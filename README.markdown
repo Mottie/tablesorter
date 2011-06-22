@@ -3,7 +3,7 @@ Originally posted by Jeremy Satterfield in his [blog][1], [jQuery plugins][2] an
 tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
-###Features ([Demo][http://mottie.github.com/tablesorter/])
+###Features ([Demo](http://mottie.github.com/tablesorter/))
 
 * Multi-column sorting.
 * Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats), time. [Add your own easily](docs/example-parsers.html)
