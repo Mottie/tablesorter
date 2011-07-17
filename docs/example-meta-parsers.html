@@ -1,41 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+<!DOCTYPE html>
+<html>
 <head>
+ <meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Setting column parser using metadata</title>
 
 	<!-- jQuery -->
-	<script type="text/javascript" src="js/jquery-latest.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link rel="stylesheet" href="css/jq.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="js/chili/chili-1.8b.js"></script>
-	<script type="text/javascript" src="js/docs.js"></script>
-	<script type="text/javascript" src="js/examples.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
-	<script type="text/javascript" src="../js/jquery.metadata.js"></script>
-	<script type="text/javascript" src="../addons/pager/jquery.tablesorter.pager.js"></script>
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.metadata.js"></script>
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
-	<script type="text/javascript" id="js">$(document).ready(function() {
+	<script id="js">$(function() {
 	// call the tablesorter plugin, the magic happens in the markup
 	$("table").tablesorter();
 });</script>
 </head>
 <body>
+
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
 	<h2>Setting column parser using metadata</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
+
 <div id="main">
 	<h1>Demo</h1>
-	<div id="demo">
-	<table cellspacing="1" class="tablesorter">
-		<thead>
+	<div id="demo"><table class="tablesorter">
+	<thead>
 		<tr>
 			<th class="{sorter: 'text'}">First Name</th>
 			<th>Last Name</th>
@@ -87,18 +88,23 @@
 			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
 	</tbody>
-		</table>
-	</div>
+</table></div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
-		<pre class="javascript"></pre>
+		<pre class="js"></pre>
 	</div>
 	<h1>HTML</h1>
 	<div id="html">
 		<pre class="html"></pre>
 	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-triggers.html">Advanced: Triggers sortEnd and sortStart &rsaquo;&rsaquo;</a>
+</div>
+
 </div>
 
 </body>
 </html>
-

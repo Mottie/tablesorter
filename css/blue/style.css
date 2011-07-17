@@ -1,8 +1,8 @@
 /* Blue Theme */
 table.tablesorter {
-	font-family:arial;
+	font-family: arial;
 	background-color: #CDCDCD;
-	margin:10px 0pt 15px;
+	margin: 10px 0pt 15px;
 	font-size: 8pt;
 	width: 100%;
 	text-align: left;
@@ -10,6 +10,7 @@ table.tablesorter {
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	background-color: #e6EEEE;
 	border: 1px solid #FFF;
+	border-collapse: collapse;
 	font-size: 8pt;
 	padding: 4px;
 }
@@ -26,7 +27,7 @@ table.tablesorter tbody td {
 	vertical-align: top;
 }
 table.tablesorter tbody tr.odd td {
-	background-color:#F0F0F6;
+	background-color: #F0F0F6;
 }
 table.tablesorter thead tr .headerSortUp {
 	background-image: url(black-asc.gif);
@@ -35,5 +36,5 @@ table.tablesorter thead tr .headerSortDown {
 	background-image: url(black-desc.gif);
 }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-background-color: #8dbdd8;
+	background-color: #8dbdd8;
 }

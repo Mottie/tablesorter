@@ -1,61 +1,68 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+<!DOCTYPE html>
+<html>
 <head>
+ <meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Triggers sortStart and sortEnd</title>
 
 	<!-- jQuery -->
-	<script type="text/javascript" src="js/jquery-latest.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link rel="stylesheet" href="css/jq.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="js/chili/chili-1.8b.js"></script>
-	<script type="text/javascript" src="js/docs.js"></script>
-	<script type="text/javascript" src="js/examples.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
 
-<script type="text/javascript" id="js">$(function(){
+<script id="js">$(function(){
+
 	var start;
 	// call the tablesorter plugin, the magic happens in the markup
+
 	$("table")
 		.tablesorter()
-		//assign the sortStart event
-		.bind("sortStart",function(e){
+
+		// assign the sortStart event
+		.bind("sortStart",function(e, t){
 			start = e.timeStamp;
-			$("#events").append('<li>Sort Started</li>').find('li:first').remove();
+			$("#display").append('<li>Sort Started</li>').find('li:first').remove();
 		})
-		.bind("sortEnd",function(e){
-			$("#events").append('<li>Sort Ended after ' + ((e.timeStamp - start)/1000).toFixed(2) +' seconds</li>').find('li:first').remove();
+
+		.bind("sortEnd",function(e, t){
+			$("#display").append('<li>Sort Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>').find('li:first').remove();
 		});
 
 }); </script>
 </head>
 <body>
+
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
 	<h2>Triggers sortStart and sortEnd</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
+
 <div id="main">
-	<h1>Demo</h1>
-	<div id="">
-		<ul id="events">
-			<li>...</li>
-			<li>...</li>
-			<li>...</li>
-		</ul>
 
 	<h1>Javascript</h1>
 	<div id="javascript">
-		<pre class="javascript"></pre>
+		<pre class="js"></pre>
 	</div>
 
+	<h1>Sort Events</h1>
+	<ul id="display">
+		<li>Sort events will appear here.</li>
+		<li>&nbsp;</li>
+		<li>&nbsp;</li>
+	</ul>
+
+	<h1>Demo</h1>
 	<!-- sortlist is appended to the table using the class attribute and is picked up by metadata plugin -->
-	<table cellspacing="1" class="tablesorter">
+	<table class="tablesorter">
 	<thead>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
 	</thead>
@@ -1088,6 +1095,10 @@
 		<tr><td>student1022</td><td>Languages</td><td>female</td><td>75</td><td>22</td><td>7</td><td>52</td></tr>
 	</tbody>
 	</table>
+
+	<div class="next-up">
+		<hr />
+		Next up: <a href="example-empty-table.html">Advanced: Initializing tablesorter on a empty table &rsaquo;&rsaquo;</a>
 	</div>
 
 </div>

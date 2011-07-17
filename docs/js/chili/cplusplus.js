@@ -2,21 +2,44 @@
 ===============================================================================
 Chili is the jQuery code highlighter plugin
 ...............................................................................
-                                               Copyright 2007 / Andrea Ercolino
--------------------------------------------------------------------------------
 LICENSE: http://www.opensource.org/licenses/mit-license.php
 WEBSITE: http://noteslog.com/chili/
+
+											   Copyright 2008 / Andrea Ercolino
 ===============================================================================
 */
 
 {
-	steps: {
-		  mlcom   : { exp: /\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\// }
-		, com     : { exp: /\/\/.*/ }
-		, preproc : { exp: /[\^\n]\s*#\w+/ }
-		, string  : { exp: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/ }
-		, number  : { exp: /\b[+-]?(?:\d*\.?\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?\b/ }
-		, datatype: { exp: /\b(?:ATOM|BOOL|BOOLEAN|BYTE|CHAR|COLORREF|DWORD|DWORD32|DWORD64|DWORDLONG|DWORD_PTR|FILE|FLOAT|HACCEL|HALF_PTR|HANDLE|HBITMAP|HBRUSH|HCOLORSPACE|HCONV|HCONVLIST|HCURSOR|HDC|HDDEDATA|HDESK|HDROP|HDWP|HENHMETAFILE|HFILE|HFONT|HGDIOBJ|HGLOBAL|HHOOK|HICON|HINSTANCE|HKEY|HKL|HLOCAL|HMENU|HMETAFILE|HMODULE|HMONITOR|HPALETTE|HPEN|HRESULT|HRGN|HRSRC|HSZ|HWINSTA|HWND|INT|INT32|INT64|INT_PTR|LANGID|LCID|LCTYPE|LGRPID|LONG|LONG32|LONG64|LONGLONG|LONG_PTR|LPARAM|LPBOOL|LPBYTE|LPCOLORREF|LPCSTR|LPCTSTR|LPCVOID|LPCWSTR|LPDWORD|LPHANDLE|LPINT|LPLONG|LPSTR|LPTSTR|LPVOID|LPWORD|LPWSTR|LRESULT|PBOOL|PBOOLEAN|PBYTE|PCHAR|PCSTR|PCTSTR|PCWSTR|PDWORD32|PDWORD64|PDWORDLONG|PDWORD_PTR|PFLOAT|PHALF_PTR|PHANDLE|PHKEY|PINT|PINT32|PINT64|PINT_PTR|PLCID|PLONG|PLONG32|PLONG64|PLONGLONG|PLONG_PTR|POINTER_32|POINTER_64|PSHORT|PSIZE_T|PSSIZE_T|PSTR|PTBYTE|PTCHAR|PTSTR|PUCHAR|PUHALF_PTR|PUINT|PUINT32|PUINT64|PUINT_PTR|PULONG|PULONG32|PULONG64|PULONGLONG|PULONG_PTR|PUSHORT|PVOID|PWCHAR|PWORD|PWSTR|SC_HANDLE|SC_LOCK|SERVICE_STATUS_HANDLE|SHORT|SIZE_T|SSIZE_T|TBYTE|TCHAR|UCHAR|UHALF_PTR|UINT|UINT32|UINT64|UINT_PTR|ULONG|ULONG32|ULONG64|ULONGLONG|ULONG_PTR|USHORT|USN|VOID|WCHAR|WORD|WPARAM|_EXCEPTION_POINTERS|_FPIEEE_RECORD|_HEAPINFO|_HFILE|_PNH|__finddata64_t|__int16|__int32|__int64|__int8|__stat64|__time64_t|__timeb64|__wchar_t|__wfinddata64_t|_complex|_dev_t|_diskfree_t|_exception|_finddata_t|_finddatai64_t|_off_t|_onexit_t|_purecall_handler|_stat|_stati64|_timeb|_utimbuf|_wfinddata_t|_wfinddatai64_t|bool|char|clock_t|div_t|double|float|fpos_t|int|intptr_t|jmp_buf|lconv|ldiv_t|long|mbstate_t|ptrdiff_t|short|sig_atomic_t|signed|size_t|terminate_function|time_t|tm|uintptr_t|va_list|wchar_t|wctrans_t|wctype_t|wint_t)\b/ }
-		, keyword : { exp: /\b(?:__declspec|__exception|__finally|__try|break|case|catch|class|const|const_cast|continue|default|delete|deprecated|dllexport|dllimport|do|dynamic_cast|else|enum|explicit|extern|false|for|friend|goto|if|inline|mutable|naked|namespace|new|noinline|noreturn|nothrow|private|protected|public|register|reinterpret_cast|return|selectany|sizeof|static|static_cast|struct|switch|template|this|thread|throw|true|try|typedef|typeid|typename|union|using|uuid|virtual|void|volatile|whcar_t|while)\b/ }
+	  _name: "cpp"
+	, _case: true
+	, _main: {
+		  mlcom   : { 
+			  _match: /\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\// 
+			, _style: "color: #4040c2;"
+		}
+		, com     : { 
+			  _match: /\/\/.*/ 
+			, _style: "color: green;"
+		}
+		, preproc : { 
+			  _match: /(?=^|\n)\s*#\w+/ 
+			, _style: "color: red;"
+		}
+		, string  : { 
+			  _match: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/ 
+			, _style: "color: teal;"
+		}
+		, number  : { 
+			  _match: /\b[+-]?(?:\d*\.?\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?\b/ 
+			, _style: "color: red;"
+		}
+		, datatype: { 
+			  _match: /\b(?:wint_t|wctype_t|wctrans_t|wchar_t|va_list|uintptr_t|tm|time_t|terminate_function|size_t|signed|sig_atomic_t|short|ptrdiff_t|mbstate_t|long|ldiv_t|lconv|jmp_buf|intptr_t|int|fpos_t|float|double|div_t|clock_t|char|bool|_wfinddatai64_t|_wfinddata_t|_utimbuf|_timeb|_stati64|_stat|_purecall_handler|_onexit_t|_off_t|_finddatai64_t|_finddata_t|_exception|_diskfree_t|_dev_t|_complex|__wfinddata64_t|__wchar_t|__timeb64|__time64_t|__stat64|__int8|__int64|__int32|__int16|__finddata64_t|_PNH|_HFILE|_HEAPINFO|_FPIEEE_RECORD|_EXCEPTION_POINTERS|WPARAM|WORD|WCHAR|VOID|USN|USHORT|ULONG_PTR|ULONGLONG|ULONG64|ULONG32|ULONG|UINT_PTR|UINT64|UINT32|UINT|UHALF_PTR|UCHAR|TCHAR|TBYTE|SSIZE_T|SIZE_T|SHORT|SERVICE_STATUS_HANDLE|SC_LOCK|SC_HANDLE|PWSTR|PWORD|PWCHAR|PVOID|PUSHORT|PULONG_PTR|PULONGLONG|PULONG64|PULONG32|PULONG|PUINT_PTR|PUINT64|PUINT32|PUINT|PUHALF_PTR|PUCHAR|PTSTR|PTCHAR|PTBYTE|PSTR|PSSIZE_T|PSIZE_T|PSHORT|POINTER_64|POINTER_32|PLONG_PTR|PLONGLONG|PLONG64|PLONG32|PLONG|PLCID|PINT_PTR|PINT64|PINT32|PINT|PHKEY|PHANDLE|PHALF_PTR|PFLOAT|PDWORD_PTR|PDWORDLONG|PDWORD64|PDWORD32|PCWSTR|PCTSTR|PCSTR|PCHAR|PBYTE|PBOOLEAN|PBOOL|LRESULT|LPWSTR|LPWORD|LPVOID|LPTSTR|LPSTR|LPLONG|LPINT|LPHANDLE|LPDWORD|LPCWSTR|LPCVOID|LPCTSTR|LPCSTR|LPCOLORREF|LPBYTE|LPBOOL|LPARAM|LONG_PTR|LONGLONG|LONG64|LONG32|LONG|LGRPID|LCTYPE|LCID|LANGID|INT_PTR|INT64|INT32|INT|HWND|HWINSTA|HSZ|HRSRC|HRGN|HRESULT|HPEN|HPALETTE|HMONITOR|HMODULE|HMETAFILE|HMENU|HLOCAL|HKL|HKEY|HINSTANCE|HICON|HHOOK|HGLOBAL|HGDIOBJ|HFONT|HFILE|HENHMETAFILE|HDWP|HDROP|HDESK|HDDEDATA|HDC|HCURSOR|HCONVLIST|HCONV|HCOLORSPACE|HBRUSH|HBITMAP|HANDLE|HALF_PTR|HACCEL|FLOAT|FILE|DWORD_PTR|DWORDLONG|DWORD64|DWORD32|DWORD|COLORREF|CHAR|BYTE|BOOLEAN|BOOL|ATOM)\b/ 
+			, _style: "color: blue;"
+		}
+		, keyword : { 
+			  _match: /\b(?:while|whcar_t|volatile|void|virtual|uuid|using|union|typename|typeid|typedef|try|true|throw|thread|this|template|switch|struct|static_cast|static|sizeof|selectany|return|reinterpret_cast|register|public|protected|private|nothrow|noreturn|noinline|new|namespace|naked|mutable|inline|if|goto|friend|for|false|extern|explicit|enum|else|dynamic_cast|do|dllimport|dllexport|deprecated|delete|default|continue|const_cast|const|class|catch|case|break|__try|__finally|__exception|__declspec)\b/ 
+			, _style: "color: navy; font-weight: bold;"
+		}
 	}
 }

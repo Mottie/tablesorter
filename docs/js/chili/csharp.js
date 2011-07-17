@@ -2,20 +2,40 @@
 ===============================================================================
 Chili is the jQuery code highlighter plugin
 ...............................................................................
-                                               Copyright 2007 / Andrea Ercolino
--------------------------------------------------------------------------------
 LICENSE: http://www.opensource.org/licenses/mit-license.php
 WEBSITE: http://noteslog.com/chili/
+
+                                               Copyright 2008 / Andrea Ercolino
 ===============================================================================
 */
 
 {
-	steps: {
-		  mlcom  : { exp: /\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\// }
-		, com    : { exp: /\/\/.*/ }
-		, string : { exp: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/ }
-		, preproc: { exp: /^\s*#.*/ }
-		, number : { exp: /\b[+-]?(?:\d*\.?\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?\b/ }
-		, keyword: { exp: /\b(?:abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|get|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|set|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|while)\b/ }
+	  _name: "cs"
+	, _case: true
+	, _main: {
+		  mlcom  : { 
+			  _match: /\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\// 
+			, _style: "color: #4040c2;"
+		}
+		, com    : { 
+			  _match: /\/\/.*/ 
+			, _style: "color: green;"
+		}
+		, string : { 
+			  _match: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/ 
+			, _style: "color: teal;"
+		}
+		, preproc: { 
+			  _match: /^\s*#.*/ 
+			, _style: "color: red;"
+		}
+		, number : { 
+			  _match: /\b[+-]?(?:\d*\.?\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?\b/ 
+			, _style: "color: red;"
+		}
+		, keyword: { 
+			  _match: /\b(?:while|volatile|void|virtual|using|ushort|unsafe|unchecked|ulong|uint|typeof|try|true|throw|this|switch|struct|string|static|stackalloc|sizeof|short|sealed|sbyte|return|ref|readonly|public|protected|private|params|override|out|operator|object|null|new|namespace|long|lock|is|internal|interface|int|in|implicit|if|goto|foreach|for|float|fixed|finally|false|extern|explicit|event|enum|else|double|do|delegate|default|decimal|continue|const|class|checked|char|catch|case|byte|break|bool|base|as|abstract)\b/ 
+			, _style: "color: navy; font-weight: bold;"
+		}
 	}
 }

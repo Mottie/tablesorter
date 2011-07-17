@@ -1,0 +1,67 @@
+###TableSorter Change Log
+
+#### Version 2.0.7 (2011-07-17)
+
+* Added "pagerChange" and "pagerComplete" events to the pager plugin which trigger on the table. See the [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) for an example on how to bind to them.
+* Added the "sortAppend" since the option was there, but apparently the code wasn't.
+* Added missing documentation from [my blog post](http://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html)
+ * This included a few new example pages: apply widgets, child rows, render header, sort append and zebra widget.
+ * Added a methods and events table.
+* Fixed the minified version. Apparently sorting functions called by the eval were removed by the Google Closure Compiler. Resolved by using "Whitespace only" optimization.
+* Fixed syntax highlighting; updated Chili.
+
+#### Version 2.0.6 (2011-06-22)
+
+* Forked original files and docs from [tablesorter.com](http://tablesorter.com) to GitHub.
+* Replaced alphabetical sort with an alphanumeric sort
+ * This "slower" sort can be disabled by setting the `sortLocaleCompare` option to `true`
+ * The `sortLocaleCompare` option's default was changed to `false`.
+ * Added a very basic demo.
+* Added `tableClass` option
+ * The value is "tablesorter" by default and should no longer be required in the default markup.
+ * This class is applied to the table in the script and should match the css styling.
+* Each header cell now has its content wrapped with a span.
+ * This allows applying the direction icon to the span instead of the entire cell.
+ * Although, this might just be extra markup with the advent of multiple background images and gradient backgrounds available in CSS3.
+* Reformatted the code to make jSLint "happier".
+
+#### Version 2.0.5b (?)
+
+* General
+ * Added "cssChildRow" option - attach a child row to its parent.
+ * Added "sortLocaleCompare" to use the native `String.localeCampare` method during text sort.
+ * Added "onRenderHeader" function that is called when classes are added to the header cells.
+ * Added "selectorHeaders" option to target the the header cells.
+ * Changed multisort function
+
+#### Version 2.0.3 (2008-03-17)
+
+* Bug fixes - Missing semicolon, broke the minified version.
+
+#### Version 2.0.2 (2008-03-14)
+
+* General
+ * Added support for the new metadata plugin.
+ * Added support for jQuery 1.2.3.
+ * Added support for decimal numbers and negative and positive digits.
+ * Updated documenation and website with new examples.
+ * Removed packed version.
+
+* Bug fixes
+ * Sort force (Thanks to David Lynch).
+
+#### Version 2.0.1 (2007-09-17)
+
+* General
+ * Removed the need for Dimensions plugin when using the pagnation plugin thanks to offset being included in the jQuery 1.2 core.
+ * Added support for jQuery 1.2.
+ * Added new Minified version of tablesorter.
+ * Updated documenation and website with new examples.
+
+* Bug fixes
+ * If row values are identical the original order is kept (Thanks to David hull).
+ * If thead includes a table $('tbody:first', table) breaks (Thanks to David Hull).
+
+* Speed improvements:
+ * appendToTable, setting innerHTML to "" before appending new content to table body.
+ * zebra widget. (Thanks to James Dempster).

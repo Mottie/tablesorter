@@ -1,114 +1,85 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+<!DOCTYPE html>
+<html>
 <head>
+ <meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Writing custom widgets</title>
 
 	<!-- jQuery -->
-	<script type="text/javascript" src="js/jquery-latest.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link rel="stylesheet" href="css/jq.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="js/chili/chili-1.8b.js"></script>
-	<script type="text/javascript" src="js/docs.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css" type="text/css" media="print, projection, screen" />
-	<script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
-	<script type="text/javascript" src="../addons/pager/jquery.tablesorter.pager.js"></script>
-	<script type="text/javascript">
-	$(function() {
-		// add new widget called repeatHeaders
-		$.tablesorter.addWidget({
-			// give the widget a id
-			id: "repeatHeaders",
-			// format is called when the on init and when a sorting has finished
-			format: function(table) {
-				// cache and collect all TH headers
-				if(!this.headers) {
-					var h = this.headers = []; 
-					$("thead th",table).each(function() {
-						h.push(
-							"<th>" + $(this).text() + "</th>"
-						);
-					});
-				}
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
 
-				// remove appended headers by classname.
-				$("tr.repated-header",table).remove();
+	<!-- Tablesorter: optional -->
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
-				// loop all tr elements and insert a copy of the "headers"	
-				for(var i=0; i < table.tBodies[0].rows.length; i++) {
-					// insert a copy of the table head every 10th row
-					if((i%5) == 4) {
-						$("tbody tr:eq(" + i + ")",table).before(
-							$("<tr></tr>").addClass("repated-header").html(this.headers.join(""))
-						);
-					}
+	<script id="js">$(function() {
+
+	// add new widget called repeatHeaders
+	$.tablesorter.addWidget({
+
+		// give the widget an id
+		id: "repeatHeaders",
+
+		// format is called when the on init and when a sorting has finished
+		format: function(table) {
+			// cache and collect all TH headers
+			if (!this.headers) {
+				var h = this.headers = [];
+				$("thead th",table).each(function() {
+					h.push(
+					"<th>" + $(this).text() + "</th>"
+					);
+				});
+			}
+
+			// remove appended headers by classname
+			$("tr.repeated-header",table).remove();
+
+			// loop all tr elements and insert a copy of the "headers"
+			for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+				// insert a copy of the table head every X rows
+				// i mod 5 = 4, is true every 4th row, starting from the 4th.
+				// i mod 6 = 5, is true every 5th row, starting from the 5th, etc.
+				if ((i%5) === 4) {
+					$("tbody tr:eq(" + i + ")",table).before(
+						$("<tr></tr>").addClass("repeated-header").html(this.headers.join(""))
+					);
 				}
 			}
-		});
 
-		// call the tablesorter plugin and assign widgets with id "zebra" (Default widget in the core) and the newly created "repeatHeaders"
-		$("table").tablesorter({
-			widgets: ['zebra','repeatHeaders']
-		});
+		}
 
 	});
-	</script>
+
+	// call the tablesorter plugin and assign widgets with id "zebra" (Default widget in the core) and the newly created "repeatHeaders"
+	$("table").tablesorter({
+		// apply both widgets
+		widgets: ['zebra', 'repeatHeaders']
+	});
+
+});</script>
 </head>
 <body>
-<div id="banner">	
+
+<div id="banner">
 	<h1>table<em>sorter</em></h1>
 	<h2>Writing custom widgets</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
+
 <div id="main">
+	<h1>Demo</h1>
 
-<h1>Javascript</h1>
-<pre class="javascript">
-// add new widget called repeatHeaders
-$.tablesorter.addWidget({
-	// give the widget a id
-	id: "repeatHeaders",
-	// format is called when the on init and when a sorting has finished
-	format: function(table) {
-		// cache and collect all TH headers
-		if(!this.headers) {
-			var h = this.headers = []; 
-			$("thead th",table).each(function() {
-				h.push(
-					"<th>" + $(this).text() + "</th>"
-				);
-				
-			});
-		}
-		
-		// remove appended headers by classname.
-		$("tr.repated-header",table).remove();
-		
-		// loop all tr elements and insert a copy of the "headers"	
-		for(var i=0; i < table.tBodies[0].rows.length; i++) {
-			// insert a copy of the table head every 10th row
-			if((i%5) == 4) {
-				$("tbody tr:eq(" + i + ")",table).before(
-					$("<tr></tr>").html(this.headers.join(""))
-				
-				);	
-			}
-		}
-	}
-});
-
-// call the tablesorter plugin and assign widgets with id "zebra" (Default widget in the core) and the newly created "repeatHeaders"
-$("table").tablesorter({
-	widgets: ['zebra','repeatHeaders']
-});
-</pre>
-
-<h1>Demo</h1>
-<table cellspacing="1" class="tablesorter">
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -341,6 +312,18 @@ $("table").tablesorter({
 		</tr>
 	</tbody>
 </table>
+
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-pager.html">Companion Plugins: file:///C:/Temp/tablesorter/docs/example-pager.html &rsaquo;&rsaquo;</a>
+</div>
+
 </div>
 
 </body>

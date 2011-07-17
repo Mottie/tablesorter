@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.6
+* Version 2.0.7
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -9,7 +9,7 @@
 * http://www.opensource.org/licenses/mit-license.php
 * http://www.gnu.org/licenses/gpl.html
 *
-* @description Create a sortable table with multi-column sorting capabilitys
+* @description Create a sortable table with multi-column sorting capabilities
 *
 * @example $('table').tablesorter();
 * @desc Create a simple tablesorter interface.
@@ -308,7 +308,7 @@
 				applyWidget(table);
 				// trigger sortend
 				setTimeout(function () {
-					$(table).trigger("sortEnd");
+					$(table).trigger("sortEnd", table);
 				}, 0);
 			}
 
@@ -474,7 +474,7 @@
 			}
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
-			function multisort(table,sortList,cache){
+			function multisort(table,sortList,cache) {
 				var dynamicExp = "var sortWrapper = function(a,b) {",
 				l = sortList.length, sortTime, i, c, s, e, order, orgOrderCol;
 				if (table.config.debug) { sortTime = new Date(); }
@@ -502,7 +502,7 @@
 			}
 
 			// http://www.webdeveloper.com/forum/showthread.php?t=107909
-			function sortText(a, b){
+			function sortText(a, b) {
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
 				if (a === b) { return 0; }
 				try {
@@ -576,7 +576,7 @@
 						totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
 						if (!this.sortDisabled && totalRows > 0) {
 							// Only call sortStart if sorting is enabled.
-							$this.trigger("sortStart");
+							$this.trigger("sortStart", tbl[0]);
 							// store exp, for speed
 							$cell = $(this);
 							// get current column index
@@ -621,6 +621,14 @@
 									config.sortList.push([i, this.order]);
 								}
 							}
+							if (config.sortAppend !== null) {
+								a = config.sortAppend;
+								for (j = 0; j < a.length; j++) {
+									if (a[j][0] !== i) {
+										config.sortList.push(a[j]);
+									}
+								}
+							}
 							setTimeout(function () {
 								// set css for headers
 								setHeadersCss($this[0], $headers, config.sortList, sortCSS);
@@ -663,7 +671,7 @@
 						getElementText(config, cell), cell);
 					})
 					.bind("sorton", function(e, list) {
-						$(this).trigger("sortStart");
+						$(this).trigger("sortStart", tbl[0]);
 						config.sortList = list;
 						// update and store the sortlist
 						var sortList = config.sortList;
@@ -695,7 +703,7 @@
 					applyWidget(this);
 				});
 			};
-				this.addParser = function(parser) {
+			this.addParser = function(parser) {
 				var i, l = parsers.length, a = true;
 				for (i = 0; i < l; i++) {
 					if (parsers[i].id.toLowerCase() === parser.id.toLowerCase()) {
@@ -706,22 +714,22 @@
 					parsers.push(parser);
 				}
 			};
-				this.addWidget = function (widget) {
+			this.addWidget = function (widget) {
 				widgets.push(widget);
 			};
-				this.formatFloat = function (s) {
+			this.formatFloat = function (s) {
 				var i = parseFloat(s);
 				return (isNaN(i)) ? 0 : i;
 			};
-				this.formatInt = function (s) {
+			this.formatInt = function (s) {
 				var i = parseInt(s, 10);
 				return (isNaN(i)) ? 0 : i;
 			};
-				this.isDigit = function (s, config) {
+			this.isDigit = function (s, config) {
 				// replace all an wanted chars and match.
 				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.']/g, '')));
 			};
-				this.clearTableBody = function (table) {
+			this.clearTableBody = function (table) {
 				if ($.browser.msie) {
 					var empty = function() {
 						while (this.firstChild) {
@@ -733,7 +741,7 @@
 					table.tBodies[0].innerHTML = "";
 				}
 			};
-			}
+		}
 	})();
 
 	// extend plugin scope

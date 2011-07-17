@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Sort table using a link outside the table</title>
+	<title>jQuery plugin: Tablesorter 2.0 - applyWidgetId vs. applyWidgets</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -16,19 +16,22 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
 	<script id="js">$(function() {
 
+	// call the tablesorter plugin
 	$("table").tablesorter();
 
-	$("#trigger-link").click(function() {
-		// set sorting column and direction, this will sort on the first and third column the column index starts at zero
-		var sorting = [[0,0],[2,0]];
-		// sort on the first column and third columns
-		$("table").trigger("sorton",[sorting]);
-		// return false to stop default link action
-		return false;
+	$("button.applyid").click(function(){
+		// This method needs to be applied after each sort
+		$('table').trigger('applyWidgetId', ['zebra']);
+	});
+
+	$("button.apply").click(function(){
+		// Update the list of widgets to apply to the table (add or remove)
+		$("table").data("tablesorter").widgets = ["zebra"];
+		// This method applies the widget - no need to keep updating
+		$('table').trigger('applyWidgets');
 	});
 
 });</script>
@@ -36,13 +39,21 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Sort table using a link outside the table</h2>
+	<h2>applyWidgetId versus applyWidgets</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em> Click on [ Apply Widget Id ], then sort the table a few times... then click on [ Apply Widgets ] and sort again.
+	</p>
+
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+	<br>
+	<div id="demo"><button class="applyid">Apply Widget Id</button> <button class="apply">Apply Widgets</button>
+
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<th>First Name</th>
@@ -95,9 +106,8 @@
 			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
 	</tbody>
-</table>
+</table></div>
 
-<a href="#" id="trigger-link">Sort first and third columns</a></div>
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
@@ -109,10 +119,11 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-child-rows.html">Basic: How to add rows that sort with their parent row &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-zebra.html">Basic: Applying the zebra stripe widget &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
 
 </body>
 </html>
+
