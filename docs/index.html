@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.7 (<a href="../changelog.markdown">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.8 (<a href="../changelog.markdown">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -298,7 +298,9 @@
 		<li><a href="example-option-sort-order.html">Direction of initial sort</a></li>
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-zebra.html">Applying the zebra stripe widget</a></li>
-		<li><a href="example-options-headers.html">Disable header using options</a></li>
+		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
+		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
+		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
 	</ul>
 	<strong>Metadata - setting inline options</strong>
@@ -307,7 +309,6 @@
 		<li><a href="example-meta-headers.html">Disable header using metadata</a></li>
 		<li><a href="example-meta-parsers.html">Setting column parser using metadata</a></li>
 	</ul>
-
 	<strong>Advanced</strong>
 	<ul>
 		<li><a href="example-triggers.html">Triggers sortEnd and sortStart (Displaying sorting progress)</a></li>
@@ -506,14 +507,20 @@
 					<pre class="js">$(function(){
   $("table").tablesorter({
     headers: {
-      0: { sorter: false },      // disable first column
+      0: { sorter: false },      // disable first column - see Example 1
       1: { sorter: "digit" },    // sort second column numerically
-      4: { sorter: "shortDate" } // sort the fifth column by date (e.g. mm/dd/yyyy if the date format is "us")
+      2: { sorter: "shortDate" } // sort the fifth column by date (e.g. mm/dd/yyyy if the date format is "us")
+      3: { lockedOrder: "asc" },  // lock the sort order - this option will not work if added as metadata - see Example 2
+      4: { sortInitialOrder: "desc" }, // Initial sort order direction of fourth column - see Example 3
     }
   });
 });</pre></div>
 				</td>
-				<td><a href="example-options-headers.html">Example</a></td>
+				<td>
+					Ex:<a href="example-options-headers.html">1</a>
+					<a href="example-options-headers-locked.html">2</a>
+					<a href="example-options-headers-order.html">3</a>
+				</td>
 			</tr>
 
 			<tr id="onrenderheader">
@@ -635,8 +642,11 @@
 				<td>sortInitialOrder</td>
 				<td>String</td>
 				<td>"asc"</td>
-				<td>When clicking the header for the first time, the direction it sorts.  Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.</td>
-				<td><a href="example-option-sort-order.html">Example</a></td>
+				<td>
+					When clicking the header for the first time, the direction it sorts.  Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.<br>
+				 <span class="tip"><em>New!</em></span> in 2.0.8: This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option.
+				</td>
+				<td>Ex:<a href="example-option-sort-order.html">1</a> <a href="example-options-headers-order.html">2</a></td>
 			</tr>
 
 			<tr id="sortlocalecompare">
@@ -707,7 +717,7 @@ $(function(){
 			<tr id="widgetzebra">
 				<td><a href="#" class="toggle2">widgetZebra</a></td>
 				<td>Object with Array</td>
-				<td>{<br>&nbsp;css :<br>&nbsp;&nbsp;["even", "odd"]<br>}</td>
+				<td>{css:["even","odd"]}</td>
 				<td>
 					When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>.
 					<div class="collapsible">
@@ -727,7 +737,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>false</td>
 			<td>Indicates if tablesorter should apply fixed widths to the table columns.  This is useful for the Pager companion.
-				<br><br><del>Requires the <a href="#Download-Addons">jQuery dimension plugin</a> to work.</del> This is now part of the jQuery core.</a></td>
+				<br><del>Requires the <a href="#Download-Addons">jQuery dimension plugin</a> to work.</del> This is now part of the jQuery core.</a></td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 

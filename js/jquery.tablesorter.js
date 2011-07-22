@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.7
+* Version 2.0.8
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -100,7 +100,7 @@
 				sortList: [],
 				headerList: [],
 				dateFormat: "us",
-				decimal: /\.|\,/g,
+				decimal: /\.|\,/g, // not used
 				onRenderHeader: null,
 				selectorHeaders: 'thead th',
 				tableClass : 'tablesorter',
@@ -355,8 +355,9 @@
 			}
 
 			function formatSortingOrder(v) {
-				if (typeof(v) !== "Number") {
-					return (v.toLowerCase() === "desc") ? 1 : 0;
+				if (typeof(v) !== "number") {
+					// look for "d" instead of "desc"
+					return (v.toLowerCase().charAt(0) === "d") ? 1 : 0;
 				} else {
 					return (v === 1) ? 1 : 0;
 				}
@@ -370,15 +371,20 @@
 				return ((table.config.headers[i]) && (table.config.headers[i].sorter === false));
 			}
 
-			function checkHeaderOptionsSortingLocked(table, i) {
-				if ((table.config.headers[i]) && (table.config.headers[i].lockedOrder)) { return table.config.headers[i].lockedOrder; }
+			function checkHeaderLocked(table, i) {
+				if ((table.config.headers[i]) && (table.config.headers[i].lockedOrder !== null)) { return table.config.headers[i].lockedOrder; }
 				return false;
+			}
+
+			function checkHeaderOrder(table, i) {
+				if ((table.config.headers[i]) && (table.config.headers[i].sortInitialOrder)) { return table.config.headers[i].sortInitialOrder; }
+				return table.config.sortInitialOrder;
 			}
 
 			function buildHeaders(table) {
 				var meta = ($.metadata) ? true : false,
 				header_index = computeTableHeaderCellIndexes(table),
-				time, $tableHeaders;
+				$th, lock, time, $tableHeaders;
 				if (table.config.debug) {
 					time = new Date();
 				}
@@ -387,12 +393,14 @@
 				.each(function (index) {
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					// this.column = index;
-					this.order = formatSortingOrder(table.config.sortInitialOrder);
+					this.order = formatSortingOrder( checkHeaderOrder(table, index) );
 					this.count = this.order;
 					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index)) { this.sortDisabled = true; }
-					if (checkHeaderOptionsSortingLocked(table, index)) { this.order = this.lockedOrder = checkHeaderOptionsSortingLocked(table, index); }
+					this.lockedOrder = false;
+					lock = checkHeaderLocked(table, index);
+					if (typeof(lock) !== 'undefined' && lock !== false) { this.order = this.lockedOrder = formatSortingOrder(lock); }
 					if (!this.sortDisabled) {
-						var $th = $(this).addClass(table.config.cssHeader);
+						$th = $(this).addClass(table.config.cssHeader);
 						if (table.config.onRenderHeader) { table.config.onRenderHeader.apply($th); }
 					}
 					// add cell to headerList
@@ -402,6 +410,7 @@
 					benchmark("Built headers:", time);
 					log($tableHeaders);
 				}
+				console.debug($tableHeaders);
 				return $tableHeaders;
 			}
 
@@ -584,9 +593,8 @@
 							// get current column sort order
 							this.order = this.count++ % 2;
 							// always sort on the locked order.
-							if(this.lockedOrder) { this.order = this.lockedOrder; }
-							// user only whants to sort on one
-							// column
+							if(typeof(this.lockedOrder) !== "undefined" && this.lockedOrder !== false) { this.order = this.lockedOrder; }
+							// user only whants to sort on one column
 							if (!e[config.sortMultiSortKey]) {
 								// flush the sort list
 								config.sortList = [];
@@ -768,10 +776,10 @@
 		id: "digit",
 		is: function(s, table){
 			var c = table.config;
-			return $.tablesorter.isDigit(s, c);
+			return $.tablesorter.isDigit(s.replace(/,/g, ""), c); // isDigit(s, c);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s);
+			return $.tablesorter.formatFloat(s.replace(/,/g, "")); // formatFloat(s);
 		},
 		type: "numeric"
 	});
@@ -779,10 +787,10 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s){
-			return (/^[£$€?.]/).test(s);
+			return (/^[£$€¤¥¢?.]/).test(s);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(new RegExp(/[£$€]/g), ""));
+			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9.\-]/g), "")); // RegExp(/[£$€]/g), ""));
 		},
 		type: "numeric"
 	});

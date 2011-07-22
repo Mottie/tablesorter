@@ -1,5 +1,12 @@
 ###TableSorter Change Log
 
+#### Version 2.0.8 (2011-07-21)
+
+* Fixed parsers for currency and digits to work with number values separated by commas. Thanks to Josh Renaud for the information!
+* Fixed "lockedOrder" header option and added documentation and an example on how to use it.
+* Made the sort order "desc" only trigger off of the first letter, so any word/abbreviation starting with "d" will set the descending sort order, all other letters will set the order to ascending (shhh, because I'm a bad speller :P)
+* Modified the "sortInitialOrder" option so it can also be set in the headers option.
+
 #### Version 2.0.7 (2011-07-17)
 
 * Added "pagerChange" and "pagerComplete" events to the pager plugin which trigger on the table. See the [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) for an example on how to bind to them.

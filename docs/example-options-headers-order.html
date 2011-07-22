@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable sort using headers options</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Set initial sort order using header options</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -19,26 +19,25 @@
 
 	<script id="js">$(function(){
 	$("table").tablesorter({
+
+		// default sortInitialOrder setting
+		sortInitialOrder: "asc",
+
 		// pass the headers argument and passing a object
 		headers: {
-			// assign the secound column (we start counting zero)
-			1: {
-				// disable it by setting the property sorter to false
-				sorter: false
-			},
-			// assign the third column (we start counting zero)
-			2: {
-				// disable it by setting the property sorter to false
-				sorter: false
-			}
+			// set initial sort order by column, this headers option setting overrides the sortInitialOrder option
+			0: { sortInitialOrder: 'desc' },
+			2: { sortInitialOrder: 'desc' },
+			4: { sortInitialOrder: 'desc' }
 		}
+
 	});
 });</script>
 </head>
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable sort using headers options</h2>
+	<h2>Set initial sort order using header options</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -110,7 +109,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-options-headers-locked.html">Basic: Lock sort order using header options &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-option-sort-key.html">Basic: Change the default multi-sorting key &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

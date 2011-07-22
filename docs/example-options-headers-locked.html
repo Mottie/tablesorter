@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable sort using headers options</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Lock sort order using header options</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -21,15 +21,13 @@
 	$("table").tablesorter({
 		// pass the headers argument and passing a object
 		headers: {
-			// assign the secound column (we start counting zero)
-			1: {
-				// disable it by setting the property sorter to false
-				sorter: false
+			0: {
+				// lock the sort order of the first column to ascending (always Bruce to Peter when sorting on that column)
+				lockedOrder: 'asc'
 			},
-			// assign the third column (we start counting zero)
 			2: {
-				// disable it by setting the property sorter to false
-				sorter: false
+				// lock the sort order of the third column to descending (always 45 to 18 when sorting on that column)
+				lockedOrder: 'desc'
 			}
 		}
 	});
@@ -38,11 +36,17 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable sort using headers options</h2>
+	<h2>Lock sort order using header options</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>TIP!</em> Sort the first and third columns to see how the sort is locked. Override this by using the multisort key (shift) while clicking on the header.
+	</p>
+
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>
@@ -110,7 +114,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-options-headers-locked.html">Basic: Lock sort order using header options &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-options-headers-order.html">Basic: Set initial sort order using header options &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
