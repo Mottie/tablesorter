@@ -26,15 +26,15 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 ###Change Log
 
-View the [complete listing here](changelog.markdown).
+View the [complete listing here](http://mottie.github.com/tablesorter/changelog.markdown).
 
 #### Version 2.0.9 (2011-07-27)
 
 * Added a jQuery UI theme and widget example. To apply the jQuery UI theme:
    * Include any jQuery UI theme on your page.
    * Add the base tablesorter ui theme (located in css/ui directory)
-   * Add the jQuery UI theme widget code found on [this example page](docs/example-option-ui-theme.html). This demo page includes the UI theme switcher.
-* Added a header index to the `onRenderHeader` function to make it easier to target specific header cells for modification. See the [render header example](docs/example-option-render-header.html) for an example.
+   * Add the jQuery UI theme widget code found on [this example page](http://mottie.github.com/tablesorter/docs/example-ui-theme.html). This demo page includes the UI theme switcher.
+* Added a header index to the `onRenderHeader` function to make it easier to target specific header cells for modification. See the [render header example](http://mottie.github.com/tablesorter/docs/example-option-render-header.html) for an example.
 * Pager plugin updates:
    * Removed the `separator` option and added an `output` option which allows you to completely customize the output string.
    * In the `output` string, include any of the following variables:
@@ -49,7 +49,7 @@ View the [complete listing here](changelog.markdown).
       * The next and last pager arrows will be have the `cssDisabled` class applied when the last row is visible.
       * Additionally, if the number of table rows is less than the pager size, the pager will get the `cssDisabled` class name applied.
       * If false (the default setting), the pager arrows class names will not change.
-      * Please see the updated [pager demo](docs/example-pager.html) to see this working.
+      * Please see the updated [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) to see this working.
 
 #### Version 2.0.8 (2011-07-21)
 
