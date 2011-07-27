@@ -1,8 +1,30 @@
+/*
+ * tablesorter pager plugin
+ * updated 7/27/2011
+ */
+
 (function($) {
 	$.extend({tablesorterPager: new function() {
 
 		var updatePageDisplay = function(table,c) {
-			var s = $(c.cssPageDisplay,c.container).val((c.page+1) + c.seperator + c.totalPages);
+			c.startRow = c.size * (c.page) + 1;
+			c.endRow = Math.min(c.totalRows, c.size * (c.page+1));
+			var out = $(c.cssPageDisplay, c.container),
+			// form the output string
+			s = c.output.replace(/\{(page|totalPages|startRow|endRow|totalRows)\}/gi, function(m){
+						return {
+							'{page}'       : c.page + 1,
+							'{totalPages}' : c.totalPages,
+							'{startRow}'   : c.startRow,
+							'{endRow}'     : c.endRow,
+							'{totalRows}'  : c.totalRows
+						}[m];
+					});
+			if (out[0].tagName === 'INPUT') {
+				out.val(s);
+			} else {
+				out.html(s);
+			}
 			$(table).trigger('pagerComplete', c);
 		},
 
@@ -49,11 +71,29 @@
 			updatePageDisplay(table,c);
 		},
 
+		// hide arrows at extremes
+		pagerArrows = function(c) {
+			if (c.updateArrows) {
+				c.container.removeClass(c.cssDisabled);
+				$(c.cssFirst + ',' + c.cssPrev + ',' + c.cssNext + ',' + c.cssLast, c.container).removeClass(c.cssDisabled);
+				if (c.page === 0) {
+					$(c.cssFirst + ',' + c.cssPrev, c.container).addClass(c.cssDisabled);
+				} else if (c.page === c.totalPages - 1) {
+					$(c.cssNext + ',' + c.cssLast, c.container).addClass(c.cssDisabled);
+				}
+				// if the total # of pages is less than the selected number of visible rows, then hide the pager
+				if (c.totalRows < c.size) {
+					c.container.addClass(c.cssDisabled);
+				}
+			}
+		},
+
 		moveToPage = function(table) {
 			var c = table.config;
-			if(c.page < 0 || c.page > (c.totalPages-1)) {
+			if (c.page < 0 || c.page > (c.totalPages-1)) {
 				c.page = 0;
 			}
+			pagerArrows(c);
 			renderTable(table,c.rowsCopy);
 		},
 
@@ -117,7 +157,9 @@
 			cssLast: '.last',
 			cssPageDisplay: '.pagedisplay',
 			cssPageSize: '.pagesize',
-			seperator: "/",
+			cssDisabled: 'disabled',
+			output: '{page}/{totalPages}', // '{startRow} to {endRow} of {totalRows} rows',
+			updateArrows: false,
 			positionFixed: true,
 			appender: this.appender
 		};
@@ -130,6 +172,7 @@
 				$(this).trigger("appendCache");
 
 				config.size = parseInt($(".pagesize",pager).val(), 10);
+				pagerArrows(config);
 
 				$(config.cssFirst,pager).click(function() {
 					moveToFirstPage(table);

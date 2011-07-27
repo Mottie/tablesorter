@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - jQuery UI Theme Widget</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- theme switcher -->
+	<script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+
+	<!-- Tablesorter: required; also include any of the jQuery UI themes -->
+	<link rel="stylesheet" href="../css/ui/style.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- Tablesorter: optional -->
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+
+	<script id="js">$(function() {
+
+	// add ui theme widget
+	$.tablesorter.addWidget({
+		id: "uitheme",
+		format: function(table) {
+			var c = table.config,
+				// ["up/down arrow (cssHeaders, unsorted)", "down arrow (cssDesc, descending)", "up arrow (cssAsc, ascending)" ]
+				icons = c.uitheme || ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"],
+				klass, rmv = icons.join(' ');
+			if (!$(c.headerList[0]).is('.ui-theme')) {
+				$(table).addClass('ui-widget ui-widget-content ui-corner-all');
+				$.each(c.headerList, function(){
+					$(this)
+						// using new "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
+						.addClass('ui-state-default ui-corner-all ui-theme')
+						.append('<span class="ui-theme"/>');
+				});
+			}
+			$.each(c.headerList, function(i){
+				if (c.headers[i] && c.headers[i].sorter === false) {
+					// no sort arrows for disabled columns!
+					$(this).find('span.ui-theme').removeClass(rmv + ' ui-icon');
+				} else {
+					// 
+					klass = ($(this).is('.' + c.cssAsc)) ? icons[1] : ($(this).is('.' + c.cssDesc)) ? icons[2] : $(this).is('.' + c.cssHeader) ? icons[0] : '';
+					$(this).find('span.ui-theme').removeClass(rmv).addClass(klass + ' ui-icon');
+				}
+			});
+		}
+	});
+
+	// call the tablesorter plugin and apply the ui theme widget
+	$("table").tablesorter({
+		widgets : ['uitheme']
+	});
+});</script>
+
+	<script>
+	$(function() {
+		// Theme switcher
+		// ********************
+		$('#switcher').themeswitcher();
+	});
+	</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>jQuery UI Theme Widget</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<div id="switcher"></div>
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>$9.99</td>
+			<td>20%</td>
+			<td>Jul 6, 2006 8:14 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
+			<td>$19.99</td>
+			<td>25%</td>
+			<td>Dec 10, 2002 5:14 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 12, 2003 11:14 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>$153.19</td>
+			<td>44%</td>
+			<td>Jan 18, 2001 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
+			<td>$13.19</td>
+			<td>11%</td>
+			<td>Jan 18, 2007 9:12 AM</td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+
+
+	<h1>CSS</h1>
+	<div>
+		<pre class="css">/* jQuery UI Theme required css; as seen in css/ui/style.css file */
+table.tablesorter {
+	font-family: arial;
+	margin: 10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	border-collapse: collapse;
+	font-size: 8pt;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	padding: 4px;
+	vertical-align: top;
+}
+table.tablesorter .header .ui-theme {
+	display: block;
+	float: right;
+}</pre>
+	</div>
+
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-options-headers.html">Basic: Disable header using options &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

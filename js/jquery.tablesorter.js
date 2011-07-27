@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.8
+* Version 2.0.9
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -100,7 +100,6 @@
 				sortList: [],
 				headerList: [],
 				dateFormat: "us",
-				decimal: /\.|\,/g, // not used
 				onRenderHeader: null,
 				selectorHeaders: 'thead th',
 				tableClass : 'tablesorter',
@@ -401,7 +400,7 @@
 					if (typeof(lock) !== 'undefined' && lock !== false) { this.order = this.lockedOrder = formatSortingOrder(lock); }
 					if (!this.sortDisabled) {
 						$th = $(this).addClass(table.config.cssHeader);
-						if (table.config.onRenderHeader) { table.config.onRenderHeader.apply($th); }
+						if (table.config.onRenderHeader) { table.config.onRenderHeader.apply($th, [index]); }
 					}
 					// add cell to headerList
 					table.config.headerList[index] = this;
@@ -410,7 +409,6 @@
 					benchmark("Built headers:", time);
 					log($tableHeaders);
 				}
-				console.debug($tableHeaders);
 				return $tableHeaders;
 			}
 

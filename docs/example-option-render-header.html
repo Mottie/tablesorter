@@ -35,9 +35,9 @@
 <script id="js">$(function() {
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		onRenderHeader: function (){
+		onRenderHeader: function (index){
 			// the TH content is wrapped with a span by default, so just add the class
-			$(this).find('span').addClass('roundedCorners');
+			$(this).find('span').addClass('roundedCorners header' + index );
 		}
 	});
 });</script>

@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.8 (<a href="../changelog.markdown">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.9 (<a href="../changelog.markdown">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -298,6 +298,7 @@
 		<li><a href="example-option-sort-order.html">Direction of initial sort</a></li>
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-zebra.html">Applying the zebra stripe widget</a></li>
+		<li><a href="example-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
@@ -644,7 +645,7 @@
 				<td>"asc"</td>
 				<td>
 					When clicking the header for the first time, the direction it sorts.  Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.<br>
-				 <span class="tip"><em>New!</em></span> in 2.0.8: This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option.
+				 <span class="tip"><em>New!</em></span> in v2.0.8: This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option.
 				</td>
 				<td>Ex:<a href="example-option-sort-order.html">1</a> <a href="example-options-headers-order.html">2</a></td>
 			</tr>
@@ -932,7 +933,7 @@ $(table)
 
 			<tr id="pagerChange">
 				<td><a href="#" class="toggle2">pagerChange</a></td>
-				<td>This event fires when the pager plugin begins to render the table on the currently selected page. <span class="tip"><em>New!</em></span> in version 2.0.7.
+				<td>This event fires when the pager plugin begins to render the table on the currently selected page. <span class="tip"><em>New!</em></span> in v2.0.7.
 					<div class="collapsible">
 						<pre class="js">$(function(){
 
@@ -958,7 +959,7 @@ $(table)
 
 			<tr id="pagerComplete">
 				<td><a href="#" class="toggle2">pagerComplete</a></td>
-				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. <span class="tip"><em>New!</em></span> in version 2.0.7.
+				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. <span class="tip"><em>New!</em></span> in v2.0.7.
 					<div class="collapsible">
 						<pre class="js">$(function(){
 
@@ -1021,6 +1022,7 @@ $(table)
 	<ul>
 		<li><a href="../css/green/green.zip">Green Skin</a> - Images and CSS styles for green themed headers</li>
 		<li><a href="../css/blue/blue.zip">Blue Skin</a> - Images and CSS styles for blue themed headers (as seen in the examples)</li>
+		<li><a href="example-ui-theme.html">jQuery UI Theme</a> - Apply any jQuery UI theme to the table using the "uitheme" widget code. <span class="tip"><em>New!</em></span> in v2.0.9!</li>
 	</ul>
 
 	<a name="Compatibility"></a>
@@ -1054,7 +1056,7 @@ $(table)
 	<p>
 		Documentation written by <a class="external" href="http://www.ghidinelli.com">Brian Ghidinelli</a>,
 		based on <a class="external" href="http://malsup.com/jquery/">Mike Alsup's</a> great documention.<br>
-		Missing documentation and alphanumeric sort added by <a class="external" href="https://github.com/Mottie/tablesorter">Mottie</a>.
+		Missing documentation, alphanumeric sort and other changes added by <a class="external" href="https://github.com/Mottie/tablesorter">Mottie</a>.
 	</p>
 	<p>
 		<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>

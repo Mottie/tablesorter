@@ -1,0 +1,26 @@
+﻿/* jQuery UI Theme */
+table.tablesorter {
+	font-family: arial;
+	margin: 10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	border-collapse: collapse;
+	font-size: 8pt;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	padding: 4px;
+	vertical-align: top;
+}
+table.tablesorter .header .ui-theme {
+	display: block;
+	float: right;
+}
