@@ -26,7 +26,17 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 ###Change Log
 
-View the [complete listing here](http://mottie.github.com/tablesorter/changelog.markdown).
+View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
+
+#### Version 2.0.10 (2011-07-31)
+
+* Modified the numeric sort with a new method to deal with non-numeric content:
+   * When sorting columns with numeric values, by default any non-numeric or empty cells are treated as if they have a zero value. This puts the text between negative and positive values in a column.
+   * Adding `string : "max+"` to the `headers` option will now treat any non-numeric table cells as if they have a maxiumum positive value (a value greater than the maximum positive value in the column).
+   * Adding `string : "max-"` to the `headers` option will now treat any non-numeric table cells as if they have a maxiumum negative value (a value greater than the maximum negative value in the column).
+   * See the "[Dealing with text strings in numeric sorts](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html)" demo for a better visual example.
+* Changed UI theme widget code to use "ui-widget-header" instead of "ui-widget-default" to better match the themes.
+* Renamed changelog.markdown to changelog.txt to prevent downloading when clicking on the link
 
 #### Version 2.0.9 (2011-07-27)
 
@@ -50,20 +60,3 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
       * Additionally, if the number of table rows is less than the pager size, the pager will get the `cssDisabled` class name applied.
       * If false (the default setting), the pager arrows class names will not change.
       * Please see the updated [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) to see this working.
-
-#### Version 2.0.8 (2011-07-21)
-
-* Fixed parsers for currency and digits to work with number values separated by commas. Thanks to Josh Renaud for the information!
-* Fixed "lockedOrder" header option and added documentation and an example on how to use it.
-* Made the sort order "desc" only trigger off of the first letter, so any word/abbreviation starting with "d" will set the descending sort order, all other letters will set the order to ascending (shhh, because I'm a bad speller :P)
-* Modified the "sortInitialOrder" option so it can also be set in the headers option.
-
-#### Version 2.0.7 (2011-07-17)
-
-* Added "pagerChange" and "pagerComplete" events to the pager plugin which trigger on the table. See the [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) for an example on how to bind to them.
-* Added the "sortAppend" since the option was there, but apparently the code wasn't.
-* Added missing documentation from [my blog post](http://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html)
- * This included a few new example pages: apply widgets, child rows, render header, sort append and zebra widget.
- * Added a methods and events table.
-* Fixed the minified version. Apparently sorting functions called by the eval were removed by the Google Closure Compiler. Resolved by using "Whitespace only" optimization.
-* Fixed syntax highlighting; updated Chili.

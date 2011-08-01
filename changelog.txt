@@ -1,5 +1,15 @@
 ###TableSorter Change Log
 
+#### Version 2.0.10 (2011-07-31)
+
+* Modified the numeric sort with a new method to deal with non-numeric content:
+   * When sorting columns with numeric values, by default any non-numeric or empty cells are treated as if they have a zero value. This puts the text between negative and positive values in a column.
+   * Adding `string : "max+"` to the `headers` option will now treat any non-numeric table cells as if they have a maxiumum positive value (a value greater than the maximum positive value in the column).
+   * Adding `string : "max-"` to the `headers` option will now treat any non-numeric table cells as if they have a maxiumum negative value (a value greater than the maximum negative value in the column).
+   * See the "[Dealing with text strings in numeric sorts](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html)" demo for a better visual example.
+* Changed UI theme widget code to use "ui-widget-header" instead of "ui-widget-default" to better match the themes.
+* Renamed changelog.markdown to changelog.txt to prevent downloading when clicking on the link
+
 #### Version 2.0.9 (2011-07-27)
 
 * Added a jQuery UI theme and widget example. To apply the jQuery UI theme:

@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Dealing with text strings in numerical sorts</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<style>
+		th { width: 10%; }
+	</style>
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<script id="js">$(function() {
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		headers: {
+			5: { sorter: "digit", string: "max+" }, // strings (non-numeric) cells are treated as a MAX value
+			6: { sorter: "digit", string: "max-" }, // strings (non-numeric) cells are treated as a MIN value
+			7: { sorter: "digit", string: "max+" }, // strings (non-numeric) cells are treated as a MAX value
+			8: { sorter: "digit", string: "max-" }, // strings (non-numeric) cells are treated as a MIN value
+			9: { sorter: "digit" }                  // strings (non-numeric) cells are given a value of ZERO (default)
+		}
+	});
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Dealing with text strings in numerical sorts</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>When a column is sorted numerically ( sorter:"digit" ) any text also in that column will by default be given a zero value. Sort the last column to see the problem with this method.</li>
+			<li>Set the "string" to "max+" to treat any text as a value greater than the max numerical value in the column</li>
+			<li>Set the "string" to "max-" to treat any text as a value greater than the max negative value.</li>
+			<li>Sort columns five through eight to see how the sort is changed. Note that the text is sorted separately.</li>
+		</ul>
+	</p>
+
+<h1>Demo</h1>
+<div id="demo"><table>
+	<thead>
+		<tr>
+			<th>Account #</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Difference</th>
+			<th>5: Ratings (max+)</th>
+			<th>6: Ratings (max-)</th>
+			<th>7: Change  (max+)</th>
+			<th>8: Change  (max-)</th>
+			<th>9: Change  (none)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>A43</td>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>-35</td>
+			<td>01</td>
+			<td>01</td>
+			<td>-.1</td>
+			<td>-.1</td>
+			<td>-.1</td>
+		</tr>
+		<tr>
+			<td>A255</td>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
+			<td>33</td>
+			<td>02</td>
+			<td>02</td>
+			<td>N/A #1</td>
+			<td>N/A #1</td>
+			<td>N/A #1</td>
+		</tr>
+		<tr>
+			<td>A33</td>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
+			<td>2</td>
+			<td>03</td>
+			<td>03</td>
+			<td>N/A #2</td>
+			<td>N/A #2</td>
+			<td>N/A #2</td>
+		</tr>
+		<tr>
+			<td>A1</td>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>-5</td>
+			<td>04</td>
+			<td>04</td>
+			<td>-8.4</td>
+			<td>-8.4</td>
+			<td>-8.4</td>
+		</tr>
+		<tr>
+			<td>A102</td>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
+			<td>99</td>
+			<td>05</td>
+			<td>05</td>
+			<td>-2.2</td>
+			<td>-2.2</td>
+			<td>-2.2</td>
+		</tr>
+		<tr>
+			<td>A10</td>
+			<td>James</td>
+			<td>Sullivan</td>
+			<td>46</td>
+			<td>-1</td>
+			<td>06</td>
+			<td>06</td>
+			<td>97.4</td>
+			<td>97.4</td>
+			<td>97.4</td>
+		</tr>
+		<tr>
+			<td>A02</td>
+			<td>Bruce</td>
+			<td>Campbell</td>
+			<td>32</td>
+			<td>0</td>
+			<td>07</td>
+			<td>07</td>
+			<td>23.6</td>
+			<td>23.6</td>
+			<td>23.6</td>
+		</tr>
+		<tr>
+			<td>A55</td>
+			<td>Frank</td>
+			<td>Evans</td>
+			<td>51</td>
+			<td>44</td>
+			<td></td>
+			<td></td>
+			<td>11.4</td>
+			<td>11.4</td>
+			<td>11.4</td>
+		</tr>
+		<tr>
+			<td>A87</td>
+			<td>Joe</td>
+			<td>Smith</td>
+			<td>24</td>
+			<td>04</td>
+			<td>NR</td>
+			<td>NR</td>
+			<td>5.2</td>
+			<td>5.2</td>
+			<td>5.2</td>
+		</tr>
+		<tr>
+			<td>A012</td>
+			<td>Mike</td>
+			<td>Wazowski</td>
+			<td>21</td>
+			<td>-24</td>
+			<td>NR</td>
+			<td>NR</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-option-sort-order.html">Basic: Direction of initial sort &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

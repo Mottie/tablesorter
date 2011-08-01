@@ -9,6 +9,9 @@ h2{color:#333;font-size:small;font-weight:400;margin:0;}
 table.info{border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
 table.tablesorter table.info tbody th,table.tablesorter table.info tbody td{border:#000 1px solid;}
 table.tablesorter table.info tbody th{background:#eee;}
+#options{width:100%;}
+#options pre{width:95%;}
+#options .examples{width:60px;}
 pre,#display{overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
 pre,#display,code.hilight{background-color:#eee;color:#333;font-size:small;list-style:none;}
 a code.hilight {text-decoration:underline;}

@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.9
+* Version 2.0.10
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -20,7 +20,7 @@
 * @example $('table').tablesorter({ headers: { 0: { sorter: false}, 1: {sorter: false} } });
 * @desc Create a tablesorter interface and disableing the first and second  column headers.
 *
-* @example $('table').tablesorter({ headers: { 0: {sorter:"integer"}, 1: {sorter:"currency"} } });
+* @example $('table').tablesorter({ headers: { 0: {sorter:"digit"}, 1: {sorter:"currency"} } });
 * @desc Create a tablesorter interface and set a column parser for the first and second column.
 *
 * @param Object settings An object literal containing key/value pairs to provide optional settings.
@@ -483,14 +483,23 @@
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
 			function multisort(table,sortList,cache) {
 				var dynamicExp = "var sortWrapper = function(a,b) {",
-				l = sortList.length, sortTime, i, c, s, e, order, orgOrderCol;
-				if (table.config.debug) { sortTime = new Date(); }
+				col, mx = 0, dir = 0, tc = table.config, lc = cache.normalized.length,
+				l = sortList.length, sortTime, i, j, c, s, e, order, orgOrderCol;
+				if (tc.debug) { sortTime = new Date(); }
 				for (i=0; i < l; i++) {
 					c = sortList[i][0];
 					order = sortList[i][1];
-					s = (getCachedSortType(table.config.parsers,c) === "text") ? ((order === 0) ? "sortText" : "sortTextDesc") : ((order === 0) ? "sortNumeric" : "sortNumericDesc");
+					s = (getCachedSortType(tc.parsers,c) === "text") ? ((order === 0) ? "sortText" : "sortTextDesc") : ((order === 0) ? "sortNumeric" : "sortNumericDesc");
 					e = "e" + i;
-					dynamicExp += "var " + e + " = " + s + "(a[" + c + "],b[" + c + "]); ";
+					// get max column value (ignore sign)
+					if (/Numeric/.test(s) && tc.headers[c] && tc.headers[c].string){
+						for (j=0; j < lc; j++) {
+							col = Math.abs(parseFloat(cache.normalized[j][c]));
+							mx = Math.max( mx, isNaN(col) ? 0 : col );
+						}
+						dir = (tc.headers[c]) ? tc.string[tc.headers[c].string] || 0 : 0;
+					}
+					dynamicExp += "var " + e + " = " + s + "(a[" + c + "],b[" + c + "]," + mx +  "," + dir + "); ";
 					dynamicExp += "if (" + e + ") { return " + e + "; } ";
 					dynamicExp += "else { ";
 				}
@@ -504,11 +513,11 @@
 				dynamicExp += "}; ";
 				eval(dynamicExp);
 				cache.normalized.sort(sortWrapper);
-				if (table.config.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time:", sortTime); }
+				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time:", sortTime); }
 				return cache;
 			}
 
-			// http://www.webdeveloper.com/forum/showthread.php?t=107909
+			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b) {
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
 				if (a === b) { return 0; }
@@ -537,16 +546,36 @@
 				}
 			}
 
-			function sortTextDesc(a,b){
+			function sortTextDesc(a, b){
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return b.localeCompare(a); }
-				return -sortText(a,b);
+				return -sortText(a, b);
 			}
 
-			function sortNumeric(a, b) {
+			// return text string value by adding up ascii value
+			// so the text is somewhat sorted when using a digital sort
+			// this is NOT an alphanumeric sort
+			function getTextValue(a, mx, d){
+				if (a === '') { return (d || 0) * Number.MAX_VALUE; }
+				if (mx) {
+					// make sure the text value is greater than the max numerical value (mx)
+					var i, l = a.length, n = mx + d;
+					for (i = 0; i < l; i++){
+						n += a.charCodeAt(i);
+					}
+					return d * n;
+				}
+				return 0;
+			}
+
+			function sortNumeric(a, b, mx, d) {
+				if (a === '' || isNaN(a)) { a = getTextValue(a, mx, d); }
+				if (b === '' || isNaN(b)) { b = getTextValue(b, mx, d); }
 				return a - b;
 			}
 
-			function sortNumericDesc(a, b) {
+			function sortNumericDesc(a, b, mx, d) {
+				if (a === '' || isNaN(a)) { a = getTextValue(a, mx, d); }
+				if (b === '' || isNaN(b)) { b = getTextValue(b, mx, d); }
 				return b - a;
 			}
 
@@ -570,6 +599,8 @@
 					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
 					this.config.parsers = buildParserCache(this, $headers);
+					// digit sort text location
+					this.config.string = { max: 1, 'max+': 1, 'max-': -1, none: 0 };
 					// build the cache for the tbody cells
 					cache = buildCache(this);
 					// get the css class names, could be done else where.
@@ -662,8 +693,7 @@
 						var me = this;
 						setTimeout(function(){
 							// rebuild parsers.
-							me.config.parsers = buildParserCache(
-							me, $headers);
+							me.config.parsers = buildParserCache(me, $headers);
 							// rebuild the cache map
 							cache = buildCache(me);
 						}, 1);
@@ -673,8 +703,7 @@
 						// get position from the dom.
 						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
-						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(
-						getElementText(config, cell), cell);
+						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell), cell);
 					})
 					.bind("sorton", function(e, list) {
 						$(this).trigger("sortStart", tbl[0]);
@@ -723,16 +752,13 @@
 			this.addWidget = function (widget) {
 				widgets.push(widget);
 			};
-			this.formatFloat = function (s) {
+			this.formatFloat = function(s) {
 				var i = parseFloat(s);
-				return (isNaN(i)) ? 0 : i;
+				// return the text instead of zero
+				return isNaN(i) ? $.trim(s) : i;
 			};
-			this.formatInt = function (s) {
-				var i = parseInt(s, 10);
-				return (isNaN(i)) ? 0 : i;
-			};
-			this.isDigit = function (s, config) {
-				// replace all an wanted chars and match.
+			this.isDigit = function(s) {
+				// replace all unwanted chars and match.
 				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.']/g, '')));
 			};
 			this.clearTableBody = function (table) {
@@ -772,12 +798,11 @@
 
 	ts.addParser({
 		id: "digit",
-		is: function(s, table){
-			var c = table.config;
-			return $.tablesorter.isDigit(s.replace(/,/g, ""), c); // isDigit(s, c);
+		is: function(s){
+			return $.tablesorter.isDigit(s.replace(/,/g, ""));
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(/,/g, "")); // formatFloat(s);
+			return $.tablesorter.formatFloat(s.replace(/,/g, ""));
 		},
 		type: "numeric"
 	});
@@ -788,7 +813,7 @@
 			return (/^[£$€¤¥¢?.]/).test(s);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9.\-]/g), "")); // RegExp(/[£$€]/g), ""));
+			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9.\-]/g), ""));
 		},
 		type: "numeric"
 	});
@@ -831,9 +856,8 @@
 		is: function(s) {
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/).test(s);
 		},
-		format: function (s) {
-			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(
-			new RegExp(/-/g), "/")).getTime() : "0");
+		format: function(s) {
+			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(new RegExp(/-/g), "/")).getTime() : "0");
 		},
 		type: "numeric"
 	});
@@ -918,8 +942,7 @@
 			// loop through the visible rows
 			$("tr:visible", table.tBodies[0]).each(function (i) {
 				$tr = $(this);
-				// style children rows the same way the parent
-				// row was styled
+				// style children rows the same way the parent row was styled
 				if (!$tr.hasClass(table.config.cssChildRow)) { row++; }
 				odd = (row % 2 === 0);
 				$tr

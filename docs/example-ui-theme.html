@@ -38,8 +38,8 @@
 				$(table).addClass('ui-widget ui-widget-content ui-corner-all');
 				$.each(c.headerList, function(){
 					$(this)
-						// using new "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
-						.addClass('ui-state-default ui-corner-all ui-theme')
+						// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
+						.addClass('ui-widget-header ui-corner-all ui-theme')
 						.append('<span class="ui-theme"/>');
 				});
 			}
