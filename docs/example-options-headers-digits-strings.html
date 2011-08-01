@@ -24,11 +24,11 @@
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		headers: {
-			5: { sorter: "digit", string: "max+" }, // strings (non-numeric) cells are treated as a MAX value
-			6: { sorter: "digit", string: "max-" }, // strings (non-numeric) cells are treated as a MIN value
-			7: { sorter: "digit", string: "max+" }, // strings (non-numeric) cells are treated as a MAX value
-			8: { sorter: "digit", string: "max-" }, // strings (non-numeric) cells are treated as a MIN value
-			9: { sorter: "digit" }                  // strings (non-numeric) cells are given a value of ZERO (default)
+			5: { sorter: "digit", string: "max+" }, // non-numeric content is treated as a MAX value
+			6: { sorter: "digit", string: "max-" }, // non-numeric content is treated as a MIN value
+			7: { sorter: "digit", string: "max+" }, // non-numeric content is treated as a MAX value
+			8: { sorter: "digit", string: "max-" }, // non-numeric content is treated as a MIN value
+			9: { sorter: "digit" }                  // non-numeric content is given a value of ZERO (default)
 		}
 	});
 });</script>
@@ -45,10 +45,10 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>When a column is sorted numerically ( sorter:"digit" ) any text also in that column will by default be given a zero value. Sort the last column to see the problem with this method.</li>
-			<li>Set the "string" to "max+" to treat any text as a value greater than the max numerical value in the column</li>
-			<li>Set the "string" to "max-" to treat any text as a value greater than the max negative value.</li>
-			<li>Sort columns five through eight to see how the sort is changed. Note that the text is sorted separately.</li>
+			<li>When a column is sorted numerically ( sorter:"digit" ) any text in that column will, by default, be given a <em>zero</em> value. Sort the last column (#9) to see the problem with this method.</li>
+			<li>Set the headers option "string" value to "max+" to treat any text in that column as a value greater than the <em>max positive</em> value.</li>
+			<li>Set the headers option "string" value to "max-" to treat any text in that column as a value greater than the <em>max negative</em> value.</li>
+			<li>Sort columns five through eight to see how the sort has changed. Note that the text is sorted separately from the numeric values.</li>
 		</ul>
 	</p>
 
