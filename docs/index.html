@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.10 (<a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.11 (<a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -300,6 +300,7 @@
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-zebra.html">Applying the zebra stripe widget</a></li>
 		<li><a href="example-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
+		<li><a href="example-options-headers.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
@@ -506,6 +507,7 @@
 					For example, to disable sorting on the first two columns of a table: <code class="hilight">headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
 					<br>
 					The plugin attempts to detect the type of data that is contained in a column, but if it can't figure it out then it defaults to alphanumeric. You can easily override this by setting the header argument (or column parser).
+					See the full list of <a href="#parsers">default parsers</a> here or <a href="example-parsers.html">write your own</a>.
 					<pre class="js">$(function(){
   $("table").tablesorter({
     headers: {
@@ -585,10 +587,14 @@
 						<tr><th><code class="hilight">sorter: "time"</code></th><td>Sort by time (23:59 or 12:59 pm).</td></tr>
 						<tr><th><code class="hilight">sorter: "metadata"</code></th><td>Sort by the sorter value in the metadata - requires the metadata plugin.</td></tr>
 					</tbody></table><br>
-					Check out the <a href="#headers"><code class="hilight">headers</code></a> option to see how to use these parsers in your table.
+					Check out the <a href="#headers"><code class="hilight">headers</code></a> option to see how to use these parsers in your table (example #1).<br>Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3) <span class="tip"><em>New!</em></span>.
 					</div>
 				</td>
-				<td></td>
+				<td>
+					Ex:<a href="example-options-headers-digits-strings.html">1</a>
+					<a href="example-parsers-class-name.html">2</a>
+					<a href="example-parsers.html">3</a>
+				</td>
 			</tr>
 
 			<tr id="selectorheaders">

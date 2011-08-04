@@ -1,5 +1,13 @@
 ###TableSorter Change Log
 
+#### Version 2.0.11 (2011-08-04)
+
+* Added the ability to set a column parser using a class name
+   * When setting the parser, start the class name with "sorter-" followed by the parser name, e.g. "sorter-text" or "sorter-digit"
+   * The column can be disabled by setting the class name to "sorter-false"
+   * [Demo page](http://mottie.github.com/tablesorter/docs/example-parsers-class-name.html) included.
+   * Custom parsers can also be used - see the updated [writing custom parsers demo](http://mottie.github.com/tablesorter/docs/example-parsers.html).
+
 #### Version 2.0.10 (2011-07-31)
 
 * Modified the numeric sort with a new method to deal with non-numeric content:

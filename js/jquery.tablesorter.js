@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.10
+* Version 2.0.11
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -203,6 +203,9 @@
 							p = getParserById($($headers[i]).metadata().sorter);
 						} else if ((table.config.headers[i] && table.config.headers[i].sorter)) {
 							p = getParserById(table.config.headers[i].sorter);
+						} else if ($($headers[i]).attr('class').match('sorter-')){
+							// include sorter class name "sorter-text", etc
+							p = getParserById($($headers[i]).attr('class').match(/sorter-(\w+)/)[1] || '');
 						}
 						if (!p) {
 							p = detectParserForColumn(table, rows, -1, i);
@@ -394,7 +397,7 @@
 					// this.column = index;
 					this.order = formatSortingOrder( checkHeaderOrder(table, index) );
 					this.count = this.order;
-					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index)) { this.sortDisabled = true; }
+					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).is('.sorter-false')) { this.sortDisabled = true; }
 					this.lockedOrder = false;
 					lock = checkHeaderLocked(table, index);
 					if (typeof(lock) !== 'undefined' && lock !== false) { this.order = this.lockedOrder = formatSortingOrder(lock); }

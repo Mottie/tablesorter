@@ -39,11 +39,9 @@ $.tablesorter.addParser({
 
 $(function() {
 	$("table").tablesorter({
-		headers: {
-			6: {
-				sorter: 'grades'
-			}
-		}
+		// "sorter-grades" added as a class name in the HTML (new in v2.0.11)
+		// or un-comment out the option below
+		// headers: { 6: { sorter: 'grades' } }
 	});
 
 });</script>
@@ -62,13 +60,13 @@ $(function() {
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th>Name</th>
+			<th class="sorter-text">Name</th>
 			<th>Major</th>
 			<th>Gender</th>
 			<th>English</th>
 			<th>Japanese</th>
 			<th>Calculus</th>
-			<th>Overall grades</th>
+			<th class="sorter-grades">Overall grades</th> <!-- set the column parser using a class name -->
 		</tr>
 	</thead>
 	<tbody>
