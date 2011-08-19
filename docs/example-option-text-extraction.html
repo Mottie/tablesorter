@@ -29,7 +29,9 @@
 		}
 		*/
 
-		// define a custom text extraction function for each column
+		// Define a custom text extraction function for each column
+		// In this example, textExtraction 1-5 functions don't really need to
+		// be defined, since they can also be obtained using `$(node).text()`
 		textExtraction: {
 			0: function(node) { return $(node).find("strong").text(); },
 			1: function(node) { return $(node).find("div").text(); },

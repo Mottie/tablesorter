@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.13 (2011-08-19)
+============================
+
+* Fixed a problem where a javascript error would occur when initializing a multi sort on an empty table. Thanks again to Eugene Ivakhiv!
+
 Version 2.0.12 (2011-08-19)
 ============================
 

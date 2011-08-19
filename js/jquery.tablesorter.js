@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.12
+* Version 2.0.13
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -139,7 +139,7 @@
 					if (typeof(te) === "function") {
 						text = te(node);
 					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)){
-						text = config.textExtraction[cellIndex](node);
+						text = te[cellIndex](node);
 					} else {
 						text = $(node).text();
 					}
@@ -280,6 +280,7 @@
 			}
 
 			function appendToTable(table, cache) {
+				if (cache.row.length === 0) { return; }
 				var c = cache,
 				r = c.row,
 				n = c.normalized,
@@ -487,6 +488,7 @@
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
 			function multisort(table,sortList,cache) {
+				if (cache.row.length === 0) { return cache; } // nothing to sort
 				var dynamicExp = "var sortWrapper = function(a,b) {",
 				col, mx = 0, dir = 0, tc = table.config, lc = cache.normalized.length,
 				l = sortList.length, sortTime, i, j, c, s, e, order, orgOrderCol;
@@ -674,10 +676,7 @@
 							setTimeout(function () {
 								// set css for headers
 								setHeadersCss($this[0], $headers, config.sortList, sortCSS);
-								appendToTable(
-								$this[0], multisort(
-								$this[0], config.sortList, cache)
-								);
+								appendToTable($this[0], multisort($this[0], config.sortList, cache));
 							}, 1);
 							// stop normal event by returning false
 							return false;
