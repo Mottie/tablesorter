@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.11
+* Version 2.0.12
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -121,11 +121,11 @@
 
 			this.benchmark = benchmark;
 
-			function getElementText(config, node) {
-				var text = "";
+			function getElementText(config, node, cellIndex) {
+				var text = "", te = config.textExtraction;
 				if (!node) { return ""; }
 				if (!config.supportsTextContent) { config.supportsTextContent = node.textContent || false; }
-				if (config.textExtraction === "simple") {
+				if (te === "simple") {
 					if (config.supportsTextContent) {
 						text = node.textContent;
 					} else {
@@ -136,8 +136,10 @@
 						}
 					}
 				} else {
-					if (typeof(config.textExtraction) === "function") {
-						text = config.textExtraction(node);
+					if (typeof(te) === "function") {
+						text = te(node);
+					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)){
+						text = config.textExtraction[cellIndex](node);
 					} else {
 						text = $(node).text();
 					}
@@ -160,8 +162,8 @@
 				return rows[rowIndex].cells[cellIndex];
 			}
 
-			function trimAndGetNodeText(config, node) {
-				return $.trim(getElementText(config, node));
+			function trimAndGetNodeText(config, node, cellIndex) {
+				return $.trim(getElementText(config, node, cellIndex));
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
@@ -173,7 +175,7 @@
 					rowIndex++;
 					if (rows[rowIndex]) {
 						node = getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex);
-						nodeValue = trimAndGetNodeText(table.config, node);
+						nodeValue = trimAndGetNodeText(table.config, node, cellIndex);
 						if (table.config.debug) {
 							log('Checking if value was empty on row:' + rowIndex);
 						}
@@ -248,7 +250,7 @@
 					}
 					cache.row.push(c);
 					for (j = 0; j < totalCells; ++j) {
-						cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j]), table, c[0].cells[j]));
+						cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j], j), table, c[0].cells[j]));
 					}
 					cols.push(cache.normalized.length); // add position for rowCache
 					cache.normalized.push(cols);
@@ -706,7 +708,7 @@
 						// get position from the dom.
 						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
-						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell), cell);
+						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell, pos[1]), cell);
 					})
 					.bind("sorton", function(e, list) {
 						$(this).trigger("sortStart", tbl[0]);

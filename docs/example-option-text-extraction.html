@@ -22,10 +22,21 @@
 	// call the tablesorter plugin
 	$("table").tablesorter({
 
-		// define a custom text extraction function
+		/*
+		// define an overall custom text extraction function
 		textExtraction: function(node) {
-			// extract data from markup and return it
 			return $(node).text();
+		}
+		*/
+
+		// define a custom text extraction function for each column
+		textExtraction: {
+			0: function(node) { return $(node).find("strong").text(); },
+			1: function(node) { return $(node).find("div").text(); },
+			2: function(node) { return $(node).find("span").text(); },
+			3: function(node) { return $(node).find("em").text(); },
+			4: function(node) { return $(node).find("a").text(); },
+			5: function(node) { return $(node).find("u").text(); }
 		}
 
 	});
@@ -35,13 +46,17 @@
 <body>
 
 <div id="banner">
-	<h1>table<em>sorter</em></h1>
+	<h1>table<strong>sorter</strong></h1>
 	<h2>Dealing with markup inside cells</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 
 <div id="main">
+	<p class="tip">
+		<em>NOTE!</em> The "First Name" column is sorting by the contents of the &lt;strong&gt; tag (in red).
+	</p>
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>
@@ -56,44 +71,44 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td><strong><em>Peter</em></strong></td>
-			<td><strong><em>Parker</em></strong></td>
-			<td><strong><em>28</em></strong></td>
-			<td><strong><em>$9.99</em></strong></td>
-			<td><strong><em>20%</em></strong></td>
-			<td><strong><em>Jul 6, 2006 8:14 AM</em></strong></td>
+			<td>Mr. <strong>Peter</strong></td>
+			<td><div>Parker</div></td>
+			<td><span>28</span></td>
+			<td><em>$9.99</em></td>
+			<td><a href="#">20%</a></td>
+			<td><u>Jul 6, 2006 8:14 AM</u></td>
 		</tr>
 		<tr>
-			<td><strong><em>John</em></strong></td>
-			<td><strong><em>Hood</em></strong></td>
-			<td><strong><em>33</em></strong></td>
-			<td><strong><em>$19.99</em></strong></td>
-			<td><strong><em>25%</em></strong></td>
-			<td><strong><em>Dec 10, 2002 5:14 AM</em></strong></td>
+			<td>Dr. <strong>John</strong></td>
+			<td><div>Hood</div></td>
+			<td><span>33</span></td>
+			<td><em>$19.99</em></td>
+			<td><a href="#">25%</a></td>
+			<td><u>Dec 10, 2002 5:14 AM</u></td>
 		</tr>
 		<tr>
-			<td><strong><em>Clark</em></strong></td>
-			<td><strong><em>Kent</em></strong></td>
-			<td><strong><em>18</em></strong></td>
-			<td><strong><em>$15.89</em></strong></td>
-			<td><strong><em>44%</em></strong></td>
-			<td><strong><em>Jan 12, 2003 11:14 AM</em></strong></td>
+			<td>Rep <strong>Clark</strong></td>
+			<td><div>Kent</div></td>
+			<td><span>18</span></td>
+			<td><em>$15.89</em></td>
+			<td><a href="#">44%</a></td>
+			<td><u>Jan 12, 2003 11:14 AM</u></td>
 		</tr>
 		<tr>
-			<td><strong><em>Bruce</em></strong></td>
-			<td><strong><em>Almighty</em></strong></td>
-			<td><strong><em>45</em></strong></td>
-			<td><strong><em>$153.19</em></strong></td>
-			<td><strong><em>44%</em></strong></td>
-			<td><strong><em>Jan 18, 2001 9:12 AM</em></strong></td>
+			<td>Rev <strong>Bruce</strong></td>
+			<td><div>Almighty</div></td>
+			<td><span>45</span></td>
+			<td><em>$153.19</em></td>
+			<td><a href="#">44%</a></td>
+			<td><u>Jan 18, 2001 9:12 AM</u></td>
 		</tr>
 		<tr>
-			<td><strong><em>Bruce</em></strong></td>
-			<td><strong><em>Evans</em></strong></td>
-			<td><strong><em>22</em></strong></td>
-			<td><strong><em>$13.19</em></strong></td>
-			<td><strong><em>11%</em></strong></td>
-			<td><strong><em>Jan 18, 2007 9:12 AM</em></strong></td>
+			<td>Capt <strong>Bruce</strong></td>
+			<td><div>Evans</div></td>
+			<td><span>22</span></td>
+			<td><em>$13.19</em></td>
+			<td><a href="#">11%</a></td>
+			<td><u>Jan 18, 2007 9:12 AM</u></td>
 		</tr>
 	</tbody>
 </table></div>

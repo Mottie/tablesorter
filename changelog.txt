@@ -1,6 +1,27 @@
-###TableSorter Change Log
+TableSorter Change Log
 
-#### Version 2.0.11 (2011-08-04)
+Version 2.0.12 (2011-08-19)
+============================
+
+* Updated the `textExtraction` functionality
+   * The original textExtraction function was only able to be applied to all the cells in the table.
+   * Apparently the ability to define textExtraction on a per column basis was misinterpreted by me, so now I've added it.
+   * Use the option as follows:
+
+     $("table").tablesorter({
+       textExtraction: {
+         0: function(node) { return $(node).find(selector1).text(); },
+         1: function(node) { return $(node).find(selector2).text(); },
+         // etc
+       }
+     });
+
+   * Updated the [Dealing with markup inside cells](http://mottie.github.com/tablesorter/docs/example-option-text-extraction.html) demo.
+   * Thanks to Eugene Ivakhiv for reporting this issue to my attention in my blog.
+
+
+Version 2.0.11 (2011-08-04)
+============================
 
 * Added the ability to set a column parser using a class name
    * When setting the parser, start the class name with "sorter-" followed by the parser name, e.g. "sorter-text" or "sorter-digit"
@@ -8,7 +29,8 @@
    * [Demo page](http://mottie.github.com/tablesorter/docs/example-parsers-class-name.html) included.
    * Custom parsers can also be used - see the updated [writing custom parsers demo](http://mottie.github.com/tablesorter/docs/example-parsers.html).
 
-#### Version 2.0.10 (2011-07-31)
+Version 2.0.10 (2011-07-31)
+============================
 
 * Modified the numeric sort with a new method to deal with non-numeric content:
    * When sorting columns with numeric values, by default any non-numeric or empty cells are treated as if they have a zero value. This puts the text between negative and positive values in a column.
@@ -18,7 +40,8 @@
 * Changed UI theme widget code to use "ui-widget-header" instead of "ui-widget-default" to better match the themes.
 * Renamed changelog.markdown to changelog.txt to prevent downloading when clicking on the link
 
-#### Version 2.0.9 (2011-07-27)
+Version 2.0.9 (2011-07-27)
+============================
 
 * Added a jQuery UI theme and widget example. To apply the jQuery UI theme:
    * Include any jQuery UI theme on your page.
@@ -41,14 +64,16 @@
       * If false (the default setting), the pager arrows class names will not change.
       * Please see the updated [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) to see this working.
 
-#### Version 2.0.8 (2011-07-21)
+Version 2.0.8 (2011-07-21)
+============================
 
 * Fixed parsers for currency and digits to work with number values separated by commas. Thanks to Josh Renaud for the information!
 * Fixed "lockedOrder" header option and added documentation and an example on how to use it.
 * Made the sort order "desc" only trigger off of the first letter, so any word/abbreviation starting with "d" will set the descending sort order, all other letters will set the order to ascending (shhh, because I'm a bad speller :P)
 * Modified the "sortInitialOrder" option so it can also be set in the headers option.
 
-#### Version 2.0.7 (2011-07-17)
+Version 2.0.7 (2011-07-17)
+============================
 
 * Added "pagerChange" and "pagerComplete" events to the pager plugin which trigger on the table. See the [pager demo](http://mottie.github.com/tablesorter/docs/example-pager.html) for an example on how to bind to them.
 * Added the "sortAppend" since the option was there, but apparently the code wasn't.
@@ -58,7 +83,8 @@
 * Fixed the minified version. Apparently sorting functions called by the eval were removed by the Google Closure Compiler. Resolved by using "Whitespace only" optimization.
 * Fixed syntax highlighting; updated Chili.
 
-#### Version 2.0.6 (2011-06-22)
+Version 2.0.6 (2011-06-22)
+============================
 
 * Forked original files and docs from [tablesorter.com](http://tablesorter.com) to GitHub.
 * Replaced alphabetical sort with an alphanumeric sort
@@ -73,7 +99,8 @@
  * Although, this might just be extra markup with the advent of multiple background images and gradient backgrounds available in CSS3.
 * Reformatted the code to make jSLint "happier".
 
-#### Version 2.0.5b (?)
+Version 2.0.5b (?)
+============================
 
 * General
  * Added "cssChildRow" option - attach a child row to its parent.
@@ -82,11 +109,13 @@
  * Added "selectorHeaders" option to target the the header cells.
  * Changed multisort function
 
-#### Version 2.0.3 (2008-03-17)
+Version 2.0.3 (2008-03-17)
+============================
 
 * Bug fixes - Missing semicolon, broke the minified version.
 
-#### Version 2.0.2 (2008-03-14)
+Version 2.0.2 (2008-03-14)
+============================
 
 * General
  * Added support for the new metadata plugin.
@@ -98,7 +127,8 @@
 * Bug fixes
  * Sort force (Thanks to David Lynch).
 
-#### Version 2.0.1 (2007-09-17)
+Version 2.0.1 (2007-09-17)
+============================
 
 * General
  * Removed the need for Dimensions plugin when using the pagnation plugin thanks to offset being included in the jQuery 1.2 core.

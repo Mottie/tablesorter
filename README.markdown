@@ -28,6 +28,26 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.12 (2011-08-19)
+
+* Updated the `textExtraction` functionality
+   * The original textExtraction function was only able to be applied to all cells.
+   * Apparently the ability to define textExtraction on a per column basis was misinterpreted by me, so now I've added it.
+   * Use the option as follows:
+
+   ```javascript
+   $("table").tablesorter({
+     textExtraction: {
+       0: function(node) { return $(node).find(selector1).text(); },
+       1: function(node) { return $(node).find(selector2).text(); },
+       // etc
+     }
+   });
+   ```
+
+   * Updated the [Dealing with markup inside cells](http://mottie.github.com/tablesorter/docs/example-option-text-extraction.html) demo.
+   * Thanks to Eugene Ivakhiv for bringing this issue to my attention in my blog.
+
 #### Version 2.0.11 (2011-08-04)
 
 * Added the ability to set a column parser using a class name
