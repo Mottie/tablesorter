@@ -807,6 +807,9 @@ $("table tbody").append(html);
 // let the plugin know that we made a update
 $("table").trigger("update");
 
+// As of version 2.0.14, the table will automatically resort (using the current sort selection)
+// after the update, so include the following if you want to specify a different sort
+
 // set sorting column and direction, this will sort on the first and third column
 var sorting = [[2,1],[0,0]];
 $("table").trigger("sorton", [sorting]);</pre></div>
@@ -844,6 +847,9 @@ $(table)
 
     // update the table, so the tablesorter plugin knows its value
     $("table").trigger("updateCell",[this]);
+
+    // As of version 2.0.14, the table will automatically resort (using the current sort selection)
+    // after the update, so include the following if you want to specify a different sort
 
     // set sorting column and direction, this will sort on the first and third column
     var sorting = [[3,1]];
