@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.13
+* Version 2.0.14
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -280,12 +280,11 @@
 			}
 
 			function appendToTable(table, cache) {
-				if (cache.row.length === 0) { return; }
 				var c = cache,
 				r = c.row,
 				n = c.normalized,
 				totalRows = n.length,
-				checkCell = (n[0].length - 1),
+				checkCell = totalRows ? (n[0].length - 1) : 0,
 				tableBody = $(table.tBodies[0]),
 				rows = [],
 				i, j, l, pos, appendTime;
@@ -483,12 +482,11 @@
 			}
 
 			function getCachedSortType(parsers, i) {
-				return parsers[i].type;
+				return (parsers) ? parsers[i].type : '';
 			}
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
 			function multisort(table,sortList,cache) {
-				if (cache.row.length === 0) { return cache; } // nothing to sort
 				var dynamicExp = "var sortWrapper = function(a,b) {",
 				col, mx = 0, dir = 0, tc = table.config, lc = cache.normalized.length,
 				l = sortList.length, sortTime, i, j, c, s, e, order, orgOrderCol;
@@ -511,7 +509,7 @@
 					dynamicExp += "else { ";
 				}
 				// if value is the same keep orignal order
-				orgOrderCol = cache.normalized[0].length - 1;
+				orgOrderCol = (cache.normalized && cache.normalized[0]) ? cache.normalized[0].length - 1 : 0;
 				dynamicExp += "return a[" + orgOrderCol + "]-b[" + orgOrderCol + "];";
 				for(i=0; i < l; i++) {
 					dynamicExp += "}; ";
@@ -619,7 +617,7 @@
 					$headers
 					.click(function(e){
 						totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
-						if (!this.sortDisabled && totalRows > 0) {
+						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
 							$this.trigger("sortStart", tbl[0]);
 							// store exp, for speed
@@ -700,6 +698,7 @@
 							me.config.parsers = buildParserCache(me, $headers);
 							// rebuild the cache map
 							cache = buildCache(me);
+							$this.trigger("sorton", [me.config.sortList]);
 						}, 1);
 					})
 					.bind("updateCell", function(e, cell) {
@@ -708,6 +707,7 @@
 						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
 						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell, pos[1]), cell);
+						$this.trigger("sorton", [config.sortList]);
 					})
 					.bind("sorton", function(e, list) {
 						$(this).trigger("sortStart", tbl[0]);

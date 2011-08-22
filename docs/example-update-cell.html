@@ -23,7 +23,7 @@
 
 	<script id="js">$(function() {
 
-	$("table").tablesorter();
+	$("table").tablesorter({ sortList: [[3,1],[0,0]] });
 
 	$("table tbody td.discount").click(function() {
 
@@ -31,12 +31,7 @@
 		var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' + ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
 		$(this).text(discount);
 
-		("table").trigger("updateCell",[this]);
-
-		// set sorting column and direction, this will sort on the first and third column
-		var sorting = [[3,1]];
-		// sort on the fourth column
-		$("table").trigger("sorton", [sorting]);
+		$("table").trigger("updateCell",[this]);
 
 		return false;
 	});

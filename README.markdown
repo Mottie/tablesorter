@@ -28,6 +28,13 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.14 (2011-08-22)
+
+* Reverted the changes made in 2.0.13 and added checks to prevent errors.
+* Allowed sorting an empty table which would then automatically sort its contents when the table is updated.
+* Modified "Update" and "UpdateCell" methods to automatically resort the table using the existing sort.
+* Updated the [Initializing tablesorter on an empty table](http://mottie.github.com/tablesorter/docs/example-empty-table.html) demo and [Updating a table cell](http://mottie.github.com/tablesorter/docs/example-update-cell.html).
+
 #### Version 2.0.13 (2011-08-19)
 
 * Fixed a problem where a javascript error would occur when initializing a multi sort on an empty table. Thanks again to Eugene Ivakhiv!
