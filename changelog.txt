@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.15 (2011-08-23)
+============================
+
+* Fixed a problem that caused a javascript error when a table header cell doesn't have a class name.
+
 Version 2.0.14 (2011-08-22)
 ============================
 

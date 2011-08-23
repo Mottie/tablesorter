@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.14
+* Version 2.0.15
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -194,20 +194,21 @@
 
 			function buildParserCache(table, $headers) {
 				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var rows = table.tBodies[0].rows, list, cells, l, i, p, parsersDebug = "";
+				var rows = table.tBodies[0].rows, list, cells, l, h, i, p, parsersDebug = "";
 				if (rows[0]) {
 					list = [];
 					cells = rows[0].cells;
 					l = cells.length;
 					for (i = 0; i < l; i++) {
 						p = false;
-						if ($.metadata && ($($headers[i]).metadata() && $($headers[i]).metadata().sorter)) {
-							p = getParserById($($headers[i]).metadata().sorter);
+						h = $($headers[i]);
+						if ($.metadata && (h.metadata() && h.metadata().sorter)) {
+							p = getParserById(h.metadata().sorter);
 						} else if ((table.config.headers[i] && table.config.headers[i].sorter)) {
 							p = getParserById(table.config.headers[i].sorter);
-						} else if ($($headers[i]).attr('class').match('sorter-')){
+						} else if (h.attr('class') && h.attr('class').match('sorter-')){
 							// include sorter class name "sorter-text", etc
-							p = getParserById($($headers[i]).attr('class').match(/sorter-(\w+)/)[1] || '');
+							p = getParserById(h.attr('class').match(/sorter-(\w+)/)[1] || '');
 						}
 						if (!p) {
 							p = detectParserForColumn(table, rows, -1, i);
@@ -226,8 +227,9 @@
 
 			/* utils */
 			function buildCache(table) {
-				var totalRows = (table.tBodies[0] && table.tBodies[0].rows.length) || 0,
-				totalCells = (table.tBodies[0].rows[0] && table.tBodies[0].rows[0].cells.length) || 0,
+				var b = table.tBodies[0],
+				totalRows = (b && b.rows.length) || 0,
+				totalCells = (b.rows[0] && b.rows[0].cells.length) || 0,
 				parsers = table.config.parsers,
 				cache = {
 					row: [],
@@ -239,7 +241,7 @@
 				}
 				for (i = 0; i < totalRows; ++i) {
 					/** Add the table data to main data array */
-					c = $(table.tBodies[0].rows[i]);
+					c = $(b.rows[i]);
 					cols = [];
 					// if this is a child row, add it to the last row's children and
 					// continue to the next row

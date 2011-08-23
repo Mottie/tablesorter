@@ -28,6 +28,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.15 (2011-08-23)
+
+* Fixed a problem that caused a javascript error when a table header cell doesn't have a class name.
+
 #### Version 2.0.14 (2011-08-22)
 
 * Reverted the changes made in 2.0.13 and added checks to prevent errors.
