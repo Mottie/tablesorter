@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Render Header</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Adding a table row</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -17,36 +17,34 @@
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-	<!-- Tablesorter: optional -->
-	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+	<style>
+		.discount { cursor: pointer; }
+	</style>
 
-<style id="css">.roundedCorners {
-	border: #000 1px solid;
-	padding: 2px 8px;
-	border-radius: 1em;
-	-moz-border-radius: 1em;
-	-webkit-border-radius: 1em;
-}
-.headerSortDown .roundedCorners {
-	border-color: #fff;
-}
-</style>
+	<script id="js">$(function() {
 
-<script id="js">$(function() {
-	// call the tablesorter plugin
-	$("table").tablesorter({
-		onRenderHeader: function (index){
-			// the TH content is wrapped with a span by default, so just add the class
-			$(this).find('span').addClass('roundedCorners header' + index );
-		}
+	$("table").tablesorter({ sortList: [[3,1],[0,0]] });
+
+	// Add two new rows using the "addRows" method
+	// the "update" method doesn't work here because not all
+	// rows are present in the table when the pager is applied
+	$('button').click(function(){
+		// add two rows
+		var row = '<tr><td>Frank</td><td>Smith</td><td>53</td><td>$39.95</td><td>22%</td><td>Mar 22, 2011 9:33 AM</td></tr>' +
+			'<tr><td>Inigo</td><td>Montoya</td><td>34</td><td>$19.99</td><td>15%</td><td>Sep 25, 1987 12:00PM</td></tr>',
+			$row = $(row);
+		$('table')
+			.find('tbody').append($row)
+			.trigger('addRows', [$row]);
 	});
+
 });</script>
 </head>
 <body>
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Render Headers</h2>
+	<h2>Adding table rows</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -54,10 +52,19 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> The span wrapping the header text and the index variable for the function was added in version 2.0.9 (it is not part of the original plugin, but the "onRenderHeader" option was available).
+		<em>NOTE!</em>
+		<ul>
+			<li>Click on the [ Add Rows ] button to add two new rows.</li>
+			<li>The "addRows" method was added in version 2.0.16, and is not part of the original plugin.</li>
+			<li>This example could have used the "update" method to add rows, but to remove rows only the "update" method works.</li>
+			<li>This method is better used for the <a href="example-pager.html">pager plugin</a> when not all of the rows are displayed.</li>
+		</ul>
 	</p>
 
 	<h1>Demo</h1>
+	<br>
+	<button>Add Rows</button>
+	<br>
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
@@ -74,7 +81,7 @@
 			<td>Peter</td>
 			<td>Parker</td>
 			<td>28</td>
-			<td>$9.99</td>
+			<td class="discount">$9.99</td>
 			<td>20%</td>
 			<td>Jul 6, 2006 8:14 AM</td>
 		</tr>
@@ -82,7 +89,7 @@
 			<td>John</td>
 			<td>Hood</td>
 			<td>33</td>
-			<td>$19.99</td>
+			<td class="discount">$19.99</td>
 			<td>25%</td>
 			<td>Dec 10, 2002 5:14 AM</td>
 		</tr>
@@ -90,7 +97,7 @@
 			<td>Clark</td>
 			<td>Kent</td>
 			<td>18</td>
-			<td>$15.89</td>
+			<td class="discount">$15.89</td>
 			<td>44%</td>
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
@@ -98,7 +105,7 @@
 			<td>Bruce</td>
 			<td>Almighty</td>
 			<td>45</td>
-			<td>$153.19</td>
+			<td class="discount">$153.19</td>
 			<td>44%</td>
 			<td>Jan 18, 2001 9:12 AM</td>
 		</tr>
@@ -106,7 +113,7 @@
 			<td>Bruce</td>
 			<td>Evans</td>
 			<td>22</td>
-			<td>$13.19</td>
+			<td class="discount">$13.19</td>
 			<td>11%</td>
 			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
@@ -117,10 +124,6 @@
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
-	<h1>CSS</h1>
-	<div id="css">
-		<pre class="css"></pre>
-	</div>
 	<h1>HTML</h1>
 	<div id="html">
 		<pre class="html"></pre>
@@ -128,11 +131,10 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-extending-defaults.html">Advanced: Extending default options &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-update-cell.html">Advanced: Update the table after cell content has changed &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
 
 </body>
 </html>
-

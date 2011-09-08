@@ -33,8 +33,8 @@
 		// append new html to table body 
 		$("table tbody").append(html);
 
-		// let the plugin know that we made a update, then
-		// set sorting column and direction, this will sort on the first and third column
+		// let the plugin know that we made a update, then the plugin will
+		// automatically sort the table based on the header settings
 		$("table").trigger("update");
 
 		return false;
@@ -52,6 +52,11 @@
 </div>
 
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em> The presorting of an empty table and automatic sorting of appended data was added in version 2.0.14 (not part of the original plugin).
+	</p>
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>

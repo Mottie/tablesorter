@@ -1,12 +1,29 @@
 /*
  * tablesorter pager plugin
- * updated 7/27/2011
+ * updated 9/8/2011
  */
 
 (function($) {
 	$.extend({tablesorterPager: new function() {
 
-		var updatePageDisplay = function(table,c) {
+		// hide arrows at extremes
+		var pagerArrows = function(c) {
+			if (c.updateArrows) {
+				c.container.removeClass(c.cssDisabled);
+				$(c.cssFirst + ',' + c.cssPrev + ',' + c.cssNext + ',' + c.cssLast, c.container).removeClass(c.cssDisabled);
+				if (c.page === 0) {
+					$(c.cssFirst + ',' + c.cssPrev, c.container).addClass(c.cssDisabled);
+				} else if (c.page === c.totalPages - 1) {
+					$(c.cssNext + ',' + c.cssLast, c.container).addClass(c.cssDisabled);
+				}
+				// if the total # of pages is less than the selected number of visible rows, then hide the pager
+				if (c.totalRows < c.size) {
+					c.container.addClass(c.cssDisabled);
+				}
+			}
+		},
+
+		updatePageDisplay = function(table,c) {
 			c.startRow = c.size * (c.page) + 1;
 			c.endRow = Math.min(c.totalRows, c.size * (c.page+1));
 			var out = $(c.cssPageDisplay, c.container),
@@ -25,6 +42,7 @@
 			} else {
 				out.html(s);
 			}
+			pagerArrows(c);
 			$(table).trigger('pagerComplete', c);
 		},
 
@@ -71,29 +89,11 @@
 			updatePageDisplay(table,c);
 		},
 
-		// hide arrows at extremes
-		pagerArrows = function(c) {
-			if (c.updateArrows) {
-				c.container.removeClass(c.cssDisabled);
-				$(c.cssFirst + ',' + c.cssPrev + ',' + c.cssNext + ',' + c.cssLast, c.container).removeClass(c.cssDisabled);
-				if (c.page === 0) {
-					$(c.cssFirst + ',' + c.cssPrev, c.container).addClass(c.cssDisabled);
-				} else if (c.page === c.totalPages - 1) {
-					$(c.cssNext + ',' + c.cssLast, c.container).addClass(c.cssDisabled);
-				}
-				// if the total # of pages is less than the selected number of visible rows, then hide the pager
-				if (c.totalRows < c.size) {
-					c.container.addClass(c.cssDisabled);
-				}
-			}
-		},
-
 		moveToPage = function(table) {
 			var c = table.config;
 			if (c.page < 0 || c.page > (c.totalPages-1)) {
 				c.page = 0;
 			}
-			pagerArrows(c);
 			renderTable(table,c.rowsCopy);
 		},
 
@@ -134,6 +134,18 @@
 				c.page = 0;
 			}
 			moveToPage(table);
+		},
+
+		destroyPager = function(table){
+			var c = table.config;
+			c.size = c.totalRows;
+			c.totalPages = 1;
+			renderTable(table,c.rowsCopy);
+			// hide pager
+			c.container.hide();
+			c.appender = null;
+			$(table).unbind('destroy.pager');
+			
 		};
 
 		this.appender = function(table,rows) {
@@ -193,6 +205,10 @@
 				$(config.cssPageSize,pager).change(function() {
 					setPageSize(table,parseInt($(this).val(), 10));
 					return false;
+				});
+
+				$(this).bind('destroy.pager', function(){
+					destroyPager(table);
 				});
 
 			});

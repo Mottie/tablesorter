@@ -28,6 +28,14 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.16 (2011-09-08)
+
+* Added notes to demo pages to indicate if the original (version 2.0.5, at [tablesorter.com](http://tablesorter.com/docs/)) does have that option or method.
+* Added "addRows" method that allows adding table rows.
+  * This method differs from the "update" method in that it only adds rows to the cache.
+  * Use this new method to add rows to a table with the pager plugin applied. Using the "update" method on a table with the pager plugin will remove all hidden rows from the cache.
+* Added a "destroy.pager" method to remove the pager from the table - pager demo updated.
+
 #### Version 2.0.15 (2011-08-23)
 
 * Fixed a problem that caused a javascript error when a table header cell doesn't have a class name.

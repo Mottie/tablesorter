@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.15
+* Version 2.0.16
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -630,7 +630,7 @@
 							this.order = this.count++ % 2;
 							// always sort on the locked order.
 							if(typeof(this.lockedOrder) !== "undefined" && this.lockedOrder !== false) { this.order = this.lockedOrder; }
-							// user only whants to sort on one column
+							// user only wants to sort on one column
 							if (!e[config.sortMultiSortKey]) {
 								// flush the sort list
 								config.sortList = [];
@@ -709,6 +709,25 @@
 						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
 						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell, pos[1]), cell);
+						$this.trigger("sorton", [config.sortList]);
+					})
+					.bind("addRows", function(e, row) {
+						var i, config = this.config, rows = row.filter('tr').length,
+						dat = [], l = row[0].cells.length;
+						// add each row
+						for (i = 0; i < rows; i++) {
+							// add each cell
+							for (j = 0; j < l; j++) {
+								dat[j] = config.parsers[j].format(getElementText(config, row[i].cells[j], j), row[i].cells[j]);
+							}
+							// add the row index to the end
+							dat.push(cache.row.length);
+							// update cache
+							cache.row.push([row[i]]);
+							cache.normalized.push(dat);
+							dat = [];
+						}
+						// resort using current settings
 						$this.trigger("sorton", [config.sortList]);
 					})
 					.bind("sorton", function(e, list) {

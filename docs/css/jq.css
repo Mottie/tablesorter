@@ -24,7 +24,7 @@ pre.normal{background-color:transparent;border:none;border-left-width:0;overflow
 hr{height:1px;}
 code{font-size:108%;font-style:normal;padding:0;}
 ul{color:#333;list-style:square;}
-#banner{margin:20px;padding-bottom:10px;text-align:left;}
+#banner{margin:20px 20px 5px 20px;padding:0;text-align:left;}
 #banner *{color:#232121;font-family:Georgia, Palatino, Times New Roman;font-size:30px;font-style:normal;font-weight:400;margin:0;padding:0;}
 #banner h1{display:block;float:left;}
 #banner h1 em{color:#6cf;}

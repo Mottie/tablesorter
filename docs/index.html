@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.15 (<a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.16 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -300,7 +300,7 @@
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-zebra.html">Applying the zebra stripe widget</a></li>
 		<li><a href="example-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
-		<li><a href="example-options-headers.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
+		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
@@ -317,6 +317,7 @@
 		<li><a href="example-triggers.html">Triggers sortEnd and sortStart (Displaying sorting progress)</a></li>
 		<li><a href="example-empty-table.html">Initializing tablesorter on a empty table</a></li>
 		<li><a href="example-ajax.html">Appending table data with ajax</a></li>
+		<li><a href="example-add-rows.html">Advanced: Adding a table row</a> <span class="tip"><em>New! v2.0.16</em></span></li>
 		<li><a href="example-update-cell.html">Update the table after cell content has changed</a></li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
 		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
@@ -784,6 +785,21 @@ $(function(){
 			</tr>
 		</thead>
 		<tbody>
+
+			<tr id="addrows">
+				<td><a href="#" class="toggle2">addRows</a></td>
+				<td>Use this method to add table rows. <span class="tip"><em>New!</em> in v2.0.16</span>
+					<div class="collapsible">
+						It does not work the same as "update" in that it only adds rows, it does not remove them.<br>
+						Also, use this method to add table rows while using the pager plugin. If the "update" method is used, only the visible table rows continue to exist.
+						<pre class="js">// Add multiple rows to the table
+  var $row = $('&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;');
+  $('table')
+    .find('tbody').append($row)
+    .trigger('addRows', [$row]);</pre></div>
+				</td>
+				<td><a href="example-add-rows.html">Example</a></td>
+			</tr>
 
 			<tr id="sorton">
 				<td><a href="#" class="toggle2">sorton</a></td>
