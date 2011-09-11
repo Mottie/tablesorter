@@ -28,6 +28,16 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.17 (2011-09-11)
+
+* Added a jquery.tablesorter.widget.js file:
+  * It contains the "uitheme" widget, to add any jQuery UI theme, and the new "columns" widget, to style columns.
+  * The blue and green themes have been updated with the added styles from the columns widget.
+  * Added a Columns Widget demo and instructions.
+* Added a `widgetColumns` option which defines the css classes added by the columns widget.
+* Added notes to the pager plugin demo page to better specify when a change was added.
+* The green theme header images have been modified to better work with variable width tables.
+
 #### Version 2.0.16 (2011-09-08)
 
 * Added notes to demo pages to indicate if the original (version 2.0.5, at [tablesorter.com](http://tablesorter.com/docs/)) does have that option or method.

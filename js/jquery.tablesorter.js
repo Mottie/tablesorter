@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.16
+* Version 2.0.17
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -94,6 +94,7 @@
 				parsers: {},
 				widgets: [],
 				widgetZebra: { css: ["even", "odd"] },
+				widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
 				headers: {},
 				widthFixed: false,
 				cancelSelection: true,

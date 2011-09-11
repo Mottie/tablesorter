@@ -1,15 +1,15 @@
 /* Blue Theme */
 table.tablesorter {
 	font-family: arial;
-	background-color: #CDCDCD;
+	background-color: #cdcdcd;
 	margin: 10px 0pt 15px;
 	font-size: 8pt;
 	width: 100%;
 	text-align: left;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-	border: 1px solid #FFF;
+	background-color: #e6eeee;
+	border: 1px solid #fff;
 	border-collapse: collapse;
 	font-size: 8pt;
 	padding: 4px;
@@ -21,13 +21,10 @@ table.tablesorter thead tr .header {
 	cursor: pointer;
 }
 table.tablesorter tbody td {
-	color: #3D3D3D;
+	color: #3d3d3d;
 	padding: 4px;
-	background-color: #FFF;
+	background-color: #fff;
 	vertical-align: top;
-}
-table.tablesorter tbody tr.odd td {
-	background-color: #F0F0F6;
 }
 table.tablesorter thead tr .headerSortUp {
 	background-image: url(black-asc.gif);
@@ -37,4 +34,34 @@ table.tablesorter thead tr .headerSortDown {
 }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
 	background-color: #8dbdd8;
+}
+
+/* Zebra Widget - row alternating colors */
+table.tablesorter tbody tr.odd td {
+	background-color: #f0f0ff;
+}
+table.tablesorter tbody tr.even td {
+	background-color: #fff;
+}
+
+/* Column Widget - column sort colors */
+table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
+	background-color: #c0c0ff;
+}
+table.tablesorter tbody tr.even td.primary {
+	background-color: #e8e8ff;
+}
+
+table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
+	background-color: #d6d6ff;
+}
+table.tablesorter tbody tr.even td.secondary {
+	background-color: #e8e8ff;
+}
+
+table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
+	background-color: #e5e5ff;
+}
+table.tablesorter tbody tr.even td.tertiary {
+	background-color: #f8f8ff;
 }

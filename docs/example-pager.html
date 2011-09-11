@@ -92,7 +92,15 @@
 	<div id="main">
 
 		<p class="tip">
-			<em>NOTE!</em> Updated pager functions and added output string formatting (e.g. "1 to 10 (1022)") to version 2.0.9 (it is not part of the original plugin).
+			<em>NOTE!</em> The following are not part of the original plugin:
+			<ul>
+				<li>Added "pagerChange" and "pagerComplete" events in version 2.0.7.</li>
+				<li>Updated pager functions, removed "separator" option, and added output string formatting (e.g. "1 to 10 (50)") to version 2.0.9.</li>
+				<li>Added "cssDisabled" and "pagerArrows" options which controls the look of the pager and arrows when the pager is on the first or last page. Added in version 2.0.9.</li>
+				<li>Added a new "addRows" method to allow adding new rows while the pager is applied to a table. Using "update" would remove all non-visible rows. New in version 2.0.16.</li>
+				<li>New "destroy.pager" method will reveal the entire table, remove the pager functionality, and hide the actual pager. Added in version 2.0.16.</li>
+				<li>Reduced the number of rows in the demo from 1022 to 50, so you don't have to scroll forever (when the pager is destroyed) to see the code below the table (v2.0.16).</li>
+			</ul>
 		</p>
 
 		<h1>Triggered Events</h1>

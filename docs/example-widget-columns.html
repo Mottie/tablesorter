@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Zebra Stripe Widget</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Columns Style Widget</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -16,30 +16,21 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 	<!-- Tablesorter: optional -->
-	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
-
-<style id="css">/* Extra selectors needed to override the default styling */
-table.tablesorter tbody tr.normal-row td {
-	background: #888;
-	color: #fff;
-}
-table.tablesorter tbody tr.alt-row td {
-	background: #555;
-	color: #fff;
-}
-</style>
+	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
 
 <script id="js">$(function() {
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		// initialize zebra striping of the table
-		widgets: ["zebra"],
-		// change the default striping class names
-		// default is { css : ["even", "odd"] }
-		widgetZebra: { css: [ "normal-row", "alt-row" ] }
+		sortList : [[1,0],[2,0],[3,0]],
+		// initialize zebra striping and column styling of the table
+		widgets: ["zebra", "columns"],
+		// change the default column class names
+		// primary is the first column sorted, secondary is the second, etc
+		widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
 	});
 
 });</script>
@@ -47,11 +38,16 @@ table.tablesorter tbody tr.alt-row td {
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Zebra Stripe Widget</h2>
+	<h2>Columns Style Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em> This widget can be applied to the original plugin.
+	</p>
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>
@@ -108,14 +104,22 @@ table.tablesorter tbody tr.alt-row td {
 	</tbody>
 </table></div>
 
+	<h1>Page Header</h1>
+	<div>
+		<pre class="html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
+&lt;!-- tablesorter plugin --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- tablesorter widget file - loaded after the plugin --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
-	<h1>CSS</h1>
-	<div id="css">
-		<pre class="css"></pre>
-	</div>
+
 	<h1>HTML</h1>
 	<div id="html">
 		<pre class="html"></pre>
@@ -123,7 +127,7 @@ table.tablesorter tbody tr.alt-row td {
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-ui-theme.html">Basic: Applying a jQuery UI theme widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-ui-theme.html">Basic: Applying a jQuery UI theme widget &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

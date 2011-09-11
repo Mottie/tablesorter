@@ -1,39 +1,69 @@
+/* green theme */
 table.tablesorter {
+	font-family: arial;
+	background-color: #cdcdcd;
+	margin: 10px 0pt 15px;
 	font-size: 12px;
-	background-color: #4D4D4D;
-	width: 1024px;
-	border: 1px solid #000;
-}
-table.tablesorter th {
+	width: 100%;
 	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6eeee;
+	border-collapse: collapse;
+	font-size: 12px;
 	padding: 5px;
-	background-color: #6E6E6E;
 }
 table.tablesorter td {
-	color: #FFF;
+	color: #3d3d3d;
 	padding: 5px;
 }
-table.tablesorter .even {
-	background-color: #3D3D3D;
-}
-table.tablesorter .odd {
-	background-color: #6E6E6E;
+table.tablesorter thead {
+	background: url(bkgd.png) center center repeat-x;
 }
 table.tablesorter .header {
-	background-image: url(bg.png);
-	background-repeat: no-repeat;
-	border-left: 1px solid #FFF;
-	border-right: 1px solid #000;
-	border-top: 1px solid #FFF;
-	padding-left: 30px;
-	padding-top: 8px;
+	background: transparent;
+	padding: 9px;
 	height: auto;
+	cursor: pointer;
 }
-table.tablesorter .headerSortUp {
-	background-image: url(asc.png);
-	background-repeat: no-repeat;
+table.tablesorter .header span {
+	background: url(none.png) no-repeat;
+	padding: 2px 0 2px 25px;
 }
-table.tablesorter .headerSortDown {
-	background-image: url(desc.png);
-	background-repeat: no-repeat;
+table.tablesorter .headerSortUp span {
+	background: url(asc.png) no-repeat;
 }
+table.tablesorter .headerSortDown span {
+	background: url(desc.png) no-repeat;
+}
+
+/* Zebra Widget - row alternating colors */
+table.tablesorter tr.odd td {
+	background-color: #f0f6f0;
+}
+table.tablesorter tr.even td {
+	background-color: #fff;
+}
+
+/* Column Widget - column sort colors */
+table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
+	background-color: #c0ffc0;
+}
+table.tablesorter tbody tr.even td.primary {
+	background-color: #e8ffe8;
+}
+
+table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
+	background-color: #d6ffd6;
+}
+table.tablesorter tbody tr.even td.secondary {
+	background-color: #e8ffe8;
+}
+
+table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
+	background-color: #eaffea;
+}
+table.tablesorter tbody tr.even td.tertiary {
+	background-color: #f8fff8;
+}
+

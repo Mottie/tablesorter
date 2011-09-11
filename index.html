@@ -13,18 +13,18 @@
 	<!-- Pick a theme, load the plugin & initialize plugin -->
 	<link href="css/blue/style.css" rel="stylesheet">
 	<script src="js/jquery.tablesorter.min.js"></script>
+	<script src="js/jquery.tablesorter.widgets.js"></script>
 	<script>
 	$(function(){
-		$('table').tablesorter();
+		$('table').tablesorter({ widgets: ['zebra', 'columns'] });
 	});
 	</script>
 
 </head>
 <body>
 <div class="demo">
-
-	<h1><a href="https://github.com/Mottie/tablesorter">TableSorter</a></h1>
-	<p>By Christian Bach; github updates by Rob G<br>
+	<h1><a href="https://github.com/Mottie/tablesorter">table<em>sorter</em></a></h1>
+	<p>By Christian Bach; github updates by <a href="https://github.com/Mottie/">Rob G</a><br>
 		<a href="docs/index.html">Complete docs included</a> (updated with missing docs from <a href="http://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html">this blog post</a>)
 	</p>
 

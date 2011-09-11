@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.16 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.17 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -298,8 +298,9 @@
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> <span class="tip"><em>New! v2.0.10</em></span></li>
 		<li><a href="example-option-sort-order.html">Direction of initial sort</a></li>
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
-		<li><a href="example-zebra.html">Applying the zebra stripe widget</a></li>
-		<li><a href="example-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
+		<li><a href="example-widget-zebra.html">Applying the zebra stripe widget</a></li>
+		<li><a href="example-widget-columns.html">Applying the columns widget</a> <span class="tip"><em>New! v2.0.17</em></span></li>
+		<li><a href="example-widget-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
 		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
@@ -317,7 +318,7 @@
 		<li><a href="example-triggers.html">Triggers sortEnd and sortStart (Displaying sorting progress)</a></li>
 		<li><a href="example-empty-table.html">Initializing tablesorter on a empty table</a></li>
 		<li><a href="example-ajax.html">Appending table data with ajax</a></li>
-		<li><a href="example-add-rows.html">Advanced: Adding a table row</a> <span class="tip"><em>New! v2.0.16</em></span></li>
+		<li><a href="example-add-rows.html">Adding a table row</a> <span class="tip"><em>New! v2.0.16</em></span></li>
 		<li><a href="example-update-cell.html">Update the table after cell content has changed</a></li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
 		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
@@ -734,7 +735,7 @@ $(function(){
 				<td>
 					Initialize widgets using this option ( e.g. <code class="hilight">widgets : ['zebra']</code>, or custom widgets <code class="hilight">widgets: ['zebra', 'myCustomWidget'];</code>, see <a href="example-widgets.html">this demo</a> on how to write your own custom widget ).
 				</td>
-				<td><a href="example-zebra.html">Example</a></td>
+				<td><a href="example-widget-zebra.html">Example</a></td>
 			</tr>
 
 			<tr id="widgetzebra">
@@ -752,7 +753,25 @@ $(function(){
   });
 });</pre></div>
 				</td>
-				<td><a href="example-zebra.html">Example</a></td>
+				<td><a href="example-widget-zebra.html">Example</a></td>
+			</tr>
+
+			<tr id="widgetcolumns">
+				<td><a href="#" class="toggle2">widgetColumns</a></td>
+				<td>Object with Array</td>
+				<td>{css:[ "primary", "secondary", "tertiary" ]}</td>
+				<td>
+					When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... <span class="tip"><em>New!</em></span> in v2.0.17.
+					<div class="collapsible">
+					Use the <a href="#widgetcolumns"><code class="hilight">"widgetColumns"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["columns"], // initialize column styling of the table
+    widgetColumns: { css: ["primary", "secondary", "tertiary" ] }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-columns.html">Example</a></td>
 			</tr>
 
 			<tr id="widthfixed">
@@ -1040,18 +1059,15 @@ $(table)
 	<strong id="Download-Required">Required:</strong>
 	<ul>
 		<li><a class="external" href="http://docs.jquery.com/Downloading_jQuery#Download_jQuery">jQuery</a> (1.2.1 or higher)</li>
-		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (12kb, Minified for production - please put the file on your server)</li>
+		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (17kb, Minified for production - please put the file on your server)</li>
 	</ul>
 
 	<strong id="Download-Addons">Optional/Add-Ons:</strong>
 	<ul>
 		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (3,7kb <strong>Required for setting <a href="#Examples">inline options</a></strong>)</li>
-		<!--
-		<li><a class="external" href="http://dev.jquery.com/browser/trunk/plugins/dimensions/jquery.dimensions.
-		.js?format=raw">jquery.dimensions.pack.js</a> (5,1kb, <a href="http://dean.edwards.name/packer/" class="external">packed</a>, for production. <strong>Required: for the <a href="example-pager.html">tablesorter pagination plugin</a></strong>)</li>
-		-->
-		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (17,7kb, for development)</li>
+		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (31kb, for development)</li>
 		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (3,6kb, <a href="example-pager.html">tablesorter pagination plugin</a>)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (2,12kb, includes the jQuery UI theme 'uitheme' and columns styling 'columns' widgets. <span class="tip"><em>New!</em></span> in v2.0.17.)</li>
 	</ul>
 
 	<!--
@@ -1065,7 +1081,7 @@ $(table)
 	<ul>
 		<li><a href="../css/green/green.zip">Green Skin</a> - Images and CSS styles for green themed headers</li>
 		<li><a href="../css/blue/blue.zip">Blue Skin</a> - Images and CSS styles for blue themed headers (as seen in the examples)</li>
-		<li><a href="example-ui-theme.html">jQuery UI Theme</a> - Apply any jQuery UI theme to the table using the "uitheme" widget code. <span class="tip"><em>New!</em></span> in v2.0.9!</li>
+		<li><a href="example-widget-ui-theme.html">jQuery UI Theme</a> - Apply any jQuery UI theme to the table using the "uitheme" widget code. <span class="tip"><em>New!</em></span> in v2.0.9!</li>
 	</ul>
 
 	<a name="Compatibility"></a>
