@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Columns Style Widget</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -25,12 +25,8 @@
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		sortList : [[1,0],[2,0],[3,0]],
-		// initialize zebra striping and column styling of the table
-		widgets: ["zebra", "columns"],
-		// change the default column class names
-		// primary is the first column sorted, secondary is the second, etc
-		widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
+		// initialize zebra striping and filter widgets
+		widgets: ["zebra", "filter"]
 	});
 
 });</script>
@@ -38,7 +34,7 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Columns Style Widget</h2>
+	<h2>Filter Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -61,6 +57,30 @@
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td>Philip</td>
+			<td>Johnson</td>
+			<td>25</td>
+			<td>$5.95</td>
+			<td>22%</td>
+			<td>Jun 26, 2004 7:22 AM</td>
+		</tr>
+		<tr>
+			<td>Aaron</td>
+			<td>Hibert</td>
+			<td>12</td>
+			<td>$2.99</td>
+			<td>5%</td>
+			<td>Aug 21, 2009 12:21 PM</td>
+		</tr>
+		<tr>
+			<td>Brandon</td>
+			<td>Henry</td>
+			<td>51</td>
+			<td>$42.29</td>
+			<td>18%</td>
+			<td>Oct 13, 2000 1:15 PM</td>
+		</tr>
 		<tr>
 			<td>Peter</td>
 			<td>Parker</td>
@@ -127,7 +147,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-filter.html">Basic: Applying the filter widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-ui-theme.html">Basic: Applying a jQuery UI theme widget &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

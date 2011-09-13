@@ -1,5 +1,13 @@
 TableSorter Change Log
 
+Version 2.0.18 (2011-09-13)
+============================
+
+* Fixed a bug in the column widget, it would cause an error if no initial sort was set.
+* Fixed a bug where an error would occur if a widget doesn't exist.
+* Updated pager widget to allow restoring the pager plugin & updated demo.
+* Added column filter widget. It is designed so that each column has an filter.
+
 Version 2.0.17 (2011-09-11)
 ============================
 

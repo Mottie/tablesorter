@@ -34,6 +34,17 @@
 
 	<script id="js">$(function(){
 
+	var pagerOptions = {
+		// target the pager markup
+		container: $("#pager"),
+		// output default: '{page}/{totalPages}'
+		output: '{startRow} to {endRow} ({totalRows})',
+		// apply disabled classname to the pager arrows when the rows at either extreme is visible
+		updateArrows: true,
+		// do not absolutely position the pager
+		positionFixed: false
+	};
+
 	$("table")
 		.tablesorter({
 			widthFixed: true,
@@ -41,16 +52,7 @@
 		})
 
 		// initialize the pager plugin
-		.tablesorterPager({
-			// target the pager markup
-			container: $("#pager"),
-			// output default: '{page}/{totalPages}'
-			output: '{startRow} to {endRow} ({totalRows})',
-			// apply disabled classname to the pager arrows when the rows at either extreme is visible
-			updateArrows: true,
-			// do not absolutely position the pager
-			positionFixed: false
-		})
+		.tablesorterPager(pagerOptions)
 
 		// bind to pager events
 		.bind('pagerChange pagerComplete', function(e,c){
@@ -77,6 +79,23 @@
 		// Destroy pager
 		$('button:contains(Destroy)').click(function(){
 			$('table').trigger('destroy.pager');
+
+			// fancy disable/enable buttons - not really needed
+			$('button:contains(Restore)').removeAttr('disabled');
+			$(this).attr('disabled', true);
+
+		});
+
+		// Restore pager
+		$('button:contains(Restore)').click(function(){
+
+			// restore the pager
+			$('table').tablesorterPager(pagerOptions);
+
+			// fancy disable/enable buttons - not really needed
+			$(this).attr('disabled', true);
+			$('button:contains(Destroy)').removeAttr('disabled');
+
 		});
 
 });</script>
@@ -112,7 +131,7 @@
 
 	<h1>Demo</h1>
 	<br>
-	<button>Add Rows</button> <button>Destroy Pager</button>
+	<button>Add Rows</button> <button>Destroy Pager</button> <button disabled>Restore Pager</button>
 	<br><br>
 	<div id="pager" class="pager">
 		<form>

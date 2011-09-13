@@ -1,10 +1,11 @@
 /* TableSorter 2.0 Widgets */
 
 // Add jQuery UI theme widget
+// **************************
 $.tablesorter.addWidget({
 	id: "uitheme",
 	format: function(table) {
-		var c = table.config,
+		var time, c = table.config,
 		// ["up/down arrow (cssHeaders, unsorted)", "down arrow (cssDesc, descending)", "up arrow (cssAsc, ascending)" ]
 		icons = c.uitheme || ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"],
 		klass, rmv = icons.join(' ');
@@ -36,6 +37,7 @@ $.tablesorter.addWidget({
 });
 
 // Add Column styles widget
+// **************************
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
@@ -49,20 +51,72 @@ $.tablesorter.addWidget({
 		if (c.debug) {
 			time = new Date();
 		}
-		// loop through the visible rows
-		$("tr:visible", table.tBodies[0]).each(function (i) {
-			$td = $(this).children().removeClass(rmv);
-			// primary sort column class
-			$td.eq(list[0][0]).addClass(css[0]);
-			if (len > 1) {
-				for (i=1; i<len; i++){
-					// secondary, tertiary, etc sort column classes
-					$td.eq(list[i][0]).addClass( css[i] || css[last] );
+		// check if there is a sort (on initialization there may not be one)
+		if (list && list[0]) {
+			// loop through the visible rows
+			$("tr:visible", table.tBodies[0]).each(function (i) {
+				$td = $(this).children().removeClass(rmv);
+				// primary sort column class
+				$td.eq(list[0][0]).addClass(css[0]);
+				if (len > 1) {
+					for (i=1; i<len; i++){
+						// secondary, tertiary, etc sort column classes
+						$td.eq(list[i][0]).addClass( css[i] || css[last] );
+					}
 				}
-			}
-		});
+			});
+		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
+		}
+	}
+});
+
+// Add Filter widget
+// ** This widget doesn't work correctly with the pager plugin =( **
+// **************************
+$.tablesorter.addWidget({
+	id: "filter",
+	format: function(table) {
+		if (!table.config.filtering) {
+			var i, v, r, t, $td, c = table.config,
+				cols = c.headerList.length,
+				cache = c.cache.normalized,
+				tbl = $(table),
+				fr = '<tr class="filters">',
+				time;
+			if (c.debug) {
+				time = new Date();
+			}
+			for (i=0; i < cols; i++){
+				fr += '<td><input type="text" class="filter" data-col="' + i + '"></td>';
+			}
+			tbl
+				.find('thead').append(fr += '</tr>')
+				.find('.filter').bind('keyup', function(e){
+					v = tbl.find('.filter').map(function(){ return ($(this).val() || '').toLowerCase(); }).get();
+					if (v.join('') === '') {
+						tbl.find('tr').show();
+					} else {
+						tbl.find('tbody').find('tr').each(function(){
+							r = true;
+							$td = $(this).find('td');
+							for (i=0; i < cols; i++){
+								if (v[i] !== '' && $td.eq(i).text().toLowerCase().indexOf(v[i]) >= 0) {
+									r = (r) ? true : false;
+								} else if (v[i] !== '') {
+									r = false;
+								}
+							}
+							$(this)[r ? 'show' : 'hide']();
+						});
+					}
+					tbl.trigger('applyWidgets'); // make sure zebra widget is applied
+				});
+			c.filtering = true;
+			if (c.debug) {
+				$.tablesorter.benchmark("Applying Filter widget", time);
+			}
 		}
 	}
 });

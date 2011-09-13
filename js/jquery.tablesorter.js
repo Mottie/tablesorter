@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.17
+* Version 2.0.18
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -262,23 +262,28 @@
 				if (table.config.debug) {
 					benchmark("Building cache for " + totalRows + " rows:", cacheTime);
 				}
+				table.config.cache = cache;
 				return cache;
 			}
 
 			function getWidgetById(name) {
-				var i, l = widgets.length;
+				var i, w, l = widgets.length;
 				for (i = 0; i < l; i++) {
-					if (widgets[i].id.toLowerCase() === name.toLowerCase()) {
-						return widgets[i];
+					w = widgets[i];
+					if (w && w.hasOwnProperty('id') && w.id.toLowerCase() === name.toLowerCase()) {
+						return w;
 					}
 				}
 			}
 
 			function applyWidget(table) {
 				var c = table.config.widgets,
-				i, l = c.length;
+				i, w, l = c.length;
 				for (i = 0; i < l; i++) {
-					getWidgetById(c[i]).format(table);
+					w = getWidgetById(c[i]);
+					if ( w && w.hasOwnProperty('format') ) {
+						w.format(table);
+					}
 				}
 			}
 
@@ -710,6 +715,7 @@
 						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
 						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell, pos[1]), cell);
+						this.config.cache = cache;
 						$this.trigger("sorton", [config.sortList]);
 					})
 					.bind("addRows", function(e, row) {
@@ -728,6 +734,7 @@
 							cache.normalized.push(dat);
 							dat = [];
 						}
+						config.cache = cache;
 						// resort using current settings
 						$this.trigger("sorton", [config.sortList]);
 					})

@@ -43,6 +43,7 @@
 				out.html(s);
 			}
 			pagerArrows(c);
+			c.container.show(); // added in case the pager is reinitialized after being destroyed.
 			$(table).trigger('pagerComplete', c);
 		},
 
