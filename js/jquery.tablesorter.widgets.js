@@ -12,22 +12,28 @@ $.tablesorter.addWidget({
 		if (c.debug) {
 			time = new Date();
 		}
-		if (!$(c.headerList[0]).is('.ui-theme')) {
-			$(table).addClass('ui-widget ui-widget-content ui-corner-all');
+		if (!$(table).is('.ui-theme')) {
+			$(table).addClass('ui-widget ui-widget-content ui-corner-all ui-theme');
 			$.each(c.headerList, function(){
 				$(this)
 				// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
-				.addClass('ui-widget-header ui-corner-all ui-theme')
-				.append('<span class="ui-theme"/>');
+				.addClass('ui-widget-header ui-corner-all')
+				.append('<span class="ui-icon"/>')
+				.hover(function(){
+					$(this).addClass('ui-state-hover');
+				}, function(){
+					$(this).removeClass('ui-state-hover');
+				})
 			});
 		}
 		$.each(c.headerList, function(i){
 			if (c.headers[i] && c.headers[i].sorter === false) {
 				// no sort arrows for disabled columns!
-				$(this).find('span.ui-theme').removeClass(rmv + ' ui-icon');
+				$(this).find('span.ui-icon').removeClass(rmv + ' ui-icon');
 			} else {
 				klass = ($(this).is('.' + c.cssAsc)) ? icons[1] : ($(this).is('.' + c.cssDesc)) ? icons[2] : $(this).is('.' + c.cssHeader) ? icons[0] : '';
-				$(this).find('span.ui-theme').removeClass(rmv).addClass(klass + ' ui-icon');
+				$(this)[klass === icons[0] ? 'removeClass' : 'addClass']('ui-state-active')
+					.find('span.ui-icon').removeClass(rmv).addClass(klass);
 			}
 		});
 		if (c.debug) {

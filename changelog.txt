@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.18.1 (2011-09-14)
+============================
+
+* Updated the "uitheme" widget with method to add zebra striping and hovered header classes.
+
 Version 2.0.18 (2011-09-13)
 ============================
 

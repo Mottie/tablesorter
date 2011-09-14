@@ -30,7 +30,9 @@
 	// call the tablesorter plugin and apply the ui theme widget
 	$("table").tablesorter({
 		// widget code now contained in the jquery.tablesorter.widgets.js file
-		widgets : ['uitheme']
+		widgets : ['uitheme', 'zebra'],
+		// adding zebra striping, using content and default styles - the ui css removes the background from default
+		widgetZebra: { css: ["ui-widget-content", "ui-state-default"] }
 	});
 
 });</script>
@@ -140,29 +142,47 @@
 	<div>
 		<pre class="css">/* jQuery UI Theme required css; as seen in css/ui/style.css file */
 table.tablesorter {
-	font-family: arial;
-	margin: 10px 0pt 15px;
-	font-size: 8pt;
-	width: 100%;
-	text-align: left;
+  font-family: arial;
+  margin: 10px 0pt 15px;
+  font-size: 8pt;
+  width: 100%;
+  text-align: left;
+  padding: 5px;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	border-collapse: collapse;
-	font-size: 8pt;
-	padding: 4px;
+  border-collapse: collapse;
+  font-size: 8pt;
+  padding: 4px;
 }
 table.tablesorter thead tr .header {
-	background-repeat: no-repeat;
-	background-position: center right;
-	cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
 }
 table.tablesorter tbody td {
-	padding: 4px;
-	vertical-align: top;
+  padding: 4px;
+  vertical-align: top;
 }
-table.tablesorter .header .ui-theme {
-	display: block;
-	float: right;
+table.tablesorter .header .ui-icon {
+  display: block;
+  float: right;
+}
+
+/* This allows you to use ui-state-default as the zebra stripe color */
+table.tablesorter tr.ui-state-default {
+  background-image: url();
+}
+/* UI hover and active states make the font normal and the table resizes, this fixes it */
+table.tablesorter th.header {
+  font-weight: bold !important;
+}
+
+/* filter widget */
+table.tablesorter thead input.filter {
+  width: 90%;
+}
+table.tablesorter thead tr.filters, table.tablesorter thead tr.filters td {
+  text-align: center;
 }</pre>
 	</div>
 

@@ -28,6 +28,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.18.1 (2011-09-14)
+
+* Updated the "uitheme" widget with method to add zebra striping and hovered header classes.
+
 #### Version 2.0.18 (2011-09-13)
 
 * Fixed a bug in the column widget, it would cause an error if no initial sort was set.

@@ -5,6 +5,7 @@ table.tablesorter {
 	font-size: 8pt;
 	width: 100%;
 	text-align: left;
+	padding: 5px;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	border-collapse: collapse;
@@ -20,9 +21,18 @@ table.tablesorter tbody td {
 	padding: 4px;
 	vertical-align: top;
 }
-table.tablesorter .header .ui-theme {
+table.tablesorter .header .ui-icon {
 	display: block;
 	float: right;
+}
+
+/* This allows you to use ui-state-default as the zebra stripe color */
+table.tablesorter tr.ui-state-default {
+	background-image: url();
+}
+/* UI hover and active states make the font normal and the table resizes, this fixes it */
+table.tablesorter th.header {
+	font-weight: bold !important;
 }
 
 /* filter widget */
