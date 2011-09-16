@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.17 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.20 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -524,13 +524,17 @@
       3: { sorter: "digit", string: "max-" }, // maximum negative value
 
       // Sort the fifth column by date (e.g. mm/dd/yyyy if the date format is "us")
-      4: { sorter: "shortDate" }
+      4: { sorter: "shortDate" },
 
       // See example 3: lock the sort order - this option will not work if added as metadata
       5: { lockedOrder: "asc" },
 
       // See Example 4: Initial sort order direction of seventh column
-      6: { sortInitialOrder: "desc" }
+      6: { sortInitialOrder: "desc" },
+
+      // Set the filter to false to disable the filter widget in this column
+      // See the "Applying the filter widget" demo
+      7: { filter: false }
 
     }
   });

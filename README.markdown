@@ -28,6 +28,14 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.20 (2011-09-16)
+
+* Filter Widget
+  * Added "filter" to the "headers" option to allow disabling the filter option for a specific column - thanks jizo!
+  * Added "filter-false" class, that when applied will disable the filter widget for that column.
+  * Updated the headers docs and the filter widget demo.
+* Updated the currency parser to use unicode characters to better work in different document formats.
+
 #### Version 2.0.19 (2011-09-16)
 
 * Added code in attempt to clear the table headers between multiple tables - fix for [issue #2](https://github.com/Mottie/tablesorter/issues/2).

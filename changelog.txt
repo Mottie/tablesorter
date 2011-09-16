@@ -1,5 +1,14 @@
 TableSorter Change Log
 
+Version 2.0.20 (2011-09-16)
+============================
+
+* Filter Widget
+  * Added "filter" to the "headers" option to allow disabling the filter option for a specific column - thanks jizo!
+  * Added "filter-false" class, that when applied will disable the filter widget for that column.
+  * Updated the headers docs and the filter widget demo.
+* Updated the currency parser to use unicode characters to better work in different document formats.
+
 Version 2.0.19 (2011-09-16)
 ============================
 

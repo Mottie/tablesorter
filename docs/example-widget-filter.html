@@ -26,7 +26,8 @@
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		// initialize zebra striping and filter widgets
-		widgets: ["zebra", "filter"]
+		widgets: ["zebra", "filter"],
+		headers: { 5: { sorter: false, filter: false } }
 	});
 
 });</script>
@@ -41,7 +42,12 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> This widget can be applied to the original plugin.
+		<em>NOTE!</em>
+		<ul>
+			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>Added filter header option and class name to allow disabling the filter in a specific column in v2.0.19.1.</li>
+			<li>The Discount column has the "filter-false" class added to the header - see the HTML on how to add this ability.</li>
+			<li>The Date column has the "headers" option applied to disable the sort and the filter - see the table options in the javascript for this example.</li>
 	</p>
 
 	<h1>Demo</h1>
@@ -52,7 +58,7 @@
 			<th>Last Name</th>
 			<th>Age</th>
 			<th>Total</th>
-			<th>Discount</th>
+			<th class="filter-false">Discount</th> <!-- disable filter in this column -->
 			<th>Date</th>
 		</tr>
 	</thead>
@@ -126,7 +132,7 @@
 
 	<h1>Page Header</h1>
 	<div>
-		<pre class="html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
+		<pre class="html">&lt;!-- blue theme stylesheet --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
@@ -138,6 +144,18 @@
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div>
+		<pre class="css">/* filter widget, added to style.css themes */
+table.tablesorter thead input.filter {
+	width: 90%;
+}
+table.tablesorter thead tr.filters, table.tablesorter thead tr.filters td {
+	text-align: center;
+	background: #fff;
+}</pre>
 	</div>
 
 	<h1>HTML</h1>

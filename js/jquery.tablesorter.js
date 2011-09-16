@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.19
+* Version 2.0.20
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -840,10 +840,10 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s){
-			return (/^[£$€¤¥¢?.]/).test(s);
+			return (/^[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // £$€¤¥¢?.
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9.\-]/g), ""));
+			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9., \-]/g), ""));
 		},
 		type: "numeric"
 	});

@@ -96,7 +96,10 @@ $.tablesorter.addWidget({
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				fr += '<td><input type="text" class="filter" data-col="' + i + '"></td>';
+				fr += '<td><input type="text" class="filter" data-col="' + i + '" style="';
+				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
+				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? 'visibility:hidden' : '';
+				fr += '"></td>';
 			}
 			tbl
 				.find('thead').append(fr += '</tr>')
