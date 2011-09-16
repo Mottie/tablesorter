@@ -1,14 +1,15 @@
 /* TableSorter 2.0 Widgets */
-
+(function($){
 // Add jQuery UI theme widget
 // **************************
 $.tablesorter.addWidget({
 	id: "uitheme",
 	format: function(table) {
-		var time, c = table.config,
+		var time, klass, rmv, c = table.config,
 		// ["up/down arrow (cssHeaders, unsorted)", "down arrow (cssDesc, descending)", "up arrow (cssAsc, ascending)" ]
-		icons = c.uitheme || ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"],
-		klass, rmv = icons.join(' ');
+		icons = ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"];
+		if (c.widgetUitheme && c.widgetUitheme.hasOwnProperty('css')) { icons = c.widgetUitheme.css || icons; }
+		rmv = icons.join(' ');
 		if (c.debug) {
 			time = new Date();
 		}
@@ -23,7 +24,7 @@ $.tablesorter.addWidget({
 					$(this).addClass('ui-state-hover');
 				}, function(){
 					$(this).removeClass('ui-state-hover');
-				})
+				});
 			});
 		}
 		$.each(c.headerList, function(i){
@@ -47,12 +48,13 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
-		var $td, time, i,
+		var $td, time, i, last, rmv,
 		c = table.config,
 		list = c.sortList,
 		len = list.length,
-		css = c.widgetColumns.css,
-		last = css.length-1,
+		css = [ "primary", "secondary", "tertiary" ];
+		if (c.widgetColumns && c.widgetColumns.hasOwnProperty('css')) { css = c.widgetColumns.css || css; }
+		last = css.length-1;
 		rmv = css.join(' ');
 		if (c.debug) {
 			time = new Date();
@@ -87,7 +89,6 @@ $.tablesorter.addWidget({
 		if (!table.config.filtering) {
 			var i, v, r, t, $td, c = table.config,
 				cols = c.headerList.length,
-				cache = c.cache.normalized,
 				tbl = $(table),
 				fr = '<tr class="filters">',
 				time;
@@ -126,3 +127,5 @@ $.tablesorter.addWidget({
 		}
 	}
 });
+
+})(jQuery);

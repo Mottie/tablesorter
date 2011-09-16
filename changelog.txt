@@ -1,5 +1,17 @@
 TableSorter Change Log
 
+Version 2.0.19 (2011-09-16)
+============================
+
+* Added code in attempt to clear the table headers between multiple tables - fix for [issue #2](https://github.com/Mottie/tablesorter/issues/2).
+* Cleaned up some code and wrapped the widget code to prevent conflicts with other javascript libraries.
+* Updated the columns widget:
+  * Added css examples to the [demo](http://mottie.github.com/tablesorter/docs/example-widget-columns.html).
+  * Removed the `widgetColumns` option from the core, but it is still used by the widget - the way it is used hasn't changed.
+* Updated the uitheme widget:
+  * Added `widgetUitheme` option - used by the widget, but not included in the core. See the demo for a better example.
+  * Example added to the [uitheme widget demo](http://mottie.github.com/tablesorter/docs/example-widget-columns.html).
+
 Version 2.0.18.1 (2011-09-14)
 ============================
 

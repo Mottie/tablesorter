@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.18
+* Version 2.0.19
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -94,7 +94,6 @@
 				parsers: {},
 				widgets: [],
 				widgetZebra: { css: ["even", "odd"] },
-				widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
 				headers: {},
 				widthFixed: false,
 				cancelSelection: true,
@@ -288,32 +287,31 @@
 			}
 
 			function appendToTable(table, cache) {
-				var c = cache,
-				r = c.row,
-				n = c.normalized,
+				var c = table.config,
+				r = cache.row,
+				n = cache.normalized,
 				totalRows = n.length,
 				checkCell = totalRows ? (n[0].length - 1) : 0,
-				tableBody = $(table.tBodies[0]),
 				rows = [],
 				i, j, l, pos, appendTime;
-				if (table.config.debug) {
+				if (c.debug) {
 					appendTime = new Date();
 				}
 				for (i = 0; i < totalRows; i++) {
 					pos = n[i][checkCell];
 					rows.push(r[pos]);
-					if (!table.config.appender) {
+					if (!c.appender) {
 						l = r[pos].length;
 						for (j = 0; j < l; j++) {
-							tableBody[0].appendChild(r[pos][j]);
+							table.tBodies[0].appendChild(r[pos][j]);
 						}
 					}
 				}
-				if (table.config.appender) {
-					table.config.appender(table, rows);
+				if (c.appender) {
+					c.appender(table, rows);
 				}
 				rows = null;
-				if (table.config.debug) {
+				if (c.debug) {
 					benchmark("Rebuilt table:", appendTime);
 				}
 				// apply table widgets
@@ -396,15 +394,15 @@
 			function buildHeaders(table) {
 				var meta = ($.metadata) ? true : false,
 				header_index = computeTableHeaderCellIndexes(table),
-				$th, lock, time, $tableHeaders;
-				if (table.config.debug) {
+				$th, lock, time, $tableHeaders, c = table.config;
+				c.headerList = [];
+				if (c.debug) {
 					time = new Date();
 				}
-				$tableHeaders = $(table.config.selectorHeaders, table)
+				$tableHeaders = $(c.selectorHeaders, table)
 				.wrapInner("<span/>")
 				.each(function (index) {
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
-					// this.column = index;
 					this.order = formatSortingOrder( checkHeaderOrder(table, index) );
 					this.count = this.order;
 					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).is('.sorter-false')) { this.sortDisabled = true; }
@@ -412,13 +410,13 @@
 					lock = checkHeaderLocked(table, index);
 					if (typeof(lock) !== 'undefined' && lock !== false) { this.order = this.lockedOrder = formatSortingOrder(lock); }
 					if (!this.sortDisabled) {
-						$th = $(this).addClass(table.config.cssHeader);
-						if (table.config.onRenderHeader) { table.config.onRenderHeader.apply($th, [index]); }
+						$th = $(this).addClass(c.cssHeader);
+						if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
 					}
 					// add cell to headerList
-					table.config.headerList[index] = this;
+					c.headerList[index] = this;
 				});
-				if (table.config.debug) {
+				if (c.debug) {
 					benchmark("Built headers:", time);
 					log($tableHeaders);
 				}
@@ -468,9 +466,8 @@
 			}
 
 			function fixColumnWidth(table, $headers) {
-				var c = table.config, colgroup;
-				if (c.widthFixed) {
-					colgroup = $('<colgroup>');
+				if (table.config.widthFixed) {
+					var colgroup = $('<colgroup>');
 					$("tr:first td", table.tBodies[0]).each(function () {
 						colgroup.append($('<col>').css('width', $(this).width()));
 					});

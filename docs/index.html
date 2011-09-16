@@ -19,8 +19,8 @@
 <script>
 	$(function() {
 		$("#tablesorter-demo").tablesorter({sortList:[[0,0],[2,1]],widgets:['zebra']});
-		$("#options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false},widthFixed:true}});
-		$("#methods,#events").tablesorter({sortList: [[0,0]],headers:{1:{sorter:false},2:{sorter:false},widthFixed:true}});
+		$("#options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}}});
+		$("#methods,#events").tablesorter({sortList: [[0,0]],headers:{1:{sorter:false},2:{sorter:false}}});
 	});
 </script>
 </head>
@@ -345,10 +345,10 @@
 	<table id="options" class="tablesorter" border="0" cellpadding="0">
 		<thead>
 			<tr>
-				<th>Property</th>
-				<th>Type</th>
-				<th>Default</th>
-				<th>Description</th>
+				<th class="property">Property</th>
+				<th class="type">Type</th>
+				<th class="defaults">Default</th>
+				<th class="descrip">Description</th>
 				<th class="examples">Link</th>
 			</tr>
 		</thead>
@@ -701,6 +701,7 @@
 					Built-in options include <code class="hilight">"simple"</code> and <code class="hilight">"complex"</code>.  Use complex if you have data marked up
 					inside of a table cell like: <code class="hilight">&lt;td&gt;&lt;strong&gt;&lt;em&gt;123 Main Street&lt;/em&gt;&lt;/strong&gt;&lt;/td&gt;</code>.
 					<div class="collapsible">
+					<br>
 					Complex can be slow in large tables so consider writing your own text extraction function "myTextExtraction" which you define like:
 					<pre class="js">var myTextExtraction = function(node){
   // extract data from markup and return it
@@ -742,10 +743,11 @@ $(function(){
 			<tr id="widgetzebra">
 				<td><a href="#" class="toggle2">widgetZebra</a></td>
 				<td>Object with Array</td>
-				<td>{css:["even","odd"]}</td>
+				<td>{ css: [ "even", "odd" ] }</td>
 				<td>
 					When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>.
 					<div class="collapsible">
+					<br>
 					Use the <a href="#widgetzebra"><code class="hilight">"widgetZebra"</code></a> option to change the css class name as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
@@ -760,15 +762,35 @@ $(function(){
 			<tr id="widgetcolumns">
 				<td><a href="#" class="toggle2">widgetColumns</a></td>
 				<td>Object with Array</td>
-				<td>{css:[ "primary", "secondary", "tertiary" ]}</td>
+				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
 				<td>
 					When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... <span class="tip"><em>New!</em></span> in v2.0.17.
 					<div class="collapsible">
+					<br>
 					Use the <a href="#widgetcolumns"><code class="hilight">"widgetColumns"</code></a> option to change the css class name as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["columns"], // initialize column styling of the table
     widgetColumns: { css: ["primary", "secondary", "tertiary" ] }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-columns.html">Example</a></td>
+			</tr>
+
+			<tr id="widgetuitheme">
+				<td><a href="#" class="toggle2">widgetUitheme</a></td>
+				<td>Object with Array</td>
+				<td>{ css: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"] }</td>
+				<td>
+					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. <span class="tip"><em>New!</em></span> in v2.0.9.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widgetuitheme"><code class="hilight">"widgetUitheme"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["uitheme"], // initialize ui theme styling widget of the table
+    widgetUitheme: { css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"] }
   });
 });</pre></div>
 				</td>
@@ -1067,16 +1089,9 @@ $(table)
 	<ul>
 		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (3,7kb <strong>Required for setting <a href="#Examples">inline options</a></strong>)</li>
 		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (31kb, for development)</li>
-		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (3,6kb, <a href="example-pager.html">tablesorter pagination plugin</a>)</li>
-		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (2,12kb, includes the jQuery UI theme 'uitheme' and columns styling 'columns' widgets. <span class="tip"><em>New!</em></span> in v2.0.17.)</li>
+		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (5,6kb, <a href="example-pager.html">tablesorter pagination plugin</a>)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (4,1kb, includes the jQuery UI theme 'uitheme', columns styling 'columns' widget and row 'filter' widgets. <span class="tip"><em>New!</em></span> in v2.0.17.)</li>
 	</ul>
-
-	<!--
-	<strong id="Download-Widgets">Widgets:</strong>
-	<ul>
-	<li><a class="external" href="http://www.jdempster.com/category/code/jquery/tablesortercookiewidget/">Cookie Widget</a>, By <a class="external" href="http://www.jdempster.com/">James Dempster</a></li>
-	</ul>
-	-->
 
 	<strong id="Download-Themes">Themes:</strong>
 	<ul>

@@ -19,7 +19,7 @@ WEBSITE: http://noteslog.com/chili/
 		}
 		, sl_comment: { 
 			  _match: /\/\/.*/
-			, _style: 'color: green;'
+			, _style: 'color: olive;'
 		}
 		, string: { 
 			  _match: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/
@@ -61,7 +61,7 @@ WEBSITE: http://noteslog.com/chili/
 		}
 		, 'function': { 
 			  _match: /\b(parseInt|parseFloat|isNaN|isFinite|eval|encodeURIComponent|encodeURI|decodeURIComponent|decodeURI)\b/
-			, _style: 'color: olive;'
+			, _style: 'color: green;'
 		}
 		, operator: {
 			  _match: /\b(void|typeof|this|new|instanceof|in|function|delete)\b/

@@ -29,10 +29,17 @@
 
 	// call the tablesorter plugin and apply the ui theme widget
 	$("table").tablesorter({
+
 		// widget code now contained in the jquery.tablesorter.widgets.js file
 		widgets : ['uitheme', 'zebra'],
+
 		// adding zebra striping, using content and default styles - the ui css removes the background from default
-		widgetZebra: { css: ["ui-widget-content", "ui-state-default"] }
+		widgetZebra: { css: ["ui-widget-content", "ui-state-default"] },
+
+		// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+		// default icons: { css: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"] }
+		// { css : ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ] }
+		widgetUitheme: { css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"] }
 	});
 
 });</script>

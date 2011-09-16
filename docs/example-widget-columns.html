@@ -25,9 +25,12 @@
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
+
 		sortList : [[1,0],[2,0],[3,0]],
+
 		// initialize zebra striping and column styling of the table
 		widgets: ["zebra", "columns"],
+
 		// change the default column class names
 		// primary is the first column sorted, secondary is the second, etc
 		widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
@@ -118,6 +121,36 @@
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div>
+		<pre class="css">/*
+ This css is part of the blue/style.css theme, shown as an example
+ To work with the zebra widget, include the .odd and .even color definitions as well
+ as definitions for the "primary", "secondary" and "tertiary" sorts.
+*/
+/* Column Widget - column sort colors */
+table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
+	background-color: #c0c0ff;
+}
+table.tablesorter tbody tr.even td.primary {
+	background-color: #e8e8ff;
+}
+
+table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
+	background-color: #d6d6ff;
+}
+table.tablesorter tbody tr.even td.secondary {
+	background-color: #e8e8ff;
+}
+
+table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
+	background-color: #e5e5ff;
+}
+table.tablesorter tbody tr.even td.tertiary {
+	background-color: #f8f8ff;
+}</pre>
 	</div>
 
 	<h1>HTML</h1>
