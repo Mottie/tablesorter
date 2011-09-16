@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.20.1 (2011-09-16)
+============================
+
+* Oops fixed currency sorting
+
 Version 2.0.20 (2011-09-16)
 ============================
 

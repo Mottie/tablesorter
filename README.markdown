@@ -28,6 +28,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.20.1 (2011-09-16)
+
+* Oops fixed currency sorting
+
 #### Version 2.0.20 (2011-09-16)
 
 * Filter Widget
