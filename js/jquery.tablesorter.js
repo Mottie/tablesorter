@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.20.1
+* Version 2.0.21
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -676,6 +676,8 @@
 									}
 								}
 							}
+							// sortBegin event triggered immediately before the sort
+							$this.trigger("sortBegin", tbl[0]);
 							setTimeout(function () {
 								// set css for headers
 								setHeadersCss($this[0], $headers, config.sortList, sortCSS);
