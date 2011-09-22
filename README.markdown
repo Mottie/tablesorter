@@ -28,6 +28,15 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.21 (2011-09-22)
+
+* Added `sortBegin` event
+  * This event is triggered immediately before the actual sort. So this event occurs after the `sortStart` and after the `sortList` option has been updated.
+  * It was added to allow for changing the sort dynamically. See [issue #3](https://github.com/Mottie/tablesorter/issues/3).
+* Added `removeRows` option to the pager plugin
+  * When `true`, the default value, the pager plugin removes all non-active rows from the table. This greatly increases the sort speed of large tables.
+  * When `false`, the pager plugin merely hides the non-active rows so they all continue to exist in the table. This should allow for better access to data within the table (i.e. submitting form elements)
+
 #### Version 2.0.20.1 (2011-09-16)
 
 * Oops fixed currency sorting

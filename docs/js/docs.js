@@ -13,7 +13,7 @@ jQuery.fn.antispam = function() {
 
 $(function(){
 
-	$("a.external").each(function() {this.target = '_new'});	
+	$("a.external").each(function() {this.target = '_new'});
 	$("span.email").antispam();
 
 	// get javascript source
@@ -24,11 +24,7 @@ $(function(){
 		$("pre.css").text( $("#css").html().replace(/\t/g, "  ") );
 	}
 	if ($("#demo").length) {
-		$("#html pre").text(
-			$("#demo").html()
-				.replace(/\t/g, "  ")
-//				.replace(/[<>]/g, function(m){ return {'<':'&lt;','>':'&gt;'}[m]; })
-		);
+		$("#html pre").text( $("#demo").html().replace(/\t/g, "  ") );
 	}
 
 	// hide child rows

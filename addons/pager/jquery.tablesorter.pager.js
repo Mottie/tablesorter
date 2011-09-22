@@ -60,6 +60,17 @@
 			}
 		},
 
+		hideRows = function(table, c){
+			var i, rows = $('tr', table.tBodies[0]),
+			l = rows.length,
+			s = (c.page * c.size),
+			e = (s + c.size);
+			if (e > l) { e = l; }
+			for (i = 0; i < l; i++){
+				rows[i].style.display = (i >= s && i < e) ? '' : 'none';
+			}
+		},
+
 		renderTable = function(table,rows) {
 			var i, j, o,
 			tableBody,
@@ -68,23 +79,27 @@
 			s = (c.page * c.size),
 			e = (s + c.size);
 			$(table).trigger('pagerChange',c);
-			if (e > rows.length ) {
-				e = rows.length;
-			}
-			tableBody = $(table.tBodies[0]);
-			// clear the table body
-			$.tablesorter.clearTableBody(table);
-			for(i = s; i < e; i++) {
-				//tableBody.append(rows[i]);
-				o = rows[i];
-				l = o.length;
-				for (j = 0; j < l; j++) {
-					tableBody[0].appendChild(o[j]);
+			if (!c.removeRows) {
+				hideRows(table, c);
+			} else {
+				if (e > rows.length ) {
+					e = rows.length;
+				}
+				tableBody = $(table.tBodies[0]);
+				// clear the table body
+				$.tablesorter.clearTableBody(table);
+				for(i = s; i < e; i++) {
+					//tableBody.append(rows[i]);
+					o = rows[i];
+					l = o.length;
+					for (j = 0; j < l; j++) {
+						tableBody[0].appendChild(o[j]);
+					}
 				}
 			}
 			fixPosition(table,tableBody);
 			$(table).trigger("applyWidgets");
-			if( c.page >= c.totalPages ) {
+			if ( c.page >= c.totalPages ) {
 				moveToLastPage(table);
 			}
 			updatePageDisplay(table,c);
@@ -145,8 +160,7 @@
 			// hide pager
 			c.container.hide();
 			c.appender = null;
-			$(table).unbind('destroy.pager');
-			
+			$(table).unbind('destroy.pager sortStart.pager');
 		};
 
 		this.appender = function(table,rows) {
@@ -174,6 +188,7 @@
 			output: '{page}/{totalPages}', // '{startRow} to {endRow} of {totalRows} rows',
 			updateArrows: false,
 			positionFixed: true,
+			removeRows: true, // removing rows in larger tables speeds up the sort
 			appender: this.appender
 		};
 
@@ -186,6 +201,14 @@
 
 				config.size = parseInt($(".pagesize",pager).val(), 10);
 				pagerArrows(config);
+				if (!config.removeRows) {
+					config.appender = null;
+					hideRows(table, config);
+					$(this).bind('sortEnd.pager', function(){
+						hideRows(table, config);
+						$(table).trigger("applyWidgets");
+					});
+				}
 
 				$(config.cssFirst,pager).click(function() {
 					moveToFirstPage(table);

@@ -966,20 +966,21 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tr, row = -1,
-			odd, time;
+			var $tr, row = 0, even, time,
+			child = table.config.cssChildRow,
+			css = table.config.widgetZebra.css;
 			if (table.config.debug) {
 				time = new Date();
 			}
 			// loop through the visible rows
-			$("tr:visible", table.tBodies[0]).each(function (i) {
+			$("tr:visible", table.tBodies[0]).each(function(i){
 				$tr = $(this);
 				// style children rows the same way the parent row was styled
-				if (!$tr.hasClass(table.config.cssChildRow)) { row++; }
-				odd = (row % 2 === 0);
+				if (!$tr.hasClass(child)) { row++; }
+				even = (row % 2 === 0);
 				$tr
-				.removeClass(table.config.widgetZebra.css[odd ? 0 : 1])
-				.addClass(table.config.widgetZebra.css[odd ? 1 : 0]);
+				.removeClass(css[even ? 1 : 0])
+				.addClass(css[even ? 0 : 1]);
 			});
 			if (table.config.debug) {
 				$.tablesorter.benchmark("Applying Zebra widget", time);
