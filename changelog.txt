@@ -1,5 +1,15 @@
 TableSorter Change Log
 
+Version 2.0.21.1 (2011-10-11)
+============================
+
+* Added "stickyHeader" widget to the "jquery.tablesorter.widgets.js" file.
+  * This widget makes the header stick to the top of the page while scrolling down.
+  * The sticky header is fully functional and will allow you to sort the table.
+  * And best of all, it can be applied to the original tablesorter plugin.
+  * Thanks to Chris Coyier and his post on [persistent headers](http://css-tricks.com/13465-persistent-headers/).
+* Added a compressed widget file named "jquery.tablesorter.widgets.min.js".
+
 Version 2.0.21 (2011-09-22)
 ============================
 

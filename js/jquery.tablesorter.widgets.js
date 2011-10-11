@@ -131,4 +131,61 @@ $.tablesorter.addWidget({
 	}
 });
 
+// Sticky header widget
+// based on this awesome article:
+// http://css-tricks.com/13465-persistent-headers/
+// **************************
+$.tablesorter.addWidget({
+	id: "stickyHeaders",
+	format: function(table) {
+		if ($(table).find('.stickyHeader').length) { return; }
+		var win = $(window),
+			header = $(table).find('thead'),
+			hdrCells = header.find('tr').children(),
+			sticky = header.find('tr').clone()
+				.addClass('stickyHeader')
+				.css({
+					width      : header.width(),
+					position   : 'fixed',
+					top        : 0,
+					visibility : 'hidden'
+				}),
+			stkyCells = sticky.children();
+		// update sticky header class names to match real header
+		$(table).bind('sortEnd', function(e,t){
+			var th = $(t).find('thead tr'),
+				sh = th.filter('.stickyHeader').children();
+			th.filter(':not(.stickyHeader)').children().each(function(i){
+				sh.eq(i).attr('class', $(this).attr('class'));
+			});
+		});
+		// set sticky header cell width and link clicks to real header
+		hdrCells.each(function(i){
+			var t = $(this),
+			s = stkyCells.eq(i)
+			// set cell widths
+			.width( t.width() )
+			// clicking on sticky will trigger sort
+			.bind('click', function(e){
+				t.trigger(e);
+			})
+			// prevent sticky header text selection
+			.bind('mousedown', function(){
+				this.onselectstart = function(){ return false; };
+				return false;
+			});
+		});
+		header.prepend( sticky );
+		// make it sticky!
+		win.scroll(function(){
+			var $t = $(table),
+				offset = $t.offset(),
+				sTop = win.scrollTop(),
+				sticky = $t.find('.stickyHeader'),
+				vis = ((sTop > offset.top) && (sTop < offset.top + $t.height())) ? 'visible' : 'hidden';
+			sticky.css('visibility', vis);
+		});
+	}
+});
+
 })(jQuery);
