@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.21
+* Version 2.0.22
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -300,7 +300,8 @@
 				for (i = 0; i < totalRows; i++) {
 					pos = n[i][checkCell];
 					rows.push(r[pos]);
-					if (!c.appender) {
+					// removeRows used by the pager plugin
+					if (!c.appender || !c.removeRows) {
 						l = r[pos].length;
 						for (j = 0; j < l; j++) {
 							table.tBodies[0].appendChild(r[pos][j]);

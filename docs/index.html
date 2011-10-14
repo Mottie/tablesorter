@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.21.1 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> 2.0.22 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -287,53 +287,77 @@
 		run these samples, just like you and your users will need Javascript enabled to use tablesorter.
 	</p>
 
-	<strong>Basic</strong>
+	<div class="box">
+	<h3>Basic</h3>
+	<h4>Sorting</h4>
 	<ul>
 		<li><a href="example-option-sort-list.html">Set an initial sorting order using options</a></li>
 		<li><a href="example-trigger-sort.html">Sort table using a link outside the table</a></li>
-		<li><a href="example-child-rows.html">How to add rows that sort with their parent row</a></li>
 		<li><a href="example-option-sort-force.html">Force a default sorting order</a></li>
 		<li><a href="example-option-sort-append.html">Append a sort to the selected sorting order</a></li>
-		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
-		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> <span class="tip"><em>New! v2.0.10</em></span></li>
+		<li><a href="example-child-rows.html">How to add rows that sort with their parent row</a></li>
 		<li><a href="example-option-sort-order.html">Direction of initial sort</a></li>
-		<li><a href="example-apply-widget.html">Applying widgets</a></li>
-		<li><a href="example-widget-zebra.html">Applying the zebra stripe widget</a></li>
-		<li><a href="example-widget-columns.html">Applying the columns widget</a> <span class="tip"><em>New! v2.0.17</em></span></li>
-		<li><a href="example-widget-filter.html">Applying the filter widget</a> <span class="tip"><em>New! v2.0.18</em></span></li>
-		<li><a href="example-widget-sticky-header.html">Applying the sticky header widget</a> <span class="tip"><em>New! v2.0.21.1</em></span></li>
-		<li><a href="example-widget-ui-theme.html">Applying the jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
-		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
 	</ul>
-	<strong>Metadata - setting inline options</strong>
+
+	<h4>Parsers / Extracting Content</h4>
 	<ul>
-		<li><a href="example-meta-sort-list.html">Set a initial sorting order using metadata</a></li>
-		<li><a href="example-meta-headers.html">Disable header using metadata</a></li>
-		<li><a href="example-meta-parsers.html">Setting column parser using metadata</a></li>
+		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
+		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> <span class="tip"><em>New! v2.0.10</em></span></li>
+		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
+		<li><a href="example-parsers.html">Parser, writing your own</a></li>
+		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
 	</ul>
-	<strong>Advanced</strong>
+
+	<h4>Widgets /  Plugins</h4>
 	<ul>
-		<li><a href="example-triggers.html">Triggers sortEnd and sortStart (Displaying sorting progress)</a></li>
+		<li><a href="example-apply-widget.html">Applying widgets</a></li>
+		<li><a href="example-widget-columns.html">Columns widget</a> <span class="tip"><em>New! v2.0.17</em></span></li>
+		<li><a href="example-widget-filter.html">Filter widget</a> <span class="tip"><em>New! v2.0.18</em></span></li>
+		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
+		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> <span class="tip"><em>New! v2.0.21.1</em></span></li>
+		<li><a href="example-widget-zebra.html">Zebra stripe widget</a></li>
+		<li><a href="example-widgets.html">Widgets, writing your own</a></li>
+		<li><a href="example-pager.html">Pager plugin</a></li>
+	</ul>
+	</div>
+
+	<div class="box">
+	<h3>Advanced</h3>
+	<h4>Adding / Removing Content</h4>
+	<ul>
 		<li><a href="example-empty-table.html">Initializing tablesorter on a empty table</a></li>
 		<li><a href="example-ajax.html">Appending table data with ajax</a></li>
 		<li><a href="example-add-rows.html">Adding a table row</a> <span class="tip"><em>New! v2.0.16</em></span></li>
 		<li><a href="example-update-cell.html">Update the table after cell content has changed</a></li>
-		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
-		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
-		<li><a href="example-extending-defaults.html">Extending default options</a></li>
-		<li><a href="example-option-debug.html">Enabling debug mode</a></li>
-		<li><a href="example-parsers.html">Parser, writing your own</a></li>
-		<li><a href="example-widgets.html">Widgets, writing your own</a></li>
+		<li><a href="example-pager.html">Pager plugin</a> - examples of how to add and remove rows</li>
 	</ul>
 
-	<strong>Companion plugins</strong>
+	<h4>Change Header Style</h4>
 	<ul>
-		<li><a href="example-pager.html">Pager plugin</a></li>
+		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
 	</ul>
+
+	<h3>Other</h3>
+	<h4>Options &amp; Events</h4>
+	<ul>
+		<li><a href="example-triggers.html">Triggers sortEnd and sortStart (Displaying sorting progress)</a></li>
+		<li><a href="example-extending-defaults.html">Extending default options</a></li>
+		<li><a href="example-option-debug.html">Enabling debug mode</a></li>
+	</ul>
+
+	<h4>Metadata - setting inline options</h4>
+	<ul>
+		<li>*Note* As of version 2.0.11, you can use class names instead of meta data (<a href="example-parsers-class-name.html">demo</a>)</li>
+		<li><a href="example-meta-sort-list.html">Set a initial sorting order using metadata</a></li>
+		<li><a href="example-meta-headers.html">Disable header using metadata</a></li>
+		<li><a href="example-meta-parsers.html">Setting column parser using metadata</a></li>
+	</ul>
+	</div>
+	<br class="clear">
 
 	<a name="Configuration"></a>
 	<h1>Configuration</h1>

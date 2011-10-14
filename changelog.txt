@@ -1,5 +1,32 @@
 TableSorter Change Log
 
+Version 2.0.22 (2011-10-13)
+============================
+
+* Updated the pager plugin:
+  * Fixed a problem that occurred when `removeRows` is set to false - fix for [issue #4](https://github.com/Mottie/tablesorter/issues/4).
+  * Added "disable.pager" and "enable.pager" methods to the pager. These are useful if you want to delete a table row with the pager applied.
+
+    // Delete a row
+    // this function targets a button with a "remove" class name inside a table row
+    // *************
+    // Use delegate or live because `removeRows` is set to `true` in the demo - hidden rows don't exist
+    $('table').delegate('button.remove', 'click' ,function(){
+      var t = $('table');
+      // disabling the pager will restore all table rows
+      t.trigger('disable.pager');
+      // remove the chosen row
+      $(this).closest('tr').remove();
+      // restore pager
+      t.trigger('enable.pager');
+    });
+
+  * Fixed the `positionFixed` option (which positions the pager below the table) to now include the `offset` option value.
+  * Fixed the pager arrow buttons so that destroying and enabling the pager multiple times doesn't multiply the number of pages changed.
+  * Updated the pager demo page to allow deleting rows.
+  * General cleanup and added lots of comments in the plugin and demo page on what each pager option does.
+* Made one minor change to the tablesorter plugin to accomidate the pager plugin using the `removeRows` option.
+
 Version 2.0.21.1 (2011-10-11)
 ============================
 
