@@ -1,5 +1,15 @@
 TableSorter Change Log
 
+Version 2.0.22.1 (2011-10-15)
+============================
+
+* Updated the stickyHeaders widget
+  * Sticky headers will now resize with the browser window
+  * Updated blue and green themes to work better with sticky headers.
+  * If using the uitheme widget, make sure the 'uitheme' widget is applied before (left of) the 'stickyHeaders' widget, as follows:
+
+        widgets: ['zebra', 'uitheme', 'stickyHeaders']
+
 Version 2.0.22 (2011-10-13)
 ============================
 

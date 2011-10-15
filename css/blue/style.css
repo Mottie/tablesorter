@@ -7,17 +7,20 @@ table.tablesorter {
 	width: 100%;
 	text-align: left;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+table.tablesorter thead tr.stickyHeader {
+	background: #ccc;
+}
+table.tablesorter thead tr th, tr.stickyHeader th, table.tablesorter tfoot tr th {
 	background-color: #e6eeee;
-	border: 1px solid #fff;
 	border-collapse: collapse;
 	font-size: 8pt;
 	padding: 4px;
 }
-table.tablesorter thead tr .header {
+table.tablesorter thead tr .header, tr.stickyHeader .header {
 	background-image: url(black-bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
+	border: 1px solid #fff;
 	cursor: pointer;
 }
 table.tablesorter tbody td {

@@ -142,12 +142,14 @@ $.tablesorter.addWidget({
 		var win = $(window),
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
+			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
 			sticky = header.find('tr').clone()
 				.addClass('stickyHeader')
 				.css({
-					width      : header.width(),
+					width      : header.outerWidth() + brdr * 2,
 					position   : 'fixed',
 					top        : 0,
+					marginLeft : -brdr,
 					visibility : 'hidden'
 				}),
 			stkyCells = sticky.children();
@@ -177,14 +179,20 @@ $.tablesorter.addWidget({
 		});
 		header.prepend( sticky );
 		// make it sticky!
-		win.scroll(function(){
-			var $t = $(table),
-				offset = $t.offset(),
-				sTop = win.scrollTop(),
-				sticky = $t.find('.stickyHeader'),
-				vis = ((sTop > offset.top) && (sTop < offset.top + $t.height())) ? 'visible' : 'hidden';
-			sticky.css('visibility', vis);
-		});
+		win
+			.scroll(function(){
+				var $t = $(table),
+					offset = $t.offset(),
+					sTop = win.scrollTop(),
+					vis = ((sTop > offset.top) && (sTop < offset.top + $t.find('tbody').height())) ? 'visible' : 'hidden';
+				sticky.css('visibility', vis);
+			})
+			.resize(function(){
+				sticky.css({ width: header.outerWidth() + brdr * 2 })
+				stkyCells.each(function(i){
+					$(this).width( hdrCells.eq(i).width() );
+				});
+			});
 	}
 });
 

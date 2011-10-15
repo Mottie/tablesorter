@@ -7,8 +7,7 @@ table.tablesorter {
 	width: 100%;
 	text-align: left;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6eeee;
+table.tablesorter thead tr th, tr.stickyHeader th, table.tablesorter tfoot tr th {
 	border-collapse: collapse;
 	font-size: 12px;
 	padding: 5px;
@@ -17,16 +16,17 @@ table.tablesorter td {
 	color: #3d3d3d;
 	padding: 5px;
 }
-table.tablesorter thead {
+table.tablesorter thead tr, table.tablesorter tfoot tr {
 	background: url(bkgd.png) center center repeat-x;
 }
 table.tablesorter .header {
 	background: transparent;
+	border-right: #cdcdcd 1px solid;
 	padding: 9px;
 	height: auto;
 	cursor: pointer;
 }
-table.tablesorter .header span {
+table.tablesorter .header span, .stickyHeader .header span {
 	background: url(none.png) no-repeat;
 	padding: 2px 0 2px 25px;
 }

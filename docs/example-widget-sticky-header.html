@@ -13,15 +13,22 @@
 	<script src="js/chili/recipes.js"></script>
 	<script src="js/docs.js"></script>
 
-	<!-- Tablesorter: required -->
+	<!-- Tablesorter: theme -->
 	<link rel="stylesheet" href="../css/blue/style.css">
+	<!-- test UI theme; also add 'uitheme' below:  widgets: ['zebra', 'uitheme', 'stickyHeaders'] ; THE ORDER DOES MATTER! -->
+	<!--
+	<link rel="stylesheet" href="../css/ui/style.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	-->
+
+	<!-- Tablesorter script: required -->
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 <script id="js">$(function(){
 
 	$("table").tablesorter({
-		widgets: ['stickyHeaders']
+		widgets: [ 'uitheme', 'zebra', 'stickyHeaders' ]
 	});
 
 }); </script>
