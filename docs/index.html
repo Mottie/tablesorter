@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> <a class="external" href="http://lovepeacenukes.com">Christian Bach</a><br>
-		<strong>Version:</strong> 2.0.22 (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> <a href="http://github.com/Mottie/tablesorter/downloads">2.0.23</a> (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -308,6 +308,7 @@
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> <span class="tip"><em>New! v2.0.10</em></span></li>
 		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
+		<li><a href="example-option-date-format.html">Changing the date format</a> <span class="tip"><em>New! v2.0.23</em></span></li>
 		<li><a href="example-parsers.html">Parser, writing your own</a></li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
 	</ul>
@@ -338,8 +339,11 @@
 
 	<h4>Change Header Style</h4>
 	<ul>
+		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
 		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
 	</ul>
+
+	<br>
 
 	<h3>Other</h3>
 	<h4>Options &amp; Events</h4>
@@ -493,17 +497,36 @@
 			<tr id="dateformat">
 				<td><a href="#" class="toggle2">dateFormat</a></td>
 				<td>String</td>
-				<td>"us"</td>
-				<td>Set the date format. Here are the available options:
+				<td>"mmddyyyy"</td>
+				<td>Set the date format. Here are the available options. <span class="tip"><em>Modified</em></span> in version 2.0.23.
 					<div class="collapsible">
 						<ul>
-							<li><code class="hilight">"us"</code> (default) - "mm-dd-yyyy" or "mm/dd/yyyy"</li>
-							<li><code class="hilight">"uk"</code> - "dd-mm-yyyy" or "dd/mm/yyyy"</li>
-							<li><code class="hilight">"dd/mm/yy"</code> or <code class="hilight">"dd-mm-yy"</code> - Sort by short year (it appears to sort by day first, not the year)</li>
+							<li><code class="hilight">"mmddyyyy"</code> (default)</li>
+							<li><code class="hilight">"ddmmyyyy"</code></li>
+							<li><code class="hilight">"yyyymmdd"</code></li>
 						</ul>
+						In previous versions, this option was set as "us", "uk" or "dd/mm/yy". This option was modified to better fit needed date formats. It will only work with four digit years!<br>
+						<br>
+						The sorter should be set to "shortDate" and the date format can be set in the "dateFormat" option or set for a specific columns within the "headers" option.
+						See <a href="example-option-date-format.html">the demo page</a> to see it working.
+						<pre class="js">$(function(){
+  $("table").tablesorter({
+
+    dateFormat : "mmddyyyy", // default date format
+
+    // or to change the format for specific columns,
+    // add the dateFormat to the headers option:
+    headers: {
+      0: { sorter: "shortDate" }, // "shortDate" with the default dateFormat above
+      1: { sorter: "shortDate", dateFormat: "ddmmyyyy" }, // day first format
+      2: { sorter: "shortDate", dateFormat: "yyyymmdd" }  // year first format
+    }
+
+  });
+});</pre>
 					</div>
 				</td>
-				<td></td>
+				<td><a href="example-option-date-format.html">Example</a></td>
 			</tr>
 
 			<tr id="debug">
@@ -551,7 +574,8 @@
       // Sort the fifth column by date (e.g. mm/dd/yyyy if the date format is "us")
       4: { sorter: "shortDate" },
 
-      // See example 3: lock the sort order - this option will not work if added as metadata
+      // See example 3: lock the sort order
+      // this option will not work if added as metadata
       5: { lockedOrder: "asc" },
 
       // See Example 4: Initial sort order direction of seventh column
@@ -819,7 +843,9 @@ $(function(){
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["uitheme"], // initialize ui theme styling widget of the table
-    widgetUitheme: { css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"] }
+    widgetUitheme: {
+      css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+    }
   });
 });</pre></div>
 				</td>
@@ -864,7 +890,9 @@ $(function(){
 						It does not work the same as "update" in that it only adds rows, it does not remove them.<br>
 						Also, use this method to add table rows while using the pager plugin. If the "update" method is used, only the visible table rows continue to exist.
 						<pre class="js">// Add multiple rows to the table
-  var $row = $('&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;');
+  var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
+    '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
+    $row = $(row);
   $('table')
     .find('tbody').append($row)
     .trigger('addRows', [$row]);</pre></div>
@@ -929,7 +957,8 @@ $(table)
   $("td.discount").click(function(){
 
     // randomize a number
-    var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' + ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
+    var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' +
+     ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
     $(this).text(discount);
 
     // update the table, so the tablesorter plugin knows its value

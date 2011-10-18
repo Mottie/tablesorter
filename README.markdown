@@ -28,6 +28,14 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.23 (2011-10-18)
+
+* Changed the `dateFormat` option:
+ * The settings are now "mmddyyyy", "ddmmyyyy", and "yyyymmdd".
+ * Changed the date separator to include any of the following: slash, dash, period, comma, space(s) or tab.
+ * The date format parser will only work with a four digit year.
+ * Added a [demo page](http://mottie.github.com/tablesorter/docs/example-option-date-format.html).
+
 #### Version 2.0.22.1 (2011-10-15)
 
 * Updated the stickyHeaders widget

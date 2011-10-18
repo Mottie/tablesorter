@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.22
+* Version 2.0.23
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -99,7 +99,7 @@
 				cancelSelection: true,
 				sortList: [],
 				headerList: [],
-				dateFormat: "us",
+				dateFormat: "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
 				onRenderHeader: null,
 				selectorHeaders: 'thead th',
 				tableClass : 'tablesorter',
@@ -243,8 +243,7 @@
 					/** Add the table data to main data array */
 					c = $(b.rows[i]);
 					cols = [];
-					// if this is a child row, add it to the last row's children and
-					// continue to the next row
+					// if this is a child row, add it to the last row's children and continue to the next row
 					if (c.hasClass(table.config.cssChildRow)) {
 						cache.row[cache.row.length - 1] = cache.row[cache.row.length - 1].add(c);
 						// go to the next for loop
@@ -252,7 +251,7 @@
 					}
 					cache.row.push(c);
 					for (j = 0; j < totalCells; ++j) {
-						cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j], j), table, c[0].cells[j]));
+						cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j], j), table, c[0].cells[j], j));
 					}
 					cols.push(cache.normalized.length); // add position for rowCache
 					cache.normalized.push(cols);
@@ -650,11 +649,9 @@
 								config.sortList.push([i, this.order]);
 								// multi column sorting
 							} else {
-								// the user has clicked on an all
-								// ready sortet column.
+								// the user has clicked on an already sorted column.
 								if (isValueInArray(i, config.sortList)) {
-									// revers the sorting direction
-									// for all tables.
+									// reverse the sorting direction for all tables.
 									for (j = 0; j < config.sortList.length; j++) {
 										s = config.sortList[j];
 										o = config.headerList[s[0]];
@@ -918,21 +915,21 @@
 	});
 
 	ts.addParser({
-		id: "shortDate",
+		id: "shortDate", // "mmddyyyy", "ddmmyyy" or "yyyymmdd"
 		is: function(s) {
-			return (/\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/).test(s);
+			// testing for ####-####-#### - so it's not perfect
+			return (/\d{1,4}[\/\-\,\.\s+]\d{1,4}[\/\-\.\,\s+]\d{1,4}/).test(s);
 		},
-		format: function(s, table) {
-			var c = table.config;
-			s = s.replace(/\-/g, "/");
-			if (c.dateFormat === "us") {
-				// reformat the string in ISO format
-				s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2");
-			} else if (c.dateFormat === "uk") {
-				// reformat the string in ISO format
-				s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-			} else if (c.dateFormat === "dd/mm/yy" || c.dateFormat === "dd-mm-yy") {
-				s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})/, "$1/$2/$3");
+		format: function(s, table, cell, cellIndex) {
+			var c = table.config,
+				format = (c.headers && c.headers[cellIndex]) ? c.headers[cellIndex].dateFormat || c.dateFormat : c.dateFormat; // get dateFormat from header or config
+			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,|\s]/g, "/");
+			if (format === "mmddyyyy") {
+				s = s.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, "$3/$1/$2");
+			} else if (format === "ddmmyyyy") {
+				s = s.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, "$3/$2/$1");
+			} else if (format === "yyyymmdd") {
+				s = s.replace(/(\d{4})\/(\d{1,2})\/(\d{1,2})/, "$1/$2/$3");
 			}
 			return $.tablesorter.formatFloat(new Date(s).getTime());
 		},
