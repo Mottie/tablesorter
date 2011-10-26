@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 11/13/2011
+ * updated 10/26/2011
  */
 
 (function($) {
@@ -82,6 +82,7 @@
 			l = rows.length,
 			s = (c.page * c.size),
 			e = (s + c.size);
+			if (l < 1) { return; } // empty table, abort!
 			$(table).trigger('pagerChange', c);
 			if (!c.removeRows) {
 				hideRows(table, c);

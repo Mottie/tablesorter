@@ -1,5 +1,15 @@
 TableSorter Change Log
 
+Version 2.0.23.1 (2011-10-26)
+============================]
+
+* Fixed the pager plugin to prevent errors when initialized on an empty table. Fix for [issue #5](https://github.com/Mottie/tablesorter/issues/5).
+* Added a Resizable Column widget
+  * At this time, this widget allows resizing the column widths from the header.
+  * The column widths are not saved, but if I did consider saving the widths to local storage. I just didn't get around to doing it.
+  * [Demo page](http://mottie.github.com/tablesorter/docs/example-widget-resizable.html) added.
+* Reorganized the next demo links, located at the bottom of every demo page, to match the order on the main document page.
+
 Version 2.0.23 (2011-10-18)
 ============================
 

@@ -1,5 +1,14 @@
-/* TableSorter 2.0 Widgets */
+/* TableSorter 2.0 Widgets
+ *
+ * jQuery UI Theme
+ * Column Styles
+ * Column Filters
+ * Sticky Header
+ * Column Resizing
+ *
+ */
 (function($){
+
 // Add jQuery UI theme widget
 // **************************
 $.tablesorter.addWidget({
@@ -81,7 +90,6 @@ $.tablesorter.addWidget({
 });
 
 // Add Filter widget
-// ** This widget doesn't work correctly with the pager plugin =( **
 // **************************
 $.tablesorter.addWidget({
 	id: "filter",
@@ -150,7 +158,8 @@ $.tablesorter.addWidget({
 					position   : 'fixed',
 					top        : 0,
 					marginLeft : -brdr,
-					visibility : 'hidden'
+					visibility : 'hidden',
+					zIndex     : 10
 				}),
 			stkyCells = sticky.children();
 		// update sticky header class names to match real header
@@ -188,11 +197,61 @@ $.tablesorter.addWidget({
 				sticky.css('visibility', vis);
 			})
 			.resize(function(){
-				sticky.css({ width: header.outerWidth() + brdr * 2 })
+				sticky.css({ width: header.outerWidth() + brdr * 2 });
 				stkyCells.each(function(i){
 					$(this).width( hdrCells.eq(i).width() );
 				});
 			});
+	}
+});
+
+// Add Column resizing widget
+// **************************
+$.tablesorter.addWidget({
+	id: "resizable",
+	format: function(table) {
+		if (!table.config.resizable) {
+			var i, w, c = table.config,
+				cols = c.headerList,
+				len = cols.length,
+				stopResize = function(){
+					c.resizable_position = 0;
+					c.resizable_target = null;
+					$(window).trigger('resize'); // will update stickyHeaders, just in case
+				};
+			c.resizable_target = null;
+			c.resizable_position = 0;
+			for (i=1; i < len; i++){
+				$(cols[i])
+					.append('<div class="resizer" style="cursor:w-resize;position:absolute;height:100%;width:20px;left:-20px;top:0;z-index:1;"></div>')
+					.wrapInner('<div style="position:relative;height:100%;width:100%"></div>')
+					.find('.resizer')
+					.bind('mousedown', function(e){
+						// save header cell and mouse position
+						c.resizable_target = $(e.target).closest('th');
+						c.resizable_position = e.pageX;
+					}).end()
+					.bind('mousemove', function(e){
+						// ignore mousemove if no mousedown
+						if (c.resizable_position === 0 || typeof(c.resizable_target) === null) { return; }
+						var w = e.pageX - c.resizable_position,
+							n = c.resizable_target.closest('th').prev();
+						// make sure
+						if ( c.resizable_target.width() < -w || ( n && n.width() <= w )) { return; }
+						// resize current column
+						n.width( n.width() + w );
+						c.resizable_position = e.pageX;
+					})
+					.bind('mouseup', function(){
+						stopResize();
+						return false;
+					});
+			}
+			$(table).find('thead').bind('mouseup mouseleave', function(){
+				stopResize();
+			});
+			c.resizable = true;
+		}
 	}
 });
 

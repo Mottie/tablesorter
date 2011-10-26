@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Updating a table cell</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Resizable Columns Widget</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -16,46 +16,34 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-	<style>
-		.discount { cursor: pointer; }
-	</style>
+	<!-- Tablesorter: optional -->
+	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
 
-	<script id="js">$(function() {
+<script id="js">$(function() {
 
-	$("table").tablesorter({ sortList: [[3,1],[0,0]] });
+	// call the tablesorter plugin
+	$("table").tablesorter({
 
-	$("table tbody td.discount").click(function() {
+		// initialize zebra striping and resizable widgets on the table
+		widgets: [ "zebra", "resizable" ]
 
-		// randomize a number
-		var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' + ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
-		$(this).text(discount);
-
-		$("table").trigger("updateCell",[this]);
-
-		return false;
 	});
 
 });</script>
 </head>
 <body>
-
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Updating a table cell</h2>
+	<h2>Resizable Columns Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
-
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li>Click on any value in the Total column to change it to a random amount.</li>
-			<li>This option is part of the original plugin.</li>
-			<li>Automatic resorting after "updateCell" is triggered was added in version 2.0.14.</li>
-		</ul>
+		<em>NOTE!</em> This widget can be applied to the original plugin.
 	</p>
 
 	<h1>Demo</h1>
@@ -75,7 +63,7 @@
 			<td>Peter</td>
 			<td>Parker</td>
 			<td>28</td>
-			<td class="discount">$9.99</td>
+			<td>$9.99</td>
 			<td>20%</td>
 			<td>Jul 6, 2006 8:14 AM</td>
 		</tr>
@@ -83,7 +71,7 @@
 			<td>John</td>
 			<td>Hood</td>
 			<td>33</td>
-			<td class="discount">$19.99</td>
+			<td>$19.99</td>
 			<td>25%</td>
 			<td>Dec 10, 2002 5:14 AM</td>
 		</tr>
@@ -91,7 +79,7 @@
 			<td>Clark</td>
 			<td>Kent</td>
 			<td>18</td>
-			<td class="discount">$15.89</td>
+			<td>$15.89</td>
 			<td>44%</td>
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
@@ -99,7 +87,7 @@
 			<td>Bruce</td>
 			<td>Almighty</td>
 			<td>45</td>
-			<td class="discount">$153.19</td>
+			<td>$153.19</td>
 			<td>44%</td>
 			<td>Jan 18, 2001 9:12 AM</td>
 		</tr>
@@ -107,17 +95,29 @@
 			<td>Bruce</td>
 			<td>Evans</td>
 			<td>22</td>
-			<td class="discount">$13.19</td>
+			<td>$13.19</td>
 			<td>11%</td>
 			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
 	</tbody>
 </table></div>
 
+	<h1>Page Header</h1>
+	<div>
+		<pre class="html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
+&lt;!-- tablesorter plugin --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- tablesorter widget file - loaded after the plugin --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
+
 	<h1>HTML</h1>
 	<div id="html">
 		<pre class="html"></pre>
@@ -125,10 +125,11 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-sticky-header.html">Applying the sticky header widget &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
 
 </body>
 </html>
+
