@@ -28,6 +28,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.23.2 (2011-10-28)
+
+* Fixed pager size & total pages not being retained after destroying, then restoring the pager. Thanks to crush123 for reporting the problem!
+
 #### Version 2.0.23.1 (2011-10-26)
 
 * Fixed the pager plugin to prevent errors when initialized on an empty table. Fix for [issue #5](https://github.com/Mottie/tablesorter/issues/5).

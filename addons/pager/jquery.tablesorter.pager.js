@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 10/26/2011
+ * updated 10/28/2011
  */
 
 (function($) {
@@ -65,7 +65,7 @@
 		},
 
 		hideRowsSetup = function(table, c){
-			c.size = parseInt($(c.cssPageSize, c.container).val(), 10);
+			c.size = c.lastSize = parseInt($(c.cssPageSize, c.container).val(), 10);
 			pagerArrows(c);
 			if (!c.removeRows) {
 				hideRows(table, c);
@@ -110,6 +110,7 @@
 
 		showAllRows = function(table, c){
 			c.lastPage = c.page;
+			c.lastSize = c.size;
 			c.size = c.totalRows;
 			c.totalPages = 1;
 			renderTable(table, c.rowsCopy, c);
@@ -176,6 +177,7 @@
 			var c = table.config;
 			c.rowsCopy = rows;
 			c.totalRows = rows.length;
+			c.size = c.lastSize || c.size;
 			c.totalPages = Math.ceil(c.totalRows / c.size);
 			renderTable(table, rows, c);
 		};
