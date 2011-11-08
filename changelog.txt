@@ -1,5 +1,16 @@
 TableSorter Change Log
 
+Version 2.0.23.3 (2011-11-7)
+============================
+
+* Updated the filter widget:
+  * Changed filter input from visibility hidden to display none. Fix/enhancement from [issue #7](https://github.com/Mottie/tablesorter/issues/7).
+  * Modified the widget to better work with child rows. Added the `widgetFilterChildRows` option. Fix for [issue #8](https://github.com/Mottie/tablesorter/issues/8).
+  * When `widgetFilterChildRows` is true, all child row content is included in the row filtering; if false, the child row content is ignored.
+* Added `tableClass` to the documents. Apparently I forgot to add it before.
+* Added a note to the filter demo bringing up [issue #6](https://github.com/Mottie/tablesorter/issues/6).
+* Miscellaneous updates to the documents.
+
 Version 2.0.23.2 (2011-10-28)
 ============================
 

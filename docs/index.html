@@ -295,7 +295,8 @@
 		<li><a href="example-trigger-sort.html">Sort table using a link outside the table</a></li>
 		<li><a href="example-option-sort-force.html">Force a default sorting order</a></li>
 		<li><a href="example-option-sort-append.html">Append a sort to the selected sorting order</a></li>
-		<li><a href="example-child-rows.html">How to add rows that sort with their parent row</a></li>
+		<li><a href="example-child-rows.html">Child rows; how to add rows that sort with their parent row</a></li>
+		<li><a href="example-child-rows-filtered.html">Child rows + filter widget; how they work together</a></li>
 		<li><a href="example-option-sort-order.html">Direction of initial sort</a></li>
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
@@ -411,7 +412,7 @@
 				<td>String</td>
 				<td>"expand-child"</td>
 				<td>Add this css class to a child row that should always be attached to its parent.  Click on the "cssChildRow" link to toggle the view on the attached child row.</td>
-				<td><a href="example-child-rows.html">Example</a></td>
+				<td>Ex:<a href="example-child-rows.html">1</a> <a href="example-child-rows-filtered.html">2</a></td>
 			</tr>
 			<tr class="expand-child">
 				<td></td>
@@ -747,6 +748,18 @@
 				<td><a href="example-option-sort-key.html">Example</a></td>
 			</tr>
 
+			<tr id="tableClass">
+				<td>tableClass</td>
+				<td>String</td>
+				<td>"tablesorter"</td>
+				<td>This class was required in the default markup in version 2.0.5. But in version 2.0.6, it was added as an option.
+					<div class="collapsible">
+						<br>Change this option if you are not using the default css, or if you are using a completely custom stylesheet.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="textextraction">
 				<td><a href="#" class="toggle2">textExtraction</a></td>
 				<td>String Or Function</td>
@@ -835,17 +848,23 @@ $(function(){
 			<tr id="widgetuitheme">
 				<td><a href="#" class="toggle2">widgetUitheme</a></td>
 				<td>Object with Array</td>
-				<td>{ css: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"] }</td>
+				<td>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</td>
 				<td>
 					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. <span class="tip"><em>New!</em></span> in v2.0.9.
 					<div class="collapsible">
+					<br>
+					Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
 					<br>
 					Use the <a href="#widgetuitheme"><code class="hilight">"widgetUitheme"</code></a> option to change the css class name as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["uitheme"], // initialize ui theme styling widget of the table
     widgetUitheme: {
-      css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+      css: [
+        "ui-icon-carat-2-n-s", // Unsorted icon
+        "ui-icon-carat-1-s",   // Sort up (down arrow)
+        "ui-icon-carat-1-n"    // Sort down (up arrow)
+      ]
     }
   });
 });</pre></div>

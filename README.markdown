@@ -1,12 +1,18 @@
 tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
-See [Alpha-numeric sort Demo](http://mottie.github.com/tablesorter/) &amp; [Full Documentation](http://mottie.github.com/tablesorter/docs/)
+See the [full documentation](http://mottie.github.com/tablesorter/docs/)
+
+###Demos
+
+* [Basic alpha-numeric sort Demo](http://mottie.github.com/tablesorter/)
+* More demos can be found in the [documentation](http://mottie.github.com/tablesorter/docs/)
+* Demos & playgrounds - updated in the [wiki pages](https://github.com/Mottie/tablesorter/wiki).
 
 ###Features
 
 * Multi-column sorting.
-* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats), time. [Add your own easily](http://mottie.github.com/tablesorter/docs/example-parsers.html)
+* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](http://mottie.github.com/tablesorter/docs/example-parsers.html)
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
 * Extensibility via [widget system](http://mottie.github.com/tablesorter/docs/example-widgets.html).
@@ -27,6 +33,16 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 ###Change Log
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
+
+#### Version 2.0.23.3 (2011-11-7)
+
+* Updated the filter widget:
+  * Changed filter input from visibility hidden to display none. Fix/enhancement from [issue #7](https://github.com/Mottie/tablesorter/issues/7).
+  * Modified the widget to better work with child rows. Added the `widgetFilterChildRows` option. Fix for [issue #8](https://github.com/Mottie/tablesorter/issues/8).
+  * When `widgetFilterChildRows` is true, all child row content is included in the row filtering; if false, the child row content is ignored.
+* Added `tableClass` to the documents. Apparently I forgot to add it before.
+* Added a note to the filter demo bringing up [issue #6](https://github.com/Mottie/tablesorter/issues/6).
+* Miscellaneous updates to the documents.
 
 #### Version 2.0.23.2 (2011-10-28)
 

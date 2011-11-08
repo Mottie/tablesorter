@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets
+/* TableSorter 2.0 Widgets - updated 11/7/2011
  *
  * jQuery UI Theme
  * Column Styles
@@ -95,7 +95,7 @@ $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
 		if (!table.config.filtering) {
-			var i, v, r, t, $td, c = table.config,
+			var i, v, r, t, cr, icr, $td, c = table.config,
 				cols = c.headerList.length,
 				tbl = $(table),
 				fr = '<tr class="filters">',
@@ -106,7 +106,7 @@ $.tablesorter.addWidget({
 			for (i=0; i < cols; i++){
 				fr += '<td><input type="text" class="filter" data-col="' + i + '" style="';
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
-				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? 'visibility:hidden' : '';
+				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? 'display:none' : '';
 				fr += '"></td>';
 			}
 			tbl
@@ -116,17 +116,24 @@ $.tablesorter.addWidget({
 					if (v.join('') === '') {
 						tbl.find('tr').show();
 					} else {
-						tbl.find('tbody').find('tr').each(function(){
+
+						tbl.find('tbody').find('tr:not(.expand-child)').each(function(){
 							r = true;
+							cr = $(this).nextUntil('tr:not(.expand-child)');
+							// so, if icr (table.config.widgetFilterChildRows) is true and there is
+							// a match anywhere in the child row, then it will make the row visible
+							// checked here so the option can be changed dynamically
+							t = (cr.length && (typeof c.widgetFilterChildRows !== 'undefined' ? c.widgetFilterChildRows : true)) ? cr.text() : '';
 							$td = $(this).find('td');
 							for (i=0; i < cols; i++){
-								if (v[i] !== '' && $td.eq(i).text().toLowerCase().indexOf(v[i]) >= 0) {
+								if (v[i] !== '' && ($td.eq(i).text() + t).toLowerCase().indexOf(v[i]) >= 0) {
 									r = (r) ? true : false;
 								} else if (v[i] !== '') {
 									r = false;
 								}
 							}
 							$(this)[r ? 'show' : 'hide']();
+							if (cr.length) { cr[r ? 'show' : 'hide'](); }
 						});
 					}
 					tbl.trigger('applyWidgets'); // make sure zebra widget is applied

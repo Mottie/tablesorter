@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Child Rows</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Child Rows with Filter Widget</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -16,20 +16,20 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-
-	<!-- Tablesorter: optional -->
-	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 	<script id="js">$(function() {
 
 	$(".tablesorter")
 		.tablesorter({
 			// this is the default setting
-			cssChildRow: "expand-child"
-		})
-		.tablesorterPager({
-			container: $("#pager"),
-			positionFixed: false
+			cssChildRow: "expand-child",
+
+			// include child row content while filtering, if true
+			widgetFilterChildRows: true,
+
+			// initialize zebra and filter widgets
+			widgets: ["zebra", "filter"]
 		});
 
 	// hide child rows
@@ -47,13 +47,21 @@
 		return false;
 	});
 
+	// Toggle widgetFilterChildRows option
+	$('button.toggle-option').click(function(){
+		var c = $('.tablesorter')[0].config,
+		o = !c.widgetFilterChildRows;
+		c.widgetFilterChildRows = o;
+		$('.state').html(o.toString());
+	});
+
 });</script>
 </head>
 <body>
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Working with Child Rows</h2>
+	<h2>Child Rows with Filter Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -61,12 +69,23 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> Click the link in the Order # column to reveal the hidden child row cells
-		(<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>). This option is available in the original plugin.
+		<em>NOTE!</em>
+		<ul>
+			<li>Click the link in the Order # column to reveal the hidden child row cells (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>). This option is available in the original plugin.</li>
+			<li>The filter widget will work with the original tablesorter plugin, just include the jquery.tablesorter.widget.js file and initialize the widget as seen below.</li>
+			<li>Combining the filter widget and pager plugin will not work as expected.</li>
 	</p>
 
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+	<br>
+	<div id="demo"><button class="toggle-option">Toggle Child Row Content</button> : <span class="state">true</span>
+
+	<ul>
+		<li>If true, the child row content is included in ALL filters. Enter "cal" (california) in any column filter and the same rows show up.</li>
+		<li>When false, child row content is ignored. Enter "cal" and no rows will be found.</li>
+	</ul>
+
+	<table class="tablesorter">
 	<colgroup>
 		<col width="85" />
 		<col width="250" />
@@ -321,22 +340,6 @@
 	</tbody>
 </table>
 
-<div id="pager" class="pager">
-	<form>
-		<input type="button" value="&lt;&lt;" class="first" />
-		<input type="button" value="&lt;" class="prev" />
-		<input type="text" class="pagedisplay"/>
-		<input type="button" value="&gt;" class="next" />
-		<input type="button" value="&gt;&gt;" class="last" />
-		<select class="pagesize">
-			<option selected="selected"  value="10">10</option>
-			<option value="20">20</option>
-			<option value="30">30</option>
-			<option value="40">40</option>
-		</select>
-	</form>
-</div></div>
-
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
@@ -416,7 +419,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-child-rows-filtered.html">Child Rows with Filter Widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-option-sort-order.html">Set an initial sorting order direction &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
