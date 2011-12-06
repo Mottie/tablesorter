@@ -34,6 +34,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+####Version 2.0.23.4 (2011-12-6)
+
+* Updated the sticky header widget to reposition the sticky header when scrolling left. Fix for [issue #9](https://github.com/Mottie/tablesorter/issues/9).
+
 #### Version 2.0.23.3 (2011-11-7)
 
 * Updated the filter widget:

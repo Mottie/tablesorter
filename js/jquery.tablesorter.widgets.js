@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 11/7/2011
+/* TableSorter 2.0 Widgets - updated 12/6/2011
  *
  * jQuery UI Theme
  * Column Styles
@@ -154,7 +154,8 @@ $.tablesorter.addWidget({
 	id: "stickyHeaders",
 	format: function(table) {
 		if ($(table).find('.stickyHeader').length) { return; }
-		var win = $(window),
+		var $table = $(table),
+			win = $(window),
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
 			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
@@ -170,7 +171,7 @@ $.tablesorter.addWidget({
 				}),
 			stkyCells = sticky.children();
 		// update sticky header class names to match real header
-		$(table).bind('sortEnd', function(e,t){
+		$table.bind('sortEnd', function(e,t){
 			var th = $(t).find('thead tr'),
 				sh = th.filter('.stickyHeader').children();
 			th.filter(':not(.stickyHeader)').children().each(function(i){
@@ -197,14 +198,19 @@ $.tablesorter.addWidget({
 		// make it sticky!
 		win
 			.scroll(function(){
-				var $t = $(table),
-					offset = $t.offset(),
+				var offset = $table.offset(),
 					sTop = win.scrollTop(),
-					vis = ((sTop > offset.top) && (sTop < offset.top + $t.find('tbody').height())) ? 'visible' : 'hidden';
-				sticky.css('visibility', vis);
+					vis = ((sTop > offset.top) && (sTop < offset.top + $table.find('tbody').height())) ? 'visible' : 'hidden';
+				sticky.css({
+					left : offset.left - win.scrollLeft(),
+					visibility : vis
+				});
 			})
 			.resize(function(){
-				sticky.css({ width: header.outerWidth() + brdr * 2 });
+				sticky.css({
+					left : $(table).offset().left - win.scrollLeft(),
+					width: header.outerWidth() + brdr * 2
+				});
 				stkyCells.each(function(i){
 					$(this).width( hdrCells.eq(i).width() );
 				});
