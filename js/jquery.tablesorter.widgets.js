@@ -159,7 +159,7 @@ $.tablesorter.addWidget({
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
 			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
-			sticky = header.find('tr').clone()
+			sticky = header.find('tr:not(.filters)').clone()
 				.addClass('stickyHeader')
 				.css({
 					width      : header.outerWidth() + brdr * 2,
@@ -169,7 +169,8 @@ $.tablesorter.addWidget({
 					visibility : 'hidden',
 					zIndex     : 10
 				}),
-			stkyCells = sticky.children();
+			stkyCells = sticky.children(),
+			laststate;
 		// update sticky header class names to match real header
 		$table.bind('sortEnd', function(e,t){
 			var th = $(t).find('thead tr'),
@@ -205,6 +206,11 @@ $.tablesorter.addWidget({
 					left : offset.left - win.scrollLeft(),
 					visibility : vis
 				});
+				if (vis !== laststate) {
+					// trigger resize to make sure the column widths match
+					win.resize();
+					laststate = vis;
+				}
 			})
 			.resize(function(){
 				sticky.css({

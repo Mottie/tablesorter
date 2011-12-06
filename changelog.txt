@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.23.5 (2011-12-6)
+============================
+
+* Updated the sticky header widget again to not interfere with the filter widget. Fix for [issue #10](https://github.com/Mottie/tablesorter/issues/10).
+
 Version 2.0.23.4 (2011-12-6)
 ============================
 
