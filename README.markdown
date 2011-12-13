@@ -34,6 +34,11 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+####Version 2.0.24 (2011-12-12)
+
+* Modified empty cell sorting to always sort at the bottom. Fix for [issue #14](https://github.com/Mottie/tablesorter/issues/14).
+* Updated the sticky header widget to line up properly with the UI theme. Fix for [issue #13](https://github.com/Mottie/tablesorter/issues/13).
+
 ####Version 2.0.23.5 (2011-12-6)
 
 * Updated the sticky header widget again to not interfere with the filter widget. Fix for [issue #10](https://github.com/Mottie/tablesorter/issues/10).

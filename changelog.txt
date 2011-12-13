@@ -1,5 +1,11 @@
 TableSorter Change Log
 
+Version 2.0.24 (2011-12-12)
+============================
+
+* Modified empty cell sorting to always sort at the bottom. Fix for [issue #14](https://github.com/Mottie/tablesorter/issues/14).
+* Updated the sticky header widget to line up properly with the UI theme. Fix for [issue #13](https://github.com/Mottie/tablesorter/issues/13).
+
 Version 2.0.23.5 (2011-12-6)
 ============================
 

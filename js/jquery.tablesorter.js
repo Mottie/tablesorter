@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.23
+* Version 2.0.24
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -74,6 +74,7 @@
 * @name tablesorter
 * @cat Plugins/Tablesorter
 * @author Christian Bach/christian.bach@polyester.se
+* @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
 (function($){
 	$.extend({
@@ -235,7 +236,7 @@
 					row: [],
 					normalized: []
 				},
-				i, j, c, cols, cacheTime;
+				t, i, j, c, cols, cacheTime;
 				if (table.config.debug) {
 					cacheTime = new Date();
 				}
@@ -251,11 +252,12 @@
 					}
 					cache.row.push(c);
 					for (j = 0; j < totalCells; ++j) {
-						cols.push(parsers[j].format(getElementText(table.config, c[0].cells[j], j), table, c[0].cells[j], j));
+						t = getElementText(table.config, c[0].cells[j], j);
+						// don't bother parsing if the string is empty - previously parsing would change it to zero
+						cols.push( t === '' ? '' : parsers[j].format(t, table, c[0].cells[j], j));
 					}
 					cols.push(cache.normalized.length); // add position for rowCache
 					cache.normalized.push(cols);
-					cols = null;
 				}
 				if (table.config.debug) {
 					benchmark("Building cache for " + totalRows + " rows:", cacheTime);
@@ -310,7 +312,6 @@
 				if (c.appender) {
 					c.appender(table, rows);
 				}
-				rows = null;
 				if (c.debug) {
 					benchmark("Rebuilt table:", appendTime);
 				}
@@ -529,8 +530,10 @@
 
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b) {
-				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
+				if (a === '') { return 1; }
+				if (b === '') { return -1; }
 				if (a === b) { return 0; }
+				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
 				try {
 					var cnt = 0, ax, t, x = /^(\.)?\d/,
 					L = Math.min(a.length, b.length) + 1;
@@ -557,6 +560,9 @@
 			}
 
 			function sortTextDesc(a, b){
+				if (a === '') { return 1; }
+				if (b === '') { return -1; }
+				if (a === b) { return 0; }
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return b.localeCompare(a); }
 				return -sortText(a, b);
 			}
@@ -565,7 +571,6 @@
 			// so the text is somewhat sorted when using a digital sort
 			// this is NOT an alphanumeric sort
 			function getTextValue(a, mx, d){
-				if (a === '') { return (d || 0) * Number.MAX_VALUE; }
 				if (mx) {
 					// make sure the text value is greater than the max numerical value (mx)
 					var i, l = a.length, n = mx + d;
@@ -578,14 +583,18 @@
 			}
 
 			function sortNumeric(a, b, mx, d) {
-				if (a === '' || isNaN(a)) { a = getTextValue(a, mx, d); }
-				if (b === '' || isNaN(b)) { b = getTextValue(b, mx, d); }
+				if (a === '') { return 1; }
+				if (b === '') { return -1; }
+				if (isNaN(a)) { a = getTextValue(a, mx, d); }
+				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return a - b;
 			}
 
 			function sortNumericDesc(a, b, mx, d) {
-				if (a === '' || isNaN(a)) { a = getTextValue(a, mx, d); }
-				if (b === '' || isNaN(b)) { b = getTextValue(b, mx, d); }
+				if (a === '') { return 1; }
+				if (b === '') { return -1; }
+				if (isNaN(a)) { a = getTextValue(a, mx, d); }
+				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return b - a;
 			}
 

@@ -14,7 +14,7 @@ table.tablesorter thead tr th, tr.stickyHeader th, table.tablesorter tfoot tr th
 	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 8pt;
-	padding: 4px;
+	padding: 4px 20px 4px 4px;
 }
 table.tablesorter thead tr .header, tr.stickyHeader .header {
 	background-image: url(black-bg.gif);

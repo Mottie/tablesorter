@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 12/6/2011
+/* TableSorter 2.0 Widgets - updated 12/12/2011
  *
  * jQuery UI Theme
  * Column Styles
@@ -28,12 +28,12 @@ $.tablesorter.addWidget({
 				$(this)
 				// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
 				.addClass('ui-widget-header ui-corner-all')
-				.append('<span class="ui-icon"/>')
 				.hover(function(){
 					$(this).addClass('ui-state-hover');
 				}, function(){
 					$(this).removeClass('ui-state-hover');
-				});
+				})
+				.append('<span class="ui-icon"/>');
 			});
 		}
 		$.each(c.headerList, function(i){
@@ -158,14 +158,16 @@ $.tablesorter.addWidget({
 			win = $(window),
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
+			firstCell = hdrCells.eq(0),
 			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
 			sticky = header.find('tr:not(.filters)').clone()
 				.addClass('stickyHeader')
 				.css({
 					width      : header.outerWidth() + brdr * 2,
 					position   : 'fixed',
-					top        : 0,
+					left       : firstCell.offset().left,
 					marginLeft : -brdr,
+					top        : 0,
 					visibility : 'hidden',
 					zIndex     : 10
 				}),
@@ -199,7 +201,7 @@ $.tablesorter.addWidget({
 		// make it sticky!
 		win
 			.scroll(function(){
-				var offset = $table.offset(),
+				var offset = firstCell.offset(),
 					sTop = win.scrollTop(),
 					vis = ((sTop > offset.top) && (sTop < offset.top + $table.find('tbody').height())) ? 'visible' : 'hidden';
 				sticky.css({
@@ -214,7 +216,7 @@ $.tablesorter.addWidget({
 			})
 			.resize(function(){
 				sticky.css({
-					left : $(table).offset().left - win.scrollLeft(),
+					left : firstCell.offset().left - win.scrollLeft(),
 					width: header.outerWidth() + brdr * 2
 				});
 				stkyCells.each(function(i){

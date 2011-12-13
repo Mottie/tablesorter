@@ -16,6 +16,7 @@ table.tablesorter thead tr .header {
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
+	white-space: normal;
 }
 table.tablesorter tbody td {
 	padding: 4px;
