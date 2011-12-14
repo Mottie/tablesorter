@@ -1,5 +1,11 @@
 TableSorter Change Log
 
+Version 2.0.25 (2011-12-14)
+============================
+
+* The ui theme and sticky header widgets now work together and update the arrow direction. Fix for [issue #15](https://github.com/Mottie/tablesorter/issues/15).
+* Empty cells with only a tab or space will now sort at the bottom. Thanks to [pursual](https://github.com/pursual) for the fix for [issue #16](https://github.com/Mottie/tablesorter/issues/16).
+
 Version 2.0.24 (2011-12-12)
 ============================
 

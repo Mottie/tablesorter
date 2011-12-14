@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.24
+* Version 2.0.25
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -252,7 +252,7 @@
 					}
 					cache.row.push(c);
 					for (j = 0; j < totalCells; ++j) {
-						t = getElementText(table.config, c[0].cells[j], j);
+						t = trimAndGetNodeText(table.config, c[0].cells[j], j);
 						// don't bother parsing if the string is empty - previously parsing would change it to zero
 						cols.push( t === '' ? '' : parsers[j].format(t, table, c[0].cells[j], j));
 					}

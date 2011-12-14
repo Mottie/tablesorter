@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 12/12/2011
+/* TableSorter 2.0 Widgets - updated 12/14/2011
  *
  * jQuery UI Theme
  * Column Styles
@@ -14,7 +14,7 @@
 $.tablesorter.addWidget({
 	id: "uitheme",
 	format: function(table) {
-		var time, klass, rmv, c = table.config,
+		var time, klass, rmv, $t, t, c = table.config, $table = $(table),
 		// ["up/down arrow (cssHeaders, unsorted)", "down arrow (cssDesc, descending)", "up arrow (cssAsc, ascending)" ]
 		icons = ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"];
 		if (c.widgetUitheme && c.widgetUitheme.hasOwnProperty('css')) { icons = c.widgetUitheme.css || icons; }
@@ -22,27 +22,29 @@ $.tablesorter.addWidget({
 		if (c.debug) {
 			time = new Date();
 		}
-		if (!$(table).is('.ui-theme')) {
-			$(table).addClass('ui-widget ui-widget-content ui-corner-all ui-theme');
+		if (!$table.is('.ui-theme')) {
+			$table.addClass('ui-widget ui-widget-content ui-corner-all ui-theme');
 			$.each(c.headerList, function(){
 				$(this)
 				// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
 				.addClass('ui-widget-header ui-corner-all')
+				.append('<span class="ui-icon"/>')
 				.hover(function(){
 					$(this).addClass('ui-state-hover');
 				}, function(){
 					$(this).removeClass('ui-state-hover');
-				})
-				.append('<span class="ui-icon"/>');
+				});
 			});
 		}
 		$.each(c.headerList, function(i){
+			$t = $(this);
 			if (c.headers[i] && c.headers[i].sorter === false) {
 				// no sort arrows for disabled columns!
-				$(this).find('span.ui-icon').removeClass(rmv + ' ui-icon');
+				$t.find('span.ui-icon').removeClass(rmv + ' ui-icon');
 			} else {
-				klass = ($(this).is('.' + c.cssAsc)) ? icons[1] : ($(this).is('.' + c.cssDesc)) ? icons[2] : $(this).is('.' + c.cssHeader) ? icons[0] : '';
-				$(this)[klass === icons[0] ? 'removeClass' : 'addClass']('ui-state-active')
+				klass = ($t.hasClass(c.cssAsc)) ? icons[1] : ($t.hasClass(c.cssDesc)) ? icons[2] : $t.hasClass(c.cssHeader) ? icons[0] : '';
+				t = ($table.hasClass('hasStickyHeaders')) ? $table.find('tr.stickyHeader').find('th').eq(i).add($t) : $t;
+				t[klass === icons[0] ? 'removeClass' : 'addClass']('ui-state-active')
 					.find('span.ui-icon').removeClass(rmv).addClass(klass);
 			}
 		});
@@ -153,8 +155,8 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "stickyHeaders",
 	format: function(table) {
-		if ($(table).find('.stickyHeader').length) { return; }
-		var $table = $(table),
+		if ($(table).hasClass('hasStickyHeaders')) { return; }
+		var $table = $(table).addClass('hasStickyHeaders'),
 			win = $(window),
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
