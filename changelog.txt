@@ -1,5 +1,11 @@
 TableSorter Change Log
 
+Version 2.0.25.1 (2011-12-15)
+============================
+
+* Fixed disabled column style for the ui theme widget. Thanks to [bbbco](https://github.com/bbbco) for the fix in [issue #17](https://github.com/Mottie/tablesorter/issues/17).
+
+
 Version 2.0.25 (2011-12-14)
 ============================
 

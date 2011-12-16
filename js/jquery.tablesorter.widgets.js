@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 12/14/2011
+/* TableSorter 2.0 Widgets - updated 12/15/2011
  *
  * jQuery UI Theme
  * Column Styles
@@ -38,7 +38,7 @@ $.tablesorter.addWidget({
 		}
 		$.each(c.headerList, function(i){
 			$t = $(this);
-			if (c.headers[i] && c.headers[i].sorter === false) {
+			if (this.sortDisabled) {
 				// no sort arrows for disabled columns!
 				$t.find('span.ui-icon').removeClass(rmv + ' ui-icon');
 			} else {
