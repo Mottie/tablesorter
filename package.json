@@ -28,7 +28,7 @@
         "natural sort"
     ],
     "homepage": "http://mottie.github.com/tablesorter/docs/index.html",
-    "contributors": [
+    "maintainers": [
         {
             "name": "Rob Garrison",
             "url": "https://github.com/Mottie"

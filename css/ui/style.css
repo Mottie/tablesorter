@@ -13,10 +13,12 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	padding: 4px;
 }
 table.tablesorter thead tr .header {
+	position: relative;
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
 	white-space: normal;
+	padding-right: 20px; /* wider than the icon */
 }
 table.tablesorter tbody td {
 	padding: 4px;
@@ -24,7 +26,10 @@ table.tablesorter tbody td {
 }
 table.tablesorter .header .ui-icon {
 	display: block;
-	float: right;
+	position: absolute;
+	right: 3px;
+	top: 50%;
+	margin-top: -8px; /* half the icon height; older IE doesn't like this */
 }
 
 /* This allows you to use ui-state-default as the zebra stripe color */

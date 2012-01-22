@@ -14,7 +14,8 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
+	<link class="theme" rel="stylesheet" href="../css/green/style.css" disabled>
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
@@ -37,6 +38,18 @@
 	});
 
 });</script>
+<script>
+$(function() {
+	$('select').change(function(){
+		var theme = $(this).val().toLowerCase(),
+			files = $('link.theme');
+		files
+			.prop('disabled', true)
+			.filter('[href*="' + theme + '"]')
+			.prop('disabled', false);
+	});
+});
+</script>
 </head>
 <body>
 <div id="banner">
@@ -52,6 +65,12 @@
 	</p>
 
 	<h1>Demo</h1>
+	Choose Theme:
+	<select>
+		<option>Blue</option>
+		<option>Green</option>
+	</select>
+
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
