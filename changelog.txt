@@ -1,5 +1,11 @@
 TableSorter Change Log
 
+Version 2.0.25.2 (2012-1-27)
+============================
+
+* Changed Blue theme to vertically align arrows. Fix for [issue #12](https://github.com/Mottie/tablesorter/issues/12).
+* Fixed sticky header widget so varing width columns now update when the pager plugin changes pages. Thanks to locationRoura for reporting this issue.
+
 Version 2.0.25.1 (2011-12-15)
 ============================
 
