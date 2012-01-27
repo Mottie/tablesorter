@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 12/15/2011
+/* TableSorter 2.0 Widgets - updated 1/27/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -182,6 +182,8 @@ $.tablesorter.addWidget({
 			th.filter(':not(.stickyHeader)').children().each(function(i){
 				sh.eq(i).attr('class', $(this).attr('class'));
 			});
+		}).bind('pagerComplete', function(){
+			win.resize(); // trigger window resize to make sure column widths & position are correct
 		});
 		// set sticky header cell width and link clicks to real header
 		hdrCells.each(function(i){
