@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.25
+* Version 2.0.26
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -523,7 +523,7 @@
 				dynamicExp += "return 0; ";
 				dynamicExp += "}; ";
 				eval(dynamicExp);
-				cache.normalized.sort(sortWrapper);
+				cache.normalized.sort(sortWrapper); // sort using eval expression
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time:", sortTime); }
 				return cache;
 			}
@@ -772,9 +772,10 @@
 					// if user has supplied a sort list to constructor.
 					if (config.sortList.length > 0) {
 						$this.trigger("sorton", [config.sortList]);
+					} else {
+						// apply widgets
+						applyWidget(this);
 					}
-					// apply widgets
-					applyWidget(this);
 				});
 			};
 			this.addParser = function(parser) {
