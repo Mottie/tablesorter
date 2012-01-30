@@ -26,14 +26,14 @@ table.tablesorter .header {
 	height: auto;
 	cursor: pointer;
 }
-table.tablesorter .header span, .stickyHeader .header span {
+table.tablesorter .header span:first-child, .stickyHeader .header span:first-child {
 	background: url(none.png) no-repeat;
 	padding: 2px 0 2px 25px;
 }
-table.tablesorter .headerSortUp span {
+table.tablesorter .headerSortUp span:first-child {
 	background: url(asc.png) no-repeat;
 }
-table.tablesorter .headerSortDown span {
+table.tablesorter .headerSortDown span:first-child {
 	background: url(desc.png) no-repeat;
 }
 

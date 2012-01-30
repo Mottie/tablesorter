@@ -19,8 +19,8 @@
 	<!-- Tablesorter: required; also include any of the jQuery UI themes -->
 	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
 	<link class="ui-theme" rel="stylesheet" href="../css/ui/style.css">
-	<link class="theme" rel="stylesheet" href="../css/blue/style.css" disabled>
-	<link class="theme" rel="stylesheet" href="../css/green/style.css" disabled>
+	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
+	<link class="theme" rel="stylesheet" href="../css/green/style.css">
 
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
@@ -58,6 +58,8 @@
 		// ********************
 		$('#switcher').themeswitcher();
 
+		$('link.theme').prop('disabled', true);
+
 		$('select').change(function(){
 			var theme = $(this).val().toLowerCase(),
 				files = $('link.theme, link.ui-theme'); // ui-theme is added by the themeswitcher
@@ -65,9 +67,6 @@
 				.prop('disabled', true)
 				.filter('[href*="' + theme + '"]')
 				.prop('disabled', false);
-
-			// hide span.ui-icon when showing green theme or we get two indicator arrows
-			$('table').find('thead span.ui-icon')[ (theme === "green") ? 'hide' : 'show' ]();
 		});
 
 	});
@@ -191,33 +190,32 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
   font-size: 8pt;
   padding: 4px;
 }
-table.tablesorter thead tr .header {
-  position: relative;
+table.tablesorter thead tr th {
   background-repeat: no-repeat;
   background-position: center right;
   cursor: pointer;
   white-space: normal;
+  /* UI hover and active states make the font normal and the table resizes, this fixes it */
+  font-weight: bold !important;
+}
+table.tablesorter thead tr th .inner {
+  position: relative;
   padding-right: 20px; /* wider than the icon */
 }
-table.tablesorter tbody td {
-  padding: 4px;
-  vertical-align: top;
-}
-table.tablesorter .header .ui-icon {
-  display: block;
+table.tablesorter thead tr th .ui-icon {
   position: absolute;
   right: 3px;
   top: 50%;
   margin-top: -8px; /* half the icon height; older IE doesn't like this */
 }
 
+table.tablesorter tbody td {
+  padding: 4px;
+  vertical-align: top;
+}
 /* This allows you to use ui-state-default as the zebra stripe color */
 table.tablesorter tr.ui-state-default {
   background-image: url();
-}
-/* UI hover and active states make the font normal and the table resizes, this fixes it */
-table.tablesorter th.header {
-  font-weight: bold !important;
 }
 
 /* filter widget */

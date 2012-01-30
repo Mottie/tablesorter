@@ -12,33 +12,32 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	font-size: 8pt;
 	padding: 4px;
 }
-table.tablesorter thead tr .header {
-	position: relative;
+table.tablesorter thead tr th {
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
 	white-space: normal;
+	/* UI hover and active states make the font normal and the table resizes, this fixes it */
+	font-weight: bold !important;
+}
+table.tablesorter thead tr th .inner {
+	position: relative;
 	padding-right: 20px; /* wider than the icon */
 }
-table.tablesorter tbody td {
-	padding: 4px;
-	vertical-align: top;
-}
-table.tablesorter .header .ui-icon {
-	display: block;
+table.tablesorter thead tr th .ui-icon {
 	position: absolute;
 	right: 3px;
 	top: 50%;
 	margin-top: -8px; /* half the icon height; older IE doesn't like this */
 }
 
+table.tablesorter tbody td {
+	padding: 4px;
+	vertical-align: top;
+}
 /* This allows you to use ui-state-default as the zebra stripe color */
 table.tablesorter tr.ui-state-default {
 	background-image: url();
-}
-/* UI hover and active states make the font normal and the table resizes, this fixes it */
-table.tablesorter th.header {
-	font-weight: bold !important;
 }
 
 /* filter widget */

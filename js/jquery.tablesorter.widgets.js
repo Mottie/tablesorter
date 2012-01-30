@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 1/27/2012
+/* TableSorter 2.0 Widgets - updated 1/30/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -29,6 +29,7 @@ $.tablesorter.addWidget({
 				// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
 				.addClass('ui-widget-header ui-corner-all')
 				.append('<span class="ui-icon"/>')
+				.wrapInner('<div class="inner"/>')
 				.hover(function(){
 					$(this).addClass('ui-state-hover');
 				}, function(){

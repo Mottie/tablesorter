@@ -1,5 +1,14 @@
 TableSorter Change Log
 
+Version 2.0.26 (2012-1-30)
+============================
+
+* Widgets should no longer be applied twice when an initial sort direction is added. Fix for [issue #21](https://github.com/Mottie/tablesorter/issues/21).
+* Modified Green theme:
+  * The Green theme sort direction icon is now applied to only the first span it encounters inside the header. The UI theme adds a second span for it's icon.
+  * Essentially to fix [this demo](http://mottie.github.com/tablesorter/docs/example-widget-ui-theme.html) which allows switching between all of the themes.
+* Modified the UI theme to now add a div that wraps all of the header cell content to allow positioning of the sort direction icon.
+
 Version 2.0.25.2 (2012-1-27)
 ============================
 
