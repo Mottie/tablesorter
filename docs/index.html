@@ -89,8 +89,8 @@
 		<li><a href="#Getting-Started">Getting started</a></li>
 		<li><a href="#Examples">Examples</a></li>
 		<li><a href="#Configuration">Configuration</a></li>
-		<li><a href="#Methods">Methods</a> <span class="tip"><em>New!</em></span></li>
-		<li><a href="#Events">Events</a> <span class="tip"><em>New!</em></span></li>
+		<li><a href="#Methods">Methods</a></li>
+		<li><a href="#Events">Events</a></li>
 		<li><a href="#Download">Download</a></li>
 		<li><a href="#Compatibility">Compatibility</a></li>
 		<li><a href="#Support">Support</a></li>
@@ -307,8 +307,8 @@
 	<h4>Parsers / Extracting Content</h4>
 	<ul>
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
-		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> <span class="tip"><em>New! v2.0.10</em></span></li>
-		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> <span class="tip"><em>New! v2.0.11</em></span></li>
+		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (v2.0.10)</li>
+		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> (v2.0.11)</li>
 		<li><a href="example-option-date-format.html">Changing the date format</a> <span class="tip"><em>New! v2.0.23</em></span></li>
 		<li><a href="example-parsers.html">Parser, writing your own</a></li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
@@ -317,11 +317,12 @@
 	<h4>Widgets /  Plugins</h4>
 	<ul>
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
-		<li><a href="example-widget-columns.html">Columns widget</a> <span class="tip"><em>New! v2.0.17</em></span></li>
-		<li><a href="example-widget-filter.html">Filter widget</a> <span class="tip"><em>New! v2.0.18</em></span></li>
-		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
+		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
+		<li><a href="example-widget-filter.html">Filter widget</a> (v2.0.18)</li>
+		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> (v2.0.9)</li>
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> <span class="tip"><em>New! v2.0.23.1</em></span></li>
-		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> <span class="tip"><em>New! v2.0.21.1</em></span></li>
+		<li><a href="example-widget-savesort.html">Save sort widget</a> <span class="tip"><em>New! v2.0.27</em></span></li>
+		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
 		<li><a href="example-widget-zebra.html">Zebra stripe widget</a></li>
 		<li><a href="example-widgets.html">Widgets, writing your own</a></li>
 		<li><a href="example-pager.html">Pager plugin</a></li>
@@ -334,14 +335,14 @@
 	<ul>
 		<li><a href="example-empty-table.html">Initializing tablesorter on a empty table</a></li>
 		<li><a href="example-ajax.html">Appending table data with ajax</a></li>
-		<li><a href="example-add-rows.html">Adding a table row</a> <span class="tip"><em>New! v2.0.16</em></span></li>
+		<li><a href="example-add-rows.html">Adding a table row</a> (v2.0.16)</li>
 		<li><a href="example-update-cell.html">Update the table after cell content has changed</a></li>
 		<li><a href="example-pager.html">Pager plugin</a> - examples of how to add and remove rows</li>
 	</ul>
 
 	<h4>Change Header Style</h4>
 	<ul>
-		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> <span class="tip"><em>New! v2.0.9</em></span></li>
+		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> (v2.0.9)</li>
 		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
 	</ul>
 
@@ -736,6 +737,16 @@
 				<td>
 					Boolean flag indicating whenever to use javascript <code class="hilight">String.localeCampare</code> method or not. This is only used when comparing text strings.<br>
 					In Tablesorter version 2.0.6+, the default sort was replaced with an alpha-numeric sort. To over-ride this behaviour, set this <code class="hilight">sortLocaleCompare</code> to <code class="hilight">true</code>.
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="sortreset">
+				<td>sortReset</td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Setting this option to <code class="hilight">true</code> will allow you to click on the table header a third time to reset the sort direction. However, it does not restore the original sort order, it merely clear the sort from the header. <span class="tip"><em>New!</em></span> in v2.0.27.
 				</td>
 				<td></td>
 			</tr>

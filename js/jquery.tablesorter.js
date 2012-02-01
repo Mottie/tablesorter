@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.26
+* Version 2.0.27
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -462,6 +462,7 @@
 				});
 				l = list.length;
 				for (i = 0; i < l; i++) {
+					if (list[i][1] === 2) { continue; } // direction = 2 means reset!
 					h[list[i][0]].addClass(css[list[i][1]]);
 				}
 			}
@@ -639,7 +640,7 @@
 							// get current column index
 							i = this.column;
 							// get current column sort order
-							this.order = this.count++ % 2;
+							this.order = this.count++ % (config.sortReset ? 3 : 2);
 							// always sort on the locked order.
 							if(typeof(this.lockedOrder) !== "undefined" && this.lockedOrder !== false) { this.order = this.lockedOrder; }
 							// user only wants to sort on one column
@@ -655,7 +656,7 @@
 									}
 								}
 								// add column to sort list
-								config.sortList.push([i, this.order]);
+								if (this.order < 2) { config.sortList.push([i, this.order]); }
 								// multi column sorting
 							} else {
 								// the user has clicked on an already sorted column.
@@ -667,12 +668,16 @@
 										if (s[0] === i) {
 											o.count = s[1];
 											o.count++;
-											s[1] = o.count % 2;
+											s[1] = o.count % (config.sortReset ? 3 : 2);
+											if (s[1] >= 2) {
+												config.sortList.splice(j,1);
+												o.count = 0;
+											}
 										}
 									}
 								} else {
 									// add column to sort list array
-									config.sortList.push([i, this.order]);
+									if (this.order < 2) { config.sortList.push([i, this.order]); }
 								}
 							}
 							if (config.sortAppend !== null) {

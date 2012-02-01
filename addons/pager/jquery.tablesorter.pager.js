@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 10/28/2011
+ * updated 1/31/2012
  */
 
 (function($) {
@@ -125,7 +125,7 @@
 		},
 
 		setPageSize = function(table, size, c) {
-			c.size = size;
+			c.size = c.lastSize = size;
 			c.totalPages = Math.ceil(c.totalRows / c.size);
 			c.pagerPositionSet = false;
 			moveToPage(table, c);

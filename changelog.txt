@@ -1,5 +1,16 @@
 TableSorter Change Log
 
+Version 2.0.27 (2012-1-31)
+============================
+
+* Added `sortReset` option
+  * Setting this option to `true`, allows you to click on the header a third time to clear the sort
+  * Clearing the sort DOES NOT return the table to it's initial unsorted state.
+* Added `saveSort` widget
+  * This widget will save the last sort to local storage, and will fallback to cookies.
+  * The widget does use the `JSON.stringify` function which is [not fully supported](http://caniuse.com/#search=json) (IE7), so if you plan to support it and use this widget, please include this [JSON library](https://github.com/douglascrockford/JSON-js).
+* Fixed pager page size not sticking. Fix for [issue #24](https://github.com/Mottie/tablesorter/issues/24).
+
 Version 2.0.26 (2012-1-30)
 ============================
 

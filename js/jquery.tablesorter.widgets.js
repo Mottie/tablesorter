@@ -1,10 +1,11 @@
-/* TableSorter 2.0 Widgets - updated 1/30/2012
+/* TableSorter 2.0 Widgets - updated 1/31/2012
  *
  * jQuery UI Theme
  * Column Styles
  * Column Filters
  * Sticky Header
  * Column Resizing
+ * Save Sort
  *
  */
 (function($){
@@ -277,6 +278,65 @@ $.tablesorter.addWidget({
 				stopResize();
 			});
 			c.resizable = true;
+		}
+	}
+});
+
+// Save table sort widget
+// store last sort in local storage, with a cookie fallback
+// IE7 needs JSON library for JSON.stringify - see link below
+// **************************
+$.tablesorter.addWidget({
+	id: 'saveSort',
+	format: function(table) {
+		var n, d, k, ls, time, c = table.config,
+			// older browsers don't support JSON.stringify (http://caniuse.com/#search=json)
+			// if you need it, then include https://github.com/douglascrockford/JSON-js
+			sortList = '{"sortList":' + JSON.stringify(c.sortList) + '}';
+		if (c.debug) {
+			time = new Date();
+		}
+		if (c.widgetsavesort){
+			n = 'tablesorter' + (c.tableIndex || 0) + table.id;
+			// save table sort
+			if (c.hasLocalStorage) {
+				localStorage[n] = sortList; // local storage
+			} else {
+				d = new Date();
+				d.setTime(d.getTime()+(31536e+6)); // 365 days
+				document.cookie = n + '=' + sortList + '; expires=' + d.toGMTString() + '; path=/';
+			}
+			if (c.debug) {
+				$.tablesorter.benchmark('saveSort: Saving sort to "' + n + '" in ' + (c.hasLocalStorage ? 'local storage' : 'a cookie'), time);
+			}
+		} else {
+			// set table sort on initial run of the widget
+			c.widgetsavesort = true;
+			c.hasLocalStorage = false;
+			// check for local storage - from Modernzr
+			try { if (localStorage.getItem) { c.hasLocalStorage = true; } } catch(e) {}
+			// save table index; in case there is more than one table on the page
+			c.tableIndex = $('.tablesorter').index($(table));
+			// make sure we use a unique table key; use index in case table.id = ""
+			n = 'tablesorter' + (c.tableIndex || 0) + table.id;
+			// get data
+			if (c.hasLocalStorage) {
+				ls = localStorage[n]; // local storage
+			} else {
+				k = document.cookie.split(/[;\s|=]/); // cookie
+				d = $.inArray(n, k) + 1; // add one to get from the key to the value
+				ls = (d !== 0) ? k[d] : '';
+			}
+			// parse data
+			try { ls = $.parseJSON(ls); } catch(e) { ls = ''; }
+			sortList = (ls && ls.hasOwnProperty('sortList') && $.isArray(ls.sortList)) ? [ls.sortList] : '';
+			if (c.debug) {
+				$.tablesorter.benchmark('saveSort: Last sort for "' + n + '" obtained from ' + (c.hasLocalStorage ? 'local storage' : 'a cookie'), time);
+			}
+			// update sort change
+			if (sortList && sortList.length > 0) {
+				$(table).trigger('sorton', sortList);
+			}
 		}
 	}
 });
