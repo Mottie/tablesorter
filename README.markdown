@@ -34,6 +34,30 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+####Version 2.0.28 (2012-2-1)
+
+* Added a new function to widgets called "init" which is called upon initialization, before any of the widgets are applied.
+  * I added it to allow the "saveSort" widget to get the saved sort data (localStorage or cookie) before the initial sort was applied.
+  * The "saveSort" widget is still compatible with the original tablesorter, but the original version will call all of the widgets twice on initialization, if using the "saveSort" widget.
+  * New add widget format is as follows:
+
+        ```javascript
+        $.tablesorter.addWidget({
+          id: 'myWidget',
+          init: function(table, allWidgets, thisWidget){
+            // widget initialization code - this is only run ONCE
+            // but in this example I call the format function because
+            // I want to keep it backwards compatible with the original tablesorter
+            thisWidget.format(table, true);
+          },
+          format: function(table, initFlag) {
+            // widget code to apply to the table AFTER EACH SORT
+            // the initFlag is true when format is called for the first time, but
+            // only if it is called from the init function
+          }
+        });
+        ```
+
 ####Version 2.0.27 (2012-1-31)
 
 * Added `sortReset` option

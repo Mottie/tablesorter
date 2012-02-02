@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 1/31/2012
+/* TableSorter 2.0 Widgets - updated 2/1/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -288,7 +288,11 @@ $.tablesorter.addWidget({
 // **************************
 $.tablesorter.addWidget({
 	id: 'saveSort',
-	format: function(table) {
+	init: function(table, allWidgets, thisWidget){
+		// run widget format before all other widgets are applied to the table
+		thisWidget.format(table, true);
+	},
+	format: function(table, init) {
 		var n, d, k, ls, time, c = table.config,
 			// older browsers don't support JSON.stringify (http://caniuse.com/#search=json)
 			// if you need it, then include https://github.com/douglascrockford/JSON-js
@@ -329,13 +333,17 @@ $.tablesorter.addWidget({
 			}
 			// parse data
 			try { ls = $.parseJSON(ls); } catch(e) { ls = ''; }
-			sortList = (ls && ls.hasOwnProperty('sortList') && $.isArray(ls.sortList)) ? [ls.sortList] : '';
+			sortList = (ls && ls.hasOwnProperty('sortList') && $.isArray(ls.sortList)) ? ls.sortList : '';
 			if (c.debug) {
 				$.tablesorter.benchmark('saveSort: Last sort for "' + n + '" obtained from ' + (c.hasLocalStorage ? 'local storage' : 'a cookie'), time);
 			}
-			// update sort change
-			if (sortList && sortList.length > 0) {
-				$(table).trigger('sorton', sortList);
+			// init is true when widget init is run, this will run this widget before all other widgets have initialized
+			// this method allows using this widget in the original tablesorter plugin; but then it will run all widgets twice.
+			if (init && sortList && sortList.length > 0) {
+				c.sortList = sortList;
+			} else if (sortList && sortList.length > 0) {
+				// update sort change
+				$(table).trigger('sorton', [sortList]);
 			}
 		}
 	}

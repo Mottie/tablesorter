@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.27
+* Version 2.0.28
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -76,7 +76,7 @@
 * @author Christian Bach/christian.bach@polyester.se
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
-(function($){
+!(function($){
 	$.extend({
 		tablesorter: new function(){
 
@@ -109,7 +109,7 @@
 
 			/* debuging utils */
 			function log(s) {
-				if (typeof console !== "undefined" && typeof console.debug !== "undefined") {
+				if (typeof console !== "undefined" && typeof console.log !== "undefined") {
 					console.log(s);
 				} else {
 					alert(s);
@@ -264,6 +264,16 @@
 				}
 				table.config.cache = cache;
 				return cache;
+			}
+
+			function initWidgets(table){
+				var i, w, l = widgets.length;
+				for (i = 0; i < l; i++) {
+					w = widgets[i];
+					if (w && w.hasOwnProperty('init')) {
+						w.init(table, widgets, w);
+					}
+				}
 			}
 
 			function getWidgetById(name) {
@@ -774,6 +784,8 @@
 					if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
 						config.sortList = $(this).metadata().sortlist;
 					}
+					// initialize widgets
+					initWidgets(this);
 					// if user has supplied a sort list to constructor.
 					if (config.sortList.length > 0) {
 						$this.trigger("sorton", [config.sortList]);
