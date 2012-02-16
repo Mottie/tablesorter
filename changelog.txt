@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.28.1 (2012-2-16)
+============================
+
+* Modified the plugin pager to ignore child rows. Fix for [issue #27](https://github.com/Mottie/tablesorter/issues/27).
+
 Version 2.0.28 (2012-2-1)
 ============================
 

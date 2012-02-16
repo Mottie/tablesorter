@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 1/31/2012
+ * updated 2/16/2012
  */
 
 (function($) {
@@ -54,7 +54,7 @@
 		},
 
 		hideRows = function(table, c){
-			var i, rows = $('tr', table.tBodies[0]),
+			var i, rows = $('tr:not(.' + c.cssChildRow + ')', table.tBodies[0]),
 			l = rows.length,
 			s = (c.page * c.size),
 			e = (s + c.size);

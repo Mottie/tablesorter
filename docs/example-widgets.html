@@ -23,6 +23,7 @@
 	<script id="js">$(function() {
 
 	// add new widget called repeatHeaders
+	// ************************************
 	$.tablesorter.addWidget({
 
 		// give the widget an id
@@ -54,7 +55,6 @@
 					);
 				}
 			}
-
 		}
 
 	});
@@ -315,6 +315,31 @@
 
 
 	<h1>Javascript</h1>
+	<h3>Add Widget Template</h3>
+	<div>
+		<pre class="js">// addWidget Template
+// *******************
+$.tablesorter.addWidget({
+	id: 'myWidget',
+	// The init function (added in v2.0.28) is called only after tablesorter has
+	// initialized, but before initial sort & before any of the widgets are applied.
+	init: function(table, allWidgets, thisWidget){
+		// widget initialization code - this is only *RUN ONCE*
+		// but in this example, only the format function is called to from here
+		// to keep the widget backwards compatible with the original tablesorter
+		thisWidget.format(table, true);
+	},
+	format: function(table, initFlag) {
+		// widget code to apply to the table *AFTER EACH SORT*
+		// the initFlag is true when this format is called from the init
+		// function above otherwise initFlag is undefined
+		// * see the saveSort widget for a full example *
+	}
+});</pre>
+	</div>
+
+	<h3>Repeat Headers Widget Code</h3>
+
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
