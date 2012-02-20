@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.28
+* Version 2.0.29
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -267,11 +267,10 @@
 			}
 
 			function initWidgets(table){
-				var i, w, l = widgets.length;
+				var i, w = table.config.widgets, l = w.length;
 				for (i = 0; i < l; i++) {
-					w = widgets[i];
-					if (w && w.hasOwnProperty('init')) {
-						w.init(table, widgets, w);
+					if (w[i] && w[i].hasOwnProperty('init')) {
+						w[i].init(table, widgets, w[i]);
 					}
 				}
 			}
@@ -461,10 +460,10 @@
 				return false;
 			}
 
-			function setHeadersCss(table, $headers, list, css) {
+			function setHeadersCss(table, $headers, list) {
+				var h = [], i, l, css = [table.config.cssDesc, table.config.cssAsc];
 				// remove all header information
 				$headers.removeClass(css[0]).removeClass(css[1]);
-				var h = [], i, l;
 				$headers.each(function (offset) {
 					if (!this.sortDisabled) {
 						h[this.column] = $(this);
@@ -616,7 +615,7 @@
 					if (!this.tHead || !this.tBodies) { return; }
 					// declare
 					var $this, $document, $headers, cache, config, shiftDown = 0,
-					sortOrder, sortCSS, totalRows, $cell, i, j, a, s, o;
+					sortOrder, totalRows, $cell, i, j, a, s, o;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
@@ -633,8 +632,6 @@
 					this.config.string = { max: 1, 'max+': 1, 'max-': -1, none: 0 };
 					// build the cache for the tbody cells
 					cache = buildCache(this);
-					// get the css class names, could be done else where.
-					sortCSS = [config.cssDesc, config.cssAsc];
 					// fixate columns if the users supplies the fixedWidth option
 					fixColumnWidth(this);
 					// apply event handling to headers
@@ -702,7 +699,7 @@
 							$this.trigger("sortBegin", tbl[0]);
 							setTimeout(function () {
 								// set css for headers
-								setHeadersCss($this[0], $headers, config.sortList, sortCSS);
+								setHeadersCss($this[0], $headers, config.sortList);
 								appendToTable($this[0], multisort($this[0], config.sortList, cache));
 							}, 1);
 							// stop normal event by returning false
@@ -767,7 +764,7 @@
 						// update header count index
 						updateHeaderSortCount(this, sortList);
 						// set css for headers
-						setHeadersCss(this, $headers, sortList, sortCSS);
+						setHeadersCss(this, $headers, sortList);
 						// sort the table and append it to the dom
 						appendToTable(this, multisort(this, sortList, cache));
 					})

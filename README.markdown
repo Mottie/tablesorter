@@ -34,6 +34,11 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.29 (2012-2-20)
+
+* Fixed a problem with the addWidget init function which apparently was always being called, even if you didn't want it! Fix for [issue #28](https://github.com/Mottie/tablesorter/issues/28). Thanks to thezoggy for helping with troubleshooting!
+* Minor cleanup of sorting class names code.
+
 #### Version 2.0.28.1 (2012-2-16)
 
 * Modified the plugin pager to ignore child rows. Fix for [issue #27](https://github.com/Mottie/tablesorter/issues/27).
