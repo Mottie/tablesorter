@@ -108,10 +108,10 @@ $.tablesorter.addWidget({
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				fr += '<td><input type="text" class="filter" data-col="' + i + '" style="';
+				fr += '<td><input type="text" data-col="' + i + '" class="filter';
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
-				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? 'display:none' : '';
-				fr += '"></td>';
+				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
+				fr += '></td>';
 			}
 			tbl
 				.find('thead').append(fr += '</tr>')
@@ -120,7 +120,6 @@ $.tablesorter.addWidget({
 					if (v.join('') === '') {
 						tbl.find('tr').show();
 					} else {
-
 						tbl.find('tbody').find('tr:not(.expand-child)').each(function(){
 							r = true;
 							cr = $(this).nextUntil('tr:not(.expand-child)');

@@ -34,6 +34,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.30.1 (2012-2-20)
+
+* Modified the "filter" widget to disable the input window instead of setting it with display none. Now the input is disabled and a "disabled" class is applied to allow for further styling.
+
 #### Version 2.0.30 (2012-2-20)
 
 * Fixed the total mess I just made with the addWidget init functionality... I need a vacation :P
