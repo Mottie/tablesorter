@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 2/1/2012
+/* TableSorter 2.0 Widgets - updated 2/20/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -301,17 +301,19 @@ $.tablesorter.addWidget({
 			time = new Date();
 		}
 		if (c.widgetsavesort){
-			n = 'tablesorter' + (c.tableIndex || 0) + table.id;
-			// save table sort
-			if (c.hasLocalStorage) {
-				localStorage[n] = sortList; // local storage
-			} else {
-				d = new Date();
-				d.setTime(d.getTime()+(31536e+6)); // 365 days
-				document.cookie = n + '=' + sortList + '; expires=' + d.toGMTString() + '; path=/';
-			}
-			if (c.debug) {
-				$.tablesorter.benchmark('saveSort: Saving sort to "' + n + '" in ' + (c.hasLocalStorage ? 'local storage' : 'a cookie'), time);
+			if (table.hasInitialized) {
+				n = 'tablesorter' + (c.tableIndex || 0) + table.id;
+				// save table sort
+				if (c.hasLocalStorage) {
+					localStorage[n] = sortList; // local storage
+				} else {
+					d = new Date();
+					d.setTime(d.getTime()+(31536e+6)); // 365 days
+					document.cookie = n + '=' + sortList + '; expires=' + d.toGMTString() + '; path=/';
+				}
+				if (c.debug) {
+					$.tablesorter.benchmark('saveSort: Saving sort to "' + n + '" in ' + (c.hasLocalStorage ? 'local storage' : 'a cookie'), time);
+				}
 			}
 		} else {
 			// set table sort on initial run of the widget
@@ -341,7 +343,7 @@ $.tablesorter.addWidget({
 			// this method allows using this widget in the original tablesorter plugin; but then it will run all widgets twice.
 			if (init && sortList && sortList.length > 0) {
 				c.sortList = sortList;
-			} else if (sortList && sortList.length > 0) {
+			} else if (table.hasInitialized && sortList && sortList.length > 0) {
 				// update sort change
 				$(table).trigger('sorton', [sortList]);
 			}

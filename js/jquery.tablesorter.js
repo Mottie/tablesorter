@@ -1,6 +1,6 @@
 /*
 * TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.29
+* Version 2.0.30
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -117,10 +117,11 @@
 			}
 
 			function benchmark(s, d) {
-				log(s + "," + (new Date().getTime() - d.getTime()) + "ms");
+				log(s + " (" + (new Date().getTime() - d.getTime()) + "ms)");
 			}
 
 			this.benchmark = benchmark;
+			this.hasInitialized = false;
 
 			function getElementText(config, node, cellIndex) {
 				var text = "", te = config.textExtraction;
@@ -178,7 +179,7 @@
 						node = getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex);
 						nodeValue = trimAndGetNodeText(table.config, node, cellIndex);
 						if (table.config.debug) {
-							log('Checking if value was empty on row:' + rowIndex);
+							log('Checking if value was empty on row ' + rowIndex + ', column:' + cellIndex + ": " + nodeValue);
 						}
 					} else {
 						keepLooking = false;
@@ -215,7 +216,7 @@
 							p = detectParserForColumn(table, rows, -1, i);
 						}
 						if (table.config.debug) {
-							parsersDebug += "column:" + i + " parser:" + p.id + "\n";
+							parsersDebug += "column:" + i + "; parser:" + p.id + "\n";
 						}
 						list.push(p);
 					}
@@ -260,19 +261,10 @@
 					cache.normalized.push(cols);
 				}
 				if (table.config.debug) {
-					benchmark("Building cache for " + totalRows + " rows:", cacheTime);
+					benchmark("Building cache for " + totalRows + " rows", cacheTime);
 				}
 				table.config.cache = cache;
 				return cache;
-			}
-
-			function initWidgets(table){
-				var i, w = table.config.widgets, l = w.length;
-				for (i = 0; i < l; i++) {
-					if (w[i] && w[i].hasOwnProperty('init')) {
-						w[i].init(table, widgets, w[i]);
-					}
-				}
 			}
 
 			function getWidgetById(name) {
@@ -285,13 +277,17 @@
 				}
 			}
 
-			function applyWidget(table) {
+			function applyWidget(table, init) {
 				var c = table.config.widgets,
 				i, w, l = c.length;
 				for (i = 0; i < l; i++) {
 					w = getWidgetById(c[i]);
-					if ( w && w.hasOwnProperty('format') ) {
-						w.format(table);
+					if ( w ) {
+						if (init && w.hasOwnProperty('init')) {
+							w.init(table, widgets, w);
+						} else if (!init && w.hasOwnProperty('format')) {
+							w.format(table);
+						}
 					}
 				}
 			}
@@ -322,7 +318,7 @@
 					c.appender(table, rows);
 				}
 				if (c.debug) {
-					benchmark("Rebuilt table:", appendTime);
+					benchmark("Rebuilt table", appendTime);
 				}
 				// apply table widgets
 				applyWidget(table);
@@ -427,7 +423,7 @@
 					c.headerList[index] = this;
 				});
 				if (c.debug) {
-					benchmark("Built headers:", time);
+					benchmark("Built headers", time);
 					log($tableHeaders);
 				}
 				return $tableHeaders;
@@ -534,7 +530,7 @@
 				dynamicExp += "}; ";
 				eval(dynamicExp);
 				cache.normalized.sort(sortWrapper); // sort using eval expression
-				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time:", sortTime); }
+				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
 				return cache;
 			}
 
@@ -781,15 +777,16 @@
 					if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
 						config.sortList = $(this).metadata().sortlist;
 					}
-					// initialize widgets
-					initWidgets(this);
+					// apply widget init code
+					applyWidget(this, true);
 					// if user has supplied a sort list to constructor.
 					if (config.sortList.length > 0) {
 						$this.trigger("sorton", [config.sortList]);
 					} else {
-						// apply widgets
+						// apply widget format
 						applyWidget(this);
 					}
+					this.hasInitialized = true;
 				});
 			};
 			this.addParser = function(parser) {

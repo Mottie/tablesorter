@@ -34,6 +34,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.0.30 (2012-2-20)
+
+* Fixed the total mess I just made with the addWidget init functionality... I need a vacation :P
+
 #### Version 2.0.29 (2012-2-20)
 
 * Fixed a problem with the addWidget init function which apparently was always being called, even if you didn't want it! Fix for [issue #28](https://github.com/Mottie/tablesorter/issues/28). Thanks to thezoggy for helping with troubleshooting!
@@ -76,25 +80,3 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
   * This widget will save the last sort to local storage, and will fallback to cookies.
   * The widget does use the `JSON.stringify` function which is [not fully supported](http://caniuse.com/#search=json) (IE7), so if you plan to support it and use this widget, please include this [JSON library](https://github.com/douglascrockford/JSON-js).
 * Fixed pager page size not sticking. Fix for [issue #24](https://github.com/Mottie/tablesorter/issues/24).
-
-#### Version 2.0.26 (2012-1-30)
-
-* Widgets should no longer be applied twice when an initial sort direction is added. Fix for [issue #21](https://github.com/Mottie/tablesorter/issues/21).
-* Modified Green theme:
-  * The Green theme sort direction icon is now applied to only the first span it encounters inside the header. The UI theme adds a second span for it's icon.
-  * Essentially to fix [this demo](http://mottie.github.com/tablesorter/docs/example-widget-ui-theme.html) which allows switching between all of the themes.
-* Modified the UI theme to now add a div that wraps all of the header cell content to allow positioning of the sort direction icon.
-
-#### Version 2.0.25.2 (2012-1-27)
-
-* Changed Blue theme to vertically align arrows. Fix for [issue #12](https://github.com/Mottie/tablesorter/issues/12).
-* Fixed sticky header widget so varing width columns now update when the pager plugin changes pages. Thanks to locationRoura for reporting this issue.
-
-#### Version 2.0.25.1 (2011-12-15)
-
-* Fixed disabled column style for the ui theme widget. Thanks to [bbbco](https://github.com/bbbco) for the fix in [issue #17](https://github.com/Mottie/tablesorter/issues/17).
-
-#### Version 2.0.25 (2011-12-14)
-
-* The ui theme and sticky header widgets now work together and update the arrow direction. Fix for [issue #15](https://github.com/Mottie/tablesorter/issues/15).
-* Empty cells with only a tab or space will now sort at the bottom. Thanks to [pursual](https://github.com/pursual) for the fix for [issue #16](https://github.com/Mottie/tablesorter/issues/16).

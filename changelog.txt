@@ -1,5 +1,10 @@
 TableSorter Change Log
 
+Version 2.0.30 (2012-2-20)
+============================
+
+* Fixed the total mess I just made with the addWidget init functionality... I need a vacation :P
+
 Version 2.0.29 (2012-2-20)
 ============================
 
