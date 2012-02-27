@@ -1,4 +1,4 @@
-/* TableSorter 2.0 Widgets - updated 2/20/2012
+/* TableSorter 2.0 Widgets - updated 2/27/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -111,14 +111,14 @@ $.tablesorter.addWidget({
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				fr += '<td><input type="text" data-col="' + i + '" class="filter';
+				fr += '<td><input type="search" data-col="' + i + '" class="filter';
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
-				fr += ((c.headers[i] && 'filter' in c.headers[i] && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
+				fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
 				fr += '></td>';
 			}
 			tbl
 				.find('thead').append(fr += '</tr>')
-				.find('.filter').bind('keyup', function(e){
+				.find('.filter').bind('keyup search', function(e){
 					v = tbl.find('.filter').map(function(){ return ($(this).val() || '').toLowerCase(); }).get();
 					if (v.join('') === '') {
 						tbl.find('tr').show();

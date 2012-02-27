@@ -1,5 +1,21 @@
 TableSorter Change Log
 
+Version 2.0.31 (2012-2-27)
+============================
+
+* Added `sortRestart` option:
+  * When `true`, this option resets the sort direction so that clicking on an unsorted column will now sort in the `sortInitialOrder` direction.
+  * Clicking on a single column to cancel a multi-sorted table may not initially sort as expected.
+  * Requested by severa in [issue #30](https://github.com/Mottie/tablesorter/issues/29). Thanks!
+* Made some `sortReset` fixes:
+  * Columns widget will now clear it's styling when the sort has reset.
+  * Added a [demo](http://mottie.github.com/tablesorter/).
+* Changed the filter widget inputs to be of a search type:
+ * Currently only supported by webkit.
+ * Requested by cr125rider in [issue #29](https://github.com/Mottie/tablesorter/issues/29). Thanks!
+* Updated `sortLocaleCompare` documentation since it was explained incorrectly.
+* Did some general code cleanup and some optimization.
+
 Version 2.0.30.1 (2012-2-20)
 ============================
 
