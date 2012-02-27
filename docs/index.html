@@ -731,12 +731,14 @@
 			</tr>
 
 			<tr id="sortlocalecompare">
-				<td>sortLocaleCompare</td>
+				<td><a href="#" class="toggle2">sortLocaleCompare</a></td>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Boolean flag indicating whenever to use javascript <code class="hilight">String.localeCampare</code> method or not. This is only used when comparing text strings.<br>
-					In Tablesorter version 2.0.6+, the default sort was replaced with an alpha-numeric sort. To over-ride this behaviour, set this <code class="hilight">sortLocaleCompare</code> to <code class="hilight">true</code>.
+					Boolean flag indicating whenever to use javascript <code class="hilight">String.localeCompare</code> method or not.
+					<div class="collapsible">
+					This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.
+					</div>
 				</td>
 				<td></td>
 			</tr>
@@ -748,7 +750,7 @@
 				<td>
 					Setting this option to <code class="hilight">true</code> will allow you to click on the table header a third time to reset the sort direction. However, it does not restore the original sort order, it merely clear the sort from the header. <span class="tip"><em>New!</em></span> in v2.0.27.
 				</td>
-				<td></td>
+				<td><a href="../index.html">Example</a></td>
 			</tr>
 
 			<tr id="sortmultisortkey">

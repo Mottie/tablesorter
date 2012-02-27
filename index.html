@@ -16,7 +16,10 @@
 	<script src="js/jquery.tablesorter.widgets.js"></script>
 	<script>
 	$(function(){
-		$('table').tablesorter({ widgets: ['zebra', 'columns'] });
+		$('table').tablesorter({
+			widgets: ['zebra', 'columns'],
+			sortReset: true
+		});
 	});
 	</script>
 
@@ -50,6 +53,8 @@
 			<tr><td>zyx 12</td><td>&#163;234,10</td><td>Llama</td><td>http://www.nasa.gov/</td></tr>
 		</tbody>
 	</table>
+
+	<p>This is a quick demo of the columns & zebra widget with the "sortReset" option set to true (clicking on a sort header a third time will reset the sort)</p>
 
 </div>
 </body></html>
