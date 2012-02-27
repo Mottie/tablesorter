@@ -91,6 +91,7 @@
 				sortForce: null,
 				sortAppend: null,
 				sortLocaleCompare: false,
+				sortReset: false,
 				textExtraction: "simple",
 				parsers: {},
 				widgets: [],

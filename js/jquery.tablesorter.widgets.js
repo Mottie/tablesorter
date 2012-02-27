@@ -86,6 +86,9 @@ $.tablesorter.addWidget({
 					}
 				}
 			});
+		} else {
+			// remove all column classes if sort is cleared (sortReset)
+			$("td", table.tBodies[0]).removeClass(rmv);
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
