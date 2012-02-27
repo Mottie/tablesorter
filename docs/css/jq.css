@@ -16,7 +16,7 @@ table.tablesorter table.info tbody th{background:#eee;}
 #options .defaults{width:200px;}
 #options .examples{width:60px;}
 pre,#display{overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
-pre,#display,code.hilight{background-color:#eee;color:#333;font-size:small;list-style:none;}
+pre,#display,code.hilight{background-color:#eee;color:#333;font-size:small;list-style:none; padding: 1px 5px;}
 a code.hilight {text-decoration:underline;}
 pre.normal{background-color:transparent;border:none;border-left-width:0;overflow-x:auto;}
 #logo{background:url(images/jq.png);display:block;float:right;height:31px;margin-right:10px;margin-top:10px;width:110px;}

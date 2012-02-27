@@ -92,6 +92,7 @@
 				sortAppend: null,
 				sortLocaleCompare: false,
 				sortReset: false,
+				sortRestart: false,
 				textExtraction: "simple",
 				parsers: {},
 				widgets: [],
@@ -372,12 +373,7 @@
 			}
 
 			function formatSortingOrder(v) {
-				if (typeof(v) !== "number") {
-					// look for "d" instead of "desc"
-					return (v.toLowerCase().charAt(0) === "d") ? 1 : 0;
-				} else {
-					return (v === 1) ? 1 : 0;
-				}
+				return (typeof(v) !== "number") ? ((v.toLowerCase().charAt(0) === "d") ? 1 : 0) : ((v === 1) ? 1 : 0);
 			}
 
 			function checkHeaderMetadata(cell) {
@@ -612,15 +608,15 @@
 					if (!this.tHead || !this.tBodies) { return; }
 					// declare
 					var $this, $document, $headers, cache, config, shiftDown = 0,
-					sortOrder, totalRows, $cell, i, j, a, s, o;
+					sortOrder, totalRows, $cell, c, i, j, a, s, o;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
-					config = $.extend(this.config, $.tablesorter.defaults, settings);
+					c = config = $.extend(this.config, $.tablesorter.defaults, settings);
 					// store common expression for speed
 					tbl = $this = $(this).addClass(this.config.tableClass);
 					// save the settings where they read
-					$.data(this, "tablesorter", config);
+					$.data(this, "tablesorter", c);
 					// build headers
 					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
@@ -641,54 +637,64 @@
 							$this.trigger("sortStart", tbl[0]);
 							// store exp, for speed
 							$cell = $(this);
+							// get current column sort order
+							this.order = this.count++ % (c.sortReset ? 3 : 2);
+							// reset all sorts on non-current column - issue #30
+							if (c.sortRestart) {
+								i = this;
+								$headers.each(function(){
+									// only reset counts on columns that weren't just clicked on and if not included in a multisort
+									if (this !== i && (!$(this).is('.' + c.cssDesc + ',.' + c.cssAsc) || !e[c.sortMultiSortKey])) {
+										this.count = 0;
+									}
+								});
+							}
 							// get current column index
 							i = this.column;
-							// get current column sort order
-							this.order = this.count++ % (config.sortReset ? 3 : 2);
 							// always sort on the locked order.
 							if(typeof(this.lockedOrder) !== "undefined" && this.lockedOrder !== false) { this.order = this.lockedOrder; }
 							// user only wants to sort on one column
-							if (!e[config.sortMultiSortKey]) {
+							if (!e[c.sortMultiSortKey]) {
 								// flush the sort list
-								config.sortList = [];
-								if (config.sortForce !== null) {
-									a = config.sortForce;
+								c.sortList = [];
+								if (c.sortForce !== null) {
+									a = c.sortForce;
 									for (j = 0; j < a.length; j++) {
 										if (a[j][0] !== i) {
-											config.sortList.push(a[j]);
+											c.sortList.push(a[j]);
 										}
 									}
 								}
 								// add column to sort list
-								if (this.order < 2) { config.sortList.push([i, this.order]); }
+								if (this.order < 2) { c.sortList.push([i, this.order]); }
 								// multi column sorting
 							} else {
 								// the user has clicked on an already sorted column.
-								if (isValueInArray(i, config.sortList)) {
+								if (isValueInArray(i, c.sortList)) {
 									// reverse the sorting direction for all tables.
-									for (j = 0; j < config.sortList.length; j++) {
-										s = config.sortList[j];
-										o = config.headerList[s[0]];
+									for (j = 0; j < c.sortList.length; j++) {
+										s = c.sortList[j];
+										o = c.headerList[s[0]];
 										if (s[0] === i) {
 											o.count = s[1];
 											o.count++;
-											s[1] = o.count % (config.sortReset ? 3 : 2);
+											s[1] = o.count % (c.sortReset ? 3 : 2);
 											if (s[1] >= 2) {
-												config.sortList.splice(j,1);
+												c.sortList.splice(j,1);
 												o.count = 0;
 											}
 										}
 									}
 								} else {
 									// add column to sort list array
-									if (this.order < 2) { config.sortList.push([i, this.order]); }
+									if (this.order < 2) { c.sortList.push([i, this.order]); }
 								}
 							}
-							if (config.sortAppend !== null) {
-								a = config.sortAppend;
+							if (c.sortAppend !== null) {
+								a = c.sortAppend;
 								for (j = 0; j < a.length; j++) {
 									if (a[j][0] !== i) {
-										config.sortList.push(a[j]);
+										c.sortList.push(a[j]);
 									}
 								}
 							}
@@ -696,8 +702,8 @@
 							$this.trigger("sortBegin", tbl[0]);
 							setTimeout(function () {
 								// set css for headers
-								setHeadersCss($this[0], $headers, config.sortList);
-								appendToTable($this[0], multisort($this[0], config.sortList, cache));
+								setHeadersCss($this[0], $headers, c.sortList);
+								appendToTable($this[0], multisort($this[0], c.sortList, cache));
 							}, 1);
 							// stop normal event by returning false
 							return false;
@@ -705,7 +711,7 @@
 						// cancel selection
 					})
 					.mousedown(function(){
-						if (config.cancelSelection) {
+						if (c.cancelSelection) {
 							this.onselectstart = function(){
 								return false;
 							};
@@ -725,22 +731,21 @@
 						}, 1);
 					})
 					.bind("updateCell", function(e, cell) {
-						var config = this.config,
 						// get position from the dom.
-						pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
+						var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache
-						cache.normalized[pos[0]][pos[1]] = config.parsers[pos[1]].format(getElementText(config, cell, pos[1]), cell);
-						this.config.cache = cache;
-						$this.trigger("sorton", [config.sortList]);
+						cache.normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), cell);
+						c.cache = cache;
+						$this.trigger("sorton", [c.sortList]);
 					})
 					.bind("addRows", function(e, row) {
-						var i, config = this.config, rows = row.filter('tr').length,
+						var i, rows = row.filter('tr').length,
 						dat = [], l = row[0].cells.length;
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = config.parsers[j].format(getElementText(config, row[i].cells[j], j), row[i].cells[j]);
+								dat[j] = c.parsers[j].format(getElementText(c, row[i].cells[j], j), row[i].cells[j]);
 							}
 							// add the row index to the end
 							dat.push(cache.row.length);
@@ -749,15 +754,15 @@
 							cache.normalized.push(dat);
 							dat = [];
 						}
-						config.cache = cache;
+						c.cache = cache;
 						// resort using current settings
-						$this.trigger("sorton", [config.sortList]);
+						$this.trigger("sorton", [c.sortList]);
 					})
 					.bind("sorton", function(e, list) {
 						$(this).trigger("sortStart", tbl[0]);
-						config.sortList = list;
+						c.sortList = list;
 						// update and store the sortlist
-						var sortList = config.sortList;
+						var sortList = c.sortList;
 						// update header count index
 						updateHeaderSortCount(this, sortList);
 						// set css for headers
@@ -776,13 +781,13 @@
 						applyWidget(this);
 					});
 					if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
-						config.sortList = $(this).metadata().sortlist;
+						c.sortList = $(this).metadata().sortlist;
 					}
 					// apply widget init code
 					applyWidget(this, true);
 					// if user has supplied a sort list to constructor.
-					if (config.sortList.length > 0) {
-						$this.trigger("sorton", [config.sortList]);
+					if (c.sortList.length > 0) {
+						$this.trigger("sorton", [c.sortList]);
 					} else {
 						// apply widget format
 						applyWidget(this);
