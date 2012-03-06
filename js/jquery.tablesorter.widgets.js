@@ -28,7 +28,7 @@ $.tablesorter.addWidget({
 			$.each(c.headerList, function(){
 				$(this)
 				// using "ui-theme" class in case the user adds their own ui-icon using onRenderHeader
-				.addClass('ui-widget-header ui-corner-all')
+				.addClass('ui-widget-header ui-corner-all ui-state-default')
 				.append('<span class="ui-icon"/>')
 				.wrapInner('<div class="inner"/>')
 				.hover(function(){
