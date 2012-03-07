@@ -1,6 +1,5 @@
 /*
-* TableSorter 2.0 - Client-side table sorting with ease!
-* Version 2.0.30
+* TableSorter 2.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -8,67 +7,6 @@
 * Dual licensed under the MIT and GPL licenses:
 * http://www.opensource.org/licenses/mit-license.php
 * http://www.gnu.org/licenses/gpl.html
-*
-* @description Create a sortable table with multi-column sorting capabilities
-*
-* @example $('table').tablesorter();
-* @desc Create a simple tablesorter interface.
-*
-* @example $('table').tablesorter({ sortList:[[0,0],[1,0]] });
-* @desc Create a tablesorter interface and sort on the first and secound column column headers.
-*
-* @example $('table').tablesorter({ headers: { 0: { sorter: false}, 1: {sorter: false} } });
-* @desc Create a tablesorter interface and disableing the first and second  column headers.
-*
-* @example $('table').tablesorter({ headers: { 0: {sorter:"digit"}, 1: {sorter:"currency"} } });
-* @desc Create a tablesorter interface and set a column parser for the first and second column.
-*
-* @param Object settings An object literal containing key/value pairs to provide optional settings.
-*
-* @option String cssHeader (optional) A string of the class name to be appended to sortable tr elements in the thead of the table.
-*         Default value: "header"
-*
-* @option String cssAsc (optional) A string of the class name to be appended to sortable tr elements in the thead on a ascending sort.
-*         Default value: "headerSortUp"
-*
-* @option String cssDesc (optional) A string of the class name to be appended to sortable tr elements in the thead on a descending sort.
-*         Default value: "headerSortDown"
-*
-* @option String sortInitialOrder (optional) A string of the inital sorting order can be asc or desc.
-*         Default value: "asc"
-*
-* @option String sortMultisortKey (optional) A string of the multi-column sort key.
-*         Default value: "shiftKey"
-*
-* @option String textExtraction (optional) A string of the text-extraction method to use. For complex html structures inside td
-*         cell set this option to "complex", on large tables the complex option can be slow.
-*         Default value: "simple"
-*
-* @option Object headers (optional) An array containing the forces sorting rules. This option let's you specify a default sorting rule.
-*         Default value: null
-*
-* @option Array sortList (optional) An array containing the forces sorting rules. This option let's you specify a default sorting rule.
-*         Default value: null
-*
-* @option Array sortForce (optional) An array containing forced sorting rules. This option let's you specify a default sorting rule,
-*         which is prepended to user-selected rules.
-*         Default value: null
-*
-* @option Boolean sortLocaleCompare (optional) Boolean flag indicating whatever to use String.localeCampare method or not.
-*         Default set to true.
-*
-* @option Array sortAppend (optional) An array containing forced sorting rules. This option let's you specify a default sorting rule,
-*         which is appended to user-selected rules.
-*         Default value: null
-*
-* @option Boolean widthFixed (optional) Boolean flag indicating if tablesorter should apply fixed widths to the table columns.
-*         This is useful when using the pager companion plugin. This options requires the dimension jquery plugin.
-*         Default value: false
-*
-* @option Boolean cancelSelection (optional) Boolean flag indicating if tablesorter should cancel selection of the table headers text.
-*         Default value: true
-*
-* @option Boolean debug (optional) Boolean flag indicating if tablesorter should display debuging information usefull for development.
 *
 * @type jQuery
 * @name tablesorter
@@ -96,7 +34,6 @@
 				textExtraction: "simple",
 				parsers: {},
 				widgets: [],
-				widgetZebra: { css: ["even", "odd"] },
 				headers: {},
 				widthFixed: false,
 				cancelSelection: true,
@@ -105,8 +42,17 @@
 				dateFormat: "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
 				onRenderHeader: null,
 				selectorHeaders: 'thead th',
+				selectorRemove: "tr.remove-me",
 				tableClass : 'tablesorter',
-				debug: false
+				debug: false,
+
+				widgetOptions : {
+					zebra : [ "even", "odd" ]
+				}
+
+				// deprecated; but retained for backwards compatibility
+				// widgetZebra: { css: ["even", "odd"] }
+
 			};
 
 			/* debuging utils */
@@ -155,15 +101,11 @@
 			function getParserById(name) {
 				var i, l = parsers.length;
 				for (i = 0; i < l; i++) {
-					if (parsers[i].id.toLowerCase() === name.toLowerCase()) {
+					if (parsers[i].id.toLowerCase() === (name.toString()).toLowerCase()) {
 						return parsers[i];
 					}
 				}
 				return false;
-			}
-
-			function getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex) {
-				return rows[rowIndex].cells[cellIndex];
 			}
 
 			function trimAndGetNodeText(config, node, cellIndex) {
@@ -178,7 +120,7 @@
 				while (nodeValue === '' && keepLooking) {
 					rowIndex++;
 					if (rows[rowIndex]) {
-						node = getNodeFromRowAndCellIndex(rows, rowIndex, cellIndex);
+						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = trimAndGetNodeText(table.config, node, cellIndex);
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column:' + cellIndex + ": " + nodeValue);
@@ -373,7 +315,7 @@
 			}
 
 			function formatSortingOrder(v) {
-				return (typeof(v) !== "number") ? ((v.toLowerCase().charAt(0) === "d") ? 1 : 0) : ((v === 1) ? 1 : 0);
+				return (/^d/i.test(v) || v === 1) ? 1 : 0;
 			}
 
 			function checkHeaderMetadata(cell) {
@@ -605,14 +547,14 @@
 			this.construct = function(settings){
 				return this.each(function(){
 					// if no thead or tbody quit.
-					if (!this.tHead || !this.tBodies) { return; }
+					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
 					var $this, $document, $headers, cache, config, shiftDown = 0,
 					sortOrder, totalRows, $cell, c, i, j, a, s, o;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
-					c = config = $.extend(this.config, $.tablesorter.defaults, settings);
+					c = config = $.extend(true, this.config, $.tablesorter.defaults, settings);
 					// store common expression for speed
 					tbl = $this = $(this).addClass(this.config.tableClass);
 					// save the settings where they read
@@ -620,9 +562,9 @@
 					// build headers
 					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
-					this.config.parsers = buildParserCache(this, $headers);
+					c.parsers = buildParserCache(this, $headers);
 					// digit sort text location
-					this.config.string = { max: 1, 'max+': 1, 'max-': -1, none: 0 };
+					c.string = { max: 1, 'max+': 1, 'max-': -1, none: 0 };
 					// build the cache for the tbody cells
 					cache = buildCache(this);
 					// fixate columns if the users supplies the fixedWidth option
@@ -721,20 +663,22 @@
 					// apply easy methods that trigger binded events
 					$this
 					.bind("update", function(){
-						var me = this;
+						var t = this, c = t.config;
 						setTimeout(function(){
+							// remove rows/elements before update
+							$(c.selectorRemove, t.tBodies[0]).remove();
 							// rebuild parsers.
-							me.config.parsers = buildParserCache(me, $headers);
+							t.config.parsers = buildParserCache(t, $headers);
 							// rebuild the cache map
-							cache = buildCache(me);
-							$this.trigger("sorton", [me.config.sortList]);
+							cache = buildCache(t);
+							$this.trigger("sorton", [t.config.sortList]);
 						}, 1);
 					})
 					.bind("updateCell", function(e, cell) {
 						// get position from the dom.
 						var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
-						// update cache
-						cache.normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), cell);
+						// update cache - format: function(s, table, cell, cellIndex)
+						cache.normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), $this, cell, pos[1]);
 						c.cache = cache;
 						$this.trigger("sorton", [c.sortList]);
 					})
@@ -745,7 +689,7 @@
 						for (i = 0; i < rows; i++) {
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = c.parsers[j].format(getElementText(c, row[i].cells[j], j), row[i].cells[j]);
+								dat[j] = c.parsers[j].format(getElementText(c, row[i].cells[j], j), $this, row[i].cells[j], j );
 							}
 							// add the row index to the end
 							dat.push(cache.row.length);
@@ -819,16 +763,7 @@
 				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.']/g, '')));
 			};
 			this.clearTableBody = function (table) {
-				if ($.browser.msie) {
-					var empty = function() {
-						while (this.firstChild) {
-							this.removeChild(this.firstChild);
-						}
-					};
-					empty.apply(table.tBodies[0]);
-				} else {
-					table.tBodies[0].innerHTML = "";
-				}
+				$(table.tBodies[0]).empty();
 			};
 		}
 	})();
@@ -992,8 +927,12 @@
 		id: "zebra",
 		format: function(table) {
 			var $tr, row = 0, even, time,
-			child = table.config.cssChildRow,
-			css = table.config.widgetZebra.css;
+			c = table.config,
+			child = c.cssChildRow,
+			css = [ "even", "odd" ];
+			// maintain backwards compatibility
+			css = c.widgetZebra && c.hasOwnProperty('css') ? c.widgetZebra.css :
+				(c.widgetOptions && c.widgetOptions.hasOwnProperty('zebra')) ? c.widgetOptions.zebra : css;
 			if (table.config.debug) {
 				time = new Date();
 			}
