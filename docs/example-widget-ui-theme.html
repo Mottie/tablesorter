@@ -32,18 +32,21 @@
 
 	// call the tablesorter plugin and apply the ui theme widget
 	$("table").tablesorter({
+		widthFixed: true,
 
 		// widget code now contained in the jquery.tablesorter.widgets.js file
 		widgets : ['uitheme', 'zebra'],
 
-		// adding zebra striping, using content and default styles - the ui css removes the background from default
-		// even and odd class names included for this demo to allow switching themes
-		widgetZebra: { css: ["ui-widget-content even", "ui-state-default odd"] },
+		widgetOptions : {
+			// adding zebra striping, using content and default styles - the ui css removes the background from default
+			// even and odd class names included for this demo to allow switching themes
+			zebra   : ["ui-widget-content even", "ui-state-default odd"],
 
-		// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
-		// default icons: { css: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"] }
-		// { css : ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ] }
-		widgetUitheme: { css: ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"] }
+			// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+			// default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
+			// ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ]
+			uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+		}
 	});
 
 });</script>
@@ -84,7 +87,12 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> This widget can be applied to the original plugin.
+		<em>NOTE!</em>
+		<ul>
+			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>If the "widgetUitheme" option exists, it will over-ride this newer "widgetOptions.uitheme" option in order to maintain backwards compatibility.</li>
+		</ul>
 	</p>
 
 	<h1>Demo</h1>
@@ -198,7 +206,7 @@ table.tablesorter thead tr th {
   /* UI hover and active states make the font normal and the table resizes, this fixes it */
   font-weight: bold !important;
 }
-table.tablesorter thead tr th .inner {
+table.tablesorter thead tr th .tablesorter-inner {
   position: relative;
   padding-right: 20px; /* wider than the icon */
 }
@@ -219,11 +227,19 @@ table.tablesorter tr.ui-state-default {
 }
 
 /* filter widget */
-table.tablesorter thead input.filter {
-  width: 90%;
+table.tablesorter thead input.tablesorter-filter {
+  width: 95%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-table.tablesorter thead tr.filters, table.tablesorter thead tr.filters td {
+table.tablesorter thead tr.tablesorter-filter, table.tablesorter thead tr.tablesorter-filter td {
   text-align: center;
+}
+/* optional disabled input styling */
+table.tablesorter thead tr.tablesorter-filter input.disabled {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
 }</pre>
 	</div>
 

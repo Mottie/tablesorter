@@ -51,7 +51,7 @@ $(function(){
 	var t = $('.current-version');
 	if (t.length) {
 		$.getJSON('../package.json', function(data) {
-			t.html(data.version || '2.0+');
+			t.html(data.version || '2.1+');
 		});
 	}
 

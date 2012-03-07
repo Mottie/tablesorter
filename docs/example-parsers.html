@@ -26,7 +26,7 @@ $.tablesorter.addParser({
 		// return false so this parser is not auto detected
 		return false;
 	},
-	format: function(s) {
+	format: function(s, table, cell, cellIndex) {
 		// format your data for normalization
 		return s.toLowerCase()
 			.replace(/good/,2)
@@ -116,7 +116,7 @@ $(function() {
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function) &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-parsers-advanced.html">Writing custom parsers, advanced &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

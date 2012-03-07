@@ -38,8 +38,11 @@ table.tablesorter tbody tr.alt-row td {
 		// initialize zebra striping of the table
 		widgets: ["zebra"],
 		// change the default striping class names
-		// default is { css : ["even", "odd"] }
-		widgetZebra: { css: [ "normal-row", "alt-row" ] }
+		// updated in v2.1 to use widgetOptions.zebra = ["even", "odd"]
+		// widgetZebra: { css: [ "normal-row", "alt-row" ] } still works
+		widgetOptions : {
+			zebra : [ "normal-row", "alt-row" ]
+		}
 	});
 
 });</script>
@@ -52,6 +55,16 @@ table.tablesorter tbody tr.alt-row td {
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This widget is part of the plugin, but has been modified from the original.</li>
+			<li>The original "widgetZebra" option has been replaced by "widgetOptions.zebra". See the javascript block below for more details. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>If the "widgetZebra" option exists, it will over-ride this newer "widgetOptions.zebra" option in order to maintain backwards compatibility.</li>
+		</ul>
+	</p>
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>

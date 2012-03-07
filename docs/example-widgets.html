@@ -51,7 +51,9 @@
 				// i mod 6 = 5, is true every 5th row, starting from the 5th, etc.
 				if ((i%5) === 4) {
 					$("tbody tr:eq(" + i + ")",table).before(
-						$("<tr></tr>").addClass("repeated-header").html(this.headers.join(""))
+						// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
+						// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
+						$("<tr></tr>").addClass("repeated-header remove-me").html(this.headers.join(""))
 					);
 				}
 			}

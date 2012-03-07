@@ -34,7 +34,9 @@
 
 		// change the default column class names
 		// primary is the first column sorted, secondary is the second, etc
-		widgetColumns: { css: ["primary", "secondary", "tertiary" ] },
+		widgetOptions: {
+			columns: [ "primary", "secondary", "tertiary" ]
+		}
 	});
 
 });</script>
@@ -61,7 +63,11 @@ $(function() {
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> This widget can be applied to the original plugin.
+		<em>NOTE!</em>
+		<ul>
+			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>The original "widgetColumns" option has been replaced by "widgetOptions.columns". See the javascript block below for more details. <span class="tip"><em>New! v2.1</em></span></li>
+		</ul>
 	</p>
 
 	<h1>Demo</h1>

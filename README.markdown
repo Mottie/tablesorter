@@ -34,6 +34,118 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1 (3/3/2012)
+
+* Added `selectorRemove` option
+ * Any table row with this css class will be removed from the table prior to updating the table contents.
+ * The reason this was added was in case a widget or some other script adds rows to the table for styling, or something else. If a table update is triggered (`$(table).trigger('update');`), all rows in the table will be included in the update.
+ * The [writing custom widgets](http://mottie.github.com/tablesorter/docs/example-widgets.html) demo has been updated to include this class name.
+ * The pager plugin update also uses this to remove the row added by the new `fixedHeight` option.
+ * It's default value is `tr.remove-me`, so it can be modified to remove more than just rows.
+
+* Fixed a bug that broke the plugin if you set `sorter: true` in the header options.
+
+* Pager plugin update
+  * Ajax
+    * The pager plugin will now interact with a database via JSON. See [demo here](http://mottie.github.com/tablesorter/docs/example-pager-ajax.html).
+    * Added `ajaxUrl` option which contains the variables `{page}` and `{size}` which will be replaced by the plugin to obtain that data.
+
+        ```javascript
+        ajaxUrl : "http:/mydatabase.com?page={page}&size={size}"
+        ```
+
+    * Another option named `ajaxProcessing` was included to process the data before returning it to the pager plugin. Basically the JSON needs to contain the data to match the example below. An additional required variable is the total number of records or rows needs to be returned.
+
+        ```javascript
+        // process ajax so that the data object is returned along with the total number of rows
+        // example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
+        ajaxProcessing: function(ajax){
+          if (ajax && ajax.hasOwnProperty('data')) {
+            // return [ "data", "total_rows" ];
+            return [ ajax.data, ajax.total_rows ];
+          }
+        }
+        ```
+
+    * I tried to make the plugin interact with a database as flexible as possible, but I'm sure I haven't covered every situation. So any and all feedback is welcome!
+    * Also, much thanks to [kachar](https://github.com/kachar) for the [enhancement request](https://github.com/Mottie/tablesorter/issues/31) and willingness to help test it!
+
+  * Removed `positionFixed` and `offset` options.
+  * Added `fixedHeight` option which replaces the `positionFixed` and `offset` options by maintaining the height of the table no matter how few rows are showing. During testing, it displayed some odd behaviour after adding or deleting rows, but it should have been fixed... just please keep an eye out ;).
+  * The pager now adds all of its options to the table configuration options within an object named "pager". Basically what this means is that instead of add all of the pager options to be mixed in with the tablesorter options, the pager options have been isolated and can be found by typing this into the browser console: `$('table')[0].config.pager`.
+
+* **Storage** function added named `$.tablesorter.storage` for use in widgets
+ * It is used by various widgets to save data to either local storage (if available) or cookies.
+ * This function needs to use `JSON.stringify()` which is [not supported by IE7](http://caniuse.com/#search=json). If you need to support IE7, then include this library: [JSON-js](https://github.com/douglascrockford/JSON-js).
+ * Use the function with your own custom widgets as follows:
+
+        ```javascript
+        // *** Save data (JSON format only) ***
+        // val must be valid JSON... use http://jsonlint.com/ to ensure it is valid
+        var val = { "mywidget" : "data1" }; // valid JSON uses double quotes
+        // $.tablesorter.storage(table, key, val);
+        $.tablesorter.storage(table, 'tablesorter-mywidget', val);
+    
+        // *** Get data: $.tablesorter.storage(table, key); ***
+        v = $.tablesorter.storage(table, 'tablesorter-mywidget');
+        // val may be empty, so also check for your data
+        val = (v && v.hasOwnProperty('mywidget')) ? v.mywidget : '';
+        alert(val); // "data1" if saved, or "" if not
+        ```
+
+* Added an option named `widgetOptions`:
+ * This is a move to store all widget specific options in one place so as not to polute the main table options.
+ * All current widgets have been modified to use this new option.
+ * Only one widget option, `widgetZebra` will be retained for backwards compatibility with the original plugin.
+ * More details for each widget are explained below.
+
+* **Zebra** widget:
+ * Added `zebra` options to the new `widgetOptions`.
+
+    ```javascript
+    widgetOptions : {
+      zebra : [ "even", "odd" ]
+    }
+    ```
+
+ * This replaces `widgetZebra: { css: [ "even", "odd" ] }`, but if the `widgetZebra` option exists, it will over-ride this newer `widgetOptions.zebra` option in order to maintain backwards compatibility.
+
+* **UI Theme** widget:
+ * Changed css class of div wrapping the contents of each header cell from "inner" to "tablesorter-inner".
+ * Added "ui-state-default" to the table head columns. Thanks to [Raigen](https://github.com/Raigen) for [sharing the code](https://github.com/Mottie/tablesorter/pull/33)!
+ * Moved `widgetUitheme` option into the new `widgetOptions`.
+
+    ```javascript
+    widgetOptions : {
+      // adding zebra striping, using content and default styles - the ui css removes the background from default
+      // even and odd class names included for this demo to allow switching themes
+      zebra   : ["ui-widget-content even", "ui-state-default odd"],
+
+      // change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+      // default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
+      // ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ]
+      uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+    }
+    ```
+
+* **Filter** widget changes:
+ * Added a new filter widget specific option `widgetOptions.filterStart` which makes the filter only work from the first letter.
+ * Added a `widgetOptions.cssFilter` option which now contains the class name added to the filter row and each input within it. Previously the class name used was "filters" for the row and "filter" for the input, now both are "tablesorter-filter". Thanks to [cr125rider](https://github.com/cr125rider) for [sharing a code fix](https://github.com/Mottie/tablesorter/issues/32)!
+ * Added css3 box sizing to allow a better fitting filter box. Thanks to [thezoggy](https://github.com/thezoggy) for sharing the code!
+ * The css changes were also added to the blue, green and UI style sheets.
+ * Updated the filter widget demo with the available options described above; this includes the `widgetOptions.filter_childRows` option which was previously undocumented, recently renamed.
+
+* **Resizable Columns** Widget changes:
+ * The resized column width is now saved using the `$.tablesorter.storage()` function (optional)
+ * If the storage function doesn't exist, the widget will still function, but just not save the column width.
+
+* **Save Sort** Widget changes:
+ * Modified to now use the `$.tablesorter.storage()` function (required)
+ * The storage function is required for this widget to work properly.
+ * Previous saved data is not compatible with the changes made and will be ignored.
+
+* Updated all docs demos to use jQuery 1.7+.
+
 #### Version 2.0.31 (2012-2-27)
 
 * Added `sortRestart` option:
@@ -61,41 +173,3 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
 
 * Fixed a problem with the addWidget init function which apparently was always being called, even if you didn't want it! Fix for [issue #28](https://github.com/Mottie/tablesorter/issues/28). Thanks to thezoggy for helping with troubleshooting!
 * Minor cleanup of sorting class names code.
-
-#### Version 2.0.28.1 (2012-2-16)
-
-* Modified the plugin pager to ignore child rows. Fix for [issue #27](https://github.com/Mottie/tablesorter/issues/27).
-
-#### Version 2.0.28 (2012-2-1)
-
-* Added a new function to widgets called "init" which is called upon initialization, before any of the widgets are applied.
-  * I added it to allow the "saveSort" widget to get the saved sort data (localStorage or cookie) before the initial sort was applied.
-  * The "saveSort" widget is still compatible with the original tablesorter, but the original version will call all of the widgets twice on initialization, if using the "saveSort" widget.
-  * New add widget format is as follows:
-
-        ```javascript
-        $.tablesorter.addWidget({
-          id: 'myWidget',
-          init: function(table, allWidgets, thisWidget){
-            // widget initialization code - this is only run ONCE
-            // but in this example I call the format function because
-            // I want to keep it backwards compatible with the original tablesorter
-            thisWidget.format(table, true);
-          },
-          format: function(table, initFlag) {
-            // widget code to apply to the table AFTER EACH SORT
-            // the initFlag is true when format is called for the first time, but
-            // only if it is called from the init function
-          }
-        });
-        ```
-
-#### Version 2.0.27 (2012-1-31)
-
-* Added `sortReset` option
-  * Setting this option to `true`, allows you to click on the header a third time to clear the sort
-  * Clearing the sort DOES NOT return the table to it's initial unsorted state.
-* Added `saveSort` widget
-  * This widget will save the last sort to local storage, and will fallback to cookies.
-  * The widget does use the `JSON.stringify` function which is [not fully supported](http://caniuse.com/#search=json) (IE7), so if you plan to support it and use this widget, please include this [JSON library](https://github.com/douglascrockford/JSON-js).
-* Fixed pager page size not sticking. Fix for [issue #24](https://github.com/Mottie/tablesorter/issues/24).

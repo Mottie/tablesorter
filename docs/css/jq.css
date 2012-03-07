@@ -9,12 +9,12 @@ h2{color:#333;font-size:small;font-weight:400;margin:0;}
 table.info{border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
 table.tablesorter table.info tbody th,table.tablesorter table.info tbody td{border:#000 1px solid;}
 table.tablesorter table.info tbody th{background:#eee;}
-#options{width:100%;}
-#options pre{width:95%;}
-#options .property{width:115px;}
-#options .type{width:80px; }
-#options .defaults{width:200px;}
-#options .examples{width:60px;}
+table.options{width:100%;}
+table.options pre{width:95%;}
+table.options .property{width:115px;}
+table.options .type{width:80px; }
+table.options .defaults{width:200px;}
+table.options .examples{width:60px;}
 pre,#display{overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
 pre,#display,code.hilight{background-color:#eee;color:#333;font-size:small;list-style:none;}
 code.hilight{padding: 1px 5px;}
@@ -24,6 +24,7 @@ pre.normal{background-color:transparent;border:none;border-left-width:0;overflow
 #main{margin:0 20px 20px;padding:0 15px 15px 0;clear:both;}
 #content{padding:20px;}
 #busy{background-color:#e95555;border:1px ridge #ccc;color:#eee;display:none;padding:3px;position:absolute;right:7px;top:7px;}
+#start{color:#007baa;}
 #demo strong{color:#a00;}
 hr{height:1px;}
 code{font-size:108%;font-style:normal;padding:0;}
@@ -40,8 +41,9 @@ form{font-size:10pt;margin-bottom:20px;width:auto;}
 form fieldset{padding:10px;text-align:left;width:140px;}
 div#main h1{border-bottom:1px solid #CDCDCD;display:block;margin-top:20px;padding:10px 0 2px;}
 table#tablesorter-demo {margin: 10px 0 0 0;}
-table#options *,table#methods *,table#events *{font-size:small;}
-p.tip em {padding: 2px; background-color: #6cf; color: #FFF;}
+table.options *,table#methods *,table#events *, p.small{font-size:small;}
+p.small {padding-left: 25px;}
+p.tip em {padding: 2px; background-color: #6cf; color: #fff;}
 span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }
 div.digg {float: right;}
 .next-up { padding-top: 10px; font-size: 90%; }
@@ -50,4 +52,7 @@ div.digg {float: right;}
 #pager-demo th.remove { width: 20px; } /* pager demo */
 #pager-demo button.remove { width: 20px; height: 20px; font-size: 10px; color: #800; }
 .box { width: 48%; float: left; padding: 0 1%; }
+a.deprecated { color: #a00; }
+span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
+.hidden { display: none; }
 .clear { clear: both; }

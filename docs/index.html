@@ -19,7 +19,7 @@
 <script>
 	$(function() {
 		$("#tablesorter-demo").tablesorter({sortList:[[0,0],[2,1]],widgets:['zebra']});
-		$("#options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}}});
+		$("table.options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}}});
 		$("#methods,#events").tablesorter({sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}}});
 	});
 </script>
@@ -36,14 +36,14 @@
 	</div>
 	<p>
 		<strong>Author:</strong> Christian Bach<br>
-		<strong>Version:</strong> <a class="current-version" href="http://github.com/Mottie/tablesorter/downloads">2.0+</a> (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> <a class="current-version" href="http://github.com/Mottie/tablesorter/downloads">2.1+</a> (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
 	</p>
 
 	<p class="tip update">
-		<em>Update!</em> New version!, and the tablesorter docs are now available in russian, head over to <a class="external" href="http://tablesorter.ru/docs/">tablesorter.ru</a>
+		<em>Note!</em> Version 2.0.3 of the tablesorter docs are available in russian, head over to <a class="external" href="http://tablesorter.ru/docs/">tablesorter.ru</a>
 	</p>
 
 	<p class="tip">
@@ -58,30 +58,15 @@
 		<input type="hidden" name="no_note" value="0">
 		<input type="hidden" name="currency_code" value="USD">
 		<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
-		<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-		<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!">
+		<img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
 	</form>
 
 	<p>Comments and love letters can be sent to: <span class="email">christian at tablesorter dot com</span>.</p>
 
 	<p> </p>
 
-	<!--
-	<p class="tip">
-	<em>Help!</em> keep tablesorter.com up and running. If you like tablesorter, have a couple of bucks over or just feel like it. Please donate.</p>
-	</p>
-
-	<form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-	<input type="hidden" name="cmd" value="_xclick">
-	<input type="hidden" name="business" value="christian.bach@polyester.se">
-	<input type="hidden" name="item_name" value="Tablesorter donation">
-	<input type="hidden" name="currency_code" value="USD">
-	<input type="hidden" name="amount" value="10.00">
-	<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-	</form>
-	-->
-
-	<a name="Contents"></a>
+	<a id="Contents"></a>
 	<h1>Contents</h1>
 	<ol>
 		<li><a href="#Introduction">Introduction</a></li>
@@ -89,6 +74,7 @@
 		<li><a href="#Getting-Started">Getting started</a></li>
 		<li><a href="#Examples">Examples</a></li>
 		<li><a href="#Configuration">Configuration</a></li>
+		<li><a href="#Widget-options">Widget Options</a> <span class="tip"><em>New!</em></span> v2.1</li>
 		<li><a href="#Methods">Methods</a></li>
 		<li><a href="#Events">Events</a></li>
 		<li><a href="#Download">Download</a></li>
@@ -97,7 +83,7 @@
 		<li><a href="#Credits">Credits</a></li>
 	</ol>
 
-	<a name="Introduction"></a>
+	<a id="Introduction"></a>
 	<h1>Introduction</h1>
 	<p>
 		tablesorter is a <a class="external" href="http://jquery.com">jQuery</a> plugin for turning a
@@ -119,10 +105,10 @@
 
 	</ul>
 
-	<a name="Demo"></a>
+	<a id="Demo"></a>
 	<h1>Demo</h1>
 
-	<table id="tablesorter-demo" class="tablesorter" border="0" cellpadding="0">
+	<table id="tablesorter-demo" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Account #</th>
@@ -204,7 +190,7 @@
 	</p>
 
 
-	<a name="Getting-Started"></a>
+	<a id="Getting-Started"></a>
 	<h1>Getting started</h1>
 	<p>
 		To use the tablesorter plugin, include the <a class="external" href="http://jquery.com">jQuery</a>
@@ -273,14 +259,14 @@
 	</p>
 
 	<pre class="js">$(function(){
-  $("#myTable").tablesorter( {sortList: [[0,0], [1,0]]} );
+  $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
 });</pre>
 
 	<p class="tip">
 		<em>NOTE!</em> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
 	</p>
 
-	<a name="Examples"></a>
+	<a id="Examples"></a>
 	<h1>Examples</h1>
 	<p>
 		These examples will show what's possible with tablesorter.  You need Javascript enabled to
@@ -309,23 +295,25 @@
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (v2.0.10)</li>
 		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> (v2.0.11)</li>
-		<li><a href="example-option-date-format.html">Changing the date format</a> <span class="tip"><em>New! v2.0.23</em></span></li>
+		<li><a href="example-option-date-format.html">Changing the date format</a> (v2.0.23)</li>
 		<li><a href="example-parsers.html">Parser, writing your own</a></li>
+		<li><a href="example-parsers-advanced.html">Parser, writing your own, advanced use</a> <span class="tip"><em>New!</em></span> v2.1</li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (textExtraction function)</a></li>
 	</ul>
 
-	<h4>Widgets /  Plugins</h4>
+	<h4>Widgets / Plugins</h4>
 	<ul>
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
 		<li><a href="example-widget-filter.html">Filter widget</a> (v2.0.18)</li>
 		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> (v2.0.9)</li>
-		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> <span class="tip"><em>New! v2.0.23.1</em></span></li>
-		<li><a href="example-widget-savesort.html">Save sort widget</a> <span class="tip"><em>New! v2.0.27</em></span></li>
+		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1)</li>
+		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
 		<li><a href="example-widget-zebra.html">Zebra stripe widget</a></li>
 		<li><a href="example-widgets.html">Widgets, writing your own</a></li>
 		<li><a href="example-pager.html">Pager plugin</a></li>
+		<li><a href="example-pager-ajax.html">Pager plugin - ajax</a> <span class="tip"><em>New!</em></span> v2.1</li>
 	</ul>
 	</div>
 
@@ -356,6 +344,14 @@
 		<li><a href="example-option-debug.html">Enabling debug mode</a></li>
 	</ul>
 
+	<h4>Playgrounds & Other demos</h4>
+	<ul>
+		<li><a href="http://jsfiddle.net/Mottie/vCTHw/10/">tablesorter basic demo</a> (includes widgets)</li>
+		<li><a href="http://jsfiddle.net/Mottie/vCTHw/11/">tablesorter basic demo using jQuery UI theme</a></li>
+		<li><a href="http://jsfiddle.net/Mottie/aEL9t/7/">tablesorter basic demo with pager plugin</a></li>
+		<li><a href="https://github.com/Mottie/tablesorter/wiki">More demos - added to wiki pages</a></li>
+	</ul>
+
 	<h4>Metadata - setting inline options</h4>
 	<ul>
 		<li>*Note* As of version 2.0.11, you can use class names instead of meta data (<a href="example-parsers-class-name.html">demo</a>)</li>
@@ -366,15 +362,15 @@
 	</div>
 	<br class="clear">
 
-	<a name="Configuration"></a>
+	<a id="Configuration"></a>
 	<h1>Configuration</h1>
 
 	<p class="tip">
-		tablesorter has many options you can pass in at initialization to achieve different effects<br> 
+		tablesorter has many options you can pass in at initialization to achieve different effects<br>
 		<em>TIP!</em> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all)
 	</p>
 
-	<table id="options" class="tablesorter" border="0" cellpadding="0">
+	<table id="options" class="tablesorter options">
 		<thead>
 			<tr>
 				<th class="property">Property</th>
@@ -384,6 +380,15 @@
 				<th class="examples">Link</th>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<th class="property">Property</th>
+				<th class="type">Type</th>
+				<th class="defaults">Default</th>
+				<th class="descrip">Description</th>
+				<th class="examples">Link</th>
+			</tr>
+		</tfoot>
 		<tbody>
 
 			<tr id="cancelselection">
@@ -493,6 +498,19 @@
   border-right: 1px solid #dad9c7;
   margin-left: -1px;
 }</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="selectorremove">
+				<td><a href="#" class="toggle2">selectorRemove</a></td>
+				<td>String</td>
+				<td>"tr.remove-me"</td>
+				<td>This CSS class name can be applied to all rows that are to be removed prior to triggering a table update. <span class="tip"><em>New!</em></span> v2.1
+					<div class="collapsible">
+					<br>
+					It was necessary to add this option because some widgets add table rows for styling (see the <a href="example-widgets.html">writing custom widgets demo</a>) and if a table update is triggered (<code class="hilight">$('table').trigger('update');</code>) those added rows will automatically become incorporated into the table.
+					</div>
 				</td>
 				<td></td>
 			</tr>
@@ -646,7 +664,7 @@
 						<tr><th><code class="hilight">sorter: "time"</code></th><td>Sort by time (23:59 or 12:59 pm).</td></tr>
 						<tr><th><code class="hilight">sorter: "metadata"</code></th><td>Sort by the sorter value in the metadata - requires the metadata plugin.</td></tr>
 					</tbody></table><br>
-					Check out the <a href="#headers"><code class="hilight">headers</code></a> option to see how to use these parsers in your table (example #1).<br>Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3) <span class="tip"><em>New!</em></span>.
+					Check out the <a href="#headers"><code class="hilight">headers</code></a> option to see how to use these parsers in your table (example #1).<br>Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3).
 					</div>
 				</td>
 				<td>
@@ -686,7 +704,7 @@
     sortList   : [[1,0], [2,0]], // initial sort columns (2nd and 3rd)
     sortAppend : [[3,0]]         // Always add this sort on the end (4th column)
   });
-});</pre></td>
+});</pre></div>
 				</td>
 				<td><a href="example-option-sort-force.html">Example</a></td>
 			</tr>
@@ -725,7 +743,7 @@
 				<td>"asc"</td>
 				<td>
 					When clicking the header for the first time, the direction it sorts.  Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.<br>
-				 <span class="tip"><em>New!</em></span> in v2.0.8: This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option.
+				 This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option (Added in v2.0.8).
 				</td>
 				<td>Ex:<a href="example-option-sort-order.html">1</a> <a href="example-options-headers-order.html">2</a></td>
 			</tr>
@@ -740,7 +758,7 @@
 					This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.
 					</div>
 				</td>
-				<td></td>
+				<td><a href="example-pager-ajax.html">Example</a></td>
 			</tr>
 
 			<tr id="sortreset">
@@ -748,7 +766,7 @@
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Setting this option to <code class="hilight">true</code> will allow you to click on the table header a third time to reset the sort direction. However, it does not restore the original sort order, it merely clear the sort from the header. <span class="tip"><em>New!</em></span> in v2.0.27.
+					Setting this option to <code class="hilight">true</code> will allow you to click on the table header a third time to reset the sort direction. New in v2.0.27.
 				</td>
 				<td><a href="../index.html">Example</a></td>
 			</tr>
@@ -758,7 +776,7 @@
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Setting this option to <code class="hilight">true</code> will start the sort with the <code>sortInitialOrder</code> when clicking on a previously unsorted column. <span class="tip"><em>New!</em></span> in v2.0.31.
+					Setting this option to <code class="hilight">true</code> will start the sort with the <code>sortInitialOrder</code> when clicking on a previously unsorted column. New in v2.0.31.
 				</td>
 				<td></td>
 			</tr>
@@ -767,7 +785,7 @@
 				<td>sortMultiSortKey</td>
 				<td>String</td>
 				<td>"shiftKey"</td>
-				<td>The key used to select more than one column for multi-column sorting.  Defaults to the shift key.  The other options are <code class="hilight">"ctrlKey"</code> or <code class="hilight">"altKey"</code>. <br>Reference: <a class="external" href="http://developer.mozilla.org/en/docs/DOM:event#Properties">http://developer.mozilla.org/en/docs/DOM:event#Properties</a></td>
+				<td>The key used to select more than one column for multi-column sorting.  Defaults to the shift key.  The other options are <code class="hilight">"ctrlKey"</code> or <code class="hilight">"altKey"</code>. Reference: <a class="external" href="http://developer.mozilla.org/en/docs/DOM:event#Properties">http://developer.mozilla.org/en/docs/DOM:event#Properties</a></td>
 				<td><a href="example-option-sort-key.html">Example</a></td>
 			</tr>
 
@@ -830,34 +848,85 @@ $(function(){
 				<td><a href="example-widget-zebra.html">Example</a></td>
 			</tr>
 
-			<tr id="widgetzebra">
-				<td><a href="#" class="toggle2">widgetZebra</a></td>
-				<td>Object with Array</td>
-				<td>{ css: [ "even", "odd" ] }</td>
+			<tr id="widthfixed">
+				<td>widthFixed</td>
+				<td>Boolean</td>
+				<td>false</td>
 				<td>
-					When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>.
+					Indicates if tablesorter should apply fixed widths to the table columns.  This is useful for the Pager companion.
+					<br><del>Requires the <a href="#Download-Addons">jQuery dimension plugin</a> to work.</del> This is now part of the jQuery core.
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="widgetoptions">
+				<td><a href="#" class="toggle2">widgetOptions</a></td>
+				<td>Object</td>
+				<td>{}</td>
+				<td>
+					As of version 2.1, all widget options have been moved into this option. This is a move to store all widget specific options in one place so as not to polute the main table options. All current widgets have been modified to use this new option. <span class="tip"><em>New!</em></span> in v2.1.
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widgetzebra"><code class="hilight">"widgetZebra"</code></a> option to change the css class name as follows:
+					Previously documented widget options <a href="#widgetzebra"><code class="hilight">widgetZebra</code></a>, <a href="#widgetcolumns"><code class="hilight">widgetColumns</code></a> and <a href="#widgetuitheme"><code class="hilight">widgetUitheme</code></a> will be retained for backwards compatibility.<br>
+					<br>
+					Use the <a href="#widgetoptions"><code class="hilight">widgetOptions</code></a> option as follows, please note that each option is followed by a comma (except the last one):
 					<pre class="js">$(function(){
   $("table").tablesorter({
-    widgets: ["zebra"], // initialize zebra striping of the table
-    widgetZebra: { css: [ "normal-row", "alt-row" ] }
+
+    // initialize a bunch of widgets
+    widgets: ["zebra", "uitheme", "columns", "filter", "stickyHeaders"],
+
+    widgetOptions: {
+
+      // zebra widget: adding zebra striping, using content and default styles - the ui css removes the background
+      // from default even and odd class names included for this demo to allow switching themes
+      // [ "even", "odd" ]
+      zebra   : ["ui-widget-content even", "ui-state-default odd"],
+
+      // uitheme widget: change default uitheme icons
+      // find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+      // default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
+      // ["up/down arrow (cssHeaders/unsorted)","down arrow (cssDesc/descending)","up arrow (cssAsc/ascending)"]
+      uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"],
+
+      // columns widget: change the default column class names
+      // primary is the first column sorted, secondary is the second, etc
+      columns : [ "primary", "secondary", "tertiary" ],
+
+      // filter widget: If there are child rows in the table (rows with class name from "cssChildRow" option)
+      // and this option is true and a match is found anywhere in the child row, then it will make that row
+      // visible; default is false
+      filter_childRows : false,
+
+      // filter widget: css class applied to the table row containing the filters & the inputs within that row
+      filter_cssFilter : "tablesorter-filter",
+
+      // filter widget: Set this option to true to use the filter to find text from the start of the column
+      // So typing in "a" will find "albert" but not "frank", both have a's; default is false
+      filter_fromStart : false,
+
+      // stickyHeaders widget: css class name applied to the sticky header
+      stickyHeaders    : "tablesorter-stickyHeader"
+
+    }
+
   });
 });</pre></div>
 				</td>
 				<td><a href="example-widget-zebra.html">Example</a></td>
 			</tr>
 
-			<tr id="widgetcolumns">
-				<td><a href="#" class="toggle2">widgetColumns</a></td>
+			<tr id="widgetcolumns"> <!-- added hidden zzz to sort these deprecated options at the bottom -->
+				<td><span class="hidden">zzz</span><a href="#" class="toggle2 deprecated">widgetColumns</a></td>
 				<td>Object with Array</td>
 				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
 				<td>
-					When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... <span class="tip"><em>New!</em></span> in v2.0.17.
+					This option is being <span class="deprecated">deprecated</span>!
+					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widgetcolumns"><code class="hilight">"widgetColumns"</code></a> option to change the css class name as follows:
+					When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... New in v2.0.17.
+					Use the <a href="#widgetcolumns"><code class="hilight">widgetColumns</code></a> option to change the css class name as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["columns"], // initialize column styling of the table
@@ -865,20 +934,22 @@ $(function(){
   });
 });</pre></div>
 				</td>
-				<td><a href="example-widget-columns.html">Example</a></td>
+				<td></td>
 			</tr>
 
 			<tr id="widgetuitheme">
-				<td><a href="#" class="toggle2">widgetUitheme</a></td>
+				<td><span class="hidden">zzz</span><a href="#" class="toggle2 deprecated">widgetUitheme</a></td>
 				<td>Object with Array</td>
 				<td>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</td>
 				<td>
-					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. <span class="tip"><em>New!</em></span> in v2.0.9.
+					This option is being <span class="deprecated">deprecated</span>!
+					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
+					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. New in v2.0.9.
 					Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
 					<br>
-					Use the <a href="#widgetuitheme"><code class="hilight">"widgetUitheme"</code></a> option to change the css class name as follows:
+					Use the <a href="#widgetuitheme"><code class="hilight">widgetUitheme</code></a> option to change the css class name as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["uitheme"], // initialize ui theme styling widget of the table
@@ -892,22 +963,225 @@ $(function(){
   });
 });</pre></div>
 				</td>
-				<td><a href="example-widget-columns.html">Example</a></td>
+				<td></td>
 			</tr>
 
-			<tr id="widthfixed">
-				<td>widthFixed</td>
-				<td>Boolean</td>
-				<td>false</td>
-			<td>Indicates if tablesorter should apply fixed widths to the table columns.  This is useful for the Pager companion.
-				<br><del>Requires the <a href="#Download-Addons">jQuery dimension plugin</a> to work.</del> This is now part of the jQuery core.</a></td>
-				<td><a href="example-pager.html">Example</a></td>
+			<tr id="widgetzebra">
+				<td><span class="hidden">zzz</span><a href="#" class="toggle2 deprecated">widgetZebra</a></td>
+				<td>Object with Array</td>
+				<td>{ css: [ "even", "odd" ] }</td>
+				<td>
+					This option is being <span class="deprecated">deprecated</span>!
+					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
+					<div class="collapsible">
+					<br>
+					When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>.
+					Use the <a href="#widgetzebra"><code class="hilight">widgetZebra</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["zebra"], // initialize zebra striping of the table
+    widgetZebra: { css: [ "normal-row", "alt-row" ] }
+  });
+});</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 		</tbody>
 	</table>
 
-	<a name="Methods"></a>
+	<a id="Widget-options"></a>
+	<h1>Widget Options</h1>
+
+	<p class="tip">
+		tablesorter widgets have many options, and to better organize them, they now are grouped together inside of the <code class="hilight">widgetOptions</code><br>
+		<em>TIP!</em> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all)
+	</p>
+
+	<table id="widget-options" class="tablesorter options">
+		<thead>
+			<tr>
+				<th class="property">Property</th>
+				<th class="type">Type</th>
+				<th class="defaults">Default</th>
+				<th class="descrip">Description</th>
+				<th class="examples">Link</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th class="property">Property</th>
+				<th class="type">Type</th>
+				<th class="defaults">Default</th>
+				<th class="descrip">Description</th>
+				<th class="examples">Link</th>
+			</tr>
+		</tfoot>
+		<tbody>
+
+			<tr id="widget-columns">
+				<td><a href="#" class="toggle2">columns</a></td>
+				<td>Array</td>
+				<td>[ "primary", "secondary", "tertiary" ]</td>
+				<td>
+					columns widget: When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... <span class="tip"><em>Modified!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-columns"><code class="hilight">"columns"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["columns"], // initialize column styling of the table
+    widgetOptions : {
+      columns: [ "primary", "secondary", "tertiary" ]
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-columns.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-childrows">
+				<td><a href="#" class="toggle2">filter_childRows</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Filter widget: If there are child rows in the table (rows with class name from <a href="#csschildrow"><code class="hilight">"cssChildRow"</code></a> option) and this option is <code class="hilight">true</code> and a match is found anywhere in the child row, then it will make that row visible.
+					<span class="tip"><em>Modified!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-childrows"><code class="hilight">filter_childRows</code></a> option include child row text as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_childRows : true
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-filter-cssfilter">
+				<td><a href="#" class="toggle2">filter_cssFilter</a></td>
+				<td>String</td>
+				<td>'tablesorter-filter'</td>
+				<td>
+					Filter widget: This is the class name applied to the filter header row (tr) and each input within that row. If you change it from the default class name of <code class="hilight">"tablesorter-filter"</code> make sure you also update the css!
+					<span class="tip"><em>New!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-cssfilter"><code class="hilight">"tablesorter-filter"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      // css class applied to the table row containing the filters & the inputs within that row
+      filter_cssFilter : "tablesorter-filter"
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-fromstart">
+				<td><a href="#" class="toggle2">filter_fromStart</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Filter widget: Set this option to <code class="hilight">true</code> to use the filter to find text from the start of the column, so typing in "a" will find "albert" but not "frank", both have a's.
+					<span class="tip"><em>New!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-fromstart"><code class="hilight">filter_fromStart</code></a> option as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_fromStart : true
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-sticky-headers">
+				<td><a href="#" class="toggle2">stickyHeaders</a></td>
+				<td>String</td>
+				<td>'tablesorter-stickyHeader'</td>
+				<td>
+					stickyHeaders widget: This is the class name applied to the sticky header row (tr). If you change it from the default class name of <code class="hilight">"tablesorter-stickyHeader"</code> make sure you also update the css!
+					<span class="tip"><em>New!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-sticky-headers"><code class="hilight">"stickyHeaders"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // css class name applied to the sticky header
+      stickyHeaders : "tablesorter-stickyHeader"
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-sticky-header.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-uitheme">
+				<td><a href="#" class="toggle2">uitheme</a></td>
+				<td>Array</td>
+				<td>[ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ]</td>
+				<td>
+					uitheme widget: This widget option replaces the previous <a href="#widgetuitheme">widgetUitheme</a>. It is used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. <span class="tip"><em>Modified!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
+					<br>
+					Use the <a href="#widgetuitheme"><code class="hilight">"widgetUitheme"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["uitheme"], // initialize ui theme styling widget of the table
+    widgetOptions: {
+      uitheme : [
+        "ui-icon-carat-2-n-s", // Unsorted icon
+        "ui-icon-carat-1-s",   // Sort up (down arrow)
+        "ui-icon-carat-1-n"    // Sort down (up arrow)
+      ]
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-ui-theme.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-zebra">
+				<td><a href="#" class="toggle2">zebra</a></td>
+				<td>Array</td>
+				<td>[ "even", "odd" ]</td>
+				<td>
+					zebra widget: When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>. <span class="tip"><em>Modified!</em></span> in v2.1.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-zebra"><code class="hilight">"zebra"</code></a> option to change the css class name as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["zebra"], // initialize zebra striping of the table
+    widgetOptions: {
+      zebra: [ "normal-row", "alt-row" ]
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-zebra.html">Example</a></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<a id="Methods"></a>
 	<h1>Methods</h1>
 
 	<p class="tip">
@@ -916,7 +1190,7 @@ $(function(){
 		<em>TIP!</em> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all):
 	</p>
 
-	<table id="methods" class="tablesorter" border="0" cellpadding="0">
+	<table id="methods" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Method</th>
@@ -928,7 +1202,7 @@ $(function(){
 
 			<tr id="addrows">
 				<td><a href="#" class="toggle2">addRows</a></td>
-				<td>Use this method to add table rows. <span class="tip"><em>New!</em> in v2.0.16</span>
+				<td>Use this method to add table rows. New in v2.0.16
 					<div class="collapsible">
 						It does not work the same as "update" in that it only adds rows, it does not remove them.<br>
 						Also, use this method to add table rows while using the pager plugin. If the "update" method is used, only the visible table rows continue to exist.
@@ -1054,7 +1328,7 @@ $(table)
 		</tbody>
 	</table>
 
-	<a name="Events"></a>
+	<a id="Events"></a>
 	<h1>Events</h1>
 
 	<p class="tip">
@@ -1063,7 +1337,7 @@ $(table)
 		<em>TIP!</em> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all):
 	</p>
 
-	<table id="events" class="tablesorter" border="0" cellpadding="0">
+	<table id="events" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Event</th>
@@ -1119,7 +1393,7 @@ $(table)
 
 			<tr id="pagerChange">
 				<td><a href="#" class="toggle2">pagerChange</a></td>
-				<td>This event fires when the pager plugin begins to render the table on the currently selected page. <span class="tip"><em>New!</em></span> in v2.0.7.
+				<td>This event fires when the pager plugin begins to render the table on the currently selected page. New in v2.0.7.
 					<div class="collapsible">
 						<pre class="js">$(function(){
 
@@ -1145,7 +1419,7 @@ $(table)
 
 			<tr id="pagerComplete">
 				<td><a href="#" class="toggle2">pagerComplete</a></td>
-				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. <span class="tip"><em>New!</em></span> in v2.0.7.
+				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. New in v2.0.7.
 					<div class="collapsible">
 						<pre class="js">$(function(){
 
@@ -1172,7 +1446,7 @@ $(table)
 		</tbody>
 	</table>
 
-	<a name="Download"></a>
+	<a id="Download"></a>
 	<h1>Download</h1>
 
 	<p><strong>Full release</strong> - Plugin, Documentation, Add-ons, Themes <a href="http://github.com/Mottie/tablesorter/downloads">jquery.tablesorter.zip</a></p>
@@ -1188,19 +1462,19 @@ $(table)
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
 		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (3,7kb, required for setting <a href="#Examples">inline options</a>)</li>
-		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (31kb, for development)</li>
-		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (5,6kb, <a href="example-pager.html">tablesorter pagination plugin</a>)</li>
-		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (8,1kb, includes the jQuery UI theme, columns styling, resizable columns, filter widget and sticky header widgets. <span class="tip"><em>New!</em></span> in v2.0.21.1.)</li>
+		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (33kb/<a href="../js/jquery.tablesorter.min.js">17kb min</a>)</li>
+		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (11kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">6kb min</a>, <a href="example-pager.html">demo</a>)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (14kb/<a href="../js/jquery.tablesorter.widgets.min.js">7kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets. <span class="tip"><em>Updated!</em></span> in v2.1.)</li>
 	</ul>
 
 	<strong id="Download-Themes">Themes:</strong>
 	<ul>
 		<li><a href="../css/green/green.zip">Green Skin</a> - Images and CSS styles for green themed headers</li>
 		<li><a href="../css/blue/blue.zip">Blue Skin</a> - Images and CSS styles for blue themed headers (as seen in the examples)</li>
-		<li><a href="example-widget-ui-theme.html">jQuery UI Theme</a> - Apply any jQuery UI theme to the table using the "uitheme" widget code. <span class="tip"><em>New!</em></span> in v2.0.9!</li>
+		<li><a href="example-widget-ui-theme.html">jQuery UI Theme</a> - Apply any jQuery UI theme to the table using the "uitheme" widget code. New in v2.0.9!</li>
 	</ul>
 
-	<a name="Compatibility"></a>
+	<a id="Compatibility"></a>
 	<h1>Browser Compatibility</h1>
 
 	<p>tablesorter has been tested successfully in the following browsers with Javascript enabled:</p>
@@ -1214,7 +1488,7 @@ $(table)
 
 	<p><a class="external" href="http://docs.jquery.com/Browser_Compatibility">jQuery Browser Compatibility</a></p>
 
-	<a name="Support"></a>
+	<a id="Support"></a>
 	<h1>Support</h1>
 
 	<p>If you are having a problem with the plugin or you want to submit a feature request, please <a href="https://github.com/Mottie/tablesorter/issues">submit an issue</a>.</p>
@@ -1225,7 +1499,7 @@ $(table)
 
 	<p>Access to the jQuery Mailing List is also available through <a class="external" href="http://www.nabble.com/JQuery-f15494.html">Nabble Forums</a>.</p>
 
-	<a name="Credits"></a>
+	<a id="Credits"></a>
 	<h1>Credits</h1>
 	<p>Written by Christian Bach.</p>
 	<p>

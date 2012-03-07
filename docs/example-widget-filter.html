@@ -25,12 +25,48 @@
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
+
 		// initialize zebra striping and filter widgets
 		widgets: ["zebra", "filter"],
-		headers: { 5: { sorter: false, filter: false } }
+
+		headers: { 5: { sorter: false, filter: false } },
+
+		widgetOptions : {
+
+			// css class applied to the table row containing the filters & the inputs within that row
+			filter_cssFilter : 'tablesorter-filter',
+
+			// filter widget: If there are child rows in the table (rows with class name from "cssChildRow" option)
+			// and this option is true and a match is found anywhere in the child row, then it will make that row
+			// visible; default is false
+			filter_childRows : false,
+
+			// Set this option to true to use the filter to find text from the start of the column
+			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
+			filter_fromStart : false
+
+		}
+
 	});
 
 });</script>
+
+<script>
+$(function(){
+	// *** widgetfilter_fromStart toggle button ***
+	$('button.toggle').click(function(){
+		var c = $('table')[0].config,
+		// toggle the boolean
+		fs = !c.widgetOptions.filter_fromStart;
+		c.widgetOptions.filter_fromStart = fs;
+		// update search after option change
+		$('input.tablesorter-filter:eq(0)').trigger('search');
+		// update text so everyone knows the option's current value
+		$('#start').html(fs.toString());
+	});
+});
+</script>
+
 </head>
 <body>
 <div id="banner">
@@ -48,11 +84,16 @@
 			<li>Added filter header option and class name to allow disabling the filter in a specific column in v2.0.19.1.</li>
 			<li>The Discount column has the "filter-false" class added to the header - see the HTML on how to add this ability.</li>
 			<li>The Date column has the "headers" option applied to disable the sort and the filter - see the table options in the javascript for this example.</li>
+			<li>Replaced <code class="hilight">widgetFilterChildRows</code> option with <code class="hilight">widgetOptions.filter_childRows</code>. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Added <code class="hilight">widgetOptions.filter_fromStart</code> option, which when <code class="hilight">true</code>, allows you to search the table from the starting of the table cell text. Use the toggle button to see the difference, and that it can be dynamically changed! <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Added <code class="hilight">widgetOptions.filter_cssFilter</code> option, which allows you to defined the css class applied to the filter row and each search input. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Additional filter widget specific options are included in the javascript below, with an explanation.</li>
 			<li>Please note that using the pager plugin with this filter widget will have <em>unexpected results</em> - I haven't figured out how to fix the problem.</li>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
+	<button class="toggle">Toggle</button> filter_fromStart : <span id="start">false</span> (if true, search from beginning of cell content only)
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
@@ -151,15 +192,21 @@
 	<h1>CSS</h1>
 	<div>
 		<pre class="css">/* filter widget, added to style.css themes */
-table.tablesorter thead input.filter {
-	width: 90%;
+table.tablesorter thead tr.filters input {
+	width: 95%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 table.tablesorter thead tr.filters, table.tablesorter thead tr.filters td {
 	text-align: center;
 	background: #fff;
 }
 /* optional disabled input styling */
-table.tablesorter thead tr.filters input.disabled {}</pre>
+table.tablesorter thead tr.filters input.disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}</pre>
 	</div>
 
 	<h1>HTML</h1>

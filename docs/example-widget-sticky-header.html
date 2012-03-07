@@ -28,7 +28,11 @@
 <script id="js">$(function(){
 
 	$("table").tablesorter({
-		widgets: [ 'zebra', 'stickyHeaders' ]
+		widgets: [ 'zebra', 'stickyHeaders' ],
+		widgetOptions: {
+			// css class name applied to the sticky header row (tr)
+			stickyHeaders : 'tablesorter-stickyHeader'
+		}
 	});
 
 }); </script>
@@ -48,7 +52,8 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
-			<li>Scroll down the page to see the headers stick! Then try sorting the columns.</li>
+			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
+			<li>Added <code class="hilight">widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual stick header. <span class="tip"><em>New! v2.1</em></span></li>
 		</ul>
 	</p>
 
