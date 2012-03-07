@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Pager plugin - Ajax</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- Tablesorter: optional -->
+	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+
+	<style id="css">/*** css used when "updateArrows" option is true ***/
+/* the pager itself gets a disabled class when the number of rows is less than the size */
+.pager.disabled {
+	display: none;
+}
+/* hide or fade out pager arrows when the first or last row is visible */
+.pager img.disabled {
+	/* visibility: hidden */
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}</style>
+
+	<script id="js">$(function(){
+
+	// Initialize tablesorter
+	// ***********************
+	$("table")
+		.tablesorter({
+			widthFixed: true,
+			sortLocaleCompare: true, // needed for accented characters in the data
+			widgets: ['zebra']
+		})
+
+		// initialize the pager plugin
+		// ****************************
+		.tablesorterPager({
+
+			// **********************************
+			//  Description of ALL pager options
+			// **********************************
+
+			// target the pager markup - see the HTML block below
+			container: $(".pager"),
+
+			// use this url format "http:/mydatabase.com?page={page}&size={size}"
+			ajaxUrl : 'assets/City{page}.json',
+
+			// process ajax so that the data object is returned along with the total number of rows
+			// example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
+			ajaxProcessing: function(ajax){
+				if (ajax && ajax.hasOwnProperty('data')) {
+					// return [ "data", "total_rows" ];
+					return [ ajax.data, ajax.total_rows ];
+				}
+			},
+
+			// output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+			output: '{startRow} to {endRow} ({totalRows})',
+
+			// apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
+			updateArrows: true,
+
+			// starting page of the pager (zero based index)
+			page: 0,
+
+			// Number of visible rows - default is 10
+			size: 25,
+
+			// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+			// table row set to a height to compensate; default is false
+			fixedHeight: false,
+
+			// remove rows from the table to speed up the sort of large tables.
+			// setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+			removeRows: false,
+
+			// css class names of pager arrows
+			cssNext: '.next', // next page arrow
+			cssPrev: '.prev', // previous page arrow
+			cssFirst: '.first', // go to first page arrow
+			cssLast: '.last', // go to last page arrow
+			cssPageDisplay: '.pagedisplay', // location of where the "output" is displayed
+			cssPageSize: '.pagesize', // page size selector - select dropdown that sets the "size" option
+
+			// class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
+			cssDisabled: 'disabled' // Note there is no period "." in front of this class name
+
+		});
+
+});</script>
+</head>
+<body id="pager-demo">
+	<div id="banner">
+		<h1>table<em>sorter</em></h1>
+		<h2>Pager plugin - Ajax</h2>
+		<h3>Flexible client-side table sorting</h3>
+		<a href="index.html">Back to documentation</a>
+	</div>
+
+	<div id="main">
+
+		<p class="tip">
+			<em>NOTE!</em>:
+			<ul>
+				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
+				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
+				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>) and block size (<code>{size}</code>).</li>
+				<li>The <code>ajaxProcessing</code> function must* return the data in the following format (Note that JSON is not allowed to include comments):
+					<pre class="js"><code>{
+  "data" : [
+    { "header column 1": "r1c1 text", "header column 2": "r1c2 text", ... }, // row 1 of tbody (r1c1 = row 1, column 1)
+    { "header column 1": "r2c1 text", "header column 2": "r2c2 text", ... }, // row 2 of tbody
+    ...
+    { "header column 1": "rNc1 text", "header column 2": "rNc2 text", ... }, // row N of tbody
+  ],
+
+  "total_rows" : 100 // total # rows contained in the database
+} </code></pre></li>
+				<li>The table header and footer text will be updated to match the JSON "header column #" text; but there is an issue with the table rendering improperly if the number of columns in the HTML and the number of columns in the JSON don't match.</li>
+				<li>Limitations of this demo:
+					<ul>
+						<li>This demo will not work in Chrome due to restrictions with browser and desktop interaction.</li>
+						<li>The record size is limited to 25 records because this demo is not interacting with an actual database, but with four JSON files containing 25 records each.</li>
+					</ul>
+				</li>
+			</ul>
+			<p class="small">* If you have a different JSON format and need help with the processing code, please ask the question on <a href="http://stackoverflow.com">StackOverflow</a> or message me directly (gmail; wowmotty). Please don't open an issue for help with code.</p>
+		</p>
+
+	<h1>Demo</h1>
+	<br>
+	<div class="pager">
+		<img src="../addons/pager/icons/first.png" class="first"/>
+		<img src="../addons/pager/icons/prev.png" class="prev"/>
+		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+		<img src="../addons/pager/icons/next.png" class="next"/>
+		<img src="../addons/pager/icons/last.png" class="last"/>
+		<select class="pagesize">
+			<option value="25">25</option>
+		</select>
+	</div>
+
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th>1</th>
+			<th>2</th>
+			<th>3</th>
+			<th>4</th>
+			<th>5</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th>1</th>
+			<th>2</th>
+			<th>3</th>
+			<th>4</th>
+			<th>5</th>
+		</tr>
+	</tfoot>
+	<tbody>
+	</tbody>
+</table>
+
+	<div class="pager">
+		<img src="../addons/pager/icons/first.png" class="first"/>
+		<img src="../addons/pager/icons/prev.png" class="prev"/>
+		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+		<img src="../addons/pager/icons/next.png" class="next"/>
+		<img src="../addons/pager/icons/last.png" class="last"/>
+		<select class="pagesize">
+			<option value="25">25</option>
+		</select>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="css"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html">&lt;!-- pager --&gt;
+&lt;div id=&quot;pager&quot; class=&quot;pager&quot;&gt;
+  &lt;form&gt;
+    &lt;img src=&quot;first.png&quot; class=&quot;first&quot;/&gt;
+    &lt;img src=&quot;prev.png&quot; class=&quot;prev&quot;/&gt;
+    &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
+    &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
+    &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
+    &lt;select class=&quot;pagesize&quot;&gt;
+      &lt;option selected=&quot;selected&quot; value=&quot;25&quot;&gt;25&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+
+&lt;table class=&quot;tablesorter&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt; &lt;!-- thead text will be updated from the JSON; make sure the number of columns matches the JSON data --&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;th&gt;5&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt; &lt;!-- tfoot text will be updated at the same time as the thead --&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;th&gt;5&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+  &lt;tbody&gt; &lt;!-- tbody will be loaded via JSON --&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+
+		</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-empty-table.html">Initializing tablesorter on a empty table &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

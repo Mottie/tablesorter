@@ -20,3 +20,8 @@ div.tablesorterPager input {
 	border: 1px solid #330000;
 	text-align: center;
 }
+#tablesorterPagerLoading {
+	background: rgba(255,255,255,0.8) url(icons/loading.gif) center center no-repeat;
+	position: absolute;
+	z-index: 1000;
+}

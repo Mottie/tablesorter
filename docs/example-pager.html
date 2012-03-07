@@ -18,15 +18,16 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<!-- Tablesorter: optional -->
+	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
 	<style id="css">/*** css used when "updateArrows" option is true ***/
 /* the pager itself gets a disabled class when the number of rows is less than the size */
-#pager.disabled {
+.pager.disabled {
 	display: none;
 }
 /* hide or fade out pager arrows when the first or last row is visible */
-#pager img.disabled {
+.pager img.disabled {
 	/* visibility: hidden */
 	opacity: 0.5;
 	filter: alpha(opacity=50);
@@ -40,7 +41,19 @@
 	var pagerOptions = {
 
 		// target the pager markup - see the HTML block below
-		container: $("#pager"),
+		container: $(".pager"),
+
+		// use this url format "http:/mydatabase.com?page={page}&size={size}"
+		ajaxUrl : null,
+
+		// process ajax so that the data object is returned along with the total number of rows
+		// example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
+		ajaxProcessing: function(ajax){
+			if (ajax && ajax.hasOwnProperty('data')) {
+				// return [ "data", "total_rows" ];
+				return [ ajax.data, ajax.total_rows ];
+			}
+		},
 
 		// output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
 		output: '{startRow} to {endRow} ({totalRows})',
@@ -54,12 +67,9 @@
 		// Number of visible rows - default is 10
 		size: 10,
 
-		// if true, moves the pager below the table at a fixed position; so if only 2 rows showing, the pager remains in the same place
-		// default is true
-		positionFixed: false,
-
-		// offset added to the pager top, but only when "positionFixed" is true
-		offset: 0,
+		// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+		// table row set to a height to compensate; default is false
+		fixedHeight: true,
 
 		// remove rows from the table to speed up the sort of large tables.
 		// setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
@@ -126,28 +136,26 @@
 			t.trigger('enable.pager');
 		});
 
-		// Destroy pager
+		// Destroy pager / Restore pager
 		// **************
 		$('button:contains(Destroy)').click(function(){
 			// Exterminate, annhilate, destroy! http://www.youtube.com/watch?v=LOqn8FxuyFs
-			$('table').trigger('destroy.pager');
-
-			// fancy disable/enable buttons - not really needed
-			$('button:contains(Restore)').removeAttr('disabled');
-			$(this).attr('disabled', true);
-
+			var $t = $(this);
+			if (/Destroy/.test( $t.text() )){
+				$('table').trigger('destroy.pager');
+				$t.text('Restore Pager');
+			} else {
+				$('table').tablesorterPager(pagerOptions);
+				$t.text('Destroy Pager');
+			}
 		});
 
-		// Restore pager
+		// Disable / Enable
 		// **************
-		$('button:contains(Restore)').click(function(){
-			// initialize the pager
-			$('table').tablesorterPager(pagerOptions);
-
-			// fancy disable/enable buttons - not really needed
-			$(this).attr('disabled', true);
-			$('button:contains(Destroy)').removeAttr('disabled');
-
+		$('button:contains(Disable)').click(function(){
+			var mode = /Disable/.test( $(this).text() );
+			$('table').trigger( (mode ? 'disable' : 'enable') + '.pager');
+			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 		});
 
 });</script>
@@ -165,14 +173,8 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
-				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the `removeRows` option to false will break the sort.</li>
-				<li>Added "pagerChange" and "pagerComplete" events in version 2.0.7.</li>
-				<li>Updated pager functions, removed "separator" option, and added output string formatting (e.g. "1 to 10 (50)") to version 2.0.9.</li>
-				<li>Added "cssDisabled" and "pagerArrows" options which controls the look of the pager and arrows when the pager is on the first or last page. Added in version 2.0.9.</li>
-				<li>Added a new "addRows" method to allow adding new rows while the pager is applied to a table. Using "update" would remove all non-visible rows. New in version 2.0.16.</li>
-				<li>New "destroy.pager" method will reveal the entire table, remove the pager functionality, and hide the actual pager. Added in version 2.0.16.</li>
-				<li>Reduced the number of rows in the demo from 1022 to 50, so you don't have to scroll forever (when the pager is destroyed) to see the code below the table (v2.0.16).</li>
-				<li>New "disable.pager" and "enable.pager" methods added to make it easier to add or delete rows from the table. Added in version 2.0.21.2.</li>
+				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code class="hilight">removeRows</code> option to false will break the sort.</li>
+				<li>There have been lots of changes made in version 2.1, please check out the <a href="#change-log">change log</a> below.</li>
 			</ul>
 		</p>
 
@@ -185,22 +187,20 @@
 
 	<h1>Demo</h1>
 	<br>
-	<button>Add Rows</button> <button>Destroy Pager</button> <button disabled>Restore Pager</button>
+	<button>Add Rows</button> <button>Disable Pager</button> <button>Destroy Pager</button>
 	<br><br>
-	<div id="pager" class="pager">
-		<form>
-			<img src="../addons/pager/icons/first.png" class="first"/>
-			<img src="../addons/pager/icons/prev.png" class="prev"/>
-			<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-			<img src="../addons/pager/icons/next.png" class="next"/>
-			<img src="../addons/pager/icons/last.png" class="last"/>
-			<select class="pagesize">
-				<option selected="selected" value="10">10</option>
-				<option value="20">20</option>
-				<option value="30">30</option>
-				<option value="40">40</option>
-			</select>
-		</form>
+	<div class="pager">
+		<img src="../addons/pager/icons/first.png" class="first"/>
+		<img src="../addons/pager/icons/prev.png" class="prev"/>
+		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+		<img src="../addons/pager/icons/next.png" class="next"/>
+		<img src="../addons/pager/icons/last.png" class="last"/>
+		<select class="pagesize">
+			<option selected="selected" value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+		</select>
 	</div>
 
 <table class="tablesorter">
@@ -480,6 +480,20 @@
 	</tbody>
 </table>
 
+<div class="pager">
+	<img src="../addons/pager/icons/first.png" class="first"/>
+	<img src="../addons/pager/icons/prev.png" class="prev"/>
+	<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+	<img src="../addons/pager/icons/next.png" class="next"/>
+	<img src="../addons/pager/icons/last.png" class="last"/>
+	<select class="pagesize">
+		<option selected="selected" value="10">10</option>
+		<option value="20">20</option>
+		<option value="30">30</option>
+		<option value="40">40</option>
+	</select>
+</div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>
@@ -515,9 +529,72 @@
 
 		</div>
 
+	<a id="change-log"></a>
+	<h1>Pager Change Log</h1>
+
+	<h4>Version 2.1</h4>
+	<ul>
+		<li>Ajax:
+			<ul>
+				<li>The pager plugin will now interact with a database via JSON. See <a href="example-pager-ajax.html">demo</a> here.</li>
+				<li>Added <code class="hilight">ajaxUrl</code> option which contains the variables <code class="hilight">{page}</code> and <code class="hilight">{size}</code> which will be replaced by the plugin to obtain that data.
+				<pre class="js"><code class="hilight">ajaxUrl : "http:/mydatabase.com?page={page}&size={size}"</code></pre>
+				</li>
+				<li>Another option named <code class="hilight">ajaxProcessing</code> was included to process the data before returning it to the pager plugin. Basically the JSON needs to contain the data to match the example below. An additional required variable is the total number of records or rows needs to be returned.
+
+				<pre class="js"><code class="hilight">// process ajax so that the data object is returned along with the total number of rows
+// example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
+ajaxProcessing: function(ajax){
+  if (ajax && ajax.hasOwnProperty('data')) {
+    // return [ "data", "total_rows" ];
+    return [ ajax.data, ajax.total_rows ];
+  }
+}</code></pre>
+				</li>
+				<li>I tried to make the plugin interact with a database as flexible as possible, but I'm sure I haven't covered every situation. So any and all feedback is welcome!</li>
+				<li>Also, much thanks to <a href="https://github.com/kachar">kachar</a> for the <a href="https://github.com/Mottie/tablesorter/issues/31">enhancement request</a> and willingness to help test it!</li>
+			</ul>
+		</li>
+		<li>Removed <code class="hilight">positionFixed</code> and <code class="hilight">offset</code> options.</li>
+		<li>Added <code class="hilight">fixedHeight</code> option which replaces the <code class="hilight">positionFixed</code> and <code class="hilight">offset</code> options.
+
+			<ul>
+				<li>If true, it should maintain the height of the table, even when viewing fewer than the set number of records (go to the last page to see this in action).</li>
+				<li>It works by adding an empty row to make up the differences in height.</li>
+				<li>There were some <strong>issues</strong> of the height being incorrect when this option is true. The problems occurred if you add/remove rows + change pager size, or just destroy/enable the pager. I think I fixed it, but if you should find a problem, please <a href="https://github.com/Mottie/tablesorter/issues">report the issue</a> and steps on how to duplicate it.</li>
+			</ul>
+		</li>
+
+		<li>The pager <code class="hilight">container</code> option will now accept class names. So you can add multiple container blocks to control the pager, just as this page now has two, one above and one below.</li>
+		<li>The pager now adds all of its options to the table configuration options within an object named "pager". Basically what this means is that instead of add all of the pager options to be mixed in with the tablesorter options, the pager options have been isolated and can be found by typing this into the browser console: <code class="hilight">$('table')[0].config.pager</code>.</li>
+	</ul>
+
+	<h4>Version 2.0.21.2</h4>
+	<ul>
+		<li>Added <code class="hilight">"disable.pager"</code> and <code class="hilight">"enable.pager"</code> methods added to make it easier to add or delete rows from the table.</li>
+	</ul>
+
+	<h4>Version 2.0.16</h4>
+	<ul>
+		<li>Reduced the number of rows in the demo from 1022 to 50, so you don't have to scroll forever (when the pager is destroyed) to see the code below the table.</li>
+		<li>Added <code class="hilight">"destroy.pager"</code> method will reveal the entire table, remove the pager functionality, and hide the actual pager.</li>
+		<li>Added a new <code class="hilight">addRows</code> method to allow adding new rows while the pager is applied to a table. Using <code class="hilight">"update"</code> would remove all non-visible rows.</li>
+	</ul>
+
+	<h4>Version 2.0.9</h4>
+	<ul>
+		<li>Added <code class="hilight">cssDisabled</code> and <code class="hilight">pagerArrows</code> options which controls the look of the pager and arrows when the pager is on the first or last page.</li>
+		<li>Updated pager functions, removed "separator" option, and added output string formatting (e.g. "1 to 10 (50)").</li>
+	</ul>
+
+	<h4>Version 2.0.7</h4>
+	<ul>
+		<li>Added <code class="hilight">"pagerChange"</code> and <code class="hilight">"pagerComplete"</code> events in version 2.0.7.</li>
+	</ul>
+
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-empty-table.html">Initializing tablesorter on a empty table &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-pager-ajax.html">Pager plugin - Ajax &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
