@@ -363,6 +363,7 @@
 					}
 					// add cell to headerList
 					c.headerList[index] = this;
+					$(this).parent().addClass('tablesorter-header');
 				});
 				if (c.debug) {
 					benchmark("Built headers", time);

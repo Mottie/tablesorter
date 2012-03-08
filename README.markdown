@@ -42,6 +42,7 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
   * The `sortInitialOrder` will work in either the main options or specifically within the headers option when a particular column needs a different initial sort order.
   * Added a [sortReset/sortRestart](http://mottie.github.com/tablesorter/docs/example-option-sortreset-sortrestart.html) demo.
   * Resolves [issue #30](https://github.com/Mottie/tablesorter/issues/29).
+* Updated pager plugin to better work with the sticky header widget.
 
 #### Version 2.1 (3/7/2012)
 

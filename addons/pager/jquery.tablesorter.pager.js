@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 3/7/2012
+ * updated 3/8/2012
  */
 
 (function($) {
@@ -149,7 +149,9 @@
 					// process data
 					if (typeof(c.ajaxProcessing) === "function") {
 						var result = c.ajaxProcessing(data), d = result[0], l = d.length,
-						i, k, th = [], tds = '', tf = '';
+						i, k, th = [], tds = '', tf = '', hsh = $(table).addClass('hasStickyHeaders'),
+						sh = '.' + ((table.config.widgetOptions && table.config.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'),
+						$sh = $t.find(sh);
 						for ( i=0; i < l; i++ ) {
 							tds += '<tr>';
 							for (k in d[i]) {
@@ -162,11 +164,17 @@
 							}
 							tds += '</tr>';
 						}
-						$t.find('thead th').each(function(j){
+						$t.find('thead tr.tablesorter-header th').each(function(j){
 							var $t = $(this),
 							// add new test within the first span it finds, or just in the header
 							tar = ($t.find('span').length) ? $t.find('span:first') : $t;
-							$t.html(th[j]);
+							tar.html(th[j]);
+							// update sticky headers
+							if (hsh && $sh.length){
+								tar = $sh.find('th').eq(j);
+								tar = (tar.find('span').length) ? tar.find('span:first') : tar;
+								tar.html(th[j]);
+							}
 							tf += '<th>' + th[j] + '</th>';
 						});
 						$t.find('tfoot').html('<tr>' + tf + '</tr>');

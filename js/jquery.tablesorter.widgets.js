@@ -1,4 +1,4 @@
-/* TableSorter 2.1 Widgets - updated 3/7/2012
+/* TableSorter 2.1 Widgets - updated 3/8/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -226,7 +226,8 @@ $.tablesorter.addWidget({
 			css = wo.stickyHeaders || 'tablesorter-stickyheader',
 			firstCell = hdrCells.eq(0),
 			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
-			sticky = header.find('tr:not(.' + (wo.filter_cssFilter || 'tablesorter-filter') + ')').clone()
+			sticky = header.find('tr.tablesorter-header').clone()
+				.removeClass('tablesorter-header')
 				.addClass(css)
 				.css({
 					width      : header.outerWidth() + brdr * 2,
@@ -239,7 +240,7 @@ $.tablesorter.addWidget({
 				}),
 			stkyCells = sticky.children(),
 			laststate;
-		// update sticky header class names to match real header
+		// update sticky header class names to match real header after sorting
 		$table.bind('sortEnd', function(e,t){
 			var th = $(t).find('thead tr'),
 				sh = th.filter('.' + css).children();
