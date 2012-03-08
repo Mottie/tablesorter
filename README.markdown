@@ -34,7 +34,16 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
-#### Version 2.1 (3/3/2012)
+#### Version 2.1.1 (3/8/2012)
+
+* Renamed `filter_fromStart` to `filter_startsWith`.
+* Fixed an issue with `sortRestart` not working properly.
+  * In turn, `sortReset`, `lockOrder` and `sortInitialOrder` were modified with this change and were made sure to all work properly.
+  * The `sortInitialOrder` will work in either the main options or specifically within the headers option when a particular column needs a different initial sort order.
+  * Added a [sortReset/sortRestart](http://mottie.github.com/tablesorter/docs/example-option-sortreset-sortrestart.html) demo.
+  * Resolves [issue #30](https://github.com/Mottie/tablesorter/issues/29).
+
+#### Version 2.1 (3/7/2012)
 
 * Added `selectorRemove` option
  * Any table row with this css class will be removed from the table prior to updating the table contents.
@@ -129,8 +138,8 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
     ```
 
 * **Filter** widget changes:
- * Added a new filter widget specific option `widgetOptions.filterStart` which makes the filter only work from the first letter.
- * Added a `widgetOptions.cssFilter` option which now contains the class name added to the filter row and each input within it. Previously the class name used was "filters" for the row and "filter" for the input, now both are "tablesorter-filter". Thanks to [cr125rider](https://github.com/cr125rider) for [sharing a code fix](https://github.com/Mottie/tablesorter/issues/32)!
+ * Added a new filter widget specific option `widgetOptions.filter_fromStart` which makes the filter only work from the first letter.
+ * Added a `widgetOptions.filter_cssFilter` option which now contains the class name added to the filter row and each input within it. Previously the class name used was "filters" for the row and "filter" for the input, now both are "tablesorter-filter". Thanks to [cr125rider](https://github.com/cr125rider) for [sharing a code fix](https://github.com/Mottie/tablesorter/issues/32)!
  * Added css3 box sizing to allow a better fitting filter box. Thanks to [thezoggy](https://github.com/thezoggy) for sharing the code!
  * The css changes were also added to the blue, green and UI style sheets.
  * Updated the filter widget demo with the available options described above; this includes the `widgetOptions.filter_childRows` option which was previously undocumented, recently renamed.

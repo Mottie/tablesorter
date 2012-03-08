@@ -287,6 +287,7 @@
 		<li><a href="example-options-headers.html">Disable sort using headers options</a></li>
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
+		<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a></li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
 	</ul>
 
@@ -768,7 +769,7 @@
 				<td>
 					Setting this option to <code class="hilight">true</code> will allow you to click on the table header a third time to reset the sort direction. New in v2.0.27.
 				</td>
-				<td><a href="../index.html">Example</a></td>
+				<td><a href="example-option-sortreset-sortrestart.html">Example</a></td>
 			</tr>
 
 			<tr id="sortrestart">
@@ -776,9 +777,9 @@
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Setting this option to <code class="hilight">true</code> will start the sort with the <code>sortInitialOrder</code> when clicking on a previously unsorted column. New in v2.0.31.
+					Setting this option to <code class="hilight">true</code> will start the sort with the <code class="hilight">sortInitialOrder</code> when clicking on a previously unsorted column. New in v2.0.31.
 				</td>
-				<td></td>
+				<td><a href="example-option-sortreset-sortrestart.html">Example</a></td>
 			</tr>
 
 			<tr id="sortmultisortkey">
@@ -903,7 +904,7 @@ $(function(){
 
       // filter widget: Set this option to true to use the filter to find text from the start of the column
       // So typing in "a" will find "albert" but not "frank", both have a's; default is false
-      filter_fromStart : false,
+      filter_startsWith : false,
 
       // stickyHeaders widget: css class name applied to the sticky header
       stickyHeaders    : "tablesorter-stickyHeader"
@@ -922,7 +923,7 @@ $(function(){
 				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
 				<td>
 					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
+					It has been replaced by <a href="#widget-columns"><code class="hilight">widgetOptions.columns</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
 					When the column styling widget is initialized, it automatically applied the default class names of <code class="hilight">"primary"</code> for the primary sort, <code class="hilight">"secondary"</code> for the next sort, <code class="hilight">"tertiary"</code> for the next sort, and so on (add more as needed)... New in v2.0.17.
@@ -943,7 +944,7 @@ $(function(){
 				<td>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</td>
 				<td>
 					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
+					It has been replaced by <a href="#widget-uitheme"><code class="hilight">widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
 					Used when the ui theme styling widget is initialized. It automatically applies the default class names of <code class="hilight">"ui-icon-arrowthick-2-n-s"</code> for the unsorted column, <code class="hilight">"ui-icon-arrowthick-1-s"</code> for the descending sort and <code class="hilight">"ui-icon-arrowthick-1-n"</code> for the ascending sort. New in v2.0.9.
@@ -972,7 +973,7 @@ $(function(){
 				<td>{ css: [ "even", "odd" ] }</td>
 				<td>
 					This option is being <span class="deprecated">deprecated</span>!
-					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
+					It has been replaced by <a href="#widget-zebra"><code class="hilight">widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
 					When the zebra striping widget is initialized, it automatically applied the default class names of <code class="hilight">"even"</code> and <code class="hilight">"odd"</code>.
@@ -1085,8 +1086,8 @@ $(function(){
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
-			<tr id="widget-filter-fromstart">
-				<td><a href="#" class="toggle2">filter_fromStart</a></td>
+			<tr id="widget-filter-startswith">
+				<td><a href="#" class="toggle2">filter_startsWith</a></td>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
@@ -1094,12 +1095,12 @@ $(function(){
 					<span class="tip"><em>New!</em></span> in v2.1.
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widget-filter-fromstart"><code class="hilight">filter_fromStart</code></a> option as follows:
+					Use the <a href="#widget-filter-startswith"><code class="hilight">filter_startsWith</code></a> option as follows:
 					<pre class="js">$(function(){
   $("table").tablesorter({
     widgets: ["filter"],
     widgetOptions : {
-      filter_fromStart : true
+      filter_startsWith : true
     }
   });
 });</pre></div>

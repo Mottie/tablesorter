@@ -43,7 +43,7 @@
 
 			// Set this option to true to use the filter to find text from the start of the column
 			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
-			filter_fromStart : false
+			filter_startsWith : false
 
 		}
 
@@ -53,12 +53,12 @@
 
 <script>
 $(function(){
-	// *** widgetfilter_fromStart toggle button ***
+	// *** widgetfilter_startsWith toggle button ***
 	$('button.toggle').click(function(){
 		var c = $('table')[0].config,
 		// toggle the boolean
-		fs = !c.widgetOptions.filter_fromStart;
-		c.widgetOptions.filter_fromStart = fs;
+		fs = !c.widgetOptions.filter_startsWith;
+		c.widgetOptions.filter_startsWith = fs;
 		// update search after option change
 		$('input.tablesorter-filter:eq(0)').trigger('search');
 		// update text so everyone knows the option's current value
@@ -85,7 +85,7 @@ $(function(){
 			<li>The Discount column has the "filter-false" class added to the header - see the HTML on how to add this ability.</li>
 			<li>The Date column has the "headers" option applied to disable the sort and the filter - see the table options in the javascript for this example.</li>
 			<li>Replaced <code class="hilight">widgetFilterChildRows</code> option with <code class="hilight">widgetOptions.filter_childRows</code>. <span class="tip"><em>New! v2.1</em></span></li>
-			<li>Added <code class="hilight">widgetOptions.filter_fromStart</code> option, which when <code class="hilight">true</code>, allows you to search the table from the starting of the table cell text. Use the toggle button to see the difference, and that it can be dynamically changed! <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Added <code class="hilight">widgetOptions.filter_startsWith</code> option, which when <code class="hilight">true</code>, allows you to search the table from the starting of the table cell text. Use the toggle button to see the difference, and that it can be dynamically changed! <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Added <code class="hilight">widgetOptions.filter_cssFilter</code> option, which allows you to defined the css class applied to the filter row and each search input. <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Additional filter widget specific options are included in the javascript below, with an explanation.</li>
 			<li>Please note that using the pager plugin with this filter widget will have <em>unexpected results</em> - I haven't figured out how to fix the problem.</li>
@@ -93,7 +93,7 @@ $(function(){
 	</p>
 
 	<h1>Demo</h1>
-	<button class="toggle">Toggle</button> filter_fromStart : <span id="start">false</span> (if true, search from beginning of cell content only)
+	<button class="toggle">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>

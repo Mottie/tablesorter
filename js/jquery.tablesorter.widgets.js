@@ -151,7 +151,7 @@ $.tablesorter.addWidget({
 });
 
 // Widget: Filter
-// "filter_fromStart" & "filter_childRows" options in "widgetOptions"
+// "filter_startsWith" & "filter_childRows" options in "widgetOptions"
 // **************************
 $.tablesorter.addWidget({
 	id: "filter",
@@ -191,7 +191,7 @@ $.tablesorter.addWidget({
 							$td = $(this).find('td');
 							for (i=0; i < cols; i++){
 								x = ($td.eq(i).text() + t).toLowerCase().indexOf(v[i]);
-								if (v[i] !== '' && ( (!wo.filter_fromStart && x >= 0) || (wo.filter_fromStart && x === 0) ) ) {
+								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
 									r = (r) ? true : false;
 								} else if (v[i] !== '') {
 									r = false;
