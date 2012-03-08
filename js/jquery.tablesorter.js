@@ -1,5 +1,5 @@
 /*
-* TableSorter 2.1 - Client-side table sorting with ease!
+* TableSorter 2.1.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -315,7 +315,8 @@
 			}
 
 			function formatSortingOrder(v) {
-				return (/^d/i.test(v) || v === 1) ? 1 : 0;
+				// look for "d" in "desc" order; return true
+				return (/^d/i.test(v) || v === 1);
 			}
 
 			function checkHeaderMetadata(cell) {
@@ -348,12 +349,14 @@
 				.wrapInner("<span/>")
 				.each(function (index) {
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
-					this.order = formatSortingOrder( checkHeaderOrder(table, index) );
-					this.count = this.order;
+					this.order = formatSortingOrder( checkHeaderOrder(table, index) ) ? [1,0,2] : [0,1,2];
+					this.count = -1; // set to -1 because clicking on the header automatically adds one
 					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).is('.sorter-false')) { this.sortDisabled = true; }
 					this.lockedOrder = false;
 					lock = checkHeaderLocked(table, index);
-					if (typeof(lock) !== 'undefined' && lock !== false) { this.order = this.lockedOrder = formatSortingOrder(lock); }
+					if (typeof(lock) !== 'undefined' && lock !== false) {
+						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
+					}
 					if (!this.sortDisabled) {
 						$th = $(this).addClass(c.cssHeader);
 						if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
@@ -427,8 +430,7 @@
 				for (i = 0; i < l; i++) {
 					s = sortList[i];
 					o = c.headerList[s[0]];
-					o.count = s[1];
-					o.count++;
+					o.count = (s[1] + 1) % (c.sortReset ? 3 : 2);
 				}
 			}
 
@@ -580,21 +582,19 @@
 							// store exp, for speed
 							$cell = $(this);
 							// get current column sort order
-							this.order = this.count++ % (c.sortReset ? 3 : 2);
+							this.count = (this.count + 1) % (c.sortReset ? 3 : 2);
 							// reset all sorts on non-current column - issue #30
 							if (c.sortRestart) {
 								i = this;
 								$headers.each(function(){
 									// only reset counts on columns that weren't just clicked on and if not included in a multisort
 									if (this !== i && (!$(this).is('.' + c.cssDesc + ',.' + c.cssAsc) || !e[c.sortMultiSortKey])) {
-										this.count = 0;
+										this.count = -1;
 									}
 								});
 							}
 							// get current column index
 							i = this.column;
-							// always sort on the locked order.
-							if(typeof(this.lockedOrder) !== "undefined" && this.lockedOrder !== false) { this.order = this.lockedOrder; }
 							// user only wants to sort on one column
 							if (!e[c.sortMultiSortKey]) {
 								// flush the sort list
@@ -608,7 +608,7 @@
 									}
 								}
 								// add column to sort list
-								if (this.order < 2) { c.sortList.push([i, this.order]); }
+								if (this.order[this.count] < 2) { c.sortList.push([i, this.order[this.count]]); }
 								// multi column sorting
 							} else {
 								// the user has clicked on an already sorted column.
@@ -618,18 +618,16 @@
 										s = c.sortList[j];
 										o = c.headerList[s[0]];
 										if (s[0] === i) {
-											o.count = s[1];
-											o.count++;
-											s[1] = o.count % (c.sortReset ? 3 : 2);
-											if (s[1] >= 2) {
+											s[1] = o.order[o.count]; // % (c.sortReset ? 3 : 2);
+											if (s[1] === 2) {
 												c.sortList.splice(j,1);
-												o.count = 0;
+												o.count = -1;
 											}
 										}
 									}
 								} else {
 									// add column to sort list array
-									if (this.order < 2) { c.sortList.push([i, this.order]); }
+									if (this.order[this.count] < 2) { c.sortList.push([i, this.order[this.count]]); }
 								}
 							}
 							if (c.sortAppend !== null) {
