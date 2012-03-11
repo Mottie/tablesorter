@@ -24,7 +24,7 @@
 
 		/*
 		// define an overall custom text extraction function
-		textExtraction: function(node) {
+		textExtraction: function(node, table, cellIndex) {
 			return $(node).text();
 		}
 		*/
@@ -33,12 +33,12 @@
 		// In this example, textExtraction 1-5 functions don't really need to
 		// be defined, since they can also be obtained using `$(node).text()`
 		textExtraction: {
-			0: function(node) { return $(node).find("strong").text(); },
-			1: function(node) { return $(node).find("div").text(); },
-			2: function(node) { return $(node).find("span").text(); },
-			3: function(node) { return $(node).find("em").text(); },
-			4: function(node) { return $(node).find("a").text(); },
-			5: function(node) { return $(node).find("u").text(); }
+			0: function(node, table, cellIndex){ return $(node).find("strong").text(); },
+			1: function(node, table, cellIndex){ return $(node).find("div").text(); },
+			2: function(node, table, cellIndex){ return $(node).find("span").text(); },
+			3: function(node, table, cellIndex){ return $(node).find("em").text(); },
+			4: function(node, table, cellIndex){ return $(node).find("a").text(); },
+			5: function(node, table, cellIndex){ return $(node).find("u").text(); }
 		}
 
 	});
@@ -60,6 +60,7 @@
 		<ul>
 			<li>The textExtraction function setting for each column was added in version 2.0.12 (not part of the original plugin).</li>
 			<li>The "First Name" column is sorting by the contents of the &lt;strong&gt; tag (in red).</li>
+			<li>Added "table" and "cellIndex" variables to the textExtraction function. <span class="tip"><em>New!</em></span> version 2.1.2.</li>
 		</ul>
 	</p>
 

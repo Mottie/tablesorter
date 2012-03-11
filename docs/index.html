@@ -807,26 +807,25 @@
 				<td>String Or Function</td>
 				<td>"simple"</td>
 				<td>Defines which method is used to extract data from a table cell for sorting.
-					Built-in options include <code class="hilight">"simple"</code> and <code class="hilight">"complex"</code>.  Use complex if you have data marked up
-					inside of a table cell like: <code class="hilight">&lt;td&gt;&lt;strong&gt;&lt;em&gt;123 Main Street&lt;/em&gt;&lt;/strong&gt;&lt;/td&gt;</code>.
+					The built-in option is <code class="hilight">"simple"</code> which is the equivalent of doing this inside of the textExtraction function: <code class="hilight">$(node).text();</code>.
 					<div class="collapsible">
 					<br>
-					Complex can be slow in large tables so consider writing your own text extraction function "myTextExtraction" which you define like:
-					<pre class="js">var myTextExtraction = function(node){
+					You can customize the text extraction by writing your own text extraction function "myTextExtraction" which you define like:
+					<pre class="js">var myTextExtraction = function(node, table, cellIndex){
   // extract data from markup and return it
   // originally: return node.childNodes[0].childNodes[0].innerHTML;
-  return $(node).text();
+  return $(node).find('selector').text();
 }
 $(function(){
   $("#myTable").tableSorter( { textExtraction: myTextExtraction } );
 });</pre>
-					tablesorter will pass a jQuery object containing the contents of the current cell for you to parse and return.  Thanks to Josh Nathanson for the examples. Updated to a jQuery example by Rob G (Mottie).<br>
-					<br>
-					Now if the text you are finding in the script above is say a number, then just include the <a href="#headers"><code class="hilight">headers</code></a> sorter option to specify how to sort it. Also in this example, we will specify that the special textExtraction code is only needed for the second column ("1" because we are using a zero-based index). All other columns will ignore this textExtraction function.
+					tablesorter will pass the current table cell object for you to parse and return.  Thanks to Josh Nathanson for the examples. Updated to a jQuery example by Rob G (Mottie).
+					<p>Now if the text you are finding in the script above is say a number, then just include the <a href="#headers"><code class="hilight">headers</code></a> sorter option to specify how to sort it. Also in this example, we will specify that the special textExtraction code is only needed for the second column ("1" because we are using a zero-based index). All other columns will ignore this textExtraction function.</p>
+					<p>Added <code class="hilight">table</code> and <code class="hilight">cellIndex</code> variables to the <code class="hilight">textExtraction</code> function in version 2.1.2.</p>
 					<pre class="js">$(function(){
   $("table").tablesorter({
     textExtraction: {
-      1: function(node) {
+      1: function(node, table, cellIndex) {
            return $(node).find("span:last").text();
       }
     },

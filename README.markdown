@@ -34,6 +34,13 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.2 (3/11/2012)
+
+* Added `table` and `cellIndex` variables to the `textExtraction` function to allow using a more general function for text extraction.
+* Empty cells will no longer skip the parser allowing extracting data attributes.
+ * This was only an issue on table cells with no text.
+ * Added a demo to the [demos wiki page](https://github.com/Mottie/tablesorter/wiki) whichs allows [dynamic sorting of checkboxes](http://jsfiddle.net/Mottie/vCTHw/18/).
+
 #### Version 2.1.1 (3/8/2012)
 
 * Renamed `filter_fromStart` to `filter_startsWith`.
@@ -174,12 +181,3 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
 #### Version 2.0.30.1 (2012-2-20)
 
 * Modified the "filter" widget to disable the input window instead of setting it with display none. Now the input is disabled and a "disabled" class is applied to allow for further styling.
-
-#### Version 2.0.30 (2012-2-20)
-
-* Fixed the total mess I just made with the addWidget init functionality... I need a vacation :P
-
-#### Version 2.0.29 (2012-2-20)
-
-* Fixed a problem with the addWidget init function which apparently was always being called, even if you didn't want it! Fix for [issue #28](https://github.com/Mottie/tablesorter/issues/28). Thanks to thezoggy for helping with troubleshooting!
-* Minor cleanup of sorting class names code.
