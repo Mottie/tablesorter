@@ -49,6 +49,7 @@ div.digg {float: right;}
 .next-up { padding-top: 10px; font-size: 90%; }
 .narrow-block { width: 50%; margin: 0 auto; }
 .spacer { height: 800px; }
+.right { text-align:right; }
 #pager-demo th.remove { width: 20px; } /* pager demo */
 #pager-demo button.remove { width: 20px; height: 20px; font-size: 10px; color: #800; }
 .box { width: 48%; float: left; padding: 0 1%; }

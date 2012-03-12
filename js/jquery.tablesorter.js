@@ -1,5 +1,5 @@
 /*
-* TableSorter 2.1.2 - Client-side table sorting with ease!
+* TableSorter 2.1.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.3
 *
 * Copyright (c) 2007 Christian Bach
@@ -40,6 +40,7 @@
 				sortList: [],
 				headerList: [],
 				dateFormat: "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
+				usNumberFormat: true, // false for German "1.234.567,89" or French "1 234 567,89"
 				onRenderHeader: null,
 				selectorHeaders: 'thead th',
 				selectorRemove: "tr.remove-me",
@@ -753,13 +754,22 @@
 				widgets.push(widget);
 			};
 			this.formatFloat = function(s) {
+				if (typeof(s) !== 'string') { return s; }
+				if (tbl[0].config.usNumberFormat) {
+					// US Format - 1,234,567.89 -> 1234567.89
+					s = s.replace(/,/g,'');
+				} else {
+					// German Format = 1.234.567,89 -> 1234567.89
+					// French Format = 1 234 567,89 -> 1234567.89
+					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
+				}
 				var i = parseFloat(s);
 				// return the text instead of zero
 				return isNaN(i) ? $.trim(s) : i;
 			};
 			this.isDigit = function(s) {
 				// replace all unwanted chars and match.
-				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.']/g, '')));
+				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.'\s]/g, '')));
 			};
 			this.clearTableBody = function (table) {
 				$(table.tBodies[0]).empty();
@@ -790,10 +800,10 @@
 	ts.addParser({
 		id: "digit",
 		is: function(s){
-			return $.tablesorter.isDigit(s.replace(/,/g, ""));
+			return $.tablesorter.isDigit(s);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(/,/g, ""));
+			return $.tablesorter.formatFloat(s);
 		},
 		type: "numeric"
 	});
@@ -804,7 +814,7 @@
 			return (/^[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // £$€¤¥¢?.
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(/\,/g,'.').replace(new RegExp(/[^0-9. \-]/g), ""));
+			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9,. \-]/g), ""));
 		},
 		type: "numeric"
 	});
