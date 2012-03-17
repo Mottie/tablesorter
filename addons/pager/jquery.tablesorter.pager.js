@@ -332,7 +332,7 @@
 			c.size = $.data(table, 'pagerLastSize') || parseInt(p.val(), 10) || c.size;
 			c.totalPages = Math.ceil(c.totalRows / c.size);
 			if (triggered) {
-				$('table').trigger('update');
+				$(table).trigger('update');
 				setPageSize(table, c.size, c);
 				hideRowsSetup(table, c);
 				fixHeight(table, c);
