@@ -328,7 +328,7 @@
 		enablePager = function(table, c, triggered){
 			var p = $(c.cssPageSize, c.container).removeClass(c.cssDisabled).removeAttr('disabled');
 			c.isDisabled = false;
-			c.page = $.data(table, 'pagerLastPage') || 0 || c.page;
+			c.page = $.data(table, 'pagerLastPage') || c.page || 0;
 			c.size = $.data(table, 'pagerLastSize') || parseInt(p.val(), 10) || c.size;
 			c.totalPages = Math.ceil(c.totalRows / c.size);
 			if (triggered) {
