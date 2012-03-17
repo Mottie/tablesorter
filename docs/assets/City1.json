@@ -1,7 +1,11 @@
 {
 	"total_rows": "80",
 
-	"data" : [{
+	"cols" : [
+		"ID", "Name", "Country Code", "District", "Population"
+	],
+
+	"rows" : [{
 		"ID": 26,
 		"Name": "Zoetermeer",
 		"CountryCode": "NLD",
@@ -47,7 +51,7 @@
 		"ID": 33,
 		"Name": "Willemstad",
 		"CountryCode": "ANT",
-		"District": "Curaçao",
+		"District": "CuraÃ§ao",
 		"Population": 2345
 	}, {
 		"ID": 34,
@@ -87,15 +91,15 @@
 		"Population": 183377
 	}, {
 		"ID": 40,
-		"Name": "Sétif",
+		"Name": "SÃ©tif",
 		"CountryCode": "DZA",
-		"District": "Sétif",
+		"District": "SÃ©tif",
 		"Population": 179055
 	}, {
 		"ID": 41,
-		"Name": "Sidi Bel Abbès",
+		"Name": "Sidi Bel AbbÃ¨s",
 		"CountryCode": "DZA",
-		"District": "Sidi Bel Abbès",
+		"District": "Sidi Bel AbbÃ¨s",
 		"Population": 153106
 	}, {
 		"ID": 42,
@@ -117,9 +121,9 @@
 		"Population": 127284
 	}, {
 		"ID": 45,
-		"Name": "Béjaïa",
+		"Name": "BÃ©jaÃ¯a",
 		"CountryCode": "DZA",
-		"District": "Béjaïa",
+		"District": "BÃ©jaÃ¯a",
 		"Population": 117162
 	}, {
 		"ID": 46,
@@ -129,9 +133,9 @@
 		"Population": 115212
 	}, {
 		"ID": 47,
-		"Name": "Tébessa",
+		"Name": "TÃ©bessa",
 		"CountryCode": "DZA",
-		"District": "Tébessa",
+		"District": "TÃ©bessa",
 		"Population": 112007
 	}, {
 		"ID": 48,
@@ -141,9 +145,9 @@
 		"Population": 110242
 	}, {
 		"ID": 49,
-		"Name": "Béchar",
+		"Name": "BÃ©char",
 		"CountryCode": "DZA",
-		"District": "Béchar",
+		"District": "BÃ©char",
 		"Population": 107311
 	}, {
 		"ID": 50,

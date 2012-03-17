@@ -1,7 +1,11 @@
-{
+ {
 	"total_rows": "80",
 
-	"data" : [{
+	"cols" : [
+		"ID", "Name", "Country Code", "District", "Population"
+	],
+
+	"rows" : [{
 		"ID": 1,
 		"Name": "Kabul",
 		"CountryCode": "AFG",
@@ -117,7 +121,7 @@
 		"Population": 135621
 	}, {
 		"ID": 20,
-		"Name": "´s-Hertogenbosch",
+		"Name": "Â´s-Hertogenbosch",
 		"CountryCode": "NLD",
 		"District": "Noord-Brabant",
 		"Population": 129170

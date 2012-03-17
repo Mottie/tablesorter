@@ -1,7 +1,11 @@
 {
 	"total_rows": "80",
 
-	"data" : [{
+	"cols" : [
+		"ID", "Name", "Country Code", "District", "Population"
+	],
+
+	"rows" : [{
 		"ID": 76,
 		"Name": "La Plata",
 		"CountryCode": "ARG",
@@ -15,13 +19,13 @@
 		"Population": 512880
 	}, {
 		"ID": 78,
-		"Name": "San Miguel de Tucum·n",
+		"Name": "San Miguel de Tucum√°n",
 		"CountryCode": "ARG",
-		"District": "Tucum·n",
+		"District": "Tucum√°n",
 		"Population": 470809
 	}, {
 		"ID": 79,
-		"Name": "Lan˙s",
+		"Name": "Lan√∫s",
 		"CountryCode": "ARG",
 		"District": "Buenos Aires",
 		"Population": 469735

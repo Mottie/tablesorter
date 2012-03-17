@@ -1,7 +1,11 @@
 {
 	"total_rows": "80",
 
-	"data" : [{
+	"cols" : [
+		"ID", "Name", "Country Code", "District", "Population"
+	],
+
+	"rows" : [{
 		"ID": 51,
 		"Name": "Ech-Chleff (el-Asnam)",
 		"CountryCode": "DZA",
@@ -9,9 +13,9 @@
 		"Population": 96794
 	}, {
 		"ID": 52,
-		"Name": "Ghardaïa",
+		"Name": "GhardaÃ¯a",
 		"CountryCode": "DZA",
-		"District": "Ghardaïa",
+		"District": "GhardaÃ¯a",
 		"Population": 89415
 	}, {
 		"ID": 53,
@@ -65,17 +69,17 @@
 		"ID": 61,
 		"Name": "South Hill",
 		"CountryCode": "AIA",
-		"District": "–",
+		"District": "â€“",
 		"Population": 961
 	}, {
 		"ID": 62,
 		"Name": "The Valley",
 		"CountryCode": "AIA",
-		"District": "–",
+		"District": "â€“",
 		"Population": 595
 	}, {
 		"ID": 63,
-		"Name": "Saint John´s",
+		"Name": "Saint JohnÂ´s",
 		"CountryCode": "ATG",
 		"District": "St John",
 		"Population": 24000
@@ -123,15 +127,15 @@
 		"Population": 1266461
 	}, {
 		"ID": 71,
-		"Name": "Córdoba",
+		"Name": "CÃ³rdoba",
 		"CountryCode": "ARG",
-		"District": "Córdoba",
+		"District": "CÃ³rdoba",
 		"Population": 1157507
 	}, {
 		"ID": 72,
 		"Name": "Rosario",
 		"CountryCode": "ARG",
-		"District": "Santa Fé",
+		"District": "Santa FÃ©",
 		"Population": 907718
 	}, {
 		"ID": 73,

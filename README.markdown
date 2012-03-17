@@ -27,12 +27,50 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 ###Licensing
 
 * Copyright (c) 2007 Christian Bach
-* Main Examples and docs at: [http://tablesorter.com](http://tablesorter.com)
+* Original examples and docs at: [http://tablesorter.com](http://tablesorter.com)
 * Dual licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) and [GPL](http://www.gnu.org/licenses/gpl.html) licenses:
 
 ###Change Log
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
+
+#### Version 2.1.3 (3/12/2012)
+
+* Added `usNumberFormat` option.
+ * Set to `true` for U.S. number format: `1,234,567.89`
+ * Set to `false` for German `1.234.567,89` or French `1 234 567,89` formats.'
+ * Fix for [issue #34](https://github.com/Mottie/tablesorter/issues/34) and [issue # 31](https://github.com/Mottie/tablesorter/issues/31#issuecomment-4236945).
+* Changed pager plugin ajax functions & demo
+ * The `ajaxProcessing` function now must now return two or three pieces of information: [ total, rows, headers ]
+ * `total` is the total number of rows in the database.
+ * `rows` is an array of table rows with an array of table cells in each row.
+ * `headers` is an array of header cell text (optional).
+
+        ```javascript
+        // process ajax so that the following information is returned:
+        // [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+        // example:
+        [
+          // total # rows contained in the database 
+          100,
+          // row data: array of arrays; each internal array has the table data 
+          [
+            [ "row1cell1", "row1cell2", ... "row1cellN" ],
+            [ "row2cell1", "row2cell2", ... "row2cellN" ],
+             ...
+            [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+          ],
+          // header text (optional)
+          [ "Header1", "Header2", ... "HeaderN" ]
+        ]
+        ```
+
+ * Modified pager plugin ajax demo to hopefully make the data processing a bit more clear by changing `data` inside of the City#.json files to `rows`.
+ * The demo json data should now render the unicode characters properly. Switched the files to the proper utf-8 encoding.
+ * When no data is returned, the table will now:
+     * Insert a row into the header showing the ajax error. If a row is inserted into the tbody, clicking on the header would cause a parser error.
+     * Disable the pager so the pager counter won't show zero total rows.
+     * Fix for issue dicussed within [issue #31](https://github.com/Mottie/tablesorter/issues/31#issuecomment-4390379).
 
 #### Version 2.1.2 (3/11/2012)
 

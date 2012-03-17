@@ -1,6 +1,6 @@
 /*
  * tablesorter pager plugin
- * updated 3/8/2012
+ * updated 3/16/2012
  */
 
 (function($) {
@@ -14,8 +14,20 @@
 			// where {page} is replaced by the page number and {size} is replaced by the number of records to show
 			ajaxUrl: null,
 
-			// process ajax so that the data object is returned along with the total number of rows
-			ajaxProcessing: function(ajax){ return [ [{ "key" : "value" }], 100 ]; },
+			// process ajax so that the following information is returned:
+			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+			// example:
+			// [
+			//   100,  // total rows
+			//   [
+			//     [ "row1cell1", "row1cell2", ... "row1cellN" ],
+			//     [ "row2cell1", "row2cell2", ... "row2cellN" ],
+			//     ...
+			//     [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+			//   ],
+			//   [ "header1", "header2", ... "headerN" ] // optional
+			// ]
+			ajaxProcessing: function(ajax){ return [ 0, [], null ]; },
 
 			// output default: '{page}/{totalPages}'
 			output: '{startRow} to {endRow} of {totalRows} rows', // '{page}/{totalPages}'
@@ -68,21 +80,23 @@
 		},
 
 		updatePageDisplay = function(table, c) {
-			c.startRow = c.size * (c.page) + 1;
-			c.endRow = Math.min(c.totalRows, c.size * (c.page+1));
-			var out = $(c.cssPageDisplay, c.container),
-			// form the output string
-			s = c.output.replace(/\{(page|totalPages|startRow|endRow|totalRows)\}/gi, function(m){
-						return {
-							'{page}'       : c.page + 1,
-							'{totalPages}' : c.totalPages,
-							'{startRow}'   : c.startRow,
-							'{endRow}'     : c.endRow,
-							'{totalRows}'  : c.totalRows
-						}[m];
-					});
-			if (out[0]) {
-				out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+			if (c.totalPages > 0) {
+				c.startRow = c.size * (c.page) + 1;
+				c.endRow = Math.min(c.totalRows, c.size * (c.page+1));
+				var out = $(c.cssPageDisplay, c.container),
+				// form the output string
+				s = c.output.replace(/\{(page|totalPages|startRow|endRow|totalRows)\}/gi, function(m){
+							return {
+								'{page}'       : c.page + 1,
+								'{totalPages}' : c.totalPages,
+								'{startRow}'   : c.startRow,
+								'{endRow}'     : c.endRow,
+								'{totalRows}'  : c.totalRows
+							}[m];
+						});
+				if (out[0]) {
+					out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+				}
 			}
 			pagerArrows(c);
 			$(table).trigger('pagerComplete', c);
@@ -134,59 +148,77 @@
 			}
 		},
 
+		renderAjax = function(data, table, c, exception){
+			// process data
+			if (typeof(c.ajaxProcessing) === "function") {
+				// ajaxProcessing result: [ total, rows, headers ]
+				var i, j, k, hsh, $sh, $t = $(table), $b = $(table.tBodies[0]),
+				hl = $t.find('thead th').length, tf = '', tds = '',
+				err = '<tr class="remove-me"><td style="text-align: center;" colspan="' + hl + '">' +
+					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
+				result = c.ajaxProcessing(data) || [ 0, [] ],
+				d = result[1] || [], l = d.length, th = result[2];
+				if (l > 0) {
+					for ( i=0; i < l; i++ ) {
+						tds += '<tr>';
+						for (j=0; j < d[i].length; j++) {
+							// build tbody cells
+							tds += '<td>' + d[i][j] + '</td>';
+						}
+						tds += '</tr>';
+					}
+				}
+				// only add new header text if the length matches
+				if (th && th.length === hl) {
+					hsh = $t.hasClass('hasStickyHeaders');
+					$sh = $t.find('.' + ((c.widgetOptions && c.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
+					$t.find('thead tr.tablesorter-header th').each(function(j){
+						var $t = $(this),
+						// add new test within the first span it finds, or just in the header
+						tar = ($t.find('span').length) ? $t.find('span:first') : $t;
+						tar.html(th[j]);
+						// update sticky headers
+						if (hsh && $sh.length){
+							tar = $sh.find('th').eq(j);
+							tar = (tar.find('span').length) ? tar.find('span:first') : tar;
+							tar.html(th[j]);
+						}
+						tf += '<th>' + th[j] + '</th>';
+					});
+					$t.find('tfoot').html('<tr>' + tf + '</tr>');
+				}
+				if (exception) {
+					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+					$t.find('thead').append(err);
+				} else {
+					$b.html(tds); // add tbody
+				}
+				c.temp.remove(); // remove loading icon
+				$t.trigger('update');
+				c.totalRows = result[0] || 0;
+				c.totalPages = Math.ceil(c.totalRows / c.size);
+				updatePageDisplay(table, c);
+				fixHeight(table, c);
+				$t.trigger('pagerChange', c);
+			}
+		},
+
 		getAjax = function(table, c){
-			var i, $load, $t = $(table), $b = $(table.tBodies[0]),
+			var $t = $(table),
 			url = c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size);
 			if (url !== '') {
 				// loading icon
-				$load = $('<div/>', {
+				c.temp = $('<div/>', {
 					id    : 'tablesorterPagerLoading',
 					width : $t.outerWidth(true),
 					height: $t.outerHeight(true)
 				});
-				$t.before($load);
+				$t.before(c.temp);
+				$(document).ajaxError(function(e, xhr, settings, exception) {
+					renderAjax(null, table, c, exception);
+				});
 				$.getJSON(url, function(data) {
-					// process data
-					if (typeof(c.ajaxProcessing) === "function") {
-						var result = c.ajaxProcessing(data), d = result[0], l = d.length,
-						i, k, th = [], tds = '', tf = '', hsh = $(table).addClass('hasStickyHeaders'),
-						sh = '.' + ((table.config.widgetOptions && table.config.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'),
-						$sh = $t.find(sh);
-						for ( i=0; i < l; i++ ) {
-							tds += '<tr>';
-							for (k in d[i]) {
-								if (typeof(k) === "string") {
-									// get new header text
-									if ( i === 0 ) { th.push(k); }
-									// build tbody cells
-									tds += '<td>' + d[i][k] + '</td>';
-								}
-							}
-							tds += '</tr>';
-						}
-						$t.find('thead tr.tablesorter-header th').each(function(j){
-							var $t = $(this),
-							// add new test within the first span it finds, or just in the header
-							tar = ($t.find('span').length) ? $t.find('span:first') : $t;
-							tar.html(th[j]);
-							// update sticky headers
-							if (hsh && $sh.length){
-								tar = $sh.find('th').eq(j);
-								tar = (tar.find('span').length) ? tar.find('span:first') : tar;
-								tar.html(th[j]);
-							}
-							tf += '<th>' + th[j] + '</th>';
-						});
-						$t.find('tfoot').html('<tr>' + tf + '</tr>');
-						$b.html(tds); // add tbody
-						$load.remove(); // remove loading icon
-						$t.trigger('update');
-						c.totalRows = result[1];
-						c.totalPages = Math.ceil(c.totalRows / c.size);
-						updatePageDisplay(table, c);
-						fixHeight(table, c);
-						$t.trigger('pagerChange', c);
-					}
+					renderAjax(data, table, c);
 				});
 			}
 		},
