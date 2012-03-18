@@ -34,6 +34,11 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.3.1 (3/17/2012)
+
+* Merged in bug fixes contributed by [Rozwell](https://github.com/rozwell). Thanks!
+* Updated pager minified version, along with version numbers.
+
 #### Version 2.1.3 (3/12/2012)
 
 * Added `usNumberFormat` option.
