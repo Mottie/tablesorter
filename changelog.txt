@@ -1,5 +1,12 @@
 TableSorter Change Log
 
+Version 2.1.4 (3/18/2012)
+============================
+
+* Modified widget scripts to not cause errors when older versions of jQuery are loaded.
+* Updated widget demos to include notes on minimum required jQuery verison.
+* Added `$.tablesorter.version` function which returns the current version number.
+
 Version 2.1.3.1 (3/17/2012)
 ============================
 

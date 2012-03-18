@@ -34,6 +34,12 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.4 (3/18/2012)
+
+* Modified widget scripts to not cause errors when older versions of jQuery are loaded.
+* Updated widget demos to include notes on minimum required jQuery verison.
+* Added `$.tablesorter.version` function which returns the current version number.
+
 #### Version 2.1.3.1 (3/17/2012)
 
 * Merged in bug fixes contributed by [Rozwell](https://github.com/rozwell). Thanks!
@@ -205,22 +211,3 @@ View the [complete listing here](http://mottie.github.com/tablesorter/changelog.
  * Previous saved data is not compatible with the changes made and will be ignored.
 
 * Updated all docs demos to use jQuery 1.7+.
-
-#### Version 2.0.31 (2012-2-27)
-
-* Added `sortRestart` option:
-  * When `true`, this option resets the sort direction so that clicking on an unsorted column will now sort in the `sortInitialOrder` direction.
-  * Clicking on a single column to cancel a multi-sorted table may not initially sort as expected.
-  * Requested by severa in [issue #30](https://github.com/Mottie/tablesorter/issues/29). Thanks!
-* Made some `sortReset` fixes:
-  * Columns widget will now clear it's styling when the sort has reset.
-  * Added a [demo](http://mottie.github.com/tablesorter/).
-* Changed the filter widget inputs to be of a search type:
- * Currently only supported by webkit.
- * Requested by cr125rider in [issue #29](https://github.com/Mottie/tablesorter/issues/29). Thanks!
-* Updated `sortLocaleCompare` documentation since it was explained incorrectly.
-* Did some general code cleanup and some optimization.
-
-#### Version 2.0.30.1 (2012-2-20)
-
-* Modified the "filter" widget to disable the input window instead of setting it with display none. Now the input is disabled and a "disabled" class is applied to allow for further styling.
