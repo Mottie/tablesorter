@@ -50,9 +50,7 @@ $(function(){
 	// update version number
 	var t = $('.current-version');
 	if (t.length) {
-		$.getJSON('../package.json', function(data) {
-			t.html(data.version || '2.1+');
-		});
+		t.html($.tablesorter.version);
 	}
 
 });
