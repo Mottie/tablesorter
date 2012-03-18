@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -89,6 +89,7 @@ $(function(){
 			<li>Added <code class="hilight">widgetOptions.filter_cssFilter</code> option, which allows you to defined the css class applied to the filter row and each search input. <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Additional filter widget specific options are included in the javascript below, with an explanation.</li>
 			<li>Please note that using the pager plugin with this filter widget will have <em>unexpected results</em> - I haven't figured out how to fix the problem.</li>
+			<li>This widget uses jQuery's <code class="hilight">.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
 		</ul>
 	</p>
 

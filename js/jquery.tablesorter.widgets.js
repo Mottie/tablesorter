@@ -1,4 +1,4 @@
-/* TableSorter 2.1 Widgets - updated 3/8/2012
+/*! TableSorter 2.1 Widgets - updated 3/18/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -31,7 +31,7 @@ $.tablesorter.storage = function(table, key, val){
 	id = table.id || $('.tablesorter').index( $(table) ),
 	url = window.location.pathname;
 	try { ls = !!(localStorage.getItem); } catch(e) {}
-	if (val) {
+	if (val && JSON && JSON.hasOwnProperty('stringify')) {
 		// add unique identifiers = url pathname > table ID/index on page > data
 		v[url] = {};
 		v[url][id]= {};
@@ -44,7 +44,7 @@ $.tablesorter.storage = function(table, key, val){
 			d.setTime(d.getTime()+(31536e+6)); // 365 days
 			document.cookie = key + '=' + (JSON.stringify(v)).replace(/\"/g,'\"') + '; expires=' + d.toGMTString() + '; path=/';
 		}
-	} else {
+	} else if ($.parseJSON) {
 		// *** get val ***
 		if (ls) {
 			v = $.parseJSON(localStorage[key]) || {};
@@ -190,7 +190,7 @@ $.tablesorter.addWidget({
 								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
 							$td = $(this).find('td');
 							for (i=0; i < cols; i++){
-								x = ($td.eq(i).text() + t).toLowerCase().indexOf(v[i]);
+								x = $.inArray( v[i], ($td.eq(i).text() + t).toLowerCase() );
 								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
 									r = (r) ? true : false;
 								} else if (v[i] !== '') {
@@ -225,12 +225,12 @@ $.tablesorter.addWidget({
 			hdrCells = header.find('tr').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyheader',
 			firstCell = hdrCells.eq(0),
-			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10),
+			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10)*2,
 			sticky = header.find('tr.tablesorter-header').clone()
 				.removeClass('tablesorter-header')
 				.addClass(css)
 				.css({
-					width      : header.outerWidth() + brdr * 2,
+					width      : header.outerWidth() + brdr,
 					position   : 'fixed',
 					left       : firstCell.offset().left,
 					marginLeft : -brdr,

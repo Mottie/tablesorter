@@ -45,11 +45,9 @@ $(function() {
 	$('select').change(function(){
 		var theme = $(this).val().toLowerCase(),
 			files = $('link.theme');
-		files
-			.prop('disabled', true)
-			.filter('[href*="' + theme + '"]')
-			.prop('disabled', false);
-	});
+		files.each(function(){ this.disabled = true; });
+		files.filter('[href*="' + theme + '"]')[0].disabled = false;
+	}).trigger('change');
 });
 </script>
 </head>

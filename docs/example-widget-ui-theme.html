@@ -61,15 +61,13 @@
 		// ********************
 		$('#switcher').themeswitcher();
 
-		$('link.theme').prop('disabled', true);
+		$('link.theme').each(function(){ this.disabled = true; });
 
 		$('select').change(function(){
 			var theme = $(this).val().toLowerCase(),
 				files = $('link.theme, link.ui-theme'); // ui-theme is added by the themeswitcher
-			files
-				.prop('disabled', true)
-				.filter('[href*="' + theme + '"]')
-				.prop('disabled', false);
+			files.each(function(){ this.disabled = true; });
+			files.filter('[href*="' + theme + '"]').each(function(){ this.disabled = false; });
 		});
 
 	});
