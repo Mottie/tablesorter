@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.4 - Client-side table sorting with ease!
+* TableSorter 2.1.5 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -860,7 +860,7 @@
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/).test(s);
 		},
 		format: function(s) {
-			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(new RegExp(/-/g), "/")).getTime() : "0");
+			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(new RegExp(/-/g), "/")).getTime() : "");
 		},
 		type: "numeric"
 	});
@@ -888,7 +888,7 @@
 	});
 
 	ts.addParser({
-		id: "shortDate", // "mmddyyyy", "ddmmyyy" or "yyyymmdd"
+		id: "shortDate", // "mmddyyyy", "ddmmyyyy" or "yyyymmdd"
 		is: function(s) {
 			// testing for ####-####-#### - so it's not perfect
 			return (/\d{1,4}[\/\-\,\.\s+]\d{1,4}[\/\-\.\,\s+]\d{1,4}/).test(s);

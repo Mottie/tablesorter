@@ -34,6 +34,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.5 (3/20/2012)
+
+* The `isoDate` parser should now allow sorting of empty cells at the bottom. Fix for [issue #38](https://github.com/Mottie/tablesorter/issues/38).
+
 #### Version 2.1.4 (3/18/2012)
 
 * Modified widget scripts to not cause errors when older versions of jQuery are loaded.
