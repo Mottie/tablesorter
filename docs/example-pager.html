@@ -21,44 +21,6 @@
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
-	<style id="css">div.tablesorterPager {
-	padding: 10px 0 10px 0;
-	background-color: #D6D2C2;
-	text-align: center;
-}
-div.tablesorterPager span {
-	padding: 0 5px 0 5px;
-}
-div.tablesorterPager input.prev {
-	width: auto;
-	margin-right: 10px;
-}
-div.tablesorterPager input.next {
-	width: auto;
-	margin-left: 10px;
-}
-div.tablesorterPager input {
-	font-size: 8px;
-	width: 50px;
-	border: 1px solid #330000;
-	text-align: center;
-}
-#tablesorterPagerLoading {
-	background: rgba(255,255,255,0.8) url(icons/loading.gif) center center no-repeat;
-	position: absolute;
-	z-index: 1000;
-}/*** css used when "updateArrows" option is true ***/
-/* the pager itself gets a disabled class when the number of rows is less than the size */
-.pager.disabled {
-	display: none;
-}
-/* hide or fade out pager arrows when the first or last row is visible */
-.pager img.disabled {
-	/* visibility: hidden */
-	opacity: 0.5;
-	filter: alpha(opacity=50);
-}</style>
-
 	<script id="js">$(function(){
 
 	// **********************************
@@ -526,8 +488,46 @@ div.tablesorterPager input {
 	</div>
 
 	<h1>CSS</h1>
-	<div id="css">
-		<pre class="css"></pre>
+	<div>
+		<pre class="css">/* pager wrapper, div */
+.pager {
+  padding: 5px;
+}
+/* pager wrapper, in thead/tfoot */
+td.pager {
+  background-color: #e6eeee;
+}
+/* pager navigation arrows */
+.pager img {
+  vertical-align: middle;
+  margin-right: 2px;
+}
+/* pager output text */
+.pager .pagedisplay {
+  font-size: 11px;
+  padding: 0 5px 0 5px;
+  width: 50px;
+  text-align: center;
+}
+
+/*** loading ajax indeterminate progress indicator ***/
+#tablesorterPagerLoading {
+  background: rgba(255,255,255,0.8) url(icons/loading.gif) center center no-repeat;
+  position: absolute;
+  z-index: 1000;
+}
+
+/*** css used when "updateArrows" option is true ***/
+/* the pager itself gets a disabled class when the number of rows is less than the size */
+.pager.disabled {
+  display: none;
+}
+/* hide or fade out pager arrows when the first or last row is visible */
+.pager img.disabled {
+  /* visibility: hidden */
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}</pre>
 	</div>
 
 	<h1>HTML</h1>
@@ -557,6 +557,13 @@ div.tablesorterPager input {
 
 	<a id="change-log"></a>
 	<h1>Pager Change Log</h1>
+
+	<h4>Version 2.1.6 (3/22/2012)</h4>
+	<ul>
+		<li>Updated pager css. It wasn't targeting the pager block correctly.</li>
+		<li>Moved pager into the thead and/or tfoot in the <a href="example-pager-ajax.html">pager ajax demo</a>.</li>
+		<li>The pager plugin ajax method should now only target the header column text (not the pager) and first footer row when updating the header text.</li>
+	</ul>
 
 	<h4>Version 2.1.3.1 (3/17/2012)</h4>
 	<ul>

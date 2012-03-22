@@ -1,6 +1,6 @@
-/*
+/*!
  * tablesorter pager plugin
- * updated 3/17/2012
+ * updated 3/22/2012
  */
 
 (function($) {
@@ -152,8 +152,8 @@
 			// process data
 			if (typeof(c.ajaxProcessing) === "function") {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, k, hsh, $sh, $t = $(table), $b = $(table.tBodies[0]),
-				hl = $t.find('thead th').length, tf = '', tds = '',
+				var i, j, k, hsh, $f, $sh, $t = $(table), $b = $(table.tBodies[0]),
+				hl = $t.find('thead th').length, tds = '',
 				err = '<tr class="remove-me"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
@@ -172,20 +172,20 @@
 				if (th && th.length === hl) {
 					hsh = $t.hasClass('hasStickyHeaders');
 					$sh = $t.find('.' + ((c.widgetOptions && c.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
+					$f = $t.find('tfoot tr:first').children();
 					$t.find('thead tr.tablesorter-header th').each(function(j){
 						var $t = $(this),
 						// add new test within the first span it finds, or just in the header
 						tar = ($t.find('span').length) ? $t.find('span:first') : $t;
 						tar.html(th[j]);
+						$f.eq(j).html(th[j]);
 						// update sticky headers
 						if (hsh && $sh.length){
 							tar = $sh.find('th').eq(j);
 							tar = (tar.find('span').length) ? tar.find('span:first') : tar;
 							tar.html(th[j]);
 						}
-						tf += '<th>' + th[j] + '</th>';
 					});
-					$t.find('tfoot').html('<tr>' + tf + '</tr>');
 				}
 				if (exception) {
 					// add error row to thead instead of tbody, or clicking on the header will result in a parser error

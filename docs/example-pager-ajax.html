@@ -166,20 +166,21 @@
 		</p>
 
 	<h1>Demo</h1>
-	<br>
-	<div class="pager">
-		<img src="../addons/pager/icons/first.png" class="first"/>
-		<img src="../addons/pager/icons/prev.png" class="prev"/>
-		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-		<img src="../addons/pager/icons/next.png" class="next"/>
-		<img src="../addons/pager/icons/last.png" class="last"/>
-		<select class="pagesize">
-			<option value="25">25</option>
-		</select>
-	</div>
 
 <table class="tablesorter">
 	<thead>
+		<tr>
+			<td class="pager" colspan="5">
+				<img src="../addons/pager/icons/first.png" class="first"/>
+				<img src="../addons/pager/icons/prev.png" class="prev"/>
+				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+				<img src="../addons/pager/icons/next.png" class="next"/>
+				<img src="../addons/pager/icons/last.png" class="last"/>
+				<select class="pagesize">
+					<option value="25">25</option>
+				</select>
+			</td>
+		</tr>
 		<tr>
 			<th>1</th>
 			<th>2</th>
@@ -196,21 +197,22 @@
 			<th>4</th>
 			<th>5</th>
 		</tr>
+		<tr>
+			<td class="pager" colspan="5">
+				<img src="../addons/pager/icons/first.png" class="first"/>
+				<img src="../addons/pager/icons/prev.png" class="prev"/>
+				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+				<img src="../addons/pager/icons/next.png" class="next"/>
+				<img src="../addons/pager/icons/last.png" class="last"/>
+				<select class="pagesize">
+					<option value="25">25</option>
+				</select>
+			</td>
+		</tr>
 	</tfoot>
 	<tbody>
 	</tbody>
 </table>
-
-	<div class="pager">
-		<img src="../addons/pager/icons/first.png" class="first"/>
-		<img src="../addons/pager/icons/prev.png" class="prev"/>
-		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-		<img src="../addons/pager/icons/next.png" class="next"/>
-		<img src="../addons/pager/icons/last.png" class="last"/>
-		<select class="pagesize">
-			<option value="25">25</option>
-		</select>
-	</div>
 
 	<h1>Javascript</h1>
 	<div id="javascript">
@@ -219,33 +221,34 @@
 
 	<h1>CSS</h1>
 	<div>
-		<pre class="css">div.tablesorterPager {
-  padding: 10px 0 10px 0;
-  background-color: #D6D2C2;
-  text-align: center;
+		<pre class="css">/* pager wrapper, div */
+.pager {
+  padding: 5px;
 }
-div.tablesorterPager span {
+/* pager wrapper, in thead/tfoot */
+td.pager {
+  background-color: #e6eeee;
+}
+/* pager navigation arrows */
+.pager img {
+  vertical-align: middle;
+  margin-right: 2px;
+}
+/* pager output text */
+.pager .pagedisplay {
+  font-size: 11px;
   padding: 0 5px 0 5px;
-}
-div.tablesorterPager input.prev {
-  width: auto;
-  margin-right: 10px;
-}
-div.tablesorterPager input.next {
-  width: auto;
-  margin-left: 10px;
-}
-div.tablesorterPager input {
-  font-size: 8px;
   width: 50px;
-  border: 1px solid #330000;
   text-align: center;
 }
+
+/*** loading ajax indeterminate progress indicator ***/
 #tablesorterPagerLoading {
   background: rgba(255,255,255,0.8) url(icons/loading.gif) center center no-repeat;
   position: absolute;
   z-index: 1000;
 }
+
 /*** css used when "updateArrows" option is true ***/
 /* the pager itself gets a disabled class when the number of rows is less than the size */
 .pager.disabled {
@@ -261,20 +264,20 @@ div.tablesorterPager input {
 
 	<h1>HTML</h1>
 	<div id="html">
-		<pre class="html">&lt;!-- pager --&gt;
-&lt;div class=&quot;pager&quot;&gt;
-  &lt;img src=&quot;first.png&quot; class=&quot;first&quot;/&gt;
-  &lt;img src=&quot;prev.png&quot; class=&quot;prev&quot;/&gt;
-  &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
-  &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
-  &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
-  &lt;select class=&quot;pagesize&quot;&gt;
-    &lt;option selected=&quot;selected&quot; value=&quot;25&quot;&gt;25&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/div&gt;
-
-&lt;table class=&quot;tablesorter&quot;&gt;
+		<pre class="html">&lt;table class=&quot;tablesorter&quot;&gt;
   &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td class=&quot;pager&quot; colspan=&quot;5&quot;&gt;
+        &lt;img src=&quot;../addons/pager/icons/first.png&quot; class=&quot;first&quot;/&gt;
+        &lt;img src=&quot;../addons/pager/icons/prev.png&quot; class=&quot;prev&quot;/&gt;
+        &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
+        &lt;img src=&quot;../addons/pager/icons/next.png&quot; class=&quot;next&quot;/&gt;
+        &lt;img src=&quot;../addons/pager/icons/last.png&quot; class=&quot;last&quot;/&gt;
+        &lt;select class=&quot;pagesize&quot;&gt;
+          &lt;option value=&quot;25&quot;&gt;25&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
     &lt;tr&gt;
       &lt;th&gt;1&lt;/th&gt; &lt;!-- thead text will be updated from the JSON; make sure the number of columns matches the JSON data --&gt;
       &lt;th&gt;2&lt;/th&gt;
@@ -291,21 +294,22 @@ div.tablesorterPager input {
       &lt;th&gt;4&lt;/th&gt;
       &lt;th&gt;5&lt;/th&gt;
     &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td class=&quot;pager&quot; colspan=&quot;5&quot;&gt;
+        &lt;img src=&quot;../addons/pager/icons/first.png&quot; class=&quot;first&quot;/&gt;
+        &lt;img src=&quot;../addons/pager/icons/prev.png&quot; class=&quot;prev&quot;/&gt;
+        &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
+        &lt;img src=&quot;../addons/pager/icons/next.png&quot; class=&quot;next&quot;/&gt;
+        &lt;img src=&quot;../addons/pager/icons/last.png&quot; class=&quot;last&quot;/&gt;
+        &lt;select class=&quot;pagesize&quot;&gt;
+          &lt;option value=&quot;25&quot;&gt;25&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
   &lt;/tfoot&gt;
   &lt;tbody&gt; &lt;!-- tbody will be loaded via JSON --&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;div class=&quot;pager&quot;&gt;
-  &lt;img src=&quot;first.png&quot; class=&quot;first&quot;/&gt;
-  &lt;img src=&quot;prev.png&quot; class=&quot;prev&quot;/&gt;
-  &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
-  &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
-  &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
-  &lt;select class=&quot;pagesize&quot;&gt;
-    &lt;option selected=&quot;selected&quot; value=&quot;25&quot;&gt;25&lt;/option&gt;
-  &lt;/select&gt;
-&lt;/div&gt;</pre>
+&lt;/table&gt;</pre>
 
 		</div>
 
