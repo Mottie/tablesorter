@@ -2,25 +2,26 @@
 table.tablesorter {
 	font-family: arial;
 	background-color: #cdcdcd;
-	margin: 10px 0pt 15px;
-	font-size: 8pt;
+	margin: 10px 0 15px;
+	font-size: 11px;
 	width: 100%;
 	text-align: left;
+	border-spacing: 0;
 }
-table.tablesorter thead tr.tablesorter-stickyHeader {
-	background: #ccc;
+table.tablesorter, table.tablesorter th, table.tablesorter tr.tablesorter-stickyHeader th, table.tablesorter td {
+	border: #cdcdcd 1px solid;
 }
+
 table.tablesorter thead tr th, tr.tablesorter-stickyHeader th, table.tablesorter tfoot tr th {
 	background-color: #e6eeee;
 	border-collapse: collapse;
-	font-size: 8pt;
+	font-size: 12px;
 	padding: 4px 20px 4px 4px;
 }
 table.tablesorter thead tr .header, tr.tablesorter-stickyHeader .header {
 	background-image: url(black-bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
-	border: 1px solid #fff;
 	cursor: pointer;
 }
 table.tablesorter tbody td {
@@ -30,13 +31,12 @@ table.tablesorter tbody td {
 	vertical-align: top;
 }
 table.tablesorter thead tr .headerSortUp {
+	background-color: #8dbdd8;
 	background-image: url(black-asc.gif);
 }
 table.tablesorter thead tr .headerSortDown {
-	background-image: url(black-desc.gif);
-}
-table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
 	background-color: #8dbdd8;
+	background-image: url(black-desc.gif);
 }
 
 /* Zebra Widget - row alternating colors */

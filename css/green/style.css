@@ -6,7 +6,12 @@ table.tablesorter {
 	font-size: 12px;
 	width: 100%;
 	text-align: left;
+	border-spacing: 0;
 }
+table.tablesorter, table.tablesorter th, table.tablesorter tr.tablesorter-stickyHeader th, table.tablesorter td {
+	border: #cdcdcd 1px solid;
+}
+
 table.tablesorter thead tr th, tr.tablesorter-stickyHeader th, table.tablesorter tfoot tr th {
 	border-collapse: collapse;
 	font-size: 12px;

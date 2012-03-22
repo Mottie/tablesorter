@@ -1,4 +1,4 @@
-/*! TableSorter 2.1 Widgets - updated 3/18/2012
+/*! tableSorter 2.1 widgets - updated 3/22/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -34,7 +34,7 @@ $.tablesorter.storage = function(table, key, val){
 	if (val && JSON && JSON.hasOwnProperty('stringify')) {
 		// add unique identifiers = url pathname > table ID/index on page > data
 		v[url] = {};
-		v[url][id]= {};
+		v[url][id] = {};
 		v[url][id] = val;
 		// *** set val ***
 		if (ls) {
@@ -225,7 +225,7 @@ $.tablesorter.addWidget({
 			hdrCells = header.find('tr').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyheader',
 			firstCell = hdrCells.eq(0),
-			brdr = parseInt(hdrCells.eq(0).css('border-left-width'),10)*2,
+			brdr = parseInt(firstCell.css('border-left-width'),10),
 			sticky = header.find('tr.tablesorter-header').clone()
 				.removeClass('tablesorter-header')
 				.addClass(css)
@@ -233,7 +233,7 @@ $.tablesorter.addWidget({
 					width      : header.outerWidth() + brdr,
 					position   : 'fixed',
 					left       : firstCell.offset().left,
-					marginLeft : -brdr,
+					margin     : 0,
 					top        : 0,
 					visibility : 'hidden',
 					zIndex     : 10
@@ -255,7 +255,7 @@ $.tablesorter.addWidget({
 			var t = $(this),
 			s = stkyCells.eq(i)
 			// set cell widths
-			.width( t.width() )
+			.width( t.width() + brdr )
 			// clicking on sticky will trigger sort
 			.bind('click', function(e){
 				t.trigger(e);
@@ -286,10 +286,10 @@ $.tablesorter.addWidget({
 			.resize(function(){
 				sticky.css({
 					left : firstCell.offset().left - win.scrollLeft(),
-					width: header.outerWidth() + brdr * 2
+					width: header.outerWidth() + brdr
 				});
 				stkyCells.each(function(i){
-					$(this).width( hdrCells.eq(i).width() );
+					$(this).width( hdrCells.eq(i).width() + brdr );
 				});
 			});
 	}
