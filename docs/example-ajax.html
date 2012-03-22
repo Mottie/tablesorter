@@ -31,9 +31,10 @@
 			// let the plugin know that we made a update
 			$("table").trigger("update");
 
-			// set sorting column and direction, this will sort on the first and third column
-			var sorting = [[2,1],[0,0]];
-			$("table").trigger("sorton", [sorting]);
+			// triggering the "update" function will resort the table using the current sort; since version 2.0.14
+			// use the following code to change the sort; set sorting column and direction, this will sort on the first and third column
+			// var sorting = [[2,1],[0,0]];
+			// $("table").trigger("sorton", [sorting]);
 		});
 
 		return false;
@@ -111,7 +112,7 @@
 <a href="#" id="ajax-append">Append new table data</a></div>
 
 	<p class="tip">
-		<em>NOTE!</em> With the latest version of jQuery, this demo will only work when the ajax page is hosted online; This page is using jQuery v1.4.4 so it will work locally.
+		<em>NOTE!</em> With the latest version of jQuery, this demo will only work when the ajax page is hosted online; This page is using jQuery v1.4.4 so it will work locally (Firefox).
 	</p>
 
 	<h1>Javascript</h1>

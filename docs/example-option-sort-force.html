@@ -24,7 +24,7 @@
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		// set forced sort on the fourth column and in decending order.
+		// sort on the first column and in ascending order PRIOR TO the sort on the selected column
 		sortForce: [[0,0]]
 	});
 
@@ -42,7 +42,12 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> Click to sort any column header to see the forcing of the first column sort.
+		<em>NOTE!</em>
+			<ul>
+				<li>Click to sort any column header to see the forcing of the first column sort.</li>
+				<li>This option is part of the original plugin</li>
+			</ul>
+
 	</p>
 
 	<h1>Demo</h1>
