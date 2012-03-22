@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.5 - Client-side table sorting with ease!
+* TableSorter 2.1.6 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.4";
+			this.version = "2.1.6";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -270,9 +270,7 @@
 				// apply table widgets
 				applyWidget(table);
 				// trigger sortend
-				setTimeout(function () {
-					$(table).trigger("sortEnd", table);
-				}, 0);
+				$(table).trigger("sortEnd", table);
 			}
 
 			// from:
@@ -556,7 +554,7 @@
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
 					var $this, $document, $headers, cache, config, shiftDown = 0,
-					sortOrder, totalRows, $cell, c, i, j, a, s, o;
+					sortOrder, totalRows, $cell, c, i, j, k, a, s, o;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
@@ -585,6 +583,7 @@
 							$this.trigger("sortStart", tbl[0]);
 							// store exp, for speed
 							$cell = $(this);
+							k = !e[c.sortMultiSortKey];
 							// get current column sort order
 							this.count = (this.count + 1) % (c.sortReset ? 3 : 2);
 							// reset all sorts on non-current column - issue #30
@@ -592,7 +591,7 @@
 								i = this;
 								$headers.each(function(){
 									// only reset counts on columns that weren't just clicked on and if not included in a multisort
-									if (this !== i && (!$(this).is('.' + c.cssDesc + ',.' + c.cssAsc) || !e[c.sortMultiSortKey])) {
+									if (this !== i && (k || !$(this).is('.' + c.cssDesc + ',.' + c.cssAsc))) {
 										this.count = -1;
 									}
 								});
@@ -600,7 +599,7 @@
 							// get current column index
 							i = this.column;
 							// user only wants to sort on one column
-							if (!e[c.sortMultiSortKey]) {
+							if (k) {
 								// flush the sort list
 								c.sortList = [];
 								if (c.sortForce !== null) {
@@ -622,7 +621,7 @@
 										s = c.sortList[j];
 										o = c.headerList[s[0]];
 										if (s[0] === i) {
-											s[1] = o.order[o.count]; // % (c.sortReset ? 3 : 2);
+											s[1] = o.order[o.count];
 											if (s[1] === 2) {
 												c.sortList.splice(j,1);
 												o.count = -1;
@@ -644,11 +643,9 @@
 							}
 							// sortBegin event triggered immediately before the sort
 							$this.trigger("sortBegin", tbl[0]);
-							setTimeout(function () {
-								// set css for headers
-								setHeadersCss($this[0], $headers, c.sortList);
-								appendToTable($this[0], multisort($this[0], c.sortList, cache));
-							}, 1);
+							// set css for headers
+							setHeadersCss($this[0], $headers, c.sortList);
+							appendToTable($this[0], multisort($this[0], c.sortList, cache));
 							// stop normal event by returning false
 							return false;
 						}
@@ -666,15 +663,13 @@
 					$this
 					.bind("update", function(){
 						var t = this, c = t.config;
-						setTimeout(function(){
-							// remove rows/elements before update
-							$(c.selectorRemove, t.tBodies[0]).remove();
-							// rebuild parsers.
-							t.config.parsers = buildParserCache(t, $headers);
-							// rebuild the cache map
-							cache = buildCache(t);
-							$this.trigger("sorton", [t.config.sortList]);
-						}, 1);
+						// remove rows/elements before update
+						$(c.selectorRemove, t.tBodies[0]).remove();
+						// rebuild parsers.
+						t.config.parsers = buildParserCache(t, $headers);
+						// rebuild the cache map
+						cache = buildCache(t);
+						$this.trigger("sorton", [t.config.sortList]);
 					})
 					.bind("updateCell", function(e, cell) {
 						// get position from the dom.

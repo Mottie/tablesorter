@@ -34,6 +34,18 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.6 (3/22/2012)
+
+* Pager updates
+  * Updated pager css. It wasn't targeting the pager block correctly.
+  * Moved pager into the thead and/or tfoot in the <a href="example-pager-ajax.html">pager ajax demo</a>.
+  * The pager plugin ajax method should now only target the header column text (not the pager) and first footer row when updating the header text.
+* Sticky Header widget &amp table css updated:
+  * Modified styles to add a border instead of using the row background; `border-spacing` css set to zero.
+  * Sticky header right edge should now align with the table.
+  * Removed top margin from IE so it will stick to the top of the browser window.
+* Removed `setTimeout` functions. More details on why they were removed are [described here](http://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html?showComment=1331768792441#c2353159245237432035).
+
 #### Version 2.1.5 (3/20/2012)
 
 * The `isoDate` parser should now allow sorting of empty cells at the bottom. Fix for [issue #38](https://github.com/Mottie/tablesorter/issues/38).
