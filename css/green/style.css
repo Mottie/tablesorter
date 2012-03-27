@@ -10,14 +10,11 @@ table.tablesorter {
 }
 table.tablesorter,
 table.tablesorter th,
-table.tablesorter tr.tablesorter-stickyHeader th,
 table.tablesorter td {
 	border: #cdcdcd 1px solid;
 }
 
-table.tablesorter thead tr th,
-tr.tablesorter-stickyHeader th,
-table.tablesorter tfoot tr th {
+table.tablesorter th {
 	border-collapse: collapse;
 	font-size: 12px;
 	padding: 5px;
@@ -26,32 +23,29 @@ table.tablesorter td {
 	color: #3d3d3d;
 	padding: 5px;
 }
-table.tablesorter thead tr.tablesorter-header,
-table.tablesorter thead tr.tablesorter-stickyHeader,
+table.tablesorter thead tr,
 table.tablesorter tfoot tr {
 	background: url(bkgd.png) center center repeat-x;
 }
-table.tablesorter .header,
-table.tablesorter .tablesorter-header {
+table.tablesorter th.header,
+table.tablesorter th.tablesorter-header {
 	background: transparent;
 	border-right: #cdcdcd 1px solid;
 	padding: 9px;
 	height: auto;
 	cursor: pointer;
 }
-table.tablesorter .header span:first-child,
-.tablesorter-stickyHeader .header span:first-child,
-table.tablesorter th.tablesorter-header .tablesorter-header-inner,
-.tablesorter-stickyHeader th.tablesorter-header .tablesorter-header-inner {
+table.tablesorter th.header span:first-child,
+table.tablesorter th.tablesorter-header .tablesorter-header-inner {
 	background: url(none.png) no-repeat;
 	padding: 2px 0 2px 25px;
 }
-table.tablesorter .headerSortUp span:first-child,
-table.tablesorter .tablesorter-headerSortUp .tablesorter-header-inner {
+table.tablesorter th.headerSortUp span:first-child,
+table.tablesorter th.tablesorter-headerSortUp .tablesorter-header-inner {
 	background: url(asc.png) no-repeat;
 }
-table.tablesorter .headerSortDown span:first-child,
-table.tablesorter .tablesorter-headerSortDown .tablesorter-header-inner {
+table.tablesorter th.headerSortDown span:first-child,
+table.tablesorter th.tablesorter-headerSortDown .tablesorter-header-inner {
 	background: url(desc.png) no-repeat;
 }
 
@@ -64,44 +58,44 @@ table.tablesorter tr.even td {
 }
 
 /* Column Widget - column sort colors */
-table.tablesorter tbody td.primary,
-table.tablesorter tbody tr.odd td.primary {
+table.tablesorter td.primary,
+table.tablesorter tr.odd td.primary {
 	background-color: #c0ffc0;
 }
-table.tablesorter tbody tr.even td.primary {
+table.tablesorter tr.even td.primary {
 	background-color: #e8ffe8;
 }
 
-table.tablesorter tbody td.secondary,
-table.tablesorter tbody tr.odd td.secondary {
+table.tablesorter td.secondary,
+table.tablesorter tr.odd td.secondary {
 	background-color: #d6ffd6;
 }
-table.tablesorter tbody tr.even td.secondary {
+table.tablesorter tr.even td.secondary {
 	background-color: #e8ffe8;
 }
 
-table.tablesorter tbody td.tertiary,
-table.tablesorter tbody tr.odd td.tertiary {
+table.tablesorter td.tertiary,
+table.tablesorter tr.odd td.tertiary {
 	background-color: #eaffea;
 }
-table.tablesorter tbody tr.even td.tertiary {
+table.tablesorter tr.even td.tertiary {
 	background-color: #f8fff8;
 }
 
 /* filter widget */
-table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter {
+table.tablesorter input.tablesorter-filter {
 	width: 95%;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-table.tablesorter thead tr.tablesorter-filter,
-table.tablesorter thead tr.tablesorter-filter td {
+table.tablesorter tr.tablesorter-filter,
+table.tablesorter tr.tablesorter-filter td {
 	text-align: center;
 	background: #fff;
 }
 /* optional disabled input styling */ 
-table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter.disabled {
+table.tablesorter input.tablesorter-filter.disabled {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 }

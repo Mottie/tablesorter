@@ -34,6 +34,11 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.8 (3/27/2012)
+
+* Modified blue &amp; green themes by lowering css specificity. The arrows weren't being applied to the header.
+* Updated Sticky Header widget demo page to include a tablesorter theme switcher.
+
 #### Version 2.1.7 (3/26/2012)
 
 * Changed default css options to use more unique names:

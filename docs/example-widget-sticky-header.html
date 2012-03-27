@@ -14,12 +14,10 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: theme -->
-	<link rel="stylesheet" href="../css/blue/style.css">
-	<!-- test UI theme; also add 'uitheme' below:  widgets: ['zebra', 'uitheme', 'stickyHeaders'] ; THE ORDER DOES MATTER! -->
-	<!--
-	<link rel="stylesheet" href="../css/ui/style.css">
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	-->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	<link class="ui-theme" rel="stylesheet" href="../css/ui/style.css">
+	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
+	<link class="theme" rel="stylesheet" href="../css/green/style.css" disabled>
 
 	<!-- Tablesorter script: required -->
 	<script src="../js/jquery.tablesorter.js"></script>
@@ -28,14 +26,38 @@
 <script id="js">$(function(){
 
 	$("table").tablesorter({
-		widgets: [ 'zebra', 'stickyHeaders' ],
+		widgets: [ 'uitheme', 'zebra', 'stickyHeaders' ],
 		widgetOptions: {
+
 			// css class name applied to the sticky header row (tr)
-			stickyHeaders : 'tablesorter-stickyHeader'
+			stickyHeaders : 'tablesorter-stickyHeader',
+
+			// adding zebra striping, using content and default styles - the ui css removes the background from default
+			// even and odd class names included for this demo to allow switching themes
+			zebra   : ["ui-widget-content even", "ui-state-default odd"],
+
+			// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+			// default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
+			// ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ]
+			uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+
 		}
+
 	});
 
 }); </script>
+<script>
+$(function() {
+		$('link.theme').each(function(){ this.disabled = true; });
+
+		$('select').change(function(){
+			var theme = $(this).val().toLowerCase(),
+				files = $('link.theme, link.ui-theme'); // ui-theme is added by the themeswitcher
+			files.each(function(){ this.disabled = true; });
+			files.filter('[href*="' + theme + '"]').each(function(){ this.disabled = false; });
+		});
+});
+</script>
 </head>
 <body>
 
@@ -65,6 +87,13 @@
 	</div>
 
 	<h1>Demo</h1>
+	Choose Theme:
+	<select>
+		<option>UI</option>
+		<option>Blue</option>
+		<option>Green</option>
+	</select>
+
 	<table class="tablesorter">
 	<thead>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>

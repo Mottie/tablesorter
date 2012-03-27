@@ -10,21 +10,18 @@ table.tablesorter {
 }
 table.tablesorter,
 table.tablesorter th,
-table.tablesorter tr.tablesorter-stickyHeader th,
 table.tablesorter td {
 	border: #cdcdcd 1px solid;
 }
 
-table.tablesorter thead tr th,
-tr.tablesorter-stickyHeader th,
-table.tablesorter tfoot tr th {
+table.tablesorter th {
 	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 12px;
 	padding: 4px 20px 4px 4px;
 }
-table.tablesorter thead tr .tablesorter-header,
-tr.tablesorter-stickyHeader .tablesorter-header {
+table.tablesorter .header,
+table.tablesorter .tablesorter-header {
 	background-image: url(black-bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
@@ -36,60 +33,61 @@ table.tablesorter tbody td {
 	background-color: #fff;
 	vertical-align: top;
 }
-table.tablesorter thead tr .headerSortUp,
-table.tablesorter thead tr .tablesorter-headerSortUp {
+table.tablesorter th.headerSortUp,
+table.tablesorter th.tablesorter-headerSortUp {
 	background-color: #8dbdd8;
 	background-image: url(black-asc.gif);
 }
-table.tablesorter thead tr .headerSortDown,
-table.tablesorter thead tr .tablesorter-headerSortDown {
+table.tablesorter th.headerSortDown,
+table.tablesorter th.tablesorter-headerSortDown {
 	background-color: #8dbdd8;
 	background-image: url(black-desc.gif);
 }
 
 /* Zebra Widget - row alternating colors */
-table.tablesorter tbody tr.odd td {
+table.tablesorter tr.odd td {
 	background-color: #f0f0ff;
 }
-table.tablesorter tbody tr.even td {
+table.tablesorter tr.even td {
 	background-color: #fff;
 }
 
 /* Column Widget - column sort colors */
-table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
+table.tablesorter td.primary, table.tablesorter tr.odd td.primary {
 	background-color: #c0c0ff;
 }
-table.tablesorter tbody tr.even td.primary {
+table.tablesorter tr.even td.primary {
 	background-color: #e8e8ff;
 }
 
-table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
+table.tablesorter td.secondary, table.tablesorter tr.odd td.secondary {
 	background-color: #d6d6ff;
 }
-table.tablesorter tbody tr.even td.secondary {
+table.tablesorter tr.even td.secondary {
 	background-color: #e8e8ff;
 }
 
-table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
+table.tablesorter td.tertiary, table.tablesorter tr.odd td.tertiary {
 	background-color: #e5e5ff;
 }
-table.tablesorter tbody tr.even td.tertiary {
+table.tablesorter tr.even td.tertiary {
 	background-color: #f8f8ff;
 }
 
 /* filter widget */
-table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter {
+table.tablesorter input.tablesorter-filter {
 	width: 95%;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-table.tablesorter thead tr.tablesorter-filter, table.tablesorter thead tr.tablesorter-filter td {
+table.tablesorter tr.tablesorter-filter,
+table.tablesorter tr.tablesorter-filter td {
 	text-align: center;
 	background: #fff;
 }
 /* optional disabled input styling */ 
-table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter.disabled {
+table.tablesorter input.tablesorter-filter.disabled {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 }
