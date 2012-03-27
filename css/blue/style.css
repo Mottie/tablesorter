@@ -18,13 +18,13 @@ table.tablesorter th {
 	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 12px;
-	padding: 4px 20px 4px 4px;
 }
 table.tablesorter .header,
 table.tablesorter .tablesorter-header {
 	background-image: url(black-bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
+	padding: 4px 20px 4px 4px;
 	cursor: pointer;
 }
 table.tablesorter tbody td {
