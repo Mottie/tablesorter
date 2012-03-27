@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.6 - Client-side table sorting with ease!
+* TableSorter 2.1.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,13 +18,13 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.6";
+			this.version = "2.1.7";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
-				cssHeader: "header",
-				cssAsc: "headerSortUp",
-				cssDesc: "headerSortDown",
+				cssHeader: "tablesorter-header",
+				cssAsc: "tablesorter-headerSortUp",
+				cssDesc: "tablesorter-headerSortDown",
 				cssChildRow: "expand-child",
 				sortInitialOrder: "asc",
 				sortMultiSortKey: "shiftKey",
@@ -347,12 +347,12 @@
 					time = new Date();
 				}
 				$tableHeaders = $(c.selectorHeaders, table)
-				.wrapInner("<span/>")
+				.wrapInner("<div class='tablesorter-header-inner' />")
 				.each(function (index) {
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( checkHeaderOrder(table, index) ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).is('.sorter-false')) { this.sortDisabled = true; }
+					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).hasClass('sorter-false')) { this.sortDisabled = true; }
 					this.lockedOrder = false;
 					lock = checkHeaderLocked(table, index);
 					if (typeof(lock) !== 'undefined' && lock !== false) {
@@ -364,7 +364,7 @@
 					}
 					// add cell to headerList
 					c.headerList[index] = this;
-					$(this).parent().addClass('tablesorter-header');
+					$(this).parent().addClass(c.cssHeader);
 				});
 				if (c.debug) {
 					benchmark("Built headers", time);

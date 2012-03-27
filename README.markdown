@@ -34,6 +34,23 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.7 (3/26/2012)
+
+* Changed default css options to use more unique names:
+  * `cssHeader` is now `"tablesorter-header"`
+  * `cssAsc` is now `"tablesorter-headerSortUp"`
+  * `cssDesc` is now `"tablesorter-headerSortDown"`
+  * Updated blue &amp; green styles to use the appropriate names.
+  * Left the original css definitions to keep the styles backward compatible.
+* Table header cell content wrapper modification:
+  * Previously the content was wrapped with a `span`, now wrapped with a `div`
+  * Content wrapping div now as the class name of `tablesorter-header-inner` applied to it.
+* Various widget fixes:
+  * The `$.tablesorter.storage` code now loads saved variables before updating. Fix for [issue #41](https://github.com/Mottie/tablesorter/issues/41).
+  * Reverted the "filter" widget code to work like it is supposed to. Fix for [issue #40](https://github.com/Mottie/tablesorter/issues/40).
+  * Modified the "stickHeaders" widget to now set the width of the content instead of the table cell. It seems to work better. Fix for [issue #37](https://github.com/Mottie/tablesorter/issues/37)
+  * Fixed the "uitheme" widget code to update the sorting icon correctly.
+
 #### Version 2.1.6 (3/22/2012)
 
 * Pager updates

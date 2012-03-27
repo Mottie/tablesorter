@@ -8,17 +8,23 @@ table.tablesorter {
 	text-align: left;
 	border-spacing: 0;
 }
-table.tablesorter, table.tablesorter th, table.tablesorter tr.tablesorter-stickyHeader th, table.tablesorter td {
+table.tablesorter,
+table.tablesorter th,
+table.tablesorter tr.tablesorter-stickyHeader th,
+table.tablesorter td {
 	border: #cdcdcd 1px solid;
 }
 
-table.tablesorter thead tr th, tr.tablesorter-stickyHeader th, table.tablesorter tfoot tr th {
+table.tablesorter thead tr th,
+tr.tablesorter-stickyHeader th,
+table.tablesorter tfoot tr th {
 	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 12px;
 	padding: 4px 20px 4px 4px;
 }
-table.tablesorter thead tr .header, tr.tablesorter-stickyHeader .header {
+table.tablesorter thead tr .tablesorter-header,
+tr.tablesorter-stickyHeader .tablesorter-header {
 	background-image: url(black-bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
@@ -30,11 +36,13 @@ table.tablesorter tbody td {
 	background-color: #fff;
 	vertical-align: top;
 }
-table.tablesorter thead tr .headerSortUp {
+table.tablesorter thead tr .headerSortUp,
+table.tablesorter thead tr .tablesorter-headerSortUp {
 	background-color: #8dbdd8;
 	background-image: url(black-asc.gif);
 }
-table.tablesorter thead tr .headerSortDown {
+table.tablesorter thead tr .headerSortDown,
+table.tablesorter thead tr .tablesorter-headerSortDown {
 	background-color: #8dbdd8;
 	background-image: url(black-desc.gif);
 }

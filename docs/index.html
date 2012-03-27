@@ -403,12 +403,12 @@
 			<tr id="cssasc">
 				<td><a href="#" class="toggle2">cssAsc</a></td>
 				<td>String</td>
-				<td>"headerSortUp"</td>
+				<td>"tablesorter-headerSortUp"</td>
 				<td>The CSS style used to style the header when sorting ascending.  Example from the blue skin:
 					<div class="collapsible">
-						<pre class="css">th.headerSortUp {
-  background-image: url(../img/small_asc.gif);
-  background-color: #3399FF;
+						<pre class="css">th.tablesorter-headerSortUp {
+  background-color: #8dbdd8;
+  background-image: url(black-asc.gif);
 }</pre></div>
 				</td>
 				<td></td>
@@ -472,12 +472,12 @@
 			<tr id="cssdesc">
 				<td><a href="#" class="toggle2">cssDesc</a></td>
 				<td>String</td>
-				<td>"headerSortDown"</td>
+				<td>"tablesorter-headerSortDown"</td>
 				<td>The CSS style used to style the header when sorting descending.  Example from the blue skin:
 					<div class="collapsible">
-						<pre class="css">th.headerSortDown {
-  background-image: url(../img/small_desc.gif);
-  background-color: #3399FF;
+						<pre class="css">th.tablesorter-headerSortDown {
+  background-color: #8dbdd8;
+  background-image: url(black-desc.gif);
 }</pre></div>
 				</td>
 				<td></td>
@@ -486,18 +486,18 @@
 			<tr id="cssheader">
 				<td><a href="#" class="toggle2">cssHeader</a></td>
 				<td>String</td>
-				<td>"header"</td>
+				<td>"tablesorter-header"</td>
 				<td>The CSS style used to style the header in its unsorted state.  Example from the blue skin:
 					<div class="collapsible">
-						<pre class="css">th.header {
-  background-image: url(../img/small.gif);
-  cursor: pointer;
-  font-weight: bold;
+						<pre class="css">th.tablesorter-header {
+  background-color: #e6eeee;
+  background-image: url(black-bg.gif);
   background-repeat: no-repeat;
-  background-position: center left;
-  padding-left: 20px;
-  border-right: 1px solid #dad9c7;
-  margin-left: -1px;
+  background-position: center right;
+  border-collapse: collapse;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 20px 4px 4px;
 }</pre></div>
 				</td>
 				<td></td>
@@ -564,7 +564,7 @@
 			<tr id="headerlist">
 				<td>headerList</td>
 				<td>Array</td>
-				<td>[] (empty array)</td>
+				<td>[ ] (empty array)</td>
 				<td>Internal list of each header element as selected using jQuery selectors in the <a href="#selectorheaders"><code class="hilight">selectorHeaders</code></a> option. Not really useful for normal usage.</td>
 				<td></td>
 			</tr>
@@ -647,7 +647,7 @@
 			<tr id="parsers">
 				<td><a href="#" class="toggle2">parsers</a></td>
 				<td>Object</td>
-				<td>{}</td>
+				<td>{ }</td>
 				<td>Internal list of all of the parsers. Here is a complete list of default parsers:
 					<div class="collapsible">
 					<br>
@@ -865,7 +865,7 @@ $(function(){
 			<tr id="widgets">
 				<td>widgets</td>
 				<td>Array</td>
-				<td>[] (empty array)</td>
+				<td>[ ] (empty array)</td>
 				<td>
 					Initialize widgets using this option ( e.g. <code class="hilight">widgets : ['zebra']</code>, or custom widgets <code class="hilight">widgets: ['zebra', 'myCustomWidget'];</code>, see <a href="example-widgets.html">this demo</a> on how to write your own custom widget ).
 				</td>
@@ -886,7 +886,7 @@ $(function(){
 			<tr id="widgetoptions">
 				<td><a href="#" class="toggle2">widgetOptions</a></td>
 				<td>Object</td>
-				<td>{}</td>
+				<td>{ }</td>
 				<td>
 					As of version 2.1, all widget options have been moved into this option. This is a move to store all widget specific options in one place so as not to polute the main table options. All current widgets have been modified to use this new option. <span class="tip"><em>New!</em></span> in v2.1.
 					<div class="collapsible">
@@ -1485,7 +1485,7 @@ $(table)
 
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
-		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (3,7kb, required for setting <a href="#Examples">inline options</a>)</li>
+		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (6kb, required for setting <a href="#Examples">inline options</a>)</li>
 		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (30kb/<a href="../js/jquery.tablesorter.min.js">17kb min</a>)</li>
 		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (14kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">7kb min</a>, <a href="example-pager.html">demo</a>)</li>
 		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (15kb/<a href="../js/jquery.tablesorter.widgets.min.js">7kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets. <span class="tip"><em>Updated!</em></span> in v2.1.)</li>

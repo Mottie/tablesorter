@@ -7,7 +7,8 @@ table.tablesorter {
 	text-align: left;
 	padding: 5px;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+table.tablesorter thead tr th,
+table.tablesorter tfoot tr th {
 	border-collapse: collapse;
 	font-size: 8pt;
 	padding: 4px;
@@ -47,7 +48,8 @@ table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-table.tablesorter thead tr.tablesorter-filter, table.tablesorter thead tr.tablesorter-filter td {
+table.tablesorter thead tr.tablesorter-filter,
+table.tablesorter thead tr.tablesorter-filter td {
 	text-align: center;
 }
 /* optional disabled input styling */ 

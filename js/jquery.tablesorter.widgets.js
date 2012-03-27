@@ -1,4 +1,4 @@
-/*! tableSorter 2.1 widgets - updated 3/22/2012
+/*! tableSorter 2.1 widgets - updated 3/26/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -14,6 +14,9 @@
 /* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
    if you need it, then include https://github.com/douglascrockford/JSON-js
 
+   $.parseJSON is not available is jQuery versions older than 1.4.1, using older
+   versions will only allow storing information for one page at a time
+
    // *** Save data (JSON format only) ***
    // val must be valid JSON... use http://jsonlint.com/ to ensure it is valid
    var val = { "mywidget" : "data1" }; // valid JSON uses double quotes
@@ -27,15 +30,26 @@
    alert(val); // "data1" if saved, or "" if not
 */
 $.tablesorter.storage = function(table, key, val){
-	var d, k, ls = false, v = {},
+	var d, k, o = {}, ls = false, v = {},
 	id = table.id || $('.tablesorter').index( $(table) ),
 	url = window.location.pathname;
 	try { ls = !!(localStorage.getItem); } catch(e) {}
+	// *** get val ***
+	if ($.parseJSON) {
+		if (ls) {
+			o = $.parseJSON(localStorage[key]) || {};
+		} else {
+			k = document.cookie.split(/[;\s|=]/); // cookie
+			d = $.inArray(key, k) + 1; // add one to get from the key to the value
+			o = (d !== 0) ? $.parseJSON(k[d]) || {} : {};
+		}
+	}
 	if (val && JSON && JSON.hasOwnProperty('stringify')) {
 		// add unique identifiers = url pathname > table ID/index on page > data
 		v[url] = {};
 		v[url][id] = {};
 		v[url][id] = val;
+		v = $.extend( o, v );
 		// *** set val ***
 		if (ls) {
 			localStorage[key] = JSON.stringify(v);
@@ -44,17 +58,9 @@ $.tablesorter.storage = function(table, key, val){
 			d.setTime(d.getTime()+(31536e+6)); // 365 days
 			document.cookie = key + '=' + (JSON.stringify(v)).replace(/\"/g,'\"') + '; expires=' + d.toGMTString() + '; path=/';
 		}
-	} else if ($.parseJSON) {
-		// *** get val ***
-		if (ls) {
-			v = $.parseJSON(localStorage[key]) || {};
-		} else {
-			k = document.cookie.split(/[;\s|=]/); // cookie
-			d = $.inArray(key, k) + 1; // add one to get from the key to the value
-			v = (d !== 0) ? $.parseJSON(k[d]) || {} : {};
-		}
+	} else {
+		return ( o && o.hasOwnProperty(url) && o[url].hasOwnProperty(id) ) ? o[url][id] : {};
 	}
-	return ( v && v.hasOwnProperty(url) && v[url].hasOwnProperty(id)) ? v[url][id] : {};
 };
 
 // Widget: jQuery UI theme
@@ -96,7 +102,7 @@ $.tablesorter.addWidget({
 				$t.find('span.ui-icon').removeClass(rmv + ' ui-icon');
 			} else {
 				klass = ($t.hasClass(c.cssAsc)) ? icons[1] : ($t.hasClass(c.cssDesc)) ? icons[2] : $t.hasClass(c.cssHeader) ? icons[0] : '';
-				t = ($table.hasClass('hasStickyHeaders')) ? $table.find('tr.' + wo.stickyHeaders || 'tablesorter-stickyheader').find('th').eq(i).add($t) : $t;
+				t = ($table.hasClass('hasStickyHeaders')) ? $table.find('tr.' + (wo.stickyHeaders || 'tablesorter-stickyHeader')).find('th').eq(i).add($t) : $t;
 				t[klass === icons[0] ? 'removeClass' : 'addClass']('ui-state-active')
 					.find('span.ui-icon').removeClass(rmv).addClass(klass);
 			}
@@ -190,7 +196,7 @@ $.tablesorter.addWidget({
 								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
 							$td = $(this).find('td');
 							for (i=0; i < cols; i++){
-								x = $.inArray( v[i], ($td.eq(i).text() + t).toLowerCase() );
+								x = ($td.eq(i).text() + t).toLowerCase().indexOf(v[i]);
 								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
 									r = (r) ? true : false;
 								} else if (v[i] !== '') {
@@ -223,14 +229,13 @@ $.tablesorter.addWidget({
 			win = $(window),
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
-			css = wo.stickyHeaders || 'tablesorter-stickyheader',
+			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
 			firstCell = hdrCells.eq(0),
-			brdr = parseInt(firstCell.css('border-left-width'),10),
 			sticky = header.find('tr.tablesorter-header').clone()
 				.removeClass('tablesorter-header')
 				.addClass(css)
 				.css({
-					width      : header.outerWidth() + brdr,
+					width      : header.outerWidth(true),
 					position   : 'fixed',
 					left       : firstCell.offset().left,
 					margin     : 0,
@@ -239,7 +244,7 @@ $.tablesorter.addWidget({
 					zIndex     : 10
 				}),
 			stkyCells = sticky.children(),
-			laststate;
+			laststate = '';
 		// update sticky header class names to match real header after sorting
 		$table.bind('sortEnd', function(e,t){
 			var th = $(t).find('thead tr'),
@@ -254,8 +259,6 @@ $.tablesorter.addWidget({
 		hdrCells.each(function(i){
 			var t = $(this),
 			s = stkyCells.eq(i)
-			// set cell widths
-			.width( t.width() + brdr )
 			// clicking on sticky will trigger sort
 			.bind('click', function(e){
 				t.trigger(e);
@@ -264,7 +267,9 @@ $.tablesorter.addWidget({
 			.bind('mousedown', function(){
 				this.onselectstart = function(){ return false; };
 				return false;
-			});
+			})
+			// set cell widths
+			.find('.tablesorter-header-inner').width( t.find('.tablesorter-header-inner').width() );
 		});
 		header.prepend( sticky );
 		// make it sticky!
@@ -286,10 +291,10 @@ $.tablesorter.addWidget({
 			.resize(function(){
 				sticky.css({
 					left : firstCell.offset().left - win.scrollLeft(),
-					width: header.outerWidth() + brdr
+					width: header.outerWidth()
 				});
-				stkyCells.each(function(i){
-					$(this).width( hdrCells.eq(i).width() + brdr );
+				stkyCells.find('.tablesorter-header-inner').each(function(i){
+					$(this).width( hdrCells.eq(i).find('.tablesorter-header-inner').width() );
 				});
 			});
 	}
