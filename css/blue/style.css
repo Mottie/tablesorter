@@ -18,6 +18,7 @@ table.tablesorter th {
 	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 12px;
+	padding: 4px;
 }
 table.tablesorter .header,
 table.tablesorter .tablesorter-header {
