@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.8 - Client-side table sorting with ease!
+* TableSorter 2.1.9 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.8";
+			this.version = "2.1.9";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -432,7 +432,7 @@
 				for (i = 0; i < l; i++) {
 					s = sortList[i];
 					o = c.headerList[s[0]];
-					o.count = (s[1] + 1) % (c.sortReset ? 3 : 2);
+					o.count = s[1] % (c.sortReset ? 3 : 2);
 				}
 			}
 
@@ -479,9 +479,9 @@
 
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b) {
+				if (a === b) { return 0; }
 				if (a === '') { return 1; }
 				if (b === '') { return -1; }
-				if (a === b) { return 0; }
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
 				try {
 					var cnt = 0, ax, t, x = /^(\.)?\d/,
@@ -509,9 +509,9 @@
 			}
 
 			function sortTextDesc(a, b){
+				if (a === b) { return 0; }
 				if (a === '') { return 1; }
 				if (b === '') { return -1; }
-				if (a === b) { return 0; }
 				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return b.localeCompare(a); }
 				return -sortText(a, b);
 			}
@@ -532,6 +532,7 @@
 			}
 
 			function sortNumeric(a, b, mx, d) {
+				if (a === b) { return 0; }
 				if (a === '') { return 1; }
 				if (b === '') { return -1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
@@ -540,6 +541,7 @@
 			}
 
 			function sortNumericDesc(a, b, mx, d) {
+				if (a === b) { return 0; }
 				if (a === '') { return 1; }
 				if (b === '') { return -1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }

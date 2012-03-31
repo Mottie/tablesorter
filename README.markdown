@@ -18,7 +18,7 @@ See the [full documentation](http://mottie.github.com/tablesorter/docs/)
 * Extensibility via [widget system](http://mottie.github.com/tablesorter/docs/example-widgets.html).
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+.
 * Small code size.
-* Works with jQuery 1.2.3+
+* Works with jQuery 1.2.6+
 
 ###Documentation
 
@@ -33,6 +33,11 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 ###Change Log
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
+
+#### Version 2.1.9 (3/31/2012)
+
+* Empty cells in a numerical column should now sort properly.
+* Setting an initial `sortList` should now set the header sort correctly; so, clicking on the header will properly change the sort direction. Fix for [issue #43](https://github.com/Mottie/tablesorter/issues/43).
 
 #### Version 2.1.8 (3/27/2012)
 

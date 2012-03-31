@@ -1,5 +1,11 @@
 TableSorter Change Log
 
+Version 2.1.9 (3/31/2012)
+============================
+
+* Empty cells in a numerical column should now sort properly.
+* Setting an initial `sortList` should now set the header sort correctly; so, clicking on the header will properly change the sort direction. Fix for [issue #43](https://github.com/Mottie/tablesorter/issues/43).
+
 Version 2.1.8 (3/27/2012)
 ============================
 
