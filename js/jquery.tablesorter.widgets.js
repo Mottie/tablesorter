@@ -30,25 +30,32 @@
    alert(val); // "data1" if saved, or "" if not
 */
 $.tablesorter.storage = function(table, key, val){
-	var d, k, o = {}, ls = false, v = {},
+	var d, k, ls = false, v = {},
 	id = table.id || $('.tablesorter').index( $(table) ),
 	url = window.location.pathname;
 	try { ls = !!(localStorage.getItem); } catch(e) {}
 	// *** get val ***
 	if ($.parseJSON) {
 		if (ls) {
-			o = $.parseJSON(localStorage[key]) || {};
+			v = $.parseJSON(localStorage[key]) || {};
 		} else {
 			k = document.cookie.split(/[;\s|=]/); // cookie
 			d = $.inArray(key, k) + 1; // add one to get from the key to the value
-			o = (d !== 0) ? $.parseJSON(k[d]) || {} : {};
+			v = (d !== 0) ? $.parseJSON(k[d]) || {} : {};
 		}
 	}
 	if (val && JSON && JSON.hasOwnProperty('stringify')) {
 		// add unique identifiers = url pathname > table ID/index on page > data
-		v[url] = {};
-		v[url][id] = val;
-		v = $.extend( true, o, v );
+		if (v[url] && v[url][id]) {
+			v[url][id] = val;
+		} else {
+			if (v[url]) {
+				v[url][id] = val;
+			} else {
+				v[url] = {};
+				v[url][id] = val;
+			}
+		}
 		// *** set val ***
 		if (ls) {
 			localStorage[key] = JSON.stringify(v);
@@ -58,7 +65,7 @@ $.tablesorter.storage = function(table, key, val){
 			document.cookie = key + '=' + (JSON.stringify(v)).replace(/\"/g,'\"') + '; expires=' + d.toGMTString() + '; path=/';
 		}
 	} else {
-		return ( o && o.hasOwnProperty(url) && o[url].hasOwnProperty(id) ) ? o[url][id] : {};
+		return ( v && v.hasOwnProperty(url) && v[url].hasOwnProperty(id) ) ? v[url][id] : {};
 	}
 };
 
