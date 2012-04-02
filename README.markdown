@@ -34,6 +34,10 @@ Included all original [document pages](http://mottie.github.com/tablesorter/docs
 
 View the [complete listing here](http://mottie.github.com/tablesorter/changelog.txt).
 
+#### Version 2.1.10 (4/2/2012)
+
+* Widget data should now save multiple tables on a single page properly. Fix for [issue #41](https://github.com/Mottie/tablesorter/issues/41).
+
 #### Version 2.1.9 (3/31/2012)
 
 * Empty cells in a numerical column should now sort properly.

@@ -1,4 +1,4 @@
-/*! tableSorter 2.1 widgets - updated 3/26/2012
+/*! tableSorter 2.1 widgets - updated 4/2/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -47,9 +47,8 @@ $.tablesorter.storage = function(table, key, val){
 	if (val && JSON && JSON.hasOwnProperty('stringify')) {
 		// add unique identifiers = url pathname > table ID/index on page > data
 		v[url] = {};
-		v[url][id] = {};
 		v[url][id] = val;
-		v = $.extend( o, v );
+		v = $.extend( true, o, v );
 		// *** set val ***
 		if (ls) {
 			localStorage[key] = JSON.stringify(v);
