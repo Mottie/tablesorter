@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.10 - Client-side table sorting with ease!
+* TableSorter 2.1.11 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.10";
+			this.version = "2.1.11";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -33,6 +33,7 @@
 				sortLocaleCompare: false,
 				sortReset: false,
 				sortRestart: false,
+				emptyToBottom : true, // sort empty cell to bottom
 				textExtraction: "simple",
 				parsers: {},
 				widgets: [],
@@ -373,6 +374,7 @@
 				return $tableHeaders;
 			}
 
+			// Part of original tablesorter - not even called.
 			function checkCellColSpan(table, rows, row) {
 				var i, cell, arr = [],
 				r = table.tHead.rows,
@@ -404,7 +406,7 @@
 				var h = [], i, l, css = [table.config.cssDesc, table.config.cssAsc];
 				// remove all header information
 				$headers.removeClass(css[0]).removeClass(css[1]);
-				$headers.each(function (offset) {
+				$headers.each(function() {
 					if (!this.sortDisabled) {
 						h[this.column] = $(this);
 					}
@@ -416,7 +418,7 @@
 				}
 			}
 
-			function fixColumnWidth(table, $headers) {
+			function fixColumnWidth(table) {
 				if (table.config.widthFixed) {
 					var colgroup = $('<colgroup>');
 					$("tr:first td", table.tBodies[0]).each(function () {
@@ -479,12 +481,13 @@
 
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b) {
+				var c = tbl[0].config, cnt = 0, L, t, x;
 				if (a === b) { return 0; }
-				if (a === '') { return 1; }
-				if (b === '') { return -1; }
-				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return a.localeCompare(b); }
+				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
+				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				if (c.sortLocaleCompare) { return a.localeCompare(b); }
 				try {
-					var cnt = 0, ax, t, x = /^(\.)?\d/,
+					x = /^(\.)?\d/;
 					L = Math.min(a.length, b.length) + 1;
 					while (cnt < L && a.charAt(cnt) === b.charAt(cnt) && x.test(b.substring(cnt)) === false && x.test(a.substring(cnt)) === false) { cnt++; }
 					a = a.substring(cnt);
@@ -509,10 +512,11 @@
 			}
 
 			function sortTextDesc(a, b){
+				var c = tbl[0].config;
 				if (a === b) { return 0; }
-				if (a === '') { return 1; }
-				if (b === '') { return -1; }
-				if ($.data(tbl[0], "tablesorter").sortLocaleCompare) { return b.localeCompare(a); }
+				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
+				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				if (c.sortLocaleCompare) { return b.localeCompare(a); }
 				return -sortText(a, b);
 			}
 
@@ -532,18 +536,20 @@
 			}
 
 			function sortNumeric(a, b, mx, d) {
+				var c = tbl[0].config;
 				if (a === b) { return 0; }
-				if (a === '') { return 1; }
-				if (b === '') { return -1; }
+				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
+				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
 				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return a - b;
 			}
 
 			function sortNumericDesc(a, b, mx, d) {
+				var c = tbl[0].config;
 				if (a === b) { return 0; }
-				if (a === '') { return 1; }
-				if (b === '') { return -1; }
+				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
+				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
 				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return b - a;
@@ -555,8 +561,8 @@
 					// if no thead or tbody quit.
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
-					var $this, $document, $headers, cache, config, shiftDown = 0,
-					sortOrder, totalRows, $cell, c, i, j, k, a, s, o;
+					var $this, $headers, cache, config,
+					totalRows, $cell, c, i, j, k, a, s, o;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
@@ -945,7 +951,7 @@
 				time = new Date();
 			}
 			// loop through the visible rows
-			$("tr:visible", table.tBodies[0]).each(function(i){
+			$("tr:visible", table.tBodies[0]).each(function(){
 				$tr = $(this);
 				// style children rows the same way the parent row was styled
 				if (!$tr.hasClass(child)) { row++; }

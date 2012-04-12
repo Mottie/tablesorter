@@ -36,7 +36,7 @@
 	</div>
 	<p>
 		<strong>Author:</strong> Christian Bach<br>
-		<strong>Version:</strong> <a class="current-version" href="http://github.com/Mottie/tablesorter/downloads">2.1+</a> (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="../changelog.txt">changelog</a>)<br>
+		<strong>Version:</strong> <a class="current-version" href="http://github.com/Mottie/tablesorter/downloads">2.1+</a> (forked from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="https://github.com/Mottie/tablesorter/wiki/Change">changelog</a>)<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
@@ -288,6 +288,7 @@
 		<li><a href="example-options-headers-locked.html">Lock sort order using header options</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order using header options</a></li>
 		<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a></li>
+		<li><a href="example-option-sort-empty.html">Sorting empty cells</a> <span class="tip"><em>New!</em></span> v2.1.11</li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
 	</ul>
 
@@ -559,6 +560,23 @@
 					Boolean flag indicating if tablesorter should display debuging information usefull for development.
 				</td>
 				<td><a href="example-option-debug.html">Example</a></td>
+			</tr>
+
+			<tr id="emptytobottom">
+				<td><a href="#" class="toggle2">emptyToBottom</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Boolean flag indicating how tablesorter should deal with empty table cells. <span class="tip"><em>New!</em></span> v2.1.11
+					<div class="collapsible">
+					<ul>
+						<li><code class="hilight">true</code> - sort empty table cells to the bottom.</li>
+						<li><code class="hilight">false</code> - sort empty table cells to the top.</li>
+						<li><code class="hilight">null</code> - sort empty table cells as if the cell has the lowest value (less than "a" and "0").</li>
+					</ul>
+					</div>
+				</td>
+				<td><a href="example-option-sort-empty.html">Example</a></td>
 			</tr>
 
 			<tr id="headerlist">

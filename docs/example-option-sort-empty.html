@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Sorting empty cells</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<script id="js">$(function() {
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		emptyToBottom: true
+	});
+});</script>
+
+<script>
+$(function(){
+	$('select').change(function(){
+		var t = $('table'),
+			etb = $(this).val(),
+			v = (etb === 'true') ? true : (etb === 'false' ? false : null);
+		t[0].config.emptyToBottom = v;
+		t.trigger("sorton", [t[0].config.sortList]);
+	});
+});
+</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Sorting empty cells</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		Set the <code class="hilight">emptyToBottom</code> selector below:
+		<ul>
+			<li>true - sort empty table cells to the bottom.</li>
+			<li>false - sort empty table cells to the top.</li>
+			<li>null - sort empty table cells as if the cell has the lowest value (less than "a" and "0").</li>
+		</ul>
+	</p>
+
+<h1>Demo</h1>
+
+Set <code class="hilight">emptyToBottom</code> option: <select>
+	<option>true</option>
+	<option>false</option>
+	<option>null</option>
+</select>
+
+<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Account #</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Diff</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>A43</td>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td></td>
+			<td>20.3%</td>
+			<td>+3</td>
+		</tr>
+		<tr>
+			<td>A255</td>
+			<td></td>
+			<td>Hood</td>
+			<td></td>
+			<td>19.99</td>
+			<td>25.1%</td>
+			<td>-7</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Clark</td>
+			<td></td>
+			<td>18</td>
+			<td>15.89</td>
+			<td>44.2%</td>
+			<td>-15</td>
+		</tr>
+		<tr>
+			<td>A1</td>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>153.19</td>
+			<td></td>
+			<td>+19</td>
+		</tr>
+		<tr>
+			<td>A102</td>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>56</td>
+			<td>153.19</td>
+			<td>23%</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-option-sort-key.html">Change the default multi-sorting key &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+
