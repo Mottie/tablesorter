@@ -41,6 +41,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * `true` - sort empty table cells to the bottom.
   * `false` - sort empty table cells to the top.
   * `null` - sort empty table cells as if the cell has the lowest value (less than "a" and "0").
+* Moved change log from a text file in the repository into the repository [wiki pages](https://github.com/Mottie/tablesorter/wiki/Change).
 
 #### Version 2.1.10 (4/2/2012)
 
