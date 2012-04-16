@@ -38,7 +38,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### Version 2.1.12 (4/16/2012)
 
 * Modified digit parser to assume numbers wrapped in parenthesis are negative numbers.
-  * Updated the [Dealing with Digits](example-option-digits.html) demo.
+  * Updated the [Dealing with Digits](http://mottie.github.com/tablesorter/docs/example-option-digits.html) demo.
   * Enhancement from [issue #47](https://github.com/Mottie/tablesorter/issues/47), thanks to [timkingman](https://github.com/timkingman) for sharing the code!
 * Updated "digit" parser to remove extraneous characters before parsing. This change makes the "digit" parser essentially work the same as the "currency" parser.
 * Updated some regex to increase parsing speed. See [this jsperf](http://jsperf.com/replace-string-vs-regex/6).
