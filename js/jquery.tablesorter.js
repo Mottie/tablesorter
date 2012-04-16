@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.11 - Client-side table sorting with ease!
+* TableSorter 2.1.12 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.11";
+			this.version = "2.1.12";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -768,13 +768,16 @@
 					// French Format = 1 234 567,89 -> 1234567.89
 					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
 				}
+				if(/^\s*\([.\d]+\)/.test(s)) {
+					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
+				}
 				var i = parseFloat(s);
 				// return the text instead of zero
 				return isNaN(i) ? $.trim(s) : i;
 			};
 			this.isDigit = function(s) {
 				// replace all unwanted chars and match.
-				return (/^[\-+]?\d*$/).test($.trim(s.replace(/[,.'\s]/g, '')));
+				return (/^[\-+(]?\d*[)]?$/).test($.trim(s.replace(/[,.'\s]/g, '')));
 			};
 			this.clearTableBody = function (table) {
 				$(table.tBodies[0]).empty();
@@ -808,7 +811,7 @@
 			return $.tablesorter.isDigit(s);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s);
+			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
 		},
 		type: "numeric"
 	});
@@ -816,10 +819,10 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s){
-			return (/^[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // £$€¤¥¢?.
+			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // £$€¤¥¢?.
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(new RegExp(/[^0-9,. \-]/g), ""));
+			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
 		},
 		type: "numeric"
 	});
@@ -852,7 +855,7 @@
 			return (/^(https?|ftp|file):\/\/$/).test(s);
 		},
 		format: function(s) {
-			return $.trim(s.replace(new RegExp(/(https?|ftp|file):\/\//), ''));
+			return $.trim(s.replace(/(https?|ftp|file):\/\//, ''));
 		},
 		type: "text"
 	});
@@ -863,7 +866,7 @@
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/).test(s);
 		},
 		format: function(s) {
-			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(new RegExp(/-/g), "/")).getTime() : "");
+			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(/-/g, "/")).getTime() : "");
 		},
 		type: "numeric"
 	});
@@ -871,10 +874,10 @@
 	ts.addParser({
 		id: "percent",
 		is: function(s) {
-			return (/\%$/).test($.trim(s));
+			return (/\%\)?$/).test($.trim(s));
 		},
 		format: function(s) {
-			return $.tablesorter.formatFloat(s.replace(new RegExp(/%/g), ""));
+			return $.tablesorter.formatFloat(s.replace(/%/g, ""));
 		},
 		type: "numeric"
 	});
@@ -882,7 +885,7 @@
 	ts.addParser({
 		id: "usLongDate",
 		is: function(s) {
-			return s.match(new RegExp(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/));
+			return s.match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
 		},
 		format: function(s) {
 			return $.tablesorter.formatFloat(new Date(s).getTime());
