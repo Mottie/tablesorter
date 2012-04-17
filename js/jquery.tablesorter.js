@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.12 - Client-side table sorting with ease!
+* TableSorter 2.1.13 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.12";
+			this.version = "2.1.13";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -811,7 +811,7 @@
 			return $.tablesorter.isDigit(s);
 		},
 		format: function(s){
-			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
+			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""));
 		},
 		type: "numeric"
 	});

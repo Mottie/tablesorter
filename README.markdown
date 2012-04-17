@@ -35,6 +35,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.13 (4/17/2012)
+
+* Modified "digit" parser to not remove alphabetical characters as it was breaking the [text strings in numerical sort](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html) functionality.
+
 #### Version 2.1.12 (4/16/2012)
 
 * Modified digit parser to assume numbers wrapped in parenthesis are negative numbers.
