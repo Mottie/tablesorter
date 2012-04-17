@@ -35,6 +35,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.14 (4/17/2012)
+
+* Updated "shortDate" parser to include the time, if provided. I've also updated the [Changing the date format](http://mottie.github.com/tablesorter/docs/example-option-date-format.html) demo with a few times.
+
 #### Version 2.1.13 (4/17/2012)
 
 * Modified "digit" parser to not remove alphabetical characters as it was breaking the [text strings in numerical sort](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html) functionality.

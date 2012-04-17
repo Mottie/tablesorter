@@ -46,6 +46,7 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>The dateFormat option was modified in version 2.0.23 (not part of the original plugin).</li>
+			<li>The dateFormat option will ONLY work with the <code class="hilight">shortDate</code> parser.</li>
 			<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
 			<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</a>
 		</ul>
@@ -67,6 +68,11 @@
 			<td>2011-8-7</td>
 		</tr>
 		<tr>
+			<td>11/1/2011 12:34 AM</td>
+			<td>1/11/2011 12:34 AM</td>
+			<td>2011/11/1 12:34 AM</td>
+		</tr>
+		<tr>
 			<td>12/28/2011</td>
 			<td>28/12/2011</td>
 			<td>2011/12/28</td>
@@ -77,9 +83,9 @@
 			<td>2011 6 30</td>
 		</tr>
 		<tr>
-			<td>11/1/2011</td>
-			<td>1/11/2011</td>
-			<td>2011/11/1</td>
+			<td>11/1/2011 12:35 AM</td>
+			<td>1/11/2011 12:35 AM</td>
+			<td>2011/11/1 12:35 AM</td>
 		</tr>
 		<tr>
 			<td>3.4.2011</td>
@@ -87,14 +93,19 @@
 			<td>2011.3.4</td>
 		</tr>
 		<tr>
-			<td>07 01-2011</td>
-			<td>01 7-2011</td>
-			<td>2011-7 01</td>
+			<td>07 01-2011 1:15 PM</td>
+			<td>01 7-2011 1:15 PM</td>
+			<td>2011-7 01 1:15 PM</td>
 		</tr>
 		<tr>
 			<td>04/5,2011</td>
 			<td>5/04,2011</td>
 			<td>2011,04/5</td>
+		</tr>
+		<tr>
+			<td>11/1/2011 12:34 PM</td>
+			<td>1/11/2011 12:34 PM</td>
+			<td>2011/11/1 12:34 PM</td>
 		</tr>
 		<tr>
 			<td>1/21 2011</td>
@@ -105,6 +116,11 @@
 			<td>5.24-2011</td>
 			<td>24.5-2011</td>
 			<td>2011-5.24</td>
+		</tr>
+		<tr>
+			<td>07/01-2011 12:15 PM</td>
+			<td>01-7/2011 12:15 PM</td>
+			<td>2011/7-01 12:15 PM</td>
 		</tr>
 		<tr>
 			<td>10,14,2011</td>

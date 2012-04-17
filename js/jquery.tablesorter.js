@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.13 - Client-side table sorting with ease!
+* TableSorter 2.1.14 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.13";
+			this.version = "2.1.14";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -902,13 +902,13 @@
 		format: function(s, table, cell, cellIndex) {
 			var c = table.config,
 				format = (c.headers && c.headers[cellIndex]) ? c.headers[cellIndex].dateFormat || c.dateFormat : c.dateFormat; // get dateFormat from header or config
-			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,|\s]/g, "/");
+			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
 			if (format === "mmddyyyy") {
-				s = s.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, "$3/$1/$2");
+				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
 			} else if (format === "ddmmyyyy") {
-				s = s.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, "$3/$2/$1");
+				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
 			} else if (format === "yyyymmdd") {
-				s = s.replace(/(\d{4})\/(\d{1,2})\/(\d{1,2})/, "$1/$2/$3");
+				s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
 			}
 			return $.tablesorter.formatFloat(new Date(s).getTime());
 		},
