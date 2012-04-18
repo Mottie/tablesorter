@@ -35,6 +35,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.15 (4/18/2012)
+
+* Modified the `emptyAtBottom` option:
+  * Clarified that setting this option to `null` will treat empty cells as if they had a value of zero. Fix for [issue #48](https://github.com/Mottie/tablesorter/issues/48).
+  * Modified the script so that empty cells do not call their respective parser to keep the `emptyAtBottom` functionality working properly. Fix for [issue #49](https://github.com/Mottie/tablesorter/issues/49).
+
 #### Version 2.1.14 (4/17/2012)
 
 * Updated "shortDate" parser to include the time, if provided. I've also updated the [Changing the date format](http://mottie.github.com/tablesorter/docs/example-option-date-format.html) demo with a few times.

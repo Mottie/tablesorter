@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.14 - Client-side table sorting with ease!
+* TableSorter 2.1.15 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.14";
+			this.version = "2.1.15";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -203,7 +203,7 @@
 					for (j = 0; j < totalCells; ++j) {
 						t = trimAndGetNodeText(table.config, c[0].cells[j], j);
 						// don't bother parsing if the string is empty - previously parsing would change it to zero
-						cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
+						cols.push( t === '' ? '' : parsers[j].format(t, table, c[0].cells[j], j) );
 					}
 					cols.push(cache.normalized.length); // add position for rowCache
 					cache.normalized.push(cols);
