@@ -48,6 +48,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
       * header class name `class="empty-top"`.
       * Overall `emptyTo` option.
   * Updated the [sorting empty cells](http://mottie.github.com/tablesorter/docs/example-option-sort-empty.html) demo.
+  * Fix for [issue #48](https://github.com/Mottie/tablesorter/issues/48).
 
 * Add `stringTo` option in version 2.1.16. This options sets the string value for all of the numerical columns.
 * Modified the `string` option which is only applied to text within a numerical column; setting the value to:
@@ -62,6 +63,9 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
       * header class name `class="string-top"`.
       * Overall `stringTo` option.
   * Updated the [text strings in numerical sort](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html).
+  * Fix for [issue #50](https://github.com/Mottie/tablesorter/issues/50).
+
+* Fixed sticky header widget to now include multiple rows. Fix for [issue #52](https://github.com/Mottie/tablesorter/issues/52).
 
 #### Version 2.1.15 (4/18/2012)
 

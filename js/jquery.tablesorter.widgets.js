@@ -1,4 +1,4 @@
-/*! tableSorter 2.1 widgets - updated 4/2/2012
+/*! tableSorter 2.1 widgets - updated 4/20/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -295,9 +295,13 @@ $.tablesorter.addWidget({
 				}
 			})
 			.resize(function(){
+				var ht = 0;
 				sticky.css({
 					left : firstCell.offset().left - win.scrollLeft(),
 					width: header.outerWidth()
+				}).each(function(i){
+					$(this).css('top', ht);
+					ht += header.find('tr').eq(i).outerHeight();
 				});
 				stkyCells.find('.tablesorter-header-inner').each(function(i){
 					$(this).width( hdrCells.eq(i).find('.tablesorter-header-inner').width() );
