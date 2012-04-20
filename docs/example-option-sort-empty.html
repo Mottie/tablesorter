@@ -20,7 +20,8 @@
 	<script id="js">$(function() {
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		emptyToBottom: true
+		// default "emptyTo"
+		emptyTo: 'bottom'
 	});
 });</script>
 
@@ -28,10 +29,9 @@
 $(function(){
 	$('select').change(function(){
 		var t = $('table'),
-			etb = $(this).val(),
-			v = (etb === 'true') ? true : (etb === 'false' ? false : null);
-		t[0].config.emptyToBottom = v;
-		t.trigger("sorton", [t[0].config.sortList]);
+			v = $(this).val();
+		t[0].config.emptyTo = v;
+		t.trigger("update");
 	});
 });
 </script>
@@ -47,26 +47,35 @@ $(function(){
 
 	<p class="tip">
 		<em>NOTE!</em>
-		Set the <code class="hilight">emptyToBottom</code> selector below:
+		Set the <code class="hilight">emptyTo</code> selector below:
 		<ul>
-			<li>true - sort empty table cells to the bottom.</li>
-			<li>false - sort empty table cells to the top.</li>
-			<li>null - sort empty table cells as if the cell has the value equal to zero.</li>
+			<li><code class="hilight">top</code> - sort empty table cells to the top.</li>
+			<li><code class="hilight">bottom</code> - sort empty table cells to the bottom.</li>
+			<li><code class="hilight">none</code> or <code class="hilight">zero</code> - sort empty table cells as if the cell has the value equal to zero.</li>
+			<li>Individual columns can be modified by adding the following, set in order of priority:
+				<ul>
+					<li>metadata <code class="hilight">class="{ empty: 'top'}"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { empty : 'top' } }</code>.</li>
+					<li>header class name <code class="hilight">class="empty-top"</code>.</li>
+					<li>Overall <code>emptyTo</code> option.</li>
+				</ul>
+			</li>
+			<li><code class="hilight">emptyToBottom</code> option was added in v2.1.11, then replaced by the <code class="hilight">emptyTo</code> option in v2.1.16.</li>
 		</ul>
 	</p>
 
 <h1>Demo</h1>
 
-Set <code class="hilight">emptyToBottom</code> option: <select>
-	<option>true</option>
-	<option>false</option>
-	<option>null</option>
+Set <code class="hilight">emptyTo</code> option: <select>
+	<option>bottom</option>
+	<option>top</option>
+	<option>zero</option>
 </select>
 
 <div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th>Account #</th>
+			<th class="empty-top">Account #</th> <!-- empty-top class has higher priority than the "emptyTo" option -->
 			<th>First Name</th>
 			<th>Last Name</th>
 			<th>Age</th>
@@ -150,6 +159,7 @@ Set <code class="hilight">emptyToBottom</code> option: <select>
 		</tr>
 	</tbody>
 </table></div>
+* Note: The "Account #" column has the "empty-top" class name set which over-rides the <code class="hilight">emptyTo</code> option.
 
 	<h1>Javascript</h1>
 	<div id="javascript">

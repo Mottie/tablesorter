@@ -562,18 +562,26 @@
 				<td><a href="example-option-debug.html">Example</a></td>
 			</tr>
 
-			<tr id="emptytobottom">
-				<td><a href="#" class="toggle2">emptyToBottom</a></td>
-				<td>Boolean</td>
-				<td>true</td>
+			<tr id="emptyto">
+				<td><a href="#" class="toggle2">emptyTo</a></td>
+				<td>String</td>
+				<td>"bottom"</td>
 				<td>
-					Boolean flag indicating how tablesorter should deal with empty table cells. <span class="tip"><em>New!</em></span> v2.1.11
+					Boolean flag indicating how tablesorter should deal with empty table cells. <span class="tip"><em>Modified!</em></span> v2.1.16.
 					<div class="collapsible">
 					<ul>
-						<li><code class="hilight">true</code> - sort empty table cells to the bottom.</li>
-						<li><code class="hilight">false</code> - sort empty table cells to the top.</li>
-						<li><code class="hilight">null</code> - sort empty table cells as if the cell has the lowest value (less than "a" and "0").</li>
+						<li><code class="hilight">bottom</code> - sort empty table cells to the bottom.</li>
+						<li><code class="hilight">top</code> - sort empty table cells to the top.</li>
+						<li><code class="hilight">none</code> or <code class="hilight">zero</code> - sort empty table cells as if the cell has the value equal to zero.</li>
 					</ul>
+					Individual columns can be modified by adding the following, set in order of priority:
+					<ul>
+						<li>metadata <code class="hilight">class="{ empty: 'top'}"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code class="hilight">headers : { 0 : { empty : 'top' } }</code>.</li>
+						<li>header class name <code class="hilight">class="empty-top"</code>.</li>
+						<li>Overall <code>emptyTo</code> option.</li>
+					</ul>
+					<code class="hilight">emptyToBottom</code> option was added in v2.1.11, then replaced by the <code class="hilight">emptyTo</code> option in v2.1.16.
 					</div>
 				</td>
 				<td><a href="example-option-sort-empty.html">Example</a></td>
@@ -806,6 +814,33 @@
 				<td>"shiftKey"</td>
 				<td>The key used to select more than one column for multi-column sorting.  Defaults to the shift key.  The other options are <code class="hilight">"ctrlKey"</code> or <code class="hilight">"altKey"</code>. Reference: <a class="external" href="http://developer.mozilla.org/en/docs/DOM:event#Properties">http://developer.mozilla.org/en/docs/DOM:event#Properties</a></td>
 				<td><a href="example-option-sort-key.html">Example</a></td>
+			</tr>
+
+			<tr id="stringto">
+				<td><a href="#" class="toggle2">stringTo</a></td>
+				<td>String</td>
+				<td>"max"</td>
+				<td>
+					Boolean flag indicating how tablesorter should deal with text inside of numerically sorted columns. <span class="tip"><em>New!</em></span> v2.1.16.
+					<div class="collapsible"><br>
+					String options was initially set in the header options only. Overall option added and values changed in version 2.1.16; setting the value to:
+					<ul>
+						<li><code class="hilight">"max"</code> will treat any text in that column as a value greater than the <em>max</em> (more positive) value. Renamed from "max+".</li>
+						<li><code class="hilight">"min"</code> will treat any text in that column as a value greater than the <em>min</em> (more negative) value. Renamed from "max-".</li>
+						<li><code class="hilight">"top"</code> will always sort the text to the top of the column.</li>
+						<li><code class="hilight">"bottom"</code> will always sort the text to the bottom of the column.</li>
+						<li><code class="hilight">"none"</code> or <code class="hilight">"zero"</code> will treat the text as if it has a value of zero.</li>
+					</ul>
+					Individual columns can be modified by adding the following, set in order of priority:
+					<ul>
+						<li>metadata <code class="hilight">class="{ string: 'top'}"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code class="hilight">headers : { 0 : { string : 'top' } }</code>.</li>
+						<li>header class name <code class="hilight">class="string-top"</code>.</li>
+						<li>Overall <code class="hilight">stringTo</code> option.</li>
+					</ul>
+					</div>
+				</td>
+				<td><a href="example-options-headers-digits-strings.html">Example</a></td>
 			</tr>
 
 			<tr id="tableClass">

@@ -35,9 +35,37 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.16 (4/20/2012)
+
+* Removed `emptyToBottom` option. It has been replaced with the `emptyTo` option.
+* Added `emptyTo` option:
+  * Setting it to `top` will always sort all empty table cells to the top of the table.
+  * `bottom` will always sort all empty cells to the bottom of the table.
+  * `none` or `zero` will treat empty cells as if their value was zero.
+  * Individual columns can be modified by adding the following, set in order of priority:
+      * metadata `class="{ empty: 'top' }"`. This requires the metadata plugin.
+      * headers option `headers : { 0 : { empty : 'top' } }`.
+      * header class name `class="empty-top"`.
+      * Overall `emptyTo` option.
+  * Updated the [sorting empty cells](http://mottie.github.com/tablesorter/docs/example-option-sort-empty.html) demo.
+
+* Add `stringTo` option in version 2.1.16. This options sets the string value for all of the numerical columns.
+* Modified the `string` option which is only applied to text within a numerical column; setting the value to:
+  * `max` will treat any text in that column as a value greater than the max (more positive) value. Same as the `max+` value, which was retained for backwards compatibility.
+  * `min` will treat any text in that column as a value greater than the min (more negative) value. Same as the `max-` value.
+  * `top` will always sort the text to the top of the column.
+  * `bottom` will always sort the text to the bottom of the column.
+  * `none` or `zero` will treat the text as if it has a value of zero.
+  * Individual columns can be modified by adding the following, set in order of priority:
+      * metadata `class="{ string: 'top' }"`. This requires the metadata plugin.
+      * headers option `headers : { 0 : { string : 'top' } }`.
+      * header class name `class="string-top"`.
+      * Overall `stringTo` option.
+  * Updated the [text strings in numerical sort](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html).
+
 #### Version 2.1.15 (4/18/2012)
 
-* Modified the `emptyAtBottom` option:
+* Modified the `emptyToBottom` option:
   * Clarified that setting this option to `null` will treat empty cells as if they had a value of zero. Fix for [issue #48](https://github.com/Mottie/tablesorter/issues/48).
   * Modified the script so that empty cells do not call their respective parser to keep the `emptyAtBottom` functionality working properly. Fix for [issue #49](https://github.com/Mottie/tablesorter/issues/49).
 

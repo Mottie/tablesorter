@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.15 - Client-side table sorting with ease!
+* TableSorter 2.1.16 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.15";
+			this.version = "2.1.16";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -33,11 +33,14 @@
 				sortLocaleCompare: false,
 				sortReset: false,
 				sortRestart: false,
-				emptyToBottom : true, // sort empty cell to bottom
+				emptyTo : "bottom", // sort empty cell to bottom
+				stringTo : "max",  // sort strings in numerical column as max value
 				textExtraction: "simple",
 				parsers: {},
 				widgets: [],
 				headers: {},
+				empties: {},
+				strings: {},
 				widthFixed: false,
 				cancelSelection: true,
 				sortList: [],
@@ -142,34 +145,49 @@
 				return parsers[0];
 			}
 
+			// get sorter, string and empty options for each column from
+			// metadata, header option or header class name ("sorter-false")
+			// priority = meta > headers option > header class name
+			function getData(m, ch, cl, key) {
+				var val = '';
+				if (m && m[key]) {
+					val = m[key];
+				} else if (ch && ch[key]) {
+					val = ch[key];
+				} else if (cl && cl.match(key + '-')) {
+					// include sorter class name "sorter-text", etc
+					val = cl.match( new RegExp(key + '-(\\w+)') )[1] || '';
+				}
+				return $.trim(val);
+			}
+
 			function buildParserCache(table, $headers) {
 				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var rows = table.tBodies[0].rows, list, cells, l, h, i, p, parsersDebug = "";
+				var c = table.config, ch, cl, rows = table.tBodies[0].rows, list, l, h, i,
+					m = $.metadata ? h.metadata() : false, p, parsersDebug = "";
 				if (rows[0]) {
 					list = [];
-					cells = rows[0].cells;
-					l = cells.length;
+					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
-						p = false;
 						h = $($headers[i]);
-						if ($.metadata && (h.metadata() && h.metadata().sorter)) {
-							p = getParserById(h.metadata().sorter);
-						} else if ((table.config.headers[i] && table.config.headers[i].sorter)) {
-							p = getParserById(table.config.headers[i].sorter);
-						} else if (h.attr('class') && h.attr('class').match('sorter-')){
-							// include sorter class name "sorter-text", etc
-							p = getParserById(h.attr('class').match(/sorter-(\w+)/)[1] || '');
-						}
+						ch = c.headers[i];
+						cl = h.attr('class');
+						// get column parser
+						p = getParserById( getData(m, ch ,cl, 'sorter') );
+						// empty cells behaviour - keeping emptyToBottom for backwards compatibility.
+						c.empties[i] = getData(m, ch ,cl, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+						// text strings behaviour in numerical sorts
+						c.strings[i] = getData(m, ch ,cl, 'string') || c.stringTo || 'max';
 						if (!p) {
 							p = detectParserForColumn(table, rows, -1, i);
 						}
-						if (table.config.debug) {
-							parsersDebug += "column:" + i + "; parser:" + p.id + "\n";
+						if (c.debug) {
+							parsersDebug += "column:" + i + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
 						}
 						list.push(p);
 					}
 				}
-				if (table.config.debug) {
+				if (c.debug) {
 					log(parsersDebug);
 				}
 				return list;
@@ -451,24 +469,30 @@
 				for (i=0; i < l; i++) {
 					c = sortList[i][0];
 					order = sortList[i][1];
-					s = (getCachedSortType(tc.parsers,c) === "text") ? ((order === 0) ? "sortText" : "sortTextDesc") : ((order === 0) ? "sortNumeric" : "sortNumericDesc");
+					s = getCachedSortType(tc.parsers,c) === "text" ? "Text" : "Numeric";
+					s += order === 0 ? "" : "Desc";
 					e = "e" + i;
 					// get max column value (ignore sign)
-					if (/Numeric/.test(s) && tc.headers[c] && tc.headers[c].string){
+					if (/Numeric/.test(s) && tc.strings[c]){
 						for (j=0; j < lc; j++) {
 							col = Math.abs(parseFloat(cache.normalized[j][c]));
 							mx = Math.max( mx, isNaN(col) ? 0 : col );
 						}
-						dir = (tc.headers[c]) ? tc.string[tc.headers[c].string] || 0 : 0;
+						// sort strings in numerical columns
+						if (typeof(tc.string[tc.strings[c]]) === 'boolean') {
+							dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
+						} else {
+							dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
+						}
 					}
-					dynamicExp += "var " + e + " = " + s + "(a[" + c + "],b[" + c + "]," + mx +  "," + dir + "); ";
+					dynamicExp += "var " + e + " = sort" + s + "(a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
 					dynamicExp += "if (" + e + ") { return " + e + "; } ";
 					dynamicExp += "else { ";
 				}
 				// if value is the same keep orignal order
 				orgOrderCol = (cache.normalized && cache.normalized[0]) ? cache.normalized[0].length - 1 : 0;
 				dynamicExp += "return a[" + orgOrderCol + "]-b[" + orgOrderCol + "];";
-				for(i=0; i < l; i++) {
+				for (i=0; i < l; i++) {
 					dynamicExp += "}; ";
 				}
 				dynamicExp += "return 0; ";
@@ -480,11 +504,11 @@
 			}
 
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
-			function sortText(a, b) {
-				var c = tbl[0].config, cnt = 0, L, t, x;
+			function sortText(a, b, col) {
 				if (a === b) { return 0; }
-				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
-				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				var c = tbl[0].config, cnt = 0, L, t, x, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (c.sortLocaleCompare) { return a.localeCompare(b); }
 				try {
 					x = /^(\.)?\d/;
@@ -511,11 +535,11 @@
 				}
 			}
 
-			function sortTextDesc(a, b){
-				var c = tbl[0].config;
+			function sortTextDesc(a, b, col){
 				if (a === b) { return 0; }
-				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
-				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (c.sortLocaleCompare) { return b.localeCompare(a); }
 				return -sortText(a, b);
 			}
@@ -535,21 +559,21 @@
 				return 0;
 			}
 
-			function sortNumeric(a, b, mx, d) {
-				var c = tbl[0].config;
+			function sortNumeric(a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
-				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
 				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return a - b;
 			}
 
-			function sortNumericDesc(a, b, mx, d) {
-				var c = tbl[0].config;
+			function sortNumericDesc(a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				if (a === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? 1 : -1; }
-				if (b === '' && c.emptyToBottom !== null) { return c.emptyToBottom ? -1 : 1; }
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
 				if (isNaN(b)) { b = getTextValue(b, mx, d); }
 				return b - a;
@@ -571,12 +595,12 @@
 					tbl = $this = $(this).addClass(this.config.tableClass);
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
+					// digit sort text location; keeping max+/- for backwards compatibility
+					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 					// build headers
 					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
 					c.parsers = buildParserCache(this, $headers);
-					// digit sort text location
-					c.string = { max: 1, 'max+': 1, 'max-': -1, none: 0 };
 					// build the cache for the tbody cells
 					cache = buildCache(this);
 					// fixate columns if the users supplies the fixedWidth option
