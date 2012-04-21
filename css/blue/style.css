@@ -11,18 +11,23 @@ table.tablesorter {
 table.tablesorter,
 table.tablesorter th,
 table.tablesorter td {
+	background-color: #e6eeee;
 	border: #cdcdcd 1px solid;
 }
 
 table.tablesorter th {
-	background-color: #e6eeee;
 	border-collapse: collapse;
 	font-size: 12px;
 	padding: 4px;
 }
 table.tablesorter .header,
 table.tablesorter .tablesorter-header {
-	background-image: url(black-bg.gif);
+	/* black double arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	/* white double arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==); */
+	/* image */
+	/* background-image: url(black-bg.gif); */
 	background-repeat: no-repeat;
 	background-position: center right;
 	padding: 4px 20px 4px 4px;
@@ -37,12 +42,22 @@ table.tablesorter tbody td {
 table.tablesorter th.headerSortUp,
 table.tablesorter th.tablesorter-headerSortUp {
 	background-color: #8dbdd8;
-	background-image: url(black-asc.gif);
+	/* black asc arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	/* white asc arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7); */
+	/* image */
+	/* background-image: url(black-asc.gif); */
 }
 table.tablesorter th.headerSortDown,
 table.tablesorter th.tablesorter-headerSortDown {
 	background-color: #8dbdd8;
-	background-image: url(black-desc.gif);
+	/* black desc arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	/* white desc arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7); */
+	/* image */
+	/* background-image: url(black-desc.gif); */
 }
 
 /* Zebra Widget - row alternating colors */

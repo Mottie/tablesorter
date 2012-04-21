@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.16 - Client-side table sorting with ease!
+* TableSorter 2.1.17 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.16";
+			this.version = "2.1.17";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -163,15 +163,16 @@
 
 			function buildParserCache(table, $headers) {
 				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var c = table.config, ch, cl, rows = table.tBodies[0].rows, list, l, h, i,
-					m = $.metadata ? h.metadata() : false, p, parsersDebug = "";
+				var c = table.config, rows = table.tBodies[0].rows,
+					list, l, i, h, m, ch, cl, p, parsersDebug = "";
 				if (rows[0]) {
 					list = [];
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
 						h = $($headers[i]);
+						m = $.metadata ? h.metadata() : false;
 						ch = c.headers[i];
-						cl = h.attr('class');
+						cl = h.attr('class') || '';
 						// get column parser
 						p = getParserById( getData(m, ch ,cl, 'sorter') );
 						// empty cells behaviour - keeping emptyToBottom for backwards compatibility.

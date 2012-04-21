@@ -35,6 +35,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.17 (4/21/2012)
+
+* Fixed an error reported in [issue #52](https://github.com/Mottie/tablesorter/issues/52) which occurrs when using the metadata plugin after the last update.
+* The sticky headers widget will now work properly if TD's are included in the header, but the following should be noted:
+  * The `selectorHeaders` option needs to be changed to `thead th, thead td` to properly include the TD's.
+  * CSS changes to the blue theme were needed and most likely any custom themes to add a background color to these cells.
+  * To prevent the TD's from being sortable, add a `sorter-false` class name to it.
+* Updated the blue theme:
+  * TD's in the sticky header should now have a background color applied.
+  * Replaced the black arrow background image gifs with data uri. Included comments with white arrow data uri.
+
 #### Version 2.1.16 (4/20/2012)
 
 * Removed `emptyToBottom` option. It has been replaced with the `emptyTo` option.
