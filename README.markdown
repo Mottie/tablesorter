@@ -45,6 +45,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Updated the blue theme:
   * TD's in the sticky header should now have a background color applied.
   * Replaced the black arrow background image gifs with data uri. Included comments with white arrow data uri.
+* Updated filter widget to more accurately count the number of columns. There was an issue with multiple header rows.
 
 #### Version 2.1.16 (4/20/2012)
 
@@ -91,50 +92,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### Version 2.1.13 (4/17/2012)
 
 * Modified "digit" parser to not remove alphabetical characters as it was breaking the [text strings in numerical sort](http://mottie.github.com/tablesorter/docs/example-options-headers-digits-strings.html) functionality.
-
-#### Version 2.1.12 (4/16/2012)
-
-* Modified digit parser to assume numbers wrapped in parenthesis are negative numbers.
-  * Updated the [Dealing with Digits](http://mottie.github.com/tablesorter/docs/example-option-digits.html) demo.
-  * Enhancement from [issue #47](https://github.com/Mottie/tablesorter/issues/47), thanks to [timkingman](https://github.com/timkingman) for sharing the code!
-* Updated "digit" parser to remove extraneous characters before parsing. This change makes the "digit" parser essentially work the same as the "currency" parser.
-* Updated some regex to increase parsing speed. See [this jsperf](http://jsperf.com/replace-string-vs-regex/6).
-
-#### Version 2.1.11 (4/12/2012)
-
-* Added `emptyToBottom` option which tells tablesorter how you want it to sort empty table cells. Enhancement from [issue #]().
-  * `true` - sort empty table cells to the bottom.
-  * `false` - sort empty table cells to the top.
-  * `null` - sort empty table cells as if the cell has the lowest value (less than "a" and "0").
-* Moved change log from a text file in the repository into the repository [wiki pages](https://github.com/Mottie/tablesorter/wiki/Change).
-
-#### Version 2.1.10 (4/2/2012)
-
-* Widget data should now save multiple tables on a single page properly. Fix for [issue #41](https://github.com/Mottie/tablesorter/issues/41).
-
-#### Version 2.1.9 (3/31/2012)
-
-* Empty cells in a numerical column should now sort properly.
-* Setting an initial `sortList` should now set the header sort correctly; so, clicking on the header will properly change the sort direction. Fix for [issue #43](https://github.com/Mottie/tablesorter/issues/43).
-
-#### Version 2.1.8 (3/27/2012)
-
-* Modified blue &amp; green themes by lowering css specificity. The arrows weren't being applied to the header.
-* Updated Sticky Header widget demo page to include a tablesorter theme switcher.
-
-#### Version 2.1.7 (3/26/2012)
-
-* Changed default css options to use more unique names:
-  * `cssHeader` is now `"tablesorter-header"`
-  * `cssAsc` is now `"tablesorter-headerSortUp"`
-  * `cssDesc` is now `"tablesorter-headerSortDown"`
-  * Updated blue &amp; green styles to use the appropriate names.
-  * Left the original css definitions to keep the styles backward compatible.
-* Table header cell content wrapper modification:
-  * Previously the content was wrapped with a `span`, now wrapped with a `div`
-  * Content wrapping div now as the class name of `tablesorter-header-inner` applied to it.
-* Various widget fixes:
-  * The `$.tablesorter.storage` code now loads saved variables before updating. Fix for [issue #41](https://github.com/Mottie/tablesorter/issues/41).
-  * Reverted the "filter" widget code to work like it is supposed to. Fix for [issue #40](https://github.com/Mottie/tablesorter/issues/40).
-  * Modified the "stickHeaders" widget to now set the width of the content instead of the table cell. It seems to work better. Fix for [issue #37](https://github.com/Mottie/tablesorter/issues/37)
-  * Fixed the "uitheme" widget code to update the sorting icon correctly.

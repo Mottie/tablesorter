@@ -172,8 +172,8 @@ $.tablesorter.addWidget({
 			var i, v, r, t, x, cr, $td, c = table.config,
 				wo = c.widgetOptions,
 				css = wo.filter_cssFilter || 'tablesorter-filter',
-				cols = c.headerList.length,
 				$t = $(table).addClass('hasFilters'),
+				cols = $t.find('tbody tr:first td').length,
 				fr = '<tr class="' + css + '">',
 				time;
 			if (c.debug) {
@@ -236,6 +236,7 @@ $.tablesorter.addWidget({
 			header = $(table).find('thead'),
 			hdrCells = header.find('tr').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
+			innr = '.tablesorter-header-inner',
 			firstCell = hdrCells.eq(0),
 			sticky = header.find('tr.tablesorter-header').clone()
 				.removeClass('tablesorter-header')
@@ -275,7 +276,7 @@ $.tablesorter.addWidget({
 				return false;
 			})
 			// set cell widths
-			.find('.tablesorter-header-inner').width( t.find('.tablesorter-header-inner').width() );
+			.find(innr).width( t.find(innr).width() );
 		});
 		header.prepend( sticky );
 		// make it sticky!
@@ -303,8 +304,8 @@ $.tablesorter.addWidget({
 					$(this).css('top', ht);
 					ht += header.find('tr').eq(i).outerHeight();
 				});
-				stkyCells.find('.tablesorter-header-inner').each(function(i){
-					$(this).width( hdrCells.eq(i).find('.tablesorter-header-inner').width() );
+				stkyCells.find(innr).each(function(i){
+					$(this).width( hdrCells.eq(i).find(innr).width() );
 				});
 			});
 	}
