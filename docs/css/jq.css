@@ -57,3 +57,5 @@ a.deprecated { color: #a00; }
 span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
 .hidden { display: none; }
 .clear { clear: both; }
+.download { color: #050505; text-decoration: none; padding: 3px 10px; border: 1px solid #ddd; background: -moz-linear-gradient( top, #ddd 0%, #bbb 50%, #aaa 50%, #bbb); background: -webkit-gradient( linear, left top, left bottom, from(#ddd), color-stop(0.50, #bbb), color-stop(0.50, #aaa), to(#bbb)); border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
+.download:hover { background: -moz-linear-gradient( top, #dddddd 0%, #dddddd 50%, #cccccc 50%, #dddddd); background: -webkit-gradient( linear, left top, left bottom, from(#dddddd), color-stop(0.50, #dddddd), color-stop(0.50, #cccccc), to(#dddddd)); }

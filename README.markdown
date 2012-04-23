@@ -35,6 +35,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.18 (4/23/2012)
+
+* When the sticky headers widget is applied to a table with multiple header rows, adding the class name `sticky-false` to any header row will prevent it from becoming sticky. Thanks to [megatom](https://github.com/megatom) for the suggestion in [issue #52](https://github.com/Mottie/tablesorter/issues/52#issuecomment-5261303)!
+* Updated filter widget css to better work with twitter's bootstrap. Fix per [issue #54](https://github.com/Mottie/tablesorter/issues/54). Thanks [thezoggy](https://github.com/thezoggy)!
+* Modified the green theme arrows; see the [columns style widget](http://mottie.github.com/tablesorter/docs/example-widget-columns.html) demo and choose the green theme to see the change. I've included the PSD files as well.
+
 #### Version 2.1.17 (4/21/2012)
 
 * Fixed an error reported in [issue #52](https://github.com/Mottie/tablesorter/issues/52) which occurrs when using the metadata plugin after the last update.

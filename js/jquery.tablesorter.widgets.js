@@ -1,4 +1,4 @@
-/*! tableSorter 2.1 widgets - updated 4/21/2012
+/*! tableSorter 2.1 widgets - updated 4/23/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -234,11 +234,11 @@ $.tablesorter.addWidget({
 			wo = table.config.widgetOptions,
 			win = $(window),
 			header = $(table).find('thead'),
-			hdrCells = header.find('tr').children(),
+			hdrCells = header.find('tr:not(.sticky-false)').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
 			innr = '.tablesorter-header-inner',
 			firstCell = hdrCells.eq(0),
-			sticky = header.find('tr.tablesorter-header').clone()
+			sticky = header.find('tr.tablesorter-header:not(.sticky-false)').clone()
 				.removeClass('tablesorter-header')
 				.addClass(css)
 				.css({

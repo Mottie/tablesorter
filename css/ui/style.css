@@ -44,6 +44,7 @@ table.tablesorter tr.ui-state-default {
 /* filter widget */
 table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter {
 	width: 95%;
+	height: inherit;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;

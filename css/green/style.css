@@ -85,6 +85,7 @@ table.tablesorter tr.even td.tertiary {
 /* filter widget */
 table.tablesorter input.tablesorter-filter {
 	width: 95%;
+	height: inherit;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;

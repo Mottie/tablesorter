@@ -77,7 +77,7 @@ $(function() {
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
 			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
 			<li>Added <code class="hilight">widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual sticky header. <span class="tip"><em>New! v2.1</em></span></li>
-			<li>Multiple rows in the header will become sticky.</li>
+			<li>Multiple rows in the header will become sticky. <span class="tip"><em>New! v2.1.17</em></span></li>
 			<li>For the sticky header to work properly if any <code class="hilight">&lt;TD&gt;</code>'s are included within the header:
 				<ul>
 					<li>Set the <code class="hilight">selectorHeaders</code> option to <code class="hilight">thead th, thead td</code>.</li>
@@ -85,6 +85,7 @@ $(function() {
 					<li>To prevent the <code class="hilight">&lt;TD&gt;</code> from being sortable, add a <code class="hilight">sorter-false</code> class name.</li>
 				</ul>
 			</li>
+			<li>Add the class name <code class="hilight">sticky-false</code> to any header rows you don't want to become sticky. <span class="tip"><em>New! v2.1.18</em></span></li>
 			<li>Because of an issue with jQuery version 1.2.6 causing an error, this widget needs at least jQuery version 1.3+ in order to work.</li>
 			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
 		</ul>
