@@ -222,7 +222,7 @@
 					for (j = 0; j < totalCells; ++j) {
 						t = trimAndGetNodeText(table.config, c[0].cells[j], j);
 						// don't bother parsing if the string is empty - previously parsing would change it to zero
-						cols.push( t === '' ? '' : parsers[j].format(t, table, c[0].cells[j], j) );
+						cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
 					}
 					cols.push(cache.normalized.length); // add position for rowCache
 					cache.normalized.push(cols);
