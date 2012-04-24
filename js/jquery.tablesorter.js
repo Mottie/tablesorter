@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.18 - Client-side table sorting with ease!
+* TableSorter 2.1.19 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function(){
 
-			this.version = "2.1.18";
+			this.version = "2.1.19";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -694,25 +694,25 @@
 					});
 					// apply easy methods that trigger binded events
 					$this
-					.bind("update", function(){
+					.bind("update", function(e, resort){
 						var t = this, c = t.config;
 						// remove rows/elements before update
 						$(c.selectorRemove, t.tBodies[0]).remove();
 						// rebuild parsers.
-						t.config.parsers = buildParserCache(t, $headers);
+						c.parsers = buildParserCache(t, $headers);
 						// rebuild the cache map
 						cache = buildCache(t);
-						$this.trigger("sorton", [t.config.sortList]);
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
-					.bind("updateCell", function(e, cell) {
+					.bind("updateCell", function(e, cell, resort) {
 						// get position from the dom.
 						var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex];
 						// update cache - format: function(s, table, cell, cellIndex)
 						cache.normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), $this, cell, pos[1]);
 						c.cache = cache;
-						$this.trigger("sorton", [c.sortList]);
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
-					.bind("addRows", function(e, row) {
+					.bind("addRows", function(e, row, resort) {
 						var i, rows = row.filter('tr').length,
 						dat = [], l = row[0].cells.length;
 						// add each row
@@ -730,7 +730,7 @@
 						}
 						c.cache = cache;
 						// resort using current settings
-						$this.trigger("sorton", [c.sortList]);
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
 					.bind("sorton", function(e, list) {
 						$(this).trigger("sortStart", tbl[0]);
@@ -844,7 +844,7 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s){
-			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // Â£$â‚¬Â¤Â¥Â¢?.
+			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // £$€¤¥¢?.
 		},
 		format: function(s){
 			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
