@@ -35,6 +35,15 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.19 (4/23/2012)
+
+* The filter widget will now ignore leading spaces so when the `filter_startsWith` is `true` it will match the text. Fix from [issue #55](https://github.com/Mottie/tablesorter/issues/55). Thanks to [aarkay18](https://github.com/aarkay18) for the code!
+* Fixed a problem with empty table cells returning an empty string instead of parsing the cell - needed when there is HTML like an input tag to process. Reverted the change accidently added back in version 2.1.15.
+* Added a resort flag that when set to false, it will prevent the resorting of the table when "update", "updateCell" or "addRows" is called. Use the appropriate format below:
+  * *update*: `$('table').trigger('update', [false]);
+  * *updateCell*: `$('table').trigger('updateCell', [ this, false ]);` - see the [updating a table cell](http://mottie.github.com/tablesorter/docs/example-update-cell.html) demo.
+  * *addRows*: `$('table').trigger('addRows', [$row, false]);` - see the [adding table rows](http://mottie.github.com/tablesorter/docs/example-add-rows.html) demo.
+
 #### Version 2.1.18 (4/23/2012)
 
 * When the sticky headers widget is applied to a table with multiple header rows, adding the class name `sticky-false` to any header row will prevent it from becoming sticky. Thanks to [megatom](https://github.com/megatom) for the suggestion in [issue #52](https://github.com/Mottie/tablesorter/issues/52#issuecomment-5261303)!

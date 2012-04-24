@@ -28,10 +28,13 @@
 	$("table tbody td.discount").click(function() {
 
 		// randomize a number
-		var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' + ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
+		var resort = "", // resort variable set to anything BUT false (without quotes) will trigger the automatic resort
+			discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' + ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
 		$(this).text(discount);
 
-		$("table").trigger("updateCell",[this]);
+		// set resort flag to false to prevent automatic resort
+		// leave the resort flag as undefined, or with any other value, to automatically resort the table
+		$("table").trigger("updateCell",[this, resort]);
 
 		return false;
 	});

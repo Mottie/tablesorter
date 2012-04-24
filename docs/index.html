@@ -1286,10 +1286,13 @@ $(function(){
 						<pre class="js">// Add multiple rows to the table
   var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
     '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
-    $row = $(row);
+    $row = $(row),
+    // resort table using the current sort; set to false to prevent resort, otherwise
+    // any other value in resort will automatically trigger the table resort.
+    resort = true;
   $('table')
     .find('tbody').append($row)
-    .trigger('addRows', [$row]);</pre></div>
+    .trigger('addRows', [$row, resort]);</pre></div>
 				</td>
 				<td><a href="example-add-rows.html">Example</a></td>
 			</tr>
@@ -1314,7 +1317,10 @@ $("table").trigger("sorton", [sort]);</pre></div>
 $("table tbody").append(html);
 
 // let the plugin know that we made a update
-$("table").trigger("update");
+// the resort flag set to anything BUT false (no quotes) will trigger an automatic
+// table resort using the current sort
+var resort = true;
+$("table").trigger("update", [resort]);
 
 // As of version 2.0.14, the table will automatically resort (using the current sort selection)
 // after the update, so include the following if you want to specify a different sort
@@ -1351,19 +1357,23 @@ $(table)
   $("td.discount").click(function(){
 
     // randomize a number
-    var discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' +
+    var resort = false,
+        discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' +
      ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
     $(this).text(discount);
 
     // update the table, so the tablesorter plugin knows its value
-    $("table").trigger("updateCell",[this]);
+    // set resort flag to false to prevent automatic resort (since we're using a different sort below)
+    // leave the resort flag as undefined, or with any other value, to automatically resort the table
+    // $("table").trigger("updateCell", [this]); < - resort is undefined so the table WILL resort
+    $("table").trigger("updateCell", [this, resort]);
 
     // As of version 2.0.14, the table will automatically resort (using the current sort selection)
     // after the update, so include the following if you want to specify a different sort
 
     // set sorting column and direction, this will sort on the first and third column
     var sorting = [[3,1]];
-    $("table").trigger("sorton",[sorting]);
+    $("table").trigger("sorton", [sorting]);
 
     return false;
   });

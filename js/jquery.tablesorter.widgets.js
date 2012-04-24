@@ -202,7 +202,7 @@ $.tablesorter.addWidget({
 								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
 							$td = $(this).find('td');
 							for (i=0; i < cols; i++){
-								x = ($td.eq(i).text() + t).toLowerCase().indexOf(v[i]);
+								x = $.trim(($td.eq(i).text() + t)).toLowerCase().indexOf(v[i]);
 								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
 									r = (r) ? true : false;
 								} else if (v[i] !== '') {
