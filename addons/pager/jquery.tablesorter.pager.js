@@ -1,9 +1,8 @@
 /*!
  * tablesorter pager plugin
- * updated 3/22/2012
+ * updated 4/28/2012
  */
-
-(function($) {
+;(function($) {
 	$.extend({tablesorterPager: new function() {
 
 		this.defaults = {
@@ -143,7 +142,6 @@
 				hideRows(table, c);
 				$(table).bind('sortEnd.pager', function(){
 					hideRows(table, c);
-					$(table).trigger("applyWidgets");
 				});
 			}
 		},
@@ -225,7 +223,7 @@
 
 		renderTable = function(table, rows, c) {
 			var i, j, o,
-			tableBody = $(table.tBodies[0]),
+			f = document.createDocumentFragment(),
 			l = rows.length,
 			s = (c.page * c.size),
 			e = (s + c.size);
@@ -242,11 +240,11 @@
 					o = rows[i];
 					l = o.length;
 					for (j = 0; j < l; j++) {
-						tableBody[0].appendChild(o[j]);
+						f.appendChild(o[j]);
 					}
 				}
+				table.tBodies[0].appendChild(f);
 			}
-			$(table).trigger("applyWidgets");
 			if ( c.page >= c.totalPages ) {
 				moveToLastPage(table, c);
 			}

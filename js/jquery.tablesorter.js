@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.1.19 - Client-side table sorting with ease!
+* TableSorter 2.1.20 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -14,11 +14,11 @@
 * @author Christian Bach/christian.bach@polyester.se
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
-!(function($){
+!(function($) {
 	$.extend({
-		tablesorter: new function(){
+		tablesorter: new function() {
 
-			this.version = "2.1.19";
+			this.version = "2.1.20";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -95,7 +95,7 @@
 				} else {
 					if (typeof(te) === "function") {
 						text = te(node, tbl, cellIndex);
-					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)){
+					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)) {
 						text = te[cellIndex](node, tbl, cellIndex);
 					} else {
 						text = $(node).text();
@@ -266,6 +266,7 @@
 				totalRows = n.length,
 				checkCell = totalRows ? (n[0].length - 1) : 0,
 				rows = [],
+				f = document.createDocumentFragment(),
 				i, j, l, pos, appendTime;
 				if (c.debug) {
 					appendTime = new Date();
@@ -277,10 +278,11 @@
 					if (!c.appender || !c.removeRows) {
 						l = r[pos].length;
 						for (j = 0; j < l; j++) {
-							table.tBodies[0].appendChild(r[pos][j]);
+							f.appendChild(r[pos][j]);
 						}
 					}
 				}
+				table.tBodies[0].appendChild(f);
 				if (c.appender) {
 					c.appender(table, rows);
 				}
@@ -474,7 +476,7 @@
 					s += order === 0 ? "" : "Desc";
 					e = "e" + i;
 					// get max column value (ignore sign)
-					if (/Numeric/.test(s) && tc.strings[c]){
+					if (/Numeric/.test(s) && tc.strings[c]) {
 						for (j=0; j < lc; j++) {
 							col = Math.abs(parseFloat(cache.normalized[j][c]));
 							mx = Math.max( mx, isNaN(col) ? 0 : col );
@@ -536,7 +538,7 @@
 				}
 			}
 
-			function sortTextDesc(a, b, col){
+			function sortTextDesc(a, b, col) {
 				if (a === b) { return 0; }
 				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
@@ -548,11 +550,11 @@
 			// return text string value by adding up ascii value
 			// so the text is somewhat sorted when using a digital sort
 			// this is NOT an alphanumeric sort
-			function getTextValue(a, mx, d){
+			function getTextValue(a, mx, d) {
 				if (mx) {
 					// make sure the text value is greater than the max numerical value (mx)
 					var i, l = a.length, n = mx + d;
-					for (i = 0; i < l; i++){
+					for (i = 0; i < l; i++) {
 						n += a.charCodeAt(i);
 					}
 					return d * n;
@@ -581,8 +583,8 @@
 			}
 
 			/* public methods */
-			this.construct = function(settings){
-				return this.each(function(){
+			this.construct = function(settings) {
+				return this.each(function() {
 					// if no thead or tbody quit.
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
@@ -609,7 +611,7 @@
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					$headers
-					.click(function(e){
+					.click(function(e) {
 						totalRows = ($this[0].tBodies[0] && $this[0].tBodies[0].rows.length) || 0;
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
@@ -622,7 +624,7 @@
 							// reset all sorts on non-current column - issue #30
 							if (c.sortRestart) {
 								i = this;
-								$headers.each(function(){
+								$headers.each(function() {
 									// only reset counts on columns that weren't just clicked on and if not included in a multisort
 									if (this !== i && (k || !$(this).is('.' + c.cssDesc + ',.' + c.cssAsc))) {
 										this.count = -1;
@@ -684,9 +686,9 @@
 						}
 						// cancel selection
 					})
-					.mousedown(function(){
+					.mousedown(function() {
 						if (c.cancelSelection) {
-							this.onselectstart = function(){
+							this.onselectstart = function() {
 								return false;
 							};
 							return false;
@@ -694,7 +696,7 @@
 					});
 					// apply easy methods that trigger binded events
 					$this
-					.bind("update", function(e, resort){
+					.bind("update", function(e, resort) {
 						var t = this, c = t.config;
 						// remove rows/elements before update
 						$(c.selectorRemove, t.tBodies[0]).remove();
@@ -821,7 +823,7 @@
 	// add default parsers
 	ts.addParser({
 		id: "text",
-		is: function(s){
+		is: function(s) {
 			return true;
 		},
 		format: function(s) {
@@ -832,10 +834,10 @@
 
 	ts.addParser({
 		id: "digit",
-		is: function(s){
+		is: function(s) {
 			return $.tablesorter.isDigit(s);
 		},
-		format: function(s){
+		format: function(s) {
 			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""));
 		},
 		type: "numeric"
@@ -843,10 +845,10 @@
 
 	ts.addParser({
 		id: "currency",
-		is: function(s){
+		is: function(s) {
 			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // г$Адев?.
 		},
-		format: function(s){
+		format: function(s) {
 			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
 		},
 		type: "numeric"
@@ -857,7 +859,7 @@
 		is: function(s) {
 			return (/^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/).test(s);
 		},
-		format: function(s){
+		format: function(s) {
 			var i, item, a = s.split("."),
 			r = "",
 			l = a.length;
@@ -979,7 +981,7 @@
 				time = new Date();
 			}
 			// loop through the visible rows
-			$("tr:visible", table.tBodies[0]).each(function(){
+			$("tr:visible", table.tBodies[0]).each(function() {
 				$tr = $(this);
 				// style children rows the same way the parent row was styled
 				if (!$tr.hasClass(child)) { row++; }

@@ -35,6 +35,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.1.20 (4/28/2012)
+
+* Optimized table rebuilding after sort by using a document fragment instead of appending cells directly to the table. This results in about a 20% increase in sort speed (very roughly determined).
+* Optimized pager table rebuilding to also use document fragments, and by removing two extra calls that reapplied the current widgets.
+
 #### Version 2.1.19 (4/23/2012)
 
 * The filter widget will now ignore leading spaces so when the `filter_startsWith` is `true` it will match the text. Fix from [issue #55](https://github.com/Mottie/tablesorter/issues/55). Thanks to [aarkay18](https://github.com/aarkay18) for the code!
