@@ -125,8 +125,9 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
-		var $td, time, i, last, rmv,
+		var $tr, $td, time, i, last, rmv, k,
 		c = table.config,
+		b = table.tBodies,
 		list = c.sortList,
 		len = list.length,
 		css = [ "primary", "secondary", "tertiary" ]; // default options
@@ -140,21 +141,24 @@ $.tablesorter.addWidget({
 		}
 		// check if there is a sort (on initialization there may not be one)
 		if (list && list[0]) {
-			// loop through the visible rows
-			$("tr:visible", table.tBodies[0]).each(function (i) {
-				$td = $(this).children().removeClass(rmv);
-				// primary sort column class
-				$td.eq(list[0][0]).addClass(css[0]);
-				if (len > 1) {
-					for (i=1; i<len; i++){
-						// secondary, tertiary, etc sort column classes
-						$td.eq(list[i][0]).addClass( css[i] || css[last] );
+			for (k = 0; k < b.length; k++ ) {
+				// loop through the visible rows
+				$tr = $(b[k]).filter(':not(' + c.cssInfoBlock + ')').find('tr:visible:not(.' + c.cssInfoBlock + ')');
+				$tr.each(function (i) {
+					$td = $(this).children().removeClass(rmv);
+					// primary sort column class
+					$td.eq(list[0][0]).addClass(css[0]);
+					if (len > 1) {
+						for (i=1; i<len; i++){
+							// secondary, tertiary, etc sort column classes
+							$td.eq(list[i][0]).addClass( css[i] || css[last] );
+						}
 					}
-				}
-			});
+				});
+			}
 		} else {
 			// remove all column classes if sort is cleared (sortReset)
-			$("td", table.tBodies[0]).removeClass(rmv);
+			$("td", table).removeClass(rmv);
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
@@ -192,7 +196,7 @@ $.tablesorter.addWidget({
 					if (v.join('') === '') {
 						$t.find('tr').show();
 					} else {
-						$t.find('tbody').find('tr:not(.' + c.cssChildRow + ')').each(function(){
+						$t.find('tbody').find('tr:not(.' + c.cssChildRow + '):not(.' + c.cssInfoBlock + ')').each(function(){
 							r = true;
 							cr = $(this).nextUntil('tr:not(.' + c.cssChildRow + ')');
 							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -238,6 +242,7 @@ $.tablesorter.addWidget({
 			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
 			innr = '.tablesorter-header-inner',
 			firstCell = hdrCells.eq(0),
+			tfoot = $table.find('tfoot'),
 			sticky = header.find('tr.tablesorter-header:not(.sticky-false)').clone()
 				.removeClass('tablesorter-header')
 				.addClass(css)
@@ -284,7 +289,8 @@ $.tablesorter.addWidget({
 			.scroll(function(){
 				var offset = firstCell.offset(),
 					sTop = win.scrollTop(),
-					vis = ((sTop > offset.top) && (sTop < offset.top + $table.find('tbody').height())) ? 'visible' : 'hidden';
+					tableHt = $table.height() - (firstCell.height() + (tfoot.height() || 0)),
+					vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
 				sticky.css({
 					left : offset.left - win.scrollLeft(),
 					visibility : vis

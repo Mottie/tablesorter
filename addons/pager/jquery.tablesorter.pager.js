@@ -235,7 +235,7 @@
 				if (e > rows.length ) {
 					e = rows.length;
 				}
-				$(table.tBodies[0]).empty();
+				$.tablesorter.clearTableBody(table);
 				for (i = s; i < e; i++) {
 					o = rows[i];
 					l = o.length;
