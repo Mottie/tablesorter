@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 5/3/2012
+ * updated 5/4/2012
  */
 ;(function($) {
 	$.extend({tablesorterPager: new function() {
@@ -124,7 +124,7 @@
 		},
 
 		hideRows = function(table, c){
-			var i, rows = $('tr:not(.' + table.config.cssChildRow + ')', table.tBodies[0]),
+			var i, rows = $('tr:not(.' + table.config.cssChildRow + ')', table.tBodies),
 			l = rows.length,
 			s = (c.page * c.size),
 			e = (s + c.size);
@@ -250,6 +250,7 @@
 			}
 			updatePageDisplay(table, c);
 			if (!c.isDisabled) { fixHeight(table, c); }
+			$(table).trigger('applyWidgets');
 		},
 
 		showAllRows = function(table, c){
