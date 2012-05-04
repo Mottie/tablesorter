@@ -20,7 +20,7 @@
 <script>
 	$(function() {
 		$("#tablesorter-demo").tablesorter({sortList:[[0,0],[2,1]],widgets:['zebra']});
-		$("#options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}},widgets:['stickyHeaders']});
+		$("table.options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}},widgets:['stickyHeaders']});
 		$("#methods,#events").tablesorter({sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}}});
 	});
 </script>

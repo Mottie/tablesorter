@@ -20,7 +20,7 @@
 
 			this.version = "2.2";
 
-			var parsers = [], widgets = [], tbl, $tbl;
+			var parsers = [], widgets = [], tbl;
 			this.defaults = {
 				cssHeader: "tablesorter-header",
 				cssAsc: "tablesorter-headerSortUp",
@@ -97,9 +97,9 @@
 					}
 				} else {
 					if (typeof(te) === "function") {
-						text = te(node, tbl, cellIndex);
+						text = te(node, tbl[0], cellIndex);
 					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)) {
-						text = te[cellIndex](node, tbl, cellIndex);
+						text = te[cellIndex](node, tbl[0], cellIndex);
 					} else {
 						text = $(node).text();
 					}
@@ -535,7 +535,7 @@
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b, col) {
 				if (a === b) { return 0; }
-				var c = tbl.config, cnt = 0, L, t, x, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = tbl[0].config, cnt = 0, L, t, x, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(a, b); }
@@ -567,7 +567,7 @@
 
 			function sortTextDesc(a, b, col) {
 				if (a === b) { return 0; }
-				var c = tbl.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(b, a); }
@@ -592,7 +592,7 @@
 
 			function sortNumeric(a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				var c = tbl.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
@@ -602,7 +602,7 @@
 
 			function sortNumericDesc(a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				var c = tbl.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
@@ -616,37 +616,35 @@
 					// if no thead or tbody quit.
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
-					var $headers, $cell, totalRows,
+					var $headers, $cell, totalRows, $this,
 						config, c, i, j, k, a, s, o;
-					tbl = this;
 					// new blank config object
-					tbl.config = {};
+					this.config = {};
 					// merge and extend.
-					c = config = $.extend(true, tbl.config, $.tablesorter.defaults, settings);
+					c = config = $.extend(true, this.config, $.tablesorter.defaults, settings);
 					// store common expression for speed
-					$tbl = $(tbl).addClass(c.tableClass);
+					tbl = $this = $(this).addClass(c.tableClass);
 					// save the settings where they read
-					$.data(tbl, "tablesorter", c);
+					$.data(this, "tablesorter", c);
 					// build up character equivalent cross-reference
 					buildRegex();
 					// digit sort text location; keeping max+/- for backwards compatibility
 					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 					// build headers
-					$headers = buildHeaders(tbl);
+					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
-					c.parsers = buildParserCache(tbl, $headers);
+					c.parsers = buildParserCache(this, $headers);
 					// build the cache for the tbody cells
-					buildCache(tbl);
+					buildCache(this);
 					// fixate columns if the users supplies the fixedWidth option
-					fixColumnWidth(tbl);
+					fixColumnWidth(this);
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					$headers
 					.click(function(e) {
-						// totalRows = (tbl.tBodies[0] && tbl.tBodies[0].rows.length) || 0;
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
-							$tbl.trigger("sortStart", tbl);
+							$this.trigger("sortStart", $this[0]);
 							// store exp, for speed
 							$cell = $(this);
 							k = !e[c.sortMultiSortKey];
@@ -708,10 +706,10 @@
 								}
 							}
 							// sortBegin event triggered immediately before the sort
-							$tbl.trigger("sortBegin", tbl);
+							$this.trigger("sortBegin", $this[0]);
 							// set css for headers
-							setHeadersCss(tbl, $headers, c.sortList);
-							appendToTable(tbl, multisort(tbl, c.sortList));
+							setHeadersCss($this[0], $headers, c.sortList);
+							appendToTable($this[0], multisort($this[0], c.sortList));
 							// stop normal event by returning false
 							return false;
 						}
@@ -726,7 +724,7 @@
 						}
 					});
 					// apply easy methods that trigger binded events
-					$tbl
+					$this
 					.bind("update", function(e, resort) {
 						// remove rows/elements before update
 						$(c.selectorRemove, this).remove();
@@ -734,25 +732,25 @@
 						c.parsers = buildParserCache(this, $headers);
 						// rebuild the cache map
 						buildCache(this);
-						if (resort !== false) { $tbl.trigger("sorton", [c.sortList]); }
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
 					.bind("updateCell", function(e, cell, resort) {
 						// get position from the dom.
 						var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbodyindex = $tbl.find('tbody').index( $(cell).closest('tbody') );
-						tbl.config.cache[tbodyindex].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), tbl, cell, pos[1]);
-						if (resort !== false) { $tbl.trigger("sorton", [c.sortList]); }
+						tbodyindex = $this.find('tbody').index( $(cell).closest('tbody') );
+						$this[0].config.cache[tbodyindex].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), $this[0], cell, pos[1]);
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
 					.bind("addRows", function(e, $row, resort) {
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length,
-						tbodyindex = $tbl.find('tbody').index( $row.closest('tbody') );
+						tbodyindex = $this.find('tbody').index( $row.closest('tbody') );
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = c.parsers[j].format( getElementText(c, $row[i].cells[j], j), tbl, $row[i].cells[j], j );
+								dat[j] = c.parsers[j].format( getElementText(c, $row[i].cells[j], j), $this[0], $row[i].cells[j], j );
 							}
 							// add the row index to the end
 							dat.push(c.cache[tbodyindex].row.length);
@@ -762,10 +760,10 @@
 							dat = [];
 						}
 						// resort using current settings
-						if (resort !== false) { $tbl.trigger("sorton", [c.sortList]); }
+						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
 					.bind("sorton", function(e, list) {
-						$tbl.trigger("sortStart", tbl);
+						$this.trigger("sortStart", $this[0]);
 						c.sortList = list;
 						// update and store the sortlist
 						var sortList = c.sortList;
@@ -793,13 +791,13 @@
 					applyWidget(this, true);
 					// if user has supplied a sort list to constructor.
 					if (c.sortList.length > 0) {
-						$tbl.trigger("sorton", [c.sortList]);
+						$this.trigger("sorton", [c.sortList]);
 					} else {
 						// apply widget format
 						applyWidget(this);
 					}
 					this.hasInitialized = true;
-					$tbl.trigger('tablesorter-initialized', this);
+					$this.trigger('tablesorter-initialized', this);
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
 			};
@@ -819,7 +817,7 @@
 			};
 			this.formatFloat = function(s) {
 				if (typeof(s) !== 'string') { return s; }
-				if (tbl.config.usNumberFormat) {
+				if (tbl[0].config.usNumberFormat) {
 					// US Format - 1,234,567.89 -> 1234567.89
 					s = s.replace(/,/g,'');
 				} else {
