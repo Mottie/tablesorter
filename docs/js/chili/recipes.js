@@ -164,7 +164,7 @@ ChiliBook.recipes[ "html.js" ] =
 		}
 		, comment: { 
 			  _match: /<!--[\w\W]*?-->/ 
-			, _style: "color: #4040c2;"
+			, _style: "color: gray;"
 		}
 		, script: { 
 			  _match: /(<script\s+[^>]*>)([\w\W]*?)(<\/script\s*>)/
@@ -191,7 +191,7 @@ ChiliBook.recipes[ "html.js" ] =
 					  + this.x( content, '/tag_attrs' ) 
 					  + "<span class='tag_start'>" + this.x( close ) + "</span>";
 			}
-			, _style: "color: navy; font-weight: bold;"
+			, _style: "color: navy;"
 		} 
 		// matches an ending tag
 		// like "</div>"
@@ -210,7 +210,7 @@ ChiliBook.recipes[ "html.js" ] =
 			// before in $1, name in $2, between in $3, value in $4
 			  _match: /(\W*?)([\w-]+)(\s*=\s*)((?:\'[^\']*(?:\\.[^\']*)*\')|(?:\"[^\"]*(?:\\.[^\"]*)*\"))/ 
 			, _replace: "$1<span class='attr_name'>$2</span>$3<span class='attr_value'>$4</span>"
-			, _style: { attr_name:  "color: green;", attr_value: "color: maroon;" }
+			, _style: { attr_name:  "color: royalBlue;", attr_value: "color: maroon;" }
 		}
 	}
 };
@@ -228,7 +228,7 @@ ChiliBook.recipes[ "js.js" ] =
 		}
 		, sl_comment: { 
 			  _match: /\/\/.*/
-			, _style: 'color: green;'
+			, _style: 'color: gray;'
 		}
 		, string: { 
 			  _match: /(?:\'[^\'\\\n]*(?:\\.[^\'\\\n]*)*\')|(?:\"[^\"\\\n]*(?:\\.[^\"\\\n]*)*\")/
@@ -236,7 +236,7 @@ ChiliBook.recipes[ "js.js" ] =
 		}
 		, num: { 
 			  _match: /\b[+-]?(?:\d*\.?\d+|\d+\.?\d*)(?:[eE][+-]?\d+)?\b/
-			, _style: 'color: red;'
+			, _style: 'color: #a00;'
 		}
 		, reg_not: { //this prevents "a / b / c" to be interpreted as a reg_exp
 			  _match: /(?:\w+\s*)\/[^\/\\\n]*(?:\\.[^\/\\\n]*)*\/[gim]*(?:\s*\w+)/
@@ -250,7 +250,7 @@ ChiliBook.recipes[ "js.js" ] =
 		}
 		, brace: { 
 			  _match: /[\{\}]/
-			, _style: 'color: red; font-weight: bold;'
+			, _style: 'color: #c00; font-weight: bold;'
 		}
 		, statement: { 
 			  _match: /\b(with|while|var|try|throw|switch|return|if|for|finally|else|do|default|continue|const|catch|case|break)\b/
@@ -292,7 +292,7 @@ ChiliBook.recipes[ "css.js" ] =
 	, _main: {
 		  comment: { 
 			  _match: /\/\*[^*]*\*+(?:[^\/][^*]*\*+)*\// 
-			, _style: "color: olive;"
+			, _style: "color: gray;"
 		}
 		, directive: {
 			  _match: /@\w+/
@@ -352,7 +352,7 @@ ChiliBook.recipes[ "css.js" ] =
 		}
 		, number: { 
 			  _match: /(?:\b[+-]?(?:\d*\.?\d+|\d+\.?\d*))(?:%|(?:(?:px|pt|em|)\b))/ 
-			, _style: "color: red;"
+			, _style: "color: maroon;"
 		}
 		, color : { 
 			  _match: /(?:\#[a-fA-F0-9]{3,6})|\b(?:yellow|white|teal|silver|red|purple|olive|navy|maroon|lime|green|gray|fuchsia|blue|black|aqua|YellowGreen|Yellow|WhiteSmoke|White|Wheat|Violet|Turquoise|Tomato|Thistle|Teal|Tan|SteelBlue|SpringGreen|Snow|SlateGrey|SlateGray|SlateBlue|SkyBlue|Silver|Sienna|SeaShell|SeaGreen|SandyBrown|Salmon|SaddleBrown|RoyalBlue|RosyBrown|Red|Purple|PowderBlue|Plum|Pink|Peru|PeachPuff|PapayaWhip|PaleVioletRed|PaleTurquoise|PaleGreen|PaleGoldenRod|Orchid|OrangeRed|Orange|OliveDrab|Olive|OldLace|Navy|NavajoWhite|Moccasin|MistyRose|MintCream|MidnightBlue|MediumVioletRed|MediumTurquoise|MediumSpringGreen|MediumSlateBlue|MediumSeaGreen|MediumPurple|MediumOrchid|MediumBlue|MediumAquaMarine|Maroon|Magenta|Linen|LimeGreen|Lime|LightYellow|LightSteelBlue|LightSlateGrey|LightSlateGray|LightSkyBlue|LightSeaGreen|LightSalmon|LightPink|LightGrey|LightGreen|LightGray|LightGoldenRodYellow|LightCyan|LightCoral|LightBlue|LemonChiffon|LawnGreen|LavenderBlush|Lavender|Khaki|Ivory|Indigo|IndianRed|HotPink|HoneyDew|Grey|GreenYellow|Green|Gray|GoldenRod|Gold|GhostWhite|Gainsboro|Fuchsia|ForestGreen|FloralWhite|FireBrick|DodgerBlue|DimGrey|DimGray|DeepSkyBlue|DeepPink|Darkorange|DarkViolet|DarkTurquoise|DarkSlateGrey|DarkSlateGray|DarkSlateBlue|DarkSeaGreen|DarkSalmon|DarkRed|DarkOrchid|DarkOliveGreen|DarkMagenta|DarkKhaki|DarkGrey|DarkGreen|DarkGray|DarkGoldenRod|DarkCyan|DarkBlue|Cyan|Crimson|Cornsilk|CornflowerBlue|Coral|Chocolate|Chartreuse|CadetBlue|BurlyWood|Brown|BlueViolet|Blue|BlanchedAlmond|Black|Bisque|Beige|Azure|Aquamarine|Aqua|AntiqueWhite|AliceBlue)\b/ 

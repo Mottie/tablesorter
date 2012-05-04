@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 4/28/2012
+ * updated 5/3/2012
  */
 ;(function($) {
 	$.extend({tablesorterPager: new function() {

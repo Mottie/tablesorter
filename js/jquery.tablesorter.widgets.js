@@ -1,4 +1,4 @@
-/*! tableSorter 2.1 widgets - updated 4/23/2012
+/*! tableSorter 2.2 widgets - updated 5/3/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -8,7 +8,7 @@
  * Save Sort
  *
  */
-(function($){
+;(function($){
 
 // *** Store data in local storage, with a cookie fallback ***
 /* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
@@ -125,7 +125,7 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
-		var $tr, $td, time, i, last, rmv, k,
+		var $tr, $td, time, last, rmv, k,
 		c = table.config,
 		b = table.tBodies,
 		list = c.sortList,
@@ -144,7 +144,7 @@ $.tablesorter.addWidget({
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
 				$tr = $(b[k]).filter(':not(' + c.cssInfoBlock + ')').find('tr:visible:not(.' + c.cssInfoBlock + ')');
-				$tr.each(function (i) {
+				$tr.each(function(i) {
 					$td = $(this).children().removeClass(rmv);
 					// primary sort column class
 					$td.eq(list[0][0]).addClass(css[0]);

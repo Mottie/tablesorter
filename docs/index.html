@@ -15,11 +15,12 @@
 
 <!-- Tablesorter: required -->
 <link href="../css/blue/style.css" rel="stylesheet">
-<script src="../js/jquery.tablesorter.min.js"></script>
+<script src="../js/jquery.tablesorter.js"></script>
+<script src="../js/jquery.tablesorter.widgets.js"></script>
 <script>
 	$(function() {
 		$("#tablesorter-demo").tablesorter({sortList:[[0,0],[2,1]],widgets:['zebra']});
-		$("table.options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}}});
+		$("#options").tablesorter({sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}},widgets:['stickyHeaders']});
 		$("#methods,#events").tablesorter({sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}}});
 	});
 </script>
@@ -94,6 +95,7 @@
 
 	<ul>
 		<li>Multi-column sorting</li>
+		<li>Multi-tbody sorting - see the <a href="#options">options</a> table below</li>
 		<li>Parsers for sorting text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats), time.  <a href="example-parsers.html">Add your own easily</a></li>
 		<!--
 		<li>Support for ROWSPAN and COLSPAN on TH elements</li>
@@ -290,6 +292,8 @@
 		<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a></li>
 		<li><a href="example-option-sort-empty.html">Sorting empty cells</a> <span class="tip"><em>New!</em></span> v2.1.11</li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
+		<li><a href="example-option-custom-sort.html">Custom sort script</a> <span class="tip"><em>New!</em></span> v2.2</li>
+		<li><a href="example-locale-sort.html">Sorting Accented Characters</a> <span class="tip"><em>New!</em></span> v2.2</li>
 	</ul>
 
 	<h4>Parsers / Extracting Content</h4>
@@ -504,6 +508,32 @@
 				<td></td>
 			</tr>
 
+			<tr id="cssinfoblock">
+				<td><a href="#" class="toggle2">cssInfoBlock</a></td>
+				<td>String</td>
+				<td>"tablesorter-infoOnly"</td>
+				<td>All tbodies with this class name will not have its contents sorted. <span class="tip"><em>New!</em></span> v2.2
+					<div class="collapsible">
+					<br>
+					With the addition of multiple tbody sorting in v2.2, you can now insert a non-sorting tbody within the table by adding this class to the tbody.
+					<pre class="html">&lt;tbody class=&quot;tablesorter-infoOnly&quot;&gt;
+  &lt;tr&gt;
+    &lt;th&gt;The contents of this tbody&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;will not be sorted&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;</pre>
+					As an example, I've split up this options table into three (3) tbodies. The first contains the active options, the second is the info block with a row that only contains the text "Deprecated Options", and the last tbody contains the deprecated options. Sort the table to see how each tbody sorts separately.
+					<br>
+					<p class="tip">
+						<em>NOTE!</em> The pager plugin will only be applied to the first tbody, as always. I may work on modifying this behavior in the future, if I can figure out the best implementation.
+					</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="selectorremove">
 				<td><a href="#" class="toggle2">selectorRemove</a></td>
 				<td>String</td>
@@ -645,6 +675,14 @@
 				</td>
 			</tr>
 
+			<tr id="ignorecase">
+				<td>ignoreCase</td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>When true, text sorting will ignore the character case. If false, upper case characters will sort before lower case.</td>
+				<td></td>
+			</tr>
+
 			<tr id="onrenderheader">
 				<td><a href="#" class="toggle2">onRenderHeader</a></td>
 				<td>Function</td>
@@ -780,12 +818,36 @@
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Boolean flag indicating whenever to use javascript <code class="hilight">String.localeCompare</code> method or not.
+					Boolean flag indicating if certain accented characters within the table will be replaced with their equivalent characters. <span class="tip"><em>Modified!</em></span> v2.2.
 					<div class="collapsible">
-					This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.
+					<ul>
+						<li>This option no longer switches the sort to use the <code class="hilight">String.localeCompare</code> method.</li>
+						<li>When this option is <code class="hilight">true</code>, the text parsed from table cells will convert accented characters to their equivalent to allow the alphanumeric sort to properly sort.</li>
+						<li>If <code class="hilight">false</code> (default), any accented characters are treated as their value in the standard unicode order.</li>
+						<li>The following characters are replaced for both upper and lower case (information obtained from <a href="http://sugarjs.com/sorting">sugar.js sorting equivalents</a> table):
+							<ul>
+								<li><code class="hilight">&#x00e1;&#x00e0;&#x00e2;&#x00e3;&#x00e4;</code> replaced with <code class="hilight">a</code></li>
+								<li><code class="hilight">&#x00e7;</code> replaced with <code class="hilight">c</code></li>
+								<li><code class="hilight">&#x00e9;&#x00e8;&#x00ea;&#x00eb;</code> replaced with <code class="hilight">e</code></li>
+								<li><code class="hilight">&#x00ed;&#x00ec;&#x0130;&#x00ee;&#x00ef;</code> replaced with <code class="hilight">i</code></li>
+								<li><code class="hilight">&#x00f3;&#x00f2;&#x00f4;&#x00f5;&#x00f6;</code> replaced with <code class="hilight">o</code></li>
+								<li><code class="hilight">&#x00fa;&#x00f9;&#x00fb;&#x00fc;</code> replaced with <code class="hilight">u</code></li>
+								<li><code class="hilight">&#x00df;</code> replaced with <code class="hilight">S</code></li>
+							</ul>
+						</li>
+						<li>Please see the example page for instrcutions on how to modify the above equivalency table.</li>
+						<li>If you would like to continuing using the <code class="hilight">String.localeCompare</code> method, then set the <code class="hilight">sortLocaleCompare</code> option to <code class="hilight">false</code> and use the new <code class="hilight">textSorter</code> option as follows:
+							<pre class="js">$('table').tablesorter({
+  textSorter: function(a,b) {
+    return a.localeCompare(b);
+  }
+});</pre></li>
+					</ul>
+					<del>Boolean flag indicating whenever to use javascript <code class="hilight">String.localeCompare</code> method or not.<br>
+				This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.</del>
 					</div>
 				</td>
-				<td><a href="example-pager-ajax.html">Example</a></td>
+				<td><a href="example-locale-sort.html">Example</a></td>
 			</tr>
 
 			<tr id="sortreset">
@@ -891,6 +953,33 @@ $(function(){
 				<td><a href="example-option-text-extraction.html">Example</a></td>
 			</tr>
 
+			<tr id="textsorter">
+				<td><a href="#" class="toggle2">textSorter</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>
+					Replace the default sorting algorithm with a custom one using this option.
+					<div class="collapsible">
+					<br>
+					Include a script like <a href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    textSorter : naturalSort
+  });
+});</pre>
+					or use the localeCompare sort
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    textSorter: function(a,b) {
+      return a.localeCompare(b);
+    }
+  });
+});</pre>There's no need to worry about reverse sorting, it's taken care of by the plugin.
+					</div>
+				</td>
+				<td><a href="example-option-custom-sort.html">Example</a></td>
+			</tr>
+
 			<tr id="usnumberformat">
 				<td><a href="#" class="toggle2">usNumberFormat</a></td>
 				<td>Boolean</td>
@@ -992,7 +1081,14 @@ $(function(){
 				</td>
 				<td><a href="example-widget-zebra.html">Example</a></td>
 			</tr>
+		</tbody>
 
+		<!-- non-sorting tbody -->
+		<tbody class="tablesorter-infoOnly">
+			<tr><th colspan="5">Deprecated Options</th></tr>
+		</tbody>
+
+		<tbody>
 			<tr id="widgetcolumns"> <!-- added hidden zzz to sort these deprecated options at the bottom -->
 				<td><span class="hidden">zzz</span><a href="#" class="toggle2 deprecated">widgetColumns</a></td>
 				<td>Object with Array</td>
@@ -1340,7 +1436,7 @@ $("table").trigger("sorton", [sorting]);</pre></div>
 					<br>
 					Note: This is the only method the pager widget uses - the entire table is stored in the cache, but only the visible portion is actually exists in the table.
 						<pre class="js">// Table data was just dynamically changed (more than one cell)
-$(table)
+$("table")
   .trigger("update")
   .trigger("appendCache");</pre></div>
 				</td>
@@ -1543,15 +1639,15 @@ $(table)
 	<strong id="Download-Required">Required:</strong>
 	<ul>
 		<li><a class="external" href="http://docs.jquery.com/Downloading_jQuery#Download_jQuery">jQuery</a> (1.2.6 or higher; some demos need jQuery 1.4.2+)</li>
-		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (17kb, minified for production - please put the file on your server)</li>
+		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (19kb, minified for production - please put the file on your server)</li>
 	</ul>
 
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
 		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (6kb, required for setting <a href="#Examples">inline options</a>)</li>
-		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (30kb/<a href="../js/jquery.tablesorter.min.js">17kb min</a>)</li>
+		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (35kb/<a href="../js/jquery.tablesorter.min.js">19kb min</a>)</li>
 		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (14kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">7kb min</a>, <a href="example-pager.html">demo</a>)</li>
-		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (15kb/<a href="../js/jquery.tablesorter.widgets.min.js">7kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets. <span class="tip"><em>Updated!</em></span> in v2.1.)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (16kb/<a href="../js/jquery.tablesorter.widgets.min.js">8kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets. <span class="tip"><em>Updated!</em></span> in v2.1.)</li>
 	</ul>
 
 	<strong id="Download-Themes">Themes:</strong>

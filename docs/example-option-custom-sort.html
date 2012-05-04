@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Using a Custom Sort Script</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- custom sorting script -->
+	<script src="js/naturalSort.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<script id="js">$(function() {
+	$("table").tablesorter({
+		textSorter : naturalSort
+	});
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Using a Custom Sort Script</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+<h1>Demo</h1>
+<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Account #</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Diff</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>a1a10</td>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>9.99</td>
+			<td>20.3%</td>
+			<td>+3</td>
+		</tr>
+		<tr>
+			<td>a1a2</td>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
+			<td>19.99</td>
+			<td>25.1%</td>
+			<td>-7</td>
+		</tr>
+		<tr>
+			<td>A1a1</td>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
+			<td>2.89</td>
+			<td>44.2%</td>
+			<td>-15</td>
+		</tr>
+		<tr>
+			<td>A2b2</td>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>153.19</td>
+			<td>44%</td>
+			<td>+19</td>
+		</tr>
+		<tr>
+			<td>A1d2</td>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>56</td>
+			<td>$153.19</td>
+			<td>23%</td>
+			<td>+9</td>
+		</tr>
+		<tr>
+			<td>a2b11</td>
+			<td>John</td>
+			<td>Clark</td>
+			<td>44</td>
+			<td>($19.89)</td>
+			<td>25.1%</td>
+			<td>(5)</td>
+		</tr>
+		<tr>
+			<td>A2b1</td>
+			<td>Elvis</td>
+			<td>Presley</td>
+			<td>24</td>
+			<td>($9.99)</td>
+			<td>50%</td>
+			<td>(22)</td>
+		</tr>
+		<tr>
+			<td>A1b0</td>
+			<td>Frank</td>
+			<td>Carter</td>
+			<td>40</td>
+			<td>-12.99</td>
+			<td>20%</td>
+			<td>(6)</td>
+		</tr>
+	</tbody>
+</table></div>
+
+
+	<h1>Page Head</h1>
+	<div>
+		<pre class="html">&lt;!-- jQuery --&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- custom sorting script --&gt;
+&lt;script src=&quot;js/naturalSort.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: required --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-locale-sort.html">Sorting Accented Characters &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+
