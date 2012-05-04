@@ -10,6 +10,7 @@ td.pager {
 .pager img {
 	vertical-align: middle;
 	margin-right: 2px;
+	cursor: pointer;
 }
 /* pager output text */
 .pager .pagedisplay {
@@ -36,4 +37,5 @@ td.pager {
 	/* visibility: hidden */
 	opacity: 0.5;
 	filter: alpha(opacity=50);
+	cursor: default;
 }
