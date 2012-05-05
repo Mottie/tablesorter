@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.2.1 - Client-side table sorting with ease!
+* TableSorter 2.2.2 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.2.1";
+			this.version = "2.2.2";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -26,7 +26,7 @@
 				cssAsc: "tablesorter-headerSortUp",
 				cssDesc: "tablesorter-headerSortDown",
 				cssChildRow: "expand-child",
-				cssInfoBlock: "tablesorter-infoOnly",
+				cssInfoBlock: "tablesorter-infoOnly", // don't sort tbody with this class name
 				sortInitialOrder: "asc",
 				sortMultiSortKey: "shiftKey",
 				sortForce: null,
@@ -224,27 +224,29 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					tc.cache[k] = { row: [], normalized: [] };
-					totalRows = (b[k] && b[k].rows.length) || 0;
-					totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
-
-					for (i = 0; i < totalRows; ++i) {
-						/** Add the table data to main data array */
-						c = $(b[k].rows[i]);
-						cols = [];
-						// if this is a child row, add it to the last row's children and continue to the next row
-						if (c.hasClass(tc.cssChildRow)) {
-							tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
-							// go to the next for loop
-							continue;
+					// ignore tbodies with class name from css.cssInfoBlock
+					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
+						totalRows = (b[k] && b[k].rows.length) || 0;
+						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
+						for (i = 0; i < totalRows; ++i) {
+							/** Add the table data to main data array */
+							c = $(b[k].rows[i]);
+							cols = [];
+							// if this is a child row, add it to the last row's children and continue to the next row
+							if (c.hasClass(tc.cssChildRow)) {
+								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
+								// go to the next for loop
+								continue;
+							}
+							tc.cache[k].row.push(c);
+							for (j = 0; j < totalCells; ++j) {
+								t = trimAndGetNodeText(tc, c[0].cells[j], j);
+								// don't bother parsing if the string is empty - previously parsing would change it to zero
+								cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
+							}
+							cols.push(tc.cache[k].normalized.length); // add position for rowCache
+							tc.cache[k].normalized.push(cols);
 						}
-						tc.cache[k].row.push(c);
-						for (j = 0; j < totalCells; ++j) {
-							t = trimAndGetNodeText(tc, c[0].cells[j], j);
-							// don't bother parsing if the string is empty - previously parsing would change it to zero
-							cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
-						}
-						cols.push(tc.cache[k].normalized.length); // add position for rowCache
-						tc.cache[k].normalized.push(cols);
 					}
 				}
 				if (tc.debug) {
@@ -287,23 +289,25 @@
 					appendTime = new Date();
 				}
 				for (k = 0; k < b.length; k++) {
-					f = document.createDocumentFragment();
-					r = c.cache[k].row;
-					n = c.cache[k].normalized;
-					totalRows = n.length;
-					checkCell = totalRows ? (n[0].length - 1) : 0;
-					for (i = 0; i < totalRows; i++) {
-						pos = n[i][checkCell];
-						rows.push(r[pos]);
-						// removeRows used by the pager plugin
-						if (!c.appender || !c.removeRows) {
-							l = r[pos].length;
-							for (j = 0; j < l; j++) {
-								f.appendChild(r[pos][j]);
+					if (!$(b[k]).hasClass(c.cssInfoBlock)){
+						f = document.createDocumentFragment();
+						r = c.cache[k].row;
+						n = c.cache[k].normalized;
+						totalRows = n.length;
+						checkCell = totalRows ? (n[0].length - 1) : 0;
+						for (i = 0; i < totalRows; i++) {
+							pos = n[i][checkCell];
+							rows.push(r[pos]);
+							// removeRows used by the pager plugin
+							if (!c.appender || !c.removeRows) {
+								l = r[pos].length;
+								for (j = 0; j < l; j++) {
+									f.appendChild(r[pos][j]);
+								}
 							}
 						}
+						table.tBodies[k].appendChild(f);
 					}
-					table.tBodies[k].appendChild(f);
 				}
 				if (c.appender) {
 					c.appender(table, rows);
@@ -417,24 +421,6 @@
 				return $tableHeaders;
 			}
 
-			// Part of original tablesorter - not even called.
-			function checkCellColSpan(table, rows, row) {
-				var i, cell, arr = [],
-				r = table.tHead.rows,
-				c = r[row].cells;
-				for (i = 0; i < c.length; i++) {
-					cell = c[i];
-					if (cell.colSpan > 1) {
-						arr = arr.concat(checkCellColSpan(table, rows, row++)); // what is headerArr?
-					} else {
-						if (table.tHead.length === 1 || (cell.rowSpan > 1 || !r[row + 1])) {
-							arr.push(cell);
-						}
-					}
-				}
-				return arr;
-			}
-
 			function isValueInArray(v, a) {
 				var i, l = a.length;
 				for (i = 0; i < l; i++) {
@@ -535,34 +521,40 @@
 			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
 			function sortText(a, b, col) {
 				if (a === b) { return 0; }
-				var c = tbl[0].config, cnt = 0, L, t, x, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
+					r = $.tablesorter.regex, xN, xD, yN, yD, xF, yF, i, mx;
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(a, b); }
-				// if (c.sortLocaleCompare) { return a.localeCompare(b); }
-				try {
-					x = /^(\.)?\d/;
-					L = Math.min(a.length, b.length) + 1;
-					while (cnt < L && a.charAt(cnt) === b.charAt(cnt) && x.test(b.substring(cnt)) === false && x.test(a.substring(cnt)) === false) { cnt++; }
-					a = a.substring(cnt);
-					b = b.substring(cnt);
-					if (x.test(a) || x.test(b)) {
-						if (x.test(a) === false) {
-							return (a) ? 1 : -1;
-						} else if (x.test(b) === false) {
-							return (b) ? -1 : 1;
-						} else {
-							t = parseFloat(a) - parseFloat(b);
-							if (t !== 0) { return t; } else { t = a.search(/[^\.\d]/); }
-							if (t === -1) { t = b.search(/[^\.\d]/); }
-							a = a.substring(t);
-							b = b.substring(t);
-						}
-					}
-					return (a > b) ? 1 : -1;
-				} catch (er) {
-					return 0;
+				// natural sort - https://github.com/overset/javascript-natural-sort
+				// chunk/tokenize
+				xN = a.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
+				yN = b.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
+				// numeric, hex or date detection
+				xD = parseInt(a.match(r[2])) || (xN.length !== 1 && a.match(r[1]) && Date.parse(a));
+				yD = parseInt(b.match(r[2])) || (xD && b.match(r[1]) && Date.parse(b)) || null;
+				// first try and sort Hex codes or Dates
+				if (yD) {
+					if ( xD < yD ) { return -1; }
+					if ( xD > yD ) { return 1; }
 				}
+				mx = Math.max(xN.length, yN.length);
+				// natural sorting through split numeric strings and default strings
+				for (i = 0; i < mx; i++) {
+					// find floats not starting with '0', string or 0 if not defined (Clint Priest)
+					xF = (!(xN[i] || '').match(r[3]) && parseFloat(xN[i])) || xN[i] || 0;
+					yF = (!(yN[i] || '').match(r[3]) && parseFloat(yN[i])) || yN[i] || 0;
+					// handle numeric vs string comparison - number < string - (Kyle Adams)
+					if (isNaN(xF) !== isNaN(yF)) { return (isNaN(xF)) ? 1 : -1; }
+					// rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
+					if (typeof xF !== typeof yF) {
+						xF += '';
+						yF += '';
+					}
+					if (xF < yF) { return -1; }
+					if (xF > yF) { return 1; }
+				}
+				return 0;
 			}
 
 			function sortTextDesc(a, b, col) {
@@ -571,7 +563,6 @@
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(b, a); }
-				// if (c.sortLocaleCompare) { return b.localeCompare(a); }
 				return sortText(b, a);
 			}
 
@@ -836,6 +827,13 @@
 				// replace all unwanted chars and match.
 				return (/^[\-+(]?\d*[)]?$/).test($.trim(s.replace(/[,.'\s]/g, '')));
 			};
+			// regex used in natural sort
+			this.regex = [
+				/(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi, // chunk/tokenize numbers & letters
+				/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/, //date
+				/^0x[0-9a-f]+$/i, // hex
+				/^0/ // leading zeros
+			];
 			// used when replacing accented characters during sorting
 			this.characterEquivalents = {
 				"a" : "\u00e1\u00e0\u00e2\u00e3\u00e4", // áàâãä
@@ -1030,7 +1028,7 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tr, row, even, time, k,
+			var $tr, $r, row, even, time, k,
 			c = table.config,
 			child = c.cssChildRow,
 			b = table.tBodies,
@@ -1047,11 +1045,11 @@
 				$tr = $(b[k]).filter(':not(' + c.cssInfoBlock + ')').find('tr:visible:not(.' + c.cssInfoBlock + ')');
 				if ($tr.length > 1) {
 					$tr.each(function() {
-						$tr = $(this);
+						$r = $(this);
 						// style children rows the same way the parent row was styled
-						if (!$tr.hasClass(child)) { row++; }
+						if (!$r.hasClass(child)) { row++; }
 						even = (row % 2 === 0);
-						$tr
+						$r
 						.removeClass(css[even ? 1 : 0])
 						.addClass(css[even ? 0 : 1]);
 					});
