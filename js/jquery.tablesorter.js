@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.2.2 - Client-side table sorting with ease!
+* TableSorter 2.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,47 +18,67 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.2.2";
+			this.version = "2.3";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
-				cssHeader: "tablesorter-header",
-				cssAsc: "tablesorter-headerSortUp",
-				cssDesc: "tablesorter-headerSortDown",
-				cssChildRow: "expand-child",
-				cssInfoBlock: "tablesorter-infoOnly", // don't sort tbody with this class name
-				sortInitialOrder: "asc",
-				sortMultiSortKey: "shiftKey",
-				sortForce: null,
-				sortAppend: null,
-				sortLocaleCompare: false,
-				sortReset: false,
-				sortRestart: false,
-				emptyTo: "bottom", // sort empty cell to bottom
-				stringTo: "max",  // sort strings in numerical column as max value
-				textExtraction: "simple",
-				textSorter: null, // use custom text sorter
-				ignoreCase: true,
-				parsers: {},
-				widgets: [],
-				headers: {},
+
+				// appearance
+				widthFixed       : false,
+
+				// functionality
+				cancelSelection  : true,       // prevent text selection in the header
+				dateFormat       : "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
+				sortMultiSortKey : "shiftKey", // key used to select additional columns
+				usNumberFormat   : true,       // false for German "1.234.567,89" or French "1 234 567,89"
+
+				// sort options
+				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
+				ignoreCase       : true,       // ignore case while sorting
+				sortForce        : null,       // column(s) first sorted; always applied
+				sortList         : [],         // Initial sort order; applied initially; updated when manually sorted
+				sortAppend       : null,       // column(s) sorted last; always applied
+
+				sortInitialOrder : "asc",      // sort direction on first click
+				sortLocaleCompare: false,      // replace equivalent character (accented characters)
+				sortReset        : false,      // third click on the header will reset column to default - unsorted
+				sortRestart      : false,      // restart sort to "sortInitialOrder" when clicking on previously unsorted columns
+
+				emptyTo          : "bottom",   // sort empty cell to bottom, top, none, zero
+				stringTo         : "max",      // sort strings in numerical column as max, min, top, bottom, zero
+				textExtraction   : "simple",   // text extraction method/function - function(node, table, cellIndex){}
+				textSorter       : null,       // use custom text sorter - function(a,b){ return a.sort(b); } // basic sort
+
+				// widget options
+				widgetOptions    : {
+					zebra : [ "even", "odd" ]    // zebra widget alternating row class names
+				},
+
+				// callbacks
+				initialized      : null,       // function(table){},
+				onRenderHeader   : null,       // function(index){},
+
+				// css class names
+				tableClass       : 'tablesorter',
+				cssAsc           : "tablesorter-headerSortUp",
+				cssChildRow      : "expand-child",
+				cssDesc          : "tablesorter-headerSortDown",
+				cssHeader        : "tablesorter-header",
+				cssInfoBlock     : "tablesorter-infoOnly", // don't sort tbody with this class name
+
+				// selectors
+				selectorHeaders  : 'thead th',
+				selectorRemove   : "tr.remove-me",
+
+				// advanced
+				debug            : false,
+
+				// Internal variables
+				headerList: [],
 				empties: {},
 				strings: {},
-				widthFixed: false,
-				cancelSelection: true,
-				sortList: [],
-				headerList: [],
-				dateFormat: "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
-				usNumberFormat: true, // false for German "1.234.567,89" or French "1 234 567,89"
-				onRenderHeader: null,
-				selectorHeaders: 'thead th',
-				selectorRemove: "tr.remove-me",
-				tableClass : 'tablesorter',
-				debug: false,
-
-				widgetOptions : {
-					zebra : [ "even", "odd" ]
-				}
+				parsers: [],
+				widgets: []
 
 				// deprecated; but retained for backwards compatibility
 				// widgetZebra: { css: ["even", "odd"] }
@@ -81,25 +101,16 @@
 			this.benchmark = benchmark;
 			this.hasInitialized = false;
 
-			function getElementText(config, node, cellIndex) {
-				var text = "", te = config.textExtraction;
+			function getElementText(table, node, cellIndex) {
+				var text = "", t = table.config.textExtraction;
 				if (!node) { return ""; }
-				if (!config.supportsTextContent) { config.supportsTextContent = node.textContent || false; }
-				if (te === "simple") {
-					if (config.supportsTextContent) {
-						text = node.textContent;
-					} else {
-						if (node.childNodes[0] && node.childNodes[0].hasChildNodes()) {
-							text = node.childNodes[0].innerHTML;
-						} else {
-							text = node.innerHTML;
-						}
-					}
+				if (t === "simple") {
+					text = $(node).text();
 				} else {
-					if (typeof(te) === "function") {
-						text = te(node, tbl[0], cellIndex);
-					} else if (typeof(te) === "object" && te.hasOwnProperty(cellIndex)) {
-						text = te[cellIndex](node, tbl[0], cellIndex);
+					if (typeof(t) === "function") {
+						text = t(node, table, cellIndex);
+					} else if (typeof(t) === "object" && t.hasOwnProperty(cellIndex)) {
+						text = t[cellIndex](node, table, cellIndex);
 					} else {
 						text = $(node).text();
 					}
@@ -118,10 +129,6 @@
 				return false;
 			}
 
-			function trimAndGetNodeText(config, node, cellIndex) {
-				return $.trim(getElementText(config, node, cellIndex));
-			}
-
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
 				var i, l = parsers.length,
 				node = false,
@@ -131,7 +138,7 @@
 					rowIndex++;
 					if (rows[rowIndex]) {
 						node = rows[rowIndex].cells[cellIndex];
-						nodeValue = trimAndGetNodeText(table.config, node, cellIndex);
+						nodeValue = $.trim(getElementText(table, node, cellIndex));
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column:' + cellIndex + ": " + nodeValue);
 						}
@@ -240,7 +247,7 @@
 							}
 							tc.cache[k].row.push(c);
 							for (j = 0; j < totalCells; ++j) {
-								t = trimAndGetNodeText(tc, c[0].cells[j], j);
+								t = $.trim(getElementText(table, c[0].cells[j], j));
 								// don't bother parsing if the string is empty - previously parsing would change it to zero
 								cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
 							}
@@ -349,6 +356,7 @@
 							}
 						}
 						lookup[cellId] = firstAvailCol;
+						$(c).attr({ 'data-row' : rowIndex, 'data-column' : firstAvailCol });
 						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
 							if (typeof(matrix[k]) === "undefined") {
 								matrix[k] = [];
@@ -432,18 +440,22 @@
 			}
 
 			function setHeadersCss(table, $headers, list) {
-				var h = [], i, l, css = [table.config.cssDesc, table.config.cssAsc];
+				var f, h = [], i, l, css = [table.config.cssDesc, table.config.cssAsc];
 				// remove all header information
-				$headers.removeClass(css[0]).removeClass(css[1]);
-				$headers.each(function() {
-					if (!this.sortDisabled) {
-						h[this.column] = $(this);
-					}
-				});
+				$headers
+					.removeClass(css.join(' '))
+					.each(function() {
+						if (!this.sortDisabled) {
+							h[this.column] = $(this);
+						}
+					});
 				l = list.length;
 				for (i = 0; i < l; i++) {
 					if (list[i][1] === 2) { continue; } // direction = 2 means reset!
 					h[list[i][0]].addClass(css[list[i][1]]);
+					// multicolumn sorting updating
+					f = $headers.filter('[data-column="' + list[i][0] + '"]');
+					if (l > 1 && f.length) { f.addClass(css[list[i][1]]); }
 				}
 			}
 
@@ -666,7 +678,16 @@
 									}
 								}
 								// add column to sort list
-								if (this.order[this.count] < 2) { c.sortList.push([i, this.order[this.count]]); }
+								o = this.order[this.count];
+								if (o < 2) {
+									c.sortList.push([i, o]);
+									// add other columns if header spans across multiple
+									if (this.colSpan > 1) {
+										for (j = 1; j < this.colSpan; j++) {
+											c.sortList.push([i+j, o]);
+										}
+									}
+								}
 								// multi column sorting
 							} else {
 								// the user has clicked on an already sorted column.
@@ -685,7 +706,16 @@
 									}
 								} else {
 									// add column to sort list array
-									if (this.order[this.count] < 2) { c.sortList.push([i, this.order[this.count]]); }
+									o = this.order[this.count];
+									if (o < 2) {
+										c.sortList.push([i, o]);
+										// add other columns if header spans across multiple
+										if (this.colSpan > 1) {
+											for (j = 1; j < this.colSpan; j++) {
+												c.sortList.push([i+j, o]);
+											}
+										}
+									}
 								}
 							}
 							if (c.sortAppend !== null) {
@@ -727,27 +757,27 @@
 					})
 					.bind("updateCell", function(e, cell, resort) {
 						// get position from the dom.
-						var pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
+						var t = $this[0], pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbodyindex = $this.find('tbody').index( $(cell).closest('tbody') );
-						$this[0].config.cache[tbodyindex].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format(getElementText(c, cell, pos[1]), $this[0], cell, pos[1]);
+						tbdy = $this.find('tbody').index( $(cell).closest('tbody') );
+						t.config.cache[tbdy].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format( getElementText(t, cell, pos[1]), t, cell, pos[1] );
 						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
 					})
 					.bind("addRows", function(e, $row, resort) {
 						var i, rows = $row.filter('tr').length,
-						dat = [], l = $row[0].cells.length,
-						tbodyindex = $this.find('tbody').index( $row.closest('tbody') );
+						dat = [], l = $row[0].cells.length, t = $this[0],
+						tbdy = $this.find('tbody').index( $row.closest('tbody') );
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = c.parsers[j].format( getElementText(c, $row[i].cells[j], j), $this[0], $row[i].cells[j], j );
+								dat[j] = c.parsers[j].format( getElementText(t, $row[i].cells[j], j), t, $row[i].cells[j], j );
 							}
 							// add the row index to the end
-							dat.push(c.cache[tbodyindex].row.length);
+							dat.push(c.cache[tbdy].row.length);
 							// update cache
-							c.cache[tbodyindex].row.push([$row[i]]);
-							c.cache[tbodyindex].normalized.push(dat);
+							c.cache[tbdy].row.push([$row[i]]);
+							c.cache[tbdy].normalized.push(dat);
 							dat = [];
 						}
 						// resort using current settings
@@ -787,11 +817,14 @@
 						// apply widget format
 						applyWidget(this);
 					}
+
+					// initialized
 					this.hasInitialized = true;
 					$this.trigger('tablesorter-initialized', this);
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
 			};
+
 			this.addParser = function(parser) {
 				var i, l = parsers.length, a = true;
 				for (i = 0; i < l; i++) {
