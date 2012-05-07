@@ -334,8 +334,7 @@
 			function computeTableHeaderCellIndexes(t) {
 				var matrix = [],
 				lookup = {},
-				thead = t.getElementsByTagName('THEAD')[0],
-				trs = thead.getElementsByTagName('TR'),
+				trs = $('thead:eq(0) tr', t),
 				i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
@@ -356,7 +355,8 @@
 							}
 						}
 						lookup[cellId] = firstAvailCol;
-						$(c).attr({ 'data-row' : rowIndex, 'data-column' : firstAvailCol });
+						// add data-column
+						$(c).attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
 						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
 							if (typeof(matrix[k]) === "undefined") {
 								matrix[k] = [];
