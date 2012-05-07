@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3 - Client-side table sorting with ease!
+* TableSorter 2.2.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3";
+			this.version = "2.2.3";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -157,10 +157,14 @@
 
 			// get sorter, string and empty options for each column from
 			// metadata, header option or header class name ("sorter-false")
-			// priority = meta > headers option > header class name
-			function getData(m, ch, cl, key) {
-				var val = '';
-				if (m && m[key]) {
+			// priority = jQuery data > meta > headers option > header class name
+			function getData(h, ch, key) {
+				var val = '',
+					m = $.metadata ? h.metadata() : false,
+					cl = h.attr('class') || '';
+				if (h.data() && typeof h.data(key) !== 'undefined'){
+					val = h.data(key) + '';
+				} else if (m && m[key]) {
 					val = m[key];
 				} else if (ch && ch[key]) {
 					val = ch[key];
@@ -179,16 +183,14 @@
 					list = [];
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
-						h = $($headers[i]);
-						m = $.metadata ? h.metadata() : false;
+						h = $headers.filter(':not([colspan])[data-column="'+i+'"]:last');
 						ch = c.headers[i];
-						cl = h.attr('class') || '';
 						// get column parser
-						p = getParserById( getData(m, ch ,cl, 'sorter') );
+						p = getParserById( getData(h, ch, 'sorter') );
 						// empty cells behaviour - keeping emptyToBottom for backwards compatibility.
-						c.empties[i] = getData(m, ch ,cl, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+						c.empties[i] = getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
 						// text strings behaviour in numerical sorts
-						c.strings[i] = getData(m, ch ,cl, 'string') || c.stringTo || 'max';
+						c.strings[i] = getData(h, ch, 'string') || c.stringTo || 'max';
 						if (!p) {
 							p = detectParserForColumn(table, rows, -1, i);
 						}
@@ -248,7 +250,8 @@
 							tc.cache[k].row.push(c);
 							for (j = 0; j < totalCells; ++j) {
 								t = $.trim(getElementText(table, c[0].cells[j], j));
-								// don't bother parsing if the string is empty - previously parsing would change it to zero
+								// allow parsing if the string is empty, previously parsing would change it to zero,
+								// in case the parser needs to extract data from the table cell attributes
 								cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
 							}
 							cols.push(tc.cache[k].normalized.length); // add position for rowCache
@@ -376,24 +379,6 @@
 				return (/^d/i.test(v) || v === 1);
 			}
 
-			function checkHeaderMetadata(cell) {
-				return (($.metadata) && ($(cell).metadata().sorter === false));
-			}
-
-			function checkHeaderOptions(table, i) {
-				return ((table.config.headers[i]) && (table.config.headers[i].sorter === false));
-			}
-
-			function checkHeaderLocked(table, i) {
-				if ((table.config.headers[i]) && (table.config.headers[i].lockedOrder !== null)) { return table.config.headers[i].lockedOrder; }
-				return false;
-			}
-
-			function checkHeaderOrder(table, i) {
-				if ((table.config.headers[i]) && (table.config.headers[i].sortInitialOrder)) { return table.config.headers[i].sortInitialOrder; }
-				return table.config.sortInitialOrder;
-			}
-
 			function buildHeaders(table) {
 				var meta = ($.metadata) ? true : false,
 				header_index = computeTableHeaderCellIndexes(table),
@@ -406,11 +391,11 @@
 				.wrapInner("<div class='tablesorter-header-inner' />")
 				.each(function(index) {
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
-					this.order = formatSortingOrder( checkHeaderOrder(table, index) ) ? [1,0,2] : [0,1,2];
+					this.order = formatSortingOrder( (c.headers[index] && c.headers[index].sortInitialOrder) ? c.headers[index].sortInitialOrder : c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					if (checkHeaderMetadata(this) || checkHeaderOptions(table, index) || $(this).hasClass('sorter-false')) { this.sortDisabled = true; }
+					if (getData($(this), c.headers[index], 'sorter') === 'false') { this.sortDisabled = true; }
 					this.lockedOrder = false;
-					lock = checkHeaderLocked(table, index);
+					lock = (c.headers[index] && c.headers[index].lockedOrder !== null) ? c.headers[index].lockedOrder : false;
 					if (typeof(lock) !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
@@ -455,7 +440,13 @@
 					h[list[i][0]].addClass(css[list[i][1]]);
 					// multicolumn sorting updating
 					f = $headers.filter('[data-column="' + list[i][0] + '"]');
-					if (l > 1 && f.length) { f.addClass(css[list[i][1]]); }
+					if (l > 1 && f.length) {
+						f.each(function(){
+							if (!this.sortDisabled) {
+								$(this).addClass(css[list[i][1]]);
+							}
+						});
+					}
 				}
 			}
 
@@ -753,20 +744,20 @@
 						c.parsers = buildParserCache(this, $headers);
 						// rebuild the cache map
 						buildCache(this);
-						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
+						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
 					})
 					.bind("updateCell", function(e, cell, resort) {
 						// get position from the dom.
-						var t = $this[0], pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
+						var t = this, pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbdy = $this.find('tbody').index( $(cell).closest('tbody') );
+						tbdy = $(this).find('tbody').index( $(cell).closest('tbody') );
 						t.config.cache[tbdy].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format( getElementText(t, cell, pos[1]), t, cell, pos[1] );
-						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
+						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
 					})
 					.bind("addRows", function(e, $row, resort) {
 						var i, rows = $row.filter('tr').length,
-						dat = [], l = $row[0].cells.length, t = $this[0],
-						tbdy = $this.find('tbody').index( $row.closest('tbody') );
+						dat = [], l = $row[0].cells.length, t = this,
+						tbdy = $(this).find('tbody').index( $row.closest('tbody') );
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
@@ -781,19 +772,18 @@
 							dat = [];
 						}
 						// resort using current settings
-						if (resort !== false) { $this.trigger("sorton", [c.sortList]); }
+						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
 					})
 					.bind("sorton", function(e, list) {
-						$this.trigger("sortStart", $this[0]);
-						c.sortList = list;
+						$(this).trigger("sortStart", this);
 						// update and store the sortlist
-						var sortList = c.sortList;
+						c.sortList = list;
 						// update header count index
-						updateHeaderSortCount(this, sortList);
+						updateHeaderSortCount(this, c.sortList);
 						// set css for headers
-						setHeadersCss(this, $headers, sortList);
+						setHeadersCss(this, $headers, c.sortList);
 						// sort the table and append it to the dom
-						appendToTable(this, multisort(this, sortList));
+						appendToTable(this, multisort(this, c.sortList));
 					})
 					.bind("appendCache", function() {
 						appendToTable(this);
@@ -805,6 +795,8 @@
 						// apply widgets
 						applyWidget(this);
 					});
+
+					// get sort list from metadata
 					if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
 						c.sortList = $(this).metadata().sortlist;
 					}
@@ -940,7 +932,7 @@
 			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // #$ $%"?.
 		},
 		format: function(s) {
-			return $.tablesorter.formatFloat(s.replace(/[^0-9,. \-()]/g, ""));
+			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""));
 		},
 		type: "numeric"
 	});

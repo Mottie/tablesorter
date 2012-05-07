@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable or set the column parser using class names</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Disable or set the column parser using jQuery data</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -24,26 +24,26 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable or set the column parser using class names</h2>
+	<h2>Disable or set the column parser using jQuery data</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> This functionality was added in version 2.0.11 (it is not part of the original plugin).
+		<em>NOTE!</em> This functionality was added in version 2.2.3 (it is not part of the original plugin).
 	</p>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th class="sorter-text">First Name</th>
-			<th class="sorter-text">Last Name</th>
-			<th class="sorter-false">Age</th>
-			<th class="sorter-currency string-min">Total</th> <!-- class="string-min" treats strings in this numeric column as a large negative number -->
-			<th class="sorter-percent empty-top">Discount</th> <!-- class="empty-top" sorts empty cells to the top -->
-			<th class="sorter-usLongDate">Date</th>
+			<th data-sorter="text">First Name</th>
+			<th data-sorter="text">Last Name</th>
+			<th data-sorter="false">Age</th>
+			<th data-sorter="currency" data-string="min">Total</th> <!-- data-string="min" treats strings in this numeric column as a large negative number -->
+			<th data-sorter="percent" data-empty="top">Discount</th> <!-- data-empty="top" sorts empty cells to the top -->
+			<th data-sorter="usLongDate">Date</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -90,10 +90,10 @@
 		<tr>
 			<td></td>
 			<td>Evans</td>
-			<td>18</td>
+			<td>22</td>
 			<td>$13.19</td>
 			<td>11%</td>
-			<td>Jul 6, 2006 8:14 AM</td>
+			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
 	</tbody>
 </table></div>
@@ -109,7 +109,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-parsers-jquery-data.html">Disable or set the column parser using jQuery data &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-option-date-format.html">Changing the date format &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

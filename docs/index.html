@@ -302,6 +302,7 @@
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (v2.0.10)</li>
 		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> (v2.0.11)</li>
+		<li><a href="example-parsers-jquery-data.html">Disable or set the column parser using jQuery Data</a> <span class="tip"><em>New!</em></span> v2.3</li>
 		<li><a href="example-option-date-format.html">Changing the date format</a> (v2.0.23)</li>
 		<li><a href="example-parsers.html">Parser, writing your own</a></li>
 		<li><a href="example-parsers-advanced.html">Parser, writing your own, advanced use</a> <span class="tip"><em>New!</em></span> v2.1</li>
@@ -361,8 +362,8 @@
 
 	<h4>Metadata - setting inline options</h4>
 	<ul>
-		<li>*Note* As of version 2.0.11, you can use class names instead of meta data (<a href="example-parsers-class-name.html">demo</a>)</li>
-		<li><a href="example-meta-sort-list.html">Set a initial sorting order using metadata</a></li>
+		<li>*Note* you can use class names (version 2.0.11+, <a href="example-parsers-class-name.html">demo</a>), or jQuery data (version 2.2.3+, <a href="example-parsers-jquery-data.html">demo</a>) instead of meta data</li>
+		<li><a href="example-meta-sort-list.html">Set a initial sorting order using metadata.</a></li>
 		<li><a href="example-meta-headers.html">Disable header using metadata</a></li>
 		<li><a href="example-meta-parsers.html">Setting column parser using metadata</a></li>
 	</ul>
@@ -607,6 +608,7 @@
 					</ul>
 					Individual columns can be modified by adding the following, set in order of priority:
 					<ul>
+						<li>jQuery data <code class="hilight">data-empty="top"</code>.</li>
 						<li>metadata <code class="hilight">class="{ empty: 'top'}"</code>. This requires the metadata plugin.</li>
 						<li>headers option <code class="hilight">headers : { 0 : { empty : 'top' } }</code>.</li>
 						<li>header class name <code class="hilight">class="empty-top"</code>.</li>
@@ -896,6 +898,7 @@
 					</ul>
 					Individual columns can be modified by adding the following, set in order of priority:
 					<ul>
+						<li>jQuery data <code class="hilight">data-string="top"</code>.</li>
 						<li>metadata <code class="hilight">class="{ string: 'top'}"</code>. This requires the metadata plugin.</li>
 						<li>headers option <code class="hilight">headers : { 0 : { string : 'top' } }</code>.</li>
 						<li>header class name <code class="hilight">class="string-top"</code>.</li>
