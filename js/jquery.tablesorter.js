@@ -916,17 +916,6 @@
 	});
 
 	ts.addParser({
-		id: "digit",
-		is: function(s) {
-			return $.tablesorter.isDigit(s);
-		},
-		format: function(s, table) {
-			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
-		},
-		type: "numeric"
-	});
-
-	ts.addParser({
 		id: "currency",
 		is: function(s) {
 			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // #$ $%"?.
@@ -1032,6 +1021,17 @@
 		},
 		format: function(s, table) {
 			return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime(), table);
+		},
+		type: "numeric"
+	});
+
+	ts.addParser({
+		id: "digit",
+		is: function(s) {
+			return $.tablesorter.isDigit(s);
+		},
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
 		},
 		type: "numeric"
 	});
