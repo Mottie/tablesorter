@@ -52,7 +52,7 @@ div.digg {float: right;}
 .right { text-align:right; }
 #pager-demo th.remove { width: 20px; } /* pager demo */
 #pager-demo button.remove { width: 20px; height: 20px; font-size: 10px; color: #800; }
-.box { width: 48%; float: left; padding: 0 1%; }
+.box { width: 48%; min-width: 300px; float: left; padding: 0 1%; }
 a.deprecated { color: #a00; }
 span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
 .hidden { display: none; }

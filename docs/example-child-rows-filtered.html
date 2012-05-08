@@ -25,11 +25,18 @@
 			// this is the default setting
 			cssChildRow: "expand-child",
 
-			// include child row content while filtering, if true
-			widgetFilterChildRows: true,
-
 			// initialize zebra and filter widgets
-			widgets: ["zebra", "filter"]
+			widgets: ["zebra", "filter"],
+
+			widgetOptions: {
+				// include child row content while filtering, if true
+				filter_childRows  : true,
+				// class name applied to filter row and each input
+				filter_cssFilter  : 'tablesorter-filter',
+				// search from beginning
+				filter_startsWith : false
+			}
+
 		});
 
 	// hide child rows
@@ -49,10 +56,12 @@
 
 	// Toggle widgetFilterChildRows option
 	$('button.toggle-option').click(function(){
-		var c = $('.tablesorter')[0].config,
-		o = !c.widgetFilterChildRows;
-		c.widgetFilterChildRows = o;
+		var c = $('.tablesorter')[0].config.widgetOptions,
+		o = !c.filter_childRows;
+		c.filter_childRows = o;
 		$('.state').html(o.toString());
+		// update filter
+		$('input.tablesorter-filter').trigger('search');
 	});
 
 });</script>
