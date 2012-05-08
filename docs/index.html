@@ -336,7 +336,7 @@
 
 	<h4>Metadata - setting inline options</h4>
 	<ul>
-		<li>*Note* you can use class names (version 2.0.11+, <a href="example-parsers-class-name.html">demo</a>), or jQuery data (version 2.2.3+, <a href="example-parsers-jquery-data.html">demo</a>) instead of meta data</li>
+		<li>*Note* you can use class names (version 2.0.11+, <a href="example-parsers-class-name.html">demo</a>), or jQuery data (version 2.3+, <a href="example-parsers-jquery-data.html">demo</a>) instead of meta data</li>
 		<li><a href="example-meta-sort-list.html">Set a initial sorting order using metadata.</a></li>
 		<li><a href="example-meta-headers.html">Disable header using metadata</a></li>
 		<li><a href="example-meta-parsers.html">Setting column parser using metadata</a></li>
@@ -563,7 +563,17 @@
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Boolean flag indicating if tablesorter should display debuging information usefull for development.
+					Boolean flag indicating if tablesorter should display debuging information useful for development.
+				</td>
+				<td><a href="example-option-debug.html">Example</a></td>
+			</tr>
+
+			<tr id="delayinit">
+				<td><span class="permalink">delayInit</span></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Setting this option to true will delay parsing of all table cell data until the user initializes a sort. This speeds up the initialization process of very large tables, but the data still needs to be parsed, so the delay is still present upon initial sort.
 				</td>
 				<td><a href="example-option-debug.html">Example</a></td>
 			</tr>

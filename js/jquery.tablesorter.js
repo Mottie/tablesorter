@@ -31,6 +31,7 @@
 				dateFormat       : "mmddyyyy", // other options: "ddmmyyy" or "yyyymmdd"
 				sortMultiSortKey : "shiftKey", // key used to select additional columns
 				usNumberFormat   : true,       // false for German "1.234.567,89" or French "1 234 567,89"
+				delayInit        : false,      // if false, the parsed table contents will not update until the first sort.
 
 				// sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -163,7 +164,7 @@
 					m = $.metadata ? h.metadata() : false,
 					cl = h.attr('class') || '';
 				if (h.data() && typeof h.data(key) !== 'undefined'){
-					val = h.data(key) + '';
+					val += h.data(key);
 				} else if (m && m[key]) {
 					val = m[key];
 				} else if (ch && ch[key]) {
@@ -425,7 +426,7 @@
 			}
 
 			function setHeadersCss(table, $headers, list) {
-				var f, h = [], i, l, css = [table.config.cssDesc, table.config.cssAsc];
+				var f, h = [], i, j, l, css = [table.config.cssDesc, table.config.cssAsc];
 				// remove all header information
 				$headers
 					.removeClass(css.join(' '))
@@ -441,11 +442,11 @@
 					// multicolumn sorting updating
 					f = $headers.filter('[data-column="' + list[i][0] + '"]');
 					if (l > 1 && f.length) {
-						f.each(function(){
-							if (!this.sortDisabled) {
-								$(this).addClass(css[list[i][1]]);
+						for (j = 0; j < f.length; j++) {
+							if (!f[j].sortDisabled) {
+								$(f[j]).addClass(css[list[i][1]]);
 							}
-						});
+						}
 					}
 				}
 			}
@@ -629,13 +630,15 @@
 					// try to auto detect column type, and store in tables config
 					c.parsers = buildParserCache(this, $headers);
 					// build the cache for the tbody cells
-					buildCache(this);
+					// delayInit will delay building the cache until the user starts a sort
+					if (!c.delayInit) { buildCache(this); }
 					// fixate columns if the users supplies the fixedWidth option
 					fixColumnWidth(this);
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					$headers
 					.click(function(e) {
+						if (c.delayInit && !c.cache) { buildCache($this[0]); }
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
 							$this.trigger("sortStart", $this[0]);
