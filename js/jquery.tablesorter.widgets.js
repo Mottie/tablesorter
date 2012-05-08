@@ -1,4 +1,4 @@
-/*! tableSorter 2.2 widgets - updated 5/3/2012
+/*! tableSorter 2.3 widgets - updated 5/8/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -127,7 +127,7 @@ $.tablesorter.addWidget({
 	format: function(table) {
 		var $tr, $td, time, last, rmv, k,
 		c = table.config,
-		b = table.tBodies,
+		b = $(table).children('tbody:not(' + c.cssInfoBlock + ')'),
 		list = c.sortList,
 		len = list.length,
 		css = [ "primary", "secondary", "tertiary" ]; // default options
@@ -143,7 +143,7 @@ $.tablesorter.addWidget({
 		if (list && list[0]) {
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
-				$tr = $(b[k]).filter(':not(' + c.cssInfoBlock + ')').find('tr:visible:not(.' + c.cssInfoBlock + ')');
+				$tr = $(b[k]).children('tr:visible');
 				$tr.each(function(i) {
 					$td = $(this).children().removeClass(rmv);
 					// primary sort column class
@@ -158,7 +158,7 @@ $.tablesorter.addWidget({
 			}
 		} else {
 			// remove all column classes if sort is cleared (sortReset)
-			$("td", table).removeClass(rmv);
+			$(table).find('td').removeClass(rmv);
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
@@ -177,7 +177,7 @@ $.tablesorter.addWidget({
 				wo = c.widgetOptions,
 				css = wo.filter_cssFilter || 'tablesorter-filter',
 				$t = $(table).addClass('hasFilters'),
-				cols = $t.find('tbody tr:first td').length,
+				cols = c.parsers.length,
 				fr = '<tr class="' + css + '">',
 				time;
 			if (c.debug) {
@@ -190,13 +190,13 @@ $.tablesorter.addWidget({
 				fr += '></td>';
 			}
 			$t
-				.find('thead').append(fr += '</tr>')
+				.find('thead').eq(0).append(fr += '</tr>')
 				.find('input.' + css).bind('keyup search', function(e){
-					v = $t.find('thead').find('input.' + css).map(function(){ return ($(this).val() || '').toLowerCase(); }).get();
+					v = $t.find('thead').eq(0).children('tr').find('input.' + css).map(function(){ return ($(this).val() || '').toLowerCase(); }).get();
 					if (v.join('') === '') {
 						$t.find('tr').show();
 					} else {
-						$t.find('tbody').find('tr:not(.' + c.cssChildRow + '):not(.' + c.cssInfoBlock + ')').each(function(){
+						$t.children('tbody:not(.' + c.cssInfoBlock + ')').children('tr:not(.' + c.cssChildRow + ')').each(function(){
 							r = true;
 							cr = $(this).nextUntil('tr:not(.' + c.cssChildRow + ')');
 							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -204,7 +204,7 @@ $.tablesorter.addWidget({
 							// checked here so the option can be changed dynamically
 							t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
 								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
-							$td = $(this).find('td');
+							$td = $(this).children('td');
 							for (i=0; i < cols; i++){
 								x = $.trim(($td.eq(i).text() + t)).toLowerCase().indexOf(v[i]);
 								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
@@ -237,8 +237,8 @@ $.tablesorter.addWidget({
 		var $table = $(table).addClass('hasStickyHeaders'),
 			wo = table.config.widgetOptions,
 			win = $(window),
-			header = $(table).find('thead'),
-			hdrCells = header.find('tr:not(.sticky-false)').children(),
+			header = $(table).children('thead'),
+			hdrCells = header.children('tr:not(.sticky-false)').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
 			innr = '.tablesorter-header-inner',
 			firstCell = hdrCells.eq(0),

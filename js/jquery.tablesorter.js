@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.2.3 - Client-side table sorting with ease!
+* TableSorter 2.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.2.3";
+			this.version = "2.3";
 
 			var parsers = [], widgets = [], tbl;
 			this.defaults = {
@@ -67,7 +67,7 @@
 				cssInfoBlock     : "tablesorter-infoOnly", // don't sort tbody with this class name
 
 				// selectors
-				selectorHeaders  : 'thead th',
+				selectorHeaders  : '> thead th',
 				selectorRemove   : "tr.remove-me",
 
 				// advanced
@@ -337,7 +337,7 @@
 			function computeTableHeaderCellIndexes(t) {
 				var matrix = [],
 				lookup = {},
-				trs = $('thead:eq(0) tr', t),
+				trs = $(t).find('thead:eq(0) tr'),
 				i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
@@ -1056,18 +1056,18 @@
 			var $tr, $r, row, even, time, k,
 			c = table.config,
 			child = c.cssChildRow,
-			b = table.tBodies,
+			b = $(table).children('tbody:not(' + c.cssInfoBlock + ')'),
 			css = [ "even", "odd" ];
 			// maintain backwards compatibility
 			css = c.widgetZebra && c.hasOwnProperty('css') ? c.widgetZebra.css :
 				(c.widgetOptions && c.widgetOptions.hasOwnProperty('zebra')) ? c.widgetOptions.zebra : css;
-			if (table.config.debug) {
+			if (c.debug) {
 				time = new Date();
 			}
 			for (k = 0; k < b.length; k++ ) {
 				row = 0;
 				// loop through the visible rows
-				$tr = $(b[k]).filter(':not(' + c.cssInfoBlock + ')').find('tr:visible:not(.' + c.cssInfoBlock + ')');
+				$tr = $(b[k]).children('tr:visible');
 				if ($tr.length > 1) {
 					$tr.each(function() {
 						$r = $(this);
@@ -1080,7 +1080,7 @@
 					});
 				}
 			}
-			if (table.config.debug) {
+			if (c.debug) {
 				$.tablesorter.benchmark("Applying Zebra widget", time);
 			}
 		}
