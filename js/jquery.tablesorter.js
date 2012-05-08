@@ -20,7 +20,7 @@
 
 			this.version = "2.3";
 
-			var parsers = [], widgets = [], tbl;
+			var parsers = [], widgets = []; 
 			this.defaults = {
 
 				// appearance
@@ -487,7 +487,8 @@
 					for (i = 0; i < l; i++) {
 						c = sortList[i][0];
 						order = sortList[i][1];
-						s = getCachedSortType(tc.parsers,c) === "text" ? "Text" : "Numeric";
+						// fallback to natural sort since it is more robust
+						s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
 						s += order === 0 ? "" : "Desc";
 						e = "e" + i;
 						// get max column value (ignore sign)
@@ -503,7 +504,7 @@
 								dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
 							}
 						}
-						dynamicExp += "var " + e + " = sort" + s + "(a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
+						dynamicExp += "var " + e + " = sort" + s + "(table, a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
 						dynamicExp += "if (" + e + ") { return " + e + "; } ";
 						dynamicExp += "else { ";
 					}
@@ -521,15 +522,14 @@
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
 			}
 
-			// Natural sort modified from: http://www.webdeveloper.com/forum/showthread.php?t=107909
-			function sortText(a, b, col) {
+			// Natural sort - https://github.com/overset/javascript-natural-sort
+			function sortText(table, a, b, col) {
 				if (a === b) { return 0; }
-				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
 					r = $.tablesorter.regex, xN, xD, yN, yD, xF, yF, i, mx;
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(a, b); }
-				// natural sort - https://github.com/overset/javascript-natural-sort
 				// chunk/tokenize
 				xN = a.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
 				yN = b.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
@@ -560,13 +560,13 @@
 				return 0;
 			}
 
-			function sortTextDesc(a, b, col) {
+			function sortTextDesc(table, a, b, col) {
 				if (a === b) { return 0; }
-				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (typeof c.textSorter === 'function') { return c.textSorter(b, a); }
-				return sortText(b, a);
+				return sortText(table, b, a);
 			}
 
 			// return text string value by adding up ascii value
@@ -584,9 +584,9 @@
 				return 0;
 			}
 
-			function sortNumeric(a, b, col, mx, d) {
+			function sortNumeric(table, a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
@@ -594,9 +594,9 @@
 				return a - b;
 			}
 
-			function sortNumericDesc(a, b, col, mx, d) {
+			function sortNumericDesc(table, a, b, col, mx, d) {
 				if (a === b) { return 0; }
-				var c = tbl[0].config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
 				if (isNaN(a)) { a = getTextValue(a, mx, d); }
@@ -617,7 +617,7 @@
 					// merge and extend.
 					c = config = $.extend(true, this.config, $.tablesorter.defaults, settings);
 					// store common expression for speed
-					tbl = $this = $(this).addClass(c.tableClass);
+					$this = $(this).addClass(c.tableClass);
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
 					// build up character equivalent cross-reference
@@ -831,9 +831,9 @@
 			this.addWidget = function(widget) {
 				widgets.push(widget);
 			};
-			this.formatFloat = function(s) {
+			this.formatFloat = function(s, table) {
 				if (typeof(s) !== 'string') { return s; }
-				if (tbl[0].config.usNumberFormat) {
+				if (table.config.usNumberFormat !== false) {
 					// US Format - 1,234,567.89 -> 1234567.89
 					s = s.replace(/,/g,'');
 				} else {
@@ -904,10 +904,10 @@
 	// add default parsers
 	ts.addParser({
 		id: "text",
-		is: function(s) {
+		is: function(s, table, node) {
 			return true;
 		},
-		format: function(s, table) {
+		format: function(s, table, cell, cellIndex) {
 			var c = table.config;
 			s = $.trim( c.ignoreCase ? s.toLocaleLowerCase() : s );
 			return c.sortLocaleCompare ? $.tablesorter.replaceAccents(s) : s;
@@ -920,8 +920,8 @@
 		is: function(s) {
 			return $.tablesorter.isDigit(s);
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""));
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -931,8 +931,8 @@
 		is: function(s) {
 			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // #$ $%"?.
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""));
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -942,7 +942,7 @@
 		is: function(s) {
 			return (/^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/).test(s);
 		},
-		format: function(s) {
+		format: function(s, table) {
 			var i, item, a = s.split("."),
 			r = "",
 			l = a.length;
@@ -954,7 +954,7 @@
 					r += item;
 				}
 			}
-			return $.tablesorter.formatFloat(r);
+			return $.tablesorter.formatFloat(r, table);
 		},
 		type: "numeric"
 	});
@@ -975,8 +975,8 @@
 		is: function(s) {
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/).test(s);
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(/-/g, "/")).getTime() : "");
+		format: function(s, table) {
+			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(/-/g, "/")).getTime() : "", table);
 		},
 		type: "numeric"
 	});
@@ -986,8 +986,8 @@
 		is: function(s) {
 			return (/\%\)?$/).test($.trim(s));
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat(s.replace(/%/g, ""));
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(s.replace(/%/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -997,8 +997,8 @@
 		is: function(s) {
 			return s.match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat(new Date(s).getTime());
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(new Date(s).getTime(), table);
 		},
 		type: "numeric"
 	});
@@ -1020,7 +1020,7 @@
 			} else if (format === "yyyymmdd") {
 				s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
 			}
-			return $.tablesorter.formatFloat(new Date(s).getTime());
+			return $.tablesorter.formatFloat(new Date(s).getTime(), table);
 		},
 		type: "numeric"
 	});
@@ -1030,8 +1030,8 @@
 		is: function(s) {
 			return (/^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/).test(s);
 		},
-		format: function(s) {
-			return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime());
+		format: function(s, table) {
+			return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime(), table);
 		},
 		type: "numeric"
 	});
