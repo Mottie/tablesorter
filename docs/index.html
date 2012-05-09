@@ -553,6 +553,14 @@
 
   });
 });</pre>
+					Individual columns can be modified by adding the following, set in order of priority <span class="tip"><em>Modified!</em></span> v2.3.1:
+					<ul>
+						<li>jQuery data <code class="hilight">data-dateFormat="mmddyyyy"</code>.</li>
+						<li>metadata <code class="hilight">class="{ dateFormat: 'mmddyyyy'}"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code class="hilight">headers : { 0 : { dateFormat : 'mmddyyyy' } }</code>.</li>
+						<li>header class name <code class="hilight">class="dateFormat-mmddyyyy"</code>.</li>
+						<li>Overall <code class="hilight">dateFormat</code> option.</li>
+					</ul>
 					</div>
 				</td>
 				<td><a href="example-option-date-format.html">Example</a></td>
@@ -632,12 +640,12 @@
       0: { sorter: false },
 
       // See example 2: Sort column numerically &amp; treat any text as if its value is:
-      1: { sorter: "digit" },                 // zero
-      2: { sorter: "digit", string: "max+" }, // maximum positive value
-      3: { sorter: "digit", string: "max-" }, // maximum negative value
+      1: { sorter: "digit", empty: "top" },  // zero; sort empty cells to the top
+      2: { sorter: "digit", string: "max" }, // maximum positive value
+      3: { sorter: "digit", string: "min" }, // maximum negative value
 
-      // Sort the fifth column by date (e.g. mm/dd/yyyy if the date format is "us")
-      4: { sorter: "shortDate" },
+      // Sort the fifth column by date &amp; set the format
+      4: { sorter: "shortDate", dateFormat: "yyyymmdd" }  // year first format
 
       // See example 3: lock the sort order
       // this option will not work if added as metadata
@@ -773,7 +781,13 @@
 				<td>Use to add an initial sort to the table.
 					<div class="collapsible">
 					<br>
-					The value contains an array of instructions for per-column sorting and direction in the format: <code class="hilight">[[columnIndex, sortDirection], ... ]</code> where columnIndex is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code class="hilight">[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code class="hilight">sortForce</code></a> for more details on other sort order options.
+					The value contains an array of instructions for per-column sorting and direction in the format: <code class="hilight">[[columnIndex, sortDirection], ... ]</code> where columnIndex is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code class="hilight">[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code class="hilight">sortForce</code></a> for more details on other sort order options.<br>
+					<br>
+					This option can also be set using jQuery data (<span class="tip"><em>New!</em></span> v2.3.1) or metadata on the table:
+					<table class="info"><tbody>
+						<tr><th>jQuery data</th><td><code>&lt;table data-sortlist="[[0,0],[4,0]]"&gt;</code></td></tr>
+						<tr><th>Meta data</th><td><code>&lt;table class="tablesorter {sortlist: [[0,0],[4,0]]}"&gt;</code></td></tr>
+					</tbody></table>
 					</div>
 				</td>
 				<td><a href="example-option-sort-list.html">Example</a></td>
@@ -795,12 +809,24 @@
 			</tr>
 
 			<tr id="sortinitialorder">
-				<td><span class="permalink">sortInitialOrder</span></td>
+				<td><a href="#" class="toggle2">sortInitialOrder</a></td>
 				<td>String</td>
 				<td>"asc"</td>
 				<td>
-					When clicking the header for the first time, the direction it sorts.  Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.<br>
-				 This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option (Added in v2.0.8).
+					The direction a column sorts when clicking the header for the first time. Valid arguments are <code class="hilight">"asc"</code> for Ascending or <code class="hilight">"desc"</code> for Descending.<br>
+					<div class="collapsible">
+					<br>
+					This order can also be set by desired column using the <a href="#headers"><code class="hilight">headers</code></a> option (Added in v2.0.8).<br>
+					<br>
+					Individual columns can be modified by adding the following, set in order of priority <span class="tip"><em>Modified!</em></span> v2.3.1:
+					<ul>
+						<li>jQuery data <code class="hilight">data-sortInitialOrder="asc"</code>.</li>
+						<li>metadata <code class="hilight">class="{ sortInitialOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code class="hilight">headers : { 0 : { sortInitialOrder : 'asc' } }</code>.</li>
+						<li>header class name <code class="hilight">class="sortInitialOrder-asc"</code>.</li>
+						<li>Overall <code class="hilight">sortInitialOrder</code> option.</li>
+					</ul>
+					</div>
 				</td>
 				<td>Ex:<a href="example-option-sort-order.html">1</a> <a href="example-options-headers-order.html">2</a></td>
 			</tr>

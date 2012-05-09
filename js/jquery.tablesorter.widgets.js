@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 5/8/2012
+/*! tableSorter 2.3 widgets - updated 5/9/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -186,7 +186,7 @@ $.tablesorter.addWidget({
 			for (i=0; i < cols; i++){
 				fr += '<td><input type="search" data-col="' + i + '" class="' + css;
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
-				fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
+				fr += $.tablesorter.getData(c.headerList[i], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
 				fr += '></td>';
 			}
 			$t

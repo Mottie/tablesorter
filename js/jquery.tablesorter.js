@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3 - Client-side table sorting with ease!
+* TableSorter 2.3.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,9 +18,9 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3";
+			this.version = "2.3.1";
 
-			var parsers = [], widgets = []; 
+			var parsers = [], widgets = [];
 			this.defaults = {
 
 				// appearance
@@ -156,29 +156,9 @@
 				return parsers[0];
 			}
 
-			// get sorter, string and empty options for each column from
-			// metadata, header option or header class name ("sorter-false")
-			// priority = jQuery data > meta > headers option > header class name
-			function getData(h, ch, key) {
-				var val = '',
-					m = $.metadata ? h.metadata() : false,
-					cl = h.attr('class') || '';
-				if (h.data() && typeof h.data(key) !== 'undefined'){
-					val += h.data(key);
-				} else if (m && m[key]) {
-					val = m[key];
-				} else if (ch && ch[key]) {
-					val = ch[key];
-				} else if (cl && cl.match(key + '-')) {
-					// include sorter class name "sorter-text", etc
-					val = cl.match( new RegExp(key + '-(\\w+)') )[1] || '';
-				}
-				return $.trim(val);
-			}
-
 			function buildParserCache(table, $headers) {
 				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var c = table.config, rows = table.tBodies[0].rows,
+				var c = table.config, rows = table.tBodies[0].rows, ts = $.tablesorter,
 					list, l, i, h, m, ch, cl, p, parsersDebug = "";
 				if (rows[0]) {
 					list = [];
@@ -187,11 +167,11 @@
 						h = $headers.filter(':not([colspan])[data-column="'+i+'"]:last');
 						ch = c.headers[i];
 						// get column parser
-						p = getParserById( getData(h, ch, 'sorter') );
+						p = getParserById( ts.getData(h, ch, 'sorter') );
 						// empty cells behaviour - keeping emptyToBottom for backwards compatibility.
-						c.empties[i] = getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+						c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
 						// text strings behaviour in numerical sorts
-						c.strings[i] = getData(h, ch, 'string') || c.stringTo || 'max';
+						c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
 						if (!p) {
 							p = detectParserForColumn(table, rows, -1, i);
 						}
@@ -382,8 +362,8 @@
 
 			function buildHeaders(table) {
 				var meta = ($.metadata) ? true : false,
-				header_index = computeTableHeaderCellIndexes(table),
-				$th, lock, time, $tableHeaders, c = table.config;
+				header_index = computeTableHeaderCellIndexes(table), ch, $t,
+				$th, lock, time, $tableHeaders, c = table.config, ts = $.tablesorter;
 				c.headerList = [];
 				if (c.debug) {
 					time = new Date();
@@ -391,22 +371,24 @@
 				$tableHeaders = $(c.selectorHeaders, table)
 				.wrapInner("<div class='tablesorter-header-inner' />")
 				.each(function(index) {
+					$t = $(this);
+					ch = c.headers[index];
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
-					this.order = formatSortingOrder( (c.headers[index] && c.headers[index].sortInitialOrder) ? c.headers[index].sortInitialOrder : c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
+					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					if (getData($(this), c.headers[index], 'sorter') === 'false') { this.sortDisabled = true; }
+					if (ts.getData($t, ch, 'sorter') === 'false') { this.sortDisabled = true; }
 					this.lockedOrder = false;
-					lock = (c.headers[index] && c.headers[index].lockedOrder !== null) ? c.headers[index].lockedOrder : false;
+					lock = ts.getData($t, ch, 'lockedOrder') || false;
 					if (typeof(lock) !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
 					if (!this.sortDisabled) {
-						$th = $(this).addClass(c.cssHeader);
+						$th = $t.addClass(c.cssHeader);
 						if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
 					}
 					// add cell to headerList
 					c.headerList[index] = this;
-					$(this).parent().addClass(c.cssHeader);
+					$t.parent().addClass(c.cssHeader);
 				});
 				if (c.debug) {
 					benchmark("Built headers", time);
@@ -612,7 +594,8 @@
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
 					var $headers, $cell, totalRows, $this,
-						config, c, i, j, k, a, s, o;
+						config, c, i, j, k, a, s, o,
+						m = $.metadata;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
@@ -799,9 +782,11 @@
 						applyWidget(this);
 					});
 
-					// get sort list from metadata
-					if ($.metadata && ($(this).metadata() && $(this).metadata().sortlist)) {
-						c.sortList = $(this).metadata().sortlist;
+					// get sort list from jQuery data or metadata
+					if ($this.data() && typeof $this.data().sortlist !== 'undefined') {
+						c.sortList = $this.data().sortlist;
+					} else if (m && ($this.metadata() && $this.metadata().sortlist)) {
+						c.sortList = $this.metadata().sortlist;
 					}
 					// apply widget init code
 					applyWidget(this, true);
@@ -834,8 +819,9 @@
 			this.addWidget = function(widget) {
 				widgets.push(widget);
 			};
+
 			this.formatFloat = function(s, table) {
-				if (typeof(s) !== 'string') { return s; }
+				if (typeof(s) !== 'string' || s === '') { return s; }
 				if (table.config.usNumberFormat !== false) {
 					// US Format - 1,234,567.89 -> 1234567.89
 					s = s.replace(/,/g,'');
@@ -855,6 +841,7 @@
 				// replace all unwanted chars and match.
 				return (/^[\-+(]?\d*[)]?$/).test($.trim(s.replace(/[,.'\s]/g, '')));
 			};
+
 			// regex used in natural sort
 			this.regex = [
 				/(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi, // chunk/tokenize numbers & letters
@@ -889,6 +876,27 @@
 				}
 				return s;
 			};
+
+			// get sorter, string, empty, etc options for each column from
+			// metadata, header option or header class name ("sorter-false")
+			// priority = jQuery data > meta > headers option > header class name
+			this.getData = function(h, ch, key) {
+				var val = '',
+					m = $.metadata ? h.metadata() : false,
+					cl = h.attr('class') || '';
+				if (h.data() && typeof h.data(key) !== 'undefined'){
+					val += h.data(key);
+				} else if (m && typeof m[key] !== 'undefined') {
+					val += m[key];
+				} else if (ch && typeof ch[key] !== 'undefined') {
+					val += ch[key];
+				} else if (cl && cl.match(key + '-')) {
+					// include sorter class name "sorter-text", etc
+					val = cl.match( new RegExp(key + '-(\\w+)') )[1] || '';
+				}
+				return $.trim(val);
+			};
+
 			this.clearTableBody = function(table) {
 				$(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')').empty();
 			};
@@ -896,13 +904,13 @@
 		}
 	})();
 
-	// extend plugin scope
-	$.fn.extend({
-		tablesorter: $.tablesorter.construct
-	});
-
 	// make shortcut
 	var ts = $.tablesorter;
+
+	// extend plugin scope
+	$.fn.extend({
+		tablesorter: ts.construct
+	});
 
 	// add default parsers
 	ts.addParser({
@@ -913,7 +921,7 @@
 		format: function(s, table, cell, cellIndex) {
 			var c = table.config;
 			s = $.trim( c.ignoreCase ? s.toLocaleLowerCase() : s );
-			return c.sortLocaleCompare ? $.tablesorter.replaceAccents(s) : s;
+			return c.sortLocaleCompare ? ts.replaceAccents(s) : s;
 		},
 		type: "text"
 	});
@@ -924,7 +932,7 @@
 			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // #$ $%"?.
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
+			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -946,7 +954,7 @@
 					r += item;
 				}
 			}
-			return $.tablesorter.formatFloat(r, table);
+			return ts.formatFloat(r, table);
 		},
 		type: "numeric"
 	});
@@ -968,7 +976,7 @@
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/).test(s);
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat((s !== "") ? new Date(s.replace(/-/g, "/")).getTime() : "", table);
+			return ts.formatFloat((s !== "") ? (new Date(s.replace(/-/g, "/")).getTime() || "") : "", table);
 		},
 		type: "numeric"
 	});
@@ -979,7 +987,7 @@
 			return (/\%\)?$/).test($.trim(s));
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat(s.replace(/%/g, ""), table);
+			return ts.formatFloat(s.replace(/%/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -990,7 +998,7 @@
 			return s.match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat(new Date(s).getTime(), table);
+			return ts.formatFloat( (new Date(s).getTime() || ''), table);
 		},
 		type: "numeric"
 	});
@@ -1003,7 +1011,7 @@
 		},
 		format: function(s, table, cell, cellIndex) {
 			var c = table.config,
-				format = (c.headers && c.headers[cellIndex]) ? c.headers[cellIndex].dateFormat || c.dateFormat : c.dateFormat; // get dateFormat from header or config
+				format = ts.getData($(cell), c.headers[cellIndex], 'dateFormat') || c.dateFormat;
 			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
 			if (format === "mmddyyyy") {
 				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
@@ -1012,7 +1020,7 @@
 			} else if (format === "yyyymmdd") {
 				s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
 			}
-			return $.tablesorter.formatFloat(new Date(s).getTime(), table);
+			return ts.formatFloat( (new Date(s).getTime() || ''), table);
 		},
 		type: "numeric"
 	});
@@ -1023,7 +1031,7 @@
 			return (/^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/).test(s);
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime(), table);
+			return ts.formatFloat( (new Date("2000/01/01 " + s).getTime() || ''), table);
 		},
 		type: "numeric"
 	});
@@ -1031,10 +1039,10 @@
 	ts.addParser({
 		id: "digit",
 		is: function(s) {
-			return $.tablesorter.isDigit(s);
+			return ts.isDigit(s);
 		},
 		format: function(s, table) {
-			return $.tablesorter.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
+			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
 		},
 		type: "numeric"
 	});
@@ -1084,7 +1092,7 @@
 				}
 			}
 			if (c.debug) {
-				$.tablesorter.benchmark("Applying Zebra widget", time);
+				ts.benchmark("Applying Zebra widget", time);
 			}
 		}
 	});
