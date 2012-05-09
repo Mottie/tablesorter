@@ -158,8 +158,16 @@
 
 			function buildParserCache(table, $headers) {
 				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var c = table.config, rows = table.tBodies[0].rows, ts = $.tablesorter,
-					list, l, i, h, m, ch, cl, p, parsersDebug = "";
+				var c = table.config, tBodies = table.tBodies, len = tBodies.length, rows, ts = $.tablesorter,
+					list, l, i, j, h, m, ch, cl, p, parsersDebug = "";
+
+				for (j = 0; j < len; j++) {
+					if ( !$(tBodies[j]).hasClass(c.cssInfoBlock) ) {
+						rows = tBodies[j].rows;
+						break;
+					}
+				}
+
 				if (rows[0]) {
 					list = [];
 					l = rows[0].cells.length;
