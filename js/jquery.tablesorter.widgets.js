@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 5/9/2012
+/*! tableSorter 2.3 widgets - updated 5/11/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -127,7 +127,7 @@ $.tablesorter.addWidget({
 	format: function(table) {
 		var $tr, $td, time, last, rmv, k,
 		c = table.config,
-		b = $(table).children('tbody:not(' + c.cssInfoBlock + ')'),
+		b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
 		list = c.sortList,
 		len = list.length,
 		css = [ "primary", "secondary", "tertiary" ]; // default options

@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 5/4/2012
+ * updated 5/11/2012
  */
 ;(function($) {
 	$.extend({tablesorterPager: new function() {
@@ -150,7 +150,7 @@
 			// process data
 			if (typeof(c.ajaxProcessing) === "function") {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, k, hsh, $f, $sh, $t = $(table), $b = $(table.tBodies[0]),
+				var i, j, k, hsh, $f, $sh, $t = $(table), $b = $(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')'),
 				hl = $t.find('thead th').length, tds = '',
 				err = '<tr class="remove-me"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',

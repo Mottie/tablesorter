@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3.1 - Client-side table sorting with ease!
+* TableSorter 2.3.2 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.1";
+			this.version = "2.3.2";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -116,7 +116,7 @@
 						text = $(node).text();
 					}
 				}
-				return text;
+				return $.trim(text);
 			}
 
 			/* parsers utils */
@@ -139,7 +139,7 @@
 					rowIndex++;
 					if (rows[rowIndex]) {
 						node = rows[rowIndex].cells[cellIndex];
-						nodeValue = $.trim(getElementText(table, node, cellIndex));
+						nodeValue = getElementText(table, node, cellIndex);
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column:' + cellIndex + ": " + nodeValue);
 						}
@@ -157,9 +157,10 @@
 			}
 
 			function buildParserCache(table, $headers) {
-				if (table.tBodies.length === 0) { return; } // In the case of empty tables
-				var c = table.config, rows = table.tBodies[0].rows, ts = $.tablesorter,
-					list, l, i, h, m, ch, cl, p, parsersDebug = "";
+					var c = table.config, tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
+						ts = $.tablesorter, rows, list, l, i, h, m, ch, cl, p, parsersDebug = "";
+				if ( tb.length === 0) { return; } // In the case of empty tables
+				rows = tb[0].rows;
 				if (rows[0]) {
 					list = [];
 					l = rows[0].cells.length;
@@ -230,7 +231,7 @@
 							}
 							tc.cache[k].row.push(c);
 							for (j = 0; j < totalCells; ++j) {
-								t = $.trim(getElementText(table, c[0].cells[j], j));
+								t = getElementText(table, c[0].cells[j], j);
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
 								cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
@@ -388,6 +389,7 @@
 					}
 					// add cell to headerList
 					c.headerList[index] = this;
+					// add to parent in case there are multiple rows
 					$t.parent().addClass(c.cssHeader);
 				});
 				if (c.debug) {
@@ -512,7 +514,7 @@
 					r = $.tablesorter.regex, xN, xD, yN, yD, xF, yF, i, mx;
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
-				if (typeof c.textSorter === 'function') { return c.textSorter(a, b); }
+				if (typeof c.textSorter === 'function') { return c.textSorter(a, b, table, col); }
 				// chunk/tokenize
 				xN = a.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
 				yN = b.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
@@ -548,7 +550,7 @@
 				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
 				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
 				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
-				if (typeof c.textSorter === 'function') { return c.textSorter(b, a); }
+				if (typeof c.textSorter === 'function') { return c.textSorter(b, a, table, col); }
 				return sortText(table, b, a);
 			}
 
@@ -780,6 +782,9 @@
 					.bind("applyWidgets", function() {
 						// apply widgets
 						applyWidget(this);
+					})
+					.bind("destroy", function(e,c){
+						$.tablesorter.destroy(this, c);
 					});
 
 					// get sort list from jQuery data or metadata
@@ -803,6 +808,23 @@
 					$this.trigger('tablesorter-initialized', this);
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
+			};
+
+			this.destroy = function(table, removeClasses){
+				var $t = $(table), c = table.config;
+				// remove widget added rows
+				$t.find('thead:first tr:not(.' + c.cssHeader + ')').remove();
+				// remove resizer widget stuff
+				$t.find('thead:first .tablesorter-resizer').remove();
+				// disable tablesorter
+				$t
+					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets destroy mouseup mouseleave')
+					.find(c.selectorHeaders)
+					.unbind('click mousedown mousemove mouseup')
+					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc);
+				if (removeClasses !== false) {
+					$t.removeClass(c.tableClass);
+				}
 			};
 
 			this.addParser = function(parser) {
@@ -839,7 +861,7 @@
 			};
 			this.isDigit = function(s) {
 				// replace all unwanted chars and match.
-				return (/^[\-+(]?\d*[)]?$/).test($.trim(s.replace(/[,.'\s]/g, '')));
+				return (/^[\-+(]?\d*[)]?$/).test(s.replace(/[,.'\s]/g, ''));
 			};
 
 			// regex used in natural sort
@@ -883,8 +905,8 @@
 			this.getData = function(h, ch, key) {
 				var val = '',
 					m = $.metadata ? h.metadata() : false,
-					cl = h.attr('class') || '';
-				if (h.data() && typeof h.data(key) !== 'undefined'){
+					cl = (h.length) ? h.attr('class') || '' : '';
+				if (h.length && h.data() && typeof h.data(key) !== 'undefined'){
 					val += h.data(key);
 				} else if (m && typeof m[key] !== 'undefined') {
 					val += m[key];
@@ -929,7 +951,7 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s) {
-			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]/).test(s); // #$ $%"?.
+			return (/^\(?[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+/).test(s); // £$€¤¥¢
 		},
 		format: function(s, table) {
 			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
@@ -984,7 +1006,7 @@
 	ts.addParser({
 		id: "percent",
 		is: function(s) {
-			return (/\%\)?$/).test($.trim(s));
+			return (/\d%\)?$/).test(s);
 		},
 		format: function(s, table) {
 			return ts.formatFloat(s.replace(/%/g, ""), table);
@@ -1067,7 +1089,7 @@
 			var $tr, $r, row, even, time, k,
 			c = table.config,
 			child = c.cssChildRow,
-			b = $(table).children('tbody:not(' + c.cssInfoBlock + ')'),
+			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
 			css = [ "even", "odd" ];
 			// maintain backwards compatibility
 			css = c.widgetZebra && c.hasOwnProperty('css') ? c.widgetZebra.css :

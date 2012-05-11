@@ -36,8 +36,8 @@
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		onRenderHeader: function (index){
-			// the TH content is wrapped with a span by default, so just add the class
-			$(this).find('span').addClass('roundedCorners header' + index );
+			// the TH content is wrapped with a div.tablesorter-header-inner by default, so just add the new class
+			$(this).find('div').addClass('roundedCorners header' + index );
 		}
 	});
 });</script>

@@ -22,7 +22,13 @@
 
 	<script id="js">$(function() {
 	$("table").tablesorter({
-		textSorter : naturalSort
+		// table = table object; get config options from table.config
+		// column is the column index (zero-based)
+		textSorter : function(a, b, table, column){
+			// this is the original sort method from tablesorter 2.0.5b
+			if (table.config.sortLocaleCompare) { return a.localeCompare(b); }
+			return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+		}
 	});
 });</script>
 </head>
@@ -35,6 +41,15 @@
 </div>
 <div id="main">
 <h1>Demo</h1>
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>The custom sort used here is from the original tablesorter plugin v2.0.5b. Sort the first column to see how it sorts alphanumeric data.</li>
+			<li>This option is not part of the original plugin. <span class="tip"><em>New! v2.2</em></span></li>
+		</ul>
+	</p>
+
 <div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>

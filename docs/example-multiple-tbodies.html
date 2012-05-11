@@ -17,10 +17,14 @@
 	<link rel="stylesheet" href="../css/blue/style.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
+	<!-- Tablesorter: widgets (optional) -->
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
 	<script id="js">$(function() {
 
 	$("table").tablesorter({
-		cssInfoBlock : "tablesorter-no-sort"
+		cssInfoBlock : "tablesorter-no-sort",
+		widgets: [ 'zebra', 'stickyHeaders' ]
 	});
 
 });</script>
@@ -42,6 +46,11 @@
 		<tr><th>Name</th><th>A-foot</th><th>B-foot</th><th>C-foot</th></tr>
 	</tfoot>
 
+	<!-- add "tablesorter-no-sort" class (changed by cssInfoBlock option) to skip sorting of this tbody -->
+	<tbody class="tablesorter-no-sort">
+		<tr><th colspan="4">This row is within the first tbody set as an info block - it is not sorted!</th></tr>
+	</tbody>
+
 	<tbody>
 		<tr><td>DDD</td><td>r1c1</td><td>r1c2</td><td>r1c3</td></tr>
 		<tr><td>AAA</td><td>r2c1</td><td>r2c2</td><td>r2c3</td></tr>
@@ -49,7 +58,6 @@
 		<tr><td>BBB</td><td>r4c1</td><td>r4c2</td><td>r4c3</td></tr>
 	</tbody>
 
-	<!-- add "tablesorter-no-sort" class to skip sorting of this tbody -->
 	<tbody class="tablesorter-no-sort">
 		<tr><th colspan="4">summary info for the first group</th></tr>
 		<tr><th colspan="4">Another row referring to the first group</th></tr>

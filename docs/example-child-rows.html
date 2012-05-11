@@ -22,6 +22,9 @@
 
 	<script id="js">$(function() {
 
+	// hide child rows
+	$('.expand-child td').hide();
+
 	$(".tablesorter")
 		.tablesorter({
 			// this is the default setting
@@ -30,10 +33,11 @@
 		.tablesorterPager({
 			container: $("#pager"),
 			positionFixed: false
+		})
+		.bind('pagerChange', function(){
+			// hide child rows after pager update
+			$('.expand-child td').hide();
 		});
-
-	// hide child rows
-	$('.expand-child td').hide();
 
 	// Toggle child row content (td), not hiding the row since we are using rowspan
 	// Using delegate because the pager plugin rebuilds the table after each page change

@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Sticky Header Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -26,7 +26,7 @@
 <script id="js">$(function(){
 
 	$("table").tablesorter({
-		selectorHeaders: 'thead th, thead td',
+		selectorHeaders: '> thead th, > thead td',
 		widgets: [ 'uitheme', 'zebra', 'stickyHeaders' ],
 		widgetOptions: {
 
@@ -86,7 +86,7 @@ $(function() {
 				</ul>
 			</li>
 			<li>Add the class name <code class="hilight">sticky-false</code> to any header rows you don't want to become sticky. <span class="tip"><em>New! v2.1.18</em></span></li>
-			<li>Because of an issue with jQuery version 1.2.6 causing an error, this widget needs at least jQuery version 1.3+ in order to work.</li>
+			<li>Because of an issue with jQuery version 1.3 and older causing an error, this widget needs at least jQuery version 1.4+ in order to work.</li>
 			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
 		</ul>
 	</p>
