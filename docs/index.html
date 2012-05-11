@@ -1525,6 +1525,19 @@ $("table")
 				<td><a href="example-apply-widget.html">Example</a></td>
 			</tr>
 
+			<tr id="destroy">
+				<td><a href="#" class="toggle2">destroy</a></td>
+				<td>Use this method to remove tablesorter from the table.
+					<div class="collapsible">
+						<pre class="js">// Remove tablesorter and all classes
+$("table").trigger("destroy");
+
+// Remove tablesorter and all classes but the "tablesorter" class on the table
+$("table").trigger("destroy", [false];</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 		</tbody>
 	</table>
 
