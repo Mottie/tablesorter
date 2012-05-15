@@ -1560,9 +1560,52 @@ $("table").trigger("destroy", [false];</pre></div>
 		</thead>
 		<tbody>
 
+			<tr id="initialized">
+				<td><a href="#" class="toggle2">initialized</a></td>
+				<td>This event fires when tablesorter has completed initialization. 
+					<div class="collapsible">
+						<pre class="js">$(function(){
+
+  // bind to initialized event BEFORE initializing tablesorter
+  $("table")
+    .bind("tablesorter-initialized",function(e, table) {
+      // do something after tablesorter has initialized
+    });
+
+  // initialize the tablesorter plugin
+  $("table").tablesorter({
+    // this is equivalent to the above bind method
+    initialized : function(table){
+      // do something after tablesorter has initialized
+    }
+  });
+
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="sortbegin">
+				<td><a href="#" class="toggle2">sortBegin</a></td>
+				<td>This event fires immediately before tablesorter begins resorting the table.
+					<div class="collapsible">
+						<pre class="js">$(function(){
+
+  // initialize the tablesorter plugin
+  $("table").tablesorter();
+
+  // bind to sort events
+  $("table").bind("sortBegin",function(e, table) {
+    // do something crazy!
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="sortstart">
 				<td><a href="#" class="toggle2">sortStart</a></td>
-				<td>This event fires when tablesorter is about to start resorting the table.
+				<td>This event fires immediately after the tablesorter header has been clicked, initializing a resort.
 					<div class="collapsible">
 						<pre class="js">$(function(){
 
@@ -1571,10 +1614,10 @@ $("table").trigger("destroy", [false];</pre></div>
 
   // bind to sort events
   $("table")
-    .bind("sortStart",function() {
+    .bind("sortStart",function(e, table) {
       $("#overlay").show();
     })
-    .bind("sortEnd",function() {
+    .bind("sortEnd",function(e, table) {
       $("#overlay").hide();
     });
 });</pre></div>
@@ -1593,10 +1636,10 @@ $("table").trigger("destroy", [false];</pre></div>
 
   // bind to sort events
   $("table")
-    .bind("sortStart",function() {
+    .bind("sortStart",function(e, table) {
       $("#overlay").show();
     })
-    .bind("sortEnd",function() {
+    .bind("sortEnd",function(e, table) {
       $("#overlay").hide();
     });
 });</pre></div>
