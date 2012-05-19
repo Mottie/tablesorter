@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable sort using headers options</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Disable sort</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -18,16 +18,15 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function(){
+
+	// BONUS TIP: disable a column using jQuery data directly
+	// but do it before the table initializes
+	$("table thead th:eq(5)").data("sorter", false);
+
 	$("table").tablesorter({
-		// pass the headers argument and passing a object
 		headers: {
-			// assign the secound column (we start counting zero)
-			1: {
-				// disable it by setting the property sorter to false
-				sorter: false
-			},
-			// assign the third column (we start counting zero)
-			2: {
+			// disable sorting of the first column (we start counting at zero)
+			0: {
 				// disable it by setting the property sorter to false
 				sorter: false
 			}
@@ -38,20 +37,36 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable sort using headers options</h2>
+	<h2>Disable sort</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>In tablesorter v2.0.5 and older, only the metadata and headers options methods were available.</li>
+			<li>In versions 2.3+, columns can be disabled using any of the following methods, in order of priority:
+				<ul>
+					<li>jQuery data <code class="hilight">data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
+					<li>metadata <code class="hilight">class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { sorter: false } }</code>.</li>
+					<li>header class name <code class="hilight">class="sorter-false"</code>.</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
+
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
-			<th>Age</th>
+			<th data-sorter="false">Age</th>
 			<th>Total</th>
-			<th>Discount</th>
+			<th class="sorter-false">Discount</th>
 			<th>Date</th>
 		</tr>
 	</thead>

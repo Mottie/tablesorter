@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3.2 - Client-side table sorting with ease!
+* TableSorter 2.3.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.2";
+			this.version = "2.3.3";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -275,7 +275,7 @@
 				var c = table.config,
 				b = table.tBodies,
 				rows = [],
-				r, n, totalRows, checkCell,
+				r, n, totalRows, checkCell, c2 = c.cache,
 				f, i, j, k, l, pos, appendTime;
 				if (c.debug) {
 					appendTime = new Date();
@@ -283,8 +283,8 @@
 				for (k = 0; k < b.length; k++) {
 					if (!$(b[k]).hasClass(c.cssInfoBlock)){
 						f = document.createDocumentFragment();
-						r = c.cache[k].row;
-						n = c.cache[k].normalized;
+						r = c2[k].row;
+						n = c2[k].normalized;
 						totalRows = n.length;
 						checkCell = totalRows ? (n[0].length - 1) : 0;
 						for (i = 0; i < totalRows; i++) {
@@ -602,6 +602,8 @@
 					this.config = {};
 					// merge and extend.
 					c = config = $.extend(true, this.config, $.tablesorter.defaults, settings);
+
+					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
 					// store common expression for speed
 					$this = $(this).addClass(c.tableClass);
 					// save the settings where they read
@@ -805,6 +807,9 @@
 
 					// initialized
 					this.hasInitialized = true;
+					if (c.debug) {
+						$.tablesorter.benchmark("Overall initialization time", $.data( this, 'startoveralltimer'));
+					}
 					$this.trigger('tablesorter-initialized', this);
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
@@ -903,18 +908,20 @@
 			// metadata, header option or header class name ("sorter-false")
 			// priority = jQuery data > meta > headers option > header class name
 			this.getData = function(h, ch, key) {
-				var val = '',
-					m = $.metadata ? h.metadata() : false,
-					cl = (h.length) ? h.attr('class') || '' : '';
-				if (h.length && h.data() && typeof h.data(key) !== 'undefined'){
-					val += h.data(key);
+				var val = '', $h = $(h),
+					m = $.metadata ? $h.metadata() : false,
+					cl = ' ' + ($h.length ? $h.attr('class') || '' : '');
+				if ($h.length && $h.data() && ( typeof $h.data(key) !== 'undefined' || typeof $h.data(key.toLowerCase()) !== 'undefined') ){
+					// "data-lockedOrder" is assigned to "lockedorder"; but "data-locked-order" is assigned to "lockedOrder"
+					// "data-sort-initial-order" is assigned to "sortInitialOrder"
+					val += $h.data(key) || $h.data(key.toLowerCase());
 				} else if (m && typeof m[key] !== 'undefined') {
 					val += m[key];
 				} else if (ch && typeof ch[key] !== 'undefined') {
 					val += ch[key];
-				} else if (cl && cl.match(key + '-')) {
+				} else if (cl && cl.match(' ' + key + '-')) {
 					// include sorter class name "sorter-text", etc
-					val = cl.match( new RegExp(key + '-(\\w+)') )[1] || '';
+					val = cl.match( new RegExp(' ' + key + '-(\\w+)') )[1] || '';
 				}
 				return $.trim(val);
 			};
@@ -1032,8 +1039,12 @@
 			return (/\d{1,4}[\/\-\,\.\s+]\d{1,4}[\/\-\.\,\s+]\d{1,4}/).test(s);
 		},
 		format: function(s, table, cell, cellIndex) {
-			var c = table.config,
-				format = ts.getData($(cell), c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+			var c = table.config, ci = c.headerList[cellIndex],
+			format = ci.shortDateFormat;
+			if (typeof format === 'undefined') {
+				// cache header formatting so it doesn't getData for every cell in the column
+				format = ci.shortDateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+			}
 			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
 			if (format === "mmddyyyy") {
 				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
@@ -1086,9 +1097,9 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tr, $r, row, even, time, k,
+			var $tb, $tr, $f, row, even, time, k, j, l, n,
 			c = table.config,
-			child = c.cssChildRow,
+			child = new RegExp(c.cssChildRow, 'i'),
 			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
 			css = [ "even", "odd" ];
 			// maintain backwards compatibility
@@ -1100,18 +1111,22 @@
 			for (k = 0; k < b.length; k++ ) {
 				row = 0;
 				// loop through the visible rows
-				$tr = $(b[k]).children('tr:visible');
-				if ($tr.length > 1) {
-					$tr.each(function() {
-						$r = $(this);
-						// style children rows the same way the parent row was styled
-						if (!$r.hasClass(child)) { row++; }
-						even = (row % 2 === 0);
-						$r
-						.removeClass(css[even ? 1 : 0])
-						.addClass(css[even ? 0 : 1]);
-					});
+				$tb = $(b[k]);
+				l = $tb.children('tr').length;
+				if (l > 1) {
+					$f = $(document.createDocumentFragment());
+					$tr = $tb.children('tr').appendTo($f);
+					for (j = 0; j < l; j++) {
+						if ($tr[j].style.display !== 'none') {
+							n = $tr[j].className;
+							// style children rows the same way the parent row was styled
+							if (!child.test(n)) { row++; }
+							even = (row % 2 === 0);
+							$tr[j].className = n.replace(/\s+/g,'').replace(css[0],'').replace(css[1],'') + ' ' + css[even ? 0 : 1];
+						}
+					}
 				}
+				$tb.append($tr);
 			}
 			if (c.debug) {
 				ts.benchmark("Applying Zebra widget", time);

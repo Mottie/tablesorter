@@ -25,9 +25,9 @@
 
 		// or to change the format for specific columns, add the dateFormat to the headers option:
 		headers: {
-			0: { sorter: "shortDate" }, // dateFormat will parsed as the default above
-			1: { sorter: "shortDate", dateFormat: "ddmmyyyy" }, // set day first format
-			2: { sorter: "shortDate", dateFormat: "yyyymmdd" }  // set year first format
+			0: { sorter: "shortDate" } //, dateFormat will parsed as the default above
+			// 1: { sorter: "shortDate", dateFormat: "ddmmyyyy" }, // set day first format; set using class names
+			// 2: { sorter: "shortDate", dateFormat: "yyyymmdd" }  // set year first format; set using data attributes (jQuery data)
 		}
 
 	});
@@ -49,6 +49,15 @@
 			<li>The dateFormat option will ONLY work with the <code class="hilight">shortDate</code> parser.</li>
 			<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
 			<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</a>
+			<li>In versions 2.3+, columns can be disabled using any of the following methods, in order of priority:
+				<ul>
+					<li>jQuery data <code class="hilight">data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
+					<li>metadata <code class="hilight">class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { sorter: false } }</code>.</li>
+					<li>header class name <code class="hilight">class="sorter-false"</code>.</li>
+					<li>overall <code class="hilight">dateFormat</code> option setting.</li>
+				</ul>
+			</li>
 		</ul>
 	</p>
 
@@ -57,8 +66,8 @@
 	<thead>
 		<tr>
 			<th>Date MMDDYYYY</th>
-			<th>Date DDMMYYYY</th>
-			<th>Date YYYYMMDD</th>
+			<th class="sorter-shortDate dateFormat-ddmmyyyy">Date DDMMYYYY</th>
+			<th data-sorter="shortDate" data-date-format="yyyymmdd">Date YYYYMMDD</th>
 		</tr>
 	</thead>
 	<tbody>

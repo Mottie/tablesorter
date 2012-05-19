@@ -80,10 +80,16 @@ $(function(){
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
-			<li>Added filter header option and class name to allow disabling the filter in a specific column in v2.0.19.1.</li>
-			<li>The Discount column has the "filter-false" class added to the header - see the HTML on how to add this ability.</li>
-			<li>The Date column has the "headers" option applied to disable the sort and the filter - see the table options in the javascript for this example.</li>
+			<li>As of tablesorter version 2.3, this widget <strong>can no longer be applied to the original plugin</strong>. Get the "jquery.tablesorter.widgets.js" file from a version prior to 2.3 to get a widget that works with the original plugin.</li>
+			<li>In version 2.0.19.1, a filter header option and header class name check was added to allow disabling the filter in a specific column.</li>
+			<li>In versions 2.3+, the filter widget can be disabled using any of the following methods, in order of priority:
+				<ul>
+					<li>jQuery data <code class="hilight">data-filter="false"</code>.</li>
+					<li>metadata <code class="hilight">class="{ filter: false }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { filter: false } }</code>.</li>
+					<li>header class name <code class="hilight">class="filter-false"</code>.</li>
+				</ul>
+			</li>
 			<li>Replaced <code class="hilight">widgetFilterChildRows</code> option with <code class="hilight">widgetOptions.filter_childRows</code>. <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Added <code class="hilight">widgetOptions.filter_startsWith</code> option, which when <code class="hilight">true</code>, allows you to search the table from the starting of the table cell text. Use the toggle button to see the difference, and that it can be dynamically changed! <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Added <code class="hilight">widgetOptions.filter_cssFilter</code> option, which allows you to defined the css class applied to the filter row and each search input. <span class="tip"><em>New! v2.1</em></span></li>

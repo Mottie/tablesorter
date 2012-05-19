@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Set initial sort order using header options</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Set initial sort order</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -26,9 +26,7 @@
 		// pass the headers argument and passing a object
 		headers: {
 			// set initial sort order by column, this headers option setting overrides the sortInitialOrder option
-			0: { sortInitialOrder: 'desc' },
-			2: { sortInitialOrder: 'desc' },
-			4: { sortInitialOrder: 'desc' }
+			0: { sortInitialOrder: 'desc' }
 		}
 
 	});
@@ -37,14 +35,26 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Set initial sort order using header options</h2>
+	<h2>Set initial sort order</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> The functionality to add a "sortInitialOrder" inside of the "headers" option was added in version 2.0.8 (not part of the original plugin).
+		<em>NOTE!</em>
+		<ul>
+			<li>Adding "sortInitialOrder" inside of the "headers" option was added in version 2.0.8 (not part of the original plugin).</li>
+			<li>In versions 2.3+, the initial sort order of the columns can be set using any of the following methods, in order of priority:
+				<ul>
+					<li>jQuery data <code class="hilight">data-sort-initial-order="desc"</code> (equivalent to <code class="hilight">data-sortinitialorder="desc"</code>).</li>
+					<li>metadata <code class="hilight">class="{ sortInitialOrder: "desc" }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { sortInitialOrder: "desc" } }</code>.</li>
+					<li>header class name <code class="hilight">class="sortInitialOrder-desc"</code>.</li>
+					<li>overall <code class="hilight">sortInitialOrder</code> option setting.</li>
+				</ul>
+			</li>
+		</ul>
 	</p>
 
 	<h1>Demo</h1>
@@ -53,9 +63,9 @@
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
-			<th>Age</th>
+			<th class="sortInitialOrder-desc">Age</th>
 			<th>Total</th>
-			<th>Discount</th>
+			<th data-sortinitialorder="desc">Discount</th> <!-- equivalent to data-sortInitialOrder="desc" or data-sort-initialorder="desc" -->
 			<th>Date</th>
 		</tr>
 	</thead>

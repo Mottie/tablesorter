@@ -1,8 +1,8 @@
-/*! tableSorter 2.3 widgets - updated 5/11/2012
+/*! tableSorter 2.3 widgets - updated 5/19/2012
  *
  * jQuery UI Theme
  * Column Styles
- * Column Filters
+ * Column Filters (not compatible with tablesorter v2.0.5)
  * Sticky Header
  * Column Resizing
  * Save Sort
@@ -125,7 +125,7 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
-		var $tr, $td, time, last, rmv, k,
+		var $tb, $tr, $td, $f, time, last, rmv, i, j, k, l,
 		c = table.config,
 		b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
 		list = c.sortList,
@@ -142,23 +142,33 @@ $.tablesorter.addWidget({
 		// check if there is a sort (on initialization there may not be one)
 		if (list && list[0]) {
 			for (k = 0; k < b.length; k++ ) {
+				$tb = $(b[k]);
+				$f = $(document.createDocumentFragment());
+				$tr = $tb.children('tr').appendTo($f);
+				l = $tr.length;
 				// loop through the visible rows
-				$tr = $(b[k]).children('tr:visible');
-				$tr.each(function(i) {
-					$td = $(this).children().removeClass(rmv);
+				for (j = 0; j < l; j++) {
+					$td = $tr.eq(j).children().removeClass(rmv);
 					// primary sort column class
 					$td.eq(list[0][0]).addClass(css[0]);
 					if (len > 1) {
-						for (i=1; i<len; i++){
+						for (i = 1; i < len; i++){
 							// secondary, tertiary, etc sort column classes
 							$td.eq(list[i][0]).addClass( css[i] || css[last] );
 						}
 					}
-				});
+				}
+				$tb.append($tr);
 			}
 		} else {
 			// remove all column classes if sort is cleared (sortReset)
-			$(table).find('td').removeClass(rmv);
+			// $(table).find('td').removeClass(rmv); slow
+			$td = $(table).find('td');
+			len = $td.length;
+			rmv = new RegExp('(' + css.join('|') + ')');
+			for (i = 0; i < len; i++){
+				$td[i].className = $td[i].className.replace(rmv, '');
+			}
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
@@ -186,7 +196,13 @@ $.tablesorter.addWidget({
 			for (i=0; i < cols; i++){
 				fr += '<td><input type="search" data-col="' + i + '" class="' + css;
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
-				fr += $.tablesorter.getData(c.headerList[i], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
+				if ($.tablesorter.getData) {
+					// get data from jQuery data, metadata, headers option or header class name
+					fr += $.tablesorter.getData(c.headerList[i], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
+				} else {
+					// only class names and header options - keep this for compatibility with tablesorter v2.0.5
+					fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
+				}
 				fr += '></td>';
 			}
 			$t
@@ -196,6 +212,7 @@ $.tablesorter.addWidget({
 					if (v.join('') === '') {
 						$t.find('tr').show();
 					} else {
+						// *** to do *** optimize this to work better with very large tables
 						$t.children('tbody:not(.' + c.cssInfoBlock + ')').children('tr:not(.' + c.cssChildRow + ')').each(function(){
 							r = true;
 							cr = $(this).nextUntil('tr:not(.' + c.cssChildRow + ')');

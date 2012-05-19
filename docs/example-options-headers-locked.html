@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Lock sort order using header options</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Lock sort order</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -24,10 +24,6 @@
 			0: {
 				// lock the sort order of the first column to ascending (always Bruce to Peter when sorting on that column)
 				lockedOrder: 'asc'
-			},
-			2: {
-				// lock the sort order of the third column to descending (always 45 to 18 when sorting on that column)
-				lockedOrder: 'desc'
 			}
 		}
 	});
@@ -36,17 +32,27 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Lock sort order using header options</h2>
+	<h2>Lock sort order</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
 	<p class="tip">
-		<em>TIP!</em> Sort the first and third columns to see how the sort is locked. Override this by using the multisort key (shift) while clicking on the header.<br>
-		<em>NOTE!</em> This option was part of the original plugin, but it was broken.
+		<em>NOTE!</em>
+		<ul>
+			<li>This option was part of the original plugin, but it was broken.</li>
+			<li>Sort the first, third and fifth columns to see how the sort is locked.</li>
+			<li>Columns can be locked using any of the following methods, in order of priority (v2.3+):
+				<ul>
+					<li>jQuery data <code class="hilight">data-lockedorder="asc"</code>. (equivalent to <code class="hilight">data-locked-order="asc"</code>).</li>
+					<li>metadata <code class="hilight">class="{ lockedOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { lockedOrder: 'asc' } }</code>.</li>
+					<li>header class name <code class="hilight">class="lockedOrder-asc"</code>.</li>
+				</ul>
+			</li>
+		</ul>
 	</p>
-
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -54,9 +60,9 @@
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
-			<th>Age</th>
+			<th data-lockedOrder="desc">Age</th> <!-- added as data-lockedOrder, but the DOM changes it to data-lockedorder -->
 			<th>Total</th>
-			<th>Discount</th>
+			<th class="lockedOrder-desc">Discount</th>
 			<th>Date</th>
 		</tr>
 	</thead>

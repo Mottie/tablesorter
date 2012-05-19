@@ -31,7 +31,19 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> This functionality was added in version 2.0.11 (it is not part of the original plugin).
+		<em>NOTE!</em>
+		<ul>
+			<li>In tablesorter version 2.0.5 and older, only the metadata and headers options methods were available to set the parsers.</li>
+			<li>In versions 2.0.11+, parsers could be set using class names.</li>
+			<li>Currently (versions 2.3+), parsers can be set using any of the following methods, in order of priority:
+				<ul>
+					<li>jQuery data <code class="hilight">data-sorter="text"</code> (see the Javascript block below on how to set it directly).</li>
+					<li>metadata <code class="hilight">class="{ sorter: "text" }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code class="hilight">headers : { 0 : { sorter: "text" } }</code>.</li>
+					<li>header class name <code class="hilight">class="sorter-text"</code>.</li>
+				</ul>
+			</li>
+		</ul>
 	</p>
 
 	<h1>Demo</h1>
