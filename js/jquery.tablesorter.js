@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3.3 - Client-side table sorting with ease!
+* TableSorter 2.3.4 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.3";
+			this.version = "2.3.4";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -165,7 +165,8 @@
 					list = [];
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
-						h = $headers.filter(':not([colspan])[data-column="'+i+'"]:last');
+						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
+						h = $headers.filter(':not([colspan])[data-column="'+i+'"]:last,[colspan="1"][data-column="'+i+'"]:last');
 						ch = c.headers[i];
 						// get column parser
 						p = getParserById( ts.getData(h, ch, 'sorter') );
