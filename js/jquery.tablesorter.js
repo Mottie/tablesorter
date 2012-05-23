@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.3.4 - Client-side table sorting with ease!
+* TableSorter 2.3.5 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.4";
+			this.version = "2.3.5";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -54,6 +54,7 @@
 				widgetOptions    : {
 					zebra : [ "even", "odd" ]    // zebra widget alternating row class names
 				},
+				initWidgets      : true,       // apply widgets on tablesorter initialization
 
 				// callbacks
 				initialized      : null,       // function(table){},
@@ -141,7 +142,7 @@
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = getElementText(table, node, cellIndex);
 						if (table.config.debug) {
-							log('Checking if value was empty on row ' + rowIndex + ', column:' + cellIndex + ": " + nodeValue);
+							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': ' + nodeValue);
 						}
 					} else {
 						keepLooking = false;
@@ -157,10 +158,12 @@
 			}
 
 			function buildParserCache(table, $headers) {
-					var c = table.config, tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
-						ts = $.tablesorter, rows, list, l, i, h, m, ch, cl, p, parsersDebug = "";
-				if ( tb.length === 0) { return; } // In the case of empty tables
-				rows = tb[0].rows;
+				var c = table.config,
+					$tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
+					$f = $(document.createDocumentFragment()),
+					ts = $.tablesorter, rows, list, l, i, h, ch, p, parsersDebug = "";
+				if ( $tb.length === 0) { return; } // In the case of empty tables
+				rows = $tb.children('tr').clone().appendTo($f);
 				if (rows[0]) {
 					list = [];
 					l = rows[0].cells.length;
@@ -263,7 +266,7 @@
 				for (i = 0; i < l; i++) {
 					w = getWidgetById(c[i]);
 					if ( w ) {
-						if (init && w.hasOwnProperty('init')) {
+						if (init === true && w.hasOwnProperty('init')) {
 							w.init(table, widgets, w);
 						} else if (!init && w.hasOwnProperty('format')) {
 							w.format(table);
@@ -272,7 +275,8 @@
 				}
 			}
 
-			function appendToTable(table) {
+			// init flag (true) used by pager plugin to prevent widget application
+			function appendToTable(table, init) {
 				var c = table.config,
 				b = table.tBodies,
 				rows = [],
@@ -309,15 +313,15 @@
 					benchmark("Rebuilt table", appendTime);
 				}
 				// apply table widgets
-				applyWidget(table);
+				if (!init) { applyWidget(table); }
 				// trigger sortend
 				$(table).trigger("sortEnd", table);
 			}
 
-			// from:
+			// computeTableHeaderCellIndexes from:
 			// http://www.javascripttoolbox.com/lib/table/examples.php
 			// http://www.javascripttoolbox.com/temp/table_cellindex.html
-			function computeTableHeaderCellIndexes(t) {
+			function computeThIndexes(t) {
 				var matrix = [],
 				lookup = {},
 				trs = $(t).find('thead:eq(0) tr'),
@@ -363,10 +367,9 @@
 			}
 
 			function buildHeaders(table) {
-				var meta = ($.metadata) ? true : false,
-				header_index = computeTableHeaderCellIndexes(table), ch, $t,
-				$th, lock, time, $tableHeaders, c = table.config, ts = $.tablesorter;
-				c.headerList = [];
+				var header_index = computeThIndexes(table), ch, $t,
+					$th, lock, time, $tableHeaders, c = table.config, ts = $.tablesorter;
+					c.headerList = [];
 				if (c.debug) {
 					time = new Date();
 				}
@@ -457,7 +460,7 @@
 			}
 
 			function getCachedSortType(parsers, i) {
-				return (parsers) ? parsers[i].type : '';
+				return (parsers && parsers[i]) ? parsers[i].type || '' : '';
 			}
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
@@ -596,7 +599,7 @@
 					// if no thead or tbody quit.
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
-					var $headers, $cell, totalRows, $this,
+					var $headers, $cell, $this,
 						config, c, i, j, k, a, s, o,
 						m = $.metadata;
 					// new blank config object
@@ -712,7 +715,8 @@
 							$this.trigger("sortBegin", $this[0]);
 							// set css for headers
 							setHeadersCss($this[0], $headers, c.sortList);
-							appendToTable($this[0], multisort($this[0], c.sortList));
+							multisort($this[0], c.sortList);
+							appendToTable($this[0]);
 							// stop normal event by returning false
 							return false;
 						}
@@ -765,7 +769,7 @@
 						// resort using current settings
 						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
 					})
-					.bind("sorton", function(e, list) {
+					.bind("sorton", function(e, list, init) {
 						$(this).trigger("sortStart", this);
 						// update and store the sortlist
 						c.sortList = list;
@@ -774,17 +778,18 @@
 						// set css for headers
 						setHeadersCss(this, $headers, c.sortList);
 						// sort the table and append it to the dom
-						appendToTable(this, multisort(this, c.sortList));
+						multisort(this, c.sortList);
+						appendToTable(this, init);
 					})
-					.bind("appendCache", function() {
-						appendToTable(this);
+					.bind("appendCache", function(e, init) {
+						appendToTable(this, init);
 					})
 					.bind("applyWidgetId", function(e, id) {
 						getWidgetById(id).format(this);
 					})
-					.bind("applyWidgets", function() {
+					.bind("applyWidgets", function(e, init) {
 						// apply widgets
-						applyWidget(this);
+						applyWidget(this, init);
 					})
 					.bind("destroy", function(e,c){
 						$.tablesorter.destroy(this, c);
@@ -800,8 +805,8 @@
 					applyWidget(this, true);
 					// if user has supplied a sort list to constructor.
 					if (c.sortList.length > 0) {
-						$this.trigger("sorton", [c.sortList]);
-					} else {
+						$this.trigger("sorton", [c.sortList, !c.initWidgets]);
+					} else if (c.initWidgets) {
 						// apply widget format
 						applyWidget(this);
 					}
@@ -1098,7 +1103,7 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tb, $tr, $f, row, even, time, k, j, l, n,
+			var $tb, $tr, $f, row, even, time, k, j, l,
 			c = table.config,
 			child = new RegExp(c.cssChildRow, 'i'),
 			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
@@ -1119,11 +1124,10 @@
 					$tr = $tb.children('tr').appendTo($f);
 					for (j = 0; j < l; j++) {
 						if ($tr[j].style.display !== 'none') {
-							n = $tr[j].className;
 							// style children rows the same way the parent row was styled
-							if (!child.test(n)) { row++; }
+							if (!child.test($tr[j].className)) { row++; }
 							even = (row % 2 === 0);
-							$tr[j].className = n.replace(/\s+/g,'').replace(css[0],'').replace(css[1],'') + ' ' + css[even ? 0 : 1];
+							$tr.eq(j).removeClass(css[even ? 1 : 0]).addClass(css[even ? 0 : 1]);
 						}
 					}
 				}

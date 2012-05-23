@@ -24,7 +24,7 @@ pre.normal{background-color:transparent;border:none;border-left-width:0;overflow
 #main{margin:0 20px 20px;padding:0 15px 15px 0;clear:both;}
 #content{padding:20px;}
 #busy{background-color:#e95555;border:1px ridge #ccc;color:#eee;display:none;padding:3px;position:absolute;right:7px;top:7px;}
-#start{color:#007baa;}
+#start,#case{color:#007baa;}
 #demo strong{color:#a00;}
 hr{height:1px;}
 code{font-size:108%;font-style:normal;padding:0;}

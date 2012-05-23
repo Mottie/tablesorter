@@ -1,8 +1,8 @@
-/*! tableSorter 2.3 widgets - updated 5/19/2012
+/*! tableSorter 2.3 widgets - updated 5/23/2012
  *
  * jQuery UI Theme
  * Column Styles
- * Column Filters (not compatible with tablesorter v2.0.5)
+ * Column Filters
  * Sticky Header
  * Column Resizing
  * Save Sort
@@ -140,35 +140,30 @@ $.tablesorter.addWidget({
 			time = new Date();
 		}
 		// check if there is a sort (on initialization there may not be one)
-		if (list && list[0]) {
-			for (k = 0; k < b.length; k++ ) {
-				$tb = $(b[k]);
-				$f = $(document.createDocumentFragment());
-				$tr = $tb.children('tr').appendTo($f);
-				l = $tr.length;
-				// loop through the visible rows
-				for (j = 0; j < l; j++) {
+		for (k = 0; k < b.length; k++ ) {
+			$tb = $(b[k]);
+			$f = $(document.createDocumentFragment());
+			$tr = $tb.children('tr').appendTo($f);
+			l = $tr.length;
+			// loop through the visible rows
+			for (j = 0; j < l; j++) {
+				if ($tr[j].style.display !== 'none') {
+					// remove all columns class names
 					$td = $tr.eq(j).children().removeClass(rmv);
-					// primary sort column class
-					$td.eq(list[0][0]).addClass(css[0]);
-					if (len > 1) {
-						for (i = 1; i < len; i++){
-							// secondary, tertiary, etc sort column classes
-							$td.eq(list[i][0]).addClass( css[i] || css[last] );
+					// add appropriate column class names
+					if (list && list[0]) {
+						// primary sort column class
+						$td.eq(list[0][0]).addClass(css[0]);
+						if (len > 1) {
+							for (i = 1; i < len; i++){
+								// secondary, tertiary, etc sort column classes
+								$td.eq(list[i][0]).addClass( css[i] || css[last] );
+							}
 						}
 					}
 				}
-				$tb.append($tr);
 			}
-		} else {
-			// remove all column classes if sort is cleared (sortReset)
-			// $(table).find('td').removeClass(rmv); slow
-			$td = $(table).find('td');
-			len = $td.length;
-			rmv = new RegExp('(' + css.join('|') + ')');
-			for (i = 0; i < len; i++){
-				$td[i].className = $td[i].className.replace(rmv, '');
-			}
+			$tb.append($tr);
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
@@ -177,19 +172,72 @@ $.tablesorter.addWidget({
 });
 
 // Widget: Filter
-// "filter_startsWith" & "filter_childRows" options in "widgetOptions"
+// "filter_startsWith", "filter_childRows", "filter_ignoreCase" & "filter_searchDelay" options in "widgetOptions"
 // **************************
 $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
 		if (!$(table).hasClass('hasFilters')) {
-			var i, v, r, t, x, cr, $td, c = table.config,
-				wo = c.widgetOptions,
-				css = wo.filter_cssFilter || 'tablesorter-filter',
-				$t = $(table).addClass('hasFilters'),
-				cols = c.parsers.length,
-				fr = '<tr class="' + css + '">',
-				time;
+			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td, $f,
+			c = table.config,
+			wo = c.widgetOptions,
+			css = wo.filter_cssFilter || 'tablesorter-filter',
+			$t = $(table).addClass('hasFilters'),
+			b = $t.children('tbody:not(.' + c.cssInfoBlock + ')'),
+			cols = c.parsers.length,
+			fr = '<tr class="' + css + '">',
+			reg = new RegExp(c.cssChildRow),
+			time, timer,
+			findRows = function(){
+				if (c.debug) { time = new Date(); }
+				v = $t.find('thead').eq(0).children('tr').find('input.' + css).map(function(){
+					i = $(this).val() || '';
+					return (wo.filter_ignoreCase) ? i.toLocaleLowerCase() : i;
+				}).get();
+				cv = v.join('');
+				for (k = 0; k < b.length; k++ ) {
+					$tb = $(b[k]);
+					$f = $(document.createDocumentFragment());
+					$tr = $tb.children('tr').appendTo($f);
+					l = $tr.length;
+					// loop through the rows
+					for (j = 0; j < l; j++) {
+						if (cv === '') {
+							$tr[j].style.display = '';
+						} else {
+							// skip child rows
+							if (!reg.test($tr[j].className)) {
+								r = true;
+								cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
+								// so, if "table.config.widgetOptions.filter_childRows" is true and there is
+								// a match anywhere in the child row, then it will make the row visible
+								// checked here so the option can be changed dynamically
+								t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
+									typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
+								$td = $tr.eq(j).children('td');
+								for (i=0; i < cols; i++){
+									if (v[i] !== '') {
+										x = $.trim(($td.eq(i).text() + t));
+										x = (wo.filter_ignoreCase ? x.toLocaleLowerCase() : x).indexOf(v[i]);
+										if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
+											r = (r) ? true : false;
+										} else {
+											r = false;
+										}
+									}
+								}
+								$tr[j].style.display = (r ? '' : 'none');
+								if (cr.length) { cr[r ? 'show' : 'hide'](); }
+							}
+						}
+					}
+					$tb.append($tr);
+				}
+				if (c.debug) {
+					$.tablesorter.benchmark("Completed filter widget search", time);
+				}
+				$t.trigger('applyWidgets'); // make sure zebra widget is applied
+			};
 			if (c.debug) {
 				time = new Date();
 			}
@@ -207,34 +255,17 @@ $.tablesorter.addWidget({
 			}
 			$t
 				.find('thead').eq(0).append(fr += '</tr>')
-				.find('input.' + css).bind('keyup search', function(e){
-					v = $t.find('thead').eq(0).children('tr').find('input.' + css).map(function(){ return ($(this).val() || '').toLowerCase(); }).get();
-					if (v.join('') === '') {
-						$t.find('tr').show();
-					} else {
-						// *** to do *** optimize this to work better with very large tables
-						$t.children('tbody:not(.' + c.cssInfoBlock + ')').children('tr:not(.' + c.cssChildRow + ')').each(function(){
-							r = true;
-							cr = $(this).nextUntil('tr:not(.' + c.cssChildRow + ')');
-							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
-							// a match anywhere in the child row, then it will make the row visible
-							// checked here so the option can be changed dynamically
-							t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
-								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
-							$td = $(this).children('td');
-							for (i=0; i < cols; i++){
-								x = $.trim(($td.eq(i).text() + t)).toLowerCase().indexOf(v[i]);
-								if (v[i] !== '' && ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) ) {
-									r = (r) ? true : false;
-								} else if (v[i] !== '') {
-									r = false;
-								}
-							}
-							$(this)[r ? 'show' : 'hide']();
-							if (cr.length) { cr[r ? 'show' : 'hide'](); }
-						});
+				.find('input.' + css).bind('keyup search', function(e, delay){
+					// skip delay
+					if (delay === false) {
+						findRows();
+						return;
 					}
-					$t.trigger('applyWidgets'); // make sure zebra widget is applied
+					// delay filtering
+					clearTimeout(timer);
+					timer = setTimeout(function(){
+						findRows();
+					}, wo.filter_searchDelay || 300);
 				});
 			if (c.debug) {
 				$.tablesorter.benchmark("Applying Filter widget", time);

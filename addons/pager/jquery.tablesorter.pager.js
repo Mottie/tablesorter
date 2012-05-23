@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 5/11/2012
+ * updated 5/23/2012
  */
 ;(function($) {
 	$.extend({tablesorterPager: new function() {
@@ -365,7 +365,7 @@
 				} else {
 					c.ajax = false;
 					// Regular pager; all rows stored in memory
-					$(this).trigger("appendCache");
+					$(this).trigger("appendCache", true);
 					hideRowsSetup(table, c);
 				}
 
