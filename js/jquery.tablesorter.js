@@ -1,4 +1,4 @@
-/*!
+﻿/*!
 * TableSorter 2.3.5 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -600,7 +600,7 @@
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
 					var $headers, $cell, $this,
-						config, c, i, j, k, a, s, o,
+						config, c, i, j, k, a, s, o, downTime,
 						m = $.metadata;
 					// new blank config object
 					this.config = {};
@@ -612,6 +612,7 @@
 					$this = $(this).addClass(c.tableClass);
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
+					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
 					// build up character equivalent cross-reference
 					buildRegex();
 					// digit sort text location; keeping max+/- for backwards compatibility
@@ -627,8 +628,15 @@
 					fixColumnWidth(this);
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
-					$headers
-					.click(function(e) {
+					$headers.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+						if (e.type === 'mousedown') {
+							downTime = new Date().getTime();
+							return !c.cancelSelection;
+						}
+
+						// prevent resizable widget from initializing a sort (long clicks are ignored)
+						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
+
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
@@ -720,16 +728,16 @@
 							// stop normal event by returning false
 							return false;
 						}
+					});
+					if (c.cancelSelection) {
 						// cancel selection
-					})
-					.mousedown(function() {
-						if (c.cancelSelection) {
+						$headers.each(function() {
 							this.onselectstart = function() {
 								return false;
 							};
 							return false;
-						}
-					});
+						});
+					}
 					// apply easy methods that trigger binded events
 					$this
 					.bind("update", function(e, resort) {
