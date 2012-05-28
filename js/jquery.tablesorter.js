@@ -940,13 +940,14 @@
 			};
 
 			// get sorter, string, empty, etc options for each column from
-			// metadata, header option or header class name ("sorter-false")
+			// jQuery data, metadata, header option or header class name ("sorter-false")
 			// priority = jQuery data > meta > headers option > header class name
 			this.getData = function(h, ch, key) {
-				var val = '', $h = $(h),
-					m = $.metadata ? $h.metadata() : false,
-					cl = ' ' + ($h.length ? $h.attr('class') || '' : '');
-				if ($h.length && $h.data() && ( typeof $h.data(key) !== 'undefined' || typeof $h.data(key.toLowerCase()) !== 'undefined') ){
+				var val = '', $h = $(h), m, cl;
+				if (!$h.length) { return ''; }
+				m = $.metadata ? $h.metadata() : false;
+				cl = ' ' + ($h.attr('class') || '');
+				if ($h.data() && ( typeof $h.data(key) !== 'undefined' || typeof $h.data(key.toLowerCase()) !== 'undefined') ){
 					// "data-lockedOrder" is assigned to "lockedorder"; but "data-locked-order" is assigned to "lockedOrder"
 					// "data-sort-initial-order" is assigned to "sortInitialOrder"
 					val += $h.data(key) || $h.data(key.toLowerCase());
@@ -1132,7 +1133,7 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tb, $tv, $tr, $f, row, even, time, k, j, l,
+			var $tb, $tv, $tr, row, even, time, k, l,
 			c = table.config,
 			child = new RegExp(c.cssChildRow, 'i'),
 			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),

@@ -39,6 +39,7 @@ table.tablesorter tbody td {
 /* This allows you to use ui-state-default as the zebra stripe color */
 table.tablesorter tr.ui-state-default {
 	background-image: url();
+	font-weight: normal;
 }
 /* used to hide a tbody while rebuilding to speed it up */
 table.tablesorter .tablesorter-hidden {
