@@ -48,6 +48,10 @@ table.tablesorter th.headerSortDown span:first-child,
 table.tablesorter th.tablesorter-headerSortDown .tablesorter-header-inner {
 	background: url(desc.png) no-repeat;
 }
+/* used to hide a tbody while rebuilding to speed it up */
+table.tablesorter .tablesorter-hidden {
+	display: none;
+}
 
 /* Zebra Widget - row alternating colors */
 table.tablesorter tr.odd td {

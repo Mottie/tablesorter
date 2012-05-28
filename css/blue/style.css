@@ -59,6 +59,10 @@ table.tablesorter th.tablesorter-headerSortDown {
 	/* image */
 	/* background-image: url(black-desc.gif); */
 }
+/* used to hide a tbody while rebuilding to speed it up */
+table.tablesorter .tablesorter-hidden {
+	display: none;
+}
 
 /* Zebra Widget - row alternating colors */
 table.tablesorter tr.odd td {

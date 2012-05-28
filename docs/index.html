@@ -690,7 +690,7 @@
 					<pre class="js">$(function(){
   $("table").tablesorter({
     onRenderHeader: function (){
-      $(this).find('span').addClass('roundedCorners');
+      $(this).find('div').addClass('roundedCorners');
     }
   });
 });</pre>and you'll end up with this HTML (only the thead is shown)<pre class="html">&lt;thead&gt;
@@ -1282,7 +1282,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: Set this option to <code class="hilight">true</code> to use the filter to find text from the start of the column, so typing in "a" will find "albert" but not "frank", both have a's. (New v2.1).
+					Set this option to <code class="hilight">true</code> to use the filter to find text from the start of the column, so typing in "a" will find "albert" but not "frank", both have a's. (New v2.1).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-startswith"><code class="hilight">filter_startsWith</code></a> option as follows:
@@ -1296,6 +1296,58 @@ $(function(){
 });</pre></div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-ignorecase">
+				<td><a href="#" class="toggle2">filter_ignoreCase</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Set this option to <code class="hilight">false</code> to make the column content search case-insensitive, so typing in "a" will not find "Albert". <span class="tip"><em>New! v2.3.4</em></span>
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-ignorecase"><code class="hilight">filter_ignorecase</code></a> option as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_ignoreCase : false
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+
+			<tr id="widget-filter-searchdelay">
+				<td><a href="#" class="toggle2">filter_searchDelay</a></td>
+				<td>Numeric</td>
+				<td>300</td>
+				<td>
+					Set this option to the number of milliseconds to delay the search. <span class="tip"><em>New! v2.3.4</em></span>
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-searchdelay"><code class="hilight">filter_searchDelay</code></a> option as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_searchDelay : 500
+    }
+  });
+});</pre>
+
+					If you want to want to initialize the filter without user input, target any one of the filters and trigger a "search".
+
+					<pre class="js">// target the first filter input
+// this method will begin the search after the searchDelay time
+$('input.tablesorter-filter:eq(0)').trigger('search');
+
+// this method will begin the search immediately
+$('input.tablesorter-filter:eq(0)').trigger('search', false);</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-sticky-headers">

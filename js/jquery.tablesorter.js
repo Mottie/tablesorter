@@ -24,7 +24,7 @@
 			this.defaults = {
 
 				// appearance
-				widthFixed       : false,
+				widthFixed       : false,      // adds colgroup to fix widths of columns
 
 				// functionality
 				cancelSelection  : true,       // prevent text selection in the header
@@ -51,6 +51,7 @@
 				textSorter       : null,       // use custom text sorter - function(a,b){ return a.sort(b); } // basic sort
 
 				// widget options
+				widgets: [],                   // method to add widgets, e.g. widgets: ['zebra']
 				widgetOptions    : {
 					zebra : [ "even", "odd" ]    // zebra widget alternating row class names
 				},
@@ -79,8 +80,7 @@
 				headerList: [],
 				empties: {},
 				strings: {},
-				parsers: [],
-				widgets: []
+				parsers: []
 
 				// deprecated; but retained for backwards compatibility
 				// widgetZebra: { css: ["even", "odd"] }
@@ -104,17 +104,26 @@
 			this.hasInitialized = false;
 
 			function getElementText(table, node, cellIndex) {
-				var text = "", t = table.config.textExtraction;
 				if (!node) { return ""; }
+				var c = table.config,
+					t = c.textExtraction, text = "";
 				if (t === "simple") {
-					text = $(node).text();
+					if (c.supportsTextContent) {
+						text = node.textContent; // newer browsers support this
+					} else {
+						if (node.childNodes[0] && node.childNodes[0].hasChildNodes()) {
+							text = node.childNodes[0].innerHTML;
+						} else {
+							text = node.innerHTML;
+						}
+					}
 				} else {
 					if (typeof(t) === "function") {
 						text = t(node, table, cellIndex);
 					} else if (typeof(t) === "object" && t.hasOwnProperty(cellIndex)) {
 						text = t[cellIndex](node, table, cellIndex);
 					} else {
-						text = $(node).text();
+						text = c.supportsTextContent ? node.textContent : $(node).text();
 					}
 				}
 				return $.trim(text);
@@ -159,11 +168,10 @@
 
 			function buildParserCache(table, $headers) {
 				var c = table.config,
-					$tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
-					$f = $(document.createDocumentFragment()),
-					ts = $.tablesorter, rows, list, l, i, h, ch, p, parsersDebug = "";
-				if ( $tb.length === 0) { return; } // In the case of empty tables
-				rows = $tb.children('tr').clone().appendTo($f);
+					tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
+					ts = $.tablesorter, rows, list, l, i, h, m, ch, cl, p, parsersDebug = "";
+				if ( tb.length === 0) { return; } // In the case of empty tables
+				rows = tb[0].rows;
 				if (rows[0]) {
 					list = [];
 					l = rows[0].cells.length;
@@ -221,6 +229,7 @@
 					tc.cache[k] = { row: [], normalized: [] };
 					// ignore tbodies with class name from css.cssInfoBlock
 					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
+						$(b[k]).addClass('tablesorter-hidden');
 						totalRows = (b[k] && b[k].rows.length) || 0;
 						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
 						for (i = 0; i < totalRows; ++i) {
@@ -243,6 +252,7 @@
 							cols.push(tc.cache[k].normalized.length); // add position for rowCache
 							tc.cache[k].normalized.push(cols);
 						}
+						$(b[k]).removeClass('tablesorter-hidden');
 					}
 				}
 				if (tc.debug) {
@@ -261,8 +271,11 @@
 			}
 
 			function applyWidget(table, init) {
-				var c = table.config.widgets,
-				i, w, l = c.length;
+				var tc = table.config, c = tc.widgets,
+				time, i, w, l = c.length;
+				if (tc.debug) {
+					time = new Date();
+				}
 				for (i = 0; i < l; i++) {
 					w = getWidgetById(c[i]);
 					if ( w ) {
@@ -272,6 +285,9 @@
 							w.format(table);
 						}
 					}
+				}
+				if (tc.debug) {
+					benchmark("Completed " + (init === true ? "initializing" : "applying") + " widgets", time);
 				}
 			}
 
@@ -287,6 +303,7 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					if (!$(b[k]).hasClass(c.cssInfoBlock)){
+						$(b[k]).addClass('tablesorter-hidden');
 						f = document.createDocumentFragment();
 						r = c2[k].row;
 						n = c2[k].normalized;
@@ -304,6 +321,7 @@
 							}
 						}
 						table.tBodies[k].appendChild(f);
+						$(b[k]).removeClass('tablesorter-hidden');
 					}
 				}
 				if (c.appender) {
@@ -366,6 +384,7 @@
 				return (/^d/i.test(v) || v === 1);
 			}
 
+
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
 					$th, lock, time, $tableHeaders, c = table.config, ts = $.tablesorter;
@@ -373,11 +392,12 @@
 				if (c.debug) {
 					time = new Date();
 				}
-				$tableHeaders = $(c.selectorHeaders, table)
-				.wrapInner("<div class='tablesorter-header-inner' />")
+				$tableHeaders = $(table).find(c.selectorHeaders)
 				.each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
+					this.innerHTML = '<div class="tablesorter-header-inner">' + this.innerHTML + '</div>'; // faster than wrapInner
+					if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
@@ -389,15 +409,14 @@
 					}
 					if (!this.sortDisabled) {
 						$th = $t.addClass(c.cssHeader);
-						if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
 					}
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
 					$t.parent().addClass(c.cssHeader);
 				});
-				if (c.debug) {
-					benchmark("Built headers", time);
+				if (table.config.debug) {
+					benchmark("Built headers:", time);
 					log($tableHeaders);
 				}
 				return $tableHeaders;
@@ -426,7 +445,10 @@
 				l = list.length;
 				for (i = 0; i < l; i++) {
 					if (list[i][1] === 2) { continue; } // direction = 2 means reset!
-					h[list[i][0]].addClass(css[list[i][1]]);
+					if (h[list[i][0]]) {
+						// add class if cell exists - fix for issue #78
+						h[list[i][0]].addClass(css[list[i][1]]);
+					}
 					// multicolumn sorting updating
 					f = $headers.filter('[data-column="' + list[i][0] + '"]');
 					if (l > 1 && f.length) {
@@ -735,7 +757,6 @@
 							this.onselectstart = function() {
 								return false;
 							};
-							return false;
 						});
 					}
 					// apply easy methods that trigger binded events
@@ -1111,7 +1132,7 @@
 	ts.addWidget({
 		id: "zebra",
 		format: function(table) {
-			var $tb, $tr, $f, row, even, time, k, j, l,
+			var $tb, $tv, $tr, $f, row, even, time, k, j, l,
 			c = table.config,
 			child = new RegExp(c.cssChildRow, 'i'),
 			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
@@ -1123,23 +1144,23 @@
 				time = new Date();
 			}
 			for (k = 0; k < b.length; k++ ) {
-				row = 0;
 				// loop through the visible rows
 				$tb = $(b[k]);
 				l = $tb.children('tr').length;
 				if (l > 1) {
-					$f = $(document.createDocumentFragment());
-					$tr = $tb.children('tr').appendTo($f);
-					for (j = 0; j < l; j++) {
-						if ($tr[j].style.display !== 'none') {
-							// style children rows the same way the parent row was styled
-							if (!child.test($tr[j].className)) { row++; }
-							even = (row % 2 === 0);
-							$tr.eq(j).removeClass(css[even ? 1 : 0]).addClass(css[even ? 0 : 1]);
-						}
-					}
+					row = 0;
+					$tv = $tb.find('tr:visible');
+					$tb.addClass('tablesorter-hidden');
+					// revered back to using jQuery each - strangely it's the fastest method
+					$tv.each(function(){
+						$tr = $(this);
+						// style children rows the same way the parent row was styled
+						if (!child.test(this.className)) { row++; }
+						even = (row % 2 === 0);
+						$tr.removeClass(css[even ? 1 : 0]).addClass(css[even ? 0 : 1]);
+					});
+					$tb.removeClass('tablesorter-hidden');
 				}
-				$tb.append($tr);
 			}
 			if (c.debug) {
 				ts.benchmark("Applying Zebra widget", time);

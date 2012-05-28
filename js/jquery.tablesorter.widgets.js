@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 5/23/2012
+/*! tableSorter 2.3 widgets - updated 5/28/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -125,7 +125,7 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "columns",
 	format: function(table) {
-		var $tb, $tr, $td, $f, time, last, rmv, i, j, k, l,
+		var $tb, $tr, $td, $t, time, last, rmv, i, k, l,
 		c = table.config,
 		b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
 		list = c.sortList,
@@ -142,14 +142,14 @@ $.tablesorter.addWidget({
 		// check if there is a sort (on initialization there may not be one)
 		for (k = 0; k < b.length; k++ ) {
 			$tb = $(b[k]);
-			$f = $(document.createDocumentFragment());
-			$tr = $tb.children('tr').appendTo($f);
+			$tr = $tb.addClass('tablesorter-hidden').children('tr');
 			l = $tr.length;
 			// loop through the visible rows
-			for (j = 0; j < l; j++) {
-				if ($tr[j].style.display !== 'none') {
+			$tr.each(function(){
+				$t = $(this);
+				if (this.style.display !== 'none') {
 					// remove all columns class names
-					$td = $tr.eq(j).children().removeClass(rmv);
+					$td = $t.children().removeClass(rmv);
 					// add appropriate column class names
 					if (list && list[0]) {
 						// primary sort column class
@@ -162,8 +162,8 @@ $.tablesorter.addWidget({
 						}
 					}
 				}
-			}
-			$tb.append($tr);
+			});
+			$tb.removeClass('tablesorter-hidden');
 		}
 		if (c.debug) {
 			$.tablesorter.benchmark("Applying Columns widget", time);
@@ -178,7 +178,7 @@ $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
 		if (!$(table).hasClass('hasFilters')) {
-			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td, $f,
+			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td,
 			c = table.config,
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
@@ -197,8 +197,7 @@ $.tablesorter.addWidget({
 				cv = v.join('');
 				for (k = 0; k < b.length; k++ ) {
 					$tb = $(b[k]);
-					$f = $(document.createDocumentFragment());
-					$tr = $tb.children('tr').appendTo($f);
+					$tr = $tb.addClass('tablesorter-hidden').children('tr');
 					l = $tr.length;
 					// loop through the rows
 					for (j = 0; j < l; j++) {
@@ -231,7 +230,7 @@ $.tablesorter.addWidget({
 							}
 						}
 					}
-					$tb.append($tr);
+					$tb.removeClass('tablesorter-hidden');
 				}
 				if (c.debug) {
 					$.tablesorter.benchmark("Completed filter widget search", time);
@@ -256,6 +255,8 @@ $.tablesorter.addWidget({
 			$t
 				.find('thead').eq(0).append(fr += '</tr>')
 				.find('input.' + css).bind('keyup search', function(e, delay){
+					// ignore arrow and meta keys; allow backspace
+					if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
 					// skip delay
 					if (delay === false) {
 						findRows();
@@ -317,11 +318,11 @@ $.tablesorter.addWidget({
 		});
 		// set sticky header cell width and link clicks to real header
 		hdrCells.each(function(i){
-			var t = $(this),
-			s = stkyCells.eq(i)
+			var t = $(this);
+			stkyCells.eq(i)
 			// clicking on sticky will trigger sort
-			.bind('click', function(e){
-				t.trigger(e);
+			.bind('mouseup', function(e){
+				t.trigger(e, true); // external mouseup flag (click timer is ignored)
 			})
 			// prevent sticky header text selection
 			.bind('mousedown', function(){
@@ -374,12 +375,11 @@ $.tablesorter.addWidget({
 	format: function(table) {
 		if ($(table).hasClass('hasResizable')) { return; }
 		$(table).addClass('hasResizable');
-		var i, j, w, s, c = table.config,
+		var j, s, c = table.config,
 			$cols = $(c.headerList).filter(':gt(0)'),
 			position = 0,
 			$target = null,
 			$prev = null,
-			len = $cols.length,
 			stopResize = function(){
 				position = 0;
 				$target = $prev = null;
@@ -403,8 +403,7 @@ $.tablesorter.addWidget({
 			.bind('mousemove', function(e){
 				// ignore mousemove if no mousedown
 				if (position === 0 || !$target) { return; }
-				var w = e.pageX - position,
-					n = $prev;
+				var w = e.pageX - position;
 				// make sure
 				if ( $target.width() < -w || ( $prev && $prev.width() <= w )) { return; }
 				// resize current column
@@ -425,6 +424,7 @@ $.tablesorter.addWidget({
 				$target = $(e.target).closest('th');
 				$prev = $target.prev();
 				position = e.pageX;
+				return false;
 			});
 		$(table).find('thead').bind('mouseup mouseleave', function(){
 			stopResize();
@@ -443,7 +443,7 @@ $.tablesorter.addWidget({
 		thisWidget.format(table, true);
 	},
 	format: function(table, init) {
-		var n, d, k, sl, time, c = table.config, sortList = { "sortList" : c.sortList };
+		var sl, time, c = table.config, sortList = { "sortList" : c.sortList };
 		if (c.debug) {
 			time = new Date();
 		}

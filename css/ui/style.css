@@ -40,6 +40,10 @@ table.tablesorter tbody td {
 table.tablesorter tr.ui-state-default {
 	background-image: url();
 }
+/* used to hide a tbody while rebuilding to speed it up */
+table.tablesorter .tablesorter-hidden {
+	display: none;
+}
 
 /* filter widget */
 table.tablesorter thead tr.tablesorter-filter input.tablesorter-filter {

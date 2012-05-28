@@ -31,9 +31,10 @@
 
 		// format is called when the on init and when a sorting has finished
 		format: function(table) {
+			var h, i, skip;
 			// cache and collect all TH headers
 			if (!this.headers) {
-				var h = this.headers = [];
+				h = this.headers = [];
 				$("thead th",table).each(function() {
 					h.push(
 					"<th>" + $(this).text() + "</th>"
@@ -44,18 +45,17 @@
 			// remove appended headers by classname
 			$("tr.repeated-header",table).remove();
 
+			// number of rows to skip
+			skip = 4;
+
 			// loop all tr elements and insert a copy of the "headers"
-			for (var i = 0; i < table.tBodies[0].rows.length; i++) {
+			for (i = skip; i < table.tBodies[0].rows.length; i += (skip + 1)) {
 				// insert a copy of the table head every X rows
-				// i mod 5 = 4, is true every 4th row, starting from the 4th.
-				// i mod 6 = 5, is true every 5th row, starting from the 5th, etc.
-				if ((i%5) === 4) {
-					$("tbody tr:eq(" + i + ")",table).before(
-						// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
-						// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
-						$("<tr></tr>").addClass("repeated-header remove-me").html(this.headers.join(""))
-					);
-				}
+				$("tbody tr:eq(" + i + ")",table).before(
+					// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
+					// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
+					$("<tr></tr>").addClass("repeated-header remove-me").html(this.headers.join(""))
+				);
 			}
 		}
 
@@ -311,6 +311,15 @@
 			<td>80</td>
 			<td>80</td>
 			<td>80</td>
+		</tr>
+		<tr>
+			<td>Student24</td>
+			<td>Languages</td>
+			<td>female</td>
+			<td>100</td>
+			<td>91</td>
+			<td>13</td>
+			<td>82</td>
 		</tr>
 	</tbody>
 </table>
