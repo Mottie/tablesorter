@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 5/28/2012
+/*! tableSorter 2.3 widgets - updated 5/30/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -178,7 +178,7 @@ $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
 		if (!$(table).hasClass('hasFilters')) {
-			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td,
+			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td, reg2,
 			c = table.config,
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
@@ -186,7 +186,8 @@ $.tablesorter.addWidget({
 			b = $t.children('tbody:not(.' + c.cssInfoBlock + ')'),
 			cols = c.parsers.length,
 			fr = '<tr class="' + css + '">',
-			reg = new RegExp(c.cssChildRow),
+			regexp = /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/,
+			reg1 = new RegExp(c.cssChildRow),
 			time, timer,
 			findRows = function(){
 				if (c.debug) { time = new Date(); }
@@ -205,7 +206,7 @@ $.tablesorter.addWidget({
 							$tr[j].style.display = '';
 						} else {
 							// skip child rows
-							if (!reg.test($tr[j].className)) {
+							if (!reg1.test($tr[j].className)) {
 								r = true;
 								cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
 								// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -214,14 +215,29 @@ $.tablesorter.addWidget({
 								t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
 									typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
 								$td = $tr.eq(j).children('td');
-								for (i=0; i < cols; i++){
+								for (i=0; i < cols; i++) {
+									x = $.trim($td.eq(i).text());
+									x = wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
+									// ignore if filter is empty
 									if (v[i] !== '') {
-										x = $.trim(($td.eq(i).text() + t));
-										x = (wo.filter_ignoreCase ? x.toLocaleLowerCase() : x).indexOf(v[i]);
-										if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
-											r = (r) ? true : false;
+										// Look for regex
+										if (regexp.test(v[i])) {
+											reg2 = regexp.exec(v[i]);
+											r = RegExp(reg2[1], reg2[2]).test(x);
+										// Look for quotes to get an exact match
+										} else if (/[\"|\']$/.test(v[i]) && x === v[i].replace(/(\"|\')/g,'')) {
+											r = true;
+										// Look for wild card: ? = single, or * = multiple
+										} else if (/[\?|\*]/.test(v[i])) {
+											r = RegExp( v[i].replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(x);
+										// Look for match, and add child row data for matching
 										} else {
-											r = false;
+											x = (x + t).indexOf(v[i]);
+											if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
+												r = (r) ? true : false;
+											} else {
+												r = false;
+											}
 										}
 									}
 								}
@@ -241,7 +257,7 @@ $.tablesorter.addWidget({
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				fr += '<td><input type="search" data-col="' + i + '" class="' + css;
+				fr += '<td><input type="search" placeholder="' + ($(c.headerList[i]).attr('data-placeholder') || "") + '" data-col="' + i + '" class="' + css;
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
 				if ($.tablesorter.getData) {
 					// get data from jQuery data, metadata, headers option or header class name
@@ -479,3 +495,6 @@ $.tablesorter.addWidget({
 });
 
 })(jQuery);
+
+// return an array with unique values
+Array.prototype.getUnique=function(){var b={},c=[],a,d;a=0;for(d=this.length;a<d;++a)if(!(this[a]in b)){c.push(this[a]);b[this[a]]=1}return c.sort()};
