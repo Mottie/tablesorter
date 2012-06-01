@@ -1,0 +1,335 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<script src="js/chili/jquery.chili-2.2.js"></script>
+	<script src="js/chili/recipes.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/blue/style.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<!-- Tablesorter: optional -->
+	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
+
+<script id="js">$(function() {
+
+	// call the tablesorter plugin
+	$("table").tablesorter({
+
+		// initialize zebra striping and filter widgets
+		widgets: ["zebra", "filter"],
+
+		// headers: { 5: { sorter: false, filter: false } },
+
+		widgetOptions : {
+
+			// css class applied to the table row containing the filters & the inputs within that row
+			filter_cssFilter : 'tablesorter-filter',
+
+			// If there are child rows in the table (rows with class name from "cssChildRow" option)
+			// and this option is true and a match is found anywhere in the child row, then it will make that row
+			// visible; default is false
+			filter_childRows : false,
+
+			// Set this option to true to use the filter to find text from the start of the column
+			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
+			filter_startsWith : false,
+
+			// Set this option to false to make the searches case sensitive
+			filter_ignoreCase : true,
+
+			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
+			// every character while typing and should make searching large tables faster.
+			filter_searchDelay : 300,
+
+			// Add select box to 4th column (zero-based index)
+			// each option has an associated function that returns a boolean
+			// function variables:
+			// e = exact text from cell
+			// n = normalized value returned by the column parser
+			// f = search filter input value
+			// i = column index
+			filter_functions : {
+
+				// Add select menu to this column
+				// set the column value to true, and/or add "filter-select" class name to header
+				// 0 : true,
+
+				// Exact match only
+				1 : function(e, n, f, i) {
+					return e === f;
+				},
+
+				// Add these options to the select dropdown (regex example)
+				2 : {
+					"A - D" : function(e, n, f, i) { return /^[A-D]/.test(e); },
+					"E - H" : function(e, n, f, i) { return /^[E-H]/.test(e); },
+					"I - L" : function(e, n, f, i) { return /^[I-L]/.test(e); },
+					"M - P" : function(e, n, f, i) { return /^[M-P]/.test(e); },
+					"Q - T" : function(e, n, f, i) { return /^[Q-T]/.test(e); },
+					"U - X" : function(e, n, f, i) { return /^[U-X]/.test(e); },
+					"Y - Z" : function(e, n, f, i) { return /^[Y-Z]/.test(e); }
+				},
+
+				// Add these options to the select dropdown (numerical comparison example)
+				// Note that only the normalized (n) value will contain numerical data
+				// If you use the exact text, you'll need to parse it (parseFloat or parseInt)
+				4 : {
+					"< $10"      : function(e, n, f, i) { return n < 10; },
+					"$10 - $100" : function(e, n, f, i) { return n >= 10 && n <=100; },
+					"> $100"     : function(e, n, f, i) { return n > 100; }
+				}
+			}
+
+		}
+// ,debug: true
+	});
+
+});</script>
+
+<script>
+$(function(){
+	// *** widgetfilter_startsWith toggle button ***
+	$('button.toggle').click(function(){
+		var c = $('table')[0].config,
+		// toggle the boolean
+		fsw = !c.widgetOptions.filter_startsWith,
+		fic = !c.widgetOptions.filter_ignoreCase;
+		if ($(this).hasClass('fsw')) {
+			c.widgetOptions.filter_startsWith = fsw;
+			$('#start').html(fsw.toString());
+		} else {
+			c.widgetOptions.filter_ignoreCase = fic;
+			$('#case').html(fic.toString());
+		}
+		// update search after option change; add false to trigger to skip search delay
+		$('input.tablesorter-filter:eq(0)').trigger('search', false);
+	});
+});
+</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Custom Filter Widget</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		Custom filter widget option <code class="hilight">filter_functions</code> was added in version 2.3.6:
+		<ul>
+			<li><strong>Default Select</strong> - See the "First Name" column below.
+				<ul>
+					<li>To enable this type of select, set the <code class="hilight">filter_functions</code> option for the column to <code class="hilight">true</code>, and/or add a "filter-select" class to the column header cell.</li>
+					<li>The default option text, "Select a name", is obtained from the header <code class="hilight">data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.</li>
+					<li>The select is populated by the column text contents with repeated content combined (i.e. There are three "Aaron"'s in the first column, but only one in the dropdown.</li>
+					<li>Select options are automatically sorted.</li>
+				</ul>
+			</li>
+			<li><strong>Custom Select</strong> - See the "Total" column.
+				<ul>
+					<li>To enable this type of select, add your custom options within the <code class="hilight">filter_functions</code> option.</li>
+					<li>Each option is set as a "key:value" pair where the "key" is the actual text of the option and the "value" is the function associated with the option. See the example below.</li>
+					<li>See the filter function information below.</li>
+				</ul>
+			</li>
+			<li><strong>Custom Filter Function</strong> - See the "Last Name" column.
+				<ul>
+					<li>To enable this type of filter, add your custom function to the <code class="hilight">filter_functions</code> option following the example below.</li>
+					<li>The example below shows you how to show only exact matches. The problem with this is that you can't see the matches while typing unless you set the <code class="hilight">filter_searchDelay</code> option to be a bit longer.</li>
+					<li>Also, the example only checks for an exact match (<code class="hilight">===</code>) meaning the <code class="hilight">filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive "i" flag.</li>
+					<li>See the filter function information below.</li>
+				</ul>
+			</li>
+
+			<li><strong>Filter function information</strong>:
+				<ul>
+					<li>The custom function must return a boolean value. If <code class="hilight">true</code> is returned, the row will be shown if all other filters match; and if <code class="hilight">false</code> is returned, the row will be hidden.</li>
+					<li>The <strong>exact text (e)</strong> of the table cell is a variable passed to the function. Note that numbers will need to be parsed to make comparisons.</li>
+					<li><strong>Normalized table cell data (n)</strong> is the next varibale passed to the function.
+						<ul>
+							<li>This data has been parsed by the assigned column parser, so make sure the same type of data is being compared as parsed data may not be what you expect.</li>
+							<li>Normalized numerical values within the table will be of numeric type and not of string type, as the sorter needs to use mathematical comparisons while sorting.</li>
+							<li>The data will be in lower-case if the <code class="hilight">filter_ignoreCase</code> option is <code class="hilight">true</code>.</li>
+							<li>Dates like in the last column of the table below will store the time in seconds since 1970 (using javascript's .getTime() function).</li>
+							<li>The percentage column will only store the number and not percentage sign.</li>
+						</ul>
+					</li>
+					<li>The <strong>filter input value (f)</strong> is the exact text entered by the user. If numerical, it will need to be parsed using parseFloat() or parseInt() to allow for making comparisons.</li>
+					<li>The <strong>column index (i)</strong> might be useful for obtaining more information from header, or something.</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
+
+	<h1>Demo</h1>
+	<button class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
+	<button class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)
+
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="filter-select" data-placeholder="Select a name">First Name</th> <!-- add "filter-select" class or filter_functions : { 0: true } -->
+			<th data-placeholder="Exact matches only">Last Name</th>
+			<th data-placeholder="Choose a city">City</th>
+			<th>Age</th>
+			<th data-placeholder="Select a filter">Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Aaron</td>
+			<td>Johnson Sr</td>
+			<td>Atlanta</td>
+			<td>35</td>
+			<td>$5.95</td>
+			<td>22%</td>
+			<td>Jun 26, 2004 7:22 AM</td>
+		</tr>
+		<tr>
+			<td>Aaron</td>
+			<td>Johnson</td>
+			<td>Yuma</td>
+			<td>12</td>
+			<td>$2.99</td>
+			<td>5%</td>
+			<td>Aug 21, 2009 12:21 PM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Henry Jr</td>
+			<td>Tampa</td>
+			<td>51</td>
+			<td>$42.29</td>
+			<td>18%</td>
+			<td>Oct 13, 2000 1:15 PM</td>
+		</tr>
+		<tr>
+			<td>Peter</td>
+			<td>Henry</td>
+			<td>New York</td>
+			<td>28</td>
+			<td>$9.99</td>
+			<td>20%</td>
+			<td>Jul 6, 2006 8:14 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Hood</td>
+			<td>Boston</td>
+			<td>33</td>
+			<td>$19.99</td>
+			<td>25%</td>
+			<td>Dec 10, 2002 5:14 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Kent Sr</td>
+			<td>Los Angeles</td>
+			<td>18</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 12, 2003 11:14 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Kent Esq</td>
+			<td>Seattle</td>
+			<td>45</td>
+			<td>$153.19</td>
+			<td>44%</td>
+			<td>Jan 18, 2021 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Peter</td>
+			<td>Johns</td>
+			<td>Milwaukee</td>
+			<td>13</td>
+			<td>$5.29</td>
+			<td>4%</td>
+			<td>Jan 8, 2012 5:11 PM</td>
+		</tr>
+		<tr>
+			<td>Aaron</td>
+			<td>Evan</td>
+			<td>Chicago</td>
+			<td>24</td>
+			<td>$14.19</td>
+			<td>14%</td>
+			<td>Jan 14, 2004 11:23 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>Upland</td>
+			<td>22</td>
+			<td>$13.19</td>
+			<td>11%</td>
+			<td>Jan 18, 2007 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>McMasters</td>
+			<td>Pheonix</td>
+			<td>18</td>
+			<td>$55.20</td>
+			<td>15%</td>
+			<td>Feb 12, 2010 7:23 PM</td>
+		</tr>
+		<tr>
+			<td>Dennis</td>
+			<td>Masters</td>
+			<td>Indianapolis</td>
+			<td>65</td>
+			<td>$123.00</td>
+			<td>32%</td>
+			<td>Jan 20, 2001 1:12 PM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Hood</td>
+			<td>Fort Worth</td>
+			<td>25</td>
+			<td>$22.09</td>
+			<td>17%</td>
+			<td>Jun 11, 2011 10:55 AM</td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="js"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-widget-ui-theme.html">jQuery UI theme widget &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

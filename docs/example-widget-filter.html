@@ -29,7 +29,7 @@
 		// initialize zebra striping and filter widgets
 		widgets: ["zebra", "filter"],
 
-		headers: { 5: { sorter: false, filter: false } },
+		// headers: { 5: { sorter: false, filter: false } },
 
 		widgetOptions : {
 
@@ -50,10 +50,13 @@
 
 			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
 			// every character while typing and should make searching large tables faster.
-			filter_searchDelay : 300
+			filter_searchDelay : 300,
+
+			// See the filter widget advanced demo on how to use these special functions
+			filter_functions : {}
 
 		}
-
+// ,debug: true
 	});
 
 });</script>
@@ -92,6 +95,20 @@ $(function(){
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In version 2.3.6, these changes were made:
+				<ul>
+					<li>Include filter input boxes placeholder text by adding <code class="hilight">data-placeholder</code> to the column header cell; e.g. <code class="hilight">data-placeholder="First Name"</code>. See the examples in the HTML code block below.</li>
+					<li>Exact match added. Add a quote (single or double) to the end of the string to find an exact match. In the first column enter <code class="hilight">Clark"</code> to only find Clark and not Brandon Clark.</li>
+					<li>Wild cards added:
+						<ul>
+						<li><code class="hilight">?</code> (question mark) finds any single non-space character.<br>In the discount column, adding <code class="hilight">1?%</code> in the filter will find all percentages between "10%" and "19%". In the last column, <code class="hilight">J?n</code> will find "Jun" and "Jan".</li>
+							<li><code class="hilight">*</code> (asterisk) finds multiple non-space characters.<br>In the first column below Enter <code class="hilight">Br*</code> will find multiple names starting with "Br". Now add a space at the end, and "Bruce" will not be included in the results.</li>
+						</ul>
+					</li>
+					<li>Regex method added. Use standard regex within the filter to filter the columns. For example enter <code class="hilight">/20[1-9]\d/</code> or <code class="hilight">/20[^0]\d/</code> in the last column to find all dates greater than 2009.</li>
+				<li>Added <code class="hilight">filter_functions</code> option which allows you to add a custom filter function for a column or to a dropdown list. Please see the <a href="example-widget-filter-custom.html">jQuery filter widget, advanced</a> demo for more details.</a></li>
+				</ul>
+			</li>
 			<li>In version 2.0.19.1, a filter header option and header class name check was added to allow disabling the filter in a specific column.</li>
 			<li>In versions 2.3+, the filter widget can be disabled using any of the following methods, in order of priority:
 				<ul>
@@ -120,18 +137,18 @@ $(function(){
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th>First Name</th>
+			<th data-placeholder="Try Br*{space}">First Name</th>
 			<th>Last Name</th>
 			<th>Age</th>
 			<th>Total</th>
-			<th class="filter-false">Discount</th> <!-- disable filter in this column -->
-			<th>Date</th>
+			<th data-placeholder="Try 1?%">Discount</th> <!-- add class="filter-false" to disable the filter in this column -->
+			<th data-placeholder="Try /20[^0]\d/">Date</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td>Philip</td>
-			<td>Johnson</td>
+			<td>Philip Aaron</td>
+			<td>Johnson Sr Esq</td>
 			<td>25</td>
 			<td>$5.95</td>
 			<td>22%</td>
@@ -146,7 +163,7 @@ $(function(){
 			<td>Aug 21, 2009 12:21 PM</td>
 		</tr>
 		<tr>
-			<td>Brandon</td>
+			<td>Brandon Clark</td>
 			<td>Henry Jr</td>
 			<td>51</td>
 			<td>$42.29</td>
@@ -183,14 +200,14 @@ $(function(){
 			<td>45</td>
 			<td>$153.19</td>
 			<td>44%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
+			<td>Jan 18, 2021 9:12 AM</td>
 		</tr>
 		<tr>
 			<td>Alex</td>
 			<td>Dumass</td>
 			<td>13</td>
 			<td>$5.29</td>
-			<td>2%</td>
+			<td>4%</td>
 			<td>Jan 8, 2012 5:11 PM</td>
 		</tr>
 		<tr>
@@ -202,7 +219,7 @@ $(function(){
 			<td>Jan 14, 2004 11:23 AM</td>
 		</tr>
 		<tr>
-			<td>Bruce</td>
+			<td>Bruce Lee</td>
 			<td>Evans</td>
 			<td>22</td>
 			<td>$13.19</td>
@@ -223,7 +240,7 @@ $(function(){
 			<td>65</td>
 			<td>$123.00</td>
 			<td>32%</td>
-			<td>Jan 22, 2001 1:12 PM</td>
+			<td>Jan 20, 2001 1:12 PM</td>
 		</tr>
 		<tr>
 			<td>Martha</td>
@@ -279,7 +296,7 @@ table.tablesorter thead tr.filters input.disabled {
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-ui-theme.html">jQuery UI theme widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-filter-custom.html">jQuery filter widget, advanced &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

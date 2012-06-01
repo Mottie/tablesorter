@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 5/30/2012
+/*! tableSorter 2.3 widgets - updated 6/1/2012
  *
  * jQuery UI Theme
  * Column Styles
@@ -172,13 +172,15 @@ $.tablesorter.addWidget({
 });
 
 // Widget: Filter
-// "filter_startsWith", "filter_childRows", "filter_ignoreCase" & "filter_searchDelay" options in "widgetOptions"
+// "filter_startsWith", "filter_childRows", "filter_ignoreCase",
+// "filter_searchDelay" & "filter_functions" options in "widgetOptions"
 // **************************
 $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
 		if (!$(table).hasClass('hasFilters')) {
-			var i, j, k, l, cv, v, r, t, x, cr, $tb, $tr, $td, reg2,
+			var i, j, k, l, cv, v, val, r, ff, t, x, xi, cr,
+			sel, $tb, $tr, $td, reg2,
 			c = table.config,
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
@@ -191,9 +193,8 @@ $.tablesorter.addWidget({
 			time, timer,
 			findRows = function(){
 				if (c.debug) { time = new Date(); }
-				v = $t.find('thead').eq(0).children('tr').find('input.' + css).map(function(){
-					i = $(this).val() || '';
-					return (wo.filter_ignoreCase) ? i.toLocaleLowerCase() : i;
+				v = $t.find('thead').eq(0).children('tr').find('select.' + css + ', input.' + css).map(function(){
+					return $(this).val() || '';
 				}).get();
 				cv = v.join('');
 				for (k = 0; k < b.length; k++ ) {
@@ -202,48 +203,62 @@ $.tablesorter.addWidget({
 					l = $tr.length;
 					// loop through the rows
 					for (j = 0; j < l; j++) {
+						// skip child rows
+						if (reg1.test($tr[j].className)) { continue; }
 						if (cv === '') {
 							$tr[j].style.display = '';
 						} else {
-							// skip child rows
-							if (!reg1.test($tr[j].className)) {
-								r = true;
-								cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
-								// so, if "table.config.widgetOptions.filter_childRows" is true and there is
-								// a match anywhere in the child row, then it will make the row visible
-								// checked here so the option can be changed dynamically
-								t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
-									typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
-								$td = $tr.eq(j).children('td');
-								for (i=0; i < cols; i++) {
-									x = $.trim($td.eq(i).text());
-									x = wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
-									// ignore if filter is empty
-									if (v[i] !== '') {
-										// Look for regex
-										if (regexp.test(v[i])) {
-											reg2 = regexp.exec(v[i]);
-											r = RegExp(reg2[1], reg2[2]).test(x);
-										// Look for quotes to get an exact match
-										} else if (/[\"|\']$/.test(v[i]) && x === v[i].replace(/(\"|\')/g,'')) {
-											r = true;
-										// Look for wild card: ? = single, or * = multiple
-										} else if (/[\?|\*]/.test(v[i])) {
-											r = RegExp( v[i].replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(x);
-										// Look for match, and add child row data for matching
+							r = true;
+							cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
+							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
+							// a match anywhere in the child row, then it will make the row visible
+							// checked here so the option can be changed dynamically
+							t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
+								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
+							$td = $tr.eq(j).children('td');
+							for (i = 0; i < cols; i++) {
+								x = $.trim($td.eq(i).text());
+								xi = wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
+								// ignore if filter is empty
+								if (v[i] !== '') {
+									ff = r; // if r is true, show that row
+									// val = case insensitive, v[i] = case sensitive
+									val = wo.filter_ignoreCase ? v[i].toLocaleLowerCase() : v[i];
+									if (wo.filter_functions && wo.filter_functions[i]) {
+										if (wo.filter_functions[i] === true) {
+											// default selector; no "filter-select" class
+											ff = wo.filter_ignoreCase ? val === xi : v[i] === x;
+										} else if (typeof wo.filter_functions[i] === 'function') {
+											// filter callback( exact cell content, parser normalized content, filter input value, column index )
+											ff = wo.filter_functions[i](x, c.cache[k].normalized[j][i], v[i], i);
+										} else if (typeof wo.filter_functions[i][v[i]] === 'function'){
+											// selector option function
+											ff = wo.filter_functions[i][v[i]](x, c.cache[k].normalized[j][i], v[i], i);
+										}
+									// Look for regex
+									} else if (regexp.test(val)) {
+										reg2 = regexp.exec(val);
+										ff = new RegExp(reg2[1], reg2[2]).test(xi);
+									// Look for quotes to get an exact match
+									} else if (/[\"|\']$/.test(val) && xi === val.replace(/(\"|\')/g,'')) {
+										r = (r) ? true : false;
+									// Look for wild card: ? = single, or * = multiple
+									} else if (/[\?|\*]/.test(val)) {
+										ff = new RegExp( val.replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(xi);
+									// Look for match, and add child row data for matching
+									} else {
+										x = (xi + t).indexOf(val);
+										if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
+											r = (r) ? true : false;
 										} else {
-											x = (x + t).indexOf(v[i]);
-											if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
-												r = (r) ? true : false;
-											} else {
-												r = false;
-											}
+											r = false;
 										}
 									}
+									r = (ff) ? (r ? true : false) : false;
 								}
-								$tr[j].style.display = (r ? '' : 'none');
-								if (cr.length) { cr[r ? 'show' : 'hide'](); }
 							}
+							$tr[j].style.display = (r ? '' : 'none');
+							if (cr.length) { cr[r ? 'show' : 'hide'](); }
 						}
 					}
 					$tb.removeClass('tablesorter-hidden');
@@ -252,38 +267,97 @@ $.tablesorter.addWidget({
 					$.tablesorter.benchmark("Completed filter widget search", time);
 				}
 				$t.trigger('applyWidgets'); // make sure zebra widget is applied
+			},
+			buildSelect = function(i){
+				var o, arry = [];
+				i = parseInt(i, 10);
+				o = '<option value="">' + ($(c.headerList[i]).attr('data-placeholder') || '') + '</option>';
+				for (k = 0; k < b.length; k++ ) {
+					l = c.cache[k].row.length;
+					// loop through the rows
+					for (j = 0; j < l; j++) {
+						// get non-normalized cell content
+						t = c.cache[k].row[j][0].cells[i];
+						arry.push( c.supportsTextContent ? t.textContent : $(t).text() );
+					}
+				}
+				// get unique elements and sort the list
+				arry = arry.getUnique(true);
+				// build option list
+				for (k = 0; k < arry.length; k++) {
+					o += '<option value="' + arry[k] + '">' + arry[k] + '</option>';
+				}
+				$t.find('thead').find('select.' + css + '[data-col="' + i + '"]').append(o);
 			};
 			if (c.debug) {
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				fr += '<td><input type="search" placeholder="' + ($(c.headerList[i]).attr('data-placeholder') || "") + '" data-col="' + i + '" class="' + css;
+				sel = (wo.filter_functions && wo.filter_functions[i] && typeof wo.filter_functions[i] !== 'function') || $(c.headerList[i]).hasClass('filter-select');
+				fr += '<td>';
+				if (sel){
+					fr += '<select data-col="' + i + '" class="' + css;
+				} else {
+					fr += '<input type="search" placeholder="' + ($(c.headerList[i]).attr('data-placeholder') || "") + '" data-col="' + i + '" class="' + css;
+				}
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
 				if ($.tablesorter.getData) {
 					// get data from jQuery data, metadata, headers option or header class name
 					fr += $.tablesorter.getData(c.headerList[i], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
 				} else {
 					// only class names and header options - keep this for compatibility with tablesorter v2.0.5
-					fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).is('.filter-false') ) ? ' disabled" disabled' : '"';
+					fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).hasClass('filter-false') ) ? ' disabled" disabled' : '"';
 				}
-				fr += '></td>';
+				fr += (sel ? '></select>' : '>') + '</td>';
 			}
 			$t
-				.find('thead').eq(0).append(fr += '</tr>')
-				.find('input.' + css).bind('keyup search', function(e, delay){
-					// ignore arrow and meta keys; allow backspace
-					if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
-					// skip delay
-					if (delay === false) {
-						findRows();
-						return;
+			.find('thead').eq(0).append(fr += '</tr>')
+			.find('input.' + css).bind('keyup search', function(e, delay){
+				// ignore arrow and meta keys; allow backspace
+				if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
+				// skip delay
+				if (delay === false) {
+					findRows();
+					return;
+				}
+				// delay filtering
+				clearTimeout(timer);
+				timer = setTimeout(function(){
+					findRows();
+				}, wo.filter_searchDelay || 300);
+			});
+			if (wo.filter_functions) {
+				// i = column # (string)
+				for (i in wo.filter_functions) {
+					t = $(c.headerList[i]);
+					fr = '';
+					if (typeof i === 'string' && wo.filter_functions[i] === true && !t.hasClass('filter-false')) {
+						buildSelect(i);
+					} else if (typeof i === 'string' && !t.hasClass('filter-false')) {
+						// add custom drop down list
+						for (j in wo.filter_functions[i]) {
+							if (typeof j === 'string') {
+								fr += fr === '' ? '<option>' + (t.attr('data-placeholder') || '') + '</option>' : '';
+								fr += '<option>' + j + '</option>';
+							}
+						}
+						$t.find('thead').find('select.' + css + '[data-col="' + i + '"]').append(fr);
 					}
-					// delay filtering
-					clearTimeout(timer);
-					timer = setTimeout(function(){
-						findRows();
-					}, wo.filter_searchDelay || 300);
-				});
+				}
+			}
+			// build default select dropdown
+			for (i = 0; i < c.headerList.length; i++) {
+				t = $(c.headerList[i]);
+				// look for the filter-select class, but don't build it twice.
+				if (t.hasClass('filter-select') && !t.hasClass('filter-false') && !(wo.filter_functions && wo.filter_functions[i] === true)){
+					buildSelect(i);
+				}
+			}
+
+			$t.find('select.' + css).bind('change', function(){
+				findRows();
+			});
+
 			if (c.debug) {
 				$.tablesorter.benchmark("Applying Filter widget", time);
 			}
@@ -496,5 +570,15 @@ $.tablesorter.addWidget({
 
 })(jQuery);
 
-// return an array with unique values
-Array.prototype.getUnique=function(){var b={},c=[],a,d;a=0;for(d=this.length;a<d;++a)if(!(this[a]in b)){c.push(this[a]);b[this[a]]=1}return c.sort()};
+// return an array with unique values https://gist.github.com/461516
+Array.prototype.getUnique = function(s){
+	var c, a = [], o = {}, i, j = 0, l = this.length;
+	for(i=0; i < l; ++i) {
+		c = this[i];
+		if (!o[c]) {
+			o[c] = {};
+			a[j++] = c;
+		}
+	}
+	return (s) ? a.sort() : a;
+};

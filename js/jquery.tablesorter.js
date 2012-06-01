@@ -1,5 +1,5 @@
 ﻿/*!
-* TableSorter 2.3.5 - Client-side table sorting with ease!
+* TableSorter 2.3.6 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.5";
+			this.version = "2.3.6";
 
 			var parsers = [], widgets = [];
 			this.defaults = {

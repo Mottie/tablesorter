@@ -87,7 +87,8 @@ table.tablesorter tr.even td.tertiary {
 }
 
 /* filter widget */
-table.tablesorter input.tablesorter-filter {
+table.tablesorter input.tablesorter-filter,
+table.tablesorter select.tablesorter-filter {
 	width: 95%;
 	height: inherit;
 	-webkit-box-sizing: border-box;
@@ -100,7 +101,8 @@ table.tablesorter tr.tablesorter-filter td {
 	background: #fff;
 }
 /* optional disabled input styling */ 
-table.tablesorter input.tablesorter-filter.disabled {
+table.tablesorter input.tablesorter-filter.disabled,
+table.tablesorter select.tablesorter-filter.disabled {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 }

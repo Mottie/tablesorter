@@ -288,6 +288,7 @@
 		<li><a href="example-apply-widget.html">Applying widgets</a></li>
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
 		<li><a href="example-widget-filter.html">Filter widget</a> (v2.0.18)</li>
+		<li><a href="example-widget-filter-custom.html">Filter widget, custom</a> <span class="tip"><em>New!</em></span> v2.3.6</li>
 		<li><a href="example-widget-ui-theme.html">jQuery UI theme widget</a> (v2.0.9)</li>
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
@@ -675,6 +676,22 @@
 				<td>Boolean</td>
 				<td>true</td>
 				<td>When true, text sorting will ignore the character case. If false, upper case characters will sort before lower case. <span class="tip"><em>New!</em></span> v2.2.</td>
+				<td></td>
+			</tr>
+
+			<tr id="initwidgets">
+				<td><a href="#" class="toggle2">initWidgets</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>Apply widgets after table initializes <span class="tip"><em>New!</em></span> v2.3.5.
+					<div class="collapsible">
+					When true, all widgets set by the <code class="hilight">widgets</code> option will apply after tablesorter has initialized, this is the normal behavior.<br>
+					<br>
+					If false, the each widget set by the <code class="hilight">widgets</code> option will be initialized, meaning the "init" function is run, but the format function will not be run. This is useful when running the pager plugin after the table is set up. The pager plugin will initialize, then apply all set widgets.<br>
+					<br>
+					Why you ask? Well, lets say you have a table with 1000 rows that will have the pager plugin applied to it. Before this option, the table would finish its setup, all widgets would be applied to the 1000 rows, pager plugin initializes and reapplies the widgets on the say 20 rows showing; making the widget application to 100 rows unnecessary and a waste of time. So, when this option is false, widgets will only be applied to the table after the pager is set up.
+					</div>
+					</td>
 				<td></td>
 			</tr>
 
@@ -1319,6 +1336,113 @@ $(function(){
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-filter-functions">
+				<td><a href="#" class="toggle2">filter_functions</a></td>
+				<td>Object</td>
+				<td>null</td>
+				<td>
+					Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions. <span class="tip"><em>New! v2.3.6</em></span>
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-functions"><code class="hilight">"filter_functions"</code></a> option in three different ways:
+					<br>
+					<ul>
+						<li>
+							Make a select dropdown list of all column contents. Repeated content will be combined.
+							<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions: {
+      filter_functions: {
+        // Add select menu to this column
+        // set the column value to true, and/or add "filter-select" class name to header
+        0 : true
+      }
+    }
+  });
+});</pre>
+							Alternately, instead of setting the column filter funtion to true, give the column header a class name of "filter-select". See the <a href="example-widget-filter-custom.html">demo</a>.<br><br>
+						</li>
+						<li>
+							Make a select dropdown list with custom option settings. Each option must have a corresponding function which returns a boolean value; return true if there is a match, or false with no match.
+
+							<h4>Regex example</h4>
+							<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions: {
+      // function variables:
+      // e = exact text from cell
+      // n = normalized value returned by the column parser
+      // f = search filter input value
+      // i = column index
+      filter_functions: {
+        // Add these options to the select dropdown (regex example)
+        2 : {
+          "A - D" : function(e, n, f, i) { return /^[A-D]/.test(e); },
+          "E - H" : function(e, n, f, i) { return /^[E-H]/.test(e); },
+          "I - L" : function(e, n, f, i) { return /^[I-L]/.test(e); },
+          "M - P" : function(e, n, f, i) { return /^[M-P]/.test(e); },
+          "Q - T" : function(e, n, f, i) { return /^[Q-T]/.test(e); },
+          "U - X" : function(e, n, f, i) { return /^[U-X]/.test(e); },
+          "Y - Z" : function(e, n, f, i) { return /^[Y-Z]/.test(e); }
+        }
+      }
+    }
+  });
+});</pre>
+							<h4>Comparison example</h4>
+							<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions: {
+      // function variables:
+      // e = exact text from cell
+      // n = normalized value returned by the column parser
+      // f = search filter input value
+      // i = column index
+      filter_functions: {
+        // Add these options to the select dropdown (numerical comparison example)
+        // Note that only the normalized (n) value will contain numerical data
+        // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
+        4 : {
+          "< $10"      : function(e, n, f, i) { return n < 10; },
+          "$10 - $100" : function(e, n, f, i) { return n >= 10 && n <=100; },
+          "> $100"     : function(e, n, f, i) { return n > 100; }
+        }
+      }
+    }
+  });
+});</pre>
+						Note: if the <code class="hilight">filter_ignoreCase</code> option is <code class="hilight">true</code>, it DOES alter the normalized value (n) by making it all lower case.<br><br>
+						</li>
+						<li>
+							Make a custom filter for the column. 
+							<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions: {
+      // function variables:
+      // e = exact text from cell
+      // n = normalized value returned by the column parser
+      // f = search filter input value
+      // i = column index
+      filter_functions: {
+        // Exact match only
+        1 : function(e, n, f, i) {
+          return e === f;
+        }
+      }
+    }
+  });
+});</pre>
+						Note: if the <code class="hilight">filter_ignoreCase</code> option is <code class="hilight">true</code>, it DOES alter the normalized value (n) by making it all lower case.<br><br>
+						</li>
+					</ul>
+					</div>
+				</td>
+				<td><a href="example-widget-filter-custom.html">Example</a></td>
+			</tr>
 
 			<tr id="widget-filter-searchdelay">
 				<td><a href="#" class="toggle2">filter_searchDelay</a></td>
