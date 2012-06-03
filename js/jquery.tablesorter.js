@@ -201,19 +201,6 @@
 			}
 
 			/* utils */
-			function buildRegex(){
-				var a, acc = '[', t = $.tablesorter,
-					reg = t.characterEquivalents;
-				t.characterRegexArray = {};
-				for (a in reg) {
-					if (typeof a === 'string') {
-						acc += reg[a];
-						t.characterRegexArray[a] = new RegExp('[' + reg[a] + ']', 'g');
-					}
-				}
-				t.characterRegex = new RegExp(acc + ']');
-			}
-
 			function buildCache(table) {
 				var b = table.tBodies,
 				tc = table.config,
@@ -515,7 +502,7 @@
 								dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
 							}
 						}
-						dynamicExp += "var " + e + " = sort" + s + "(table, a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
+						dynamicExp += "var " + e + " = sort" + s + "(table,a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
 						dynamicExp += "if (" + e + ") { return " + e + "; } ";
 						dynamicExp += "else { ";
 					}
@@ -635,8 +622,6 @@
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
-					// build up character equivalent cross-reference
-					buildRegex();
 					// digit sort text location; keeping max+/- for backwards compatibility
 					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 					// build headers
@@ -658,7 +643,6 @@
 
 						// prevent resizable widget from initializing a sort (long clicks are ignored)
 						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
-
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled.
@@ -928,6 +912,18 @@
 				"U" : "\u00da\u00d9\u00db\u00dc" // ÚÙÛÜ
 			};
 			this.replaceAccents = function(s) {
+				if (!this.characterRegex) {
+					var a, acc = '[',
+						reg = this.characterEquivalents;
+					this.characterRegexArray = {};
+					for (a in reg) {
+						if (typeof a === 'string') {
+							acc += reg[a];
+							this.characterRegexArray[a] = new RegExp('[' + reg[a] + ']', 'g');
+						}
+					}
+					this.characterRegex = new RegExp(acc + ']');
+				}
 				if (this.characterRegex.test(s)) {
 					var a, eq = this.characterEquivalents;
 					for (a in eq) {
