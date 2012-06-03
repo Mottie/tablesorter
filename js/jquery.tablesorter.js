@@ -1,5 +1,5 @@
 ﻿/*!
-* TableSorter 2.3.6 - Client-side table sorting with ease!
+* TableSorter 2.3.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.6";
+			this.version = "2.3.7";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -914,20 +914,18 @@
 				"U" : "\u00da\u00d9\u00db\u00dc" // ÚÙÛÜ
 			};
 			this.replaceAccents = function(s) {
+				var a, acc = '[', eq = this.characterEquivalents;
 				if (!this.characterRegex) {
-					var a, acc = '[',
-						reg = this.characterEquivalents;
 					this.characterRegexArray = {};
-					for (a in reg) {
+					for (a in eq) {
 						if (typeof a === 'string') {
-							acc += reg[a];
-							this.characterRegexArray[a] = new RegExp('[' + reg[a] + ']', 'g');
+							acc += eq[a];
+							this.characterRegexArray[a] = new RegExp('[' + eq[a] + ']', 'g');
 						}
 					}
 					this.characterRegex = new RegExp(acc + ']');
 				}
 				if (this.characterRegex.test(s)) {
-					var a, eq = this.characterEquivalents;
 					for (a in eq) {
 						if (typeof a === 'string') {
 							s = s.replace( this.characterRegexArray[a], a );
