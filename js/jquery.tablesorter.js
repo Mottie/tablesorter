@@ -1023,7 +1023,7 @@
 	ts.addParser({
 		id: "url",
 		is: function(s) {
-			return (/^(https?|ftp|file):\/\/$/).test(s);
+			return (/^(https?|ftp|file):\/\//).test(s);
 		},
 		format: function(s) {
 			return $.trim(s.replace(/(https?|ftp|file):\/\//, ''));
