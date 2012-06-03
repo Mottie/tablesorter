@@ -756,9 +756,11 @@
 					})
 					.bind("updateCell", function(e, cell, resort) {
 						// get position from the dom.
-						var t = this, pos = [(cell.parentNode.rowIndex - 1), cell.cellIndex],
+						var t = this, $tb = $(this).find('tbody'), row, pos,
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbdy = $(this).find('tbody').index( $(cell).closest('tbody') );
+						tbdy = $tb.index( $(cell).closest('tbody') );
+						row = $tb.eq(tbdy).find('tr').index( $(cell).closest('tr') );
+						pos = [ row, cell.cellIndex];
 						t.config.cache[tbdy].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format( getElementText(t, cell, pos[1]), t, cell, pos[1] );
 						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
 					})
