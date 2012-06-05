@@ -315,6 +315,9 @@ $.tablesorter.addWidget({
 				fr += (sel ? '></select>' : '>') + '</td>';
 			}
 			$t
+			.bind('addRows updateCell update appendCache', function(){
+				findRows();
+			})
 			.find('thead').eq(0).append(fr += '</tr>')
 			.find('input.' + css).bind('keyup search', function(e, delay){
 				// ignore arrow and meta keys; allow backspace
