@@ -1,5 +1,5 @@
 ﻿/*!
-* TableSorter 2.3.7 - Client-side table sorting with ease!
+* TableSorter 2.3.8 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.7";
+			this.version = "2.3.8";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -640,7 +640,6 @@
 							downTime = new Date().getTime();
 							return !c.cancelSelection;
 						}
-
 						// prevent resizable widget from initializing a sort (long clicks are ignored)
 						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }

@@ -40,14 +40,14 @@
 	*/
 	// modify the above defaults as follows
 	$.extend( $.tablesorter.characterEquivalents, {
-		"ae" : "\u00e6;", // expanding characters æ Æ
-		"AE" : "\u00c6;",
-		"oe" : "\u00f6;\u0153;", // œ Œ
-		"OE" : "\u00d6;\u0152;",
-		"d"  : "\u00f0;",  // Eth (ð Ð)
-		"D"  : "\u00d0;",
-		"o"  : "\u00f3;\u00f2;\u00f4;\u00f5;", // remove ö because it's in the oe now
-		"O"  : "\u00d3;\u00d2;\u00d4;\u00d5;"  // remove Ö because it's in the OE now
+		"ae" : "\u00e6", // expanding characters æ Æ
+		"AE" : "\u00c6",
+		"oe" : "\u00f6\u0153", // œ Œ
+		"OE" : "\u00d6\u0152",
+		"d"  : "\u00f0",  // Eth (ð Ð)
+		"D"  : "\u00d0",
+		"o"  : "\u00f3\u00f2\u00f4\u00f5", // remove ö because it's in the oe now
+		"O"  : "\u00d3\u00d2\u00d4\u00d5"  // remove Ö because it's in the OE now
 	});
 
 	$("table").tablesorter({
@@ -66,6 +66,16 @@
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>Accented characters will get replaced by their character equivalent when the <code class="hilight">sortLocaleCompare</code> option is <code class="hilight">true</code>.</li>
+			<li>In the javascript code block below you can see the default <code class="hilight">$.tablesorter.characterEquivalents</code> table and an example of how to extend it to include other equivalents.</li>
+			<li>If you have a specific language requirement, please refer to the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki pages to see if it is there. If not, please consider sharing the code or even just share the character equivalents themselves.</li>
+		</ul>
+	</p>
+
 <h1>Demo</h1>
 <div id="demo"><table class="tablesorter">
 	<thead>
