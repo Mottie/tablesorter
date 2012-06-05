@@ -886,7 +886,7 @@
 			};
 			this.isDigit = function(s) {
 				// replace all unwanted chars and match.
-				return (/^[\-+(]?\d*[)]?$/).test(s.replace(/[,.'\s]/g, ''));
+				return (/^[\-+(]?\d+[)]?$/).test(s.replace(/[,.'\s]/g, ''));
 			};
 
 			// regex used in natural sort
