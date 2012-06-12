@@ -180,8 +180,9 @@ $.tablesorter.addWidget({
 	format: function(table) {
 		if (!$(table).hasClass('hasFilters')) {
 			var i, j, k, l, cv, v, val, r, ff, t, x, xi, cr,
-			sel, $tb, $tr, $td, reg2,
+			sel, $tb, $th, $tr, $td, reg2,
 			c = table.config,
+			$ths = $(c.headerList),
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
 			$t = $(table).addClass('hasFilters'),
@@ -245,18 +246,14 @@ $.tablesorter.addWidget({
 										}
 									// Look for quotes to get an exact match
 									} else if (/[\"|\']$/.test(val) && xi === val.replace(/(\"|\')/g,'')) {
-										r = (r) ? true : false;
+										ff = true;
 									// Look for wild card: ? = single, or * = multiple
 									} else if (/[\?|\*]/.test(val)) {
 										ff = new RegExp( val.replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(xi);
 									// Look for match, and add child row data for matching
 									} else {
 										x = (xi + t).indexOf(val);
-										if ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) ) {
-											r = (r) ? true : false;
-										} else {
-											r = false;
-										}
+										ff  = ( (!wo.filter_startsWith && x >= 0) || (wo.filter_startsWith && x === 0) );
 									}
 									r = (ff) ? (r ? true : false) : false;
 								}
@@ -275,7 +272,7 @@ $.tablesorter.addWidget({
 			buildSelect = function(i){
 				var o, arry = [];
 				i = parseInt(i, 10);
-				o = '<option value="">' + ($(c.headerList[i]).attr('data-placeholder') || '') + '</option>';
+				o = '<option value="">' + ($ths.filter('[data-column="' + i + '"]:last').attr('data-placeholder') || '') + '</option>';
 				for (k = 0; k < b.length; k++ ) {
 					l = c.cache[k].row.length;
 					// loop through the rows
@@ -291,26 +288,27 @@ $.tablesorter.addWidget({
 				for (k = 0; k < arry.length; k++) {
 					o += '<option value="' + arry[k] + '">' + arry[k] + '</option>';
 				}
-				$t.find('thead').find('select.' + css + '[data-col="' + i + '"]').append(o);
+				$t.find('thead').find('select.' + css + '[data-column="' + i + '"]').append(o);
 			};
 			if (c.debug) {
 				time = new Date();
 			}
 			for (i=0; i < cols; i++){
-				sel = (wo.filter_functions && wo.filter_functions[i] && typeof wo.filter_functions[i] !== 'function') || $(c.headerList[i]).hasClass('filter-select');
+				$th = $ths.filter('[data-column="' + i + '"]:last'); // assuming last cell of a column is the main column
+				sel = (wo.filter_functions && wo.filter_functions[i] && typeof wo.filter_functions[i] !== 'function') || $th.hasClass('filter-select');
 				fr += '<td>';
 				if (sel){
-					fr += '<select data-col="' + i + '" class="' + css;
+					fr += '<select data-column="' + i + '" class="' + css;
 				} else {
-					fr += '<input type="search" placeholder="' + ($(c.headerList[i]).attr('data-placeholder') || "") + '" data-col="' + i + '" class="' + css;
+					fr += '<input type="search" placeholder="' + ($th.attr('data-placeholder') || "") + '" data-column="' + i + '" class="' + css;
 				}
 				// use header option - headers: { 1: { filter: false } } OR add class="filter-false"
 				if ($.tablesorter.getData) {
 					// get data from jQuery data, metadata, headers option or header class name
-					fr += $.tablesorter.getData(c.headerList[i], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
+					fr += $.tablesorter.getData($th[0], c.headers[i], 'filter') === 'false' ? ' disabled" disabled' : '"';
 				} else {
 					// only class names and header options - keep this for compatibility with tablesorter v2.0.5
-					fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $(c.headerList[i]).hasClass('filter-false') ) ? ' disabled" disabled' : '"';
+					fr += ((c.headers[i] && c.headers[i].hasOwnProperty('filter') && c.headers[i].filter === false) || $th.hasClass('filter-false') ) ? ' disabled" disabled' : '"';
 				}
 				fr += (sel ? '></select>' : '>') + '</td>';
 			}
@@ -336,7 +334,7 @@ $.tablesorter.addWidget({
 			if (wo.filter_functions) {
 				// i = column # (string)
 				for (i in wo.filter_functions) {
-					t = $(c.headerList[i]);
+					t = $ths.filter('[data-column="' + i + '"]:last');
 					fr = '';
 					if (typeof i === 'string' && wo.filter_functions[i] === true && !t.hasClass('filter-false')) {
 						buildSelect(i);
@@ -348,13 +346,13 @@ $.tablesorter.addWidget({
 								fr += '<option>' + j + '</option>';
 							}
 						}
-						$t.find('thead').find('select.' + css + '[data-col="' + i + '"]').append(fr);
+						$t.find('thead').find('select.' + css + '[data-column="' + i + '"]').append(fr);
 					}
 				}
 			}
 			// build default select dropdown
-			for (i = 0; i < c.headerList.length; i++) {
-				t = $(c.headerList[i]);
+			for (i = 0; i < cols; i++) {
+				t = $ths.filter('[data-column="' + i + '"]:last');
 				// look for the filter-select class, but don't build it twice.
 				if (t.hasClass('filter-select') && !t.hasClass('filter-false') && !(wo.filter_functions && wo.filter_functions[i] === true)){
 					buildSelect(i);
