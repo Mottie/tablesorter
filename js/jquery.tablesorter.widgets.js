@@ -270,7 +270,7 @@ $.tablesorter.addWidget({
 				}
 				$t.trigger('applyWidgets'); // make sure zebra widget is applied
 			},
-			buildSelect = function(i){
+			buildSelect = function(i, updating){
 				var o, arry = [];
 				i = parseInt(i, 10);
 				o = '<option value="">' + ($ths.filter('[data-column="' + i + '"]:last').attr('data-placeholder') || '') + '</option>';
@@ -280,7 +280,9 @@ $.tablesorter.addWidget({
 					for (j = 0; j < l; j++) {
 						// get non-normalized cell content
 						t = c.cache[k].row[j][0].cells[i];
-						arry.push( c.supportsTextContent ? t.textContent : $(t).text() );
+						if (t) {
+							arry.push( c.supportsTextContent ? t.textContent : $(t).text() );
+						}
 					}
 				}
 				// get unique elements and sort the list
@@ -289,7 +291,17 @@ $.tablesorter.addWidget({
 				for (k = 0; k < arry.length; k++) {
 					o += '<option value="' + arry[k] + '">' + arry[k] + '</option>';
 				}
-				$t.find('thead').find('select.' + css + '[data-column="' + i + '"]').append(o);
+				$t.find('thead').find('select.' + css + '[data-column="' + i + '"]')[ updating ? 'html' : 'append' ](o);
+			},
+			buildDefault = function(updating){
+				// build default select dropdown
+				for (i = 0; i < cols; i++) {
+					t = $ths.filter('[data-column="' + i + '"]:last');
+					// look for the filter-select class, but don't build it twice.
+					if (t.hasClass('filter-select') && !t.hasClass('filter-false') && !(wo.filter_functions && wo.filter_functions[i] === true)){
+						buildSelect(i, updating);
+					}
+				}
 			};
 			if (c.debug) {
 				time = new Date();
@@ -316,6 +328,7 @@ $.tablesorter.addWidget({
 			}
 			$t
 			.bind('addRows updateCell update appendCache', function(){
+				buildDefault(true);
 				findRows();
 			})
 			.find('thead').eq(0).append(fr += '</tr>')
@@ -352,14 +365,7 @@ $.tablesorter.addWidget({
 					}
 				}
 			}
-			// build default select dropdown
-			for (i = 0; i < cols; i++) {
-				t = $ths.filter('[data-column="' + i + '"]:last');
-				// look for the filter-select class, but don't build it twice.
-				if (t.hasClass('filter-select') && !t.hasClass('filter-false') && !(wo.filter_functions && wo.filter_functions[i] === true)){
-					buildSelect(i);
-				}
-			}
+			buildDefault();
 
 			$t.find('select.' + css).bind('change', function(){
 				findRows();
