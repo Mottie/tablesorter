@@ -204,11 +204,11 @@ $.tablesorter.addWidget({
 					l = $tr.length;
 					// loop through the rows
 					for (j = 0; j < l; j++) {
-						// skip child rows
-						if (reg1.test($tr[j].className)) { continue; }
 						if (cv === '') {
 							$tr[j].style.display = '';
 						} else {
+							// skip child rows
+							if (reg1.test($tr[j].className)) { continue; }
 							r = true;
 							cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
 							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -216,6 +216,7 @@ $.tablesorter.addWidget({
 							// checked here so the option can be changed dynamically
 							t = (cr.length && (wo && wo.hasOwnProperty('filter_childRows') &&
 								typeof wo.filter_childRows !== 'undefined' ? wo.filter_childRows : true)) ? cr.text() : '';
+							t = wo.filter_ignoreCase ? t.toLocaleLowerCase() : t;
 							$td = $tr.eq(j).children('td');
 							for (i = 0; i < cols; i++) {
 								x = $.trim($td.eq(i).text());
@@ -293,6 +294,7 @@ $.tablesorter.addWidget({
 			if (c.debug) {
 				time = new Date();
 			}
+			wo.filter_ignoreCase = wo.filter_ignoreCase !== false; // set default filter_ignoreCase to true
 			for (i=0; i < cols; i++){
 				$th = $ths.filter('[data-column="' + i + '"]:last'); // assuming last cell of a column is the main column
 				sel = (wo.filter_functions && wo.filter_functions[i] && typeof wo.filter_functions[i] !== 'function') || $th.hasClass('filter-select');
