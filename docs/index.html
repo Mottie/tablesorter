@@ -1581,10 +1581,14 @@ $('input.tablesorter-filter:eq(0)').trigger('search', false);</pre></div>
     $row = $(row),
     // resort table using the current sort; set to false to prevent resort, otherwise
     // any other value in resort will automatically trigger the table resort.
-    resort = true;
+    // A callback method was added in 2.3.9.
+    resort = true,
+    callback = function(table){
+      alert('rows have been added!');
+    };
   $('table')
     .find('tbody').append($row)
-    .trigger('addRows', [$row, resort]);</pre></div>
+    .trigger('addRows', [$row, resort, callback]);</pre></div>
 				</td>
 				<td><a href="example-add-rows.html">Example</a></td>
 			</tr>
@@ -1594,9 +1598,13 @@ $('input.tablesorter-filter:eq(0)').trigger('search', false);</pre></div>
 				<td>Use this method to sort an initialized table in the desired order.
 					<div class="collapsible">
 						<pre class="js">// Choose a new sort order
-var sort = [[0,0],[2,0]];
+var sort = [[0,0],[2,0]],
+    callback = function(table){
+        alert('new sort applied to ' + table.id);
+    };
 // Note that the sort value below is inside of another array (inside another set of square brackets)
-$("table").trigger("sorton", [sort]);</pre></div>
+// A callback method was added in 2.3.9.
+$("table").trigger("sorton", [sort, callback]);</pre></div>
 				</td>
 				<td><a href="example-trigger-sort.html">Example</a></td>
 			</tr>
@@ -1611,8 +1619,12 @@ $("table tbody").append(html);
 // let the plugin know that we made a update
 // the resort flag set to anything BUT false (no quotes) will trigger an automatic
 // table resort using the current sort
-var resort = true;
-$("table").trigger("update", [resort]);
+// A callback method was added in 2.3.9.
+var resort = true,
+    callback = function(table){
+        alert('new sort applied');
+    };
+$("table").trigger("update", [resort, callback]);
 
 // As of version 2.0.14, the table will automatically resort (using the current sort selection)
 // after the update, so include the following if you want to specify a different sort

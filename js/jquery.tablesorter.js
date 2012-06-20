@@ -604,6 +604,23 @@
 				return b - a;
 			}
 
+			function checkResort($table, flag, callback) {
+				var t = $table[0];
+				if (flag !== false) {
+					$table.trigger("sorton", [t.config.sortList, function(){
+						$table.trigger('updateComplete');
+						if (typeof callback === "function") {
+							callback(t);
+						}
+					}]);
+				} else {
+					$table.trigger('updateComplete');
+					if (typeof callback === "function") {
+						callback(t);
+					}
+				}
+			}
+
 			/* public methods */
 			this.construct = function(settings) {
 				return this.each(function() {
@@ -611,12 +628,12 @@
 					if (!this.tHead || this.tBodies.length === 0) { return; }
 					// declare
 					var $headers, $cell, $this,
-						config, c, i, j, k, a, s, o, downTime,
+						c, i, j, k, a, s, o, downTime,
 						m = $.metadata;
 					// new blank config object
 					this.config = {};
 					// merge and extend.
-					c = config = $.extend(true, this.config, $.tablesorter.defaults, settings);
+					c = $.extend(true, this.config, $.tablesorter.defaults, settings);
 
 					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
 					// store common expression for speed
@@ -746,16 +763,16 @@
 					}
 					// apply easy methods that trigger binded events
 					$this
-					.bind("update", function(e, resort) {
+					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, this).remove();
 						// rebuild parsers.
 						c.parsers = buildParserCache(this, $headers);
 						// rebuild the cache map
 						buildCache(this);
-						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
+						checkResort($this, resort, callback);
 					})
-					.bind("updateCell", function(e, cell, resort) {
+					.bind("updateCell", function(e, cell, resort, callback) {
 						// get position from the dom.
 						var t = this, $tb = $(this).find('tbody'), row, pos,
 						// update cache - format: function(s, table, cell, cellIndex)
@@ -763,9 +780,9 @@
 						row = $tb.eq(tbdy).find('tr').index( $(cell).closest('tr') );
 						pos = [ row, cell.cellIndex];
 						t.config.cache[tbdy].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format( getElementText(t, cell, pos[1]), t, cell, pos[1] );
-						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
+						checkResort($this, resort, callback);
 					})
-					.bind("addRows", function(e, $row, resort) {
+					.bind("addRows", function(e, $row, resort, callback) {
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length, t = this,
 						tbdy = $(this).find('tbody').index( $row.closest('tbody') );
@@ -783,9 +800,9 @@
 							dat = [];
 						}
 						// resort using current settings
-						if (resort !== false) { $(this).trigger("sorton", [c.sortList]); }
+						checkResort($this, resort, callback);
 					})
-					.bind("sorton", function(e, list, init) {
+					.bind("sorton", function(e, list, callback, init) {
 						$(this).trigger("sortStart", this);
 						var l = c.headerList.length;
 						c.sortList = [];
@@ -800,6 +817,9 @@
 						// sort the table and append it to the dom
 						multisort(this, c.sortList);
 						appendToTable(this, init);
+						if (typeof callback === "function") {
+							callback(this);
+						}
 					})
 					.bind("appendCache", function(e, init) {
 						appendToTable(this, init);
@@ -825,7 +845,7 @@
 					applyWidget(this, true);
 					// if user has supplied a sort list to constructor.
 					if (c.sortList.length > 0) {
-						$this.trigger("sorton", [c.sortList, !c.initWidgets]);
+						$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
 					} else if (c.initWidgets) {
 						// apply widget format
 						applyWidget(this);
