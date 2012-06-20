@@ -464,7 +464,9 @@
 				for (i = 0; i < l; i++) {
 					s = sortList[i];
 					o = c.headerList[s[0]];
-					o.count = s[1] % (c.sortReset ? 3 : 2);
+					if (o) { // prevents error if sorton array is wrong
+						o.count = s[1] % (c.sortReset ? 3 : 2);
+					}
 				}
 			}
 
@@ -785,8 +787,12 @@
 					})
 					.bind("sorton", function(e, list, init) {
 						$(this).trigger("sortStart", this);
-						// update and store the sortlist
-						c.sortList = list;
+						var l = c.headerList.length;
+						c.sortList = [];
+						$.each(list, function(i,v){
+							// make sure column exists
+							if (v[0] < l) { c.sortList.push(list[i]); }
+						});
 						// update header count index
 						updateHeaderSortCount(this, c.sortList);
 						// set css for headers
