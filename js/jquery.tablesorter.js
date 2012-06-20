@@ -384,7 +384,7 @@
 					$t = $(this);
 					ch = c.headers[index];
 					this.innerHTML = '<div class="tablesorter-header-inner">' + this.innerHTML + '</div>'; // faster than wrapInner
-					if (c.onRenderHeader) { c.onRenderHeader.apply($th, [index]); }
+					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
