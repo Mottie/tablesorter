@@ -1,4 +1,4 @@
-/*! tableSorter 2.3 widgets - updated 6/5/2012
+/*! tableSorter 2.3 widgets - updated 6/21/2012
  *
  * jQuery UI Theme
  * Column Styles

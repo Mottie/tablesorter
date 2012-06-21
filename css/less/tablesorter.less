@@ -1,0 +1,211 @@
+﻿/* LESS Theme by Rob Garrison
+
+ To create your own theme, modify the code below and run it through
+ a LESS compiler, like this one: http://leafo.net/lessphp/editor.html
+ or download less.js from http://lesscss.org/
+
+ */
+
+/*** fonts ***/
+@tableHeaderFont       : 11px 'trebuchet ms', verdana, arial;
+@tableBodyFont         : 11px 'trebuchet ms', verdana, arial;
+
+/*** color definitions ***/
+/* for best results, only change the hue (210),
+   leave the saturation and luminosity alone
+   pick the color from here: http://hslpicker.com/#99CCE6 */
+@headerBackground      : hsl(120, 60%, 75%);
+@overallBorder         : #cdcdcd 1px solid;
+@headerTextColor       : #000;
+
+@bodyBackground        : #fff;
+@bodyTextColor         : #000;
+
+@headerSortUp          : desaturate(@headerBackground, 10%);
+@headerSortDown        : darken(@headerSortUp, 5%);
+
+/* zebra striping */
+.allRows {
+	background: @bodyBackground;
+	color: @bodyTextColor;
+}
+.evenRows {
+	background: lighten(@headerBackground, 40%);
+	color: @bodyTextColor;
+}
+.oddRows {
+	background: lighten(@headerBackground, 20%);
+}
+
+/* hovered rows */
+.oddHovered {
+	background: desaturate(@headerBackground, 60%);
+	color: @bodyTextColor;
+}
+.evenHovered {
+	background: lighten( desaturate(@headerBackground, 60%), 10% );
+	color: @bodyTextColor;
+}
+
+/* Columns widget */
+@primaryOdd            : spin(@headerBackground, 10); /* saturate( darken( desaturate(@headerBackground, 10%), 10% ), 30%); */
+@primaryEven           : lighten( @primaryOdd, 10% );
+@secondaryOdd          : @primaryEven;
+@secondaryEven         : lighten( @primaryEven, 5% );
+@tertiaryOdd           : @secondaryEven;
+@tertiaryEven          : lighten( @secondaryEven, 5% );
+
+/* black */
+@unsortedBlack         : url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+@sortUpBlack           : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+@sortDownBlack         : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+/* white */
+@unsortedWhite         : url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+@sortUpWhite           : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+@sortDownWhite         : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+
+/*** Arrows ***/
+.unsorted (@a) when (lightness(@a) >= 50%) {
+	background-image: @unsortedBlack;
+	color: @headerTextColor;
+}
+.unsorted (@a) when (lightness(@a) < 50%) {
+	background-image: @unsortedWhite;
+	color: lighten(@headerTextColor, 90%);
+}
+.sortUp (@a) when (lightness(@a) >= 50%) {
+	background-image: @sortUpBlack;
+	color: @headerTextColor;
+}
+.sortUp (@a) when (lightness(@a) < 50%) {
+	background-image: @sortUpWhite;
+	color: lighten(@headerTextColor, 90%);
+}
+.sortDown (@a) when (lightness(@a) >= 50%) {
+	background-image: @sortDownBlack;
+	color: @headerTextColor;
+}
+.sortDown (@a) when (lightness(@a) < 50%) {
+	background-image: @sortDownWhite;
+	color: lighten(@headerTextColor, 90%);
+}
+
+table.tablesorter {
+	font: @tableBodyFont;
+	background-color: @borderAndBackground;
+	margin: 10px 0 15px;
+	width: 100%;
+	text-align: left;
+	border-spacing: 0;
+
+	th, td {
+		border: @overallBorder;
+	}
+
+	/* style th's outside of the thead */
+	th {
+		background-color: @headerBackground;
+		color: @headerTextColor;
+		border-collapse: collapse;
+		font: @tableHeaderFont;
+		font-weight: bold;
+		padding: 4px;
+
+		&.headerSortUp, /* backward compatible with tablesorter 2.0.5 */
+		&.tablesorter-headerSortUp {
+			background-color: @headerSortUp;
+			.sortUp(@headerBackground);
+		}
+
+		&.headerSortDown, /* backward compatible with tablesorter 2.0.5 */
+		&.tablesorter-headerSortDown {
+			background-color: @headerSortDown;
+			.sortDown(@headerBackground);
+		}
+
+	}
+
+	/* style header */
+	.header, /* backward compatible with tablesorter 2.0.5 */
+	.tablesorter-header {
+		.unsorted(@headerBackground);
+		background-repeat: no-repeat;
+		background-position: center right;
+		padding: 4px 20px 4px 4px;
+		cursor: pointer;
+	}
+
+	/* Column Widget - column sort colors */
+	tr.odd td.primary {
+		background-color: @primaryOdd;
+	}
+	td.primary, tr.even td.primary {
+		background-color: @primaryEven;
+	}
+	tr.odd td.secondary {
+		background-color: @secondaryOdd;
+	}
+	td.secondary, tr.even td.secondary {
+		background-color: @secondaryEven;
+	}
+	tr.odd td.tertiary {
+		background-color: @tertiaryOdd;
+	}
+	td.tertiary, tr.even td.tertiary {
+		background-color: @tertiaryEven;
+	}
+
+	/* filter widget */
+	input.tablesorter-filter,
+	select.tablesorter-filter {
+		width: 95%;
+		height: inherit;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+	tr.tablesorter-filter,
+	tr.tablesorter-filter td {
+		text-align: center;
+		background: @bodyBackground;
+	}
+	/* optional disabled input styling */ 
+	input.tablesorter-filter.disabled,
+	select.tablesorter-filter.disabled {
+		opacity: 0.5;
+		filter: alpha(opacity=50);
+	}
+
+	/* body */
+	tbody {
+
+		td {
+			.allRows;
+			padding: 4px;
+			vertical-align: top;
+		}
+
+		/* Zebra Widget - row alternating colors */
+		tr.odd td {
+			.oddRows;
+		}
+		tr.even td {
+			.evenRows;
+		}
+
+		/* hovered row colors */
+		tr:hover td, tr.even:hover td {
+			.evenHovered;
+		}
+		tr.odd:hover td {
+			.oddHovered;
+		}
+
+	}
+
+	/* used to hide a tbody while rebuilding to speed it up */
+	.tablesorter-hidden {
+		display: none;
+	}
+
+}

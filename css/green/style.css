@@ -55,35 +55,44 @@ table.tablesorter .tablesorter-hidden {
 
 /* Zebra Widget - row alternating colors */
 table.tablesorter tr.odd td {
-	background-color: #f0f6f0;
+	background-color: #ebfaeb;
 }
 table.tablesorter tr.even td {
 	background-color: #fff;
 }
 
 /* Column Widget - column sort colors */
-table.tablesorter td.primary,
-table.tablesorter tr.odd td.primary {
-	background-color: #c0ffc0;
+.tablesorter td.primary,
+.tablesorter tr.odd td.primary {
+	background-color: #99e6a6;
 }
-table.tablesorter tr.even td.primary {
-	background-color: #e8ffe8;
-}
-
-table.tablesorter td.secondary,
-table.tablesorter tr.odd td.secondary {
-	background-color: #d6ffd6;
-}
-table.tablesorter tr.even td.secondary {
-	background-color: #e8ffe8;
+.tablesorter tr.even td.primary {
+	background-color: #c2f0c9;
 }
 
-table.tablesorter td.tertiary,
-table.tablesorter tr.odd td.tertiary {
-	background-color: #eaffea;
+.tablesorter td.secondary,
+.tablesorter tr.odd td.secondary {
+	background-color: #c2f0c9;
 }
-table.tablesorter tr.even td.tertiary {
-	background-color: #f8fff8;
+.tablesorter tr.even td.secondary {
+	background-color: #d6f5db;
+}
+
+.tablesorter td.tertiary,
+.tablesorter tr.odd td.tertiary {
+	background-color: #d6f5db;
+}
+.tablesorter tr.even td.tertiary {
+	background-color: #ebfaed;
+}
+
+/* hovered row colors */
+table.tablesorter tbody tr:hover td,
+table.tablesorter tbody tr.even:hover td {
+	background: #d9d9d9;
+}
+table.tablesorter tbody tr.odd:hover td {
+	background: #bfbfbf;
 }
 
 /* filter widget */

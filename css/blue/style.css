@@ -1,9 +1,8 @@
 /* Blue Theme */
 table.tablesorter {
-	font-family: arial;
+	font: 11px/18px Arial, Sans-serif;
 	background-color: #cdcdcd;
 	margin: 10px 0 15px;
-	font-size: 11px;
 	width: 100%;
 	text-align: left;
 	border-spacing: 0;
@@ -11,13 +10,14 @@ table.tablesorter {
 table.tablesorter,
 table.tablesorter th,
 table.tablesorter td {
-	background-color: #e6eeee;
 	border: #cdcdcd 1px solid;
 }
 
 table.tablesorter th {
+	background-color: #99bfe6;
+	color: #000;
 	border-collapse: collapse;
-	font-size: 12px;
+	font: 12px/18px Arial, Sans-serif;
 	padding: 4px;
 }
 table.tablesorter .header,
@@ -41,7 +41,7 @@ table.tablesorter tbody td {
 }
 table.tablesorter th.headerSortUp,
 table.tablesorter th.tablesorter-headerSortUp {
-	background-color: #8dbdd8;
+	background-color: #9fbfdf;
 	/* black asc arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	/* white asc arrow */
@@ -51,7 +51,7 @@ table.tablesorter th.tablesorter-headerSortUp {
 }
 table.tablesorter th.headerSortDown,
 table.tablesorter th.tablesorter-headerSortDown {
-	background-color: #8dbdd8;
+	background-color: #8cb3d9;
 	/* black desc arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 	/* white desc arrow */
@@ -66,32 +66,44 @@ table.tablesorter .tablesorter-hidden {
 
 /* Zebra Widget - row alternating colors */
 table.tablesorter tr.odd td {
-	background-color: #f0f0ff;
+	background-color: #ebf2fa;
 }
 table.tablesorter tr.even td {
 	background-color: #fff;
 }
 
 /* Column Widget - column sort colors */
-table.tablesorter td.primary, table.tablesorter tr.odd td.primary {
-	background-color: #c0c0ff;
+.tablesorter td.primary,
+.tablesorter tr.odd td.primary {
+	background-color: #99b3e6;
 }
-table.tablesorter tr.even td.primary {
-	background-color: #e8e8ff;
-}
-
-table.tablesorter td.secondary, table.tablesorter tr.odd td.secondary {
-	background-color: #d6d6ff;
-}
-table.tablesorter tr.even td.secondary {
-	background-color: #e8e8ff;
+.tablesorter tr.even td.primary {
+	background-color: #c2d1f0;
 }
 
-table.tablesorter td.tertiary, table.tablesorter tr.odd td.tertiary {
-	background-color: #e5e5ff;
+.tablesorter td.secondary,
+.tablesorter tr.odd td.secondary {
+	background-color: #c2d1f0;
 }
-table.tablesorter tr.even td.tertiary {
-	background-color: #f8f8ff;
+.tablesorter tr.even td.secondary {
+	background-color: #d6e0f5;
+}
+
+.tablesorter td.tertiary,
+.tablesorter tr.odd td.tertiary {
+	background-color: #d6e0f5;
+}
+.tablesorter tr.even td.tertiary {
+	background-color: #ebf0fa;
+}
+
+/* hovered row colors */
+table.tablesorter tbody tr:hover td,
+table.tablesorter tbody tr.even:hover td {
+	background: #d9d9d9;
+}
+table.tablesorter tbody tr.odd:hover td {
+	background: #bfbfbf;
 }
 
 /* filter widget */
