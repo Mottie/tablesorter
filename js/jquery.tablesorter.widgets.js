@@ -178,7 +178,7 @@ $.tablesorter.addWidget({
 $.tablesorter.addWidget({
 	id: "filter",
 	format: function(table) {
-		if (!$(table).hasClass('hasFilters')) {
+		if (table.config.parsers && !$(table).hasClass('hasFilters')) {
 			var i, j, k, l, cv, v, val, r, ff, t, x, xi, cr,
 			sel, $tb, $th, $tr, $td, reg2,
 			c = table.config,
