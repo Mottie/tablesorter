@@ -476,12 +476,12 @@
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
 			function multisort(table, sortList) {
-				var dynamicExp, col, mx = 0, dir = 0, tc = table.config,
+				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, j, k, c, cache, lc, s, e, order, orgOrderCol;
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
-					dynamicExp = "var sortWrapper = function(a,b) {";
+					dynamicExp = "sortWrapper = function(a,b) {";
 					cache = tc.cache[k];
 					lc = cache.normalized.length;
 					for (i = 0; i < l; i++) {
@@ -516,8 +516,7 @@
 					}
 					dynamicExp += "return 0; ";
 					dynamicExp += "}; ";
-					eval(dynamicExp);
-					cache.normalized.sort(sortWrapper); // sort using eval expression
+					cache.normalized.sort(eval(dynamicExp)); // sort using eval expression
 				}
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
 			}
@@ -657,7 +656,7 @@
 					$headers.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
 						if (e.type === 'mousedown') {
 							downTime = new Date().getTime();
-							return !c.cancelSelection;
+							return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 						}
 						// prevent resizable widget from initializing a sort (long clicks are ignored)
 						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
@@ -904,6 +903,7 @@
 					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
 				}
 				if(/^\s*\([.\d]+\)/.test(s)) {
+					// make (#) into a negative number -> (10) = -10
 					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
 				}
 				var i = parseFloat(s);
@@ -1171,7 +1171,7 @@
 				l = $tb.children('tr').length;
 				if (l > 1) {
 					row = 0;
-					$tv = $tb.find('tr:visible');
+					$tv = $tb.children('tr:visible');
 					$tb.addClass('tablesorter-hidden');
 					// revered back to using jQuery each - strangely it's the fastest method
 					$tv.each(function(){
