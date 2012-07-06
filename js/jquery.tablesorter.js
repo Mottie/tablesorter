@@ -749,8 +749,6 @@
 							setHeadersCss($this[0], $headers, c.sortList);
 							multisort($this[0], c.sortList);
 							appendToTable($this[0]);
-							// stop normal event by returning false
-							return false;
 						}
 					});
 					if (c.cancelSelection) {
