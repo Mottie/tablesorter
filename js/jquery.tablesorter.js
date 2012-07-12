@@ -1,5 +1,5 @@
 ﻿/*!
-* TableSorter 2.3.10 - Client-side table sorting with ease!
+* TableSorter 2.3.11 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -511,7 +511,7 @@
 						dynamicExp += "}; ";
 					}
 					dynamicExp += "return 0; ";
-					dynamicExp += "}; "; console.log(dynamicExp);
+					dynamicExp += "}; ";
 					cache.normalized.sort(eval(dynamicExp)); // sort using eval expression
 				}
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
