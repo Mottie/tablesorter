@@ -18,7 +18,7 @@
 	$.extend({
 		tablesorter: new function() {
 
-			this.version = "2.3.10";
+			this.version = "2.3.11";
 
 			var parsers = [], widgets = [];
 			this.defaults = {
@@ -173,7 +173,7 @@
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
 						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
-						h = $headers.filter(':not([colspan])[data-column="'+i+'"]:last,[colspan="1"][data-column="'+i+'"]:last');
+						h = $headers.filter(':not([colspan])[data-column="' + i + '"]:last,[colspan="1"][data-column="' + i + '"]:last');
 						ch = c.headers[i];
 						// get column parser
 						p = getParserById( ts.getData(h, ch, 'sorter') );
@@ -472,12 +472,12 @@
 
 			/* sorting methods - reverted sorting method back to version 2.0.3 */
 			function multisort(table, sortList) {
-				var dynamicExp, col, mx = 0, dir = 0, tc = table.config,
+				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, j, k, c, cache, lc, s, e, order, orgOrderCol;
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
-					dynamicExp = "var sortWrapper = function(a,b) {";
+					dynamicExp = "sortWrapper = function(a,b) {";
 					cache = tc.cache[k];
 					lc = cache.normalized.length;
 					for (i = 0; i < l; i++) {
@@ -500,7 +500,7 @@
 								dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
 							}
 						}
-						dynamicExp += "var " + e + " = sort" + s + "(table,a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
+						dynamicExp += "var " + e + " = $.tablesorter.sort" + s + "(table,a[" + c + "],b[" + c + "]," + c + "," + mx +  "," + dir + "); ";
 						dynamicExp += "if (" + e + ") { return " + e + "; } ";
 						dynamicExp += "else { ";
 					}
@@ -511,93 +511,10 @@
 						dynamicExp += "}; ";
 					}
 					dynamicExp += "return 0; ";
-					dynamicExp += "}; ";
-					eval(dynamicExp);
-					cache.normalized.sort(sortWrapper); // sort using eval expression
+					dynamicExp += "}; "; console.log(dynamicExp);
+					cache.normalized.sort(eval(dynamicExp)); // sort using eval expression
 				}
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
-			}
-
-			// Natural sort - https://github.com/overset/javascript-natural-sort
-			function sortText(table, a, b, col) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
-					r = $.tablesorter.regex, xN, xD, yN, yD, xF, yF, i, mx;
-				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
-				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
-				if (typeof c.textSorter === 'function') { return c.textSorter(a, b, table, col); }
-				// chunk/tokenize
-				xN = a.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
-				yN = b.replace(r[0], '\0$1\0').replace(/\0$/, '').replace(/^\0/, '').split('\0');
-				// numeric, hex or date detection
-				xD = parseInt(a.match(r[2])) || (xN.length !== 1 && a.match(r[1]) && Date.parse(a));
-				yD = parseInt(b.match(r[2])) || (xD && b.match(r[1]) && Date.parse(b)) || null;
-				// first try and sort Hex codes or Dates
-				if (yD) {
-					if ( xD < yD ) { return -1; }
-					if ( xD > yD ) { return 1; }
-				}
-				mx = Math.max(xN.length, yN.length);
-				// natural sorting through split numeric strings and default strings
-				for (i = 0; i < mx; i++) {
-					// find floats not starting with '0', string or 0 if not defined (Clint Priest)
-					xF = (!(xN[i] || '').match(r[3]) && parseFloat(xN[i])) || xN[i] || 0;
-					yF = (!(yN[i] || '').match(r[3]) && parseFloat(yN[i])) || yN[i] || 0;
-					// handle numeric vs string comparison - number < string - (Kyle Adams)
-					if (isNaN(xF) !== isNaN(yF)) { return (isNaN(xF)) ? 1 : -1; }
-					// rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
-					if (typeof xF !== typeof yF) {
-						xF += '';
-						yF += '';
-					}
-					if (xF < yF) { return -1; }
-					if (xF > yF) { return 1; }
-				}
-				return 0;
-			}
-
-			function sortTextDesc(table, a, b, col) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
-				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
-				if (typeof c.textSorter === 'function') { return c.textSorter(b, a, table, col); }
-				return sortText(table, b, a);
-			}
-
-			// return text string value by adding up ascii value
-			// so the text is somewhat sorted when using a digital sort
-			// this is NOT an alphanumeric sort
-			function getTextValue(a, mx, d) {
-				if (mx) {
-					// make sure the text value is greater than the max numerical value (mx)
-					var i, l = a.length, n = mx + d;
-					for (i = 0; i < l; i++) {
-						n += a.charCodeAt(i);
-					}
-					return d * n;
-				}
-				return 0;
-			}
-
-			function sortNumeric(table, a, b, col, mx, d) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
-				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
-				if (isNaN(a)) { a = getTextValue(a, mx, d); }
-				if (isNaN(b)) { b = getTextValue(b, mx, d); }
-				return a - b;
-			}
-
-			function sortNumericDesc(table, a, b, col, mx, d) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
-				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
-				if (isNaN(a)) { a = getTextValue(a, mx, d); }
-				if (isNaN(b)) { b = getTextValue(b, mx, d); }
-				return b - a;
 			}
 
 			function checkResort($table, flag, callback) {
@@ -697,7 +614,7 @@
 									// add other columns if header spans across multiple
 									if (this.colSpan > 1) {
 										for (j = 1; j < this.colSpan; j++) {
-											c.sortList.push([i+j, o]);
+											c.sortList.push([i + j, o]);
 										}
 									}
 								}
@@ -725,7 +642,7 @@
 										// add other columns if header spans across multiple
 										if (this.colSpan > 1) {
 											for (j = 1; j < this.colSpan; j++) {
-												c.sortList.push([i+j, o]);
+												c.sortList.push([i + j, o]);
 											}
 										}
 									}
@@ -853,6 +770,88 @@
 					$this.trigger('tablesorter-initialized', this);
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
+			};
+
+			// Natural sort - https://github.com/overset/javascript-natural-sort
+			this.sortText = function(table, a, b, col) {
+				if (a === b) { return 0; }
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
+					r = $.tablesorter.regex, xN, xD, yN, yD, xF, yF, i, mx;
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
+				if (typeof c.textSorter === 'function') { return c.textSorter(a, b, table, col); }
+				// chunk/tokenize
+				xN = a.replace(r[0], '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
+				yN = b.replace(r[0], '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
+				// numeric, hex or date detection
+				xD = parseInt(a.match(r[2]),16) || (xN.length !== 1 && a.match(r[1]) && Date.parse(a));
+				yD = parseInt(b.match(r[2]),16) || (xD && b.match(r[1]) && Date.parse(b)) || null;
+				// first try and sort Hex codes or Dates
+				if (yD) {
+					if ( xD < yD ) { return -1; }
+					if ( xD > yD ) { return 1; }
+				}
+				mx = Math.max(xN.length, yN.length);
+				// natural sorting through split numeric strings and default strings
+				for (i = 0; i < mx; i++) {
+					// find floats not starting with '0', string or 0 if not defined (Clint Priest)
+					xF = (!(xN[i] || '').match(r[3]) && parseFloat(xN[i])) || xN[i] || 0;
+					yF = (!(yN[i] || '').match(r[3]) && parseFloat(yN[i])) || yN[i] || 0;
+					// handle numeric vs string comparison - number < string - (Kyle Adams)
+					if (isNaN(xF) !== isNaN(yF)) { return (isNaN(xF)) ? 1 : -1; }
+					// rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
+					if (typeof xF !== typeof yF) {
+						xF += '';
+						yF += '';
+					}
+					if (xF < yF) { return -1; }
+					if (xF > yF) { return 1; }
+				}
+				return 0;
+			};
+
+			this.sortTextDesc = function(table, a, b, col) {
+				if (a === b) { return 0; }
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
+				if (typeof c.textSorter === 'function') { return c.textSorter(b, a, table, col); }
+				return this.sortText(table, b, a);
+			};
+
+			// return text string value by adding up ascii value
+			// so the text is somewhat sorted when using a digital sort
+			// this is NOT an alphanumeric sort
+			this.getTextValue = function(a, mx, d) {
+				if (mx) {
+					// make sure the text value is greater than the max numerical value (mx)
+					var i, l = a.length, n = mx + d;
+					for (i = 0; i < l; i++) {
+						n += a.charCodeAt(i);
+					}
+					return d * n;
+				}
+				return 0;
+			};
+
+			this.sortNumeric = function(table, a, b, col, mx, d) {
+				if (a === b) { return 0; }
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : e || 1; }
+				if (isNaN(a)) { a = this.getTextValue(a, mx, d); }
+				if (isNaN(b)) { b = this.getTextValue(b, mx, d); }
+				return a - b;
+			};
+
+			this.sortNumericDesc = function(table, a, b, col, mx, d) {
+				if (a === b) { return 0; }
+				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return (typeof(e) === 'boolean') ? (e ? 1 : -1) : -e || -1; }
+				if (isNaN(a)) { a = this.getTextValue(a, mx, d); }
+				if (isNaN(b)) { b = this.getTextValue(b, mx, d); }
+				return b - a;
 			};
 
 			this.destroy = function(table, removeClasses){
