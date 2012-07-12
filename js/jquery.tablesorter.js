@@ -1023,18 +1023,11 @@
 			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
 		},
 		format: function(s, table) {
-			var i, item, a = s.split("."),
+			var i, a = s.split("."),
 			r = "",
 			l = a.length;
 			for (i = 0; i < l; i++) {
-				item = a[i];
-				if (item.length === 1) {
-					r += "00" + item;
-				} else if (item.length === 2) {
-					r += "0" + item;
-				} else {
-					r += item;
-				}
+				r += ("00" + a[i]).slice(-3);
 			}
 			return ts.formatFloat(r, table);
 		},
