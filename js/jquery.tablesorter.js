@@ -1020,7 +1020,7 @@
 	ts.addParser({
 		id: "ipAddress",
 		is: function(s) {
-			return (/^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/).test(s);
+			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
 		},
 		format: function(s, table) {
 			var i, item, a = s.split("."),
@@ -1028,7 +1028,9 @@
 			l = a.length;
 			for (i = 0; i < l; i++) {
 				item = a[i];
-				if (item.length === 2) {
+				if (item.length === 1) {
+					r += "00" + item;
+				} else if (item.length === 2) {
 					r += "0" + item;
 				} else {
 					r += item;
