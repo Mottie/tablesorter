@@ -83,11 +83,7 @@
 					if (config.supportsTextContent) {
 						text = node.textContent;
 					} else {
-						if (node.childNodes[0] && node.childNodes[0].hasChildNodes()) {
-							text = node.childNodes[0].innerHTML;
-						} else {
-							text = node.innerHTML;
-						}
+						text = $(node).text();
 					}
 				} else {
 					if (typeof(te) === "function") {
