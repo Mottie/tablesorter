@@ -274,6 +274,17 @@
 				}
 			}
 
+			// detach tbody but save the position
+			function processTbody(table, $tb, getIt){
+				var tb, holdr;
+				if (getIt) {
+					return $tb.before( '<tbody class="savemyplace"/>' ).detach();
+				}
+				holdr = $(table).find('tbody.savemyplace');
+				$tb.insertAfter( holdr );
+				holdr.remove();
+			}
+
 			// init flag (true) used by pager plugin to prevent widget application
 			function appendToTable(table, init) {
 				var c = table.config,
@@ -285,9 +296,10 @@
 					appendTime = new Date();
 				}
 				for (k = 0; k < b.length; k++) {
-					if (!$(b[k]).hasClass(c.cssInfoBlock)){
-						$(b[k]).addClass('tablesorter-hidden');
-						f = document.createDocumentFragment();
+					$bk = $(b[k]);
+					if (!$bk.hasClass(c.cssInfoBlock)) {
+						// get tbody
+						$tb = processTbody(table, $bk, true);
 						r = c2[k].row;
 						n = c2[k].normalized;
 						totalRows = n.length;
@@ -299,12 +311,12 @@
 							if (!c.appender || !c.removeRows) {
 								l = r[pos].length;
 								for (j = 0; j < l; j++) {
-									f.appendChild(r[pos][j]);
+									$tb.append(r[pos][j]);
 								}
 							}
 						}
-						table.tBodies[k].appendChild(f);
-						$(b[k]).removeClass('tablesorter-hidden');
+						// restore tbody
+						processTbody(table, $tb, false);
 					}
 				}
 				if (c.appender) {
@@ -470,7 +482,7 @@
 				return (parsers && parsers[i]) ? parsers[i].type || '' : '';
 			}
 
-			/* sorting methods - reverted sorting method back to version 2.0.3 */
+			// sort multiple columns
 			function multisort(table, sortList) {
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				l = sortList.length, bl = table.tBodies.length,
@@ -514,7 +526,7 @@
 					dynamicExp += "}; ";
 					cache.normalized.sort(eval(dynamicExp)); // sort using eval expression
 				}
-				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order+ " time", sortTime); }
+				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
 			}
 
 			function checkResort($table, flag, callback) {
@@ -545,7 +557,7 @@
 						m = $.metadata;
 					// new blank config object
 					this.config = {};
-					// merge and extend.
+					// merge and extend
 					c = $.extend(true, this.config, $.tablesorter.defaults, settings);
 
 					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
@@ -677,7 +689,7 @@
 					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, this).remove();
-						// rebuild parsers.
+						// rebuild parsers
 						c.parsers = buildParserCache(this, $headers);
 						// rebuild the cache map
 						buildCache(this);
