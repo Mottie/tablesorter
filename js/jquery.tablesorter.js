@@ -27,6 +27,7 @@
 			ts.defaults = {
 
 				// appearance
+				theme            : 'default',  // adds tablesorter-{theme} to the table for styling
 				widthFixed       : false,      // adds colgroup to fix widths of columns
 
 				// functionality
@@ -71,7 +72,7 @@
 				cssDesc          : 'tablesorter-headerSortDown',
 				cssHeader        : 'tablesorter-header',
 				cssHeaderRow     : 'tablesorter-headerRow',
-				cssIcon          : 'tablesorter-icon',
+				cssIcon          : '', // if this class exists, a <i> will be added to the header automatically
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name
 
 				// selectors
@@ -378,7 +379,7 @@
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
 					$th, lock, time, $tableHeaders, c = table.config;
-					c.headerList = [];
+					t, c.headerList = [];
 				if (c.debug) {
 					time = new Date();
 				}
@@ -386,7 +387,8 @@
 				.each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
-					this.innerHTML = '<div class="tablesorter-header-inner">' + this.innerHTML + '</div>'; // faster than wrapInner
+					t = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
+					this.innerHTML = '<div class="tablesorter-header-inner">' + this.innerHTML + t + '</div>'; // faster than wrapInner
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
@@ -559,7 +561,7 @@
 
 					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
 					// store common expression for speed
-					$this = $(this).addClass(c.tableClass);
+					$this = $(this).addClass(c.tableClass + (c.theme !== '' ? ' tablesorter-' + c.theme : ''));
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
@@ -772,7 +774,7 @@
 					}
 
 					// initialized
-					this.hasInitialized = true;
+					ts.hasInitialized = true;
 					if (c.debug) {
 						ts.benchmark("Overall initialization time", $.data( this, 'startoveralltimer'));
 					}
@@ -889,7 +891,6 @@
 				if (removeClasses !== false) {
 					$t.removeClass(c.tableClass);
 				}
-
 			};
 
 			ts.addParser = function(parser) {
