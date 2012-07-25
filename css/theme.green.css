@@ -1,0 +1,90 @@
+@import url("theme.global.css"); /* global css */
+
+/*** green theme ***/
+.tablesorter-green,
+.tablesorter-green th,
+.tablesorter-green td {
+	border: #cdcdcd 1px solid;
+}
+
+.tablesorter-green td {
+	color: #3d3d3d;
+	padding: 5px;
+}
+.tablesorter-green thead tr,
+.tablesorter-green tfoot tr {
+	background: url(images/green-header.png) center center repeat-x;
+}
+.tablesorter-green th.tablesorter-header .tablesorter-header-inner {
+	border-right: #cdcdcd 1px solid;
+	padding: 8px 8px 8px 20px;
+}
+.tablesorter-green .tablesorter-header {
+	background: url(images/green-unsorted.png) no-repeat 5px center;
+}
+.tablesorter-green .tablesorter-headerSortUp {
+	background-image: url(images/green-asc.png);
+}
+.tablesorter-green .tablesorter-headerSortDown {
+	background-image: url(images/green-desc.png);
+}
+
+/* processing background color */
+.tablesorter-green .tablesorter-processing {
+	background-color: #3d3d3d; /* older browsers that don't support rgba */
+	background-color: rgba(61,61,61,0.8);
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-green tr.odd td {
+	background-color: #ebfaeb;
+}
+.tablesorter-green tr.even td {
+	background-color: #fff;
+}
+
+/* Column Widget - column sort colors */
+.tablesorter-green td.primary,
+.tablesorter-green tr.odd td.primary {
+	background-color: #99e6a6;
+}
+.tablesorter-green tr.even td.primary {
+	background-color: #c2f0c9;
+}
+
+.tablesorter-green td.secondary,
+.tablesorter-green tr.odd td.secondary {
+	background-color: #c2f0c9;
+}
+.tablesorter-green tr.even td.secondary {
+	background-color: #d6f5db;
+}
+
+.tablesorter-green td.tertiary,
+.tablesorter-green tr.odd td.tertiary {
+	background-color: #d6f5db;
+}
+.tablesorter-green tr.even td.tertiary {
+	background-color: #ebfaed;
+}
+
+/* Filter widget */
+table.tablesorter-blue .tablesorter-filter-row td {
+	background-color: #eee;
+}
+
+/* hovered row colors
+ you'll need to add additional lines for
+ rows with more than 2 child rows
+ */
+.tablesorter-green tbody tr:hover td,
+.tablesorter-green tbody tr.even:hover td,
+.tablesorter-green tbody tr.even:hover + tr.tablesorter-child-row td,
+.tablesorter-green tbody tr.even:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+	background: #d9d9d9;
+}
+.tablesorter-green tbody tr.odd:hover td,
+.tablesorter-green tbody tr.odd:hover + tr.tablesorter-child-row td,
+.tablesorter-green tbody tr.odd:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+	background: #bfbfbf;
+}

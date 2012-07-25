@@ -1,0 +1,81 @@
+﻿@import url("theme.global.css"); /* global css */
+
+/*** Ice Theme (by thezoggy) ***/
+table.tablesorter-ice {
+	background-color: #fff;
+}
+table.tablesorter-ice th {
+	color: #555;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	background-color: #f6f8f9;
+	border: 1px solid #ccc;
+}
+table.tablesorter-ice td {
+	color: #333;
+	border: 1px solid #ccc;
+}
+table.tablesorter-ice .header,
+table.tablesorter-ice .tablesorter-header {
+	padding: 4px 18px 4px 4px;
+	background: #f6f8f9 url(images/ice-unsorted.gif) no-repeat center right;
+}
+table.tablesorter-ice th.headerSortUp,
+table.tablesorter-ice th.tablesorter-headerSortUp {
+	color: #333;
+	background: #ebedee url(images/ice-desc.gif) no-repeat center right;
+}
+table.tablesorter-ice th.headerSortDown,
+table.tablesorter-ice th.tablesorter-headerSortDown {
+	color: #333;
+	background: #ebedee url(images/ice-asc.gif) no-repeat center right;
+}
+
+/* hovered row colors */
+table.tablesorter-ice tr:hover td,
+table.tablesorter-ice tr.even:hover td,
+table.tablesorter-ice tr.odd:hover td {
+	background: #ebf2fa;
+}
+
+/* Zebra Widget - row alternating colors */
+table.tablesorter-ice tr.odd td {
+	background-color: #dfdfdf;
+}
+table.tablesorter-ice tr.even td {
+	background-color: #efefef;
+}
+
+/* Column Widget - column sort colors */
+.tablesorter-ice td.primary,
+.tablesorter-ice tr.odd td.primary {
+	background-color: #9ae5e5;
+}
+.tablesorter-ice tr.even td.primary {
+	background-color: #c2f0f0;
+}
+.tablesorter-ice td.secondary,
+.tablesorter-ice tr.odd td.secondary {
+	background-color: #c2f0f0;
+}
+.tablesorter-ice tr.even td.secondary {
+	background-color: #d5f5f5;
+}
+.tablesorter-ice td.tertiary,
+.tablesorter-ice tr.odd td.tertiary {
+	background-color: #d5f5f5;
+}
+.tablesorter-ice tr.even td.tertiary {
+	background-color: #ebfafa;
+}
+
+/* Filter Widget */
+table.tablesorter-ice tr.tablesorter-filter,
+table.tablesorter-ice tr.tablesorter-filter td {
+	background: #eee;
+}
+
+/* StickyHeaders Widget */
+table.tablesorter-ice tr.tablesorter-stickyHeader {
+	padding: 2px 1px;
+	background-color: #fff;
+}

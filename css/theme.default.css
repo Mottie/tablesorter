@@ -1,0 +1,105 @@
+@import url("theme.global.css"); /* global css */
+
+/*** Default Theme ***/
+.tablesorter-default {
+	color: #333;
+	background-color: #fff;
+}
+.tablesorter-default td {
+	background-color: #fff;
+	border-bottom: #ccc 1px solid;
+}
+.tablesorter-default th {
+	color: #000;
+	background-color: #fff;
+	border-collapse: collapse;
+	border-bottom: #ccc 2px solid;
+}
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+.tablesorter-default th.headerSortUp,
+.tablesorter-default th.tablesorter-headerSortUp {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-default th.headerSortDown,
+.tablesorter-default th.tablesorter-headerSortDown {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	border-bottom: #000 2px solid;
+}
+
+/* processing background color */
+.tablesorter-default .tablesorter-processing {
+	background-color: #ddd; /* older browsers that don't support rgba */
+	background-color: rgba(255,255,255,0.8);
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-default tr.odd td {
+	background-color: #dfdfdf;
+}
+.tablesorter-default tr.even td {
+	background-color: #efefef;
+}
+
+/* Column Widget - column sort colors */
+.tablesorter-default tr.odd td.primary {
+  background-color: #bfbfbf;
+}
+.tablesorter-default td.primary,
+.tablesorter-default tr.even td.primary {
+  background-color: #d9d9d9;
+}
+.tablesorter-default tr.odd td.secondary {
+  background-color: #d9d9d9;
+}
+.tablesorter-default td.secondary,
+.tablesorter-default tr.even td.secondary {
+  background-color: #e6e6e6;
+}
+.tablesorter-default tr.odd td.tertiary {
+  background-color: #e6e6e6;
+}
+.tablesorter-default td.tertiary,
+.tablesorter-default tr.even td.tertiary {
+  background-color: #f2f2f2;
+}
+
+/* hovered row colors */
+.tablesorter-default tbody tr:hover td,
+.tablesorter-default tbody tr.even:hover td,
+.tablesorter-default tbody tr.even:hover + tr.tablesorter-child-row td,
+.tablesorter-default tbody tr.even:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+  background: #d9d9d9;
+  color: #000000;
+}
+.tablesorter-default tbody tr.odd:hover td,
+.tablesorter-default tbody tr.odd:hover + tr.tablesorter-child-row td,
+.tablesorter-default tbody tr.odd:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+  background: #bfbfbf;
+  color: #000000;
+}
+
+/* Filter Widget */
+.tablesorter-default .tablesorter-filter,
+.tablesorter-default .tablesorter-filter td {
+	background: #efefef;
+	border-bottom: #ccc 1px solid;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

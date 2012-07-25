@@ -1,0 +1,114 @@
+@import url("theme.global.css"); /* global css */
+
+/*** Blue Theme ***/
+table.tablesorter-blue,
+table.tablesorter-blue th,
+table.tablesorter-blue td {
+	border: #cdcdcd 1px solid;
+}
+table.tablesorter-blue th, .tablesorter-blue thead td {
+	background-color: #99bfe6;
+	color: #000;
+}
+table.tablesorter-blue .header,
+table.tablesorter-blue .tablesorter-header {
+	/* black (unsorted) double arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	/* white (unsorted) double arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==); */
+	/* image */
+	/* background-image: url(images/black-unsorted.gif); */
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding: 4px 20px 4px 4px;
+	cursor: pointer;
+}
+
+/* table header asc sort color */
+table.tablesorter-blue th.headerSortUp,
+table.tablesorter-blue th.tablesorter-headerSortUp {
+	background-color: #9fbfdf;
+	/* black asc arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	/* white asc arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7); */
+	/* image */
+	/* background-image: url(images/black-asc.gif); */
+}
+
+/* table header desc sort color */
+table.tablesorter-blue th.headerSortDown,
+table.tablesorter-blue th.tablesorter-headerSortDown {
+	background-color: #8cb3d9;
+	/* black desc arrow */
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	/* white desc arrow */
+	/* background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7); */
+	/* image */
+	/* background-image: url(images/black-desc.gif); */
+}
+
+table.tablesorter-blue tbody td {
+	color: #3d3d3d;
+	background-color: #fff;
+}
+
+/* processing background color */
+table.tablesorter-blue .tablesorter-processing {
+	background-color: #ddd; /* older browsers that don't support rgba */
+	background-color: rgba(255,255,255,0.8);
+}
+
+/* Zebra Widget - row alternating colors */
+table.tablesorter-blue tbody tr.odd td {
+	background-color: #ebf2fa;
+}
+table.tablesorter-blue tbody tr.even td {
+	background-color: #fff;
+}
+
+/* Column Widget - column sort colors */
+table.tablesorter-blue td.primary,
+table.tablesorter-blue tr.odd td.primary {
+	background-color: #99b3e6;
+}
+table.tablesorter-blue tr.even td.primary {
+	background-color: #c2d1f0;
+}
+
+table.tablesorter-blue td.secondary,
+table.tablesorter-blue tr.odd td.secondary {
+	background-color: #c2d1f0;
+}
+table.tablesorter-blue tr.even td.secondary {
+	background-color: #d6e0f5;
+}
+
+table.tablesorter-blue td.tertiary,
+table.tablesorter-blue tr.odd td.tertiary {
+	background-color: #d6e0f5;
+}
+table.tablesorter-blue tr.even td.tertiary {
+	background-color: #ebf0fa;
+}
+
+/* Filter widget */
+table.tablesorter-blue .tablesorter-filter-row td {
+	background-color: #eee;
+}
+
+/* hovered row colors
+ you'll need to add additional lines for
+ rows with more than 2 child rows
+ */
+table.tablesorter-blue tbody tr:hover td,
+table.tablesorter-blue tbody tr.even:hover td,
+table.tablesorter-blue tbody tr.even:hover + tr.tablesorter-child-row td,
+table.tablesorter-blue tbody tr.even:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+	background: #d9d9d9;
+}
+table.tablesorter-blue tbody tr.odd:hover td,
+table.tablesorter-blue tbody tr.odd:hover + tr.tablesorter-child-row td,
+table.tablesorter-blue tbody tr.odd:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+	background: #bfbfbf;
+}

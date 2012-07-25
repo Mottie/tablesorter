@@ -1,0 +1,35 @@
+﻿@import url("theme.global.css"); /* global css */
+
+/*** jQuery UI Theme ***/
+.tablesorter-jui {
+	padding: 5px;
+}
+
+.tablesorter-jui thead th {
+	position: relative;
+	background-repeat: no-repeat;
+	background-position: center right;
+	/* UI hover and active states make the font normal and the table resizes, this fixes it */
+	font-weight: bold !important;
+}
+.tablesorter-jui thead tr th .tablesorter-header {
+	padding-right: 20px; /* wider than the icon */
+}
+.tablesorter-jui thead tr th .ui-icon {
+	position: absolute;
+	right: 3px;
+	top: 50%;
+	margin-top: -8px; /* half the icon height; older IE doesn't like this */
+}
+
+/* This allows you to use ui-state-default as the zebra stripe color */
+.tablesorter-jui tr.ui-state-default {
+	background-image: url();
+	font-weight: normal;
+}
+
+/* processing background color */
+.tablesorter-jui .tablesorter-processing {
+	background-color: #ddd; /* older browsers that don't support rgba */
+	background-color: rgba(255,255,255,0.8);
+}

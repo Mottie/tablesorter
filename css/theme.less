@@ -15,7 +15,8 @@
    leave the saturation and luminosity alone
    pick the color from here: http://hslpicker.com/#99CCE6 */
 @headerBackground      : hsl(120, 60%, 75%);
-@overallBorder         : #cdcdcd 1px solid;
+@borderAndBackground   : #cdcdcd;
+@overallBorder         : @borderAndBackground 1px solid;
 @headerTextColor       : #000;
 
 @bodyBackground        : #fff;
@@ -23,6 +24,15 @@
 
 @headerSortUp          : desaturate(@headerBackground, 10%);
 @headerSortDown        : darken(@headerSortUp, 5%);
+
+@filterCellBackground  : #eee;
+
+@overallPadding        : 4px;
+/* 20px should be slightly wider than the icon width to avoid overlap */
+@headerPadding         : 4px 20px 4px 4px;
+
+/* url(icons/loading.gif); */
+@processingIcon        : url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=');
 
 /* zebra striping */
 .allRows {
@@ -59,10 +69,15 @@
 @unsortedBlack         : url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
 @sortUpBlack           : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 @sortDownBlack         : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+
+@filterIconBlack       : url(data:image/gif;base64,R0lGODlhCgAMALMAAEpKSklJSUNDQ0FBQUBAQDk5OTc3NzY2NiQkJP///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAKAAwAAAQnEMlJk72YamQE+KBgJEcAAsFxFWeBJcRHvInxjfRHW/oODLsEEBMBADs=);
+
 /* white */
 @unsortedWhite         : url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
 @sortUpWhite           : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 @sortDownWhite         : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+
+@filterIconWhite       : url(data:image/gif;base64,R0lGODlhCgANALMAAP////r6+u7u7ufn5+Hh4d3d3cXFxb+/v76+vru7u7m5uf///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAKAA0AAAQpUMhJl72YanEG+OBwLEkAAkFyGaeBLcVXvAvyIfTy5TrAAwQeQcEjYiIAOw==);
 
 /*** Arrows ***/
 .unsorted (@a) when (lightness(@a) >= 50%) {
@@ -89,8 +104,14 @@
 	background-image: @sortDownWhite;
 	color: lighten(@headerTextColor, 90%);
 }
+.filterIcon (@a) when (lightness(@a) >= 50%) {
+	background-image: @filterIconBlack;
+}
+.filterIcon (@a) when (lightness(@a) < 50%) {
+	background-image: @filterIconWhite;
+}
 
-table.tablesorter {
+.tablesorter {
 	font: @tableBodyFont;
 	background-color: @borderAndBackground;
 	margin: 10px 0 15px;
@@ -103,36 +124,32 @@ table.tablesorter {
 	}
 
 	/* style th's outside of the thead */
-	th {
+	th, thead td {
 		background-color: @headerBackground;
 		color: @headerTextColor;
 		border-collapse: collapse;
 		font: @tableHeaderFont;
 		font-weight: bold;
-		padding: 4px;
-
-		&.headerSortUp, /* backward compatible with tablesorter 2.0.5 */
-		&.tablesorter-headerSortUp {
-			background-color: @headerSortUp;
-			.sortUp(@headerBackground);
-		}
-
-		&.headerSortDown, /* backward compatible with tablesorter 2.0.5 */
-		&.tablesorter-headerSortDown {
-			background-color: @headerSortDown;
-			.sortDown(@headerBackground);
-		}
-
+		padding: @overallPadding;
 	}
 
 	/* style header */
-	.header, /* backward compatible with tablesorter 2.0.5 */
 	.tablesorter-header {
 		.unsorted(@headerBackground);
 		background-repeat: no-repeat;
 		background-position: center right;
-		padding: 4px 20px 4px 4px;
+		padding: @headerPadding;
 		cursor: pointer;
+	}
+
+	.tablesorter-headerSortUp {
+		background-color: @headerSortUp;
+		.sortUp(@headerBackground);
+	}
+
+	.tablesorter-headerSortDown {
+		background-color: @headerSortDown;
+		.sortDown(@headerBackground);
 	}
 
 	/* Column Widget - column sort colors */
@@ -155,25 +172,25 @@ table.tablesorter {
 		background-color: @tertiaryEven;
 	}
 
+	/* optional disabled input styling */ 
+	.disabled {
+		opacity: 0.5;
+		filter: alpha(opacity=50);
+		cursor: not-allowed;
+	}
+
 	/* filter widget */
-	input.tablesorter-filter,
-	select.tablesorter-filter {
+	.tablesorter-filter-row input,
+	.tablesorter-filter-row select{
 		width: 95%;
 		height: inherit;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 	}
-	tr.tablesorter-filter,
-	tr.tablesorter-filter td {
+	.tablesorter-filter-row td {
 		text-align: center;
-		background: @bodyBackground;
-	}
-	/* optional disabled input styling */ 
-	input.tablesorter-filter.disabled,
-	select.tablesorter-filter.disabled {
-		opacity: 0.5;
-		filter: alpha(opacity=50);
+		background: @filterCellBackground;
 	}
 
 	/* body */
@@ -181,7 +198,7 @@ table.tablesorter {
 
 		td {
 			.allRows;
-			padding: 4px;
+			padding: @overallPadding;
 			vertical-align: top;
 		}
 
@@ -193,19 +210,32 @@ table.tablesorter {
 			.evenRows;
 		}
 
-		/* hovered row colors */
-		tr:hover td, tr.even:hover td {
+		/* hovered row colors
+		 you'll need to add additional lines for
+		 rows with more than 2 child rows
+		*/
+		tr:hover td,
+		tr.even:hover td,
+		tr.even:hover + tr.tablesorter-child-row td,
+		tr.even:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
 			.evenHovered;
 		}
-		tr.odd:hover td {
+		tr.odd:hover td,
+		tr.odd:hover + tr.tablesorter-child-row td,
+		tr.odd:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
 			.oddHovered;
 		}
 
 	}
 
-	/* used to hide a tbody while rebuilding to speed it up */
-	.tablesorter-hidden {
-		display: none;
+	/* table processing indicator - indeterminate spinner */
+	.tablesorter-processing {
+		background-image: @processingIcon;
+		background-position: center center;
+		background-repeat: no-repeat;
+		position: absolute;
+		z-index: 1000;
 	}
 
 }
+
