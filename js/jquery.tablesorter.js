@@ -72,7 +72,7 @@
 				cssDesc          : 'tablesorter-headerSortDown',
 				cssHeader        : 'tablesorter-header',
 				cssHeaderRow     : 'tablesorter-headerRow',
-				cssIcon          : '', // if this class exists, a <i> will be added to the header automatically
+				cssIcon          : 'tablesorter-icon', //  if this class exists, a <i> will be added to the header automatically
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name
 
 				// selectors
@@ -107,7 +107,6 @@
 			}
 
 			ts.benchmark = benchmark;
-			ts.hasInitialized = false;
 
 			function getElementText(table, node, cellIndex) {
 				if (!node) { return ""; }
@@ -378,8 +377,8 @@
 
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
-					$th, lock, time, $tableHeaders, c = table.config;
-					t, c.headerList = [];
+					t, $th, lock, time, $tableHeaders, c = table.config;
+					c.headerList = [];
 				if (c.debug) {
 					time = new Date();
 				}
@@ -393,7 +392,12 @@
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					if (ts.getData($t, ch, 'sorter') === 'false') { this.sortDisabled = true; }
+					if (ts.getData($t, ch, 'sorter') === 'false') {
+						this.sortDisabled = true;
+						$t.addClass('sorter-false');
+					} else {
+						$t.removeClass('sorter-false');
+					}
 					this.lockedOrder = false;
 					lock = ts.getData($t, ch, 'lockedOrder') || false;
 					if (typeof(lock) !== 'undefined' && lock !== false) {
@@ -554,6 +558,8 @@
 					var $headers, $cell, $this,
 						c, i, j, k, a, s, o, downTime,
 						m = $.metadata;
+					// initialization flag
+					this.hasInitialized = false;
 					// new blank config object
 					this.config = {};
 					// merge and extend
@@ -753,6 +759,9 @@
 						// apply widgets
 						applyWidget(this, init);
 					})
+					.bind("refreshWidgets", function(e, all){
+						ts.refreshWidgets(this, all);
+					})
 					.bind("destroy", function(e, c, cb){
 						ts.destroy(this, c, cb);
 					});
@@ -774,7 +783,7 @@
 					}
 
 					// initialized
-					ts.hasInitialized = true;
+					this.hasInitialized = true;
 					if (c.debug) {
 						ts.benchmark("Overall initialization time", $.data( this, 'startoveralltimer'));
 					}
@@ -876,20 +885,48 @@
 				return b - a;
 			};
 
-			ts.destroy = function(table, removeClasses){
-				var $t = $(table), c = table.config;
+			ts.refreshWidgets = function(table, doAll, dontapply) {
+				var c = table.config,
+					cw = c.widgets,
+					w = ts.widgets, l = w.length;
+				// remove previous widgets
+				for (i = 0; i < l; i++){
+					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
+						if (c.debug) { log( 'removing ' + w[i].id  ); }
+						if (w[i].hasOwnProperty('remove')) { w[i].remove(table, c, c.widgetOptions); }
+					}
+				}
+				if (dontapply !== true) {
+					applyWidget(table, doAll);
+				}
+			};
+
+			ts.destroy = function(table, removeClasses, callback){
+				var $t = $(table), c = table.config,
+				$h = $t.find('thead:first');
 				// remove widget added rows
-				$t.find('thead:first tr:not(.' + c.cssHeader + ')').remove();
+				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
 				// remove resizer widget stuff
-				$t.find('thead:first .tablesorter-resizer').remove();
+				$h.find('.tablesorter-resizer').remove();
+				// remove all widgets
+				ts.refreshWidgets(table, true, true);
 				// disable tablesorter
 				$t
-					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets destroy mouseup mouseleave')
-					.find(c.selectorHeaders)
+					.removeData('tablesorter')
+					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.find('.' + c.cssHeader)
 					.unbind('click mousedown mousemove mouseup')
-					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc);
+					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
+					.find('.tablesorter-header-inner').each(function(){
+						if (c.cssIcon !== '') { $(this).find('.' + c.cssIcon).remove(); }
+						$(this).replaceWith( $(this).contents() );
+					});
 				if (removeClasses !== false) {
 					$t.removeClass(c.tableClass);
+				}
+				if (typeof callback === 'function') {
+					console.debug('running callback');
+					callback(table);
 				}
 			};
 
@@ -1167,9 +1204,7 @@
 		format: function(table, c, wo) {
 			var $tb, $tv, $tr, row, even, time, k, l,
 			child = new RegExp(c.cssChildRow, 'i'),
-			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
-			// maintain backwards compatibility
-			css = wo.zebra;
+			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')');
 			if (c.debug) {
 				time = new Date();
 			}
@@ -1186,7 +1221,7 @@
 						// style children rows the same way the parent row was styled
 						if (!child.test(this.className)) { row++; }
 						even = (row % 2 === 0);
-						$tr.removeClass(css[even ? 1 : 0]).addClass(css[even ? 0 : 1]);
+						$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
 					});
 				}
 			}
