@@ -261,6 +261,12 @@
 					wo = c.widgetOptions,
 					ws = c.widgets.sort().reverse(), // ensure that widgets are always applied in a certain order
 				time, i, w, l = ws.length;
+				// make zebra last
+				i = $.inArray('zebra', c.widgets);
+				if (i >= 0) {
+					c.widgets.splice(i,1);
+					c.widgets.push('zebra');
+				}
 				if (c.debug) {
 					time = new Date();
 				}
@@ -555,7 +561,7 @@
 					if (!this.tHead || this.tBodies.length === 0 || this.hasInitialized === true) { return; }
 					// declare
 					var $headers, $cell, $this = $(this),
-						c, i, j, k, a, s, o, downTime,
+						c, i, j, k = '', a, s, o, downTime,
 						m = $.metadata;
 					// initialization flag
 					this.hasInitialized = false;
@@ -563,15 +569,18 @@
 					this.config = {};
 					// merge and extend
 					c = $.extend(true, this.config, ts.defaults, settings);
-
-					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
-					// store common expression for speed
-					$this = $(this).addClass(c.tableClass + (c.theme !== '' ? ' tablesorter-' + c.theme : ''));
 					// save the settings where they read
 					$.data(this, "tablesorter", c);
+					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
+					// constants
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
 					// digit sort text location; keeping max+/- for backwards compatibility
 					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+					// add table theme class only if there isn't already one there
+					if (!/tablesorter\-/.test($this.attr('class'))) {
+						k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
+					}
+					$this.addClass(c.tableClass + k);
 					// build headers
 					$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
