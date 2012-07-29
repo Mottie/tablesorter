@@ -68,7 +68,7 @@
 				// css class names
 				tableClass       : 'tablesorter',
 				cssAsc           : 'tablesorter-headerSortUp',
-				cssChildRow      : 'expand-child',
+				cssChildRow      : 'tablesorter-child-row', // previously "expand-child"
 				cssDesc          : 'tablesorter-headerSortDown',
 				cssHeader        : 'tablesorter-header',
 				cssHeaderRow     : 'tablesorter-headerRow',
@@ -76,7 +76,7 @@
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name
 
 				// selectors
-				selectorHeaders  : '> thead th',
+				selectorHeaders  : '> thead th, > thead td',
 				selectorRemove   : 'tr.remove-me',
 
 				// advanced
@@ -374,7 +374,6 @@
 				return (/^d/i.test(v) || v === 1);
 			}
 
-
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
 					t, $th, lock, time, $tableHeaders, c = table.config;
@@ -552,10 +551,10 @@
 			/* public methods */
 			ts.construct = function(settings) {
 				return this.each(function() {
-					// if no thead or tbody quit.
-					if (!this.tHead || this.tBodies.length === 0) { return; }
+					// if no thead or tbody, or tablesorter is already present, quit.
+					if (!this.tHead || this.tBodies.length === 0 || this.hasInitialized === true) { return; }
 					// declare
-					var $headers, $cell, $this,
+					var $headers, $cell, $this = $(this),
 						c, i, j, k, a, s, o, downTime,
 						m = $.metadata;
 					// initialization flag
@@ -702,13 +701,20 @@
 					})
 					.bind("updateCell", function(e, cell, resort, callback) {
 						// get position from the dom.
-						var t = this, $tb = $(this).find('tbody'), row, pos,
+						var l, row, icell,
+						t = this, $tb = $(this).find('tbody'),
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbdy = $tb.index( $(cell).closest('tbody') );
-						row = $tb.eq(tbdy).find('tr').index( $(cell).closest('tr') );
-						pos = [ row, cell.cellIndex];
-						t.config.cache[tbdy].normalized[pos[0]][pos[1]] = c.parsers[pos[1]].format( getElementText(t, cell, pos[1]), t, cell, pos[1] );
-						checkResort($this, resort, callback);
+						tbdy = $tb.index( $(cell).closest('tbody') ),
+						$row = $(cell).closest('tr');
+						// tbody may not exist if update is initialized while tbody is removed for processing
+						if ($tb.length && tbdy >= 0) {
+							row = $tb.eq(tbdy).find('tr').index( $row ),
+							icell = cell.cellIndex,
+							l = t.config.cache[tbdy].normalized[row].length - 1;
+							t.config.cache[tbdy].row[t.config.cache[tbdy].normalized[row][l]] = $row;
+							t.config.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(t, cell, icell), t, cell, icell );
+							checkResort($this, resort, callback);
+						}
 					})
 					.bind("addRows", function(e, $row, resort, callback) {
 						var i, rows = $row.filter('tr').length,
@@ -781,7 +787,6 @@
 						// apply widget format
 						applyWidget(this);
 					}
-
 					// initialized
 					this.hasInitialized = true;
 					if (c.debug) {
@@ -793,12 +798,13 @@
 			};
 
 			// detach tbody but save the position
+			// don't use tbody because there are portions that look for a tbody index (updateCell)
 			ts.processTbody = function(table, $tb, getIt){
 				var holdr;
 				if (getIt) {
-					return $tb.before( '<tbody class="savemyplace"/>' ).detach();
+					return $tb.before( '<span class="tablesorter-savemyplace"/>' ).detach();
 				}
-				holdr = $(table).find('tbody.savemyplace');
+				holdr = $(table).find('span.tablesorter-savemyplace');
 				$tb.insertAfter( holdr );
 				holdr.remove();
 			}
@@ -904,6 +910,8 @@
 			ts.destroy = function(table, removeClasses, callback){
 				var $t = $(table), c = table.config,
 				$h = $t.find('thead:first');
+				// clear flag in case the plugin is initialized again
+				table.hasInitialized === false;
 				// remove widget added rows
 				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
 				// remove resizer widget stuff
