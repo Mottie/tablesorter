@@ -425,18 +425,10 @@
 				return $tableHeaders;
 			}
 
-			function isValueInArray(v, a) {
-				var i, l = a.length;
-				for (i = 0; i < l; i++) {
-					if (a[i][0] === v) {
-						return true;
-					}
-				}
-				return false;
-			}
-
 			function setHeadersCss(table, $headers, list) {
-				var f, h = [], i, j, l, css = [table.config.cssDesc, table.config.cssAsc];
+				var f, h = [], i, j, l,
+					c = table.config,
+					css = [c.cssDesc, c.cssAsc];
 				// remove all header information
 				$headers
 					.removeClass(css.join(' '))
@@ -646,7 +638,7 @@
 								// multi column sorting
 							} else {
 								// the user has clicked on an already sorted column.
-								if (isValueInArray(i, c.sortList)) {
+								if (ts.isValueInArray(i, c.sortList)) {
 									// reverse the sorting direction for all tables.
 									for (j = 0; j < c.sortList.length; j++) {
 										s = c.sortList[j];
@@ -796,6 +788,7 @@
 						// apply widget format
 						applyWidget(this);
 					}
+
 					// initialized
 					this.hasInitialized = true;
 					if (c.debug) {
@@ -805,6 +798,16 @@
 					if (typeof c.initialized === 'function') { c.initialized(this); }
 				});
 			};
+
+			ts.isValueInArray = function(v, a) {
+				var i, l = a.length;
+				for (i = 0; i < l; i++) {
+					if (a[i][0] === v) {
+						return true;
+					}
+				}
+				return false;
+			}
 
 			// detach tbody but save the position
 			// don't use tbody because there are portions that look for a tbody index (updateCell)
@@ -942,7 +945,6 @@
 					$t.removeClass(c.tableClass);
 				}
 				if (typeof callback === 'function') {
-					console.debug('running callback');
 					callback(table);
 				}
 			};
