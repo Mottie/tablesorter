@@ -637,6 +637,12 @@
 								}
 								// multi column sorting
 							} else {
+								// get rid of the sortAppend before adding more - fixes issue #115
+								if (c.sortAppend && c.sortList.length > 1) {
+									if (ts.isValueInArray(c.sortAppend[0][0], c.sortList)) {
+										c.sortList.pop();
+									}
+								}
 								// the user has clicked on an already sorted column.
 								if (ts.isValueInArray(i, c.sortList)) {
 									// reverse the sorting direction for all tables.
