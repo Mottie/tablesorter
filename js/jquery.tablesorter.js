@@ -1159,7 +1159,7 @@
 				l = $tb.children('tr').length;
 				if (l > 1) {
 					row = 0;
-					$tv = $tb.find('tr:visible');
+					$tv = $tb.children('tr:visible');
 					$tb.addClass('tablesorter-hidden');
 					// revered back to using jQuery each - strangely it's the fastest method
 					$tv.each(function(){
