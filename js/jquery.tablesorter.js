@@ -35,7 +35,7 @@
 				dateFormat       : 'mmddyyyy', // other options: "ddmmyyy" or "yyyymmdd"
 				sortMultiSortKey : 'shiftKey', // key used to select additional columns
 				usNumberFormat   : true,       // false for German "1.234.567,89" or French "1 234 567,89"
-				delayInit        : false,      // if false, the parsed table contents will not update until the first sort.
+				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 
 				// sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -68,7 +68,7 @@
 				// css class names
 				tableClass       : 'tablesorter',
 				cssAsc           : 'tablesorter-headerSortUp',
-				cssChildRow      : 'tablesorter-child-row', // previously "expand-child"
+				cssChildRow      : 'tablesorter-childRow', // previously "expand-child"
 				cssDesc          : 'tablesorter-headerSortDown',
 				cssHeader        : 'tablesorter-header',
 				cssHeaderRow     : 'tablesorter-headerRow',
@@ -182,7 +182,7 @@
 						ch = c.headers[i];
 						// get column parser
 						p = getParserById( ts.getData(h, ch, 'sorter') );
-						// empty cells behaviour - keeping emptyToBottom for backwards compatibility.
+						// empty cells behaviour - keeping emptyToBottom for backwards compatibility
 						c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
 						// text strings behaviour in numerical sorts
 						c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
@@ -549,7 +549,7 @@
 			/* public methods */
 			ts.construct = function(settings) {
 				return this.each(function() {
-					// if no thead or tbody, or tablesorter is already present, quit.
+					// if no thead or tbody, or tablesorter is already present, quit
 					if (!this.tHead || this.tBodies.length === 0 || this.hasInitialized === true) { return; }
 					// declare
 					var $headers, $cell, $this = $(this),
@@ -593,7 +593,7 @@
 						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }
 						if (!this.sortDisabled) {
-							// Only call sortStart if sorting is enabled.
+							// Only call sortStart if sorting is enabled
 							$this.trigger("sortStart", $this[0]);
 							// store exp, for speed
 							$cell = $(this);
@@ -643,9 +643,9 @@
 										c.sortList.pop();
 									}
 								}
-								// the user has clicked on an already sorted column.
+								// the user has clicked on an already sorted column
 								if (ts.isValueInArray(i, c.sortList)) {
-									// reverse the sorting direction for all tables.
+									// reverse the sorting direction for all tables
 									for (j = 0; j < c.sortList.length; j++) {
 										s = c.sortList[j];
 										o = c.headerList[s[0]];
@@ -707,7 +707,7 @@
 						checkResort($this, resort, callback);
 					})
 					.bind("updateCell", function(e, cell, resort, callback) {
-						// get position from the dom.
+						// get position from the dom
 						var l, row, icell,
 						t = this, $tb = $(this).find('tbody'),
 						// update cache - format: function(s, table, cell, cellIndex)
@@ -766,7 +766,7 @@
 						appendToTable(this, init);
 					})
 					.bind("applyWidgetId", function(e, id) {
-						getWidgetById(id).format(this);
+						getWidgetById(id).format(this, c, c.widgetOptions); // (table, c, wo)
 					})
 					.bind("applyWidgets", function(e, init) {
 						// apply widgets
@@ -787,7 +787,7 @@
 					}
 					// apply widget init code
 					applyWidget(this, true);
-					// if user has supplied a sort list to constructor.
+					// if user has supplied a sort list to constructor
 					if (c.sortList.length > 0) {
 						$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
 					} else if (c.initWidgets) {
@@ -849,9 +849,9 @@
 				mx = Math.max(xN.length, yN.length);
 				// natural sorting through split numeric strings and default strings
 				for (i = 0; i < mx; i++) {
-					// find floats not starting with '0', string or 0 if not defined (Clint Priest)
-					xF = (!(xN[i] || '').match(r[3]) && parseFloat(xN[i])) || xN[i] || 0;
-					yF = (!(yN[i] || '').match(r[3]) && parseFloat(yN[i])) || yN[i] || 0;
+					// find floats not starting with '0', string or 0 if not defined
+					xF = isNaN(xN[i]) ? xN[i] || 0 : parseFloat(xN[i]) || 0;
+					yF = isNaN(yN[i]) ? yN[i] || 0 : parseFloat(yN[i]) || 0;
 					// handle numeric vs string comparison - number < string - (Kyle Adams)
 					if (isNaN(xF) !== isNaN(yF)) { return (isNaN(xF)) ? 1 : -1; }
 					// rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
@@ -989,7 +989,7 @@
 				return isNaN(i) ? $.trim(s) : i;
 			};
 			ts.isDigit = function(s) {
-				// replace all unwanted chars and match.
+				// replace all unwanted chars and match
 				return isNaN(s) ? (/^[\-+(]?\d+[)]?$/).test(s.replace(/[,.'\s]/g, '')) : true;
 			};
 
@@ -997,8 +997,7 @@
 			ts.regex = [
 				/(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi, // chunk/tokenize numbers & letters
 				/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/, //date
-				/^0x[0-9a-f]+$/i, // hex
-				/^0/ // leading zeros
+				/^0x[0-9a-f]+$/i // hex
 			];
 			// used when replacing accented characters during sorting
 			ts.characterEquivalents = {
