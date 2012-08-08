@@ -1092,11 +1092,11 @@
 			}
 			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
 			if (format === "mmddyyyy") {
-				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
+				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2,4})/, "$3/$1/$2");
 			} else if (format === "ddmmyyyy") {
-				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
+				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2,4})/, "$3/$2/$1");
 			} else if (format === "yyyymmdd") {
-				s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
+				s = s.replace(/(\d{2,4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
 			}
 			return ts.formatFloat( (new Date(s).getTime() || ''), table);
 		},
