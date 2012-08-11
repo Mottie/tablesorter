@@ -14,7 +14,10 @@
 * @author Christian Bach/christian.bach@polyester.se
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
+/*jshint evil:true, browser:true, jquery:true, unused:false */
+/*global console:false, alert:false */
 !(function($) {
+	"use strict";
 	$.extend({
 		tablesorter: new function() {
 
@@ -170,7 +173,7 @@
 			function buildParserCache(table, $headers) {
 				var c = table.config,
 					tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, m, ch, cl, p, parsersDebug = "";
+					rows, list, l, i, h, ch, p, parsersDebug = "";
 				if ( tb.length === 0) { return; } // In the case of empty tables
 				rows = tb[0].rows;
 				if (rows[0]) {
@@ -275,7 +278,7 @@
 					w = getWidgetById(ws[i]);
 					if ( w ) {
 						if (init === true && w.hasOwnProperty('init')) {
-							w.init(table, widgets, w, c, wo);
+							w.init(table, w, c, wo);
 						} else if (!init && w.hasOwnProperty('format')) {
 							w.format(table, c, wo);
 						}
@@ -291,8 +294,9 @@
 				var c = table.config,
 				b = table.tBodies,
 				rows = [],
-				r, n, totalRows, checkCell, c2 = c.cache,
-				f, i, j, k, l, pos, appendTime;
+				c2 = c.cache,
+				r, n, totalRows, checkCell, $bk, $tb,
+				i, j, k, l, pos, appendTime;
 				if (c.debug) {
 					appendTime = new Date();
 				}
@@ -382,7 +386,7 @@
 
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
-					t, $th, lock, time, $tableHeaders, c = table.config;
+					t, lock, time, $tableHeaders, c = table.config;
 					c.headerList = [];
 				if (c.debug) {
 					time = new Date();
@@ -457,10 +461,11 @@
 			}
 
 			function fixColumnWidth(table) {
-				if (table.config.widthFixed) {
-					var colgroup = $('<colgroup>');
+				if (table.config.widthFixed && $(table).find('colgroup').length === 0) {
+					var colgroup = $('<colgroup>'),
+						overallWidth = $(table).width();
 					$("tr:first td", table.tBodies[0]).each(function() {
-						colgroup.append($('<col>').css('width', $(this).width()));
+						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
 					$(table).prepend(colgroup);
 				}
@@ -529,20 +534,21 @@
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
 			}
 
-			function checkResort($table, flag, callback) {
+			function resortComplete($table, callback){
 				var t = $table[0];
+				$table.trigger('updateComplete');
+				if (typeof callback === "function") {
+					callback(t);
+				}
+			}
+
+			function checkResort($table, flag, callback) {
 				if (flag !== false) {
-					$table.trigger("sorton", [t.config.sortList, function(){
-						$table.trigger('updateComplete');
-						if (typeof callback === "function") {
-							callback(t);
-						}
+					$table.trigger("sorton", [$table[0].config.sortList, function(){
+						resortComplete($table, callback);
 					}]);
 				} else {
-					$table.trigger('updateComplete');
-					if (typeof callback === "function") {
-						callback(t);
-					}
+					resortComplete($table, callback);
 				}
 			}
 
@@ -580,11 +586,12 @@
 					// build the cache for the tbody cells
 					// delayInit will delay building the cache until the user starts a sort
 					if (!c.delayInit) { buildCache(this); }
-					// fixate columns if the users supplies the fixedWidth option
-					fixColumnWidth(this);
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					$headers.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+						// only recognize left clicks
+						if ((e.which || e.button) !== 1) { return false; }
+						// set timer on mousedown
 						if (e.type === 'mousedown') {
 							downTime = new Date().getTime();
 							return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
@@ -715,8 +722,8 @@
 						$row = $(cell).closest('tr');
 						// tbody may not exist if update is initialized while tbody is removed for processing
 						if ($tb.length && tbdy >= 0) {
-							row = $tb.eq(tbdy).find('tr').index( $row ),
-							icell = cell.cellIndex,
+							row = $tb.eq(tbdy).find('tr').index( $row );
+							icell = cell.cellIndex;
 							l = t.config.cache[tbdy].normalized[row].length - 1;
 							t.config.cache[tbdy].row[t.config.cache[tbdy].normalized[row][l]] = $row;
 							t.config.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(t, cell, icell), t, cell, icell );
@@ -795,6 +802,10 @@
 						applyWidget(this);
 					}
 
+					// fixate columns if the users supplies the fixedWidth option
+					// do this after theme has been applied
+					fixColumnWidth(this);
+
 					// initialized
 					this.hasInitialized = true;
 					if (c.debug) {
@@ -813,7 +824,7 @@
 					}
 				}
 				return false;
-			}
+			};
 
 			// detach tbody but save the position
 			// don't use tbody because there are portions that look for a tbody index (updateCell)
@@ -825,7 +836,7 @@
 				holdr = $(table).find('span.tablesorter-savemyplace');
 				$tb.insertAfter( holdr );
 				holdr.remove();
-			}
+			};
 
 			// Natural sort - https://github.com/overset/javascript-natural-sort
 			ts.sortText = function(table, a, b, col) {
@@ -910,7 +921,7 @@
 			};
 
 			ts.refreshWidgets = function(table, doAll, dontapply) {
-				var c = table.config,
+				var i, c = table.config,
 					cw = c.widgets,
 					w = ts.widgets, l = w.length;
 				// remove previous widgets
@@ -929,7 +940,7 @@
 				var $t = $(table), c = table.config,
 				$h = $t.find('thead:first');
 				// clear flag in case the plugin is initialized again
-				table.hasInitialized === false;
+				table.hasInitialized = false;
 				// remove widget added rows
 				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
 				// remove resizer widget stuff
@@ -1064,8 +1075,8 @@
 				$(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')').empty();
 			};
 
-		}
-	})();
+		}()
+	});
 
 	// make shortcut
 	var ts = $.tablesorter;
