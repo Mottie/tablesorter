@@ -905,7 +905,7 @@
 			};
 			this.isDigit = function(s) {
 				// replace all unwanted chars and match.
-				return (/^[\-+(]?\d+[)]?$/).test(s.replace(/[,.'\s]/g, ''));
+				return (/^[\-+(]?\d+[)]?$/).test(s.toString().replace(/[,.'\s]/g, ''));
 			};
 
 			// regex used in natural sort
@@ -1069,7 +1069,7 @@
 	ts.addParser({
 		id: "usLongDate",
 		is: function(s) {
-			return s.match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
+			return s.toString().match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
 		},
 		format: function(s, table) {
 			return ts.formatFloat( (new Date(s).getTime() || ''), table);
