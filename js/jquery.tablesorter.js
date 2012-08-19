@@ -300,7 +300,7 @@
 			function computeThIndexes(t) {
 				var matrix = [],
 				lookup = {},
-				trs = $(t).find('thead:eq(0) tr'),
+				trs = $(t).find('thead:eq(0) tr, tfoot tr'),
 				i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
