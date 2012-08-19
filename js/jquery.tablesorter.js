@@ -1307,6 +1307,16 @@
 			if (c.debug) {
 				ts.benchmark("Applying Zebra widget", time);
 			}
+		},
+		remove: function(table, c, wo){
+			var k, $tb,
+				b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
+				rmv = (c.widgetOptions.zebra || [ "even", "odd" ]).join(' ');
+			for (k = 0; k < b.length; k++ ){
+				$tb = $.tablesorter.processTbody(table, $(b[k]), true); // remove tbody
+				$tb.children().removeClass(rmv);
+				$.tablesorter.processTbody(table, $tb, false); // restore tbody
+			}
 		}
 	});
 
