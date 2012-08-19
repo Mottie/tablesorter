@@ -32,7 +32,7 @@
 				// appearance
 				theme            : 'default',  // adds tablesorter-{theme} to the table for styling
 				widthFixed       : false,      // adds colgroup to fix widths of columns
-				showProcessing   : true,
+				showProcessing   : false,      // show an indeterminate timer icon in the header when the table is sorted or filtered.
 
 				// functionality
 				cancelSelection  : true,       // prevent text selection in the header
@@ -555,7 +555,7 @@
 							return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 						}
 						// ignore long clicks (prevents resizable widget from initializing a sort)
-						if (external !== true && (new Date().getTime() - downTime > 500)) { return false; }
+						if (external !== true && (new Date().getTime() - downTime > 250)) { return false; }
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }
 						if (!this.sortDisabled) {
 							// Only call sortStart if sorting is enabled
