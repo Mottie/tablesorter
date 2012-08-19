@@ -337,7 +337,7 @@ $.tablesorter.addWidget({
 				}, 10);
 			},
 			findRows = function(filter, v, cv){
-				var $tb, $tr, $td, cr, r, v, cv, l, ff, time, arry;
+				var $tb, $tr, $td, cr, r, l, ff, time, arry;
 				if (c.debug) { time = new Date(); }
 
 				for (k = 0; k < b.length; k++ ){

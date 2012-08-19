@@ -135,17 +135,6 @@
 				return $.trim(text);
 			}
 
-			/* parsers utils */
-			function getParserById(name) {
-				var i, l = ts.parsers.length;
-				for (i = 0; i < l; i++) {
-					if (ts.parsers[i].id.toLowerCase() === (name.toString()).toLowerCase()) {
-						return ts.parsers[i];
-					}
-				}
-				return false;
-			}
-
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
 				var i, l = ts.parsers.length,
 				node = false,
@@ -186,7 +175,7 @@
 						h = $headers.filter(':not([colspan])[data-column="' + i + '"]:last,[colspan="1"][data-column="' + i + '"]:last');
 						ch = c.headers[i];
 						// get column parser
-						p = getParserById( ts.getData(h, ch, 'sorter') );
+						p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 						// empty cells behaviour - keeping emptyToBottom for backwards compatibility
 						c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
 						// text strings behaviour in numerical sorts
@@ -258,46 +247,6 @@
 				}
 			}
 
-			function getWidgetById(name) {
-				var i, w, l = ts.widgets.length;
-				for (i = 0; i < l; i++) {
-					w = ts.widgets[i];
-					if (w && w.hasOwnProperty('id') && w.id.toLowerCase() === name.toLowerCase()) {
-						return w;
-					}
-				}
-			}
-
-			function applyWidget(table, init) {
-				var c = table.config,
-					wo = c.widgetOptions,
-					ws = c.widgets.sort().reverse(), // ensure that widgets are always applied in a certain order
-				time, i, w, l = ws.length;
-				// make zebra last
-				i = $.inArray('zebra', c.widgets);
-				if (i >= 0) {
-					c.widgets.splice(i,1);
-					c.widgets.push('zebra');
-				}
-				if (c.debug) {
-					time = new Date();
-				}
-				// add selected widgets
-				for (i = 0; i < l; i++) {
-					w = getWidgetById(ws[i]);
-					if ( w ) {
-						if (init === true && w.hasOwnProperty('init')) {
-							w.init(table, w, c, wo);
-						} else if (!init && w.hasOwnProperty('format')) {
-							w.format(table, c, wo);
-						}
-					}
-				}
-				if (c.debug) {
-					benchmark("Completed " + (init === true ? "initializing" : "applying") + " widgets", time);
-				}
-			}
-
 			// init flag (true) used by pager plugin to prevent widget application
 			function appendToTable(table, callback, init) {
 				var c = table.config,
@@ -340,7 +289,7 @@
 					benchmark("Rebuilt table", appendTime);
 				}
 				// apply table widgets
-				if (!init) { applyWidget(table); }
+				if (!init) { ts.applyWidget(table); }
 				// trigger sortend
 				$(table).trigger("sortEnd", table);
 			}
@@ -785,11 +734,11 @@
 						appendToTable(this, callback, init);
 					})
 					.bind("applyWidgetId", function(e, id) {
-						getWidgetById(id).format(this, c, c.widgetOptions);
+						ts.getWidgetById(id).format(this, c, c.widgetOptions);
 					})
 					.bind("applyWidgets", function(e, init) {
 						// apply widgets
-						applyWidget(this, init);
+						ts.applyWidget(this, init);
 					})
 					.bind("refreshWidgets", function(e, all, dontapply){
 						ts.refreshWidgets(this, all, dontapply);
@@ -806,13 +755,13 @@
 						c.sortList = $this.metadata().sortlist;
 					}
 					// apply widget init code
-					applyWidget(this, true);
+					ts.applyWidget(this, true);
 					// if user has supplied a sort list to constructor
 					if (c.sortList.length > 0) {
 						$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
 					} else if (c.initWidgets) {
 						// apply widget format
-						applyWidget(this);
+						ts.applyWidget(this);
 					}
 
 					// fixate columns if the users supplies the fixedWidth option
@@ -836,14 +785,27 @@
 				});
 			};
 
-			ts.isValueInArray = function(v, a) {
-				var i, l = a.length;
-				for (i = 0; i < l; i++) {
-					if (a[i][0] === v) {
-						return true;
+			// *** Process table ***
+			// add processing indicator
+			ts.isProcessing = function(table, toggle, $ths) {
+				var c = table.config,
+					// default to all headers
+					$h = $(table).find('.' + c.cssHeader);
+				if (toggle) {
+					if ($ths) {
+						// jQuery selected headers (filter widget)
+						$h = $ths;
+					} else if (c.sortList.length > 0) {
+						// get headers from the sortList
+						$h = $h.filter(function(){
+							// get data-column from attr to keep  compatibility with jQuery 1.2.6
+							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList);
+						});
 					}
+					$h.addClass(c.cssProcessing);
+				} else {
+					$h.removeClass(c.cssProcessing);
 				}
-				return false;
 			};
 
 			// detach tbody but save the position
@@ -859,6 +821,48 @@
 				$tb.insertAfter( holdr );
 				holdr.remove();
 			};
+
+			ts.clearTableBody = function(table) {
+				$(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')').empty();
+			};
+
+			ts.destroy = function(table, removeClasses, callback){
+				var $t = $(table), c = table.config,
+				$h = $t.find('thead:first');
+				// clear flag in case the plugin is initialized again
+				table.hasInitialized = false;
+				// remove widget added rows
+				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
+				// remove resizer widget stuff
+				$h.find('.tablesorter-resizer').remove();
+				// remove all widgets
+				ts.refreshWidgets(table, true, true);
+				// disable tablesorter
+				$t
+					.removeData('tablesorter')
+					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.find('.' + c.cssHeader)
+					.unbind('click mousedown mousemove mouseup')
+					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
+					.find('.tablesorter-header-inner').each(function(){
+						if (c.cssIcon !== '') { $(this).find('.' + c.cssIcon).remove(); }
+						$(this).replaceWith( $(this).contents() );
+					});
+				if (removeClasses !== false) {
+					$t.removeClass(c.tableClass);
+				}
+				if (typeof callback === 'function') {
+					callback(table);
+				}
+			};
+
+			// *** sort functions ***
+			// regex used in natural sort
+			ts.regex = [
+				/(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi, // chunk/tokenize numbers & letters
+				/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/, //date
+				/^0x[0-9a-f]+$/i // hex
+			];
 
 			// Natural sort - https://github.com/overset/javascript-natural-sort
 			ts.sortText = function(table, a, b, col) {
@@ -942,118 +946,6 @@
 				return b - a;
 			};
 
-			ts.refreshWidgets = function(table, doAll, dontapply) {
-				var i, c = table.config,
-					cw = c.widgets,
-					w = ts.widgets, l = w.length; console.debug(w);
-				// remove previous widgets
-				for (i = 0; i < l; i++){
-					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
-						if (c.debug) { log( 'removing ' + w[i].id  ); }
-						if (w[i].hasOwnProperty('remove')) { w[i].remove(table, c, c.widgetOptions); }
-					}
-				}
-				if (dontapply !== true) {
-					applyWidget(table, doAll);
-				}
-			};
-
-			// add processing indicator
-			ts.isProcessing = function(table, toggle, $ths) {
-				var c = table.config,
-					// default to all headers
-					$h = $(table).find('.' + c.cssHeader);
-				if (toggle) {
-					if ($ths) {
-						// jQuery selected headers (filter widget)
-						$h = $ths;
-					} else if (c.sortList.length > 0) {
-						// get headers from the sortList
-						$h = $h.filter(function(){
-							// get data-column from attr to keep  compatibility with jQuery 1.2.6
-							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList);
-						});
-					}
-					$h.addClass(c.cssProcessing);
-				} else {
-					$h.removeClass(c.cssProcessing);
-				}
-			};
-
-			ts.destroy = function(table, removeClasses, callback){
-				var $t = $(table), c = table.config,
-				$h = $t.find('thead:first');
-				// clear flag in case the plugin is initialized again
-				table.hasInitialized = false;
-				// remove widget added rows
-				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
-				// remove resizer widget stuff
-				$h.find('.tablesorter-resizer').remove();
-				// remove all widgets
-				ts.refreshWidgets(table, true, true);
-				// disable tablesorter
-				$t
-					.removeData('tablesorter')
-					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
-					.find('.' + c.cssHeader)
-					.unbind('click mousedown mousemove mouseup')
-					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
-					.find('.tablesorter-header-inner').each(function(){
-						if (c.cssIcon !== '') { $(this).find('.' + c.cssIcon).remove(); }
-						$(this).replaceWith( $(this).contents() );
-					});
-				if (removeClasses !== false) {
-					$t.removeClass(c.tableClass);
-				}
-				if (typeof callback === 'function') {
-					callback(table);
-				}
-			};
-
-			ts.addParser = function(parser) {
-				var i, l = ts.parsers.length, a = true;
-				for (i = 0; i < l; i++) {
-					if (ts.parsers[i].id.toLowerCase() === parser.id.toLowerCase()) {
-						a = false;
-					}
-				}
-				if (a) {
-					ts.parsers.push(parser);
-				}
-			};
-			ts.addWidget = function(widget) {
-				ts.widgets.push(widget);
-			};
-
-			ts.formatFloat = function(s, table) {
-				if (typeof(s) !== 'string' || s === '') { return s; }
-				if (table.config.usNumberFormat !== false) {
-					// US Format - 1,234,567.89 -> 1234567.89
-					s = s.replace(/,/g,'');
-				} else {
-					// German Format = 1.234.567,89 -> 1234567.89
-					// French Format = 1 234 567,89 -> 1234567.89
-					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
-				}
-				if(/^\s*\([.\d]+\)/.test(s)) {
-					// make (#) into a negative number -> (10) = -10
-					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
-				}
-				var i = parseFloat(s);
-				// return the text instead of zero
-				return isNaN(i) ? $.trim(s) : i;
-			};
-			ts.isDigit = function(s) {
-				// replace all unwanted chars and match
-				return isNaN(s) ? (/^[\-+(]?\d+[)]?$/).test(s.replace(/[,.'\s]/g, '')) : true;
-			};
-
-			// regex used in natural sort
-			ts.regex = [
-				/(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi, // chunk/tokenize numbers & letters
-				/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/, //date
-				/^0x[0-9a-f]+$/i // hex
-			];
 			// used when replacing accented characters during sorting
 			ts.characterEquivalents = {
 				"a" : "\u00e1\u00e0\u00e2\u00e3\u00e4", // áàâãä
@@ -1092,6 +984,99 @@
 				return s;
 			};
 
+			// *** utilities ***
+			ts.isValueInArray = function(v, a) {
+				var i, l = a.length;
+				for (i = 0; i < l; i++) {
+					if (a[i][0] === v) {
+						return true;
+					}
+				}
+				return false;
+			};
+
+			ts.addParser = function(parser) {
+				var i, l = ts.parsers.length, a = true;
+				for (i = 0; i < l; i++) {
+					if (ts.parsers[i].id.toLowerCase() === parser.id.toLowerCase()) {
+						a = false;
+					}
+				}
+				if (a) {
+					ts.parsers.push(parser);
+				}
+			};
+
+			ts.getParserById = function(name) {
+				var i, l = ts.parsers.length;
+				for (i = 0; i < l; i++) {
+					if (ts.parsers[i].id.toLowerCase() === (name.toString()).toLowerCase()) {
+						return ts.parsers[i];
+					}
+				}
+				return false;
+			};
+
+			ts.addWidget = function(widget) {
+				ts.widgets.push(widget);
+			};
+
+			ts.getWidgetById = function(name) {
+				var i, w, l = ts.widgets.length;
+				for (i = 0; i < l; i++) {
+					w = ts.widgets[i];
+					if (w && w.hasOwnProperty('id') && w.id.toLowerCase() === name.toLowerCase()) {
+						return w;
+					}
+				}
+			};
+
+			ts.applyWidget = function(table, init) {
+				var c = table.config,
+					wo = c.widgetOptions,
+					ws = c.widgets.sort().reverse(), // ensure that widgets are always applied in a certain order
+				time, i, w, l = ws.length;
+				// make zebra last
+				i = $.inArray('zebra', c.widgets);
+				if (i >= 0) {
+					c.widgets.splice(i,1);
+					c.widgets.push('zebra');
+				}
+				if (c.debug) {
+					time = new Date();
+				}
+				// add selected widgets
+				for (i = 0; i < l; i++) {
+					w = ts.getWidgetById(ws[i]);
+					if ( w ) {
+						if (init === true && w.hasOwnProperty('init')) {
+							w.init(table, w, c, wo);
+						} else if (!init && w.hasOwnProperty('format')) {
+							w.format(table, c, wo);
+						}
+					}
+				}
+				if (c.debug) {
+					benchmark("Completed " + (init === true ? "initializing" : "applying") + " widgets", time);
+				}
+			};
+
+			ts.refreshWidgets = function(table, doAll, dontapply) {
+				var i, c = table.config,
+					cw = c.widgets,
+					w = ts.widgets, l = w.length; console.debug(w);
+				// remove previous widgets
+				for (i = 0; i < l; i++){
+					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
+						if (c.debug) { log( 'removing ' + w[i].id  ); }
+						if (w[i].hasOwnProperty('remove')) { w[i].remove(table, c, c.widgetOptions); }
+					}
+				}
+				if (dontapply !== true) {
+					ts.applyWidget(table, doAll);
+				}
+			};
+
 			// get sorter, string, empty, etc options for each column from
 			// jQuery data, metadata, header option or header class name ("sorter-false")
 			// priority = jQuery data > meta > headers option > header class name
@@ -1115,8 +1100,28 @@
 				return $.trim(val);
 			};
 
-			ts.clearTableBody = function(table) {
-				$(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')').empty();
+			ts.formatFloat = function(s, table) {
+				if (typeof(s) !== 'string' || s === '') { return s; }
+				if (table.config.usNumberFormat !== false) {
+					// US Format - 1,234,567.89 -> 1234567.89
+					s = s.replace(/,/g,'');
+				} else {
+					// German Format = 1.234.567,89 -> 1234567.89
+					// French Format = 1 234 567,89 -> 1234567.89
+					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
+				}
+				if(/^\s*\([.\d]+\)/.test(s)) {
+					// make (#) into a negative number -> (10) = -10
+					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
+				}
+				var i = parseFloat(s);
+				// return the text instead of zero
+				return isNaN(i) ? $.trim(s) : i;
+			};
+
+			ts.isDigit = function(s) {
+				// replace all unwanted chars and match
+				return isNaN(s) ? (/^[\-+(]?\d+[)]?$/).test(s.replace(/[,.'\s]/g, '')) : true;
 			};
 
 		}()
