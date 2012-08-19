@@ -111,7 +111,7 @@
 	background-image: @filterIconWhite;
 }
 
-.tablesorter {
+table.tablesorter {
 	font: @tableBodyFont;
 	background-color: @borderAndBackground;
 	margin: 10px 0 15px;
@@ -215,14 +215,16 @@
 		 rows with more than 2 child rows
 		*/
 		tr:hover td,
+		tr:hover + tr.tablesorter-childRow td,
+		tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td,
 		tr.even:hover td,
-		tr.even:hover + tr.tablesorter-child-row td,
-		tr.even:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+		tr.even:hover + tr.tablesorter-childRow td,
+		tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
 			.evenHovered;
 		}
 		tr.odd:hover td,
-		tr.odd:hover + tr.tablesorter-child-row td,
-		tr.odd:hover + tr.tablesorter-child-row + tr.tablesorter-child-row td {
+		tr.odd:hover + tr.tablesorter-childRow td,
+		tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
 			.oddHovered;
 		}
 

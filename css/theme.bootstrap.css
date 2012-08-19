@@ -1,56 +1,12 @@
 ﻿/*************
-  sorta global
+  Bootstrap theme
  *************/
+/* jQuery Bootstrap Theme */
 .tablesorter-bootstrap {
 	width: 100%;
 }
-
-.tablesorter-bootstrap .tablesorter-filter-row.hideme td {
-	margin: 0;
-	height: 0;
-	line-height: 0;
-	overflow: hidden;
-	-webkit-transition: height 0.2s ease;
-	-moz-transition: height 0.2s ease;
-	-o-transition: height 0.2s ease;
-	transition: height 0.2s ease;
-}
-.tablesorter-bootstrap .tablesorter-filter-row.hideme .tablesorter-filter {
-	height: 1px;
-	min-height: 0;
-	border: 0;
-	padding: 0;
-	-webkit-transition: height 0.2s ease;
-	-moz-transition: height 0.2s ease;
-	-o-transition: height 0.2s ease;
-	transition: height 0.2s ease;
-}
-
-.tablesorter-bootstrap .tablesorter-processing {
-	background: #ddd; /* older browsers that don't support rgba */
-	background: rgba(255,255,255,0.8) center center no-repeat; /* icons/loading.gif */
-	background-image: url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=');
-	position: absolute;
-	z-index: 1000;
-}
-
-/* fitler widget */
-.tablesorter-filter-row .tablesorter-filter {
-	width: 95%;
-	height: inherit;
-	margin: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-.tablesorter-filter-row td {
-	text-align: center;
-	background: #eee;
-	padding: 4px;
-}
-
-/* jQuery Bootstrap Theme */
 .tablesorter-bootstrap .tablesorter-header {
+	font: 12px/18px Arial, Sans-serif;
 	position: relative;
 	padding: 8px;
 	margin: 0 0 18px;
@@ -69,11 +25,6 @@
 	box-shadow: inset 0 1px 0 white;
 }
 
-/* needed for Firefox */
-.tablesorter-bootstrap .tablesorter-header-inner {
-	position: relative;
-}
-
 /* bootstrap uses <i> for icons */
 .tablesorter-bootstrap .tablesorter-header i {
 	position: absolute;
@@ -86,7 +37,7 @@
 	line-height: 14px;
 	display: inline-block;
 }
-.bootstrap-icon-unsorted {
+.tablesorter-bootstrap .bootstrap-icon-unsorted {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWVJREFUeNqUUL9Lw2AUTGP8mqGlpBQkNeCSRcckEBcHq1jImMElToKuDvpHFMGhU0BQcHBwLji6CE1B4uB/INQsDi4d2jQ/fPeZxo764OV6915f7lLJ81xot9tCURXqdVEUr7IsO6ffH9Q5BlEUCaLwWxWqTcbYnaIoh0Dw4gAvcWlxq1qt9hqNxg6hUGAP+uIPUrGs0qXLer2+v/pTX6QpxLtkc2U2m53ACb8sSdIDXerSEms2m6+DweAICA4d89KGbduf9MpEVdXQ9/2LVqv1CASHjjn3iq/x1xKFfxQPqGnada1W86bT6SiO42OS3qk3KPStLMvbk8nkfjwen/LLuq6blFymMB0KdUPSGhAcOualjX6/f0bCiC7NaWGPQr0BwaFjzn0gYJqmLAiCA8/zni3LmhuGkQPBoWPOPwQeaPIqD4fDruu6L6Zp5kBw6IudchmdJAkLw3DXcZwnIPjy/FuAAQCiqqWWCAFKcwAAAABJRU5ErkJggg==);
 }
 
@@ -100,6 +51,56 @@
 }
 .tablesorter-bootstrap tr.even td {
 	background-color: #fff;
+}
+
+/* processing icon */
+.tablesorter-bootstrap .tablesorter-processing {
+	background-image: url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=');
+	position: absolute;
+	z-index: 1000;
+}
+
+/* filter widget */
+.tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
+	width: 98%;
+	height: inherit;
+	margin: 0 auto;
+	padding: 2px;
+	background-color: #fff;
+	color: #333;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-transition: height 0.1s ease;
+	-moz-transition: height 0.1s ease;
+	-o-transition: height 0.1s ease;
+	transition: height 0.1s ease;
+}
+.tablesorter-bootstrap .tablesorter-filter-row td {
+	background: #eee;
+	line-height: normal;
+	text-align: center;
+	padding: 4px;
+	-webkit-transition: line-height 0.1s ease;
+	-moz-transition: line-height 0.1s ease;
+	-o-transition: line-height 0.1s ease;
+	transition: line-height 0.1s ease;
+}
+/* hidden filter row */
+.tablesorter-bootstrap .tablesorter-filter-row.hideme td {
+	padding: 2px; /* change this to modify the thickness of the closed border row */
+	margin: 0;
+	line-height: 0;
+}
+.tablesorter-bootstrap .tablesorter-filter-row.hideme .tablesorter-filter {
+	height: 1px;
+	min-height: 0;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	/* don't use visibility: hidden because it disables tabbing */
+	opacity: 0;
+	filter: alpha(opacity=0);
 }
 
 /* pager plugin */
