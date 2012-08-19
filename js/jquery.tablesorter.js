@@ -387,31 +387,30 @@
 				return $tableHeaders;
 			}
 
-			function setHeadersCss(table, $headers, list) {
+			function setHeadersCss(table, $headers) {
 				var f, h = [], i, j, l,
 					c = table.config,
-					css = [c.cssDesc, c.cssAsc];
+					list = c.sortList,
+					css = [c.cssDesc, c.cssAsc],
+					// find the footer
+					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
 				// remove all header information
-				$headers
-					.removeClass(css.join(' '))
-					.each(function() {
-						if (!this.sortDisabled) {
-							h[this.column] = $(this);
-						}
-					});
+				$headers.removeClass(css.join(' '));
 				l = list.length;
 				for (i = 0; i < l; i++) {
-					if (list[i][1] === 2) { continue; } // direction = 2 means reset!
-					if (h[list[i][0]]) {
-						// add class if cell exists - fix for issue #78
-						h[list[i][0]].addClass(css[list[i][1]]);
-					}
-					// multicolumn sorting updating
-					f = $headers.filter('[data-column="' + list[i][0] + '"]');
-					if (l > 1 && f.length) {
-						for (j = 0; j < f.length; j++) {
-							if (!f[j].sortDisabled) {
-								$(f[j]).addClass(css[list[i][1]]);
+					// direction = 2 means reset!
+					if (list[i][1] !== 2) {
+						// multicolumn sorting updating - choose the :last in case there are nested columns
+						f = $headers.filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
+						if (f.length) {
+							for (j = 0; j < f.length; j++) {
+								if (!f[j].sortDisabled) {
+									f.eq(j).addClass(css[list[i][1]]);
+									// add sorted class to footer, if it exists
+									if ($t.length) {
+										$t.filter('[data-column="' + list[i][0] + '"]').eq(j).addClass(css[list[i][1]]); 
+									}
+								}
 							}
 						}
 					}
@@ -649,7 +648,7 @@
 							// setTimeout needed so the processing icon shows up
 							setTimeout(function(){
 								// set css for headers
-								setHeadersCss($this[0], $headers, c.sortList);
+								setHeadersCss($this[0], $headers);
 								multisort($this[0], c.sortList);
 								appendToTable($this[0]);
 							}, 1);
@@ -722,7 +721,7 @@
 						// update header count index
 						updateHeaderSortCount(this, c.sortList);
 						// set css for headers
-						setHeadersCss(this, $headers, c.sortList);
+						setHeadersCss(this, $headers);
 						// sort the table and append it to the dom
 						multisort(this, c.sortList);
 						appendToTable(this, callback, init);
