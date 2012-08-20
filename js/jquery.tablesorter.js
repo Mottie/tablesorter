@@ -545,7 +545,9 @@
 					if (!c.delayInit) { buildCache(this); }
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
-					$headers.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+					$headers
+					.unbind('mousedown.tablesorter mouseup.tablesorter')
+					.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
 						// only recognize left clicks
 						if ((e.which || e.button) !== 1) { return false; }
 						// set timer on mousedown
@@ -664,6 +666,7 @@
 					}
 					// apply easy methods that trigger binded events
 					$this
+					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
 					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, this).remove();
@@ -769,7 +772,9 @@
 
 					// show processesing icon
 					if (c.showProcessing) {
-						$this.bind('sortBegin sortEnd', function(e) {
+						$this
+						.unbind('sortBegin sortEnd')
+						.bind('sortBegin sortEnd', function(e) {
 							ts.isProcessing($this[0], e.type === 'sortBegin');
 						});
 					}
