@@ -370,11 +370,7 @@
 					if (typeof(lock) !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
-					if (this.sortDisabled) {
-						$t.removeAttr('data-column'); // data-column used to find correct column (in case of rowspan/colspan)
-					} else {
-						$t.addClass(c.cssHeader);
-					}
+					$t.addClass( this.sortDisabled ? 'sorter-false' : c.cssHeader );
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
@@ -401,7 +397,7 @@
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
 						// multicolumn sorting updating - choose the :last in case there are nested columns
-						f = $headers.filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
+						f = $headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
@@ -529,6 +525,7 @@
 					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
 					// constants
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
+					c.supportsDataObject = parseFloat($.fn.jquery) >= 1.4;
 					// digit sort text location; keeping max+/- for backwards compatibility
 					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 					// add table theme class only if there isn't already one there
@@ -751,7 +748,7 @@
 
 					// get sort list from jQuery data or metadata
 					// in jQuery < 1.4, an error occurs when calling $this.data()
-					if (parseFloat($.fn.jquery) >= 1.4 && typeof $this.data().sortlist !== 'undefined') {
+					if (c.supportsDataObject && typeof $this.data().sortlist !== 'undefined') {
 						c.sortList = $this.data().sortlist;
 					} else if (m && ($this.metadata() && $this.metadata().sortlist)) {
 						c.sortList = $this.metadata().sortlist;
