@@ -82,6 +82,7 @@
 
 				// selectors
 				selectorHeaders  : '> thead th, > thead td',
+				selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
 				selectorRemove   : 'tr.remove-me',
 
 				// advanced
@@ -548,8 +549,11 @@
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					$headers
+					// http://stackoverflow.com/questions/5312849/jquery-find-self
+					.find('*').andSelf().filter(c.selectorSort)
 					.unbind('mousedown.tablesorter mouseup.tablesorter')
 					.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+						var $cell = $(this).closest('th, td'), cell = $cell[0];
 						// only recognize left clicks
 						if ((e.which || e.button) !== 1) { return false; }
 						// set timer on mousedown
@@ -560,17 +564,17 @@
 						// ignore long clicks (prevents resizable widget from initializing a sort)
 						if (external !== true && (new Date().getTime() - downTime > 250)) { return false; }
 						if (c.delayInit && !c.cache) { buildCache($this[0]); }
-						if (!this.sortDisabled) {
+						if (!cell.sortDisabled) {
 							// Only call sortStart if sorting is enabled
 							$this.trigger("sortStart", $this[0]);
 							// store exp, for speed
-							$cell = $(this);
+							// $cell = $(this);
 							k = !e[c.sortMultiSortKey];
 							// get current column sort order
-							this.count = (this.count + 1) % (c.sortReset ? 3 : 2);
+							cell.count = (cell.count + 1) % (c.sortReset ? 3 : 2);
 							// reset all sorts on non-current column - issue #30
 							if (c.sortRestart) {
-								i = this;
+								i = cell;
 								$headers.each(function() {
 									// only reset counts on columns that weren't just clicked on and if not included in a multisort
 									if (this !== i && (k || !$(this).is('.' + c.cssDesc + ',.' + c.cssAsc))) {
@@ -579,7 +583,7 @@
 								});
 							}
 							// get current column index
-							i = this.column;
+							i = cell.column;
 							// user only wants to sort on one column
 							if (k) {
 								// flush the sort list
@@ -593,12 +597,12 @@
 									}
 								}
 								// add column to sort list
-								o = this.order[this.count];
+								o = cell.order[cell.count];
 								if (o < 2) {
 									c.sortList.push([i, o]);
 									// add other columns if header spans across multiple
-									if (this.colSpan > 1) {
-										for (j = 1; j < this.colSpan; j++) {
+									if (cell.colSpan > 1) {
+										for (j = 1; j < cell.colSpan; j++) {
 											c.sortList.push([i + j, o]);
 										}
 									}
@@ -627,12 +631,12 @@
 									}
 								} else {
 									// add column to sort list array
-									o = this.order[this.count];
+									o = cell.order[cell.count];
 									if (o < 2) {
 										c.sortList.push([i, o]);
 										// add other columns if header spans across multiple
-										if (this.colSpan > 1) {
-											for (j = 1; j < this.colSpan; j++) {
+										if (cell.colSpan > 1) {
+											for (j = 1; j < cell.colSpan; j++) {
 												c.sortList.push([i + j, o]);
 											}
 										}
