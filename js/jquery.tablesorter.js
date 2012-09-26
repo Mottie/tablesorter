@@ -424,16 +424,21 @@
 				}
 			}
 
-			function updateHeaderSortCount(table, sortList) {
-				var i, s, o, c = table.config,
-				l = sortList.length;
-				for (i = 0; i < l; i++) {
-					s = sortList[i];
+			function updateHeaderSortCount(table, list) {
+				var s, o, c = table.config,
+					l = c.headerList.length,
+					sl = list || c.sortList;
+				c.sortList = [];
+				$.each(sl, function(i,v){
+					// ensure all sortList values are numeric - fixes #127
+					s = [ parseInt(v[0], 10), parseInt(v[1], 10) ];
+					// make sure header exists
 					o = c.headerList[s[0]];
 					if (o) { // prevents error if sorton array is wrong
+						c.sortList.push(s);
 						o.count = s[1] % (c.sortReset ? 3 : 2);
 					}
-				}
+				});
 			}
 
 			function getCachedSortType(parsers, i) {
@@ -441,9 +446,9 @@
 			}
 
 			// sort multiple columns
-			function multisort(table, sortList) {
+			function multisort(table) {
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
-				l = sortList.length, bl = table.tBodies.length,
+				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, j, k, c, cache, lc, s, e, order, orgOrderCol;
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
@@ -648,7 +653,7 @@
 							setTimeout(function(){
 								// set css for headers
 								setHeadersCss($this[0], $headers);
-								multisort($this[0], c.sortList);
+								multisort($this[0]);
 								appendToTable($this[0]);
 							}, 1);
 						}
@@ -712,18 +717,12 @@
 					})
 					.bind("sorton", function(e, list, callback, init) {
 						$(this).trigger("sortStart", this);
-						var l = c.headerList.length;
-						c.sortList = [];
-						$.each(list, function(i,v){
-							// make sure column exists
-							if (v[0] < l) { c.sortList.push(list[i]); }
-						});
 						// update header count index
-						updateHeaderSortCount(this, c.sortList);
+						updateHeaderSortCount(this, list);
 						// set css for headers
 						setHeadersCss(this, $headers);
 						// sort the table and append it to the dom
-						multisort(this, c.sortList);
+						multisort(this);
 						appendToTable(this, callback, init);
 						if (typeof callback === "function") {
 							callback(this);
@@ -1065,7 +1064,7 @@
 			ts.refreshWidgets = function(table, doAll, dontapply) {
 				var i, c = table.config,
 					cw = c.widgets,
-					w = ts.widgets, l = w.length; console.debug(w);
+					w = ts.widgets, l = w.length;
 				// remove previous widgets
 				for (i = 0; i < l; i++){
 					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
