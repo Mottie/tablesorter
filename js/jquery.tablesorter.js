@@ -1217,10 +1217,10 @@
 	ts.addParser({
 		id: "usLongDate",
 		is: function(s) {
-			return s.match(/^[A-Za-z]{3,10}\.? [0-9]{1,2}, ([0-9]{4}|'?[0-9]{2}) (([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(AM|PM)))$/);
+			return /^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4}|'?\d{2})\s+(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i.test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat( (new Date(s).getTime() || ''), table);
+			return ts.formatFloat( (new Date(s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ''), table);
 		},
 		type: "numeric"
 	});
@@ -1254,10 +1254,10 @@
 	ts.addParser({
 		id: "time",
 		is: function(s) {
-			return (/^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/).test(s);
+			return /^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i.test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat( (new Date("2000/01/01 " + s).getTime() || ''), table);
+			return ts.formatFloat( (new Date("2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ""), table);
 		},
 		type: "numeric"
 	});
