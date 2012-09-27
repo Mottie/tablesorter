@@ -41,8 +41,9 @@
 	width: 18px;
 	height: 10px;
 	position: absolute;
-	right: 5px;
-	top: 20%;
+	right: 2px;
+	top: 50%;
+	margin-top: -10px;
 	/* white (unsorted) double arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
 	background-repeat: no-repeat;
@@ -101,17 +102,17 @@
  you'll need to add additional lines for
  rows with more than 2 child rows
  */
-.tablesorter-grey tbody tr:hover td,
-.tablesorter-grey tbody tr:hover + tr.tablesorter-childRow td,
-.tablesorter-grey tbody tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td,
-.tablesorter-grey tbody tr.even:hover td,
-.tablesorter-grey tbody tr.even:hover + tr.tablesorter-childRow td,
-.tablesorter-grey tbody tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
+.tablesorter-grey tbody > tr:hover > td,
+.tablesorter-grey tbody > tr:hover + tr.tablesorter-childRow > td,
+.tablesorter-grey tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-grey tbody > tr.even:hover > td,
+.tablesorter-grey tbody > tr.even:hover + tr.tablesorter-childRow > td,
+.tablesorter-grey tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
 	background: #134b78;
 }
-.tablesorter-grey tbody tr.odd:hover td,
-.tablesorter-grey tbody tr.odd:hover + tr.tablesorter-childRow td,
-.tablesorter-grey tbody tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
+.tablesorter-grey tbody > tr.odd:hover > td,
+.tablesorter-grey tbody > tr.odd:hover + tr.tablesorter-childRow > td,
+.tablesorter-grey tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
 	background: #134b78;
 }
 

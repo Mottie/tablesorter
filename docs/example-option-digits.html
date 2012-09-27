@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Dealing with Digits</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -14,12 +14,12 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
 	// call the tablesorter plugin
-	$("table").tablesorter();
+	$("table").tablesorter({ theme : 'blue' });
 });</script>
 </head>
 <body>
@@ -41,7 +41,7 @@
 	</p>
 
 <h1>Demo</h1>
-<div id="demo"><table class="tablesorter">
+<div id="demo"><table class="tablesorter" data-sortlist="[[0,0]]">
 	<thead>
 		<tr>
 			<th>Account #</th>

@@ -14,7 +14,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<!-- Tablesorter: optional -->
@@ -24,6 +24,8 @@
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
+		theme : 'blue',
+
 		// sort on the first column and in ascending order PRIOR TO the sort on the selected column
 		sortForce: [[0,0]]
 	});

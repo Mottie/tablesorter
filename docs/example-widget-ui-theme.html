@@ -2,10 +2,10 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - jQuery UI Theme Widget</title>
+	<title>jQuery plugin: Tablesorter 2.0 - jQuery UITheme Widget (jQuery UI)</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -17,10 +17,8 @@
 	<script src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
 
 	<!-- Tablesorter: required; also include any of the jQuery UI themes -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<link class="ui-theme" rel="stylesheet" href="../css/ui/style.css">
-	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
-	<link class="theme" rel="stylesheet" href="../css/green/style.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	<link rel="stylesheet" href="../css/theme.jui.css">
 
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
@@ -30,23 +28,37 @@
 
 	<script id="js">$(function() {
 
+	// Extend the themes to change any of the default class names ## NEW ##
+	$.extend($.tablesorter.themes.jui, {
+		// change default jQuery uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
+		table    : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		header   : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+		icons    : 'ui-icon', // icon class added to the <i> in the header
+		sortNone : 'ui-icon-carat-2-n-s',
+		sortAsc  : 'ui-icon-carat-1-n',
+		sortDesc : 'ui-icon-carat-1-s',
+		active   : 'ui-state-active', // applied when column is sorted
+		hover    : 'ui-state-hover',  // hover class
+		filterRow: '',
+		even     : 'ui-widget-content', // odd row zebra striping
+		odd      : 'ui-state-default'   // even row zebra striping
+	});
+
 	// call the tablesorter plugin and apply the ui theme widget
 	$("table").tablesorter({
-		widthFixed: true,
 
 		// widget code now contained in the jquery.tablesorter.widgets.js file
-		widgets : ['uitheme', 'zebra'],
+		widgets : ['uitheme', 'zebra', 'resizable'],
 
 		widgetOptions : {
-			// adding zebra striping, using content and default styles - the ui css removes the background from default
-			// even and odd class names included for this demo to allow switching themes
-			zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			// zebra striping class names - the uitheme widget adds the class names defined in
+			// $.tablesorter.themes to the zebra widget class names
+			zebra   : ["even", "odd"],
 
-			// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
-			// default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
-			// ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ]
-			uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+			// set the uitheme widget to use the jQuery UI theme class names ## NEW ##
+			uitheme : 'jui'
 		}
+
 	});
 
 });</script>
@@ -61,15 +73,6 @@
 		// ********************
 		$('#switcher').themeswitcher();
 
-		$('link.theme').each(function(){ this.disabled = true; });
-
-		$('select').change(function(){
-			var theme = $(this).val().toLowerCase(),
-				files = $('link.theme, link.ui-theme'); // ui-theme is added by the themeswitcher
-			files.each(function(){ this.disabled = true; });
-			files.filter('[href*="' + theme + '"]').each(function(){ this.disabled = false; });
-		});
-
 	});
 	</script>
 </head>
@@ -77,7 +80,7 @@
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>jQuery UI Theme Widget</h2>
+	<h2>jQuery UITheme Widget (jQuery UI)</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -88,23 +91,23 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
-			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details. <span class="tip"><em>New! v2.1</em></span></li>
-			<li>If the "widgetUitheme" option exists, it will over-ride this newer "widgetOptions.uitheme" option in order to maintain backwards compatibility.</li>
-			<li>The latest version of jQuery UI appears to need jQuery 1.4+ or script errors will break the plugin.</li>
+			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details (v2.1).</li>
+			<li><span class="tip"><em>New!</em></span> In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
+				<ul>
+					<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the jQuery UI theme saved to <code>$.tablesorter.themes.jui</code></li>
+					<li>The themes variable allows you to modify the class names for the table, header, sort icons, active state, hover state, filter inputs and zebra striping. See the code below on how to extend these variables.</li>
+					<li>Set the <code>uitheme</code> widget option to <code>"jui"</code> to set the widget to use the jQuery UI theme. See the <a href="example-widget-bootstrap-theme.html">bootstrap demo</a> for another example.</li>
+				</ul>
+			</li>
+			<li>Earlier widget versions required jQuery 1.4+. The UITheme widget for tablesorter 2.4 requires jQuery 1.2.6+.</li>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
-
+	<br>
 	jQuery UI Theme:
 	<div id="switcher"></div>
 	<br>
-	Tablesorter Theme:
-	<select>
-		<option>UI</option>
-		<option>Blue</option>
-		<option>Green</option>
-	</select>
 
 	<div id="demo"><table class="tablesorter">
 	<thead>
@@ -117,6 +120,16 @@
 			<th>Date</th>
 		</tr>
 	</thead>
+	<tfoot>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</tfoot>
 	<tbody>
 		<tr>
 			<td>Peter</td>
@@ -165,7 +178,7 @@
 	<h1>Page Header</h1>
 	<div>
 		<pre class="html">&lt;!-- ui theme stylesheet - contents shown below --&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/ui/style.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.jui.css&quot;&gt;
 &lt;!-- jQuery UI theme (cupertino example here) --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css&quot;&gt;
 
@@ -180,69 +193,6 @@
 		<pre class="js"></pre>
 	</div>
 
-
-	<h1>CSS</h1>
-	<div>
-		<pre class="css">/* jQuery UI Theme required css; as seen in css/ui/style.css file */
-table.tablesorter {
-  font-family: arial;
-  margin: 10px 0pt 15px;
-  font-size: 8pt;
-  width: 100%;
-  text-align: left;
-  padding: 5px;
-}
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-  border-collapse: collapse;
-  font-size: 8pt;
-  padding: 4px;
-}
-table.tablesorter thead tr th {
-  background-repeat: no-repeat;
-  background-position: center right;
-  cursor: pointer;
-  white-space: normal;
-  /* UI hover and active states make the font normal and the table resizes, this fixes it */
-  font-weight: bold !important;
-}
-table.tablesorter thead tr th .tablesorter-inner {
-  position: relative;
-  padding-right: 20px; /* wider than the icon */
-}
-table.tablesorter thead tr th .ui-icon {
-  position: absolute;
-  right: 3px;
-  top: 50%;
-  margin-top: -8px; /* half the icon height; older IE doesn't like this */
-}
-
-table.tablesorter tbody td {
-  padding: 4px;
-  vertical-align: top;
-}
-/* This allows you to use ui-state-default as the zebra stripe color */
-table.tablesorter tr.ui-state-default {
-  background-image: url();
-}
-
-/* filter widget */
-table.tablesorter thead input.tablesorter-filter {
-  width: 95%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-table.tablesorter thead tr.tablesorter-filter, table.tablesorter thead tr.tablesorter-filter td {
-  text-align: center;
-}
-/* optional disabled input styling */
-table.tablesorter thead tr.tablesorter-filter input.disabled {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-}</pre>
-	</div>
-
-
 	<h1>HTML</h1>
 	<div id="html">
 		<pre class="html"></pre>
@@ -250,7 +200,7 @@ table.tablesorter thead tr.tablesorter-filter input.disabled {
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-resizable.html">Resizable Columns widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-bootstrap-theme.html">UITheme widget - Bootstrap theme &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

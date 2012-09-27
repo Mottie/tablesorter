@@ -55,12 +55,13 @@
 	padding: 4px;
 	background-color: #000;
 	border-bottom: #333 1px solid;
+	color: #ccc;
 }
 
 /* hovered row colors */
-.tablesorter-dark tbody tr:hover td,
-.tablesorter-dark tbody tr.even:hover td,
-.tablesorter-dark tbody tr.odd:hover td {
+.tablesorter-dark tbody > tr:hover > td,
+.tablesorter-dark tbody > tr.even:hover > td,
+.tablesorter-dark tbody > tr.odd:hover > td {
 	background: #000;
 }
 

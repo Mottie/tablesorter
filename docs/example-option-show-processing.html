@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Triggers sortStart and sortEnd</title>
+	<title>jQuery plugin: Tablesorter 2.0 - showProcessing & Filter events</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -13,30 +13,41 @@
 	<script src="js/chili/recipes.js"></script>
 	<script src="js/docs.js"></script>
 
+	<style>
+	.search { float: right; }
+	</style>
+
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 <script id="js">$(function(){
+	var t, start;
 
-	var start;
-	// call the tablesorter plugin, the magic happens in the markup
-
-	$("table")
-		.tablesorter({
-			theme: 'blue',
-			showProcessing : true
-		})
-
-		// assign the sortStart event
-		.bind("sortStart",function(e, t){
+	$("table").tablesorter({
+		showProcessing: true,
+		theme : 'blue',
+		// initialize zebra and filter widgets
+		widgets: ["zebra", "filter"],
+		widgetOptions : {
+			filter_reset : '.reset'
+		}
+	})
+	.bind('filterStart filterEnd', function(e, filter){
+		if (e.type === 'filterStart') {
 			start = e.timeStamp;
-			$("#display").append('<li>Sort Started</li>').find('li:first').remove();
-		})
+			t = '<li>Filter Started: [' + filter + ']</li>';
+		} else {
+			t = '<li>Filter Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>';
+		}
+		$("#display").append(t).find('li:first').remove();
+	});
 
-		.bind("sortEnd",function(e, t){
-			$("#display").append('<li>Sort Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>').find('li:first').remove();
-		});
+	$('button').click(function(){
+		var search = $(this).attr('data-search').split(',');
+		$('table').trigger('search', [search]);
+	});
 
 }); </script>
 </head>
@@ -44,7 +55,7 @@
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Triggers sortStart and sortEnd</h2>
+	<h2>showProcessing &amp; Filter events</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -56,18 +67,23 @@
 		<pre class="js"></pre>
 	</div>
 
-	<h1>Sort Events</h1>
+	<h1>Filter Events</h1>
 	<ul id="display">
-		<li>Sort events will appear here.</li>
+		<li>Filter events will appear here.</li>
 		<li>&nbsp;</li>
 		<li>&nbsp;</li>
 	</ul>
 
 	<h1>Demo</h1>
-	<!-- sortlist is appended to the table using the class attribute and is picked up by metadata plugin -->
+
+	<!-- ",l,f,>80".split(",") ends up as an array [ "", "l", "f", ">80" ] -->
+	<button data-search=",l,f,>80">Filter</button> (females majoring in languages with a score >80)<br>
+	<button data-search=",l,!female,>80">Filter</button> (males majoring in languages with a score >80)<br>
+	<button class="reset">Reset</button>
+
 	<table class="tablesorter">
 	<thead>
-		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th class="filter-false">Geometry</th></tr>
 	</thead>
 	<tfoot>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
@@ -1101,7 +1117,7 @@
 
 	<div class="next-up">
 		<hr />
-		Next up: <a href="example-extending-defaults.html">Extending default options &rsaquo;&rsaquo;</a>
+		Next up: <a href="example-option-digits.html">Dealing with digits! &rsaquo;&rsaquo;</a>
 	</div>
 
 </div>

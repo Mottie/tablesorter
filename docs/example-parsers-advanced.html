@@ -14,7 +14,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">// add parser through the tablesorter addParser method
@@ -52,7 +52,8 @@ $(function(){
 	});
 
 	$('table').tablesorter({
-		headers : {
+		theme: 'blue',
+		headers: {
 			0 : { sorter: 'data' },
 			2 : { sorter: 'data' }
 		},
@@ -72,6 +73,13 @@ $(function(){
 </div>
 
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This method of writing custom parsers will NOT work with the original tablesorter 2.0.5b plugin because the format function does not consistently provide the <code>cell</code> and <code>cellIndex</code> parameters.</li>
+		</ul>
+	</p>
 
 	<h1>Demo</h1>
 	<div id="demo"><table>

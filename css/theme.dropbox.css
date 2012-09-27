@@ -75,9 +75,9 @@
 }
 
 /* hovered row colors */
-.tablesorter-dropbox tbody tr:hover td,
-.tablesorter-dropbox tbody tr.even:hover td,
-.tablesorter-dropbox tbody tr.odd:hover td {
+.tablesorter-dropbox tbody > tr:hover > td,
+.tablesorter-dropbox tbody > tr.even:hover > td,
+.tablesorter-dropbox tbody > tr.odd:hover > td {
 	background-color: rgba(230, 245, 255, 0.3);
 	border-right: 0;
 	border-left: 0;

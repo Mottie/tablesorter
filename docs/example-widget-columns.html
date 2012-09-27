@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Columns Style Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -14,40 +14,57 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
-	<link class="theme" rel="stylesheet" href="../css/green/style.css" disabled>
+	<link rel="stylesheet" href="../css/theme.default.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<link rel="stylesheet" href="../css/theme.green.css">
+	<link rel="stylesheet" href="../css/theme.grey.css">
+	<link rel="stylesheet" href="../css/theme.ice.css">
+	<link rel="stylesheet" href="../css/theme.black-ice.css">
+	<link rel="stylesheet" href="../css/theme.dark.css">
+	<link rel="stylesheet" href="../css/theme.dropbox.css">
+
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-	<!-- Tablesorter: optional -->
-	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
-
-<script id="js">$(function() {
+	<script id="js">$(function() {
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
+		theme : 'blue',
 
 		sortList : [[1,0],[2,0],[3,0]],
 
 		// initialize zebra striping and column styling of the table
 		widgets: ["zebra", "columns"],
 
-		// change the default column class names
-		// primary is the first column sorted, secondary is the second, etc
 		widgetOptions: {
-			columns: [ "primary", "secondary", "tertiary" ]
+			// change the default column class names
+			// primary is the first column sorted, secondary is the second, etc
+			columns: [ "primary", "secondary", "tertiary" ],
+			// include thead when adding class names
+			columns_thead : true,
+			// include tfoot when adding class names
+			columns_tfoot : true
 		}
+
 	});
 
 });</script>
 <script>
 $(function() {
-	$('select').change(function(){
-		var theme = $(this).val().toLowerCase(),
-			files = $('link.theme');
-		files.each(function(){ this.disabled = true; });
-		files.filter('[href*="' + theme + '"]')[0].disabled = false;
-	}).trigger('change');
+	var themes = 'default blue green grey ice blackice dark dropbox',
+		i, o = '', t = themes.split(' ');
+	for (i = 0; i < t.length; i++) {
+		o += '<option>' + t[i] + '</option>';
+	}
+	$('select')
+		.html(o)
+		.change(function(){
+			var theme = $(this).val().toLowerCase();
+			$('table')
+				.removeClass('tablesorter-' + t.join(' tablesorter-'))
+				.addClass('tablesorter-' + theme);
+		}).trigger('change');
 });
 </script>
 </head>
@@ -64,16 +81,15 @@ $(function() {
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
-			<li>The original "widgetColumns" option has been replaced by "widgetOptions.columns". See the javascript block below for more details. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>The original "widgetColumns" option has been replaced by "widgetOptions.columns". See the javascript block below for more details (v2.1).</li>
+			<li>Table header and footer rows now get updated with the columns widget classes. Check out the "grey" theme to see. <span class="tip"><em>New! v2.4</em></span></li>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
 	Choose Theme:
-	<select>
-		<option>Blue</option>
-		<option>Green</option>
-	</select>
+	<select></select>
+	<br><br>
 
 	<div id="demo"><table class="tablesorter">
 	<thead>
@@ -86,6 +102,16 @@ $(function() {
 			<th>Date</th>
 		</tr>
 	</thead>
+	<tfoot>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</tfoot>
 	<tbody>
 		<tr>
 			<td>Peter</td>
@@ -133,7 +159,7 @@ $(function() {
 	<h1>Page Header</h1>
 	<div>
 		<pre class="html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
 
@@ -154,25 +180,28 @@ $(function() {
  as definitions for the "primary", "secondary" and "tertiary" sorts.
 */
 /* Column Widget - column sort colors */
-table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
-	background-color: #c0c0ff;
+table.tablesorter-blue td.primary,
+table.tablesorter-blue tr.odd td.primary {
+	background-color: #99b3e6;
 }
-table.tablesorter tbody tr.even td.primary {
-	background-color: #e8e8ff;
-}
-
-table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
-	background-color: #d6d6ff;
-}
-table.tablesorter tbody tr.even td.secondary {
-	background-color: #e8e8ff;
+table.tablesorter-blue tr.even td.primary {
+	background-color: #c2d1f0;
 }
 
-table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
-	background-color: #e5e5ff;
+table.tablesorter-blue td.secondary,
+table.tablesorter-blue tr.odd td.secondary {
+	background-color: #c2d1f0;
 }
-table.tablesorter tbody tr.even td.tertiary {
-	background-color: #f8f8ff;
+table.tablesorter-blue tr.even td.secondary {
+	background-color: #d6e0f5;
+}
+
+table.tablesorter-blue td.tertiary,
+table.tablesorter-blue tr.odd td.tertiary {
+	background-color: #d6e0f5;
+}
+table.tablesorter-blue tr.even td.tertiary {
+	background-color: #ebf0fa;
 }</pre>
 	</div>
 

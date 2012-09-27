@@ -14,7 +14,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function(){
@@ -24,6 +24,8 @@
 	$("table thead th:eq(5)").data("sorter", false);
 
 	$("table").tablesorter({
+		theme : 'blue',
+
 		headers: {
 			// disable sorting of the first column (we start counting at zero)
 			0: {
@@ -47,12 +49,12 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>In tablesorter v2.0.5 and older, only the metadata and headers options methods were available.</li>
-			<li>In versions 2.3+, columns can be disabled using any of the following methods, in order of priority:
+			<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
 				<ul>
-					<li>jQuery data <code class="hilight">data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
-					<li>metadata <code class="hilight">class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code class="hilight">headers : { 0 : { sorter: false } }</code>.</li>
-					<li>header class name <code class="hilight">class="sorter-false"</code>.</li>
+					<li>jQuery data <code>data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
+					<li>metadata <code>class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { sorter: false } }</code>.</li>
+					<li>header class name <code>class="sorter-false"</code>.</li>
 				</ul>
 			</li>
 		</ul>

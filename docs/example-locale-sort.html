@@ -14,7 +14,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
@@ -51,6 +51,7 @@
 	});
 
 	$("table").tablesorter({
+		theme : 'blue',
 		// Enable use of the characterEquivalents reference
 		sortLocaleCompare : true,
 		// if false, upper case sorts BEFORE lower case
@@ -70,8 +71,8 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>Accented characters will get replaced by their character equivalent when the <code class="hilight">sortLocaleCompare</code> option is <code class="hilight">true</code>.</li>
-			<li>In the javascript code block below you can see the default <code class="hilight">$.tablesorter.characterEquivalents</code> table and an example of how to extend it to include other equivalents.</li>
+			<li>Accented characters will get replaced by their character equivalent when the <code>sortLocaleCompare</code> option is <code>true</code>.</li>
+			<li>In the javascript code block below you can see the default <code>$.tablesorter.characterEquivalents</code> table and an example of how to extend it to include other equivalents.</li>
 			<li>If you have a specific language requirement, please refer to the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki pages to see if it is there. If not, please consider sharing the code or even just share the character equivalents themselves.</li>
 		</ul>
 	</p>

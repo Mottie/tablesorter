@@ -15,9 +15,15 @@
 
 	<!-- Tablesorter: theme -->
 	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<link class="ui-theme" rel="stylesheet" href="../css/ui/style.css">
-	<link class="theme" rel="stylesheet" href="../css/blue/style.css">
-	<link class="theme" rel="stylesheet" href="../css/green/style.css" disabled>
+	<link class="ui-theme" rel="stylesheet" href="../css/theme.jui.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.default.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.blue.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.green.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.grey.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.ice.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.black-ice.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.dark.css">
+	<link class="theme" rel="stylesheet" href="../css/theme.dropbox.css">
 
 	<!-- Tablesorter script: required -->
 	<script src="../js/jquery.tablesorter.js"></script>
@@ -26,8 +32,11 @@
 <script id="js">$(function(){
 
 	$("table").tablesorter({
-		selectorHeaders: '> thead th, > thead td',
-		widgets: [ 'uitheme', 'zebra', 'stickyHeaders' ],
+
+		widthFixed : true,
+
+		widgets: ["columns", "filter", "stickyHeaders", "uitheme", "zebra"] , //[ 'uitheme', 'zebra', 'stickyHeaders' ],
+
 		widgetOptions: {
 
 			// css class name applied to the sticky header row (tr)
@@ -37,10 +46,9 @@
 			// even and odd class names included for this demo to allow switching themes
 			zebra   : ["ui-widget-content even", "ui-state-default odd"],
 
-			// change default uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
-			// default icons: ["ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n"]
-			// ["up/down arrow (cssHeaders/unsorted)", "down arrow (cssDesc/descending)", "up arrow (cssAsc/ascending)" ]
-			uitheme : ["ui-icon-carat-2-n-s", "ui-icon-carat-1-s", "ui-icon-carat-1-n"]
+			// use uitheme widget to apply defauly jquery ui (jui) class names
+			// see the uitheme demo for more details on how to change the class names
+			uitheme : 'jui'
 
 		}
 
@@ -49,13 +57,24 @@
 }); </script>
 <script>
 $(function() {
-		$('link.theme').each(function(){ this.disabled = true; });
+	$('link.theme').each(function(){ this.disabled = true; });
 
-		$('select').change(function(){
+	var themes = 'default blue green grey ice blackice dark dropbox',
+		i, o = '', t = themes.split(' ');
+	for (i = 0; i < t.length; i++) {
+		o += '<option>' + t[i] + '</option>';
+	}
+
+	$('select')
+		.append(o)
+		.change(function(){
 			var theme = $(this).val().toLowerCase(),
 				files = $('link.theme, link.ui-theme'); // ui-theme is added by the themeswitcher
 			files.each(function(){ this.disabled = true; });
-			files.filter('[href*="' + theme + '"]').each(function(){ this.disabled = false; });
+			files.filter('[href*="' + (theme === 'jui' ? 'ui' : theme) + '"]').each(function(){ this.disabled = false; });
+			$('table')
+				.removeClass('tablesorter-' + t.join(' tablesorter-'))
+				.addClass('tablesorter-' + theme);
 		});
 });
 </script>
@@ -76,18 +95,19 @@ $(function() {
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
 			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
-			<li>Added <code class="hilight">widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual sticky header. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Added <code>widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual sticky header. <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Multiple rows in the header will become sticky. <span class="tip"><em>New! v2.1.17</em></span></li>
-			<li>For the sticky header to work properly if any <code class="hilight">&lt;TD&gt;</code>'s are included within the header:
+			<li>The filter widget adds a row to the table header, but that row will not be included in the sticky header.</li>
+			<li>Add the class name <code>sticky-false</code> to any header rows you don't want to become sticky. <span class="tip"><em>New! v2.1.18</em></span></li>
+			<li><del>Because of an issue with jQuery version 1.3 and older causing an error, this widget needs at least jQuery version 1.4+ in order to work.</del> Now working with jQuery 1.2.6+ again.</li>
+			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
+			<li><del>For the sticky header to work properly if any <code>&lt;TD&gt;</code>'s are included within the header:</del> <span class="tip"><em>Fixed! v2.4</em></span>
 				<ul>
-					<li>Set the <code class="hilight">selectorHeaders</code> option to <code class="hilight">thead th, thead td</code>.</li>
-					<li>The <code class="hilight">&lt;TD&gt;</code> may not be styled properly, so CSS changes may be needed.</li>
-					<li>To prevent the <code class="hilight">&lt;TD&gt;</code> from being sortable, add a <code class="hilight">sorter-false</code> class name.</li>
+					<li><del>Set the <code>selectorHeaders</code> option to <code>thead th, thead td</code>.</del></li>
+					<li><del>The <code>&lt;TD&gt;</code> may not be styled properly, so CSS changes may be needed.</del></li>
+					<li><del>To prevent the <code>&lt;TD&gt;</code> from being sortable, add a <code>sorter-false</code> class name.</del></li>
 				</ul>
 			</li>
-			<li>Add the class name <code class="hilight">sticky-false</code> to any header rows you don't want to become sticky. <span class="tip"><em>New! v2.1.18</em></span></li>
-			<li>Because of an issue with jQuery version 1.3 and older causing an error, this widget needs at least jQuery version 1.4+ in order to work.</li>
-			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
 		</ul>
 	</p>
 
@@ -99,18 +119,18 @@ $(function() {
 	<h1>Demo</h1>
 	Choose Theme:
 	<select>
-		<option>UI</option>
-		<option>Blue</option>
-		<option>Green</option>
+		<option value="jui">Jquery UI</option>
 	</select>
+	<br><br>
 
 	<table class="tablesorter">
+	<caption>Table caption</caption>
 	<thead>
 		<tr>
 			<th colspan="3" class="sorter-false">Personal Information for each person (resize the browser to check expanding height)</th>
 			<td colspan="4" class="sorter-false">Courses (this is a TD cell)</td>
 		</tr>
-		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th class="filter-false sorter-false">Geometry</th></tr>
 	</thead>
 	<tfoot>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>

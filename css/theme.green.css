@@ -65,17 +65,17 @@
  you'll need to add additional lines for
  rows with more than 2 child rows
  */
-.tablesorter-green tbody tr:hover td,
-.tablesorter-green tbody tr:hover + tr.tablesorter-childRow td,
-.tablesorter-green tbody tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td,
-.tablesorter-green tbody tr.even:hover td,
-.tablesorter-green tbody tr.even:hover + tr.tablesorter-childRow td,
-.tablesorter-green tbody tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
+.tablesorter-green tbody > tr:hover > td,
+.tablesorter-green tbody > tr:hover + tr.tablesorter-childRow > td,
+.tablesorter-green tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-green tbody > tr.even:hover > td,
+.tablesorter-green tbody > tr.even:hover + tr.tablesorter-childRow > td,
+.tablesorter-green tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
 	background: #d9d9d9;
 }
-.tablesorter-green tbody tr.odd:hover td,
-.tablesorter-green tbody tr.odd:hover + tr.tablesorter-childRow td,
-.tablesorter-green tbody tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow td {
+.tablesorter-green tbody > tr.odd:hover > td,
+.tablesorter-green tbody > tr.odd:hover + tr.tablesorter-childRow > td,
+.tablesorter-green tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
 	background: #bfbfbf;
 }
 

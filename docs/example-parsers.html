@@ -14,7 +14,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
@@ -39,9 +39,10 @@ $.tablesorter.addParser({
 
 $(function() {
 	$("table").tablesorter({
+		theme: 'blue'
 		// "sorter-grades" added as a class name in the HTML (new in v2.0.11)
 		// or un-comment out the option below
-		// headers: { 6: { sorter: 'grades' } }
+		// ,headers: { 6: { sorter: 'grades' } }
 	});
 
 });</script>
@@ -82,7 +83,7 @@ $(function() {
 			<td>80</td>
 			<td>70</td>
 			<td>75</td>
-			<td>bad</td>
+			<td>medium</td>
 		</tr>
 		<tr>
 			<td>Student02</td>
@@ -100,7 +101,34 @@ $(function() {
 			<td>85</td>
 			<td>95</td>
 			<td>80</td>
+			<td>good</td>
+		</tr>
+		<tr>
+			<td>Student04</td>
+			<td>Languages</td>
+			<td>male</td>
+			<td>20</td>
+			<td>50</td>
+			<td>65</td>
+			<td>bad</td>
+		</tr>
+		<tr>
+			<td>Student05</td>
+			<td>Mathematics</td>
+			<td>female</td>
+			<td>70</td>
+			<td>78</td>
+			<td>70</td>
 			<td>medium</td>
+		</tr>
+		<tr>
+			<td>Student06</td>
+			<td>Mathematics</td>
+			<td>male</td>
+			<td>44</td>
+			<td>65</td>
+			<td>60</td>
+			<td>bad</td>
 		</tr>
 	</tbody>
 </table></div>

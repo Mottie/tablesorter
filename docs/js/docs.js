@@ -1,10 +1,10 @@
 /* Stop IE flicker */
-if ($.browser.msie == true) document.execCommand('BackgroundImageCache', false, true);
+if ($.browser.msie) { document.execCommand('BackgroundImageCache', false, true); }
 
 jQuery.fn.antispam = function() {
 	return this.each(function(){
-		var email = $(this).text().toLowerCase().replace(/\sdot/g,'.').replace(/\sat/g,'@').replace(/\s+/g,'');
-		var URI = "mailto:" + email;
+		var email = $(this).text().toLowerCase().replace(/\sdot/g,'.').replace(/\sat/g,'@').replace(/\s+/g,''),
+			URI = "mailto:" + email;
 		$(this).hide().before(
 			$("<a></a>").attr("href",URI).addClass("external").text(email)
 		);
@@ -13,7 +13,7 @@ jQuery.fn.antispam = function() {
 
 $(function(){
 
-	$("a.external").each(function() {this.target = '_new'});
+	$("a.external").each(function(){this.target = '_new';});
 	$("span.email").antispam();
 
 	// get javascript source
@@ -28,10 +28,10 @@ $(function(){
 	}
 
 	// hide child rows
-	$('#root .expand-child').hide();
+	$('#root .tablesorter-childRow').hide();
 	// toggle child row content, not hiding the row since we are using rowspan
 	$('#root .toggle').click(function(){
-		$(this).closest('tr').nextUntil('tr:not(.expand-child)').toggle();
+		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').toggle();
 		return false;
 	});
 
@@ -70,19 +70,19 @@ $(function(){
 function showProperty(){
 	var prop, h = window.location.hash;
 	if (h) {
-		var prop = $(h);
+		prop = $(h);
 		if (prop.length) {
 			prop.find('.collapsible').show();
 			if (h === '#csschildrow') {
-				$('#root .expand-child').show();
+				$('#root .tablesorter-childRow').show();
 			}
 			// move below sticky header
-			if (/options/.test(prop.closest('table')[0].id)) {
+			if (/options/.test(prop.closest('table').attr('id') || '')) {
 				$(window).scrollTop( prop.position().top - 30 );
 			}
 		}
 	}
-};
+}
 
 $(window).load(function(){
 	$(".js").chili();

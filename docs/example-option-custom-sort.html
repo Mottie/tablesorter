@@ -13,19 +13,17 @@
 	<script src="js/chili/recipes.js"></script>
 	<script src="js/docs.js"></script>
 
-	<!-- custom sorting script -->
-	<script src="js/naturalSort.js"></script>
-
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
 	$("table").tablesorter({
+		theme : 'blue',
 		// table = table object; get config options from table.config
 		// column is the column index (zero-based)
 		textSorter : function(a, b, table, column){
-			// this is the original sort method from tablesorter 2.0.5b
+			// this is the original sort method from tablesorter 2.0.3
 			if (table.config.sortLocaleCompare) { return a.localeCompare(b); }
 			return ((a < b) ? -1 : ((a > b) ? 1 : 0));
 		}
@@ -45,7 +43,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>The custom sort used here is from the original tablesorter plugin v2.0.5b. Sort the first column to see how it sorts alphanumeric data.</li>
+			<li>The custom sort used here is from the original tablesorter plugin v2.0.3. Sort the first column to see how it sorts alphanumeric data.</li>
 			<li>This option is not part of the original plugin. <span class="tip"><em>New! v2.2</em></span></li>
 		</ul>
 	</p>
@@ -138,19 +136,6 @@
 	</tbody>
 </table></div>
 
-
-	<h1>Page Head</h1>
-	<div>
-		<pre class="html">&lt;!-- jQuery --&gt;
-&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js&quot;&gt;&lt;/script&gt;
-
-&lt;!-- custom sorting script --&gt;
-&lt;script src=&quot;js/naturalSort.js&quot;&gt;&lt;/script&gt;
-
-&lt;!-- Tablesorter: required --&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/blue/style.css&quot;&gt;
-&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;</pre>
-	</div>
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="js"></pre>

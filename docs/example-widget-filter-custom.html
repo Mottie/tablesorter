@@ -4,27 +4,65 @@
  <meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget</title>
 
+
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<script src="js/chili/jquery.chili-2.2.js"></script>
 	<script src="js/chili/recipes.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-	<!-- Tablesorter: optional -->
-	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
+	<script>
+	$(function(){
 
-<script id="js">$(function() {
+		$('.accordion').accordion({
+			autoHeight: false,
+			collapsible : true
+		});
+
+		// External search
+		// buttons set up like this:
+		// <button class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
+		$('button.match').click(function(){
+
+			// toggle "filter-match" class on first column
+			var first = $('table').find('th:first').toggleClass('filter-match');
+			$('#mode').html( '' + first.hasClass('filter-match') );
+
+			/*** first method *** data-filter-column="1" data-filter-text="!son"
+				add search value to Discount column (zero based index) input */
+			var filters = $('table').find('.tablesorter-filter'),
+				col = $(this).data('filter-column'), // zero-based index
+				txt = $(this).data('filter-text'); // text to add to filter
+
+			filters.val(''); // clear all filters
+			filters.eq(col).val(txt).trigger('search', false);
+
+		});
+
+
+
+
+	});
+	</script>
+
+	<script id="js">$(function() {
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
+		theme: 'blue',
+
+		// hidden filter input/selects will resize the columns, so try to minimize the change
+		widthFixed : true,
 
 		// initialize zebra striping and filter widgets
 		widgets: ["zebra", "filter"],
@@ -34,23 +72,34 @@
 		widgetOptions : {
 
 			// css class applied to the table row containing the filters & the inputs within that row
-			filter_cssFilter : 'tablesorter-filter',
+			filter_cssFilter   : 'tablesorter-filter',
 
 			// If there are child rows in the table (rows with class name from "cssChildRow" option)
 			// and this option is true and a match is found anywhere in the child row, then it will make that row
 			// visible; default is false
-			filter_childRows : false,
+			filter_childRows   : false,
 
-			// Set this option to true to use the filter to find text from the start of the column
-			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
-			filter_startsWith : false,
+			// if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+			// below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+			filter_hideFilters : false,
 
 			// Set this option to false to make the searches case sensitive
-			filter_ignoreCase : true,
+			filter_ignoreCase  : true,
+
+			// jQuery selector string of an element used to reset the filters
+			filter_reset : '.reset',
 
 			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
 			// every character while typing and should make searching large tables faster.
 			filter_searchDelay : 300,
+
+			// Set this option to true to use the filter to find text from the start of the column
+			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
+			filter_startsWith  : false,
+
+			// if false, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
+			// below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+			filter_hideFilters : false,
 
 			// Add select box to 4th column (zero-based index)
 			// each option has an associated function that returns a boolean
@@ -92,31 +141,10 @@
 			}
 
 		}
-// ,debug: true
+
 	});
 
 });</script>
-
-<script>
-$(function(){
-	// *** widgetfilter_startsWith toggle button ***
-	$('button.toggle').click(function(){
-		var c = $('table')[0].config,
-		// toggle the boolean
-		fsw = !c.widgetOptions.filter_startsWith,
-		fic = !c.widgetOptions.filter_ignoreCase;
-		if ($(this).hasClass('fsw')) {
-			c.widgetOptions.filter_startsWith = fsw;
-			$('#start').html(fsw.toString());
-		} else {
-			c.widgetOptions.filter_ignoreCase = fic;
-			$('#case').html(fic.toString());
-		}
-		// update search after option change; add false to trigger to skip search delay
-		$('input.tablesorter-filter:eq(0)').trigger('search', false);
-	});
-});
-</script>
 
 </head>
 <body>
@@ -128,62 +156,115 @@ $(function(){
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
-		Custom filter widget option <code class="hilight">filter_functions</code> was added in version 2.3.6:
-		<ul>
-			<li><strong>Default Select</strong> - See the "First Name" column below.
-				<ul>
-					<li>To enable this type of select, set the <code class="hilight">filter_functions</code> option for the column to <code class="hilight">true</code>, and/or add a "filter-select" class to the column header cell.</li>
-					<li>The default option text, "Select a name", is obtained from the header <code class="hilight">data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.</li>
-					<li>The select is populated by the column text contents with repeated content combined (i.e. There are three "Aaron"'s in the first column, but only one in the dropdown.</li>
-					<li>Select options are automatically sorted.</li>
-				</ul>
-			</li>
-			<li><strong>Custom Select</strong> - See the "Total" column.
-				<ul>
-					<li>To enable this type of select, add your custom options within the <code class="hilight">filter_functions</code> option.</li>
-					<li>Each option is set as a "key:value" pair where the "key" is the actual text of the option and the "value" is the function associated with the option. See the example below.</li>
-					<li>See the filter function information below.</li>
-				</ul>
-			</li>
-			<li><strong>Custom Filter Function</strong> - See the "Last Name" column.
-				<ul>
-					<li>To enable this type of filter, add your custom function to the <code class="hilight">filter_functions</code> option following the example below.</li>
-					<li>The example below shows you how to show only exact matches. The problem with this is that you can't see the matches while typing unless you set the <code class="hilight">filter_searchDelay</code> option to be a bit longer.</li>
-					<li>Also, the example only checks for an exact match (<code class="hilight">===</code>) meaning the <code class="hilight">filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive "i" flag.</li>
-					<li>See the filter function information below.</li>
-				</ul>
-			</li>
+	<p></p>
+	<br>
+	<div class="accordion">
 
-			<li><strong>Filter function information</strong>:
-				<ul>
-					<li>The custom function must return a boolean value. If <code class="hilight">true</code> is returned, the row will be shown if all other filters match; and if <code class="hilight">false</code> is returned, the row will be hidden.</li>
-					<li>The <strong>exact text (e)</strong> of the table cell is a variable passed to the function. Note that numbers will need to be parsed to make comparisons.</li>
-					<li><strong>Normalized table cell data (n)</strong> is the next varibale passed to the function.
-						<ul>
-							<li>This data has been parsed by the assigned column parser, so make sure the same type of data is being compared as parsed data may not be what you expect.</li>
-							<li>Normalized numerical values within the table will be of numeric type and not of string type, as the sorter needs to use mathematical comparisons while sorting.</li>
-							<li>The data will be in lower-case if the <code class="hilight">filter_ignoreCase</code> option is <code class="hilight">true</code>.</li>
-							<li>Dates like in the last column of the table below will store the time in seconds since 1970 (using javascript's .getTime() function).</li>
-							<li>The percentage column will only store the number and not percentage sign.</li>
-						</ul>
-					</li>
-					<li>The <strong>filter input value (f)</strong> is the exact text entered by the user. If numerical, it will need to be parsed using parseFloat() or parseInt() to allow for making comparisons.</li>
-					<li>The <strong>column index (i)</strong> might be useful for obtaining more information from header, or something.</li>
-				</ul>
-			</li>
-		</ul>
-	</p>
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>Custom filter widget option <code>filter_functions</code> was added in version 2.3.6.</li>
+				<li>This widget does work with tablesorter v2.0.5.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#"><strong>Default Select</strong> ("First Name" column)</a></h3>
+		<div>
+			<ul>
+				<li>To enable this type of select, set the <code>filter_functions</code> option for the column to <code>true</code>,<pre>filter_functions : {
+
+  // Add select menu to this column
+  // set the column value to true, and/or add "filter-select" class name to header
+  0 : true
+
+}</pre>or add a "filter-select" class to the column header cell (see code below).</li>
+				<li>The default option text, "Select a name", is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre>&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+			<li>Add a "filter-match" class to only match instead of exactly match the selected value. Click on the "Match" button below to see the difference.<pre>&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three "Aaron"'s in the first column, but only one in the dropdown.</li>
+				<li>Select options are automatically alphanumerically (new in v2.4) sorted.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#"><strong>Custom Filter Function</strong> ("Last Name" column)</a></h3>
+		<div>
+			<ul>
+				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre>filter_functions : {
+
+  // Exact match only
+  1 : function(e, n, f, i) {
+    return e === f;
+  }
+
+}</pre></li>
+				<li>The example shows you how to show only exact matches. The problem with this is that you can't see the matches while typing unless you set the <code>filter_searchDelay</code> option to be a bit longer.</li>
+				<li>Also, the example only checks for an exact match (<code>===</code>) meaning the <code>filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive "i" flag.</li>
+				<li>See the filter function information below.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#"><strong>Custom Select</strong> ("City" or "Total" column)</a></h3>
+		<div>
+			<ul>
+				<li>To enable this type of select, add your custom options within the <code>filter_functions</code> option.</li>
+				<li>Each option is set as a "key:value" pair where the "key" is the actual text of the option and the "value" is the function associated with the option.</li>
+				<li>Here is an example using alphabetical comparisons (using regular expressions):<pre>filter_functions : {
+
+  // Add these options to the select dropdown (regex example)
+  2 : {
+    "A - D" : function(e, n, f, i) { return /^[A-D]/.test(e); },
+    "E - H" : function(e, n, f, i) { return /^[E-H]/.test(e); },
+    "I - L" : function(e, n, f, i) { return /^[I-L]/.test(e); },
+    "M - P" : function(e, n, f, i) { return /^[M-P]/.test(e); },
+    "Q - T" : function(e, n, f, i) { return /^[Q-T]/.test(e); },
+    "U - X" : function(e, n, f, i) { return /^[U-X]/.test(e); },
+    "Y - Z" : function(e, n, f, i) { return /^[Y-Z]/.test(e); }
+  }
+
+}</pre></li>
+				<li>Here is an example using numerical comparisons:<pre>filter_functions : {
+  // Add these options to the select dropdown (numerical comparison example)
+  // Note that only the normalized (n) value will contain numerical data
+  // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
+  4 : {
+    "< $10"      : function(e, n, f, i) { return n < 10; },
+    "$10 - $100" : function(e, n, f, i) { return n >= 10 && n <=100; },
+    "> $100"     : function(e, n, f, i) { return n > 100; }
+  }
+}</pre></li>
+				<li>See the "Filter function information" section below.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#"><strong>Filter function information</strong></a></h3>
+		<div>
+			<ul>
+				<li>The custom function must return a boolean value. If <code>true</code> is returned, the row will be shown if all other filters match; and if <code>false</code> is returned, the row will be hidden.<pre>function(e, n, f, i) { return test; /* test should be a Boolean (true or false) */ }</pre></li>
+				<li>The <strong>exact text (e)</strong> of the table cell is a variable passed to the function. Note that numbers will need to be parsed to make comparisons.</li>
+				<li><strong>Normalized table cell data (n)</strong> is the next varibale passed to the function.
+					<ul>
+						<li>This data has been parsed by the assigned column parser, so make sure the same type of data is being compared as parsed data may not be what you expect.</li>
+						<li>Normalized numerical values within the table will be of numeric type and not of string type, as the sorter needs to use mathematical comparisons while sorting.</li>
+						<li>The data will be in lower-case if the <code>filter_ignoreCase</code> option is <code>true</code>.</li>
+						<li>Dates like in the last column of the table below will store the time in seconds since 1970 (using javascript's .getTime() function).</li>
+						<li>The percentage column will only store the number and not percentage sign.</li>
+					</ul>
+				</li>
+				<li>The <strong>filter input value (f)</strong> is the exact text entered by the user. If numerical, it will need to be parsed using parseFloat() or parseInt() to allow for making comparisons.</li>
+				<li>The <strong>column index (i)</strong> might be useful for obtaining more information from header, or something.</li>
+			</ul>
+		</div>
+	</div>
 
 	<h1>Demo</h1>
-	<button class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
-	<button class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)
+	<button class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle "filter-match" class on First Name column)<br>
+	<button class="reset">Reset Search</button>
 
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th class="filter-select" data-placeholder="Select a name">First Name</th> <!-- add "filter-select" class or filter_functions : { 0: true } -->
+			<!-- add "filter-select" class or filter_functions : { 0: true } -->
+			<!-- add "filter-match" class to just match the content, so selecting "Denni" will also show "Dennis" -->
+			<th class="filter-select" data-placeholder="Select a name">First Name</th>
 			<th data-placeholder="Exact matches only">Last Name</th>
 			<th data-placeholder="Choose a city">City</th>
 			<th>Age</th>
@@ -221,7 +302,7 @@ $(function(){
 			<td>Oct 13, 2000 1:15 PM</td>
 		</tr>
 		<tr>
-			<td>Peter</td>
+			<td>Denni</td>
 			<td>Henry</td>
 			<td>New York</td>
 			<td>28</td>
@@ -248,7 +329,7 @@ $(function(){
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
 		<tr>
-			<td>John</td>
+			<td>Peter</td>
 			<td>Kent Esq</td>
 			<td>Seattle</td>
 			<td>45</td>
@@ -325,7 +406,7 @@ $(function(){
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-ui-theme.html">jQuery UI theme widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-ui-theme.html">UITheme widget - jQuery UI theme &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

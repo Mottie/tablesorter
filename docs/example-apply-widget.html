@@ -14,13 +14,13 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
 
 	// call the tablesorter plugin
-	$("table").tablesorter();
+	$("table").tablesorter({ theme : 'blue' });
 
 	$("button.applyid").click(function(){
 		// This method needs to be applied after each sort

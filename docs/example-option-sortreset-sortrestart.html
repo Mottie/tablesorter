@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
+	<meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Reset/Restart the sort</title>
 
 	<!-- jQuery -->
@@ -14,19 +14,20 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
-		
+		theme : 'blue',
+
+		// third click on the header will reset column to default - unsorted
 		sortReset   : true,
 		// Resets the sort direction so that clicking on an unsorted column will sort in the sortInitialOrder direction.
 		sortRestart : true,
 
-		
 		sortInitialOrder: 'desc',
 
 		headers : {
@@ -52,10 +53,10 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>The default <code class="hilight">sortInitialOrder</code> for the entire table is set to <code class="hilight">desc</code> (descending sort).</li>
+			<li>The default <code>sortInitialOrder</code> for the entire table is set to <code>desc</code> (descending sort).</li>
 			<li>The last three columns have the initial sort order set in the ascending direction, using the headers option.</li>
-			<li>Test the <code class="hilight">sortReset</code> option by clicking on any column at least three times. It should sort in the <code class="hilight">sortInitialOrder</code> direction on the first click, the opposite direction on the second click, then reset to the original sort order on the third click. This cycle repeats on subsequent sorts.</li>
-			<li>Test the <code class="hilight">sortRestart</code> option by clicking on any unsorted column to see that it will always restart from the <code class="hilight">sortInitialOrder</code>.</li>
+			<li>Test the <code>sortReset</code> option by clicking on any column at least three times. It should sort in the <code>sortInitialOrder</code> direction on the first click, the opposite direction on the second click, then reset to the original sort order on the third click. This cycle repeats on subsequent sorts.</li>
+			<li>Test the <code>sortRestart</code> option by clicking on any unsorted column to see that it will always restart from the <code>sortInitialOrder</code>.</li>
 		</ul>
 	</p>
 
@@ -125,7 +126,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-option-sort-empty.html">Sorting empty cells &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-option-selectorsort.html">Using selectorSort &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

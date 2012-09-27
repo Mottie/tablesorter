@@ -1,6 +1,6 @@
 {
     "name": "tablesorter",
-    "version": "2.3.11",
+    "version": "2.4",
     "title": "tablesorter",
     "author": {
         "name": "Christian Bach",
@@ -35,7 +35,7 @@
         }
     ],
     "files": [
-        "css/blue/blue.zip",
+        "css/theme.blue.css",
         "js/",
         "/addons/pager/"
     ]

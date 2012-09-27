@@ -14,11 +14,12 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function(){
 	$("table").tablesorter({
+		theme : 'blue',
 
 		// default sortInitialOrder setting
 		sortInitialOrder: "asc",
@@ -45,13 +46,13 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>Adding "sortInitialOrder" inside of the "headers" option was added in version 2.0.8 (not part of the original plugin).</li>
-			<li>In versions 2.3+, the initial sort order of the columns can be set using any of the following methods, in order of priority:
+			<li>In versions 2.3+, the initial sort order of the columns can be set using any of the following methods (they all do the same thing), in order of priority:
 				<ul>
-					<li>jQuery data <code class="hilight">data-sort-initial-order="desc"</code> (equivalent to <code class="hilight">data-sortinitialorder="desc"</code>).</li>
-					<li>metadata <code class="hilight">class="{ sortInitialOrder: "desc" }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code class="hilight">headers : { 0 : { sortInitialOrder: "desc" } }</code>.</li>
-					<li>header class name <code class="hilight">class="sortInitialOrder-desc"</code>.</li>
-					<li>overall <code class="hilight">sortInitialOrder</code> option setting.</li>
+					<li>jQuery data <code>data-sort-initial-order="desc"</code> (equivalent to <code>data-sortinitialorder="desc"</code>).</li>
+					<li>metadata <code>class="{ sortInitialOrder: "desc" }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { sortInitialOrder: "desc" } }</code>.</li>
+					<li>header class name <code>class="sortInitialOrder-desc"</code>.</li>
+					<li>overall <code>sortInitialOrder</code> option setting.</li>
 				</ul>
 			</li>
 		</ul>
@@ -61,12 +62,12 @@
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th class="sortInitialOrder-desc">Age</th>
-			<th>Total</th>
-			<th data-sortinitialorder="desc">Discount</th> <!-- equivalent to data-sortInitialOrder="desc" or data-sort-initialorder="desc" -->
-			<th>Date</th>
+			<th>First Name (desc)</th>
+			<th>Last Name (asc)</th>
+			<th class="sortInitialOrder-desc">Age (desc)</th>
+			<th>Total (asc)</th>
+			<th data-sortinitialorder="desc">Discount (desc)</th> <!-- equivalent to data-sortInitialOrder="desc" or data-sort-initialorder="desc" -->
+			<th>Date (asc)</th>
 		</tr>
 	</thead>
 	<tbody>

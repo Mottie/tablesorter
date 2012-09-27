@@ -14,12 +14,13 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function() {
 	// call the tablesorter plugin
 	$("table").tablesorter({
+		theme : 'blue',
 
 		dateFormat : "mmddyyyy", // set the default date format
 
@@ -46,16 +47,16 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>The dateFormat option was modified in version 2.0.23 (not part of the original plugin).</li>
-			<li>The dateFormat option will ONLY work with the <code class="hilight">shortDate</code> parser.</li>
+			<li>The dateFormat option will ONLY work with the <code>shortDate</code> parser.</li>
 			<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
 			<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</a>
-			<li>In versions 2.3+, columns can be disabled using any of the following methods, in order of priority:
+			<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
 				<ul>
-					<li>jQuery data <code class="hilight">data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
-					<li>metadata <code class="hilight">class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code class="hilight">headers : { 0 : { sorter: false } }</code>.</li>
-					<li>header class name <code class="hilight">class="sorter-false"</code>.</li>
-					<li>overall <code class="hilight">dateFormat</code> option setting.</li>
+					<li>jQuery data <code>data-date-format="mmddyyyy"</code> (see the Javascript block below on how to set it directly; <code>data-dateFormat</code> is equivalent to <code>data-data-format</code>).</li>
+					<li>metadata <code>class="{ dateFormat: "mmddyyyy" }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { dateFormat: "mmddyyyy" } }</code>.</li>
+					<li>header class name <code>class="dateFormat-mmddyyyy"</code>.</li>
+					<li>overall <code>dateFormat</code> option setting.</li>
 				</ul>
 			</li>
 		</ul>

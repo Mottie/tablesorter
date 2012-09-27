@@ -14,11 +14,12 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
-	<link rel="stylesheet" href="../css/blue/style.css">
+	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function(){
 	$("table").tablesorter({
+		theme : 'blue',
 		// pass the headers argument and passing a object
 		headers: {
 			0: {
@@ -43,12 +44,12 @@
 		<ul>
 			<li>This option was part of the original plugin, but it was broken.</li>
 			<li>Sort the first, third and fifth columns to see how the sort is locked.</li>
-			<li>Columns can be locked using any of the following methods, in order of priority (v2.3+):
+			<li>Columns can be locked using any of the following methods (they all do the same thing), in order of priority (v2.3+):
 				<ul>
-					<li>jQuery data <code class="hilight">data-lockedorder="asc"</code>. (equivalent to <code class="hilight">data-locked-order="asc"</code>).</li>
-					<li>metadata <code class="hilight">class="{ lockedOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code class="hilight">headers : { 0 : { lockedOrder: 'asc' } }</code>.</li>
-					<li>header class name <code class="hilight">class="lockedOrder-asc"</code>.</li>
+					<li>jQuery data <code>data-lockedorder="asc"</code>. (equivalent to <code>data-locked-order="asc"</code>).</li>
+					<li>metadata <code>class="{ lockedOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { lockedOrder: 'asc' } }</code>.</li>
+					<li>header class name <code>class="lockedOrder-asc"</code>.</li>
 				</ul>
 			</li>
 		</ul>

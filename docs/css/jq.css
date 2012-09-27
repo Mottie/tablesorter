@@ -15,10 +15,12 @@ table.options .property{width:115px;}
 table.options .type{width:80px; }
 table.options .defaults{width:200px;}
 table.options .examples{width:60px;}
+table.compatibility { width: 50%; float: right; font-size: .8em; margin-left: 20px; }
+table.compatibility th,table.compatibility td { text-align: center; padding: 2px; }
 pre,#display{overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
-pre,#display,code.hilight{background-color:#eee;color:#333;font-size:small;list-style:none;}
-code.hilight{padding: 1px 5px;}
-a code.hilight {text-decoration:underline;}
+pre,#display,code{background-color:#eee;color:#333;font-size:small;list-style:none;}
+code{padding: 1px 5px;}
+a code {text-decoration:underline;}
 pre.normal{background-color:transparent;border:none;border-left-width:0;overflow-x:auto;}
 #logo{background:url(images/jq.png);display:block;float:right;height:31px;margin-right:10px;margin-top:10px;width:110px;}
 #main{margin:0 20px 20px;padding:0 15px 15px 0;clear:both;}
@@ -47,7 +49,7 @@ p.tip em {padding: 2px; background-color: #6cf; color: #fff;}
 span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }
 div.digg {float: right;}
 .next-up { padding-top: 10px; font-size: 90%; }
-.narrow-block { width: 50%; margin: 0 auto; }
+.narrow-block { width: 50%; margin: 50px auto; }
 .spacer { height: 800px; }
 .right { text-align:right; }
 #pager-demo th.remove { width: 20px; } /* pager demo */
@@ -59,3 +61,6 @@ span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
 .clear { clear: both; }
 .download { color: #050505; text-decoration: none; padding: 3px 10px; border: 1px solid #ddd; background: -moz-linear-gradient( top, #ddd 0%, #bbb 50%, #aaa 50%, #bbb); background: -webkit-gradient( linear, left top, left bottom, from(#ddd), color-stop(0.50, #bbb), color-stop(0.50, #aaa), to(#bbb)); border-radius: 8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
 .download:hover { background: -moz-linear-gradient( top, #dddddd 0%, #dddddd 50%, #cccccc 50%, #dddddd); background: -webkit-gradient( linear, left top, left bottom, from(#dddddd), color-stop(0.50, #dddddd), color-stop(0.50, #cccccc), to(#dddddd)); }
+.bootstrap_buttons button { margin: 5px 0 0 0; }
+#main .ui-accordion-header a { font-size: 14px; margin-left: 24px; }
+#main .ui-accordion-content { font-size: 14px; }
