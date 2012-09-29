@@ -553,7 +553,8 @@
 					.find('*').andSelf().filter(c.selectorSort)
 					.unbind('mousedown.tablesorter mouseup.tablesorter')
 					.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
-						var $cell = $(this).closest('th, td'), cell = $cell[0];
+						// jQuery 1.2 doesn't have closest()
+						var $cell = this.tagName.match('TH|TD') ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 						// only recognize left clicks
 						if ((e.which || e.button) !== 1) { return false; }
 						// set timer on mousedown
