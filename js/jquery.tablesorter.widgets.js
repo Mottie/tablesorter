@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 9/27/2012
+/*! tableSorter 2.4+ widgets - updated 9/29/2012
  *
  * Column Styles
  * Column Filters
@@ -138,6 +138,10 @@ $.tablesorter.addWidget({
 				}, function(){
 					$(this).removeClass(o.hover);
 				});
+			if (!$h.find('.tablesorter-wrapper').length) {
+				// Firefox needs this inner div to position the resizer correctly
+				$h.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>');
+			}
 			if (c.cssIcon){
 				// if c.cssIcon is '', then no <i> is added to the header
 				$h.find('.' + c.cssIcon).addClass(o.icons);
@@ -811,7 +815,7 @@ $.tablesorter.addWidget({
 			$c = $(this).children();
 			if (!$(this).find('.tablesorter-wrapper').length) {
 				// Firefox needs this inner div to position the resizer correctly
-				$c.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>')
+				$c.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>');
 			}
 			$c = $c.slice(0,-1); // don't include the last column of the row
 			$cols = $cols ? $cols.add($c) : $c;

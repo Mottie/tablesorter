@@ -1,5 +1,5 @@
 ﻿/*!
-* TableSorter 2.4 - Client-side table sorting with ease!
+* TableSorter 2.4.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -1218,7 +1218,7 @@
 	ts.addParser({
 		id: "usLongDate",
 		is: function(s) {
-			return /^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4}|'?\d{2})\s+(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i.test(s);
+			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4}|'?\d{2})\s+(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i).test(s);
 		},
 		format: function(s, table) {
 			return ts.formatFloat( (new Date(s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ''), table);
@@ -1255,7 +1255,7 @@
 	ts.addParser({
 		id: "time",
 		is: function(s) {
-			return /^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i.test(s);
+			return (/^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i).test(s);
 		},
 		format: function(s, table) {
 			return ts.formatFloat( (new Date("2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ""), table);
