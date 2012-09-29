@@ -808,10 +808,12 @@ $.tablesorter.addWidget({
 			}
 		}
 		$tbl.children('thead:first').find('tr').each(function(){
-			$c = $(this).children()
+			$c = $(this).children();
+			if (!$(this).find('.tablesorter-wrapper').length) {
 				// Firefox needs this inner div to position the resizer correctly
-				.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>')
-				.not(':last'); // don't include the first column of the row
+				$c.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>')
+			}
+			$c = $c.slice(0,-1); // don't include the last column of the row
 			$cols = $cols ? $cols.add($c) : $c;
 		});
 		$cols
@@ -843,8 +845,8 @@ $.tablesorter.addWidget({
 		})
 		.find('.tablesorter-resizer')
 		.bind('mousedown', function(e){
-			// save header cell and mouse position
-			$target = $(e.target).closest('th');
+			// save header cell and mouse position; closest() not supported by jQuery v1.2.6
+			$target = $(e.target).parents('th:last');
 			$next = $target.next();
 			position = e.pageX;
 		});
@@ -856,7 +858,7 @@ $.tablesorter.addWidget({
 		.bind('contextmenu.tsresize', function(){
 				$.tablesorter.resizableReset(table);
 				// $.isEmptyObject() needs jQuery 1.4+
-				var rtn = $.isEmptyObject(s); // allow right click if already reset
+				var rtn = $.isEmptyObject ? $.isEmptyObject(s) : s === {}; // allow right click if already reset
 				s = {};
 				return rtn;
 		});
