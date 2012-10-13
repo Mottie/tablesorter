@@ -687,9 +687,10 @@ $.tablesorter.addWidget({
 				}),
 			stkyCells = stkyHdr.find('tr').children(),
 			laststate = '',
+			spacing = 0,
 			resizeHdr = function(){
-				var bwsr = navigator.userAgent,
-					spacing = 0;
+				var bwsr = navigator.userAgent;
+				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
 				// webkit automatically compensates for border spacing
 				if ($table.css('border-collapse') !== 'collapse' && !/webkit/i.test(bwsr)) {
@@ -757,7 +758,10 @@ $.tablesorter.addWidget({
 				sTop = win.scrollTop(),
 				tableHt = $table.height() - (firstCell.height() + (tfoot.height() || 0)),
 				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
-			stkyHdr.css({
+			stkyHdr
+			.css({
+				// adjust when scrolling horizontally - fixes issue #143
+				left : header.offset().left - win.scrollLeft() - spacing,
 				visibility : vis
 			});
 			if (vis !== laststate){
