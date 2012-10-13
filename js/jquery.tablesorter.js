@@ -83,7 +83,7 @@
 				// selectors
 				selectorHeaders  : '> thead th, > thead td',
 				selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
-				selectorRemove   : 'tr.remove-me',
+				selectorRemove   : '.remove-me',
 
 				// advanced
 				debug            : false,
@@ -249,7 +249,7 @@
 			}
 
 			// init flag (true) used by pager plugin to prevent widget application
-			function appendToTable(table, callback, init) {
+			function appendToTable(table, init) {
 				var c = table.config,
 				b = table.tBodies,
 				rows = [],
@@ -350,8 +350,7 @@
 				if (c.debug) {
 					time = new Date();
 				}
-				$tableHeaders = $(table).find(c.selectorHeaders)
-				.each(function(index) {
+				$tableHeaders = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
 					t = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
@@ -385,7 +384,7 @@
 			}
 
 			function setHeadersCss(table, $headers) {
-				var f, h = [], i, j, l,
+				var f, i, j, l,
 					c = table.config,
 					list = c.sortList,
 					css = [c.cssDesc, c.cssAsc],
@@ -688,8 +687,9 @@
 						var l, row, icell,
 						t = this, $tb = $(this).find('tbody'),
 						// update cache - format: function(s, table, cell, cellIndex)
-						tbdy = $tb.index( $(cell).closest('tbody') ),
-						$row = $(cell).closest('tr');
+						// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
+						tbdy = $tb.index( $(cell).parents('tbody').filter(':last') ),
+						$row = $(cell).parents('tr').filter(':last');
 						// tbody may not exist if update is initialized while tbody is removed for processing
 						if ($tb.length && tbdy >= 0) {
 							row = $tb.eq(tbdy).find('tr').index( $row );
@@ -728,13 +728,16 @@
 						setHeadersCss(this, $headers);
 						// sort the table and append it to the dom
 						multisort(this);
-						appendToTable(this, callback, init);
+						appendToTable(this, init);
 						if (typeof callback === "function") {
 							callback(this);
 						}
 					})
 					.bind("appendCache", function(e, callback, init) {
-						appendToTable(this, callback, init);
+						appendToTable(this, init);
+						if (typeof callback === "function") {
+							callback(this);
+						}
 					})
 					.bind("applyWidgetId", function(e, id) {
 						ts.getWidgetById(id).format(this, c, c.widgetOptions);
@@ -795,12 +798,9 @@
 			ts.isProcessing = function(table, toggle, $ths) {
 				var c = table.config,
 					// default to all headers
-					$h = $(table).find('.' + c.cssHeader);
+					$h = $ths || $(table).find('.' + c.cssHeader);
 				if (toggle) {
-					if ($ths) {
-						// jQuery selected headers (filter widget)
-						$h = $ths;
-					} else if (c.sortList.length > 0) {
+					if (c.sortList.length > 0) {
 						// get headers from the sortList
 						$h = $h.filter(function(){
 							// get data-column from attr to keep  compatibility with jQuery 1.2.6
@@ -1040,7 +1040,7 @@
 				var c = table.config,
 					wo = c.widgetOptions,
 					ws = c.widgets.sort().reverse(), // ensure that widgets are always applied in a certain order
-				time, i, w, l = ws.length;
+					time, i, w, l = ws.length;
 				// make zebra last
 				i = $.inArray('zebra', c.widgets);
 				if (i >= 0) {
