@@ -148,16 +148,18 @@
 		},
 
 		hideRows = function(table, c){
-			var i,
-			rows = $('tr:not(.' + table.config.cssChildRow + ')', table.tBodies),
-			l = rows.length,
-			s = ( c.page * c.size ),
-			e =  s + c.size,
-			j = 0; // size counter
-			for ( i = 0; i < l; i++ ){
-				if (!/filtered/.test(rows[i].className)) {
-					rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
-					j++;
+			if (!c.ajaxUrl) {
+				var i,
+				rows = $('tr:not(.' + table.config.cssChildRow + ')', table.tBodies),
+				l = rows.length,
+				s = ( c.page * c.size ),
+				e =  s + c.size,
+				j = 0; // size counter
+				for ( i = 0; i < l; i++ ){
+					if (!/filtered/.test(rows[i].className)) {
+						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
+						j++;
+					}
 				}
 			}
 		},
@@ -180,9 +182,10 @@
 				// ajaxProcessing result: [ total, rows, headers ]
 				var i, j, hsh, $f, $sh,
 				$t = $(table),
-				$b = $(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')'),
+				tc = table.config,
+				$b = $(table.tBodies).filter(':not(.' + tc.cssInfoBlock + ')'),
 				hl = $t.find('thead th').length, tds = '',
-				err = '<tr class="remove-me"><td style="text-align: center;" colspan="' + hl + '">' +
+				err = '<tr class="' + tc.selectorRemove + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
 				d = result[1] || [],
@@ -201,13 +204,22 @@
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
 					hsh = $t.hasClass('hasStickyHeaders');
-					$sh = $t.find('.' + ((c.widgetOptions && c.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
+					$sh = $t.find('.' + ((tc.widgetOptions && tc.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
 					$f = $t.find('tfoot tr:first').children();
-					$t.find('thead tr.tablesorter-header th').each(function(j){
-						var $t = $(this),
+					$t.find('th.' + tc.cssHeader).each(function(j){
+						var $t = $(this), tar, icn;
 						// add new test within the first span it finds, or just in the header
-						tar = ( $t.find('span').length ) ? $t.find('span:first') : $t;
-						tar.html( th[j] );
+						if ( $t.find('.' + tc.cssIcon).length ) {
+							icn = $t.find('.' + tc.cssIcon).clone(true);
+							$t.find('.tablesorter-header-inner').html( th[j] ).append(icn);
+							if ( hsh && $sh.length ) {
+								icn = $sh.find('th').eq(j).find('.' + tc.cssIcon).clone(true);
+								$sh.find('th').eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icn);
+							}
+						} else {
+							$t.find('.tablesorter-header-inner').html( th[j] );
+							$sh.find('th').eq(j).find('.tablesorter-header-inner').html( th[j] );
+						}
 						$f.eq(j).html( th[j] );
 						// update sticky headers
 						if ( hsh && $sh.length ){

@@ -17,7 +17,8 @@ td.tablesorter-pager {
 /* pager output text */
 .tablesorter-pager .pagedisplay {
 	padding: 0 5px 0 5px;
-	width: 50px;
+	width: auto;
+	white-space: nowrap;
 	text-align: center;
 }
 
