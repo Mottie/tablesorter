@@ -412,8 +412,8 @@ $.tablesorter.addWidget({
 										ff = val === '' ? true : !(wo.filter_startsWith ? s === 0 : s >= 0);
 									// Look for operators >, >=, < or <=
 									} else if (/^[<>]=?/.test(val)){
-										rg = $.tablesorter.formatFloat(xi.replace(reg[5], ''), table);
-										if (isNaN(rg)) { rg = xi; }
+										// xi may be numeric - see issue #149
+										rg = isNaN(xi) ? $.tablesorter.formatFloat(xi.replace(reg[5], ''), table) : $.tablesorter.formatFloat(xi, table);
 										s = $.tablesorter.formatFloat(val.replace(reg[5], '').replace(reg[6],''), table);
 										if (/>/.test(val)) { ff = />=/.test(val) ? rg >= s : rg > s; }
 										if (/</.test(val)) { ff = /<=/.test(val) ? rg <= s : rg < s; }
