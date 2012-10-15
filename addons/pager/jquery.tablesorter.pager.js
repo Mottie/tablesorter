@@ -328,6 +328,8 @@
 			} else {
 				renderTable(table, table.config.rowsCopy, c);
 			}
+
+			$(table).trigger('pageMoved', c);
 		},
 
 		setPageSize = function(table, size, c) {
