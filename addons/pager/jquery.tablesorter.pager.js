@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/13/2012
+ * updated 10/15/2012
  */
 /*jshint browser:true, jquery:true */
 ;(function($) {
@@ -122,7 +122,7 @@
 				}
 			}
 			pagerArrows(c);
-			$(table).trigger('pagerComplete', c);
+			if (c.initialized) { $(table).trigger('pagerComplete', c); }
 		},
 
 		fixHeight = function(table, c) {
@@ -236,12 +236,16 @@
 					$b.html( tds ); // add tbody
 				}
 				c.temp.remove(); // remove loading icon
-				$t.trigger('update');
+				if (c.initialized) { $t.trigger('update'); }
 				c.totalRows = result[0] || 0;
 				c.totalPages = Math.ceil( c.totalRows / c.size );
 				updatePageDisplay(table, c);
 				fixHeight(table, c);
-				$t.trigger('pagerChange', c);
+				if (c.initialized) { $t.trigger('pagerChange', c); }
+			}
+			if (!c.initialized) {
+				c.initialized = true;
+				$(table).trigger('pagerInitialized', c);
 			}
 		},
 
@@ -272,7 +276,7 @@
 			s = ( c.page * c.size ),
 			e = ( s + c.size );
 			if ( l < 1 ) { return; } // empty table, abort!
-			$(table).trigger('pagerChange', c);
+			if (c.initialized) { $(table).trigger('pagerChange', c); }
 			if ( !c.removeRows ) {
 				hideRows(table, c);
 			} else {
@@ -328,8 +332,7 @@
 			} else {
 				renderTable(table, table.config.rowsCopy, c);
 			}
-
-			$(table).trigger('pageMoved', c);
+			if (c.initialized) { $(table).trigger('pageMoved', c); }
 		},
 
 		setPageSize = function(table, size, c) {
@@ -406,6 +409,8 @@
 				$t = $(table),
 				pager = $(c.container).addClass('tablesorter-pager').show(); // added in case the pager is reinitialized after being destroyed.
 				config.appender = $this.appender;
+				// clear initialized flag
+				c.initialized = false;
 				enablePager(table, c, false);
 				if ( typeof(c.ajaxUrl) === 'string' ) {
 					// ajax pager; interact with database
@@ -418,6 +423,7 @@
 					hideRowsSetup(table, c);
 				}
 
+				// update pager after filter widget completes
 				if ( $(table).hasClass('hasFilters') ) {
 					$(table).unbind('filterEnd.pager').bind('filterEnd.pager', function() {
 						c.page = 0;
@@ -472,6 +478,12 @@
 				.bind('update.pager', function(){
 					hideRows(table, c);
 				});
+
+				// pager initialized
+				if (!c.ajax) {
+					c.initialized = true;
+					$(table).trigger('pagerInitialized', c);
+				}
 			});
 		};
 

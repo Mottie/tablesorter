@@ -89,28 +89,29 @@
 
 	};
 
-	// Initialize tablesorter
-	// ***********************
 	$("table")
+
+		// Initialize tablesorter
+		// ***********************
 		.tablesorter({
 			theme: 'blue',
 			widthFixed: true,
 			widgets: ['zebra']
 		})
 
-		// initialize the pager plugin
-		// ****************************
-		.tablesorterPager(pagerOptions)
-
 		// bind to pager events
 		// *********************
-		.bind('pagerChange pagerComplete', function(e,c){
+		.bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
 			var msg = '" event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
 				' page ' + (c.page + 1) + '/' + c.totalPages;
 			$('#display')
 				.append('<li>"' + e.type + msg + '</li>')
 				.find('li:first').remove();
-		});
+		})
+
+		// initialize the pager plugin
+		// ****************************
+		.tablesorterPager(pagerOptions);
 
 		// Add two new rows using the "addRows" method
 		// the "update" method doesn't work here because not all rows are

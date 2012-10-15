@@ -78,7 +78,6 @@
 		<li>Extensibility via <a href="example-widgets.html">widget system</a></li>
 		<li>Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+</li>
 		<li>Small code size</li>
-
 	</ul>
 
 	<a id="Demo"></a>
@@ -2280,7 +2279,16 @@ or, directly add the search string to the filter input as follows:<pre class="js
 				<td><a href="example-triggers.html">Example</a></td>
 			</tr>
 
-			<tr id="pagerChange">
+		</tbody>
+
+		<!-- non-sorting tbody -->
+		<tbody class="tablesorter-infoOnly">
+			<tr><th colspan="5">Pager Events</th></tr>
+		</tbody>
+
+		<!-- Pager addon events -->
+		<tbody>
+			<tr id="pagerchange">
 				<td><a href="#" class="toggle2">pagerChange</a></td>
 				<td>This event fires when the pager plugin begins to render the table on the currently selected page. (v2.0.7).
 					<div class="collapsible">
@@ -2306,7 +2314,7 @@ or, directly add the search string to the filter input as follows:<pre class="js
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
-			<tr id="pagerComplete">
+			<tr id="pagercomplete">
 				<td><a href="#" class="toggle2">pagerComplete</a></td>
 				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. (v2.0.7).
 					<div class="collapsible">
@@ -2331,7 +2339,65 @@ or, directly add the search string to the filter input as follows:<pre class="js
 				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
+
+			<tr id="pagerinitialized">
+				<td><a href="#" class="toggle2">pagerInitialized</a></td>
+				<td>This event fires when the pager plugin has completed initialization.  <span class="tip"><em>New</em></span> v2.4.4.
+					<div class="collapsible">
+						<pre class="js">$(function(){
+
+  $("table")
+
+    // initialize the sorter
+    .tablesorter()
+
+    // bind to pager initialized event BEFORE calling the addon
+    .bind('pagerInitialized', function(e, c){
+      // c.totalPages contains the total number of pages
+      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+    })
+
+    // initialize the pager plugin
+    .tablesorterPager({
+      container: $("#pager")
+    });
+
+});</pre></div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pagemoved">
+				<td><a href="#" class="toggle2">pageMoved</a></td>
+				<td>This event fires when the pager plugin begins to change to the selected page. <span class="tip"><em>New</em></span> v2.4.4.
+					<div class="collapsible">
+						This event may fire before the <code>pagerComplete</code> event when ajax processing is involved, or after the <code>pagerComplete</code> on normal use.
+						See <a href="https://github.com/Mottie/tablesorter/pull/153">issue #153</a>.
+						<pre class="js">$(function(){
+
+  // initialize the sorter
+  $("table")
+    .tablesorter()
+
+    // initialize the pager plugin
+    .tablesorterPager({
+      container: $("#pager")
+    })
+
+    // bind to pager events
+    .bind('pageMoved', function(e, c){
+      // c.totalPages contains the total number of pages
+      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+    });
+
+});</pre></div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+
 		</tbody>
+
 
 		<!-- non-sorting tbody -->
 		<tbody class="tablesorter-infoOnly">
