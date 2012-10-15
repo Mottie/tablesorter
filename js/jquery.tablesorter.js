@@ -119,10 +119,14 @@
 				var c = table.config,
 					t = c.textExtraction, text = "";
 				if (t === "simple") {
-					if (c.supportsTextContent) {
-						text = node.textContent; // newer browsers support this
-					} else {
-						text = $(node).text();
+					// See if node has a data attribute for sorting
+					var sortdata = $(node).attr('data-sort-val');
+					if (sortdata != null) {
+						text = sortdata;
+					}
+					else {
+						// Newer browsers support textContent
+						text = (c.supportsTextContent ? node.textContent : $(node).text()); 
 					}
 				} else {
 					if (typeof(t) === "function") {
