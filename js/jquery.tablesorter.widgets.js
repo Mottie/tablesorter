@@ -8,7 +8,7 @@
  * Save Sort
  * ["zebra", "uitheme", "stickyHeaders", "filter", "columns"]
  */
-/*jshint browser:true, jquery:true, unused:false */
+/*jshint browser:true, jquery:true, unused:false, loopfunc:true */
 /*global jQuery: false, localStorage: false, navigator: false */
 ;(function($){
 "use strict";
@@ -495,7 +495,8 @@ $.tablesorter.addWidget({
 			}
 			wo.filter_ignoreCase = wo.filter_ignoreCase !== false; // set default filter_ignoreCase to true
 			wo.filter_useParsedData = wo.filter_useParsedData === true; // default is false
-			if (wo.filter_columnFilters !== false){
+			// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
+			if (wo.filter_columnFilters !== false && $ths.filter('.filter-false').length !== $ths.length){
 				t = '<tr class="tablesorter-filter-row">'; // build filter row
 				for (i = 0; i < cols; i++){
 					dis = false;
