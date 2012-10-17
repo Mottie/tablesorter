@@ -41,7 +41,7 @@
 		// target the pager markup - see the HTML block below
 		container: $(".pager"),
 
-		// use this url format "http:/mydatabase.com?page={page}&size={size}"
+		// use this url format "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
 		ajaxUrl: null,
 
 		// process ajax so that the data object is returned along with the total number of rows
@@ -584,10 +584,22 @@ td.tablesorter-pager {
 	<div class="inner">
 		<div class="accordion">
 
+			<h3><a href="#">Version 2.4.2 (10/17/2012)</a></h3>
+			<div>
+				<ul>
+					<li>Ajax loaded tables will no longer hide pages other than the first. Fixes <a href="https://github.com/Mottie/tablesorter/issues/151">issue #151</a>.</li>
+					<li>Ajax header data now properly replaces the header text.</li>
+					<li>The error message row is now added with the class name from the <code>selectorRemove</code> option.</li>
+				</ul>
+			</div>
+
 			<h3><a href="#">Version 2.4 (8/19/2012)</a></h3>
 			<div>
 				<ul>
-					<li>xxx.</li>
+					<li>The pager plugin now plays nice with the filter widget. Fixes <a href="https://github.com/Mottie/tablesorter/issues/6">issue #6</a>.</li>
+					<li>Added <code>cssGoto</code> option which contains a jQuery selector pointing to a page select dropdown. Updated the pager demo with an example.</li>
+					<li>Updated pager addong to now work with the filter and advanced filter widgets.</li>
+					<li>Added <code>{filteredRows}</code> and <code>{filteredPages}</code> parameters to the <code>output</code> option. They contain the number of rows and pages that result from the filter widget search.</li>
 				</ul>
 			</div>
 

@@ -11,8 +11,10 @@
 			// target the pager markup
 			container: null,
 
-			// use this format: "http:/mydatabase.com?page={page}&size={size}"
+			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
 			// where {page} is replaced by the page number and {size} is replaced by the number of records to show
+			// {sortList:col} adds the sortList to the url into a "col" array.
+			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
 			ajaxUrl: null,
 
 			// process ajax so that the following information is returned:
@@ -67,7 +69,7 @@
 			totalRows: 0,
 			totalPages: 0,
 			filteredRows: 0,
-			filteredPages : 0
+			filteredPages: 0
 
 		};
 
@@ -221,12 +223,6 @@
 							$sh.find('th').eq(j).find('.tablesorter-header-inner').html( th[j] );
 						}
 						$f.eq(j).html( th[j] );
-						// update sticky headers
-						if ( hsh && $sh.length ){
-							tar = $sh.find('th').eq(j);
-							tar = ( tar.find('span').length ) ? tar.find('span:first') : tar;
-							tar.html( th[j] );
-						}
 					});
 				}
 				if ( exception ) {
@@ -236,7 +232,7 @@
 					$b.html( tds ); // add tbody
 				}
 				c.temp.remove(); // remove loading icon
-				if (c.initialized) { $t.trigger('update'); }
+				$t.trigger('update');
 				c.totalRows = result[0] || 0;
 				c.totalPages = Math.ceil( c.totalRows / c.size );
 				updatePageDisplay(table, c);
@@ -251,7 +247,18 @@
 
 		getAjax = function(table, c){
 			var $t = $(table),
-			url = c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size);
+			url = (c.ajaxUrl) ? c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size) : '',
+			k, arry = [],
+			sl = table.config.sortList,
+			col = url.match(/\{sortList[\s+]?:[\s+]?(.*)\}/);
+			if (col) {
+				col = col[1];
+				$.each(sl, function(i,v){
+					arry.push(col + '[' + v[0] + ']=' + v[1]);
+				});
+				// if the arry is empty, just add the col parameter... "&{sortList:col}" becomes "&col"
+				url = url.replace(/\{sortList[\s+]?:[\s+]?(.*)\}/g, arry.length ? arry.join('&') : col );
+			}
 			if ( url !== '' ) {
 				// loading icon
 				c.temp = $('<div/>', {

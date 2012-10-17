@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Pager plugin - Ajax</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -47,7 +47,10 @@
 			// target the pager markup - see the HTML block below
 			container: $(".pager"),
 
-			// use this url format "http:/mydatabase.com?page={page}&size={size}"
+			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
+			// where {page} is replaced by the page number and {size} is replaced by the number of records to show
+			// {sortList:col} adds the sortList to the url into a "col" array.
+			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
 			ajaxUrl : 'assets/City{page}.json',
 
 			// process ajax so that the following information is returned:
@@ -171,7 +174,7 @@
 <table class="tablesorter">
 	<thead>
 		<tr>
-			<td class="pager" colspan="5">
+			<td class="pager sorter-false" colspan="5">
 				<img src="../addons/pager/icons/first.png" class="first" alt="First" />
 				<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />
 				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
