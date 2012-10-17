@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/15/2012
+ * updated 10/17/2012
  */
 /*jshint browser:true, jquery:true */
 ;(function($) {
@@ -324,7 +324,9 @@
 				renderTable(table, table.config.rowsCopy, c);
 			}
 			// disable size selector
-			$(c.cssPageSize, c.container).addClass(c.cssDisabled)[0].disabled = true;
+			$(c.container).find(c.cssPageSize + ',' + c.cssGoto).each(function(){
+				$(this).addClass(c.cssDisabled)[0].disabled = true;
+			});
 		},
 
 		moveToPage = function(table, c) {

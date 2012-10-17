@@ -143,7 +143,7 @@
 			<ul>
 				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
 				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
-				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>) and block size (<code>{size}</code>).</li>
+				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>
 				<li>The <code>ajaxProcessing</code> function must* return the data in the following format <code>[ total, rows, headers ]</code> - <span class="tip"><em>Modified</em></span> in 2.1.3:
 					<pre class="js"><code>[
   // total # rows contained in the database
