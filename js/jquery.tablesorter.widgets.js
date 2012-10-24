@@ -457,7 +457,7 @@ $.tablesorter.addWidget({
 						} else {
 							t = c.cache[k].row[j][0].cells[i];
 							if (t){
-								arry.push( c.supportsTextContent ? t.textContent : $(t).text() );
+								arry.push( $.trim(c.supportsTextContent ? t.textContent : $(t).text()) );
 							}
 						}
 					}
