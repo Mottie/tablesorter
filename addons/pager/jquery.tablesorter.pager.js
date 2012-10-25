@@ -11,7 +11,7 @@
 			// target the pager markup
 			container: null,
 
-			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
+			// use this format: "http://mydatabase.com?page={page}&size={size}&{sortList:col}"
 			// where {page} is replaced by the page number and {size} is replaced by the number of records to show
 			// {sortList:col} adds the sortList to the url into a "col" array.
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
@@ -167,7 +167,7 @@
 		},
 
 		hideRowsSetup = function(table, c){
-			c.size = parseInt( $(c.cssPageSize, c.container).val(), 10 ) || c.size;
+			c.size = parseInt( $(c.cssPageSize, c.container).find('option[selected]').val(), 10 ) || c.size;
 			$.data(table, 'pagerLastSize', c.size);
 			pagerArrows(c);
 			if ( !c.removeRows ) {
@@ -389,7 +389,8 @@
 			var p = $(c.cssPageSize, c.container).removeClass(c.cssDisabled).removeAttr('disabled');
 			c.isDisabled = false;
 			c.page = $.data(table, 'pagerLastPage') || c.page || 0;
-			c.size = $.data(table, 'pagerLastSize') || parseInt(p.val(), 10) || c.size;
+			c.size = $.data(table, 'pagerLastSize') || parseInt(p.find('option[selected]').val(), 10) || c.size;
+			p.val(c.size); // set page size
 			c.totalPages = Math.ceil( Math.min( c.totalPages, c.filteredPages ) / c.size);
 			if ( triggered ) {
 				$(table).trigger('update');
@@ -441,6 +442,7 @@
 						changeHeight(table, c);
 					});
 				}
+
 				if ( $(c.cssGoto, pager).length ) {
 					$(c.cssGoto, pager).bind('change', function(){
 						c.page = $(this).val() - 1;
