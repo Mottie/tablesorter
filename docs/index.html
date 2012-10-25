@@ -2279,6 +2279,26 @@ or, directly add the search string to the filter input as follows:<pre class="js
 				<td><a href="example-triggers.html">Example</a></td>
 			</tr>
 
+			<tr id="updatecomplete">
+				<td><a href="#" class="toggle2">updateComplete</a></td>
+				<td>This event fires after tablesorter has completed updating. (v.2.3.9)
+					<div class="collapsible">
+						This occurs after an "update", "updateCell" or "addRows" method was called, but before any callback functions are executed.
+						<pre class="js">$(function(){
+
+  // initialize the tablesorter plugin
+  $("table").tablesorter();
+
+  // bind to sort events
+  $("table")
+    .bind("updateComplete",function(e, table) {
+      // do something after the table has been altered;
+    });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 		</tbody>
 
 		<!-- non-sorting tbody -->
