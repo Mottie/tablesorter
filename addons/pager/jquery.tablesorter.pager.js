@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/17/2012
+ * updated 10/25/2012
  */
 /*jshint browser:true, jquery:true */
 ;(function($) {
@@ -209,7 +209,7 @@
 					$sh = $t.find('.' + ((tc.widgetOptions && tc.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
 					$f = $t.find('tfoot tr:first').children();
 					$t.find('th.' + tc.cssHeader).each(function(j){
-						var $t = $(this), tar, icn;
+						var $t = $(this), icn;
 						// add new test within the first span it finds, or just in the header
 						if ( $t.find('.' + tc.cssIcon).length ) {
 							icn = $t.find('.' + tc.cssIcon).clone(true);
@@ -248,7 +248,7 @@
 		getAjax = function(table, c){
 			var $t = $(table),
 			url = (c.ajaxUrl) ? c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size) : '',
-			k, arry = [],
+			arry = [],
 			sl = table.config.sortList,
 			col = url.match(/\{sortList[\s+]?:[\s+]?(.*)\}/);
 			if (col) {
@@ -434,14 +434,14 @@
 				}
 
 				// update pager after filter widget completes
-				if ( $(table).hasClass('hasFilters') ) {
-					$(table).unbind('filterEnd.pager').bind('filterEnd.pager', function() {
+				$(table)
+					.unbind('filterEnd.pager updateComplete.pager ')
+					.bind('filterEnd.pager updateComplete.pager', function() {
 						c.page = 0;
 						updatePageDisplay(table, c);
 						moveToPage(table, c);
 						changeHeight(table, c);
 					});
-				}
 
 				if ( $(c.cssGoto, pager).length ) {
 					$(c.cssGoto, pager).bind('change', function(){
