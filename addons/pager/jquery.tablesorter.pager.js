@@ -138,6 +138,8 @@
 						$b.append('<tr class="pagerSavedHeightSpacer remove-me" style="height:' + d + 'px;"></tr>');
 					}
 				}
+			} else {
+				changeHeight(table, c);
 			}
 		},
 
