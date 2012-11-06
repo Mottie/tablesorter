@@ -23,7 +23,7 @@
 
 			var ts = this;
 
-			ts.version = "2.4.5";
+			ts.version = "2.4.6";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -162,7 +162,7 @@
 				return ts.parsers[0];
 			}
 
-			function buildParserCache(table, $headers) {
+			function buildParserCache(table) {
 				var c = table.config,
 					tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
 					rows, list, l, i, h, ch, p, parsersDebug = "";
@@ -173,7 +173,7 @@
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
 						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
-						h = $headers.filter(':not([colspan])[data-column="' + i + '"]:last,[colspan="1"][data-column="' + i + '"]:last');
+						h = c.$headers.filter(':not([colspan])[data-column="' + i + '"]:last,[colspan="1"][data-column="' + i + '"]:last');
 						ch = c.headers[i];
 						// get column parser
 						p = ts.getParserById( ts.getData(h, ch, 'sorter') );
@@ -383,7 +383,7 @@
 				return $tableHeaders;
 			}
 
-			function setHeadersCss(table, $headers) {
+			function setHeadersCss(table) {
 				var f, i, j, l,
 					c = table.config,
 					list = c.sortList,
@@ -391,13 +391,13 @@
 					// find the footer
 					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
 				// remove all header information
-				$headers.removeClass(css.join(' '));
+				c.$headers.removeClass(css.join(' '));
 				l = list.length;
 				for (i = 0; i < l; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
 						// multicolumn sorting updating - choose the :last in case there are nested columns
-						f = $headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
+						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
@@ -515,7 +515,7 @@
 					// if no thead or tbody, or tablesorter is already present, quit
 					if (!this.tHead || this.tBodies.length === 0 || this.hasInitialized === true) { return; }
 					// declare
-					var $headers, $cell, $this = $(this),
+					var $cell, $this = $(this),
 						c, i, j, k = '', a, s, o, downTime,
 						m = $.metadata;
 					// initialization flag
@@ -538,15 +538,15 @@
 					}
 					$this.addClass(c.tableClass + k);
 					// build headers
-					$headers = buildHeaders(this);
+					c.$headers = buildHeaders(this);
 					// try to auto detect column type, and store in tables config
-					c.parsers = buildParserCache(this, $headers);
+					c.parsers = buildParserCache(this);
 					// build the cache for the tbody cells
 					// delayInit will delay building the cache until the user starts a sort
 					if (!c.delayInit) { buildCache(this); }
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
-					$headers
+					c.$headers
 					// http://stackoverflow.com/questions/5312849/jquery-find-self
 					.find('*').andSelf().filter(c.selectorSort)
 					.unbind('mousedown.tablesorter mouseup.tablesorter')
@@ -574,7 +574,7 @@
 							// reset all sorts on non-current column - issue #30
 							if (c.sortRestart) {
 								i = cell;
-								$headers.each(function() {
+								c.$headers.each(function() {
 									// only reset counts on columns that weren't just clicked on and if not included in a multisort
 									if (this !== i && (k || !$(this).is('.' + c.cssDesc + ',.' + c.cssAsc))) {
 										this.count = -1;
@@ -655,7 +655,7 @@
 							// setTimeout needed so the processing icon shows up
 							setTimeout(function(){
 								// set css for headers
-								setHeadersCss($this[0], $headers);
+								setHeadersCss($this[0]);
 								multisort($this[0]);
 								appendToTable($this[0]);
 							}, 1);
@@ -663,7 +663,7 @@
 					});
 					if (c.cancelSelection) {
 						// cancel selection
-						$headers.each(function() {
+						c.$headers.each(function() {
 							this.onselectstart = function() {
 								return false;
 							};
@@ -671,12 +671,18 @@
 					}
 					// apply easy methods that trigger binded events
 					$this
-					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.bind("sortReset", function(){
+						c.sortList = [];
+						setHeadersCss($this[0]);
+						multisort($this[0]);
+						appendToTable($this[0]);
+					})
 					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, this).remove();
 						// rebuild parsers
-						c.parsers = buildParserCache(this, $headers);
+						c.parsers = buildParserCache(this);
 						// rebuild the cache map
 						buildCache(this);
 						checkResort($this, resort, callback);
@@ -724,7 +730,7 @@
 						// update header count index
 						updateHeaderSortCount(this, list);
 						// set css for headers
-						setHeadersCss(this, $headers);
+						setHeadersCss(this);
 						// sort the table and append it to the dom
 						multisort(this);
 						appendToTable(this, init);
@@ -844,7 +850,7 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
+					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
 					.find('.' + c.cssHeader)
 					.unbind('click mousedown mousemove mouseup')
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
