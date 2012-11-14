@@ -173,7 +173,10 @@
 					l = rows[0].cells.length;
 					for (i = 0; i < l; i++) {
 						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
-						h = c.$headers.filter(':not([colspan])[data-column="' + i + '"]:last,[colspan="1"][data-column="' + i + '"]:last');
+						// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
+						h = $headers.filter(':not([colspan])');
+						h = h.add( $headers.filter('[colspan="1"]') ) // ie8 fix
+							.filter('[data-column="' + i + '"]:last');
 						ch = c.headers[i];
 						// get column parser
 						p = ts.getParserById( ts.getData(h, ch, 'sorter') );
