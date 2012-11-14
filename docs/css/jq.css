@@ -7,7 +7,7 @@ h2{color:#333;font-size:small;font-weight:400;margin:0;}
 .demo p{text-align:center;}
 .demo table.tablesorter{font-size:14px;}
 table.info{border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
-table.tablesorter table.info tbody th,table.tablesorter table.info tbody td{border:#000 1px solid;}
+table.tablesorter table.info tbody th,table.tablesorter table.info td{border:#000 1px solid;}
 table.tablesorter table.info tbody th{background:#eee;}
 table.options{width:100%;}
 table.options pre{width:95%;}

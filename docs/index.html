@@ -269,6 +269,7 @@
 		<li><a href="example-options-headers-locked.html">Lock sort order</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order</a></li>
 		<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a></li>
+		<li><a href="example-method-sortreset.html">Resetting the entire table sort</a> (sortReset method) <span class="tip"><em>New!</em></span> v2.4.7</li>
 		<li><a href="example-option-selectorsort.html">Using selectorSort option</a> <span class="tip"><em>New!</em></span> v2.4</li>
 		<li><a href="example-option-sort-empty.html">Sorting empty cells</a> (v2.1.11)</li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
@@ -862,10 +863,15 @@
 					The value contains an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where columnIndex is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code>sortForce</code></a> for more details on other sort order options.<br>
 					<br>
 					This option can also be set using jQuery data (v2.3.1) or metadata on the table:
-					<table class="info"><tbody>
-						<tr><th>jQuery data</th><td><code>&lt;table data-sortlist="[[0,0],[4,0]]"&gt;</code></td></tr>
-						<tr><th>Meta data</th><td><code>&lt;table class="tablesorter {sortlist: [[0,0],[4,0]]}"&gt;</code></td></tr>
-					</tbody></table>
+					<table class="info">
+						<tfoot>
+							<tr><td colspan="2"><strong>** Note</strong>: <code>data-sortlist</code> data is not supported in jQuery versions older than 1.4.</td></tr>
+						</tfoot>
+						<tbody>
+							<tr><th>jQuery data</th><td><code>&lt;table data-sortlist="[[0,0],[4,0]]"&gt;</code> <strong>**</strong></td></tr>
+							<tr><th>Meta data</th><td><code>&lt;table class="tablesorter {sortlist: [[0,0],[4,0]]}"&gt;</code></td></tr>
+						</tbody>
+					</table>
 					</div>
 				</td>
 				<td><a href="example-option-sort-list.html">Example</a></td>
@@ -950,11 +956,14 @@
 			</tr>
 
 			<tr id="sortreset">
-				<td><span class="permalink">sortReset</span></td>
+				<td><a href="#" class="toggle2">sortReset</a></td>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
 					Setting this option to <code>true</code> will allow you to click on the table header a third time to reset the sort direction. (v2.0.27).
+					<div class="collapsible">
+						<br>Don't confuse this option with the <a href="#sortreset-method"><code>sortReset</code> method</a>. This option only resets the column sort after a third click, while the method immediately resets the entire table sort.
+					</div>
 				</td>
 				<td><a href="example-option-sortreset-sortrestart.html">Example</a></td>
 			</tr>
@@ -1997,6 +2006,17 @@ var sort = [[0,0],[2,0]],
 $("table").trigger("sorton", [sort, callback]);</pre></div>
 				</td>
 				<td><a href="example-trigger-sort.html">Example</a></td>
+			</tr>
+
+			<tr id="sortreset-method">
+				<td><a href="#" class="toggle2">sortReset</a></td>
+				<td>Use this method to reset the table to it's initial unsorted state. <span class="tip"><em>New</em></span> v2.4.7.
+					<div class="collapsible">
+						Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. This method immediately resets the entire table sort, while the option only resets the column sort after a third click.
+						<pre class="js">// Reset the table (make it unsorted)
+$("table").trigger("sortReset");</pre></div>
+				</td>
+				<td><a href="example-method-sortreset.html">Example</a></td>
 			</tr>
 
 			<tr id="update">

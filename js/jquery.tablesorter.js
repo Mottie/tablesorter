@@ -1,5 +1,5 @@
-﻿/*!
-* TableSorter 2.4.6 - Client-side table sorting with ease!
+/*!
+* TableSorter 2.4.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -23,7 +23,7 @@
 
 			var ts = this;
 
-			ts.version = "2.4.6";
+			ts.version = "2.4.7";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -174,8 +174,8 @@
 					for (i = 0; i < l; i++) {
 						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
 						// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
-						h = $headers.filter(':not([colspan])');
-						h = h.add( $headers.filter('[colspan="1"]') ) // ie8 fix
+						h = c.$headers.filter(':not([colspan])');
+						h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
 							.filter('[data-column="' + i + '"]:last');
 						ch = c.headers[i];
 						// get column parser
@@ -373,7 +373,7 @@
 					if (typeof(lock) !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
-					$t.addClass( this.sortDisabled ? 'sorter-false' : c.cssHeader );
+					$t.addClass( (this.sortDisabled ? 'sorter-false ' : ' ') + c.cssHeader );
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
@@ -677,9 +677,9 @@
 					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
 					.bind("sortReset", function(){
 						c.sortList = [];
-						setHeadersCss($this[0]);
-						multisort($this[0]);
-						appendToTable($this[0]);
+						setHeadersCss(this);
+						multisort(this);
+						appendToTable(this);
 					})
 					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update

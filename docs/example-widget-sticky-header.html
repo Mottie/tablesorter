@@ -29,7 +29,7 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-<script id="js">$(function(){
+	<script id="js">$(function(){
 
 	$("table").tablesorter({
 
@@ -59,7 +59,7 @@
 $(function() {
 	$('link.theme').each(function(){ this.disabled = true; });
 
-	var themes = 'default blue green grey ice blackice dark dropbox',
+	var themes = 'default blue green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
 		o += '<option>' + t[i] + '</option>';
@@ -73,8 +73,8 @@ $(function() {
 			files.each(function(){ this.disabled = true; });
 			files.filter('[href*="' + (theme === 'jui' ? 'ui' : theme) + '"]').each(function(){ this.disabled = false; });
 			$('table')
-				.removeClass('tablesorter-' + t.join(' tablesorter-'))
-				.addClass('tablesorter-' + theme);
+				.removeClass('tablesorter-' + t.join(' tablesorter-') + ' tablesorter-jui')
+				.addClass('tablesorter-' + theme.replace(/-/,''));
 		});
 });
 </script>
@@ -123,7 +123,7 @@ $(function() {
 	</select>
 	<br><br>
 
-	<table class="tablesorter">
+	<table class="tablesorter" borderspacing="10">
 	<caption>Table caption</caption>
 	<thead>
 		<tr>

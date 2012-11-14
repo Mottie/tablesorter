@@ -2,10 +2,10 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Dealing with Digits</title>
+	<title>jQuery plugin: Tablesorter 2.0 - resetting the entire table sort</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2/jquery.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -19,13 +19,21 @@
 
 	<script id="js">$(function() {
 	// call the tablesorter plugin
-	$("table").tablesorter({ theme : 'blue' });
+	$("table").tablesorter({
+		theme : 'blue',
+		sortList: [ [0,0],[1,0],[2,0] ]
+	});
+
+	$('button').click(function(){
+		$('table').trigger('sortReset');
+	});
+
 });</script>
 </head>
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Dealing with digits</h2>
+	<h2>Resetting the entire table sort</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -34,15 +42,15 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>Click on any column header to sort that column.</li>
-			<li>The alphanumeric sort working in the first column was added in version 2.0.6 (not part of the original plugin).</li>
-			<li>The above sort was replaced with a natural sort in version 2.2.</li>
+			<li>Click on the reset button to reset the sort. The button can be used at any time.</li>
+			<li>Reset the table by triggering a <code>sortReset</code> event on the table (see the javascript code below).</li>
+			<li>This method was added in version 2.4.7.</li>
 		</ul>
 	</p>
 
 <h1>Demo</h1>
-<div id="demo"><!-- the data-sortlist won't apply because it is supported by jQuery v1.4+; and this demo is using jQuery v1.2.6 -->
-<table class="tablesorter" data-sortlist="[[0,0]]">
+<button>Reset</button>
+<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Account #</th>
@@ -134,14 +142,10 @@
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
-	<h1>HTML</h1>
-	<div id="html">
-		<pre class="html"></pre>
-	</div>
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-option-selectorsort.html">Using selectorSort &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
