@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 10/17/2012
+/*! tableSorter 2.4+ widgets - updated 11/14/2012
  *
  * Column Styles
  * Column Filters
@@ -673,10 +673,11 @@ $.tablesorter.addWidget({
 			hdrCells = header.children('tr:not(.sticky-false)').children(),
 			css = wo.stickyHeaders || 'tablesorter-stickyHeader',
 			innr = '.tablesorter-header-inner',
-			firstCell = hdrCells.eq(0),
+			firstRow = hdrCells.eq(0).parent(),
 			tfoot = $table.find('tfoot'),
+			t2 = $table.clone(),
 			// clone the entire thead - seems to work in IE8+
-			stkyHdr = header.clone()
+			stkyHdr = t2.children('thead:first')
 				.addClass(css)
 				.css({
 					width      : header.outerWidth(true),
@@ -686,7 +687,7 @@ $.tablesorter.addWidget({
 					visibility : 'hidden',
 					zIndex     : 1
 				}),
-			stkyCells = stkyHdr.find('tr').children(),
+			stkyCells = stkyHdr.children('tr:not(.sticky-false)').children(), // issue #172
 			laststate = '',
 			spacing = 0,
 			resizeHdr = function(){
@@ -694,10 +695,10 @@ $.tablesorter.addWidget({
 				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
 				// webkit automatically compensates for border spacing
-				if ($table.css('border-collapse') !== 'collapse' && !/webkit/i.test(bwsr)) {
-					// IE needs to be adjusted by the padding; Firefox & Opera use the border-spacing
+				if ($table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(bwsr)) {
+					// Firefox & Opera use the border-spacing
 					// update border-spacing here because of demos that switch themes
-					spacing = /msie/i.test(bwsr) ? parseInt(header.css('padding-left'), 10) : parseInt($table.css('border-spacing'), 10);
+					spacing = parseInt(hdrCells.eq(0).css('border-left-width'), 10) * 2;
 				}
 				stkyHdr.css({
 					left : header.offset().left - win.scrollLeft() - spacing,
@@ -707,7 +708,7 @@ $.tablesorter.addWidget({
 				.each(function(i){
 					var $h = hdrCells.eq(i);
 					$(this).css({
-						width: $h.width(),
+						width: $h.width() - spacing,
 						height: $h.height()
 					});
 				})
@@ -717,6 +718,9 @@ $.tablesorter.addWidget({
 					$(this).width(w);
 				});
 			};
+		// clear out cloned table, except for sticky header
+		t2.find('thead:gt(0),tr.sticky-false,tbody,tfoot,caption').remove();
+		t2.css({ height:0, width:0, padding:0, margin:0, border:0 });
 		// remove rows you don't want to be sticky
 		stkyHdr.find('tr.sticky-false').remove();
 		// remove resizable block
@@ -751,13 +755,13 @@ $.tablesorter.addWidget({
 				return false;
 			});
 		});
-		header.after( stkyHdr );
+		$table.before( t2 );
 		// make it sticky!
 		win
 		.bind('scroll.tsSticky', function(){
-			var offset = firstCell.offset(),
+			var offset = firstRow.offset(),
 				sTop = win.scrollTop(),
-				tableHt = $table.height() - (firstCell.height() + (tfoot.height() || 0)),
+				tableHt = $table.height() - (stkyHdr.height() + (tfoot.height() || 0)),
 				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
 			stkyHdr
 			.css({
