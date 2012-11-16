@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 11/14/2012
+/*! tableSorter 2.4+ widgets - updated 11/15/2012
  *
  * Column Styles
  * Column Filters
@@ -675,7 +675,7 @@ $.tablesorter.addWidget({
 			innr = '.tablesorter-header-inner',
 			firstRow = hdrCells.eq(0).parent(),
 			tfoot = $table.find('tfoot'),
-			t2 = $table.clone(),
+			t2 = $table.clone(), // clone table, but don't remove id... the table might be styled by css
 			// clone the entire thead - seems to work in IE8+
 			stkyHdr = t2.children('thead:first')
 				.addClass(css)
@@ -755,7 +755,8 @@ $.tablesorter.addWidget({
 				return false;
 			});
 		});
-		$table.before( t2 );
+		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
+		$table.after( t2 );
 		// make it sticky!
 		win
 		.bind('scroll.tsSticky', function(){

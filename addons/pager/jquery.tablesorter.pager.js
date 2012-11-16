@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/25/2012
+ * updated 11/15/2012
  */
 /*jshint browser:true, jquery:true */
 ;(function($) {
@@ -413,6 +413,8 @@
 
 		$this.construct = function(settings) {
 			return this.each(function() {
+				// check if tablesorter has initialized
+				if (!(this.config && this.hasInitialized)) { return; }
 				var config = this.config,
 				c = config.pager = $.extend( {}, $.tablesorterPager.defaults, settings ),
 				table = this,
