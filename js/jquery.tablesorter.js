@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.4.8 - Client-side table sorting with ease!
+* TableSorter 2.5 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -14,7 +14,7 @@
 * @author Christian Bach/christian.bach@polyester.se
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
-/*jshint evil:true, browser:true, jquery:true, unused:false */
+/*jshint browser:true, jquery:true, unused:false */
 /*global console:false, alert:false */
 !(function($) {
 	"use strict";
@@ -23,7 +23,7 @@
 
 			var ts = this;
 
-			ts.version = "2.4.8";
+			ts.version = "2.5";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -449,7 +449,7 @@
 			}
 
 			// sort multiple columns
-			function multisort(table) {
+			function multisort(table) { /*jshint loopfunc:true */
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, j, k, c, cache, lc, s, e, order, orgOrderCol;
@@ -704,6 +704,10 @@
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length, t = this,
 						tbdy = $(this).find('tbody').index( $row.closest('tbody') );
+						// fixes adding rows to an empty table - see issue #179
+						if (!c.parsers) {
+							c.parsers = buildParserCache(t);
+						}
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
@@ -1305,6 +1309,7 @@
 					row = 0;
 					$tv = $tb.children('tr:visible');
 					// revered back to using jQuery each - strangely it's the fastest method
+					/*jshint loopfunc:true */
 					$tv.each(function(){
 						$tr = $(this);
 						// style children rows the same way the parent row was styled
