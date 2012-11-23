@@ -32,20 +32,24 @@
 	background-position: center right;
 	background-repeat: no-repeat;
 }
-.tablesorter-blackice th.headerSortUp,
-.tablesorter-blackice th.tablesorter-headerSortUp {
+.tablesorter-blackice .headerSortUp,
+.tablesorter-blackice .tablesorter-headerSortUp,
+.tablesorter-blackice .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	color: #fff;
+}
+.tablesorter-blackice .headerSortDown,
+.tablesorter-blackice .tablesorter-headerSortDown,
+.tablesorter-blackice .tablesorter-headerDesc {
 	color: #fff;
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
-}
-.tablesorter-blackice th.headerSortDown,
-.tablesorter-blackice th.tablesorter-headerSortDown {
-	color: #fff;
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 }
 
 /* tfoot */
 .tablesorter-blackice tfoot .tablesorter-headerSortUp,
-.tablesorter-blackice tfoot .tablesorter-headerSortDown {
+.tablesorter-blackice tfoot .tablesorter-headerSortDown,
+.tablesorter-blackice tfoot .tablesorter-headerAsc,
+.tablesorter-blackice tfoot .tablesorter-headerDesc {
 	/* remove sort arrows from footer */
 	background-image: url();
 }

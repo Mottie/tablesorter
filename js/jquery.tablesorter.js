@@ -71,9 +71,9 @@
 
 				// css class names
 				tableClass       : 'tablesorter',
-				cssAsc           : 'tablesorter-headerSortUp',
+				cssAsc           : 'tablesorter-headerAsc',
 				cssChildRow      : 'tablesorter-childRow', // previously "expand-child"
-				cssDesc          : 'tablesorter-headerSortDown',
+				cssDesc          : 'tablesorter-headerDesc',
 				cssHeader        : 'tablesorter-header',
 				cssHeaderRow     : 'tablesorter-headerRow',
 				cssIcon          : 'tablesorter-icon', //  if this class exists, a <i> will be added to the header automatically
@@ -390,7 +390,7 @@
 				var f, i, j, l,
 					c = table.config,
 					list = c.sortList,
-					css = [c.cssDesc, c.cssAsc],
+					css = [c.cssAsc, c.cssDesc],
 					// find the footer
 					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
 				// remove all header information

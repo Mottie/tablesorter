@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 11/15/2012
+/*! tableSorter 2.4+ widgets - updated 11/22/2012
  *
  * Column Styles
  * Column Filters
@@ -159,7 +159,7 @@ $.tablesorter.addWidget({
 				$tar.removeClass(rmv + ' tablesorter-icon ' + o.icons);
 			} else {
 				t = ($t.hasClass('hasStickyHeaders')) ? $t.find(sh).find('th').eq(i).add($el) : $el;
-				klass = ($el.hasClass(c.cssAsc)) ? o.sortDesc : ($el.hasClass(c.cssDesc)) ? o.sortAsc : $el.hasClass(c.cssHeader) ? o.sortNone : '';
+				klass = ($el.hasClass(c.cssAsc)) ? o.sortAsc : ($el.hasClass(c.cssDesc)) ? o.sortDesc : $el.hasClass(c.cssHeader) ? o.sortNone : '';
 				$el[klass === o.sortNone ? 'removeClass' : 'addClass'](o.active);
 				$tar.removeClass(rmv).addClass(klass);
 			}

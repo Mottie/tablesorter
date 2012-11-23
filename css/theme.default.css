@@ -35,21 +35,24 @@ Default Theme
 	padding: 4px 20px 4px 4px;
 }
 .tablesorter-default thead .headerSortUp,
-.tablesorter-default thead .tablesorter-headerSortUp {
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+.tablesorter-default thead .tablesorter-headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 	border-bottom: #000 2px solid;
 }
 .tablesorter-default thead .headerSortDown,
-.tablesorter-default thead .tablesorter-headerSortDown {
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+.tablesorter-default thead .tablesorter-headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	border-bottom: #000 2px solid;
 }
 
 /* tfoot */
 .tablesorter-default tfoot .tablesorter-headerSortUp,
-.tablesorter-default tfoot .tablesorter-headerSortDown {
+.tablesorter-default tfoot .tablesorter-headerSortDown,
+.tablesorter-default tfoot .tablesorter-headerAsc,
+.tablesorter-default tfoot .tablesorter-headerDesc {
 	border-top: #000 2px solid;
-	background-image: url();
 }
 
 /* tbody */

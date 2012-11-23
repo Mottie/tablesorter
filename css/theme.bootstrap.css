@@ -5,7 +5,9 @@
 .tablesorter-bootstrap {
 	width: 100%;
 }
-.tablesorter-bootstrap .tablesorter-header {
+.tablesorter-bootstrap .tablesorter-header,
+.tablesorter-bootstrap tfoot th,
+.tablesorter-bootstrap tfoot td {
 	font: bold 14px/20px Arial, Sans-serif;
 	position: relative;
 	padding: 8px;
@@ -23,6 +25,10 @@
 	-webkit-box-shadow: inset 0 1px 0 white;
 	-moz-box-shadow: inset 0 1px 0 #ffffff;
 	box-shadow: inset 0 1px 0 white;
+}
+
+.tablesorter-bootstrap .tablesorter-header {
+	cursor: pointer;
 }
 
 .tablesorter-bootstrap .tablesorter-header-inner {

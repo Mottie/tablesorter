@@ -31,20 +31,24 @@
 	background-position: center right;
 	background-repeat: no-repeat;
 }
-.tablesorter-dark th.headerSortUp,
-.tablesorter-dark th.tablesorter-headerSortUp {
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+.tablesorter-dark thead .headerSortUp,
+.tablesorter-dark thead .tablesorter-headerSortUp,
+.tablesorter-dark thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 	border-bottom: #888 1px solid;
 }
-.tablesorter-dark th.headerSortDown,
-.tablesorter-dark th.tablesorter-headerSortDown {
-	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+.tablesorter-dark thead .headerSortDown,
+.tablesorter-dark thead .tablesorter-headerSortDown,
+.tablesorter-dark thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	border-bottom: #888 1px solid;
 }
 
 /* tfoot */
 .tablesorter-dark tfoot .tablesorter-headerSortUp,
-.tablesorter-dark tfoot .tablesorter-headerSortDown {
+.tablesorter-dark tfoot .tablesorter-headerSortDown,
+.tablesorter-dark tfoot .tablesorter-headerAsc,
+.tablesorter-dark tfoot .tablesorter-headerDesc {
 	border-top: #888 1px solid;
 	/* remove sort arrows from footer */
 	background-image: url();
