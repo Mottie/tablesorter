@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.5 - Client-side table sorting with ease!
+* TableSorter 2.5.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -23,7 +23,7 @@
 
 			var ts = this;
 
-			ts.version = "2.5";
+			ts.version = "2.5.1";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -206,7 +206,7 @@
 				totalRows,
 				totalCells,
 				parsers = tc.parsers,
-				t, i, j, k, c, cols, cacheTime;
+				t, v, i, j, k, c, cols, cacheTime, colMax = [];
 				tc.cache = {};
 				if (tc.debug) {
 					cacheTime = new Date();
@@ -236,11 +236,16 @@
 								t = getElementText(table, c[0].cells[j], j);
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
-								cols.push( parsers[j].format(t, table, c[0].cells[j], j) );
+								v = parsers[j].format(t, table, c[0].cells[j], j);
+								cols.push(v);
+								if ((parsers[j].type || '').toLowerCase() === "numeric") {
+									colMax[j] = Math.max(Math.abs(v), colMax[j] || 0); // determine column max value (ignore sign)
+								}
 							}
 							cols.push(tc.cache[k].normalized.length); // add position for rowCache
 							tc.cache[k].normalized.push(cols);
 						}
+						tc.cache[k].colMax = colMax;
 					}
 				}
 				if (tc.showProcessing) {
@@ -449,27 +454,26 @@
 			}
 
 			// sort multiple columns
+/* */
 			function multisort(table) { /*jshint loopfunc:true */
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
-				sortTime, i, j, k, c, cache, lc, s, e, order, orgOrderCol;
+				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol;
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
-					cache = tc.cache[k];
-					lc = cache.normalized.length;
-					cache.normalized.sort(function(a, b) {
+					colMax = tc.cache[k].colMax;
+					cache = tc.cache[k].normalized;
+					lc = cache.length;
+					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
+					cache.sort(function(a, b) {
+						// cache is undefined here in IE, so don't use it!
 						for (i = 0; i < l; i++) {
 							c = sortList[i][0];
 							order = sortList[i][1];
 							// fallback to natural sort since it is more robust
 							s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
 							s += order === 0 ? "" : "Desc";
-							// get max column value (ignore sign)
 							if (/Numeric/.test(s) && tc.strings[c]) {
-								for (j = 0; j < lc; j++) {
-									col = Math.abs(parseFloat(cache.normalized[j][c]));
-									mx = Math.max(mx, isNaN(col) ? 0 : col);
-								}
 								// sort strings in numerical columns
 								if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
 									dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
@@ -477,10 +481,9 @@
 									dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
 								}
 							}
-							var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, mx, dir);
+							var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
 							if (sort) { return sort; }
 						}
-						orgOrderCol = (cache.normalized && cache.normalized[0]) ? cache.normalized[0].length - 1 : 0;
 						return a[orgOrderCol] - b[orgOrderCol];
 					});
 				}
