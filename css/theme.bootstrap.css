@@ -19,9 +19,9 @@
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#efefef));
 	background-image: -webkit-linear-gradient(top, white, #efefef);
 	background-image: -o-linear-gradient(top, white, #efefef);
-	background-image: linear-gradient(top, white, #efefef);
-	background-repeat: repeat-x;
+	background-image: linear-gradient(to bottom, white, #efefef);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#efefef', GradientType=0);
+	background-repeat: repeat-x;
 	-webkit-box-shadow: inset 0 1px 0 white;
 	-moz-box-shadow: inset 0 1px 0 #ffffff;
 	box-shadow: inset 0 1px 0 white;
