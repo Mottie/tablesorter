@@ -1,8 +1,8 @@
 /*!
  * tablesorter pager plugin
- * updated 11/15/2012
+ * updated 11/27/2012
  */
-/*jshint browser:true, jquery:true */
+/*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
 	"use strict";
 	$.extend({tablesorterPager: new function() {
@@ -231,7 +231,7 @@
 				} else {
 					$b.html( tds ); // add tbody
 				}
-				c.temp.remove(); // remove loading icon
+				$.tablesorter.isProcessing(table); // remove loading icon
 				$t.trigger('update');
 				c.totalRows = result[0] || 0;
 				c.totalPages = Math.ceil( c.totalRows / c.size );
@@ -246,8 +246,7 @@
 		},
 
 		getAjax = function(table, c){
-			var $t = $(table),
-			url = (c.ajaxUrl) ? c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size) : '',
+			var url = (c.ajaxUrl) ? c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size) : '',
 			arry = [],
 			sl = table.config.sortList,
 			col = url.match(/\{sortList[\s+]?:[\s+]?(.*)\}/);
@@ -261,12 +260,7 @@
 			}
 			if ( url !== '' ) {
 				// loading icon
-				c.temp = $('<div/>', {
-					'class' : 'tablesorter-processing',
-					width : $t.outerWidth(true),
-					height: $t.outerHeight(true)
-				});
-				$t.before( c.temp );
+				$.tablesorter.isProcessing(table, true);
 				$(document).ajaxError(function(e, xhr, settings, exception) {
 					renderAjax(null, table, c, exception);
 				});
@@ -335,12 +329,13 @@
 			if ( c.page < 0 || c.page > ( p - 1 ) ) {
 				c.page = 0;
 			}
-			$.data(table, 'pagerLastPage', c.page);
-			if ( c.ajax ) {
+			// change if page changed - fixes #182
+			if (c.ajax && $.data(table, 'pagerLastPage') !== c.page) {
 				getAjax(table, c);
-			} else {
+			} else if (!c.ajax) {
 				renderTable(table, table.config.rowsCopy, c);
 			}
+			$.data(table, 'pagerLastPage', c.page);
 			if (c.initialized) { $(table).trigger('pageMoved', c); }
 		},
 
@@ -387,6 +382,7 @@
 
 		enablePager = function(table, c, triggered){
 			var p = $(c.cssPageSize, c.container).removeClass(c.cssDisabled).removeAttr('disabled');
+			$(c.container).find(c.cssGoto).removeClass(c.cssDisabled).removeAttr('disabled');
 			c.isDisabled = false;
 			c.page = $.data(table, 'pagerLastPage') || c.page || 0;
 			c.size = $.data(table, 'pagerLastSize') || parseInt(p.find('option[selected]').val(), 10) || c.size;
@@ -439,10 +435,12 @@
 				$(table)
 					.unbind('filterEnd.pager updateComplete.pager ')
 					.bind('filterEnd.pager updateComplete.pager', function() {
-						c.page = 0;
-						updatePageDisplay(table, c);
-						moveToPage(table, c);
-						changeHeight(table, c);
+						if ($(this).hasClass('hasFilters')) {
+							c.page = 0;
+							updatePageDisplay(table, c);
+							moveToPage(table, c);
+							changeHeight(table, c);
+						}
 					});
 
 				if ( $(c.cssGoto, pager).length ) {
