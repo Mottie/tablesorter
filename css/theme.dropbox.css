@@ -74,6 +74,10 @@
 	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAALNJREFUeNpi/P//PwMhwBJf3uP879e3PUzMzBiS//7+ZWBi43JhBJmU2z7nIzMzEx8jIyNcAUj8799/nyZXpvCzgARYuXjTWBkZVjCzIEz7++cvw+//DGkgNiPMTWVT1l5hZvynDTINbMp/pqtdOcE6IDkmmM5fv3/5//v37z9QBQOIBvFhcnBFEwoj7/5jZFnz9+8fBhAN4sN9h+ybH9++JrGxscr/+vE1CVmckZhwAggwANvlUyq5Dd1wAAAAAElFTkSuQmCC');
 	/* background-image: url(images/dropbox-desc-hovered.png); */
 }
+.tablesorter-dropbox thead .sorter-false i,
+.tablesorter-dropbox thead .sorter-false:hover i {
+	background-image: url();
+}
 
 /* tbody */
 .tablesorter-dropbox td {

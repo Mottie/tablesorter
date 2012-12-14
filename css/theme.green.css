@@ -56,6 +56,9 @@
 .tablesorter-green td.tablesorter-header .tablesorter-header-inner {
 	padding-left: 23px;
 }
+.tablesorter-green thead .tablesorter-header.sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-green tbody td,

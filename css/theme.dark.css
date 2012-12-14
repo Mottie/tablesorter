@@ -43,6 +43,9 @@
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	border-bottom: #888 1px solid;
 }
+.tablesorter-dark thead .sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-dark tfoot .tablesorter-headerSortUp,

@@ -69,6 +69,9 @@
 	/* image */
 	/* background-image: url(images/black-desc.gif); */
 }
+.tablesorter-blue thead .sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-blue tfoot .tablesorter-headerSortUp,

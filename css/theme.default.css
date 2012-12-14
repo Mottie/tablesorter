@@ -46,6 +46,9 @@ Default Theme
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 	border-bottom: #000 2px solid;
 }
+.tablesorter-default thead .sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-default tfoot .tablesorter-headerSortUp,

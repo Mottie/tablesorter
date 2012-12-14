@@ -44,6 +44,9 @@
 	color: #fff;
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
+.tablesorter-blackice thead .sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-blackice tfoot .tablesorter-headerSortUp,

@@ -58,6 +58,9 @@
 	background-image: url(data:image/gif;base64,R0lGODlhDAAMANUAAAE/iAJBigNFjgNEjQNFjQNDiwRHkQRHjwNHjwROlgRMlQRMlARJkgRKkgZQmAVPlgZWnQZSmgZRmAdXoAdXnwdUnAdbogdZoQhbowlhqAlepglkrAliqQtstAtqsQxyugxyuQxwuAxxuAxxtwxwtgxvtQ10vA12vA10u/8A/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAMAAwAAAY6wJQwdRoah6bP6DhEiVIdDxNEGm4yxlDpiJkwv2AmR2OhVCSJBsJ4gUQeCwOB6VAwBAXwYRAIpwBfQQA7);
 	/* background-image: url(images/ice-asc.gif); */
 }
+.tablesorter-ice thead .sorter-false {
+	background-image: url();
+}
 
 /* tfoot */
 .tablesorter-ice tfoot .tablesorter-headerSortUp,
