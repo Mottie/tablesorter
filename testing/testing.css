@@ -1,0 +1,9 @@
+/* tables */
+.tester { /* */
+	visibility: hidden;
+}
+
+/* skipped tests */
+#qunit-tests li.pass.skipped {
+	background-color: #fffacd;
+}
