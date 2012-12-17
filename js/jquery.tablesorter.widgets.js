@@ -282,6 +282,7 @@ $.tablesorter.addWidget({
   filter_searchDelay   : 300    // typing delay in milliseconds before starting a search
   filter_startsWith    : false  // if true, filter start from the beginning of the cell contents
   filter_useParsedData : false  // filter all data using parsed content
+  filter_serversideFiltering : false // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
  **************************/
 $.tablesorter.addWidget({
 	id: "filter",
@@ -353,7 +354,7 @@ $.tablesorter.addWidget({
 					$tb = $.tablesorter.processTbody(table, $(b[k]), true);
 					$tr = $tb.children('tr');
 					l = $tr.length;
-					if (cv === ''){
+					if (cv === '' || wo.filter_serversideFiltering){
 						$tr.show().removeClass('filtered');
 					} else {
 						// loop through the rows
