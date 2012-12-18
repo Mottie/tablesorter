@@ -504,34 +504,35 @@
 			function multisort(table) { /*jshint loopfunc:true */
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
-				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol;
+				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol,
+				rowSorter = function(a, b) {
+					// cache is undefined here in IE, so don't use it!
+					for (i = 0; i < l; i++) {
+						c = sortList[i][0];
+						order = sortList[i][1];
+						// fallback to natural sort since it is more robust
+						s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
+						s += order === 0 ? "" : "Desc";
+						if (/Numeric/.test(s) && tc.strings[c]) {
+							// sort strings in numerical columns
+							if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
+								dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
+							} else {
+								dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
+							}
+						}
+						var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
+						if (sort) { return sort; }
+					}
+					return a[orgOrderCol] - b[orgOrderCol];
+				};
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
 					colMax = tc.cache[k].colMax;
 					cache = tc.cache[k].normalized;
 					lc = cache.length;
 					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
-					cache.sort(function(a, b) {
-						// cache is undefined here in IE, so don't use it!
-						for (i = 0; i < l; i++) {
-							c = sortList[i][0];
-							order = sortList[i][1];
-							// fallback to natural sort since it is more robust
-							s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
-							s += order === 0 ? "" : "Desc";
-							if (/Numeric/.test(s) && tc.strings[c]) {
-								// sort strings in numerical columns
-								if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
-									dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
-								} else {
-									dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
-								}
-							}
-							var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
-							if (sort) { return sort; }
-						}
-						return a[orgOrderCol] - b[orgOrderCol];
-					});
+					cache.sort(rowSorter);
 				}
 				// sort our body cache
 				if(tc.sortBodies) {
