@@ -16,30 +16,34 @@ $.tablesorter = $.tablesorter || {};
 
 $.tablesorter.themes = {
 	"bootstrap" : {
-		table    : 'table table-bordered table-striped',
-		header   : 'bootstrap-header', // give the header a gradient background
-		icons    : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
-		sortNone : 'bootstrap-icon-unsorted',
-		sortAsc  : 'icon-chevron-up',
-		sortDesc : 'icon-chevron-down',
-		active   : '', // applied when column is sorted
-		hover    : '', // use custom css here - bootstrap class may not override it
-		filterRow: '', // filter row class
-		even     : '', // even row zebra striping
-		odd      : ''  // odd row zebra striping
+		table      : 'table table-bordered table-striped',
+		header     : 'bootstrap-header', // give the header a gradient background
+		footerRow  : '',
+		footerCells: '',
+		icons      : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
+		sortNone   : 'bootstrap-icon-unsorted',
+		sortAsc    : 'icon-chevron-up',
+		sortDesc   : 'icon-chevron-down',
+		active     : '', // applied when column is sorted
+		hover      : '', // use custom css here - bootstrap class may not override it
+		filterRow  : '', // filter row class
+		even       : '', // even row zebra striping
+		odd        : ''  // odd row zebra striping
 	},
 	"jui" : {
-		table    : 'ui-widget ui-widget-content ui-corner-all', // table classes
-		header   : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-		icons    : 'ui-icon', // icon class added to the <i> in the header
-		sortNone : 'ui-icon-carat-2-n-s',
-		sortAsc  : 'ui-icon-carat-1-n',
-		sortDesc : 'ui-icon-carat-1-s',
-		active   : 'ui-state-active', // applied when column is sorted
-		hover    : 'ui-state-hover',  // hover class
-		filterRow: '',
-		even     : 'ui-widget-content', // even row zebra striping
-		odd      : 'ui-state-default'   // odd row zebra striping
+		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+		footerRow  : '',
+		footerCells: '',
+		icons      : 'ui-icon', // icon class added to the <i> in the header
+		sortNone   : 'ui-icon-carat-2-n-s',
+		sortAsc    : 'ui-icon-carat-1-n',
+		sortDesc   : 'ui-icon-carat-1-s',
+		active     : 'ui-state-active', // applied when column is sorted
+		hover      : 'ui-state-hover',  // hover class
+		filterRow  : '',
+		even       : 'ui-widget-content', // even row zebra striping
+		odd        : 'ui-state-default'   // odd row zebra striping
 	}
 };
 
@@ -124,10 +128,16 @@ $.tablesorter.addWidget({
 			if (o.even !== '') { wo.zebra[0] += ' ' + o.even; }
 			if (o.odd !== '') { wo.zebra[1] += ' ' + o.odd; }
 			// add table/footer class names
-			$t
+			t = $t
 				// remove other selected themes; use widgetOptions.theme_remove
 				.removeClass( c.theme === '' ? '' : 'tablesorter-' + c.theme )
-				.addClass('tablesorter-' + theme + ' ' + o.table); // add theme widget class name
+				.addClass('tablesorter-' + theme + ' ' + o.table) // add theme widget class name
+				.find('tfoot');
+			if (t.length) {
+				t
+				.find('tr').addClass(o.footerRow)
+				.children('th, td').addClass(o.footerCells);
+			}
 			c.theme = ''; // clear out theme option so it doesn't interfere
 			// update header classes
 			$h
