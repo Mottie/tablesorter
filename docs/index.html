@@ -819,6 +819,14 @@
 				<td><a href="example-option-selectorsort.html">Example</a></td>
 			</tr>
 
+			<tr id="serversidesorting">
+				<td><span class="permalink">serverSideSorting</span></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>Set to <code>true</code> if the server is performing the sorting. The ui and events will still be used. <span class="tip"><em>New!</em></span> v2.5.3.</td>
+				<td></td>
+			</tr>
+
 			<tr id="showprocessing">
 				<td><span class="permalink">showProcessing</span></td>
 				<td>Boolean</td>
@@ -1202,6 +1210,8 @@ $(function(){
       filter_startsWith    : false,
       // filter all data using parsed content.
       filter_useParsedData : false,
+      // Set to true for server-side filtering
+      filter_serversideFiltering :  false,
 
       // *** stickyHeaders widget ***
       // css class name applied to the sticky header
@@ -1738,6 +1748,27 @@ $('input.tablesorter-filter:eq(0)').trigger('search', false);</pre>
 					In tablesorter v2.4+, the trigger can be applied directly to the table:
 					<pre class="js">// refresh the widget filter; no delay
 $('table').trigger('search', false);</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-filter-serversidefiltering">
+				<td><a href="#" class="toggle2">filter_serversideFiltering</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Filter widget: Set this option to <code>true</code> if filtering is performed on the server-side. <span class="tip"><em>New!</em></span> v2.5.3.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-serversidefiltering"><code>filter_serversideFiltering</code></a> option as follows:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_serversideFiltering : true
+    }
+  });
+});</pre></div>
 				</td>
 				<td></td>
 			</tr>
@@ -2535,6 +2566,8 @@ or, directly add the search string to the filter input as follows:<pre class="js
 
 	<p>If you would like to contribute, <a href="https://github.com/Mottie/tablesorter">fork a copy on github</a>.</p>
 
+	<p>Some basic <a href="../test.html">unit testing</a> has been added. If you would like to add more or report a problem, please use the appropriate link above. <span class="tip"><em>New!</em></span> v2.6.</p>
+
 	<p>Support is also available through the <a class="external" href="http://jquery.com/discuss/">jQuery Mailing List</a> or <a class="external" href="http://stackoverflow.com/questions/tagged/tablesorter">StackOverflow</a>.</p>
 
 	<p>Access to the jQuery Mailing List is also available through <a class="external" href="http://www.nabble.com/JQuery-f15494.html">Nabble Forums</a>.</p>
@@ -2545,7 +2578,7 @@ or, directly add the search string to the filter input as follows:<pre class="js
 	<p>
 		Documentation written by <a class="external" href="http://www.ghidinelli.com">Brian Ghidinelli</a>,
 		based on <a class="external" href="http://malsup.com/jquery/">Mike Alsup's</a> great documention.<br>
-		Additional &amp; Missing documentation, alphanumeric sort, numerous widgets and other changes added by <a class="external" href="https://github.com/Mottie/tablesorter">Mottie</a>.
+		Additional &amp; Missing documentation, alphanumeric sort, numerous widgets, unit testing and other changes added by <a class="external" href="https://github.com/Mottie/tablesorter">Mottie</a>.
 	</p>
 	<p>
 		<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>

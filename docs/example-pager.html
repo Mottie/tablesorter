@@ -157,10 +157,14 @@
 
 		// Disable / Enable
 		// **************
-		$('button:contains(Disable)').click(function(){
+		$('.toggle').click(function(){
 			var mode = /Disable/.test( $(this).text() );
 			$('table').trigger( (mode ? 'disable' : 'enable') + '.pager');
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
+		});
+		$('table').bind('pagerChange', function(){
+			// pager automatically enables when table is sorted.
+			$('.toggle').text('Disable Pager');
 		});
 
 });</script>
@@ -192,7 +196,7 @@
 
 	<h1>Demo</h1>
 	<br>
-	<button>Add Rows</button> <button>Disable Pager</button> <button>Destroy Pager</button>
+	<button>Add Rows</button> <button class="toggle">Disable Pager</button> <button>Destroy Pager</button>
 	<br><br>
 	<div class="pager">
 		<img src="../addons/pager/icons/first.png" class="first" alt="First" />
@@ -578,134 +582,9 @@ td.tablesorter-pager {
 
 	<a id="change-log"></a>
 	<h1>Pager Change Log</h1>
-
-<div class="accordion">
-	<h3><a href="#">Changes</a></h3>
-	<div class="inner">
-		<div class="accordion">
-
-			<h3><a href="#">Version 2.4.2 (10/17/2012)</a></h3>
-			<div>
-				<ul>
-					<li>Ajax loaded tables will no longer hide pages other than the first. Fixes <a href="https://github.com/Mottie/tablesorter/issues/151">issue #151</a>.</li>
-					<li>Ajax header data now properly replaces the header text.</li>
-					<li>The error message row is now added with the class name from the <code>selectorRemove</code> option.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.4 (8/19/2012)</a></h3>
-			<div>
-				<ul>
-					<li>The pager plugin now plays nice with the filter widget. Fixes <a href="https://github.com/Mottie/tablesorter/issues/6">issue #6</a>.</li>
-					<li>Added <code>cssGoto</code> option which contains a jQuery selector pointing to a page select dropdown. Updated the pager demo with an example.</li>
-					<li>Updated pager addong to now work with the filter and advanced filter widgets.</li>
-					<li>Added <code>{filteredRows}</code> and <code>{filteredPages}</code> parameters to the <code>output</code> option. They contain the number of rows and pages that result from the filter widget search.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.2.1 (5/4/2012)</a></h3>
-			<div>
-				<ul>
-					<li>Widgets should now apply properly while the pager is active. Fix for <a href="https://github.com/Mottie/tablesorter/issues/60">issue #60</a>.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.1.20 (4/28/2012)</a></h3>
-			<div>
-				<ul>
-					<li>Optimized pager table rebuilding to also use document fragments, and by removing two extra calls that reapplied the current widgets.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.1.6 (3/22/2012)</a></h3>
-			<div>
-				<ul>
-					<li>Updated pager css. It wasn't targeting the pager block correctly.</li>
-					<li>Moved pager into the thead and/or tfoot in the <a href="example-pager-ajax.html">pager ajax demo</a>.</li>
-					<li>The pager plugin ajax method should now only target the header column text (not the pager) and first footer row when updating the header text.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.1.3.1 (3/17/2012)</a></h3>
-			<div>
-				<ul>
-					<li><a href="https://github.com/rozwell">Rozwell</a> contributed some <a href="https://github.com/Mottie/tablesorter/pull/35">bug fixes</a> that occur when <code>cssPageSize</code> is not set. Thanks for sharing!</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.1</a></h3>
-			<div>
-				<ul>
-					<li>Ajax:
-						<ul>
-							<li>The pager plugin will now interact with a database via JSON. See <a href="example-pager-ajax.html">demo</a> here.</li>
-							<li>Added <code>ajaxUrl</code> option which contains the variables <code>{page}</code> and <code>{size}</code> which will be replaced by the plugin to obtain that data.
-								<pre class="js"><code>ajaxUrl : "http:/mydatabase.com?page={page}&size={size}"</code></pre>
-							</li>
-							<li>Another option named <code>ajaxProcessing</code> was included to process the data before returning it to the pager plugin. Basically the JSON needs to contain the data to match the example below. An additional required variable is the total number of records or rows needs to be returned.
-
-								<pre class="js"><code>// process ajax so that the data object is returned along with the total number of rows
-									// example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
-									ajaxProcessing: function(ajax){
-									if (ajax && ajax.hasOwnProperty('data')) {
-									// return [ "data", "total_rows" ];
-									return [ ajax.data, ajax.total_rows ];
-									}
-								}</code></pre>
-							</li>
-							<li>I tried to make the plugin interact with a database as flexible as possible, but I'm sure I haven't covered every situation. So any and all feedback is welcome!</li>
-							<li>Also, much thanks to <a href="https://github.com/kachar">kachar</a> for the <a href="https://github.com/Mottie/tablesorter/issues/31">enhancement request</a> and willingness to help test it!</li>
-						</ul>
-					</li>
-					<li>Removed <code>positionFixed</code> and <code>offset</code> options.</li>
-					<li>Added <code>fixedHeight</code> option which replaces the <code>positionFixed</code> and <code>offset</code> options.
-
-						<ul>
-							<li>If true, it should maintain the height of the table, even when viewing fewer than the set number of records (go to the last page to see this in action).</li>
-							<li>It works by adding an empty row to make up the differences in height.</li>
-							<li>There were some <strong>issues</strong> of the height being incorrect when this option is true. The problems occurred if you add/remove rows + change pager size, or just destroy/enable the pager. I think I fixed it, but if you should find a problem, please <a href="https://github.com/Mottie/tablesorter/issues">report the issue</a> and steps on how to duplicate it.</li>
-						</ul>
-					</li>
-
-					<li>The pager <code>container</code> option will now accept class names. So you can add multiple container blocks to control the pager, just as this page now has two, one above and one below.</li>
-					<li>The pager now adds all of its options to the table configuration options within an object named "pager". Basically what this means is that instead of add all of the pager options to be mixed in with the tablesorter options, the pager options have been isolated and can be found by typing this into the browser console: <code>$('table')[0].config.pager</code>.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.0.21.2</a></h3>
-			<div>
-				<ul>
-					<li>Added <code>"disable.pager"</code> and <code>"enable.pager"</code> methods added to make it easier to add or delete rows from the table.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.0.16</a></h3>
-			<div>
-				<ul>
-					<li>Reduced the number of rows in the demo from 1022 to 50, so you don't have to scroll forever (when the pager is destroyed) to see the code below the table.</li>
-					<li>Added <code>"destroy.pager"</code> method will reveal the entire table, remove the pager functionality, and hide the actual pager.</li>
-					<li>Added a new <code>addRows</code> method to allow adding new rows while the pager is applied to a table. Using <code>"update"</code> would remove all non-visible rows.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.0.9</a></h3>
-			<div>
-				<ul>
-					<li>Added <code>cssDisabled</code> and <code>pagerArrows</code> options which controls the look of the pager and arrows when the pager is on the first or last page.</li>
-					<li>Updated pager functions, removed "separator" option, and added output string formatting (e.g. "1 to 10 (50)").</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">Version 2.0.7</a></h3>
-			<div>
-				<ul>
-					<li>Added <code>"pagerChange"</code> and <code>"pagerComplete"</code> events in version 2.0.7.</li>
-				</ul>
-			</div>
-
-		</div>
-	</div>
-</div>
+	<ul>
+		<li>Moved to <a href="https://github.com/Mottie/tablesorter/wiki/Change2">wiki pages</a>.</li>
+	</ul>
 
 <div class="next-up">
 	<hr />

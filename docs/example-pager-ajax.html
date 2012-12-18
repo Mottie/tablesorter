@@ -48,9 +48,11 @@
 			container: $(".pager"),
 
 			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
-			// where {page} is replaced by the page number and {size} is replaced by the number of records to show
-			// {sortList:col} adds the sortList to the url into a "col" array.
+			// where {page} is replaced by the page number, {size} is replaced by the number of records to show,
+			// {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
+			// the filterList to the url into an "fcol" array.
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
+			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
 			ajaxUrl : 'assets/City{page}.json',
 
 			// process ajax so that the following information is returned:
@@ -114,15 +116,16 @@
 			removeRows: false,
 
 			// css class names of pager arrows
-			cssNext: '.next', // next page arrow
-			cssPrev: '.prev', // previous page arrow
-			cssFirst: '.first', // go to first page arrow
-			cssLast: '.last', // go to last page arrow
-			cssPageDisplay: '.pagedisplay', // location of where the "output" is displayed
-			cssPageSize: '.pagesize', // page size selector - select dropdown that sets the "size" option
+			cssNext        : '.next',  // next page arrow
+			cssPrev        : '.prev',  // previous page arrow
+			cssFirst       : '.first', // go to first page arrow
+			cssLast        : '.last',  // go to last page arrow
+			cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+			cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+			cssErrorRow    : 'tablesorter-errorRow', // error information row
 
 			// class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
-			cssDisabled: 'disabled' // Note there is no period "." in front of this class name
+			cssDisabled    : 'disabled' // Note there is no period "." in front of this class name
 
 		});
 
@@ -141,6 +144,8 @@
 		<p class="tip">
 			<em>NOTE!</em>:
 			<ul>
+				<li><code>{sortList:col}</code> was added to the <code>ajaxUrl</code> in version 2.6.</li>
+				<li><code>{filterList:fcol}</code> was added to the <code>ajaxUrl</code> in version 2.4.5.</li>
 				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
 				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
 				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>

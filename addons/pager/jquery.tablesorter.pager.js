@@ -1,11 +1,12 @@
 /*!
  * tablesorter pager plugin
- * updated 11/27/2012
+ * updated 12/18/2012
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
 	"use strict";
-	$.extend({tablesorterPager: new function() {
+	/*jshint supernew:true */
+	$.extend({ tablesorterPager: new function() {
 
 		this.defaults = {
 			// target the pager markup
@@ -63,6 +64,7 @@
 			cssGoto: '.gotoPage', // go to page selector - select dropdown that sets the current page
 			cssPageDisplay: '.pagedisplay', // location of where the "output" is displayed
 			cssPageSize: '.pagesize', // page size selector - select dropdown that sets the "size" option
+			cssErrorRow: 'tablesorter-errorRow', // error information row
 
 			// class added to arrows when at the extremes (i.e. prev/first arrows are "disabled" when on the first page)
 			cssDisabled: 'disabled', // Note there is no period "." in front of this class name
@@ -71,8 +73,7 @@
 			totalRows: 0,
 			totalPages: 0,
 			filteredRows: 0,
-			filteredPages: 0,
-			cssErrorRow: 'tablesorter-errorRow'
+			filteredPages: 0
 
 		};
 
@@ -189,7 +190,7 @@
 				tc = table.config,
 				$b = $(table.tBodies).filter(':not(.' + tc.cssInfoBlock + ')'),
 				hl = $t.find('thead th').length, tds = '',
-				err = '<tr class="' + c.cssErrorRow + '"><td style="text-align: center;" colspan="' + hl + '">' +
+				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
 				d = result[1] || [],
@@ -228,7 +229,7 @@
 					});
 				}
 				
-				$t.find('thead tr.' + c.cssErrorRow).remove(); //Clean up any previous error.
+				$t.find('thead tr.' + c.cssErrorRow).remove(); // Clean up any previous error.
 				if ( exception ) {
 					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 					$t.find('thead').append(err);
@@ -259,7 +260,7 @@
 					$.tablesorter.isProcessing(table, true); // show loading icon
 				}
 				$(document).bind('ajaxError.pager', function(e, xhr, settings, exception) {
-					if (settings.url == url) {
+					if (settings.url === url) {
 						renderAjax(null, table, c, exception);
 						$(document).unbind('ajaxError.pager');
 					}
@@ -284,7 +285,7 @@
 					arry.push(sortCol + '[' + v[0] + ']=' + v[1]);
 				});
 				// if the arry is empty, just add the col parameter... "&{sortList:col}" becomes "&col"
-				url = url.replace(/\{sortList[\s+]?:[\s+]?([^}]*)\}/g, arry.length ? arry.join('&') : sortCol );
+				url = url.replace(/\{sortList[\s+]?:[\s+]?([^\}]*)\}/g, arry.length ? arry.join('&') : sortCol );
 			}
 			if (filterCol) {
 				filterCol = filterCol[1];
@@ -294,7 +295,7 @@
 					}
 				});
 				// if the arry is empty, just add the fcol parameter... "&{filterList:fcol}" becomes "&fcol"
-				url = url.replace(/\{filterList[\s+]?:[\s+]?([^}]*)\}/g, arry.length ? arry.join('&') : filterCol );
+				url = url.replace(/\{filterList[\s+]?:[\s+]?([^\}]*)\}/g, arry.length ? arry.join('&') : filterCol );
 			}
 			
 			return url;
