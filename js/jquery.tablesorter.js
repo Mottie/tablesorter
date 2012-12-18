@@ -88,6 +88,10 @@
 				// advanced
 				debug            : false,
 
+				// sort bodies
+				sortBodies       : false, // flag to say whether to sort bodies with one another
+				primaryRow       : null, // function(tbody) - to get the primary row (i.e. the one to use when sorting bodies)
+
 				// Internal variables
 				headerList: [],
 				empties: {},
@@ -164,7 +168,7 @@
 
 			function buildParserCache(table) {
 				var c = table.config,
-					tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
+					tb = c.sortBodies ? $(table.tBodies) : $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
 					rows, list, l, i, h, ch, p, parsersDebug = "";
 				if ( tb.length === 0) { return; } // In the case of empty tables
 				rows = tb[0].rows;
@@ -206,8 +210,9 @@
 				totalRows,
 				totalCells,
 				parsers = tc.parsers,
-				t, v, i, j, k, c, cols, cacheTime, colMax = [];
+				t, v, i, j, k, c, cols, $b, cacheTime, colMax = [];
 				tc.cache = {};
+				tc.bodyCache = {};
 				if (tc.debug) {
 					cacheTime = new Date();
 				}
@@ -215,16 +220,32 @@
 				if (tc.showProcessing) {
 					ts.isProcessing(table, true);
 				}
+				var getColsFromRow = function(row, totalCells) {
+					var cols = [];
+					for (j = 0; j < totalCells; ++j) {
+						t = getElementText(table, c[0].cells[j], j);
+						// allow parsing if the string is empty, previously parsing would change it to zero,
+						// in case the parser needs to extract data from the table cell attributes
+						v = parsers[j].format(t, table, c[0].cells[j], j);
+						cols.push(v);
+						if ((parsers[j].type || '').toLowerCase() === "numeric") {
+							colMax[j] = Math.max(Math.abs(v), colMax[j] || 0); // determine column max value (ignore sign)
+						}
+					}
+					return cols;
+				}
 				for (k = 0; k < b.length; k++) {
-					tc.cache[k] = { row: [], normalized: [] };
-					// ignore tbodies with class name from css.cssInfoBlock
-					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
+					// compute the cache if:
+					// we're not sorting by bodies AND we're ignoring this body
+					// OR
+					// we're sorting by bodies (the body being ignored will still need row data)
+					if ((!tc.sortBodies && !$(b[k]).hasClass(tc.cssInfoBlock)) || tc.sortBodies) {
+						tc.cache[k] = { row: [], normalized: [] };
 						totalRows = (b[k] && b[k].rows.length) || 0;
 						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
 						for (i = 0; i < totalRows; ++i) {
 							/** Add the table data to main data array */
 							c = $(b[k].rows[i]);
-							cols = [];
 							// if this is a child row, add it to the last row's children and continue to the next row
 							if (c.hasClass(tc.cssChildRow)) {
 								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
@@ -232,22 +253,31 @@
 								continue;
 							}
 							tc.cache[k].row.push(c);
-							for (j = 0; j < totalCells; ++j) {
-								t = getElementText(table, c[0].cells[j], j);
-								// allow parsing if the string is empty, previously parsing would change it to zero,
-								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].format(t, table, c[0].cells[j], j);
-								cols.push(v);
-								if ((parsers[j].type || '').toLowerCase() === "numeric") {
-									colMax[j] = Math.max(Math.abs(v), colMax[j] || 0); // determine column max value (ignore sign)
-								}
-							}
+
+							cols = getColsFromRow(c, totalCells);
 							cols.push(tc.cache[k].normalized.length); // add position for rowCache
 							tc.cache[k].normalized.push(cols);
 						}
 						tc.cache[k].colMax = colMax;
 					}
 				}
+				// if sorting bodies, create a separate body cache with similar layout to
+				// actual cache
+				if (tc.sortBodies) {
+					tc.bodyCache[0] = { body: [], normalized: [] };
+
+					for(k = 0; k < b.length; k++) {
+						$b = $(b[k]);
+						c = tc.primaryRow($b);
+						cols = getColsFromRow(c, c.cells ? c.cells.length : c.get(0).cells.length);
+						cols.push(tc.bodyCache[0].normalized.length);
+						tc.bodyCache[0].body.push($b);
+						tc.bodyCache[0].normalized.push(cols);
+					}
+
+					tc.bodyCache[0].colMax = colMax;
+				}
+
 				if (tc.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
 				}
@@ -263,30 +293,46 @@
 				rows = [],
 				c2 = c.cache,
 				r, n, totalRows, checkCell, $bk, $tb,
-				i, j, k, l, pos, appendTime;
+				i, j, k, l, pos, appendTime, body;
 				if (c.debug) {
 					appendTime = new Date();
 				}
+				// rather than iterate over the bodies in numerical order, go through them in the
+				// order they should be in the table
 				for (k = 0; k < b.length; k++) {
-					$bk = $(b[k]);
-					if (!$bk.hasClass(c.cssInfoBlock)) {
+					r = c2[k].row;
+					n = c2[k].normalized;
+					totalRows = n.length;
+					checkCell = totalRows ? (n[0].length - 1) : 0;
+
+					// if sorting by bodies, our position etc. is changed by whatever is in the
+					// bodyCache, rather than the actual cache.
+					if(c.sortBodies) {
+						// get the body with the position of k (k == 0, means first body to show)
+						pos = c.bodyCache[0].normalized[k][checkCell];
+
+						// sort this body
+						$bk = $(c.bodyCache[0].body[pos]);
+						r = c2[pos].row;
+						n = c2[pos].normalized;
+					} else {
+						$bk = $(b[k])
+					}
+					if ((!c.sortBodies && !$(b[k]).hasClass(c.cssInfoBlock)) || c.sortBodies) {
 						// get tbody
-						$tb = ts.processTbody(table, $bk, true);
-						r = c2[k].row;
-						n = c2[k].normalized;
-						totalRows = n.length;
-						checkCell = totalRows ? (n[0].length - 1) : 0;
+						$tb = ts.processTbody(table, $bk, true, k);
 						for (i = 0; i < totalRows; i++) {
 							pos = n[i][checkCell];
 							rows.push(r[pos]);
 							// removeRows used by the pager plugin
-							if (!c.appender || !c.removeRows) {
+							if (!$bk.hasClass(c.cssInfoBlock) && (!c.appender || !c.removeRows)) {
 								l = r[pos].length;
 								for (j = 0; j < l; j++) {
 									$tb.append(r[pos][j]);
 								}
 							}
 						}
+
 						// restore tbody
 						ts.processTbody(table, $tb, false);
 					}
@@ -458,35 +504,41 @@
 			function multisort(table) { /*jshint loopfunc:true */
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
-				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol;
+				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol,
+				rowSorter = function(a, b) {
+					// cache is undefined here in IE, so don't use it!
+					for (i = 0; i < l; i++) {
+						c = sortList[i][0];
+						order = sortList[i][1];
+						// fallback to natural sort since it is more robust
+						s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
+						s += order === 0 ? "" : "Desc";
+						if (/Numeric/.test(s) && tc.strings[c]) {
+							// sort strings in numerical columns
+							if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
+								dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
+							} else {
+								dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
+							}
+						}
+						var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
+						if (sort) { return sort; }
+					}
+					return a[orgOrderCol] - b[orgOrderCol];
+				};
 				if (tc.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
 					colMax = tc.cache[k].colMax;
 					cache = tc.cache[k].normalized;
 					lc = cache.length;
 					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
-					cache.sort(function(a, b) {
-						// cache is undefined here in IE, so don't use it!
-						for (i = 0; i < l; i++) {
-							c = sortList[i][0];
-							order = sortList[i][1];
-							// fallback to natural sort since it is more robust
-							s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
-							s += order === 0 ? "" : "Desc";
-							if (/Numeric/.test(s) && tc.strings[c]) {
-								// sort strings in numerical columns
-								if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
-									dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
-								} else {
-									dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
-								}
-							}
-							var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
-							if (sort) { return sort; }
-						}
-						return a[orgOrderCol] - b[orgOrderCol];
-					});
+					cache.sort(rowSorter);
 				}
+				// sort our body cache
+				if(tc.sortBodies) {
+					tc.bodyCache[0].normalized.sort(rowSorter);
+				}
+
 				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
 			}
 
@@ -822,10 +874,15 @@
 
 			// detach tbody but save the position
 			// don't use tbody because there are portions that look for a tbody index (updateCell)
-			ts.processTbody = function(table, $tb, getIt){
-				var t, holdr;
+			ts.processTbody = function(table, $tb, getIt, pos){
+				var t, holdr, place;
 				if (getIt) {
-					$tb.before('<span class="tablesorter-savemyplace"/>');
+					if(typeof pos !== 'undefined') {
+						place = $(table).find('tbody').eq(pos);
+					} else {
+						place = $tb;
+					}
+					place.before('<span class="tablesorter-savemyplace"/>');
 					holdr = ($.fn.detach) ? $tb.detach() : $tb.remove();
 					return holdr;
 				}
