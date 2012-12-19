@@ -58,6 +58,7 @@
 }
 .tablesorter-green thead .tablesorter-header.sorter-false {
 	background-image: url();
+	padding: 4px;
 }
 
 /* tfoot */

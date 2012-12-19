@@ -48,6 +48,7 @@ Default Theme
 }
 .tablesorter-default thead .sorter-false {
 	background-image: url();
+	padding: 4px;
 }
 
 /* tfoot */

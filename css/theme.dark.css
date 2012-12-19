@@ -45,6 +45,7 @@
 }
 .tablesorter-dark thead .sorter-false {
 	background-image: url();
+	padding: 4px;
 }
 
 /* tfoot */

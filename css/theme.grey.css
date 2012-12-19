@@ -80,6 +80,7 @@
 }
 .tablesorter-grey thead .sorter-false i {
 	background-image: url();
+	padding: 4px;
 }
 
 /* tfoot */
