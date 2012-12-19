@@ -93,11 +93,13 @@
 			return ts.formatFloat(str, table1);
 		};
 		test( "formatFloat", function() {
-			expect(17);
+			expect(18);
 			strictEqual( ff(''), '', 'returns empty string' );
 			strictEqual( ff(5), 5, 'returns numerical values');
 
 			c1.usNumberFormat = false;
+			strictEqual( ts.formatFloat('1,234,567.89'), 1234567.89, 'use format float without including table - defaults to US number format');
+
 			strictEqual( ff('1 234,56'), 1234.56, 'parse non-U.S. (French) number format');
 			strictEqual( ff('1.234,56'), 1234.56, 'parse non-U.S. (German) number format');
 			strictEqual( ff('-32,32'), -32.32, 'negative non-U.S. signed numbers');
@@ -116,6 +118,7 @@
 			strictEqual( ff('fred 12'), 'fred 12', 'return string if number not at beginning');
 			strictEqual( ff('12fred'), 12, 'parse number + string into number only');
 			strictEqual( ff('(fred)'), '(fred)', 'leave parenthesis intact on strings');
+
 		});
 
 		/************************************************

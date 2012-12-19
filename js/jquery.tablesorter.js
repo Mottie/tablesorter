@@ -1129,7 +1129,11 @@
 
 			ts.formatFloat = function(s, table) {
 				if (typeof(s) !== 'string' || s === '') { return s; }
-				if (table.config.usNumberFormat !== false) {
+				// allow using formatFloat without a table; defaults to US number format
+				var i,
+					t = table && table.hasOwnProperty('config') ? table.config.usNumberFormat !== false :
+						typeof table !== "undefined" ? table : true;
+				if (t) {
 					// US Format - 1,234,567.89 -> 1234567.89
 					s = s.replace(/,/g,'');
 				} else {
@@ -1141,7 +1145,7 @@
 					// make (#) into a negative number -> (10) = -10
 					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
 				}
-				var i = parseFloat(s);
+				i = parseFloat(s);
 				// return the text instead of zero
 				return isNaN(i) ? $.trim(s) : i;
 			};
