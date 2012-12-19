@@ -2420,6 +2420,32 @@ or, directly add the search string to the filter input as follows:<pre class="js
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
+			<tr id="pagerbeforeinitialized">
+				<td><a href="#" class="toggle2">pagerBeforeInitialized</a></td>
+				<td>This event fires after all pager controls have been bound and set up but before the pager formats the table or loads any ajax data.  <span class="tip"><em>New</em></span> v2.4.4.
+					<div class="collapsible">
+						<pre class="js">$(function(){
+
+  $("table")
+
+    // initialize the sorter
+    .tablesorter()
+
+    // bind to pager initialized event BEFORE calling the addon
+    .bind('pagerBeforeInitialized', function(e, c){
+      // e = event object; c = pager options
+    })
+
+    // initialize the pager plugin
+    .tablesorterPager({
+      container: $("#pager")
+    });
+
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="pagerinitialized">
 				<td><a href="#" class="toggle2">pagerInitialized</a></td>
 				<td>This event fires when the pager plugin has completed initialization.  <span class="tip"><em>New</em></span> v2.4.4.
