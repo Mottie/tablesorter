@@ -137,7 +137,7 @@
 				h = $.data(table, 'pagerSavedHeight');
 				if (h) {
 					d = h - $b.height();
-					if ( d > 5 && $.data(table, 'pagerLastSize') === c.size && $b.find('tr:visible').length < c.size ) {
+					if ( d > 5 && $.data(table, 'pagerLastSize') === c.size && $b.children('tr:visible').length < c.size ) {
 						$b.append('<tr class="pagerSavedHeightSpacer remove-me" style="height:' + d + 'px;"></tr>');
 					}
 				}
@@ -155,7 +155,7 @@
 		hideRows = function(table, c){
 			if (!c.ajaxUrl) {
 				var i,
-				rows = $('tr:not(.' + table.config.cssChildRow + ')', table.tBodies),
+				rows = $(table.tBodies).children('tr:not(.' + table.config.cssChildRow + ')'),
 				l = rows.length,
 				s = ( c.page * c.size ),
 				e =  s + c.size,
