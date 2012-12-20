@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 12/19/2012
+ * updated 12/20/2012
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -536,7 +536,7 @@
 					//When filtering with ajax, allow only custom filtering function, disable default filtering since it will be done server side.
 					tc.widgetOptions.filter_serversideFiltering = true;
 					tc.serverSideSorting = true;
-					getAjax(table, c);
+					moveToPage(table, c);
 				} else {
 					c.ajax = false;
 					// Regular pager; all rows stored in memory
