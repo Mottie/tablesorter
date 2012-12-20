@@ -1131,7 +1131,7 @@
 				if (typeof(s) !== 'string' || s === '') { return s; }
 				// allow using formatFloat without a table; defaults to US number format
 				var i,
-					t = table && table.hasOwnProperty('config') ? table.config.usNumberFormat !== false :
+					t = table && table.config ? table.config.usNumberFormat !== false :
 						typeof table !== "undefined" ? table : true;
 				if (t) {
 					// US Format - 1,234,567.89 -> 1234567.89
