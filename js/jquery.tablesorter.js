@@ -454,8 +454,7 @@
 			}
 
 			function updateHeaderSortCount(table, list) {
-				var s, o, c = table.config,
-					l = c.headerList.length,
+				var s, t, o, c = table.config,
 					sl = list || c.sortList;
 				c.sortList = [];
 				$.each(sl, function(i,v){
@@ -465,7 +464,8 @@
 					o = c.headerList[s[0]];
 					if (o) { // prevents error if sorton array is wrong
 						c.sortList.push(s);
-						o.count = s[1] % (c.sortReset ? 3 : 2);
+						t = $.inArray(s[1], o.order); // fixes issue #167
+						o.count = t >= 0 ? t : s[1] % (c.sortReset ? 3 : 2);
 					}
 				});
 			}
