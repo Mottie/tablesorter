@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Render Header</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Header Template &amp; Rendering</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -17,26 +17,18 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-<style id="css">.roundedCorners {
-	border: #000 1px solid;
-	padding: 2px 8px;
-	border-radius: 1em;
-	-moz-border-radius: 1em;
-	-webkit-border-radius: 1em;
-}
-.tablesorter-headerSortDown .roundedCorners {
-	border-color: #fff;
-}
-</style>
-
 <script id="js">$(function() {
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		theme : 'blue',
-		headerTemplate: '{content} {icon}',
-		onRenderHeader: function(index){
-			// the TH content is wrapped with a div.tablesorter-header-inner by default, so just add the new class
-			$(this).find('div').addClass('roundedCorners header' + index );
+
+		// {icon} isn't used by the blue theme; it is optional here
+		headerTemplate : '{icon}{content}',
+		// manipulate the template string after is it created
+		onRenderTemplate : function(i, t){
+			// add the column number to the beginning
+			// it's a zero-based index, so we add one
+			return '<em>' + (i+1) + ':</em> ' + t;
 		}
 	});
 });</script>
@@ -45,7 +37,7 @@
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Render Headers</h2>
+	<h2>Header Template &amp; Rendering</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -53,7 +45,7 @@
 <div id="main">
 
 	<p class="tip">
-		<em>NOTE!</em> The span wrapping the header text and the index variable for the function was added in version 2.0.9 (it is not part of the original plugin, but the "onRenderHeader" option was available).
+		<em>NOTE!</em> These options were added in version 2.7 (they are not part of the original plugin).
 	</p>
 
 	<h1>Demo</h1>
@@ -116,10 +108,6 @@
 	<div id="javascript">
 		<pre class="js"></pre>
 	</div>
-	<h1>CSS</h1>
-	<div id="css">
-		<pre class="css"></pre>
-	</div>
 	<h1>HTML</h1>
 	Before
 	<div>
@@ -138,12 +126,12 @@
 	<div>
 		<pre class="html">&lt;thead&gt;
   &lt;tr class=&quot;tablesorter-headerRow&quot;&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header0&quot;&gt;First Name &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header1&quot;&gt;Last Name &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header2&quot;&gt;Age &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header3&quot;&gt;Total &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header4&quot;&gt;Discount &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
-    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners header5&quot;&gt;Date &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;1:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;First Name&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;2:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Last Name&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;3:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Age&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;4:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Total&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;5:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Discount&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;6:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Date&lt;/div&gt;&lt;/th&gt;
   &lt;/tr&gt;
 &lt;/thead&gt;</pre>
 <small>* Note: the tablesorter-icon was only added for emphasis in this demo, it isn't used at all by the blue template.</small>
@@ -151,7 +139,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-option-render-template.html">Header Template &amp; Rendering &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-triggers.html">Triggers sortEnd and sortStart &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

@@ -323,7 +323,8 @@
 	<h4>Change Header Style</h4>
 	<ul>
 		<li><a href="example-widget-ui-theme.html">UITheme widget</a> (v2.0.9)</li>
-		<li><a href="example-option-render-header.html">Modify how the header is rendered to allow for custom styling</a></li>
+		<li><a href="example-option-render-header.html">Modifying the Header during rendering.</a></li>
+		<li><a href="example-option-render-template.html">Modifying the Header using a template</a>. <span class="tip"><em>New!</em></span> v2.7</li>
 	</ul>
 
 	<br>
@@ -512,9 +513,11 @@
 				<td><a href="#" class="toggle2">cssIcon</a></td>
 				<td>String</td>
 				<td>"tablesorter-icon"</td>
-				<td>The CSS style used to style the header cell icon. <span class="tip"><em>New!</em></span> v2.4.
-					<div class="collapsible">
-						As of v2.4, an &lt;i&gt; element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an &lt;i&gt; element to the headers, set the <code>cssicon</code> option to an empty string.
+				<td>The CSS style used to style the header cell icon. <span class="tip"><em>Modified!</em></span> v2.7.
+					<div class="collapsible"><br>
+						As of v2.4, an &lt;i&gt; element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an &lt;i&gt; element to the headers, set the <code>cssIcon</code> option to an empty string.<br>
+						<br>
+						In v2.7, the icon will only be added to the header if <strong>both</strong> the <code>cssIcon</code> option is set AND the <code>headerTemplate</code> option includes the icon tag (<code>{icon}</code>).
 					</div>
 				</td>
 				<td></td>
@@ -703,6 +706,24 @@
 				</td>
 			</tr>
 
+			<tr id="headertemplate">
+				<td><a href="#" class="toggle2">headerTemplate</a></td>
+				<td>String</td>
+				<td>'{content} {icon}'</td>
+				<td>This is a template string which allows adding additional content to the header while it is being built. <span class="tip"><em>New!</em></span> v2.7.
+					<div class="collapsible"><br>
+						This template string has two default tags: <code>{content}</code> and <code>{icon}</code>.<br>
+						<code>{content}</code> will be replaced by the current header HTML content.<br>
+						<code>{icon}</code> will be replaced by <code>&lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;</code>, but only if a class name is defined in the <code>cssIcon</code> option.<br>
+						<br>
+						This template string may also contain HTML, e.g (<code>'&lt;em&gt;{content}&lt;/em&gt;'</code>)<br>
+						<br>
+						After the template string is built, the <code>onRenderTemplate</code> function is called to allow further manipulation. Please read more about this <a href="#onrendertemplate"><code>onRenderTemplate</code> function</a> and/or check out the example (link to the right).
+					</div>
+				</td>
+				<td><a href="example-option-render-template.html">Example</a></td>
+			</tr>
+
 			<tr id="ignorecase">
 				<td><span class="permalink">ignoreCase</span></td>
 				<td>Boolean</td>
@@ -732,24 +753,57 @@
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This function is called when classes are added to the TH tags. You can use this to modify the HTML in each header tag for additional styling.
+					This function is called after content is to the TH tags (after the template is procressed and added). You can use this to modify the HTML in each header tag for additional styling.
 					<div class="collapsible">
 					<br>
-					In versions 2.0.6+, all TH text is wrapped in a span by default. In the example below, the header cell (TH) span is given a class name (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).
+					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).
 					<pre class="js">$(function(){
   $("table").tablesorter({
+    headerTemplate: '{content}',
     onRenderHeader: function (){
       $(this).find('div').addClass('roundedCorners');
     }
   });
 });</pre>and you'll end up with this HTML (only the thead is shown)<pre class="html">&lt;thead&gt;
   &lt;tr&gt;
-    &lt;th class=&quot;header&quot;&gt;&lt;span class=&quot;roundedCorners&quot;&gt;Column 1&lt;/span&gt;&lt;/th&gt;
-    &lt;th class=&quot;header&quot;&gt;&lt;span class=&quot;roundedCorners&quot;&gt;Column 2&lt;/span&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners&quot;&gt;Column 1&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner roundedCorners&quot;&gt;Column 2&lt;/div&gt;&lt;/th&gt;
   &lt;/tr&gt;
-&lt;/thead&gt;</pre></div>
+&lt;/thead&gt;</pre>
+						<small>* Note: this function adds additional rendering time to the table if any DOM manipulation is done. Because this time will be on top of the processing time already added by the template.</small>
+					</div>
 				</td>
 				<td><a href="example-option-render-header.html">Example</a></td>
+			</tr>
+
+			<tr id="onrendertemplate">
+				<td><a href="#" class="toggle2">onRenderTemplate</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>
+					This function is called after the template string has been built, but before the template string is applied to the header and before the <code>onRenderHeader</code> function is called. <span class="tip"><em>New!</em></span> v2.7.
+					<div class="collapsible">
+					<br>
+					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it. Here is an example:
+					<pre class="js">$(function(){
+  $("table").tablesorter({
+    headerTemplate: '{icon}{content}',
+    onRenderTemplate: function (index, template){
+      return '&lt;em&gt;' + (index + 1) + ':&lt;/em&gt; ' + template;
+    }
+  });
+});</pre>The <code>template</code> parameter can be manipulated as a string, or if you prefer, turn it into a jQuery object (<code>var $t = $(template)</code>) to find and replace content as desired. Just make sure you return a string (<code>return $t.html()</code>)<br>
+<br>
+From the example function above, you'll end up with something similar to this HTML (only the thead is shown)<pre class="html">&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;1:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;First Name&lt;/div&gt;&lt;/th&gt;
+    &lt;th class=&quot;tablesorter-header&quot;&gt;&lt;div class=&quot;tablesorter-header-inner&quot;&gt;&lt;em&gt;2:&lt;/em&gt; &lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;Last Name&lt;/div&gt;&lt;/th&gt;
+  &lt;/tr&gt;
+&lt;/thead&gt;</pre>
+						<small>* Note: If the <code>cssIcon</code> option is an empty string, the <code>{icon}</code> tag will also become an empty string.</small>
+					</div>
+				</td>
+				<td><a href="example-option-render-template.html">Example</a></td>
 			</tr>
 
 			<tr id="parsers">
@@ -1050,7 +1104,6 @@
 						<br>When changing this theme option, make sure that the appropriate css theme file has also been loaded. Included theme files include: 
 						<a href="themes.html" target="_blank" title="open themes in a new window">see all themes</a><br>
 						<iframe style="width:100%;height:300px;" src="themes.html"></iframe>
-
 					</div>
 				</td>
 				<td><a href="themes.html">Example</a></td>

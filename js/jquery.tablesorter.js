@@ -30,12 +30,16 @@
 			ts.widgets = [];
 			ts.defaults = {
 
-				// appearance
+				// *** appearance
 				theme            : 'default',  // adds tablesorter-{theme} to the table for styling
 				widthFixed       : false,      // adds colgroup to fix widths of columns
 				showProcessing   : false,      // show an indeterminate timer icon in the header when the table is sorted or filtered.
 
-				// functionality
+				headerTemplate   : '{content} {icon}', // header layout template (HTML ok); {content} = innerHTML, {icon} = <i/> (class from cssIcon)
+				onRenderTemplate : null,       // function(index, template){ return template; }, (template is a string)
+				onRenderHeader   : null,       // function(index){}, (nothing to return)
+
+				// *** functionality
 				cancelSelection  : true,       // prevent text selection in the header
 				dateFormat       : 'mmddyyyy', // other options: "ddmmyyy" or "yyyymmdd"
 				sortMultiSortKey : 'shiftKey', // key used to select additional columns
@@ -44,7 +48,7 @@
 				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 				serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
 
-				// sort options
+				// *** sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
 				ignoreCase       : true,       // ignore case while sorting
 				sortForce        : null,       // column(s) first sorted; always applied
@@ -61,18 +65,17 @@
 				textExtraction   : 'simple',   // text extraction method/function - function(node, table, cellIndex){}
 				textSorter       : null,       // use custom text sorter - function(a,b){ return a.sort(b); } // basic sort
 
-				// widget options
+				// *** widget options
 				widgets: [],                   // method to add widgets, e.g. widgets: ['zebra']
 				widgetOptions    : {
 					zebra : [ 'even', 'odd' ]    // zebra widget alternating row class names
 				},
 				initWidgets      : true,       // apply widgets on tablesorter initialization
 
-				// callbacks
+				// *** callbacks
 				initialized      : null,       // function(table){},
-				onRenderHeader   : null,       // function(index){},
 
-				// css class names
+				// *** css class names
 				tableClass       : 'tablesorter',
 				cssAsc           : 'tablesorter-headerAsc',
 				cssChildRow      : 'tablesorter-childRow', // previously "expand-child"
@@ -83,15 +86,15 @@
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name
 				cssProcessing    : 'tablesorter-processing', // processing icon applied to header during sort/filter
 
-				// selectors
+				// *** selectors
 				selectorHeaders  : '> thead th, > thead td',
 				selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
 				selectorRemove   : '.remove-me',
 
-				// advanced
+				// *** advanced
 				debug            : false,
 
-				// Internal variables
+				// *** Internal variables
 				headerList: [],
 				empties: {},
 				strings: {},
@@ -362,17 +365,26 @@
 
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
-					t, lock, time, $tableHeaders, c = table.config;
-					c.headerList = [];
+					h, i, t, lock, time, $tableHeaders, c = table.config;
+					c.headerList = [], c.headerContent = [];
 				if (c.debug) {
 					time = new Date();
 				}
+				i = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
 				$tableHeaders = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
-					t = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
-					this.innerHTML = '<div class="tablesorter-header-inner">' + this.innerHTML + t + '</div>'; // faster than wrapInner
+					c.headerContent[index] = this.innerHTML; // save original header content
+					// set up header template
+					t = c.headerTemplate.replace(/\{content\}/g, this.innerHTML).replace(/\{icon\}/g, i);
+					if (c.onRenderTemplate) {
+						h = c.onRenderTemplate.apply($t, [index, t]);
+						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
+					}
+					this.innerHTML = '<div class="tablesorter-header-inner">' + t + '</div>'; // faster than wrapInner
+
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
+
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
