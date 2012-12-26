@@ -35,6 +35,8 @@
 
 		widthFixed : true,
 
+		headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
+
 		widgets: ["columns", "filter", "stickyHeaders", "uitheme", "zebra"] , //[ 'uitheme', 'zebra', 'stickyHeaders' ],
 
 		widgetOptions: {
@@ -94,6 +96,7 @@ $(function() {
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
 			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
 			<li>Added <code>widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual sticky header. <span class="tip"><em>New! v2.1</em></span></li>
 			<li>Multiple rows in the header will become sticky. <span class="tip"><em>New! v2.1.17</em></span></li>

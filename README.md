@@ -36,6 +36,30 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7 (12/26/2012)
+
+* Added `headerTemplate` option:
+ * `headerTemplate` is a template string which allows adding additional content to the header while it is being built.
+ * This template string has two default tags: `{content}` and `{icon}`.
+ * `{content}` will be replaced by the current header HTML content.
+ * `{icon}` will be replaced by `<i class="tablesorter-icon"></i>`, but only if a class name is defined in the `cssIcon` option.
+ * Everything within this template string will be wrapped in a div with class `tablesorter-header-inner`.
+ * The default template is `{content}`.
+ * The following themes DO NEED the icon (`{icon}`) included in the template: Bootstrap, jQuery UI, Grey and Dropbox.
+* Added `onRenderTemplate` option:
+ * This is a function that is called after the template string has been built, but before the template string is applied to the header and before the onRenderHeader function is called.
+ * The onRenderTemplate function receives a column index and template string parameters. The template string, from the headerTemplate option, will already have the {icon} and {content} tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it.
+ * Check out the [demo here](http://mottie.github.com/tablesorter/docs/example-option-render-template.html).
+* Updated `uitheme` widget
+  * The `uitheme` setting is no longer required, use the `theme` option instead.
+  * When using the `bootstrap` or `jui` theme, just add the name to the `theme` option: e.g. `theme: "bootstrap"`.
+  * The `uitheme` widget option will still work, but if the theme name exists within `$.tablesorter.themes` it will override the `uitheme` option.
+  * Look at the [theme demo](http://mottie.github.com/tablesorter/docs/themes.html) source for a better example.
+* Fixed `sortReset` bug - see [issue #167](https://github.com/Mottie/tablesorter/issues/167).
+* Fixed an issue with the pager resetting to the first page after every sort.
+* Fixed javascript errors popping up when initializing the plugin on an empty table. Fixes [issue #206](https://github.com/Mottie/tablesorter/issues/206).
+* 
+
 #### Version 2.6.2 (12/20/2012)
 
 * Fixed sort breaking when `tfoot` contained a table. Fixes problem mentioned in [issue #196](https://github.com/Mottie/tablesorter/issues/196).

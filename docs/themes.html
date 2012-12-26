@@ -46,25 +46,31 @@ $(function() {
 	$('.demo').tablesorter({
 		widthFixed : true,
 		widgets    : ['zebra','columns'],
-		sortList   : [ [0,0],[1,0],[2,0] ] 
+		sortList   : [ [0,0],[1,0],[2,0] ]
+	});
+
+	// grey & dropbox themes need the {icon} for header icons
+	$('.tablesorter-dropbox,.tablesorter-grey').tablesorter({
+		widthFixed : true,
+		headerTemplate: '{content}{icon}', // dropbox theme doesn't like a space between the content & icon
+		widgets    : ['zebra','columns'],
+		sortList   : [ [0,0],[1,0],[2,0] ]
 	});
 
 	$('.tablesorter-bootstrap').tablesorter({
+		theme : 'bootstrap',
 		widthFixed : true,
+		headerTemplate: '{content} {icon}',
 		widgets    : ['zebra','columns', 'uitheme'],
-		widgetOptions : {
-			uitheme : 'bootstrap'
-		},
-		sortList   : [ [0,0],[1,0],[2,0] ] 
+		sortList   : [ [0,0],[1,0],[2,0] ]
 	});
 
 	$('.tablesorter-jui').tablesorter({
+		theme : 'jui',
 		widthFixed : true,
+		headerTemplate: '{content} {icon}',
 		widgets    : ['zebra','columns', 'uitheme'],
-		widgetOptions : {
-			uitheme : 'jui'
-		},
-		sortList   : [ [0,0],[1,0],[2,0] ] 
+		sortList   : [ [0,0],[1,0],[2,0] ]
 	});
 
 
@@ -148,7 +154,7 @@ $(function() {
 	</div>
 	<div class="minitable">
 		<h3>dropbox</h3>
-		<table class="demo tablesorter-dropbox">
+		<table class="tablesorter-dropbox">
 			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
 			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
 			<tbody>
@@ -177,7 +183,7 @@ $(function() {
 	</div>
 	<div class="minitable">
 		<h3>grey</h3>
-		<table class="demo tablesorter-grey">
+		<table class="tablesorter-grey">
 			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
 			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
 			<tbody>

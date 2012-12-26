@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.6.2 - Client-side table sorting with ease!
+* TableSorter 2.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.6.2";
+			ts.version = "2.7";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -35,7 +35,7 @@
 				widthFixed       : false,      // adds colgroup to fix widths of columns
 				showProcessing   : false,      // show an indeterminate timer icon in the header when the table is sorted or filtered.
 
-				headerTemplate   : '{content} {icon}', // header layout template (HTML ok); {content} = innerHTML, {icon} = <i/> (class from cssIcon)
+				headerTemplate   : '{content}',// header layout template (HTML ok); {content} = innerHTML, {icon} = <i/> (class from cssIcon)
 				onRenderTemplate : null,       // function(index, template){ return template; }, (template is a string)
 				onRenderHeader   : null,       // function(index){}, (nothing to return)
 

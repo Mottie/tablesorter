@@ -46,6 +46,8 @@
 	// call the tablesorter plugin and apply the ui theme widget
 	$("table").tablesorter({
 
+		headerTemplate : '{content} {icon}', // needed to add icon for jui theme
+
 		// widget code now contained in the jquery.tablesorter.widgets.js file
 		widgets : ['uitheme', 'zebra', 'resizable'],
 
@@ -78,6 +80,7 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
 			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details (v2.1).</li>
 			<li><span class="tip"><em>New!</em></span> In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
 				<ul>

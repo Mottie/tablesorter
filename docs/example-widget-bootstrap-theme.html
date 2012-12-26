@@ -45,7 +45,11 @@
 
 	// call the tablesorter plugin and apply the uitheme widget
 	$("table").tablesorter({
+		theme : "bootstrap", // this will 
+
 		widthFixed: true,
+
+		headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
 
 		// widget code contained in the jquery.tablesorter.widgets.js file
 		// use the zebra stripe widget if you plan on hiding any rows (filter widget)
@@ -60,7 +64,7 @@
 			filter_reset : ".reset",
 
 			// set the uitheme widget to use the bootstrap theme class names
-			uitheme : "bootstrap"
+			// uitheme : "bootstrap"
 
 		}
 	})
@@ -137,7 +141,9 @@
 	<p class="tip">
 		<span class="label label-info">NOTE!</span>
 		<ul>
-			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
+			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file. But you'll need to add the <code>&lt;i&gt;</code> into the header manually.</li>
+			<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
+
 			<li><span class="label label-info">New!</span> In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
 				<ul>
 					<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the Bootstrap theme saved to <code>$.tablesorter.themes.bootstrap</code>.</li>

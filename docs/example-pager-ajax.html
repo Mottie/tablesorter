@@ -130,6 +130,13 @@
 		});
 
 });</script>
+	<script>
+		$(window).load(function(){
+			// allow THIS demo to sort the content; this variable is automatically set to true when ajax
+			// is used as there isn't any way to sort the server side data from the client side.
+			$('table')[0].config.serverSideSorting = false;
+		});
+	</script>
 </head>
 <body id="pager-demo">
 	<div id="banner">
