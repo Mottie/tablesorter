@@ -83,16 +83,10 @@ $.tablesorter.storage = function(table, key, val){
 	}
 	if (val && JSON && JSON.hasOwnProperty('stringify')){
 		// add unique identifiers = url pathname > table ID/index on page > data
-		if (v[url] && v[url][id]){
-			v[url][id] = val;
-		} else {
-			if (v[url]){
-				v[url][id] = val;
-			} else {
-				v[url] = {};
-				v[url][id] = val;
-			}
+		if (!v[url]) {
+			v[url] = {};
 		}
+		v[url][id] = val;
 		// *** set val ***
 		if (ls){
 			localStorage[key] = JSON.stringify(v);
@@ -112,13 +106,13 @@ $.tablesorter.storage = function(table, key, val){
 $.tablesorter.addWidget({
 	id: "uitheme",
 	format: function(table){
-		var time, klass, $el, $tar, t,
+		var time, klass, $el, $tar,
+			t = $.tablesorter.themes,
 			$t = $(table),
 			c = table.config,
 			wo = c.widgetOptions,
-			theme = typeof wo.uitheme === 'object' ? 'jui' : wo.uitheme || 'jui', // default uitheme is 'jui'
-			// use Object.prototype.toString.call().test('Array') instead of $.isArray to make this widget compatible with jQuery v1.2.6
-			o = (typeof wo.uitheme === 'object' && !Object.prototype.toString.call(wo.uitheme).test('Array')) ? wo.uitheme : $.tablesorter.themes[ $.tablesorter.themes.hasOwnProperty(theme) ? theme : 'jui'],
+			theme = c.theme !== 'default' ? c.theme : wo.uitheme || 'jui', // default uitheme is 'jui'
+			o = t[ t[theme] ? theme : t[wo.uitheme] ? wo.uitheme : 'jui'],
 			$h = $(c.headerList),
 			sh = 'tr.' + (wo.stickyHeaders || 'tablesorter-stickyHeader'),
 			rmv = o.sortNone + ' ' + o.sortDesc + ' ' + o.sortAsc;
@@ -138,7 +132,6 @@ $.tablesorter.addWidget({
 				.find('tr').addClass(o.footerRow)
 				.children('th, td').addClass(o.footerCells);
 			}
-			c.theme = ''; // clear out theme option so it doesn't interfere
 			// update header classes
 			$h
 				.addClass(o.header)
