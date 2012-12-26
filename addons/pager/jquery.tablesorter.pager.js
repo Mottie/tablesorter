@@ -457,13 +457,13 @@
 						c.currentFilters = filters;
 					})
 					// update pager after filter widget completes
-					.bind('filterEnd.pager sortEnd.pager', function() {
+					.bind('filterEnd.pager sortEnd.pager', function(e) {
 						//Prevent infinite event loops from occuring by setting this in all moveToPage calls and catching it here.
 						if ($.data(table, 'pagerUpdateTriggered')) {
 							$.data(table, 'pagerUpdateTriggered', false);
 							return;
 						}
-						c.page = 0;
+						if (e.type === 'filterEnd') { c.page = 0; }
 						updatePageDisplay(table, c);
 						moveToPage(table, c);
 						changeHeight(table, c);
