@@ -276,6 +276,7 @@
 				c2 = c.cache,
 				r, n, totalRows, checkCell, $bk, $tb,
 				i, j, k, l, pos, appendTime;
+				if (!c2[0]) { return; } // empty table - fixes #206
 				if (c.debug) {
 					appendTime = new Date();
 				}
@@ -479,7 +480,7 @@
 				var dynamicExp, sortWrapper, col, mx = 0, dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, j, k, c, colMax, cache, lc, s, e, order, orgOrderCol;
-				if (tc.serverSideSorting) {
+				if (tc.serverSideSorting || !tc.cache[0]) { // empty table - fixes #206
 					return;
 				}
 				if (tc.debug) { sortTime = new Date(); }
