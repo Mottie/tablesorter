@@ -867,30 +867,32 @@
 			};
 
 			ts.destroy = function(table, removeClasses, callback){
-				var $t = $(table), c = table.config,
-				$h = $t.find('thead:first');
-				// clear flag in case the plugin is initialized again
-				table.hasInitialized = false;
-				// remove widget added rows
-				$h.find('tr:not(.' + c.cssHeaderRow + ')').remove();
-				// remove resizer widget stuff
-				$h.find('.tablesorter-resizer').remove();
+				if (!table.hasInitialized) { return; }
 				// remove all widgets
 				ts.refreshWidgets(table, true, true);
+				var $t = $(table), c = table.config,
+				$h = $t.find('thead:first'),
+				$r = $h.find('tr.' + c.cssHeaderRow).removeClass(c.cssHeaderRow),
+				$f = $t.find('tfoot:first > tr').children('th, td');
+				// remove widget added rows, just in case
+				$h.find('tr').not($r).remove();
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
 					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
-					.find('.' + c.cssHeader)
-					.unbind('click mousedown mousemove mouseup')
+				c.$headers.add($f)
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
-					.find('.tablesorter-header-inner').each(function(){
-						if (c.cssIcon !== '') { $(this).find('.' + c.cssIcon).remove(); }
-						$(this).replaceWith( $(this).contents() );
-					});
+					.removeAttr('data-column');
+				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter');
+				// restore headers
+				$r.children().each(function(i){
+					$(this).html( c.headerContent[i] );
+				});
 				if (removeClasses !== false) {
-					$t.removeClass(c.tableClass);
+					$t.removeClass(c.tableClass + ' tablesorter-' + c.theme);
 				}
+				// clear flag in case the plugin is initialized again
+				table.hasInitialized = false;
 				if (typeof callback === 'function') {
 					callback(table);
 				}

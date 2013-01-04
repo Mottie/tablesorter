@@ -81,7 +81,8 @@ $.tablesorter.storage = function(table, key, val){
 			v = (d !== 0) ? $.parseJSON(k[d]) || {} : {};
 		}
 	}
-	if (val && JSON && JSON.hasOwnProperty('stringify')){
+	// allow val to be an empty string to 
+	if ((val || val === '') && window.JSON && JSON.hasOwnProperty('stringify')){
 		// add unique identifiers = url pathname > table ID/index on page > data
 		if (!v[url]) {
 			v[url] = {};
@@ -96,7 +97,7 @@ $.tablesorter.storage = function(table, key, val){
 			document.cookie = key + '=' + (JSON.stringify(v)).replace(/\"/g,'\"') + '; expires=' + d.toGMTString() + '; path=/';
 		}
 	} else {
-		return ( v && v.hasOwnProperty(url) && v[url].hasOwnProperty(id) ) ? v[url][id] : {};
+		return v && v[url] ? v[url][id] : {};
 	}
 };
 
@@ -263,6 +264,8 @@ $.tablesorter.addWidget({
 		var k, $tb,
 			b = c.$tbodies,
 			rmv = (c.widgetOptions.columns || [ "primary", "secondary", "tertiary" ]).join(' ');
+		c.$headers.removeClass(rmv);
+		$(table).children('tfoot').children('tr').children('th, td').removeClass(rmv);
 		for (k = 0; k < b.length; k++ ){
 			$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
 			$tb.children('tr').each(function(){
@@ -679,7 +682,7 @@ $.tablesorter.addWidget({
 			innr = '.tablesorter-header-inner',
 			firstRow = hdrCells.eq(0).parent(),
 			tfoot = $table.find('tfoot'),
-			t2 = $table.clone(), // clone table, but don't remove id... the table might be styled by css
+			t2 = wo.$sticky = $table.clone(), // clone table, but don't remove id... the table might be styled by css
 			// clone the entire thead - seems to work in IE8+
 			stkyHdr = t2.children('thead:first')
 				.addClass(css)
@@ -791,6 +794,7 @@ $.tablesorter.addWidget({
 			.removeClass('hasStickyHeaders')
 			.unbind('sortEnd.tsSticky pagerComplete.tsSticky')
 			.find('.' + css).remove();
+		if (wo.$sticky) { wo.$sticky.remove(); } // remove cloned thead
 		$(window).unbind('scroll.tsSticky resize.tsSticky');
 	}
 });
