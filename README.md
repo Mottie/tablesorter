@@ -36,6 +36,21 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.1 (1/4/2013)
+
+* Added two internal parameters to always make sure we're targeting the correct elements.
+ * Added `table.config.$table` which is a jQuery object of the table.
+ * Added `table.config.$tbodies` which is a jQuery object of sortable tbodies; the ones without the class name in the `cssInfoBlock` option.
+* Fixed removal methods:
+ * Tablesorter destroy will now properly restore the header and remove all bindings.
+ * Widgets should now again be removed properly.
+ * Updated the storage utility to allow setting a property to an empty string, previously it was just ignored.
+* Fixed pager issues:
+ * Pager status will now update properly while filtering rows.
+ * Pager status will also update properly after sorting filtered rows.
+ * The above issues were fixes for [issue #207](https://github.com/Mottie/tablesorter/issues/207).
+ * Fixed the pager's `fixedHeight` option to again properly pad the table to maintain the height.
+
 #### Version 2.7 (12/26/2012)
 
 * Added `headerTemplate` option:
@@ -113,35 +128,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Added `footerRow` and `footerCells` to the tablesorter themes (`$.tablesorter.themes`):
   * This allows styling of the footer in the bootstrap and jQuery UI themes.
   * Used by the `uitheme` widget.
-
-#### Version 2.5.2 (11/27/2012)
-
-* Fixed an issue with the pager making recursive ajax calls. Fixes [issue #182](https://github.com/Mottie/tablesorter/issues/182).
-
-#### Version 2.5.1 (11/26/2012)
-
-* Fixed a serious bug which occurrs in IE:
- * This bug is related to the multi-column sorting changes made in v2.5 - I swear I'll add unit testing soon!
- * This problem appeared to occur in all versions of IE.
- * See [issue #181](https://github.com/Mottie/tablesorter/issues/181) for details.
-* Updated the grey and bootstrap themes:
- * The w3c recommendations for linear gradients are now being followed ([ref](http://dev.w3.org/csswg/css3-images/#linear-gradients)) - added a "to" to the position.
- * Fixed the older IE filter for gradients. Apparently `startColorstr='#555'` is a different color than `startColorstr='#555555'`.
-
-#### Version 2.5 (11/22/2012)
-
-* Improved multi-column sorting
-  * Huge thanks to [Nick Craver](https://github.com/NickCraver) for making multicolumn sorting no longer uses an `eval()` during the sort!
-  * This change improves performance of the sort across all browsers.
-  * It also allows use of numerous minifier scripts.
-  * See [pull request #177](https://github.com/Mottie/tablesorter/pull/177) for more details.
-* Fixed using `addRows` on an empty table, [issue #179](https://github.com/Mottie/tablesorter/issues/179).
-* Fixed inconsistencies in the usage of sort up (ascending) and sort down (descending) in the javascript and css.
-  * Updated the `cssAsc` default value to `tablesorter-headerAsc`.
-  * Updated the `cssDesc` default value to `tablesorter-headerDesc`.
-  * All css themes now include these new class names. References to older class names were not removed, but they will be removed in version 3.
-  * Renamed image files and switched data URIs to match these changes.
-  * This fixes [issue #173](https://github.com/Mottie/tablesorter/issues/173). Thanks [bitti](https://github.com/bitti)!
-* Updated all theme css files to use image data URIs instead of the images.
-  * The images are all still contained in the `css/images` directory.
-  * References to the image files have been commented out instead of removed.

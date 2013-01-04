@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 12/26/2012
+ * updated 1/4/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -94,7 +94,7 @@
 
 		updatePageDisplay = function(table, c) {
 			var i, p, s, t, out, f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
-			c.filteredRows = (f) ? $(table).find('tbody tr:not(.filtered)').length : c.totalRows;
+			c.filteredRows = (f) ? table.config.$tbodies.children('tr:not(.filtered,.remove-me)').length : c.totalRows;
 			c.filteredPages = (f) ? Math.ceil( c.filteredRows / c.size ) : c.totalPages;
 			if ( Math.min( c.totalPages, c.filteredPages ) > 0 ) {
 				t = (c.size * c.page > c.filteredRows);
@@ -138,7 +138,7 @@
 				if (h) {
 					d = h - $b.height();
 					if ( d > 5 && $.data(table, 'pagerLastSize') === c.size && $b.children('tr:visible').length < c.size ) {
-						$b.append('<tr class="pagerSavedHeightSpacer remove-me" style="height:' + d + 'px;"></tr>');
+						$b.append('<tr class="pagerSavedHeightSpacer ' + table.config.selectorRemove.replace('.','') + '" style="height:' + d + 'px;"></tr>');
 					}
 				}
 			}
@@ -188,9 +188,9 @@
 				var i, j, hsh, $f, $sh,
 				$t = $(table),
 				tc = table.config,
-				$b = $(table.tBodies).filter(':not(.' + tc.cssInfoBlock + ')'),
+				$b = c.$tbodies,
 				hl = $t.find('thead th').length, tds = '',
-				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove + '"><td style="text-align: center;" colspan="' + hl + '">' +
+				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace('.','') + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
 				d = result[1] || [],
@@ -302,6 +302,7 @@
 		},
 
 		renderTable = function(table, rows, c) {
+			c.isDisabled = false; // needed because sorting will change the page and re-enable the pager
 			var i, j, o,
 			f = document.createDocumentFragment(),
 			l = rows.length,
@@ -454,6 +455,7 @@
 				$t
 					.unbind('filterStart.pager filterEnd.pager sortEnd.pager disable.pager enable.pager destroy.pager update.pager')
 					.bind('filterStart.pager', function(e, filters) {
+						$.data(table, 'pagerUpdateTriggered', false);
 						c.currentFilters = filters;
 					})
 					// update pager after filter widget completes
@@ -466,7 +468,7 @@
 						if (e.type === 'filterEnd') { c.page = 0; }
 						updatePageDisplay(table, c);
 						moveToPage(table, c);
-						changeHeight(table, c);
+						fixHeight(table, c);
 					})
 					.bind('disable.pager', function(){
 						showAllRows(table, c);
@@ -544,6 +546,8 @@
 					hideRowsSetup(table, c);
 				}
 
+				changeHeight(table, c);
+	
 				// pager initialized
 				if (!c.ajax) {
 					c.initialized = true;
