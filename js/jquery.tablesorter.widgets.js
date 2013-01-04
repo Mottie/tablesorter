@@ -199,7 +199,7 @@ $.tablesorter.addWidget({
 		$tbl = $(table),
 		c = table.config,
 		wo = c.widgetOptions,
-		b = $tbl.children('tbody:not(.' + c.cssInfoBlock + ')'),
+		b = c.$tbodies,
 		list = c.sortList,
 		len = list.length,
 		css = [ "primary", "secondary", "tertiary" ]; // default options
@@ -213,7 +213,7 @@ $.tablesorter.addWidget({
 		}
 		// check if there is a sort (on initialization there may not be one)
 		for (k = 0; k < b.length; k++ ){
-			$tb = $.tablesorter.processTbody(table, $(b[k]), true); // detach tbody
+			$tb = $.tablesorter.processTbody(table, b.eq(k), true); // detach tbody
 			$tr = $tb.children('tr');
 			l = $tr.length;
 			// loop through the visible rows
@@ -261,10 +261,10 @@ $.tablesorter.addWidget({
 	},
 	remove: function(table, c, wo){
 		var k, $tb,
-			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
+			b = c.$tbodies,
 			rmv = (c.widgetOptions.columns || [ "primary", "secondary", "tertiary" ]).join(' ');
 		for (k = 0; k < b.length; k++ ){
-			$tb = $.tablesorter.processTbody(table, $(b[k]), true); // remove tbody
+			$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
 			$tb.children('tr').each(function(){
 				$(this).children().removeClass(rmv);
 			});
@@ -300,7 +300,7 @@ $.tablesorter.addWidget({
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
 			$t = $(table).addClass('hasFilters'),
-			b = $t.children('tbody:not(.' + c.cssInfoBlock + ')'),
+			b = c.$tbodies,
 			cols = c.parsers.length,
 			reg = [ // regex used in filter "check" functions
 				/^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // 0 = regex to test for regex
@@ -354,7 +354,7 @@ $.tablesorter.addWidget({
 				if (c.debug) { time = new Date(); }
 
 				for (k = 0; k < b.length; k++ ){
-					$tb = $.tablesorter.processTbody(table, $(b[k]), true);
+					$tb = $.tablesorter.processTbody(table, b.eq(k), true);
 					$tr = $tb.children('tr');
 					l = $tr.length;
 					if (cv === '' || wo.filter_serversideFiltering){
@@ -645,14 +645,14 @@ $.tablesorter.addWidget({
 	remove: function(table, c, wo){
 		var k, $tb,
 			$t = $(table),
-			b = $t.children('tbody:not(.' + c.cssInfoBlock + ')');
+			b = c.$tbodies;
 		$t
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
 			.unbind('addRows updateCell update appendCache search'.split(' ').join('.tsfilter'))
 			.find('.tablesorter-filter-row').remove();
 		for (k = 0; k < b.length; k++ ){
-			$tb = $.tablesorter.processTbody(table, $(b[k]), true); // remove tbody
+			$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
 			$tb.children().removeClass('filtered').show();
 			$.tablesorter.processTbody(table, $tb, false); // restore tbody
 		}

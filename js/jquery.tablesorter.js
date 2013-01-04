@@ -170,7 +170,7 @@
 
 			function buildParserCache(table) {
 				var c = table.config,
-					tb = $(table.tBodies).filter(':not(.' + c.cssInfoBlock + ')'),
+					tb = c.$tbodies,
 					rows, list, l, i, h, ch, p, parsersDebug = "";
 				if ( tb.length === 0) {
 					return c.debug ? log('*Empty table!* Not building a parser cache') : '';
@@ -539,18 +539,18 @@
 						return (this.config.debug) ? log('stopping initialization! No thead, tbody or tablesorter has already been initialized') : '';
 					}
 					// declare
-					var $cell, $this = $(this),
+					var $cell, $this = $(this), $t0 = this,
 						c, i, j, k = '', a, s, o, downTime,
 						m = $.metadata;
 					// initialization flag
-					this.hasInitialized = false;
+					$t0.hasInitialized = false;
 					// new blank config object
-					this.config = {};
+					$t0.config = {};
 					// merge and extend
-					c = $.extend(true, this.config, ts.defaults, settings);
+					c = $.extend(true, $t0.config, ts.defaults, settings);
 					// save the settings where they read
-					$.data(this, "tablesorter", c);
-					if (c.debug) { $.data( this, 'startoveralltimer', new Date()); }
+					$.data($t0, "tablesorter", c);
+					if (c.debug) { $.data( $t0, 'startoveralltimer', new Date()); }
 					// constants
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
 					c.supportsDataObject = parseFloat($.fn.jquery) >= 1.4;
@@ -560,14 +560,15 @@
 					if (!/tablesorter\-/.test($this.attr('class'))) {
 						k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
 					}
-					$this.addClass(c.tableClass + k);
+					c.$table = $this.addClass(c.tableClass + k);
+					c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
 					// build headers
-					c.$headers = buildHeaders(this);
+					c.$headers = buildHeaders($t0);
 					// try to auto detect column type, and store in tables config
-					c.parsers = buildParserCache(this);
+					c.parsers = buildParserCache($t0);
 					// build the cache for the tbody cells
 					// delayInit will delay building the cache until the user starts a sort
-					if (!c.delayInit) { buildCache(this); }
+					if (!c.delayInit) { buildCache($t0); }
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					c.$headers
@@ -586,10 +587,10 @@
 						}
 						// ignore long clicks (prevents resizable widget from initializing a sort)
 						if (external !== true && (new Date().getTime() - downTime > 250)) { return false; }
-						if (c.delayInit && !c.cache) { buildCache($this[0]); }
+						if (c.delayInit && !c.cache) { buildCache($t0); }
 						if (!cell.sortDisabled) {
 							// Only call sortStart if sorting is enabled
-							$this.trigger("sortStart", $this[0]);
+							$this.trigger("sortStart", $t0);
 							// store exp, for speed
 							// $cell = $(this);
 							k = !e[c.sortMultiSortKey];
@@ -675,13 +676,13 @@
 								}
 							}
 							// sortBegin event triggered immediately before the sort
-							$this.trigger("sortBegin", $this[0]);
+							$this.trigger("sortBegin", $t0);
 							// setTimeout needed so the processing icon shows up
 							setTimeout(function(){
 								// set css for headers
-								setHeadersCss($this[0]);
-								multisort($this[0]);
-								appendToTable($this[0]);
+								setHeadersCss($t0);
+								multisort($t0);
+								appendToTable($t0);
 							}, 1);
 						}
 					});
@@ -698,23 +699,23 @@
 					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
 					.bind("sortReset", function(){
 						c.sortList = [];
-						setHeadersCss(this);
-						multisort(this);
-						appendToTable(this);
+						setHeadersCss($t0);
+						multisort($t0);
+						appendToTable($t0);
 					})
 					.bind("update", function(e, resort, callback) {
 						// remove rows/elements before update
-						$(c.selectorRemove, this).remove();
+						$(c.selectorRemove, $t0).remove();
 						// rebuild parsers
-						c.parsers = buildParserCache(this);
+						c.parsers = buildParserCache($t0);
 						// rebuild the cache map
-						buildCache(this);
+						buildCache($t0);
 						checkResort($this, resort, callback);
 					})
 					.bind("updateCell", function(e, cell, resort, callback) {
 						// get position from the dom
 						var l, row, icell,
-						t = this, $tb = $(this).find('tbody'),
+						$tb = $this.find('tbody'),
 						// update cache - format: function(s, table, cell, cellIndex)
 						// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
 						tbdy = $tb.index( $(cell).parents('tbody').filter(':last') ),
@@ -724,25 +725,25 @@
 						if ($tb.length && tbdy >= 0) {
 							row = $tb.eq(tbdy).find('tr').index( $row );
 							icell = cell.cellIndex;
-							l = t.config.cache[tbdy].normalized[row].length - 1;
-							t.config.cache[tbdy].row[t.config.cache[tbdy].normalized[row][l]] = $row;
-							t.config.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(t, cell, icell), t, cell, icell );
+							l = $t0.config.cache[tbdy].normalized[row].length - 1;
+							$t0.config.cache[tbdy].row[$t0.config.cache[tbdy].normalized[row][l]] = $row;
+							$t0.config.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText($t0, cell, icell), $t0, cell, icell );
 							checkResort($this, resort, callback);
 						}
 					})
 					.bind("addRows", function(e, $row, resort, callback) {
 						var i, rows = $row.filter('tr').length,
-						dat = [], l = $row[0].cells.length, t = this,
-						tbdy = $(this).find('tbody').index( $row.closest('tbody') );
+						dat = [], l = $row[0].cells.length,
+						tbdy = $this.find('tbody').index( $row.closest('tbody') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!c.parsers) {
-							c.parsers = buildParserCache(t);
+							c.parsers = buildParserCache($t0);
 						}
 						// add each row
 						for (i = 0; i < rows; i++) {
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = c.parsers[j].format( getElementText(t, $row[i].cells[j], j), t, $row[i].cells[j], j );
+								dat[j] = c.parsers[j].format( getElementText($t0, $row[i].cells[j], j), $t0, $row[i].cells[j], j );
 							}
 							// add the row index to the end
 							dat.push(c.cache[tbdy].row.length);
@@ -755,36 +756,36 @@
 						checkResort($this, resort, callback);
 					})
 					.bind("sorton", function(e, list, callback, init) {
-						$(this).trigger("sortStart", this);
+						$this.trigger("sortStart", this);
 						// update header count index
-						updateHeaderSortCount(this, list);
+						updateHeaderSortCount($t0, list);
 						// set css for headers
-						setHeadersCss(this);
+						setHeadersCss($t0);
 						// sort the table and append it to the dom
-						multisort(this);
-						appendToTable(this, init);
+						multisort($t0);
+						appendToTable($t0, init);
 						if (typeof callback === "function") {
-							callback(this);
+							callback($t0);
 						}
 					})
 					.bind("appendCache", function(e, callback, init) {
-						appendToTable(this, init);
+						appendToTable($t0, init);
 						if (typeof callback === "function") {
-							callback(this);
+							callback($t0);
 						}
 					})
 					.bind("applyWidgetId", function(e, id) {
-						ts.getWidgetById(id).format(this, c, c.widgetOptions);
+						ts.getWidgetById(id).format($t0, c, c.widgetOptions);
 					})
 					.bind("applyWidgets", function(e, init) {
 						// apply widgets
-						ts.applyWidget(this, init);
+						ts.applyWidget($t0, init);
 					})
 					.bind("refreshWidgets", function(e, all, dontapply){
-						ts.refreshWidgets(this, all, dontapply);
+						ts.refreshWidgets($t0, all, dontapply);
 					})
 					.bind("destroy", function(e, c, cb){
-						ts.destroy(this, c, cb);
+						ts.destroy($t0, c, cb);
 					});
 
 					// get sort list from jQuery data or metadata
@@ -795,35 +796,35 @@
 						c.sortList = $this.metadata().sortlist;
 					}
 					// apply widget init code
-					ts.applyWidget(this, true);
+					ts.applyWidget($t0, true);
 					// if user has supplied a sort list to constructor
 					if (c.sortList.length > 0) {
 						$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
 					} else if (c.initWidgets) {
 						// apply widget format
-						ts.applyWidget(this);
+						ts.applyWidget($t0);
 					}
 
 					// fixate columns if the users supplies the fixedWidth option
 					// do this after theme has been applied
-					fixColumnWidth(this);
+					fixColumnWidth($t0);
 
 					// show processesing icon
 					if (c.showProcessing) {
 						$this
 						.unbind('sortBegin sortEnd')
 						.bind('sortBegin sortEnd', function(e) {
-							ts.isProcessing($this[0], e.type === 'sortBegin');
+							ts.isProcessing($t0, e.type === 'sortBegin');
 						});
 					}
 
 					// initialized
-					this.hasInitialized = true;
+					$t0.hasInitialized = true;
 					if (c.debug) {
-						ts.benchmark("Overall initialization time", $.data( this, 'startoveralltimer'));
+						ts.benchmark("Overall initialization time", $.data( $t0, 'startoveralltimer'));
 					}
-					$this.trigger('tablesorter-initialized', this);
-					if (typeof c.initialized === 'function') { c.initialized(this); }
+					$this.trigger('tablesorter-initialized', $t0);
+					if (typeof c.initialized === 'function') { c.initialized($t0); }
 				});
 			};
 
@@ -862,7 +863,7 @@
 			};
 
 			ts.clearTableBody = function(table) {
-				$(table.tBodies).filter(':not(.' + table.config.cssInfoBlock + ')').empty();
+				table.config.$tbodies.empty();
 			};
 
 			ts.destroy = function(table, removeClasses, callback){
@@ -1333,13 +1334,13 @@
 		format: function(table, c, wo) {
 			var $tb, $tv, $tr, row, even, time, k, l,
 			child = new RegExp(c.cssChildRow, 'i'),
-			b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')');
+			b = c.$tbodies;
 			if (c.debug) {
 				time = new Date();
 			}
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
-				$tb = $(b[k]);
+				$tb = b.eq(k);
 				l = $tb.children('tr').length;
 				if (l > 1) {
 					row = 0;
@@ -1361,10 +1362,10 @@
 		},
 		remove: function(table, c, wo){
 			var k, $tb,
-				b = $(table).children('tbody:not(.' + c.cssInfoBlock + ')'),
+				b = c.$tbodies,
 				rmv = (c.widgetOptions.zebra || [ "even", "odd" ]).join(' ');
 			for (k = 0; k < b.length; k++ ){
-				$tb = $.tablesorter.processTbody(table, $(b[k]), true); // remove tbody
+				$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
 				$tb.children().removeClass(rmv);
 				$.tablesorter.processTbody(table, $tb, false); // restore tbody
 			}
