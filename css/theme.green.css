@@ -57,7 +57,7 @@
 	padding-left: 23px;
 }
 .tablesorter-green thead .tablesorter-header.sorter-false {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 

@@ -47,7 +47,7 @@ Default Theme
 	border-bottom: #000 2px solid;
 }
 .tablesorter-default thead .sorter-false {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 

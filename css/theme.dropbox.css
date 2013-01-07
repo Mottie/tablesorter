@@ -76,7 +76,7 @@
 }
 .tablesorter-dropbox thead .sorter-false i,
 .tablesorter-dropbox thead .sorter-false:hover i {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 

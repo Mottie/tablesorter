@@ -68,7 +68,7 @@
 
 /* Zebra widget - This allows you to use ui-state-default as the zebra stripe color */
 .tablesorter-jui tr.ui-state-default {
-	background-image: url();
+	background-image: none;
 	font-weight: normal;
 }
 

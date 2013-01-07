@@ -70,7 +70,7 @@
 	/* background-image: url(images/black-desc.gif); */
 }
 .tablesorter-blue thead .sorter-false {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 
@@ -80,7 +80,7 @@
 .tablesorter-blue tfoot .tablesorter-headerAsc,
 .tablesorter-blue tfoot .tablesorter-headerDesc {
 	/* remove sort arrows from footer */
-	background-image: url();
+	background-image: none;
 }
 
 /* tbody */

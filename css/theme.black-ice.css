@@ -45,7 +45,7 @@
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 .tablesorter-blackice thead .sorter-false {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 
@@ -55,7 +55,7 @@
 .tablesorter-blackice tfoot .tablesorter-headerAsc,
 .tablesorter-blackice tfoot .tablesorter-headerDesc {
 	/* remove sort arrows from footer */
-	background-image: url();
+	background-image: none;
 }
 
 /* tbody */

@@ -59,7 +59,7 @@
 	/* background-image: url(images/ice-asc.gif); */
 }
 .tablesorter-ice thead .sorter-false {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 

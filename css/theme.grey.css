@@ -79,7 +79,7 @@
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 .tablesorter-grey thead .sorter-false i {
-	background-image: url();
+	background-image: none;
 	padding: 4px;
 }
 
