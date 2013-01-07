@@ -36,6 +36,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.1b (1/7/2013)
+
+* Updated bootstrap demo
+ * It now properly removes the "table-striped" class when the zebra widget is enabled.
+ * The demo now uses the [`refreshWidgets` method](http://mottie.github.com/tablesorter/docs/index.html#refreshwidgets) (added in v2.4) to completely remove the zebra widget.
+ * Thanks to [potsky](https://github.com/Mottie/tablesorter/issues/111#issuecomment-11951369) for notifying me of this problem!
+
 #### Version 2.7.1 (1/4/2013)
 
 * Added two internal parameters to always make sure we're targeting the correct elements.

@@ -28,7 +28,7 @@
 	$.extend($.tablesorter.themes.bootstrap, {
 		// these classes are added to the table. To see other table classes available,
 		// look here: http://twitter.github.com/bootstrap/base-css.html#tables
-		table      : 'table table-bordered table-striped',
+		table      : 'table table-bordered',
 		header     : 'bootstrap-header', // give the header a gradient background
 		footerRow  : '',
 		footerCells: '',
@@ -46,7 +46,7 @@
 	// call the tablesorter plugin and apply the uitheme widget
 	$("table").tablesorter({
 		theme : "bootstrap", // this will 
-
+debug: true,
 		widthFixed: true,
 
 		headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
@@ -97,31 +97,26 @@
 				txt = $(this).data('filter');
 			$('table').find('.tablesorter-filter').val('').eq(col).val(txt);
 			$('table').trigger('search', false);
-
-			// the commented out code below will filter the rows
-			// without adding text to the filter input
-			// ******************
-			// var filter = [];
-			// filter[col] = txt; // get text to filter
-			// $('table').trigger('search', [filter]);
 		});
 
 		// toggle zebra widget
 		$('button.zebra').click(function(){
-			var t = $(this).find('i').hasClass('icon-ok');
-			if (t) {
+			var t = $(this).hasClass('btn-success');
+//			if (t) {
 				// removing classes applied by the zebra widget
 				// you shouldn't ever need to use this code, it is only for this demo
-				$('table').find('tr').removeClass('odd even');
-			}
-			$('table')[0].config.widgets = (t) ? ["uitheme", "filter"] : ["uitheme", "filter", "zebra"];
+//				$('table').find('tr').removeClass('odd even');
+//			}
+			$('table')
+				.toggleClass('table-striped')[0]
+				.config.widgets = (t) ? ["uitheme", "filter"] : ["uitheme", "filter", "zebra"];
 			$(this)
 				.toggleClass('btn-danger btn-success')
 				.find('i')
 				.toggleClass('icon-ok icon-remove').end()
 				.find('span')
 				.text(t ? 'disabled' : 'enabled');
-			$('table').trigger('applyWidgets');
+			$('table').trigger('refreshWidgets', [false]);
 		});
 	});
 	</script>
@@ -142,21 +137,25 @@
 		<span class="label label-info">NOTE!</span>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file. But you'll need to add the <code>&lt;i&gt;</code> into the header manually.</li>
-			<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
-
-			<li><span class="label label-info">New!</span> In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
+			<li><span class="label label-success">New!</span> v2.7!
+				<ul>
+					<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code.</li>
+					<li>Setting <code>theme</code> option to <code>"Bootstrap"</code> will now override/ignore the <code>uitheme</code> value in the <code>widgetOptions</code>.</li>
+				</ul>
+			</li>
+			<li><span class="label label-success">New!</span> In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
 				<ul>
 					<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the Bootstrap theme saved to <code>$.tablesorter.themes.bootstrap</code>.</li>
 					<li>The themes variable allows you to modify the class names for the table, header, sort icons, active state, hover state, filter inputs and zebra striping. See the code below on how to extend these variables.</li>
-					<li>Set the <code>uitheme</code> widget option to <code>"bootstrap"</code> to set the widget to use the Bootstrap theme. See the <a href="example-widget-ui-theme.html">jQuery UI demo</a> for another example.</li>
+					<li>Set the <del><code>uitheme</code> widget</del> <code>theme</code> option (changed in v2.7) to <code>"bootstrap"</code> to set the widget to use the Bootstrap theme. See the <a href="example-widget-ui-theme.html">jQuery UI demo</a> for another example.</li>
 				</ul>
 			</li>
 			<li>This demo shows how to get around an issue with the filter widget:
 				<ul>
 					<li>The <span class="label label-success">zebra widget button</span> below was added to show that when bootstrap's "table-striped" class is applied, the css defined zebra striping will not apply correctly because table rows are hidden but still accounted for by the css <code>nth-child()</code> selector.</li>
-					<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button class="filter btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
-					<li>Try other filter searches with the zebra widget disabled, like <button class="filter btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
-					<li>To solve this issue, just enable the zebra widget and the "even" and "odd" row class names will over-ride the <code>nth-child()</code> styling.</li>
+					<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button class="filter btn btn-small btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
+					<li>Try other filter searches with the zebra widget disabled, like <button class="filter btn btn-small btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
+					<li>To solve this issue, just enable the zebra widget and the "even" and "odd" row class names <del>will</del> should over-ride the <code>nth-child()</code> styling.<br><span class="label label-warning">NOTE!</span> This doesn't seem to work in the latest Bootstrap version, so you'll have to remove the "table-striped" class completely from the table.</li>
 					<li>The only down side is that for custom bootstrap themes, you'll need to edit the "theme.bootstrap.css" file for bootstrap.</li>
 				</ul>
 			</li>
