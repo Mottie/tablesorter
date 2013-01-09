@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 1/4/2013
+/*! tableSorter 2.4+ widgets - updated 1/8/2013
  *
  * Column Styles
  * Column Filters
@@ -488,8 +488,8 @@ $.tablesorter.addWidget({
 				// build default select dropdown
 				for (i = 0; i < cols; i++){
 					t = $ths.filter('[data-column="' + i + '"]:last');
-					// look for the filter-select class, but don't build it twice.
-					if (t.hasClass('filter-select') && !t.hasClass('filter-false') && !(wo.filter_functions && wo.filter_functions[i] === true)){
+					// look for the filter-select class; build/update it if found
+					if ((t.hasClass('filter-select') || wo.filter_functions[i] === true) && !t.hasClass('filter-false')){
 						if (!wo.filter_functions) { wo.filter_functions = {}; }
 						wo.filter_functions[i] = true; // make sure this select gets processed by filter_functions
 						buildSelect(i, updating);
@@ -582,7 +582,9 @@ $.tablesorter.addWidget({
 					}
 				}
 			}
-			buildDefault();
+			// not really updating, but if the column has both the "filter-select" class & filter_functions set to true,
+			// it would append the same options twice.
+			buildDefault(true);
 
 			$t.find('select.' + css).bind('change search', function(){
 				checkFilters();

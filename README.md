@@ -36,6 +36,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.2 (1/8/2013)
+
+* Updated filter widget to update the filter-select when an update event is triggered. See [this StackOverflow question](http://stackoverflow.com/q/14223044/145346).
+* Replaced `background-image: url();` with `background-image: none;` in all applicable theme files.
+
 #### Version 2.7.1b (1/7/2013)
 
 * Updated bootstrap demo
