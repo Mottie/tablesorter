@@ -38,7 +38,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 
 #### Version 2.7.3 (1/10/2013)
 
-* Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined. Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).
+* Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined (introduced in v2.7.2). Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).
 
 #### Version 2.7.2 (1/8/2013)
 
