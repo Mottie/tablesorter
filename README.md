@@ -36,6 +36,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.3 (1/10/2013)
+
+* Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined. Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).
+
 #### Version 2.7.2 (1/8/2013)
 
 * Updated filter widget to update the filter-select when an update event is triggered. See [this StackOverflow question](http://stackoverflow.com/q/14223044/145346).

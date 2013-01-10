@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 1/8/2013
+/*! tableSorter 2.4+ widgets - updated 1/10/2013
  *
  * Column Styles
  * Column Filters
@@ -489,7 +489,7 @@ $.tablesorter.addWidget({
 				for (i = 0; i < cols; i++){
 					t = $ths.filter('[data-column="' + i + '"]:last');
 					// look for the filter-select class; build/update it if found
-					if ((t.hasClass('filter-select') || wo.filter_functions[i] === true) && !t.hasClass('filter-false')){
+					if ((t.hasClass('filter-select') || wo.filter_functions && wo.filter_functions[i] === true) && !t.hasClass('filter-false')){
 						if (!wo.filter_functions) { wo.filter_functions = {}; }
 						wo.filter_functions[i] = true; // make sure this select gets processed by filter_functions
 						buildSelect(i, updating);
