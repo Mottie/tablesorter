@@ -714,7 +714,7 @@
 						multisort($t0);
 						appendToTable($t0);
 					})
-					.bind("update", function(e, resort, callback) {
+					.bind("update updateRows", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, $t0).remove();
 						// rebuild parsers
