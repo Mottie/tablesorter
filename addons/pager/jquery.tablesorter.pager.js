@@ -452,7 +452,7 @@
 				config.appender = $this.appender;
 
 				$t
-					.unbind('filterStart.pager filterEnd.pager sortEnd.pager disable.pager enable.pager destroy.pager update.pager')
+					.unbind('filterStart.pager filterEnd.pager sortEnd.pager disable.pager enable.pager destroy.pager update.pager pageSize.pager')
 					.bind('filterStart.pager', function(e, filters) {
 						$.data(table, 'pagerUpdateTriggered', false);
 						c.currentFilters = filters;
@@ -480,6 +480,11 @@
 					})
 					.bind('update.pager', function(){
 						hideRows(table, c);
+					})
+					.bind('pageSize.pager', function(e,v){
+						c.size = parseInt(v, 10) || 10;
+						hideRows(table, c);
+						updatePageDisplay(table, c);
 					});
 
 				// clicked controls
