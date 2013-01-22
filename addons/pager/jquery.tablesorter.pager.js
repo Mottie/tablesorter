@@ -188,7 +188,6 @@
 				var i, j, hsh, $f, $sh,
 				$t = $(table),
 				tc = table.config,
-				$b = c.$tbodies,
 				hl = $t.find('thead th').length, tds = '',
 				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace('.','') + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
@@ -234,7 +233,7 @@
 					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 					$t.find('thead').append(err);
 				} else {
-					$b.html( tds ); // add tbody
+					$(table.tBodies[0]).html( tds ); // add rows to first tbody
 				}
 				if (tc.showProcessing) {
 					$.tablesorter.isProcessing(table); // remove loading icon
