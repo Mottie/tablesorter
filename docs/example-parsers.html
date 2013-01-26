@@ -9,8 +9,8 @@
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
-	<script src="js/chili/jquery.chili-2.2.js"></script>
-	<script src="js/chili/recipes.js"></script>
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
@@ -22,10 +22,10 @@
 $.tablesorter.addParser({
 	// set a unique id
 	id: 'grades',
-	is: function(s) {
+//	is: function(s) {
 		// return false so this parser is not auto detected
-		return false;
-	},
+//		return false;
+//	},
 	format: function(s, table, cell, cellIndex) {
 		// format your data for normalization
 		return s.toLowerCase()
@@ -135,11 +135,11 @@ $(function() {
 
 	<h1>Javascript</h1>
 	<div id="javascript">
-		<pre class="js"></pre>
+		<pre class="prettyprint lang-javascript"></pre>
 	</div>
 	<h1>HTML</h1>
 	<div id="html">
-		<pre class="html"></pre>
+		<pre class="prettyprint lang-html"></pre>
 	</div>
 
 <div class="next-up">

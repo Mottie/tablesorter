@@ -9,8 +9,8 @@
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
-	<script src="js/chili/jquery.chili-2.2.js"></script>
-	<script src="js/chili/recipes.js"></script>
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
@@ -36,9 +36,7 @@
 			if (!this.headers) {
 				h = this.headers = [];
 				$("thead th",table).each(function() {
-					h.push(
-					"<th>" + $(this).text() + "</th>"
-					);
+					h.push( "<th>" + $(this).text() + "</th>" );
 				});
 			}
 
@@ -335,7 +333,7 @@
 	<h1>Javascript</h1>
 	<h3>Add Widget Template</h3>
 	<div>
-		<pre class="js">// addWidget Template
+		<pre class="prettyprint lang-javascript">// addWidget Template
 // *******************
 $.tablesorter.addWidget({
 	id: 'myWidget',
@@ -359,7 +357,7 @@ $.tablesorter.addWidget({
 	<h3>Repeat Headers Widget Code</h3>
 
 	<div id="javascript">
-		<pre class="js"></pre>
+		<pre class="prettyprint lang-javascript"></pre>
 	</div>
 
 <div class="next-up">

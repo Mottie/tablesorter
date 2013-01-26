@@ -12,8 +12,8 @@
 	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
-	<script src="js/chili/jquery.chili-2.2.js"></script>
-	<script src="js/chili/recipes.js"></script>
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
@@ -176,6 +176,7 @@ $(function(){
 				<li><code>filter_searchDelay : 300</code> - typing delay in milliseconds before starting a search.</li>
 				<li><code>filter_startsWith : false</code> - if true, filter start from the beginning of the cell contents.</li>
 				<li><code>filter_useParsedData : false</code> - filter all data using parsed content.</li>
+				<li><code>filter_serversideFiltering : false</code> - if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.</li>
 			</ul>
 		</div>
 
@@ -191,117 +192,9 @@ $(function(){
 
 		<h3><a href="#">Changes</a></h3>
 		<div class="inner">
-		<div class="accordion">
-
-			<h3><a href="#">v2.4</a></h3>
-			<div>
-				<ul>
-					<li>Added the ability to enter operators into the filter. Added <code>< <= >= > ! =</code>
-						<ul>
-							<li>Click any of the following buttons to perform a search in the table below. Click and scroll down!</li>
-							<li>To find values greater than 10, enter <code>&gt;10</code>.</li>
-							<li>To find letters less than M, enter <button class="search" data-filter-column="1" data-filter-text="<m">&lt;m</button>, but to find letters greater than M, enter <button class="search" data-filter-column="1" data-filter-text=">=n">&gt;=n</button>, because <button class="search" data-filter-column="1" data-filter-text=">m">&gt;m</button> will include <code>ma</code> because <code>ma &gt; m</code>.</li>
-							<li>To find people that don't have "son" in their name, enter <button class="search" data-filter-column="2" data-filter-text="!son">!son</button> or to only look for males, enter <code>!female</code>.</li>
-							<li>Exact matches can be done using quotes, as before, or by using an equal sign <code>=</code>, e.g. find the exact number 10 by using <button class="search" data-filter-column="0" data-filter-text="10=">10=</button>.</li>
-							<li><strong>Note #1</strong> In currency, percent or other numerical columns with numbers, the operators will ignore these extra symbols when parsing the value. So to find values greater than 30%, ignore the percent sign and use <button class="search" data-filter-column="5" data-filter-text=">30">&gt; 30</button>.</li>
-							<li><strong>Note #2</strong> when using any of the above operators, the child row content is ignored even if <code>filter_childRows</code> is set to <code>true</code>.</li>
-						</ul>
-					</li>
-					<li>Added "filterStart" and "filterEnd" triggered events on the table. This is used by the updated pager plugin to allow it to work with the filter widget.</li>
-					<li>Added <code>filter_columnFilters</code> option which when <code>true</code> will add a filter to each column. If <code>false</code>, no filter row is added.</li>
-					<li>Added <code>filter_reset</code> option which will contain a jQuery selector pointing to a reset element (button or link).</li>
-					<li>Added <code>filter_useParsedData</code> option
-						<ul>
-							<li>When <code>true</code>, ALL filter searches will only use parsed data.</li>
-							<li>To only use parsed data in specific columns, set this option to <code>false</code> and use any of the following (they all do the same thing), set in order of priority:
-								<ul>
-									<li>jQuery data <code>data-filter="parsed"</code>.</li>
-									<li>metadata <code>class="{ filter: 'parsed'}"</code>. This requires the metadata plugin.</li>
-									<li>headers option <code>headers : { 0 : { filter : 'parsed' } }</code>.</li>
-									<li>header class name <code>class="filter-parsed"</code>.</li>
-								</ul>
-							</li>
-							<li>Remember that parsed data most likely doesn't match the actual table cell text, <code>20%</code> becomes <code>20</code> and <code>Jan 1, 2013 12:01 AM</code> becomes <code>1357020060000</code>.</li>
-						</ul>
-					</li>
-					<li>Added a method to apply a filter to the table when <code>filter_columnFilters</code> is <code>false</code> by triggering a search on the table.
-						<h3>Search by columns</h3>
-<pre class="js"><code>// *** applies to both basic & advanced filter widgets ***
-// search using an array - the index of the array matches the column index
-// [ column0, column1, column2, ..., columnN ]
-var columns = []; // undefined array elements are treated as an empty search ''
-columns[4] = '2?%'; // is equivalent to defining the array this way [ '', '', '', '2?%' ]
-$('table').trigger('search', [columns]);
-</code></pre>
-					</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">v2.3.6</a></h3>
-			<div>
-				<ul>
-					<li>Include filter input boxes placeholder text by adding <code>data-placeholder</code> to the column header cell; e.g. <code>data-placeholder="First Name"</code>. See the examples in the HTML code block below.</li>
-					<li>Exact match added. Add a quote (single or double) to the end of the string to find an exact match. In the first column enter <code>Clark"</code> to only find Clark and not Brandon Clark.</li>
-					<li>Wild cards added:
-						<ul>
-							<li><code>?</code> (question mark) finds any single non-space character.<br>In the discount column, adding <code>2?%</code> in the filter will find all percentages between "10%" and "19%". In the last column, <code>J?n</code> will find "Jun" and "Jan".</li>
-							<li><code>*</code> (asterisk) finds multiple non-space characters.<br>In the first column below Enter <code>B*</code> will find multiple names starting with "B". Now add a space at the end, and "Bruce" will not be included in the results.</li>
-						</ul>
-					</li>
-					<li>Regex method added.
-						<ul>
-							<li>Use standard regex within the filter to filter the columns.</li>
-							<li>For example enter <code>/20[1-9]\d/</code> or <code>/20[^0]\d/</code> in the last column to find all dates greater than 2009.</li>
-							<li>Another example would be to switch the <code>filter_ignoreCase</code> value to <code>false</code> and then enter <code>/JAN/i</code> to find "Jan" with a case-insenstive regex flag.</li>
-						</ul>
-					</li>
-					<li>Added <code>filter_functions</code> option which allows you to add a custom filter function for a column or to a dropdown list. Please see the <a href="example-widget-filter-custom.html">jQuery filter widget, advanced</a> demo for more details.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">v2.3.4</a></h3>
-			<div>
-				<ul>
-					<li>Added <code>widgetOptions.filter_ignoreCase</code> option which makes the search case-insensitive, when <code>true</code>.</li>
-					<li>Added <code>widgetOptions.filter_searchDelay</code> option which delays the search giving the user time to type in the search string.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">v2.3</a></h3>
-			<div>
-				The filter widget can be disabled using any of the following methods (they all do the same thing), in order of priority:
-				<ul>
-					<li>jQuery data <code>data-filter="false"</code>.</li>
-					<li>metadata <code>class="{ filter: false }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { filter: false } }</code>.</li>
-					<li>header class name <code>class="filter-false"</code>.</li>
-					<li><strike>As of this version, this widget <strong>can no longer be applied to the original plugin</strong>.</strike>. Fixed in v2.3.3.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">v2.1</a></h3>
-			<div>
-				<ul>
-					<li>Replaced <code>widgetFilterChildRows</code> option with <code>widgetOptions.filter_childRows</code>.</li>
-					<li>Added <code>widgetOptions.filter_startsWith</code> option which when <code>true</code>, allows you to search the table from the starting of the table cell text. Use the toggle button to see the difference, and that it can be dynamically changed!.</li>
-					<li>Added <code>widgetOptions.filter_cssFilter</code> option which allows you to defined the css class applied to the filter row and each search input.</li>
-
-					<li>Additional filter widget specific options are included in the javascript below, with explanations.</li>
-					<li>Please note that using the pager plugin with this filter widget will have <em>unexpected results</em> - I haven't found a fix for this problem.</li>
-				</ul>
-			</div>
-
-			<h3><a href="#">v2.0.19.1</a></h3>
-			<div>
-				<ul>
-					<li>A filter header option and header class name check was added to allow disabling the filter in a specific column.</li>
-				</ul>
-			</div>
-
-		</div>
+			<p>Moved to the wiki pages - <a href="https://github.com/Mottie/tablesorter/wiki/Change3">filter change log</a>.
 		</div>
 	</div>
-
 
 	<h1>Demo</h1>
 	<button class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
@@ -447,7 +340,7 @@ $('table').trigger('search', [columns]);
 
 	<h1>Page Header</h1>
 	<div>
-		<pre class="html">&lt;!-- blue theme stylesheet --&gt;
+		<pre class="prettyprint lang-html">&lt;!-- blue theme stylesheet --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
@@ -458,12 +351,12 @@ $('table').trigger('search', [columns]);
 
 	<h1>Javascript</h1>
 	<div id="javascript">
-		<pre class="js"></pre>
+		<pre class="prettyprint lang-javascript"></pre>
 	</div>
 
 	<h1>CSS</h1>
 	<div>
-		<pre class="css">/* filter row */
+		<pre class="prettyprint lang-css">/* filter row */
 .tablesorter-filter-row td {
   background: #eee;
   line-height: normal;
@@ -523,7 +416,7 @@ $('table').trigger('search', [columns]);
 
 	<h1>HTML</h1>
 	<div id="html">
-		<pre class="html"></pre>
+		<pre class="prettyprint lang-html"></pre>
 	</div>
 
 <div class="next-up">

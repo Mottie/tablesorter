@@ -9,8 +9,8 @@
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
-	<script src="js/chili/jquery.chili-2.2.js"></script>
-	<script src="js/chili/recipes.js"></script>
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: required -->
@@ -58,11 +58,22 @@
 		// the "update" method doesn't work here because not all rows are
 		// present in the table when the pager is applied ("removeRows" is false)
 		// ***********************************************************************
+		var r, $row, num = 50,
+			row = '<tr><td>Student{i}</td><td>{m}</td><td>{g}</td><td>{r}</td><td>{r}</td><td>{r}</td><td>{r}</td><td><button class="remove" title="Remove this row">X</button></td></tr>' +
+				'<tr><td>Student{j}</td><td>{m}</td><td>{g}</td><td>{r}</td><td>{r}</td><td>{r}</td><td>{r}</td><td><button class="remove" title="Remove this row">X</button></td></tr>';
 		$('button:contains(Add)').click(function(){
-			// add two rows
-			var row = '<tr><td>StudentXX</td><td>Mathematics</td><td>male</td><td>33</td><td>39</td><td>54</td><td>73</td><td><button class="remove" title="Remove this row">X</button></td></tr>' +
-				'<tr><td>StudentYY</td><td>Mathematics</td><td>female</td><td>83</td><td>89</td><td>84</td><td>83</td><td><button class="remove" title="Remove this row">X</button></td></tr>',
-				$row = $(row);
+			// add two rows of random data!
+			r = row.replace(/\{[gijmr]\}/g, function(m){
+				return {
+					'{i}' : num + 1,
+					'{j}' : num + 2,
+					'{r}' : Math.round(Math.random() * 100),
+					'{g}' : Math.random() > 0.5 ? 'male' : 'female',
+					'{m}' : Math.random() > 0.5 ? 'Mathematics' : 'Languages'
+				}[m];
+			});
+			num = num + 2;
+			$row = $(r);
 			$('table')
 				.find('tbody').append($row)
 				.trigger('addRows', [$row]);
@@ -439,7 +450,7 @@
 
 	<h1>Javascript</h1>
 	<div id="javascript">
-		<pre class="js"></pre>
+		<pre class="prettyprint lang-javascript"></pre>
 	</div>
 
 <div class="next-up">
