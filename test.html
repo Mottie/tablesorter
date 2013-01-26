@@ -3,11 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<title>Tablesorter Testing (WIP)</title>
-	<link rel="stylesheet" href="testing/qunit.css">
+	<link rel="stylesheet" href="testing/qunit-1.11.0.css">
 	<link rel="stylesheet" href="testing/testing.css">
 
-	<script src="testing/qunit.js"></script>
-	<script src="testing/jshint.js"></script>
+	<script src="testing/qunit-1.11.0.js"></script>
+	<script src="testing/jshint-r12.js"></script>
 	<script src="testing/jquery-1.8.3.min.js"></script>
 	<script src="js/jquery.tablesorter.js"></script>
 	<script src="js/jquery.metadata.js"></script>
@@ -154,7 +154,7 @@
 		************************************************/
 		var p = ts.parsers,
 			// test by parser
-			parserTests = 50,
+			parserTests = 51,
 			// skipping metadata parser
 			sample1 = {
 				'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': 'á test' },
@@ -163,7 +163,7 @@
 				'url'       : { 'http://google.com': 'google.com', 'ftp://fred.com': 'fred.com', 'https://github.com': 'github.com' },
 				'isoDate'   : { '2012/12/12': 1355292000000, '2012-12/12': 1355292000000, '2013-1-1': 1357020000000, '2013/1/1 12:34:56 AM': 1357022096000 },
 				'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4 },
-				'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000 },
+				'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000, '01 Jan 2013': 1357020000000 },
 				'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000 },
 				'time'      : { '12:34 AM': 946708440000, '1:00 pm': 946753200000 },
 				'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
