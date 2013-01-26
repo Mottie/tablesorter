@@ -170,7 +170,8 @@
 
 			function buildParserCache(table) {
 				var c = table.config,
-					tb = c.$tbodies,
+					// update table bodies in case we start with an empty table
+					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
 					rows, list, l, i, h, ch, p, parsersDebug = "";
 				if ( tb.length === 0) {
 					return c.debug ? log('*Empty table!* Not building a parser cache') : '';
@@ -322,6 +323,7 @@
 			function computeThIndexes(t) {
 				var matrix = [],
 				lookup = {},
+				cols = 0, // determine the number of columns
 				trs = $(t).find('thead:eq(0), tfoot').children('tr'), // children tr in tfoot - see issue #196
 				i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
 				for (i = 0; i < trs.length; i++) {
@@ -343,6 +345,7 @@
 							}
 						}
 						lookup[cellId] = firstAvailCol;
+						cols = Math.max(firstAvailCol, cols);
 						// add data-column
 						$(c).attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
 						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
@@ -356,6 +359,7 @@
 						}
 					}
 				}
+				t.config.columns = cols; // may not be accurate if # header columns !== # tbody columns
 				return lookup;
 			}
 
@@ -448,7 +452,7 @@
 				var $c, c = table.config,
 					$cg = $('<colgroup>'),
 					$cgo = c.$table.find('colgroup'),
-					n = c.parsers.length,
+					n = c.columns.length,
 					overallWidth = c.$table.width();
 				$("tr:first td", table.tBodies[0]).each(function(i) {
 					$c = $('<col>');
@@ -575,6 +579,9 @@
 					c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
 					// build headers
 					c.$headers = buildHeaders($t0);
+					// fixate columns if the users supplies the fixedWidth option
+					// do this after theme has been applied
+					fixColumnWidth($t0);
 					// try to auto detect column type, and store in tables config
 					c.parsers = buildParserCache($t0);
 					// build the cache for the tbody cells
@@ -815,10 +822,6 @@
 						// apply widget format
 						ts.applyWidget($t0);
 					}
-
-					// fixate columns if the users supplies the fixedWidth option
-					// do this after theme has been applied
-					fixColumnWidth($t0);
 
 					// show processesing icon
 					if (c.showProcessing) {
