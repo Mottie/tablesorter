@@ -160,7 +160,7 @@
 					}
 				}
 				for (i = 1; i < l; i++) {
-					if (ts.parsers[i].is(nodeValue, table, node)) {
+					if (ts.parsers[i].is && ts.parsers[i].is(nodeValue, table, node)) {
 						return ts.parsers[i];
 					}
 				}
