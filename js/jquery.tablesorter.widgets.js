@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 1/10/2013
+/*! tableSorter 2.4+ widgets - updated 1/29/2013
  *
  * Column Styles
  * Column Filters
@@ -810,14 +810,24 @@ $.tablesorter.addWidget({
 	format: function(table){
 		if ($(table).hasClass('hasResizable')) { return; }
 		$(table).addClass('hasResizable');
-		var t, j, s, $c, $cols,
+		var $t, t, i, j, s, $c, $cols, w, tw,
 			$tbl = $(table),
 			c = table.config,
 			wo = c.widgetOptions,
 			position = 0,
 			$target = null,
 			$next = null,
+			fullWidth = Math.abs($tbl.parent().width() - $tbl.width()) < 20,
 			stopResize = function(){
+				if ($.tablesorter.storage && $target){
+					s[$target.index()] = $target.width();
+					s[$next.index()] = $next.width();
+					$target.width( s[$target.index()] );
+					$next.width( s[$next.index()] );
+					if (wo.resizable !== false){
+						$.tablesorter.storage(table, 'tablesorter-resizable', s);
+					}
+				}
 				position = 0;
 				$target = $next = null;
 				$(window).trigger('resize'); // will update stickyHeaders, just in case
@@ -831,8 +841,17 @@ $.tablesorter.addWidget({
 				}
 			}
 		}
-		$tbl.children('thead:first').find('tr').each(function(){
-			$c = $(this).children();
+		$t = $tbl.children('thead:first').children('tr');
+		// add resizable-false class name to headers (across rows as needed)
+		$t.children().each(function(){
+			t = $(this);
+			i = t.attr('data-column');
+			j = $.tablesorter.getData( t, c.headers[i], 'resizable') === "false";
+			$t.children().filter('[data-column="' + i + '"]').toggleClass('resizable-false', j);
+		});
+		// add wrapper inside each cell to allow for positioning of the resizable target block
+		$t.each(function(){
+			$c = $(this).children(':not(.resizable-false)');
 			if (!$(this).find('.tablesorter-wrapper').length) {
 				// Firefox needs this inner div to position the resizer correctly
 				$c.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>');
@@ -842,36 +861,37 @@ $.tablesorter.addWidget({
 		});
 		$cols
 		.each(function(){
-			t = $(this);
-			j = parseInt(t.css('padding-right'), 10) + 8; // 8 is 1/2 of the 16px wide resizer
-			t
+			$t = $(this);
+			j = parseInt($t.css('padding-right'), 10) + 10; // 8 is 1/2 of the 16px wide resizer grip
+			t = '<div class="tablesorter-resizer" style="cursor:w-resize;position:absolute;z-index:1;right:-' + j +
+				'px;top:0;height:100%;width:20px;"></div>';
+			$t
 				.find('.tablesorter-wrapper')
-				.append('<div class="tablesorter-resizer" style="cursor:w-resize;position:absolute;height:100%;width:16px;right:-' + j + 'px;top:0;z-index:1;"></div>');
+				.append(t);
 		})
 		.bind('mousemove.tsresize', function(e){
 			// ignore mousemove if no mousedown
 			if (position === 0 || !$target) { return; }
 			// resize columns
-			var w = e.pageX - position;
-			$target.width( $target.width() + w );
-			$next.width( $next.width() - w );
+			w = e.pageX - position;
+			tw = $target.width();
+			$target.width( tw + w );
+			if ($target.width() !== tw && fullWidth){
+				$next.width( $next.width() - w );
+			}
 			position = e.pageX;
 		})
 		.bind('mouseup.tsresize', function(){
-			if ($.tablesorter.storage && $target){
-				s[$target.index()] = $target.width();
-				s[$next.index()] = $next.width();
-				if (wo.resizable !== false){
-					$.tablesorter.storage(table, 'tablesorter-resizable', s);
-				}
-			}
 			stopResize();
 		})
-		.find('.tablesorter-resizer')
+		.find('.tablesorter-resizer,.tablesorter-resizer-grip')
 		.bind('mousedown', function(e){
 			// save header cell and mouse position; closest() not supported by jQuery v1.2.6
-			$target = $(e.target).parents('th:last');
-			$next = $target.next();
+			$target = $(e.target).closest('th');
+			t = c.$headers.filter('[data-column="' + $target.attr('data-column') + '"]');
+			if (t.length > 1) { $target = $target.add(t); }
+			// if table is not as wide as it's parent, then resize the table
+			$next = e.shiftKey ? $target.parent().find('th:not(.resizable-false)').filter(':last') : $target.nextAll(':not(.resizable-false)').eq(0);
 			position = e.pageX;
 		});
 		$tbl.find('thead:first')
@@ -894,16 +914,14 @@ $.tablesorter.addWidget({
 			.unbind('mouseup.tsresize mouseleave.tsresize contextmenu.tsresize')
 			.find('tr').children()
 			.unbind('mousemove.tsresize mouseup.tsresize')
-			.find('.tablesorter-wrapper').each(function(){
-				$(this).find('.tablesorter-resizer').remove();
-				$(this).replaceWith( $(this).contents() );
-			});
+			// don't remove "tablesorter-wrapper" as uitheme uses it too
+			.find('.tablesorter-resizer,.tablesorter-resizer-grip').remove();
 		$.tablesorter.resizableReset(table);
 	}
 });
 $.tablesorter.resizableReset = function(table){
-	$(table.config.headerList).width('auto');
-	$.tablesorter.storage(table, 'tablesorter-resizable', {});
+	$(table.config.headerList).filter(':not(.resizable-false)').css('width','');
+	if ($.tablesorter.storage) { $.tablesorter.storage(table, 'tablesorter-resizable', {}); }
 };
 
 // Save table sort widget
@@ -956,7 +974,7 @@ $.tablesorter.addWidget({
 	},
 	remove: function(table, c, wo){
 		// clear storage
-		$.tablesorter.storage( table, 'tablesorter-savesort', '' );
+		if ($.tablesorter.storage) { $.tablesorter.storage( table, 'tablesorter-savesort', '' ); }
 	}
 });
 
