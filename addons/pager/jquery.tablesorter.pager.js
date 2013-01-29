@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 1/4/2013
+ * updated 1/29/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -138,7 +138,7 @@
 				if (h) {
 					d = h - $b.height();
 					if ( d > 5 && $.data(table, 'pagerLastSize') === c.size && $b.children('tr:visible').length < c.size ) {
-						$b.append('<tr class="pagerSavedHeightSpacer ' + table.config.selectorRemove.replace('.','') + '" style="height:' + d + 'px;"></tr>');
+						$b.append('<tr class="pagerSavedHeightSpacer ' + table.config.selectorRemove.replace(/(tr)?\./g,'') + '" style="height:' + d + 'px;"></tr>');
 					}
 				}
 			}
@@ -189,7 +189,7 @@
 				$t = $(table),
 				tc = table.config,
 				hl = $t.find('thead th').length, tds = '',
-				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace('.','') + '"><td style="text-align: center;" colspan="' + hl + '">' +
+				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace(/(tr)?\./g,'') + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
 				d = result[1] || [],

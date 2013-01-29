@@ -267,15 +267,15 @@
 		<li><a href="example-options-headers-locked.html">Lock sort order</a></li>
 		<li><a href="example-options-headers-order.html">Set initial sort order</a></li>
 		<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a></li>
-		<li><a href="example-method-sortreset.html">Resetting the entire table sort</a> (sortReset method) <span class="tip"><em>New!</em></span> v2.4.7</li>
-		<li><a href="example-option-selectorsort.html">Using selectorSort option</a> <span class="tip"><em>New!</em></span> v2.4</li>
+		<li><a href="example-method-sortreset.html">Resetting the entire table sort</a> (sortReset method) (v2.4.7)</li>
+		<li><a href="example-option-selectorsort.html">Using selectorSort option</a> (v2.4)</li>
 		<li><a href="example-option-sort-empty.html">Sorting empty cells</a> (v2.1.11)</li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
 		<li><a href="example-option-custom-sort.html">Custom sort script</a> (v2.2)</li>
 		<li><a href="example-locale-sort.html">Sorting Accented Characters</a> (v2.24; <a href="https://github.com/Mottie/tablesorter/wiki/Language">languages</a>)</li>
 		<li><a href="example-multiple-tbodies.html">Sorting with Multiple Tbodies</a> (v2.2)</li>
 		<li><a href="example-header-column-span.html">Sorting Across Multiple Columns</a> (v2.3)</li>
-		<li><a href="example-option-show-processing.html">Show a processing icon during sorting/filtering</a> <span class="tip"><em>New!</em></span> v2.4</li>
+		<li><a href="example-option-show-processing.html">Show a processing icon during sorting/filtering</a> (v2.4)</li>
 	</ul>
 
 	<h4>Parsers / Extracting Content</h4>
@@ -296,16 +296,16 @@
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
 		<li><a href="example-widget-filter.html">Filter widget</a> (v2.0.18)</li>
 		<li><a href="example-widget-filter-custom.html">Filter widget, custom</a> (v2.3.6)</li>
-		<li><a href="example-widget-ui-theme.html">UITheme widget - jQuery UI theme</a> (v2.0.9;  <span class="tip"><em>Modified!</em></span> v2.4)</li>
-		<li><a href="example-widget-bootstrap-theme.html">UITheme widget - Bootstrap</a> <span class="tip"><em>New!</em></span> v2.4</li>
-		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1)</li>
+		<li><a href="example-widget-ui-theme.html">UITheme widget - jQuery UI theme</a> (v2.0.9; Modified v2.4)</li>
+		<li><a href="example-widget-bootstrap-theme.html">UITheme widget - Bootstrap</a> (v2.4)</li>
+		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Modified</em></span> v2.7.4)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
 		<li><a href="example-widget-zebra.html">Zebra stripe widget</a></li>
 		<li><a href="example-widgets.html">Widgets, writing your own</a></li>
 		<li><a href="example-pager.html">Pager plugin</a></li>
 		<li><a href="example-pager-ajax.html">Pager plugin - ajax</a> (v2.1)</li>
-		<li><a href="example-pager-filtered.html">Pager plugin + filter widget</a> <span class="tip"><em>New!</em></span> v2.4</li>
+		<li><a href="example-pager-filtered.html">Pager plugin + filter widget</a> (v2.4)</li>
 	</ul>
 	</div>
 
@@ -413,7 +413,7 @@
 				<td><a class="toggle" href="#">cssChildRow</a></td>
 				<td>String</td>
 				<td>"tablesorter-childRow"</td>
-				<td>Add this css class to a child row that should always be attached to its parent.  Click on the "cssChildRow" link to toggle the view on the attached child row. Previous default was "expand-child", <span class="tip"><em>Changed!</em></span> in v2.4.</td>
+				<td>Add this css class to a child row that should always be attached to its parent.  Click on the "cssChildRow" link to toggle the view on the attached child row. Previous default was "expand-child" (Changed in v2.4).</td>
 				<td>Ex:<a href="example-child-rows.html">1</a> <a href="example-child-rows-filtered.html">2</a></td>
 			</tr>
 			<tr class="tablesorter-childRow">
@@ -502,7 +502,7 @@
 				<td><a href="#" class="toggle2">cssHeaderRow</a></td>
 				<td>String</td>
 				<td>"tablesorter-headerRow"</td>
-				<td>The CSS style used to style the header row. <span class="tip"><em>New!</em></span> v2.4.
+				<td>The CSS style used to style the header row (v2.4).
 					<div class="collapsible">
 						Previously the row would get the same class as the header cells, this class was added to make it easier to determine what element was being targetted in the plugin.
 					</div>
@@ -528,7 +528,7 @@
 				<td><span class="permalink">cssProcessing</span></td>
 				<td>String</td>
 				<td>"tablesorter-processing"</td>
-				<td>This class name is added to the header cell that is currently being sorted or filted. To prevent this class name from being added, set the <a href="#showprocessing"><code>showProcessing</code></a> option to <code>false</code>. <span class="tip"><em>New!</em></span> v2.4.</td>
+				<td>This class name is added to the header cell that is currently being sorted or filted. To prevent this class name from being added, set the <a href="#showprocessing"><code>showProcessing</code></a> option to <code>false</code> (v2.4).</td>
 				<td></td>
 			</tr>
 
@@ -693,7 +693,9 @@
       // See the "Applying the filter widget" demo
       7: { filter: false },    // disable filter widget for this column
       8: { filter: "parsed" }, // use parsed data for this column in the filter search
-      9: { filter: "noquicksearch" } // exclude this column from the advanced filter quick search
+
+      // Set resizable widget options for this column
+      9: { resizable: false } // prevent resizing of column 9
 
     }
   });
@@ -845,7 +847,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td>jQuery selectors used to find cells in the header.
 					<div class="collapsible">
 					You can change this, but the table will still need the required thead and tbody before this plugin will work properly. 
-					<br>Added <code>&gt;</code> to the selector in v2.3 to prevent targetting nested table headers. It was modified again in v2.4 to include <code>td</code> cells within the thead. <span class="tip"><em>Modified!</em></span> v2.4.
+					<br>Added <code>&gt;</code> to the selector in v2.3 to prevent targetting nested table headers. It was modified again in v2.4 to include <code>td</code> cells within the thead.
 					</div>
 					</td>
 				<td></td>
@@ -868,7 +870,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><span class="permalink">selectorSort</span></td>
 				<td>String</td>
 				<td>"th, td"</td>
-				<td>jQuery selector of content within <a href="#selectorheaders"><code>selectorHeaders</code></a> that is clickable to trigger a sort. <span class="tip"><em>New!</em></span> v2.4.</td>
+				<td>jQuery selector of content within <a href="#selectorheaders"><code>selectorHeaders</code></a> that is clickable to trigger a sort (v2.4).</td>
 				<td><a href="example-option-selectorsort.html">Example</a></td>
 			</tr>
 
@@ -876,7 +878,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><span class="permalink">serverSideSorting</span></td>
 				<td>Boolean</td>
 				<td>false</td>
-				<td>Set to <code>true</code> if the server is performing the sorting. The ui and events will still be used. <span class="tip"><em>New!</em></span> v2.5.3.</td>
+				<td>Set to <code>true</code> if the server is performing the sorting. The ui and events will still be used (v2.5.3).</td>
 				<td></td>
 			</tr>
 
@@ -884,7 +886,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><span class="permalink">showProcessing</span></td>
 				<td>Boolean</td>
 				<td>false</td>
-				<td>Show an indeterminate timer icon in the header when the table is sorted or filtered. Please note that due to javascript processing, the icon may not show as being animated. I'm looking into this further and would appreciate any feedback or suggestions with the coding. <span class="tip"><em>New!</em></span> v2.4.</td>
+				<td>Show an indeterminate timer icon in the header when the table is sorted or filtered. Please note that due to javascript processing, the icon may not show as being animated. I'm looking into this further and would appreciate any feedback or suggestions with the coding (v2.4).</td>
 				<td><a href="example-option-show-processing.html">Example</a></td>
 			</tr>
 
@@ -1100,7 +1102,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><a href="#" class="toggle2">theme</a></td>
 				<td>String</td>
 				<td>"default"</td>
-				<td>This option will add a theme css class name to the table <code>"tablesorter-{theme}"</code> for styling. <span class="tip"><em>New</em></span> v2.4.
+				<td>This option will add a theme css class name to the table <code>"tablesorter-{theme}"</code> for styling (v2.4).
 					<div class="collapsible">
 						<br>When changing this theme option, make sure that the appropriate css theme file has also been loaded. Included theme files include: 
 						<a href="themes.html" target="_blank" title="open themes in a new window">see all themes</a><br>
@@ -1212,7 +1214,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Indicates if tablesorter should apply fixed percentage-based widths to the table columns. <span class="tip"><em>Modified!</em></span> v2.4.
+					Indicates if tablesorter should apply fixed percentage-based widths to the table columns (modified v2.4).
 					<div class="collapsible">
 					Prior to v2.4, this option set pixel widths to added colgroups to fix the column widths. This is useful for the Pager companion.
 					<br>
@@ -1463,7 +1465,7 @@ $(function(){
 				<td>Array</td>
 				<td>true</td>
 				<td>
-					Columns widget: If true, the class names from the <code>columns</code> option will also be added to the table thead. <span class="tip"><em>New!</em></span> v2.4.
+					Columns widget: If true, the class names from the <code>columns</code> option will also be added to the table thead (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-columns-thead"><code>"columns_thead"</code></a> option to add the column class names to the thead as follows:
@@ -1484,7 +1486,7 @@ $(function(){
 				<td>Array</td>
 				<td>true</td>
 				<td>
-					Columns widget: If true, the class names from the <code>columns</code> option will also be added to the table tfoot. <span class="tip"><em>New!</em></span> v2.4.
+					Columns widget: If true, the class names from the <code>columns</code> option will also be added to the table tfoot (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-columns-tfoot"><code>"columns_tfoot"</code></a> option to add the column class names to the tfoot as follows:
@@ -1527,7 +1529,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					Filter widget: If <code>true</code>, a filter will be added to the top of each table column. <span class="tip"><em>New!</em></span> v2.4.
+					Filter widget: If <code>true</code>, a filter will be added to the top of each table column (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-columnFilters"><code>filter_columnFilters</code></a> option as follows:
@@ -1677,7 +1679,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The rows is revealed by hovering over the filter row or giving any filter input/select focus. <span class="tip"><em>New!</em></span> v2.4.
+					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The rows is revealed by hovering over the filter row or giving any filter input/select focus (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-hidefilters"><code>filter_hideFilters</code></a> option as follows:
@@ -1760,7 +1762,7 @@ $(function(){
 				<td>String</td>
 				<td>null</td>
 				<td>
-					Filter widget: jQuery selector string of an element used to reset the filters. <span class="tip"><em>New!</em></span> v2.4.
+					Filter widget: jQuery selector string of an element used to reset the filters (v2.4).
 					<div class="collapsible">
 					<p>
 					To use this option, point to a reset button or link using a jQuery selector. For example, add this button (<code>&lt;button class="reset"&gt;Reset&lt;/button&gt;</code>) to the table header, or anywhere else on the page. That element will be used as a reset for all column and quick search filters (clears all fields):
@@ -1817,7 +1819,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: Set this option to <code>true</code> if filtering is performed on the server-side. <span class="tip"><em>New!</em></span> v2.5.3.
+					Filter widget: Set this option to <code>true</code> if filtering is performed on the server-side (v2.5.3).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-serversidefiltering"><code>filter_serversideFiltering</code></a> option as follows:
@@ -1859,7 +1861,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: If <code>true</code>, ALL filter searches will only use parsed data. <span class="tip"><em>New!</em></span> v2.4.
+					Filter widget: If <code>true</code>, ALL filter searches will only use parsed data (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-useParsedData"><code>filter_useParsedData</code></a> option as follows:
@@ -1914,7 +1916,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					Resizable widget: If this option is set to <code>false</code>, resized column widths will not be saved. Previous saved values will be restored on page reload. <span class="tip"><em>New!</em></span> v2.4.
+					Resizable widget: If this option is set to <code>false</code>, resized column widths will not be saved. Previous saved values will be restored on page reload (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-resizable"><code>"resizable"</code></a> option to change the css class name as follows:
@@ -1936,7 +1938,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					saveSort widget: If this option is set to <code>false</code>, new sorts will not be saved. Any previous saved sort will be restored on page reload. <span class="tip"><em>New!</em></span> v2.4.
+					saveSort widget: If this option is set to <code>false</code>, new sorts will not be saved. Any previous saved sort will be restored on page reload (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-savesort"><code>"saveSort"</code></a> option to change the css class name as follows:
@@ -1958,26 +1960,26 @@ $('table').trigger('search', false);</pre></div>
 				<td>String</td>
 				<td>"jui"</td>
 				<td>
-					** <span class="tip"><em>Updated! in tablesorter v2.4</em></span> **<br>
-
-					Instead of the array of icon class names, this option now contains the name of the theme. Currently jQuery UI ("jui") and Bootstrap ("bootstrap") themes are supported. To modify the class names used, extend from the theme
+					Instead of the array of icon class names, this option now contains the name of the theme. Currently jQuery UI ("jui") and Bootstrap ("bootstrap") themes are supported. To modify the class names used, extend from the theme (updated v2.4)
 					<div class="collapsible">
 					<p></p>
 					<pre class="prettyprint lang-javascript">// Extend the themes to change any of the default class names ** NEW **
 $.extend($.tablesorter.themes.jui, {
   // change default jQuery uitheme icons - find the full list of icons
   // here: http://jqueryui.com/themeroller/ (hover over them for their name)
-  table    : 'ui-widget ui-widget-content ui-corner-all', // table classes
-  header   : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-  icons    : 'ui-icon', // icon class added to the &lt;i&gt; in the header
-  sortNone : 'ui-icon-carat-2-n-s',
-  sortAsc  : 'ui-icon-carat-1-n',
-  sortDesc : 'ui-icon-carat-1-s',
-  active   : 'ui-state-active', // applied when column is sorted
-  hover    : 'ui-state-hover',  // hover class
-  filterRow: '',
-  even     : 'ui-widget-content', // even row zebra striping
-  odd      : 'ui-state-default'   // odd row zebra striping
+  table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+  header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'ui-icon', // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'ui-icon-carat-2-n-s',
+  sortAsc    : 'ui-icon-carat-1-n',
+  sortDesc   : 'ui-icon-carat-1-s',
+  active     : 'ui-state-active', // applied when column is sorted
+  hover      : 'ui-state-hover',  // hover class
+  filterRow  : '',
+  even       : 'ui-widget-content', // even row zebra striping
+  odd        : 'ui-state-default'   // odd row zebra striping
 });</pre>
 
 					This widget option replaces the previous <a href="#widgetuitheme">widgetUitheme</a>. All theme css names are now contained within the <code>$.tablesorter.themes</code> variable. Extend the default theme as seen above.<br>
@@ -1991,26 +1993,29 @@ $.extend($.tablesorter.themes.jui, {
 					Use the <a href="#widget-uitheme"><code>"uitheme"</code></a> option to change the css class name as follows:
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
-    widgets: ["uitheme"], // initialize ui theme styling widget of the table
+    theme     : 'jui',       // set theme name from $.tablesorter.themes here
+    widgets   : ["uitheme"], // initialize ui theme styling widget of the table
     widgetOptions: {
-      uitheme : "jui"
+      uitheme : "jui"        // this is now optional in v2.7, it is overridden by the theme option 
     }
   });
 });</pre>
 
 					To add a new theme, define it as follows; replace "custom" with the name of your theme:
 					<pre class="prettyprint lang-javascript">$.tablesorter.themes.custom = {
-  table    : 'table',       // table classes
-  header   : 'header',      // header classes
-  icons    : 'icon',        // icon class added to the &lt;i&gt; in the header
-  sortNone : 'sort-none',   // unsorted header
-  sortAsc  : 'sort-asc',    // ascending sorted header
-  sortDesc : 'sort-desc',   // descending sorted header
-  active   : 'sort-active', // applied when column is sorted
-  hover    : 'hover',       // hover class
-  filterRow: 'filters',     // class added to the filter row
-  even     : 'even',        // even row zebra striping
-  odd      : 'odd'          // odd row zebra striping
+  table      : 'table',       // table classes
+  header     : 'header',      // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'icon',        // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'sort-none',   // unsorted header
+  sortAsc    : 'sort-asc',    // ascending sorted header
+  sortDesc   : 'sort-desc',   // descending sorted header
+  active     : 'sort-active', // applied when column is sorted
+  hover      : 'hover',       // hover class
+  filterRow  : 'filters',     // class added to the filter row
+  even       : 'even',        // even row zebra striping
+  odd        : 'odd'          // odd row zebra striping
 }</pre></div>
 				</td>
 				<td><a href="example-widget-ui-theme.html">Example</a></td>

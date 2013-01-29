@@ -1,8 +1,7 @@
 {
-    "name": "tablesorter",
-    "version": "2.7.3",
-    "main": ["js/jquery.tablesorter.js", "css/theme.blue.css"],
-    "dependencies": {
-        "jquery": ">=1.2.6"
-    }
+  "name": "tablesorter",
+  "version": "2.7.4",
+  "dependencies": {
+    "jqueryjs": ">=1.2.6"
+  }
 }

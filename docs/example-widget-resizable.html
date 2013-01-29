@@ -49,19 +49,31 @@
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
 			<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
 			<li>Column width saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>
-			<li>Right clicking (opening the context menu) will now reset the resized columns. <span class="tip"><em>New! v2.4</em></span></li>
-			<li>Because this widget uses jQuery's <code>closest()</code> function, it requires jQuery 1.3+ in order to work.</li>
-			<li>Because this widget uses jQuery's <code>parseJson()</code> function, it requires jQuery version 1.4.1+ in order to save the widths.</li>
+			<li>Right clicking (opening the context menu) will now reset the resized columns (v2.4).</li>
+			<li>Holding down the shift key while resizing will force the last column or the table to resize instead of the next column, but only if the table is full width. <span class="tip"><em>New!</em></span> v2.7.4.</li>
+			<li>Prevent resizing a column by adding any of the following (they all do the same thing), set in order of priority <span class="tip"><em>New!</em></span> v2.7.4:
+				<ul>
+					<li>jQuery data <code>data-resizable="false"</code>.</li>
+					<li>metadata <code>class="{ resizable: 'false'}"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { resizable : 'false' } }</code>.</li>
+					<li>header class name <code>class="resizable-false"</code>.</li>
+				</ul>
+			</li>
+			<li>Setting the <code>resizable</code> widget option to <code>false</code>, will only prevent the saving of resized columns, it has nothing to do with preventing a column from being resized.</li>
+			<li>Because this widget uses jQuery's <code>closest()</code> (jQuery 1.3+) and <code>index()</code> (jQuery 1.4+) functions, it requires these newer versions of jQuery in order to work.</li>
+			<li>In order to save the resized widths, jQuery version 1.4.1+ should be used because jQuery's <code>parseJson()</code> function is needed.</li>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+	<div id="demo">
+<h3>Non-full width table <small>(individual columns resize)</small></h3>
+<table class="tablesorter" style="width:auto">
 	<thead>
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
-			<th>Age</th>
+			<th class="resizable-false">Age</th>
 			<th>Total</th>
 			<th>Discount</th>
 			<th>Date</th>
@@ -109,7 +121,64 @@
 			<td>Jan 18, 2007 9:12 AM</td>
 		</tr>
 	</tbody>
-</table></div>
+</table>
+
+<h3>Full width table <small>(use shift to force last column to resize)</small></h3>
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th class="resizable-false">Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>$9.99</td>
+			<td>20%</td>
+			<td>Jul 6, 2006 8:14 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
+			<td>$19.99</td>
+			<td>25%</td>
+			<td>Dec 10, 2002 5:14 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 12, 2003 11:14 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>$153.19</td>
+			<td>44%</td>
+			<td>Jan 18, 2001 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
+			<td>$13.19</td>
+			<td>11%</td>
+			<td>Jan 18, 2007 9:12 AM</td>
+		</tr>
+	</tbody>
+</table>
+</div>
 
 	<h1>Page Header</h1>
 	<div>
@@ -128,8 +197,23 @@
 	</div>
 
 	<h1>HTML</h1>
-	<div id="html">
-		<pre class="prettyprint lang-html"></pre>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- The Age column is set to not be resizable --&gt;
+&lt;table class=&quot;tablesorter&quot; style=&quot;width:auto&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;First Name&lt;/th&gt;
+      &lt;th&gt;Last Name&lt;/th&gt;
+      &lt;th class=&quot;resizable-false&quot;&gt;Age&lt;/th&gt;
+      &lt;th&gt;Total&lt;/th&gt;
+      &lt;th&gt;Discount&lt;/th&gt;
+      &lt;th&gt;Date&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    ...
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
 	</div>
 
 <div class="next-up">

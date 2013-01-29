@@ -6,7 +6,7 @@
 
 	<!-- demo css -->
 	<style>
-	.minitable {float:left;width:190px;margin:5px;}
+	.minitable {float:left;min-width:190px; min-height: 280px; margin:5px;}
 	.minitable table {width:175px;margin:10px auto;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
 	.minitable table th {font-size:11px;}
 	.minitable table td {font-size:11px;padding:4px !important;text-align:center;}
@@ -42,36 +42,30 @@
 <script>
 $(function() {
 
-	$('.demo').tablesorter({
-		widthFixed : true,
-		widgets    : ['zebra','columns'],
-		sortList   : [ [0,0],[1,0],[2,0] ]
+	$.extend($.tablesorter.defaults, {
+		widthFixed: true,
+		widgets : ['zebra','columns'],
+		sortList : [ [0,0],[1,0],[2,0] ]
 	});
+
+	$('.demo').tablesorter();
 
 	// grey & dropbox themes need the {icon} for header icons
 	$('.tablesorter-dropbox,.tablesorter-grey').tablesorter({
-		widthFixed : true,
-		headerTemplate: '{content}{icon}', // dropbox theme doesn't like a space between the content & icon
-		widgets    : ['zebra','columns'],
-		sortList   : [ [0,0],[1,0],[2,0] ]
+		headerTemplate: '{content}{icon}' // dropbox theme doesn't like a space between the content & icon
 	});
 
 	$('.tablesorter-bootstrap').tablesorter({
 		theme : 'bootstrap',
-		widthFixed : true,
 		headerTemplate: '{content} {icon}',
-		widgets    : ['zebra','columns', 'uitheme'],
-		sortList   : [ [0,0],[1,0],[2,0] ]
+		widgets    : ['zebra','columns', 'uitheme']
 	});
 
 	$('.tablesorter-jui').tablesorter({
 		theme : 'jui',
-		widthFixed : true,
 		headerTemplate: '{content} {icon}',
-		widgets    : ['zebra','columns', 'uitheme'],
-		sortList   : [ [0,0],[1,0],[2,0] ]
+		widgets    : ['zebra','columns', 'uitheme']
 	});
-
 
 });
 </script>
@@ -94,23 +88,10 @@ $(function() {
 			</tbody>
 		</table>
 	</div>
+
 	<div class="minitable">
 		<h3>blue</h3>
 		<table class="demo tablesorter-blue">
-			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
-			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
-			<tbody>
-				<tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
-				<tr><td>14</td><td>15</td><td>16</td><td>5</td></tr>
-				<tr><td>13</td><td>20</td><td>17</td><td>6</td></tr>
-				<tr><td>12</td><td>19</td><td>18</td><td>7</td></tr>
-				<tr><td>11</td><td>10</td><td>9</td><td>8</td></tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="minitable">
-		<h3>Bootstrap</h3>
-		<table class="tablesorter-bootstrap">
 			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
 			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
 			<tbody>
@@ -137,23 +118,10 @@ $(function() {
 			</tbody>
 		</table>
 	</div>
+
 	<div class="minitable">
 		<h3>default</h3>
 		<table class="demo tablesorter-default">
-			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
-			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
-			<tbody>
-				<tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
-				<tr><td>14</td><td>15</td><td>16</td><td>5</td></tr>
-				<tr><td>13</td><td>20</td><td>17</td><td>6</td></tr>
-				<tr><td>12</td><td>19</td><td>18</td><td>7</td></tr>
-				<tr><td>11</td><td>10</td><td>9</td><td>8</td></tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="minitable">
-		<h3>dropbox</h3>
-		<table class="tablesorter-dropbox">
 			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
 			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
 			<tbody>
@@ -180,6 +148,7 @@ $(function() {
 			</tbody>
 		</table>
 	</div>
+
 	<div class="minitable">
 		<h3>grey</h3>
 		<table class="tablesorter-grey">
@@ -194,9 +163,25 @@ $(function() {
 			</tbody>
 		</table>
 	</div>
+
 	<div class="minitable">
 		<h3>ice</h3>
 		<table class="demo tablesorter-ice">
+			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
+			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
+			<tbody>
+				<tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+				<tr><td>14</td><td>15</td><td>16</td><td>5</td></tr>
+				<tr><td>13</td><td>20</td><td>17</td><td>6</td></tr>
+				<tr><td>12</td><td>19</td><td>18</td><td>7</td></tr>
+				<tr><td>11</td><td>10</td><td>9</td><td>8</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="minitable">
+		<h3>Bootstrap</h3>
+		<table class="tablesorter-bootstrap">
 			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
 			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
 			<tbody>
@@ -224,6 +209,20 @@ $(function() {
 		</table>
 	</div>
 
+	<div class="minitable">
+		<h3>dropbox</h3>
+		<table class="tablesorter-dropbox">
+			<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
+			<tfoot><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></tfoot>
+			<tbody>
+				<tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+				<tr><td>14</td><td>15</td><td>16</td><td>5</td></tr>
+				<tr><td>13</td><td>20</td><td>17</td><td>6</td></tr>
+				<tr><td>12</td><td>19</td><td>18</td><td>7</td></tr>
+				<tr><td>11</td><td>10</td><td>9</td><td>8</td></tr>
+			</tbody>
+		</table>
+	</div>
 
 </div>
 

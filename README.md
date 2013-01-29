@@ -36,6 +36,28 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.4 (1/29/2013)
+
+* Fixed an problem with the pager not pointing to a tbody, and breaking on an empty tbody. See [issue #223](https://github.com/Mottie/tablesorter/issues/223).
+* Modified core to always add a `<colgroup>` to the table. Only when the `widthFixed` option is `true` will it add percentage based widths.
+* Modified the parsers code to no longer require an `is` function; or if the function is missing, no error will be thrown.
+* Modified the isoDate and usLongDate parsers:
+  * isoDate parser will now auto-detect dates with times
+  * usLongDate parser will now auto-detect dates in this format: "DD MMMMMMMMM YYYY" (25 Jan 2013)
+* Added manifest files:
+  * `component.json` for bower package manager. Thanks to [appleboy](https://github.com/appleboy); also see [issue #190](https://github.com/Mottie/tablesorter/issues/190).
+  * `tablesorter.jquery.json` for the jquery plugin registry.
+* Added `"updateRows"` method which is the exact same as `"update"`, but needed due to issues with Prototype. See [issue #217](https://github.com/Mottie/tablesorter/issues/217).
+* Added `pageSize` method to change the pager page size more easily. See [issue #218](https://github.com/Mottie/tablesorter/issues/218).
+* Added [filter widget change log](https://github.com/Mottie/tablesorter/wiki/Change3) to the wiki pages.
+* Added a config variable `config.columns`:
+  * This variable indicates the number of columns in the table.
+  * Previously, `config.parsers.length` or `config.$headers.length` were used. Neither of which were accurate if the table was empty or multiple rows in the header existed.
+  * This value may still be inaccurate if a rowspan is used in the header.
+* Updated index page to use jQuery 1.9.
+  * jQuery 2.0 is has a [bug adding rows to the table](http://jsfiddle.net/Mottie/abkNM/324/), so I didn't upgrade the demos to use it.
+  * Changed syntax highlighting script from chilli to google's prettify.
+
 #### Version 2.7.3 (1/10/2013)
 
 * Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined (introduced in v2.7.2). Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).

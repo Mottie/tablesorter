@@ -22,10 +22,10 @@
 $.tablesorter.addParser({
 	// set a unique id
 	id: 'grades',
-//	is: function(s) {
+	is: function(s) {
 		// return false so this parser is not auto detected
-//		return false;
-//	},
+		return false;
+	},
 	format: function(s, table, cell, cellIndex) {
 		// format your data for normalization
 		return s.toLowerCase()
