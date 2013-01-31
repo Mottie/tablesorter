@@ -2287,6 +2287,24 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 			</tr>
 		</tbody>
 
+		<!-- non-sorting tbody -->
+		<tbody class="tablesorter-infoOnly">
+			<tr><th colspan="5">Pager Methods</th></tr>
+		</tbody>
+
+		<tbody>
+			<tr id="pagesize">
+				<td><a href="#" class="toggle2">pageSize</a></td>
+				<td>Trigger the pager to change the page size. <span class="tip"><em>New!</em></span> v2.7.4.
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">$(function(){
+  $('table').trigger('pageSize', 15);
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+		</tbody>
+
 	</table>
 
 	<a id="Events"></a>

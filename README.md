@@ -36,6 +36,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.5 (1/31/2013)
+
+* Added pager `pageSize` method to the docs.
+* Added chili syntax highlighting script files back to the repo as some other external demos were still linking to it.
+
 #### Version 2.7.4 (1/29/2013)
 
 * Fixed an problem with the pager not pointing to a tbody, and breaking on an empty tbody. See [issue #223](https://github.com/Mottie/tablesorter/issues/223).
