@@ -36,6 +36,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.6 (2/6/2013)
+
+* Merged in an update from [Somebi](https://github.com/Somebi) to fix a javascript error which occurs when the table doesn't have a thead or tbody, or it is already initialized.
+
 #### Version 2.7.5 (1/31/2013)
 
 * Added pager `pageSize` method to the docs.
