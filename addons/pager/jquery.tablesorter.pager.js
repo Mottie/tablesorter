@@ -357,9 +357,8 @@
 		moveToPage = function(table, c) {
 			if ( c.isDisabled ) { return; }
 			var p = Math.min( c.totalPages, c.filteredPages );
-			if ( c.page < 0 || c.page > ( p - 1 ) ) {
-				c.page = 0;
-			}
+			if ( c.page < 0 ) { c.page = 0; }
+			if ( c.page > ( p - 1 ) ) { c.page = p - 1; }
 			if (c.ajax) {
 				getAjax(table, c);
 			} else if (!c.ajax) {
@@ -465,8 +464,8 @@
 							return;
 						}
 						if (e.type === 'filterEnd') { c.page = 0; }
-						updatePageDisplay(table, c);
 						moveToPage(table, c);
+						updatePageDisplay(table, c);
 						fixHeight(table, c);
 					})
 					.bind('disable.pager', function(){
@@ -484,6 +483,11 @@
 					.bind('pageSize.pager', function(e,v){
 						c.size = parseInt(v, 10) || 10;
 						hideRows(table, c);
+						updatePageDisplay(table, c);
+					})
+					.bind('pageSet.pager', function(e,v){
+						c.page = (parseInt(v, 10) || 1) - 1;
+						moveToPage(table, c);
 						updatePageDisplay(table, c);
 					});
 

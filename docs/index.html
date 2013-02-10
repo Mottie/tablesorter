@@ -22,7 +22,7 @@
 		$("#tablesorter-demo").tablesorter({theme:'blue',sortList:[[0,0],[2,1]],widgets:['zebra'],widthFixed:true});
 		$(".compatibility").tablesorter({theme:'blue',sortList:[[0,0]],widthFixed:true});
 		$("table.options").tablesorter({theme:'blue',sortList:[[0,0]],headers:{3:{sorter:false},4:{sorter:false}},widgets:['stickyHeaders'],widthFixed:true});
-		$("#methods,#events").tablesorter({theme:'blue',sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}},widgets:['stickyHeaders'],widthFixed:true});
+		$("#method,#event").tablesorter({theme:'blue',sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}},widgets:['stickyHeaders'],widthFixed:true});
 	});
 </script>
 </head>
@@ -1306,7 +1306,7 @@ $(function(){
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody class="tablesorter-infoOnly">
+		<tbody id="deprecated" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Deprecated Options</th></tr>
 		</tbody>
 
@@ -2045,7 +2045,7 @@ $.extend($.tablesorter.themes.jui, {
 		</tbody>
 	</table>
 
-	<a id="Methods"></a>
+	<a id="methods"></a>
 	<h1>Methods</h1>
 
 	<div class="tip">
@@ -2055,7 +2055,7 @@ $.extend($.tablesorter.themes.jui, {
 		<em>TIP!</em> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
-	<table id="methods" class="tablesorter">
+	<table id="method" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Method</th>
@@ -2262,7 +2262,7 @@ $.tablesorter.refreshWidgets(table, doAll, dontapply)</pre>
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody class="tablesorter-infoOnly">
+		<tbody id="methods-widgets" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Widget Methods</th></tr>
 		</tbody>
 
@@ -2288,7 +2288,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody class="tablesorter-infoOnly">
+		<tbody id="methods-pager" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Pager Methods</th></tr>
 		</tbody>
 
@@ -2303,11 +2303,21 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 				</td>
 				<td></td>
 			</tr>
+			<tr id="pageset">
+				<td><a href="#" class="toggle2">pageSet</a></td>
+				<td>Trigger the pager to change the current page. <span class="tip"><em>New!</em></span> v2.7.7.
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">$(function(){
+  $('table').trigger('pageSet', 3);
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
 		</tbody>
 
 	</table>
 
-	<a id="Events"></a>
+	<a id="events"></a>
 	<h1>Events</h1>
 
 	<div class="tip">
@@ -2317,7 +2327,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 		<em>TIP!</em> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
-	<table id="events" class="tablesorter">
+	<table id="event" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Event</th>
@@ -2437,7 +2447,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody class="tablesorter-infoOnly">
+		<tbody id="events-pager" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Pager Events</th></tr>
 		</tbody>
 
@@ -2581,7 +2591,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 
 
 		<!-- non-sorting tbody -->
-		<tbody class="tablesorter-infoOnly">
+		<tbody id="events-widgets" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Widget Events</th></tr>
 		</tbody>
 
