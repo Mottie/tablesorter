@@ -1213,7 +1213,7 @@
 	ts.addParser({
 		id: "currency",
 		is: function(s) {
-			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test(s); // £$€¤¥¢
+			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test((s || '').replace(/[,. ]/g,'')); // £$€¤¥¢
 		},
 		format: function(s, table) {
 			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
