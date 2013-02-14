@@ -449,23 +449,13 @@
 
 			// automatically add col group, and column sizes if set
 			function fixColumnWidth(table) {
-				var $c, c = table.config,
-					$cg = $('<colgroup>'),
-					$cgo = c.$table.find('colgroup'),
-					n = c.columns.length,
-					overallWidth = c.$table.width();
-				$("tr:first td", table.tBodies[0]).each(function(i) {
-					$c = $('<col>');
-					if (c.widthFixed) {
-						$c.css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%');
-					}
-					$cg.append($c);
-				});
-				// replace colgroup contents
-				if ($cgo.length) {
-					$cgo.html( $cg.html() );
-				} else {
-					c.$table.prepend( $cg );
+				if (table.config.widthFixed && $(table).find('colgroup').length === 0) {
+					var colgroup = $('<colgroup>'),
+						overallWidth = $(table).width();
+					$("tr:first td", table.tBodies[0]).each(function() {
+						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
+					});
+					$(table).prepend(colgroup);
 				}
 			}
 
