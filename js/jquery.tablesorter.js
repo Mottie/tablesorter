@@ -712,16 +712,16 @@
 							};
 						});
 					}
-					// apply easy methods that trigger binded events
+					// apply easy methods that trigger boundd events
 					$this
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave')
-					.bind("sortReset", function(){
+					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
+					.bind("sortReset.tablesorter", function(){
 						c.sortList = [];
 						setHeadersCss($t0);
 						multisort($t0);
 						appendToTable($t0);
 					})
-					.bind("update updateRows", function(e, resort, callback) {
+					.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
 						// remove rows/elements before update
 						$(c.selectorRemove, $t0).remove();
 						// rebuild parsers
@@ -730,7 +730,7 @@
 						buildCache($t0);
 						checkResort($this, resort, callback);
 					})
-					.bind("updateCell", function(e, cell, resort, callback) {
+					.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
 						// get position from the dom
 						var l, row, icell,
 						$tb = $this.find('tbody'),
@@ -749,7 +749,7 @@
 							checkResort($this, resort, callback);
 						}
 					})
-					.bind("addRows", function(e, $row, resort, callback) {
+					.bind("addRows.tablesorter", function(e, $row, resort, callback) {
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length,
 						tbdy = $this.find('tbody').index( $row.closest('tbody') );
@@ -773,7 +773,7 @@
 						// resort using current settings
 						checkResort($this, resort, callback);
 					})
-					.bind("sorton", function(e, list, callback, init) {
+					.bind("sorton.tablesorter", function(e, list, callback, init) {
 						$this.trigger("sortStart", this);
 						// update header count index
 						updateHeaderSortCount($t0, list);
@@ -786,23 +786,23 @@
 							callback($t0);
 						}
 					})
-					.bind("appendCache", function(e, callback, init) {
+					.bind("appendCache.tablesorter", function(e, callback, init) {
 						appendToTable($t0, init);
 						if (typeof callback === "function") {
 							callback($t0);
 						}
 					})
-					.bind("applyWidgetId", function(e, id) {
+					.bind("applyWidgetId.tablesorter", function(e, id) {
 						ts.getWidgetById(id).format($t0, c, c.widgetOptions);
 					})
-					.bind("applyWidgets", function(e, init) {
+					.bind("applyWidgets.tablesorter", function(e, init) {
 						// apply widgets
 						ts.applyWidget($t0, init);
 					})
-					.bind("refreshWidgets", function(e, all, dontapply){
+					.bind("refreshWidgets.tablesorter", function(e, all, dontapply){
 						ts.refreshWidgets($t0, all, dontapply);
 					})
-					.bind("destroy", function(e, c, cb){
+					.bind("destroy.tablesorter", function(e, c, cb){
 						ts.destroy($t0, c, cb);
 					});
 
@@ -826,8 +826,8 @@
 					// show processesing icon
 					if (c.showProcessing) {
 						$this
-						.unbind('sortBegin sortEnd')
-						.bind('sortBegin sortEnd', function(e) {
+						.unbind('sortBegin.tablesorter sortEnd.tablesorter')
+						.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
 							ts.isProcessing($t0, e.type === 'sortBegin');
 						});
 					}
@@ -893,7 +893,7 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave');
+					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
 					.removeAttr('data-column');
