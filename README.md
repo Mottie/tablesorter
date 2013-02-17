@@ -42,6 +42,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.8 (2/17/2013)
+
+* Fixed script errors:
+  * Comment start was stripped when converting files from UTF-8 w/BOM to UTF-8 w/o BOM.
+  * Fixed Firefox error in the filter-formatter files, when HTML5 elements don't exist, oops!
+
 #### Version 2.7.7 (2/17/2013)
 
 * Updated the currency parser to ignore formatting (commas, decimals and spaces) when detecting the column parser.

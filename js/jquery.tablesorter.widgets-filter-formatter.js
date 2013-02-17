@@ -302,8 +302,10 @@ $.tablesorter.filterFormatter = {
 			}
 			$cell
 				.find('input[type=hidden]').val( chkd ? val + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
-				.trigger('search').end()
-				.find('.number')[0].disabled = (o.disabled || !chkd);
+				.trigger('search');
+			if ($cell.find('.number').length) {
+				$cell.find('.number')[0].disabled = (o.disabled || !chkd);
+			}
 		};
 		$number.remove();
 
@@ -405,7 +407,9 @@ $.tablesorter.filterFormatter = {
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
-			$cell.find('.colorpicker')[0].disabled = (o.disabled || !chkd);
+			if ($cell.find('.colorpicker').length) {
+				$cell.find('.colorpicker')[0].disabled = (o.disabled || !chkd);
+			}
 			$cell
 				.find('input[type=hidden]').val( chkd ? val : '' )
 				.trigger('search');
