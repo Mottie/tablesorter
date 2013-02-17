@@ -32,9 +32,66 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Original examples and docs at: [http://tablesorter.com](http://tablesorter.com).
 * Dual licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) and [GPL](http://www.gnu.org/licenses/gpl.html) licenses.
 
+### Special Thanks
+
+* Big shout-out to [Nick Craver](https://github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
+* Also big thanks to [thezoggy](https://github.com/thezoggy) for helping with code, themes and valuable feedback.
+* And, thanks to everyone that has contributed, and continue to contribute to this forked project!
+
 ### Change Log
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+
+#### Version 2.7.7 (2/17/2013)
+
+* Updated the currency parser to ignore formatting (commas, decimals and spaces) when detecting the column parser.
+* Updated the natural sort regex to better work with scientific notation and alphanumerics with the number first - see [this issue](https://github.com/overset/javascript-natural-sort/issues/8).
+* Reverted code to only add a colgroup if the [`widthFixed`](http://mottie.github.com/tablesorter/docs/#widthfixed) option is `true` and no colgroup exists. Fixes issues [#238](https://github.com/Mottie/tablesorter/issues/238) and [#239](https://github.com/Mottie/tablesorter/issues/239).
+* Added a tablesorter namespace to all bound events. Fixes [issue #233](https://github.com/Mottie/tablesorter/issues/233).
+* Added a [`filterReset`](http://mottie.github.com/tablesorter/docs/#filterreset) method which is the same code executed when the [`filter_reset`](http://mottie.github.com/tablesorter/docs/#widget-filter-reset) element is clicked.
+* Added a `pageSet` method to the pager which allows you to easily change the pager page (see [issue #231](https://github.com/Mottie/tablesorter/issues/231)):
+
+    ```javascript
+    // go to page 3
+    $('table').trigger('pageSet', 3);
+    ```
+
+* Added a range filter to the filter widget.
+  * You can now search for a range of values using either of these formats: `10 - 20` or `10 to 20`. Note the space before and after the dash so as to differentiate it from a negative sign.
+  * You can also use symbols within the range `10% - 20%` or `$10 - $20`.
+  * Thanks to [matzhu](https://github.com/matzhu) and [satacoy](https://github.com/satacoy) for code ideas in [issue #166](https://github.com/Mottie/tablesorter/issues/166#issuecomment-10167129).
+* Added logical AND and OR operators to the filters to the filter widget.
+  * Entering `box && bat` (or `box AND bat`) will only show rows that contain `box` and `bat` within the same column below the filter. It does not search other columns. The spaces between the operators and the queries are important.
+  * Entering `box|bat` (or `box OR bat`) will only show rows that contain either `box` or `bat` within the same column below the filter. It does not search other columns. The spaces between the operators and the queries are important.
+  * At this time you cannot combine different operators. So, `>= 100 AND <= 200` will not work, use the range filter operator (`100 - 200`) instead.
+  * Using the `|` (or operator) was previously undocumented, but useable.
+  * This was also requested in [issue #166](https://github.com/Mottie/tablesorter/issues/166).
+* Added a new filter widget option named [`filter_formatter`](http://mottie.github.com/tablesorter/docs/#widget-filter-formatter):
+  * This option allows you to add custom selectors into the filter row.
+  * Because of the amount of coding, new files named "jquery.tablesorter.widgets-filter-formatter.js" and "filter.formatter.css" were added. They include code to add jQuery UI and HTML5 controls via the filter_formatter option.
+  * Filter formatter functions include: "uiSpinner", "uiSlider", "uiRange" (uiSlider ranged), "uiDatepicker" (range only), "html5Number", "html5Range" and "html5Color".
+  * As an example, this code will add the jQuery UI spinner to the first column:
+
+      ```javascript
+      filter_formatter : {
+        0 : function($cell, indx){
+          return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
+            value : 0,  // starting value
+            min   : 0,  // minimum value
+            max   : 50, // maximum value
+            step  : 1,  // increment value by
+            addToggle: true, // enable or disable the control
+            exactMatch: true,
+            numberFormat: "n"
+          });
+        }
+      }
+      ```
+
+  * You can also choose to add the current selector value into a css3 tooltip or into the header by setting the `valueToHeader` option, if available.
+  * Fulfills [ErinsMatthew](https://github.com/ErinsMatthew)'s feature request - [issue #232](https://github.com/Mottie/tablesorter/issues/232). Thanks for the great idea!
+* NOTE: I know the js folder is getting messy. In version 3, I plan on having a separate folder for widgets and parsers. And with the build system, you'll be able to pick and choose which components you need.
+
 
 #### Version 2.7.6 (2/6/2013)
 
@@ -70,108 +127,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### Version 2.7.3 (1/10/2013)
 
 * Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined (introduced in v2.7.2). Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).
-
-#### Version 2.7.2 (1/8/2013)
-
-* Updated filter widget to update the filter-select when an update event is triggered. See [this StackOverflow question](http://stackoverflow.com/q/14223044/145346).
-* Replaced `background-image: url();` with `background-image: none;` in all applicable theme files.
-
-#### Version 2.7.1b (1/7/2013)
-
-* Updated bootstrap demo
- * It now properly removes the "table-striped" class when the zebra widget is enabled.
- * The demo now uses the [`refreshWidgets` method](http://mottie.github.com/tablesorter/docs/index.html#refreshwidgets) (added in v2.4) to completely remove the zebra widget.
- * Thanks to [potsky](https://github.com/Mottie/tablesorter/issues/111#issuecomment-11951369) for notifying me of this problem!
-
-#### Version 2.7.1 (1/4/2013)
-
-* Added two internal parameters to always make sure we're targeting the correct elements.
- * Added `table.config.$table` which is a jQuery object of the table.
- * Added `table.config.$tbodies` which is a jQuery object of sortable tbodies; the ones without the class name in the `cssInfoBlock` option.
-* Fixed removal methods:
- * Tablesorter destroy will now properly restore the header and remove all bindings.
- * Widgets should now again be removed properly.
- * Updated the storage utility to allow setting a property to an empty string, previously it was just ignored.
-* Fixed pager issues:
- * Pager status will now update properly while filtering rows.
- * Pager status will also update properly after sorting filtered rows.
- * The above issues were fixes for [issue #207](https://github.com/Mottie/tablesorter/issues/207).
- * Fixed the pager's `fixedHeight` option to again properly pad the table to maintain the height.
-
-#### Version 2.7 (12/26/2012)
-
-* Added `headerTemplate` option:
- * `headerTemplate` is a template string which allows adding additional content to the header while it is being built.
- * This template string has two default tags: `{content}` and `{icon}`.
- * `{content}` will be replaced by the current header HTML content.
- * `{icon}` will be replaced by `<i class="tablesorter-icon"></i>`, but only if a class name is defined in the `cssIcon` option.
- * Everything within this template string will be wrapped in a div with class `tablesorter-header-inner`.
- * The default template is `{content}`.
- * The following themes DO NEED the icon (`{icon}`) included in the template: Bootstrap, jQuery UI, Grey and Dropbox.
-* Added `onRenderTemplate` option:
- * This is a function that is called after the template string has been built, but before the template string is applied to the header and before the onRenderHeader function is called.
- * The onRenderTemplate function receives a column index and template string parameters. The template string, from the headerTemplate option, will already have the {icon} and {content} tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it.
- * Check out the [demo here](http://mottie.github.com/tablesorter/docs/example-option-render-template.html).
-* Updated `uitheme` widget
-  * The `uitheme` setting is no longer required, use the `theme` option instead.
-  * When using the `bootstrap` or `jui` theme, just add the name to the `theme` option: e.g. `theme: "bootstrap"`.
-  * The `uitheme` widget option will still work, but if the theme name exists within `$.tablesorter.themes` it will override the `uitheme` option.
-  * Look at the [theme demo](http://mottie.github.com/tablesorter/docs/themes.html) source for a better example.
-* Fixed `sortReset` bug - see [issue #167](https://github.com/Mottie/tablesorter/issues/167).
-* Fixed an issue with the pager resetting to the first page after every sort.
-* Fixed javascript errors popping up when initializing the plugin on an empty table. Fixes [issue #206](https://github.com/Mottie/tablesorter/issues/206).
-* 
-
-#### Version 2.6.2 (12/20/2012)
-
-* Fixed sort breaking when `tfoot` contained a table. Fixes problem mentioned in [issue #196](https://github.com/Mottie/tablesorter/issues/196).
-* Fixed javascript error due to using `hasOwnProperty` inside of the formatFloat function in IE8. Fixes [issue #200](https://github.com/Mottie/tablesorter/issues/200).
-* Fixed the reformatted minified widget file. Fixes [issue #201](https://github.com/Mottie/tablesorter/issues/201).
-* Fixed pager ajax. It no longer load the initial page twice. Fixes [issue #202](https://github.com/Mottie/tablesorter/issues/202).
-
-#### Version 2.6.1 (12/19/2012)
-
-* Updated the pager
-  * Added an event named `pagerBeforeInitialized` which is triggered after all of the controls have been set up, but before rendering of the table or ajax data is obtained.
-  * Cleaned up pager code.
-* Modifed the `formatFloat` function
-  * Previously you had to call the formatFloat function with a table so it could get the number format configuration
-
-    ```javascript
-    $.tablesorter.formatFloat('1,234,567.89', table); // result if usNumberFormat true = 1234567.89
-    ```
-
-  * Now you can either pass the table or a boolean to indicate the format:
-
-    ```javascript
-    var usNumberFormat = true;
-    $.tablesorter.formatFloat('1,234', usNumberFormat); // result = 1234
-    $.tablesorter.formatFloat('1,234', false); // non-U.S. format result = 1.234
-    ```
-
-* Fixed pager size result incorrect with nested tables. Fixes [issue #196](https://github.com/Mottie/tablesorter/issues/196).
-* Fixed parser javascript error when clearing tr's from table. Fixes [issue #199](https://github.com/Mottie/tablesorter/issues/199).
-* Fixed themes so that the `sorter-false` class now restores the header padding. Mentioned in [issue #](188).
-
-#### Version 2.6 (12/18/2012)
-
-* Added `sortResetKey`:
-  * By default, holding down the ctrl key while clicking on a header cell will reset that column's sort.
-  * When sorting multiple columns, holding shift+ctrl will maintain the previous sorts and reset the selected column.
-  * Thanks to [emmerich](https://github.com/emmerich) for sharing [this code](https://github.com/Mottie/tablesorter/pull/194)!
-* Added basic unit testing:
-  * JSHint checks of core, widgets and pager addon.
-  * Checks of various public functions, parsers and methods.
-  * This is a work-in-progress, so many more tests still need to be added.
-  * See the [basic test results here](http://mottie.github.com/tablesorter/test.html).
-* Sorting arrows no longer show when a header column is disabled. Fixes [issue #188](https://github.com/Mottie/tablesorter/issues/188).
-* Improved pager AJAX support:
-  * Added `serverSideSorting` option (default is `false`) to the plugin core which when `true` will disable client-side sorting.
-  * Added `filter_serversideFiltering` filter widget option (default is `false`) which when `true` will disable client-side filter widget processing.
-  * Added a `filterList` (`{filterList:fcol}`) ajax parameter to the pager's `ajaxUrl` option.
-  * Added `cssErrorRow` option to the pager options, allowing you to style the ajax error row which only appears with ajax errors.
-  * This update also fixes an issue with page size changing. See [issue #198](https://github.com/Mottie/tablesorter/issues/198).
-  * Thanks to [dhamma](https://github.com/dhamma) for [this enhancement](https://github.com/Mottie/tablesorter/pull/183)!
-* Added `footerRow` and `footerCells` to the tablesorter themes (`$.tablesorter.themes`):
-  * This allows styling of the footer in the bootstrap and jQuery UI themes.
-  * Used by the `uitheme` widget.

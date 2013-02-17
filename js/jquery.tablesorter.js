@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.7.6 - Client-side table sorting with ease!
+* TableSorter 2.7.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.7.6";
+			ts.version = "2.7.7";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -580,8 +580,8 @@
 					// apply event handling to headers
 					// this is to big, perhaps break it out?
 					c.$headers
-					// http://stackoverflow.com/questions/5312849/jquery-find-self
-					.find('*').andSelf().filter(c.selectorSort)
+					// http://stackoverflow.com/questions/5312849/jquery-find-self; andSelf() deprecated in jQuery 1.8
+					.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort)
 					.unbind('mousedown.tablesorter mouseup.tablesorter')
 					.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
 						// jQuery v1.2.6 doesn't have closest()

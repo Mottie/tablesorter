@@ -795,8 +795,8 @@ $.tablesorter.addWidget({
 		.bind('pagerComplete.tsSticky', function(){
 			resizeHdr();
 		});
-		// set sticky header cell width and link clicks to real header
-		hdrCells.find('*').andSelf().filter(c.selectorSort).each(function(i){
+		// set sticky header cell width and link clicks to real header; andSelf() deprecated in jQuery 1.8
+		hdrCells.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort).each(function(i){
 			var t = $(this);
 			stkyCells.eq(i)
 			// clicking on sticky will trigger sort
