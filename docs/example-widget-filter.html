@@ -1,9 +1,8 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
+	<meta charset="utf-8">
 	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget</title>
-
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
@@ -33,7 +32,7 @@
 	<script id="js">$(function() {
 
 	// call the tablesorter plugin
-	$("table").tablesorter({
+	$("table.tablesorter").tablesorter({
 		theme: 'blue',
 
 		// hidden filter input/selects will resize the columns, so try to minimize the change
@@ -95,7 +94,7 @@
 	$('button.search').click(function(){
 		/*** first method *** data-filter-column="1" data-filter-text="!son"
 			add search value to Discount column (zero based index) input */
-		var filters = $('table').find('input.tablesorter-filter'),
+		var filters = $('table.tablesorter').find('input.tablesorter-filter'),
 			col = $(this).data('filter-column'), // zero-based index
 			txt = $(this).data('filter-text'); // text to add to filter
 
@@ -121,7 +120,7 @@ $(function(){
 
 	// *** widgetfilter_startsWith toggle button ***
 	$('button.toggle').click(function(){
-		var c = $('table')[0].config,
+		var c = $('table.tablesorter')[0].config,
 		// toggle the boolean
 		fsw = !c.widgetOptions.filter_startsWith,
 		fic = !c.widgetOptions.filter_ignoreCase;
@@ -133,7 +132,7 @@ $(function(){
 			$('#case').html(fic.toString());
 		}
 		// update search after option change; add false to trigger to skip search delay
-		$('table').trigger('search', false);
+		$('table.tablesorter').trigger('search', false);
 	});
 
 });
@@ -159,6 +158,24 @@ $(function(){
 				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <code>filter_hideFilters</code> option to <code>false</code>.</li>
 				<li>This widget uses jQuery's <code>.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
 				<li>This widget does work with tablesorter v2.0.5.</li>
+				<li>Using the filters:
+					<table class="tablesorter-blue">
+						<thead><tr><th>Type</th><td>Description</th><th>Example</th></tr></thead>
+						<tbody>
+							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds "abc", "abcd", "abcde", etc)</td></tr>
+							<tr><td class="center"><code>"</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc"</code> or <code>abc=</code> (exactly match "abc")</td></tr>
+							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds "Jan" and "Jun", but not "Joan")</td></tr>
+							<tr><td class="center"><code>*</code></td><td>Wildcard for none, or multiple non-space characters.</td><td><code>B*k</code> (matches "Black" and "Book")</td></tr>
+							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds "bag", "beg", "BIG", "Bug", etc)</td></tr>
+							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query</td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
+							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with "female" in that column, but shows rows with "male")</td></tr>
+							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical "and". Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both "box" and "bat")</td></tr>
+							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.</td><td><code>box|bat</code> (matches a column cell with either "box" or "bat")</td></tr>
+							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word "to").</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
+						</tbody>
+					</table>
+					* Note: You cannot combine these operators with each other (except for the wildcards).
+				</li>
 			</ul>
 		</div>
 
@@ -421,7 +438,7 @@ $(function(){
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-filter-custom.html">jQuery filter widget, advanced &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-filter-custom.html">jQuery custom filter widget &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

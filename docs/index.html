@@ -296,6 +296,7 @@
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
 		<li><a href="example-widget-filter.html">Filter widget</a> (v2.0.18)</li>
 		<li><a href="example-widget-filter-custom.html">Filter widget, custom</a> (v2.3.6)</li>
+		<li><a href="example-widget-filter-formatter.html">Filter widget, formatter</a> <span class="tip"><em>New</em></span> v2.7.7.</li>
 		<li><a href="example-widget-ui-theme.html">UITheme widget - jQuery UI theme</a> (v2.0.9; Modified v2.4)</li>
 		<li><a href="example-widget-bootstrap-theme.html">UITheme widget - Bootstrap</a> (v2.4)</li>
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Modified</em></span> v2.7.4)</li>
@@ -343,7 +344,7 @@
 		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a></li>
 		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a></li>
 		<li><a href="http://codepen.io/Mottie/pen/eqBbn">tableSorter LESS theme; modify the colors dynamically in this LESS theme demo!</a></li>
-		<li><a href="https://github.com/Mottie/tablesorter/wiki">More demos - added to wiki pages</a></li>
+		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="tip"><em>more demos</em></span>!</li>
 	</ul>
 
 	<h4 id="metadata">Metadata - setting inline options</h4>
@@ -1567,6 +1568,54 @@ $(function(){
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-filter-formatter">
+				<td><a href="#" class="toggle2">filter_formatter</a></td>
+				<td>Object</td>
+				<td>null</td>
+				<td>
+					Filter widget: This option allows you to add custom controls within the filter widget row. <span class="tip"><em>New! v2.7.7</em></span><br>
+					<div class="collapsible">
+					<br>
+					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
+					<br>
+					Most of the formatter functions have an option named <code>valueToHeader</code> which, when <code>true</code> adds a span to the header cell above the filter row and updates it with the current control's value (see <a href="example-widget-filter-formatter-2.html">example 2</a>). If the option exists and is set to <code>false</code>, then the current value is added to the control's handle and css can be used to create a popup to show the current value (see <a href="example-widget-filter-formatter-1.html">example 1</a>).<br>
+					<br>
+					Another custom option named <code>addToggle</code> is included with the "uiSpinner", "html5Color" and "html5Number" code. This allows the user to disable the control to show all table rows. For the single sliders, "uiSlider" and "html5Range", the minimum value is used to clear the filter (show all rows).<br>
+					<br>
+					The options included for each jQuery UI control only show basic options, but any or all of the jQuery UI options for that control can be included.<br>
+					<ul>
+						<li>
+							To add the jQuery UI slider, follow this example:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_formatter : {
+        0 : function($cell, indx){
+          return $.tablesorter.filterFormatter.<strong>uiSpinner</strong>( $cell, indx, {
+            value : 0,  // starting value
+            min   : 0,  // minimum value
+            max   : 50, // maximum value
+            step  : 1,  // increment value by
+            addToggle: true, // Add a toggle to enable/disable the control
+            valueToHeader: false // add current slider value to the header cell
+          });
+        }
+      }
+    }
+  });
+});</pre>Any of the other <a href="http://api.jqueryui.com/spinner/">jQuery UI spinner widget options</a> can also be included.<br>
+							<br>
+						</li>
+						<li>Filter formatter functions include: "uiSpinner", "uiSlider", "uiRange" (uiSlider ranged), "uiDatepicker" (range only), "html5Number", "html5Range" and "html5Color".</li>
+						<li>
+							For other examples, please refer to the example pages. Formatter part 1 (example 1) adds jQuery UI controls to the filter row, while formatter part 2 (example 2) adds HTML5 controls, if supported, to the filter row.
+						</li>
+					</div>
+				</td>
+				<td>Ex: <a href="example-widget-filter-formatter-1.html">1</a> <a href="example-widget-filter-formatter-2.html">2</a> </td>
+			</tr>
+
 			<tr id="widget-filter-functions">
 				<td><a href="#" class="toggle2">filter_functions</a></td>
 				<td>Object</td>
@@ -2285,6 +2334,20 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 				</td>
 				<td>Ex: <a href="example-widget-filter.html">1</a> <a href="example-widget-filter-custom.html">2</a> <a href="example-option-show-processing.html">3</a></td>
 			</tr>
+
+			<tr id="filterreset">
+				<td><a href="#" class="toggle2">filterReset</a></td>
+				<td>Trigger the filter widget to reset the search criteria. <span class="tip"><em>New!</em></span> v2.7.7.
+					<div class="collapsible">
+						If you are using the <code>filter_formatter</code> option to add custom input elements, this function may not work on those columns. Please refer to the <code>filter_formatter</code> section for more details.
+						<pre class="prettyprint lang-javascript">$(function(){
+  // this is the same code that the <code>filter_reset</code> element runs to clear out the filters.
+  $('button').click(function(){
+    $('table').trigger('filterReset');
+});</pre></div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
 		</tbody>
 
 		<!-- non-sorting tbody -->
@@ -2649,7 +2712,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 
 	<strong id="Download-Required">Required:</strong>
 	<ul>
-		<li><a class="external" href="http://docs.jquery.com/Downloading_jQuery#Download_jQuery">jQuery</a> (1.2.6 or higher; some demos & <a href="http://api.jquery.com/data/#data-html5">HTML5 data-attributes</a> need jQuery 1.4.3+)</li>
+		<li><a class="external" href="http://jquery.com/download/">jQuery</a> (1.2.6 or higher; some demos & <a class="external" href="http://api.jquery.com/data/#data-html5">HTML5 data-attributes</a> need jQuery 1.4.3+)</li>
 		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (19kb, minified for production - please put the file on your server)</li>
 	</ul>
 
@@ -2676,20 +2739,20 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 		<li>Konqueror</li>
 	</ul>
 
-	<p><a class="external" href="http://docs.jquery.com/Browser_Compatibility">jQuery Browser Compatibility</a></p>
+	<p><a class="external" href="http://jquery.com/browser-support/">jQuery Browser Compatibility</a></p>
 
 	<a id="Support"></a>
 	<h1>Support</h1>
 
-	<p>If you are having a problem with the plugin or you want to submit a feature request, please <a href="https://github.com/Mottie/tablesorter/issues">submit an issue</a>.</p>
+	<p>If you are having a problem with the plugin or you want to submit a feature request, please <a class="external" href="https://github.com/Mottie/tablesorter/issues">submit an issue</a>.</p>
 
-	<p>If you would like to contribute, <a href="https://github.com/Mottie/tablesorter">fork a copy on github</a>.</p>
+	<p>If you would like to contribute, <a class="external" href="https://github.com/Mottie/tablesorter">fork a copy on github</a>.</p>
 
 	<p>Some basic <a href="../test.html">unit testing</a> has been added. If you would like to add more or report a problem, please use the appropriate link above. <span class="tip"><em>New!</em></span> v2.6.</p>
 
-	<p>Support is also available through the <a class="external" href="http://jquery.com/discuss/">jQuery Mailing List</a> or <a class="external" href="http://stackoverflow.com/questions/tagged/tablesorter">StackOverflow</a>.</p>
+	<p>Support is also available from <a class="external" href="http://stackoverflow.com/questions/tagged/tablesorter">stackoverflow</a>.</p>
 
-	<p>Access to the jQuery Mailing List is also available through <a class="external" href="http://www.nabble.com/JQuery-f15494.html">Nabble Forums</a>.</p>
+	<p>For questions about jQuery, try <a class="external" href="http://irc.jquery.org/">irc</a>, <a class="external" href="http://stackoverflow.com/tags/jquery/info">stackoverflow</a>, or the <a class="external" href="http://forum.jquery.com/">jQuery forums</a>.</p>
 
 	<a id="Credits"></a>
 	<h1>Credits</h1>

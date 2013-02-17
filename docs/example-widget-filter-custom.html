@@ -1,8 +1,8 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget</title>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Functions</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -146,7 +146,7 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Custom Filter Widget</h2>
+	<h2>Custom Filter Widget Functions</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -161,21 +161,22 @@
 			<ul>
 				<li>Custom filter widget option <code>filter_functions</code> was added in version 2.3.6.</li>
 				<li>This widget does work with tablesorter v2.0.5.</li>
+				<li>jQuery v1.4.3+ required.</li>
 			</ul>
 		</div>
 
 		<h3><a href="#"><strong>Default Select</strong> ("First Name" column)</a></h3>
 		<div>
 			<ul>
-				<li>To enable this type of select, set the <code>filter_functions</code> option for the column to <code>true</code>,<pre>filter_functions : {
+				<li>To enable this type of select, set the <code>filter_functions</code> option for the column to <code>true</code>,<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Add select menu to this column
   // set the column value to true, and/or add "filter-select" class name to header
   0 : true
 
 }</pre>or add a "filter-select" class to the column header cell (see code below).</li>
-				<li>The default option text, "Select a name", is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre>&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
-			<li>Add a "filter-match" class to only match instead of exactly match the selected value. Click on the "Match" button below to see the difference.<pre>&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+				<li>The default option text, "Select a name", is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+				<li>Add a "filter-match" class to only match instead of exactly match the selected value. Click on the "Match" button below to see the difference.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
 				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three "Aaron"'s in the first column, but only one in the dropdown.</li>
 				<li>Select options are automatically alphanumerically (new in v2.4) sorted.</li>
 			</ul>
@@ -184,7 +185,7 @@
 		<h3><a href="#"><strong>Custom Filter Function</strong> ("Last Name" column)</a></h3>
 		<div>
 			<ul>
-				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre>filter_functions : {
+				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Exact match only
   1 : function(e, n, f, i) {
@@ -203,7 +204,7 @@
 			<ul>
 				<li>To enable this type of select, add your custom options within the <code>filter_functions</code> option.</li>
 				<li>Each option is set as a "key:value" pair where the "key" is the actual text of the option and the "value" is the function associated with the option.</li>
-				<li>Here is an example using alphabetical comparisons (using regular expressions):<pre>filter_functions : {
+				<li>Here is an example using alphabetical comparisons (using regular expressions):<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Add these options to the select dropdown (regex example)
   2 : {
@@ -217,7 +218,7 @@
   }
 
 }</pre></li>
-				<li>Here is an example using numerical comparisons:<pre>filter_functions : {
+				<li>Here is an example using numerical comparisons:<pre class="prettyprint lang-javascript">filter_functions : {
   // Add these options to the select dropdown (numerical comparison example)
   // Note that only the normalized (n) value will contain numerical data
   // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
@@ -234,7 +235,7 @@
 		<h3><a href="#"><strong>Filter function information</strong></a></h3>
 		<div>
 			<ul>
-				<li>The custom function must return a boolean value. If <code>true</code> is returned, the row will be shown if all other filters match; and if <code>false</code> is returned, the row will be hidden.<pre>function(e, n, f, i) { return test; /* test should be a Boolean (true or false) */ }</pre></li>
+				<li>The custom function must return a boolean value. If <code>true</code> is returned, the row will be shown if all other filters match; and if <code>false</code> is returned, the row will be hidden.<pre class="prettyprint lang-javascript">function(e, n, f, i) { return test; /* test should be a Boolean (true or false) */ }</pre></li>
 				<li>The <strong>exact text (e)</strong> of the table cell is a variable passed to the function. Note that numbers will need to be parsed to make comparisons.</li>
 				<li><strong>Normalized table cell data (n)</strong> is the next varibale passed to the function.
 					<ul>
@@ -402,7 +403,7 @@
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-ui-theme.html">UITheme widget - jQuery UI theme &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-filter-formatter-1.html">jQuery custom filter widget formatter (part 1) &rsaquo;&rsaquo;</a>
 </div>
 
 </div>

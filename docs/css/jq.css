@@ -4,7 +4,7 @@ h1{font-size:large;font-weight:400;margin:0;}
 h2{color:#333;font-size:small;font-weight:400;margin:0;}
 .demo{width:600px;margin:20px auto;}
 .demo h1,.demo h1 a{font-size:120%;text-align:center;text-decoration:none;color:#000;}
-.demo p{text-align:center;}
+.demo p,.center{text-align:center;}
 .demo table.tablesorter{font-size:14px;}
 table.info{border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
 table.tablesorter table.info tbody th,table.tablesorter table.info td{border:#000 1px solid;}
@@ -44,7 +44,7 @@ form{font-size:10pt;margin-bottom:20px;width:auto;}
 form fieldset{padding:10px;text-align:left;width:140px;}
 div#main h1{border-bottom:1px solid #CDCDCD;display:block;margin-top:20px;padding:10px 0 2px;}
 table#tablesorter-demo {margin: 10px 0 0 0;}
-table.options *,table#methods *,table#events *, p.small{font-size:small;}
+table *, p.small{font-size:small;}
 p.small {padding-left: 25px;}
 p.tip em {padding: 2px; background-color: #6cf; color: #fff;}
 span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }
@@ -65,3 +65,7 @@ span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }
 #main .ui-accordion-header a { font-size: 14px; margin-left: 24px; }
 #main .ui-accordion-content { font-size: 14px; }
+
+@media all and (max-width: 650px) {
+ table.compatibility { float: none; }
+}
