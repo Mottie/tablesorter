@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 2/17/2013
+ * updated 2/20/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -358,7 +358,7 @@
 			if ( c.isDisabled ) { return; }
 			var p = Math.min( c.totalPages, c.filteredPages );
 			if ( c.page < 0 ) { c.page = 0; }
-			if ( c.page > ( p - 1 ) ) { c.page = p - 1; }
+			if ( c.page > ( p - 1 ) && p !== 0 ) { c.page = p - 1; }
 			if (c.ajax) {
 				getAjax(table, c);
 			} else if (!c.ajax) {

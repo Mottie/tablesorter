@@ -42,6 +42,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.9 (2/20/2013)
+
+* Fixed an issue with the pager targetting an incorrect page when the table starts out empty.
+* Get the correct number of columns when `widthFixed` is `true` and the first row contains a table. See [issue #238](https://github.com/Mottie/tablesorter/issues/238).
+
 #### Version 2.7.8 (2/17/2013)
 
 * Fixed script errors:
