@@ -498,8 +498,8 @@ $.tablesorter.addWidget({
 
 				// build option list
 				for (k = 0; k < arry.length; k++){
-					// replace quotes - fixes #242
-					o += '<option value="' + arry[k].replace(/\"/g, "&quot;") + '">' + arry[k] + '</option>';
+					// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
+					o += arry[k] !== '' ? '<option value="' + arry[k].replace(/\"/g, "&quot;") + '">' + arry[k] + '</option>' : '';
 				}
 				$t.find('thead').find('select.' + css + '[data-column="' + i + '"]')[ updating ? 'html' : 'append' ](o);
 			},
