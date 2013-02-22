@@ -35,12 +35,27 @@ tablesorter can successfully parse and sort many types of data including linked 
 ### Special Thanks
 
 * Big shout-out to [Nick Craver](https://github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
-* Also big thanks to [thezoggy](https://github.com/thezoggy) for helping with code, themes and valuable feedback.
-* And, thanks to everyone that has contributed, and continue to contribute to this forked project!
+* Also big thanks to [thezoggy](https://github.com/thezoggy) for helping with code, themes and providing valuable feedback.
+* And, thanks to everyone else that has contributed, and continue to contribute to this forked project!
 
 ### Change Log
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+
+#### Version 2.7.10 (2/22/2013)
+
+* Updated widget storage function to ensure no invalid strings are passed to the `$.parseJSON` function.
+  * Thanks to [andriijas](https://github.com/andriijas) for the code suggestion :)
+  * Fixes [issue #240](https://github.com/Mottie/tablesorter/issues/240) &amp; [issue #244](https://github.com/Mottie/tablesorter/issues/244).
+* Updated filter widget:
+  * When cell content contains quotes and the filter select is added, the quotes are now properly processed to be included within the options. Fixes [issue #242](https://github.com/Mottie/tablesorter/issues/242).
+  * Empty cells are no longer added to the options. If you want to include empty cells, add the following (see [this StackOverflow question](http://stackoverflow.com/q/14990971/145346)):
+
+    ```html
+    <span style="display:none">{empty}</span>
+    ```
+
+    Then you'll get a select dropdown showing `{empty}` allowing you to select empty content.
 
 #### Version 2.7.9 (2/20/2013)
 
@@ -107,34 +122,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### Version 2.7.6 (2/6/2013)
 
 * Merged in an update from [Somebi](https://github.com/Somebi) to fix a javascript error which occurs when the table doesn't have a thead or tbody, or it is already initialized.
-
-#### Version 2.7.5 (1/31/2013)
-
-* Added pager `pageSize` method to the docs.
-* Added chili syntax highlighting script files back to the repo as some other external demos were still linking to it.
-
-#### Version 2.7.4 (1/29/2013)
-
-* Fixed an problem with the pager not pointing to a tbody, and breaking on an empty tbody. See [issue #223](https://github.com/Mottie/tablesorter/issues/223).
-* Modified core to always add a `<colgroup>` to the table. Only when the `widthFixed` option is `true` will it add percentage based widths.
-* Modified the parsers code to no longer require an `is` function; or if the function is missing, no error will be thrown.
-* Modified the isoDate and usLongDate parsers:
-  * isoDate parser will now auto-detect dates with times
-  * usLongDate parser will now auto-detect dates in this format: "DD MMMMMMMMM YYYY" (25 Jan 2013)
-* Added manifest files:
-  * `component.json` for bower package manager. Thanks to [appleboy](https://github.com/appleboy); also see [issue #190](https://github.com/Mottie/tablesorter/issues/190).
-  * `tablesorter.jquery.json` for the jquery plugin registry.
-* Added `"updateRows"` method which is the exact same as `"update"`, but needed due to issues with Prototype. See [issue #217](https://github.com/Mottie/tablesorter/issues/217).
-* Added `pageSize` method to change the pager page size more easily. See [issue #218](https://github.com/Mottie/tablesorter/issues/218).
-* Added [filter widget change log](https://github.com/Mottie/tablesorter/wiki/Change3) to the wiki pages.
-* Added a config variable `config.columns`:
-  * This variable indicates the number of columns in the table.
-  * Previously, `config.parsers.length` or `config.$headers.length` were used. Neither of which were accurate if the table was empty or multiple rows in the header existed.
-  * This value may still be inaccurate if a rowspan is used in the header.
-* Updated index page to use jQuery 1.9.
-  * jQuery 2.0 is has a [bug adding rows to the table](http://jsfiddle.net/Mottie/abkNM/324/), so I didn't upgrade the demos to use it.
-  * Changed syntax highlighting script from chilli to google's prettify.
-
-#### Version 2.7.3 (1/10/2013)
-
-* Fixed a serious bug in the filter widget that was breaking the widget completely if `filter_functions` was not defined (introduced in v2.7.2). Fixes [issue #213](https://github.com/Mottie/tablesorter/issues/213).

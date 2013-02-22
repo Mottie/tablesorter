@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 2/17/2013
+/*! tableSorter 2.4+ widgets - updated 2/22/2013
  *
  * Column Styles
  * Column Filters
@@ -365,7 +365,7 @@ $.tablesorter.addWidget({
 						// loop through the rows
 						for (j = 0; j < l; j++){
 							// skip child rows
-							if (reg["child"].test($tr[j].className)) { continue; }
+							if (reg.child.test($tr[j].className)) { continue; }
 							r = true;
 							cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
 							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -385,7 +385,7 @@ $.tablesorter.addWidget({
 									// using older or original tablesorter
 										x = $.trim($td.eq(i).text());
 									}
-									xi = !reg["type"].test(typeof x) && wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
+									xi = !reg.type.test(typeof x) && wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
 									ff = r; // if r is true, show that row
 									// val = case insensitive, v[i] = case sensitive
 									val = wo.filter_ignoreCase ? v[i].toLocaleLowerCase() : v[i];
@@ -401,8 +401,8 @@ $.tablesorter.addWidget({
 											ff = wo.filter_functions[i][v[i]](x, c.cache[k].normalized[j][i], v[i], i);
 										}
 									// Look for regex
-									} else if (reg["regex"].test(val)){
-										rg = reg["regex"].exec(val);
+									} else if (reg.regex.test(val)){
+										rg = reg.regex.exec(val);
 										try {
 											ff = new RegExp(rg[1], rg[2]).test(xi);
 										} catch (err){
@@ -410,7 +410,7 @@ $.tablesorter.addWidget({
 										}
 									// Look for quotes or equals to get an exact match; ignore type since xi could be numeric
 									/*jshint eqeqeq:false */
-									} else if (reg["exact"].test(val) && xi == val.replace(reg["exact"], '')){
+									} else if (reg.exact.test(val) && xi == val.replace(reg.exact, '')){
 										ff = true;
 									// Look for a not match
 									} else if (/^\!/.test(val)){
@@ -420,8 +420,8 @@ $.tablesorter.addWidget({
 									// Look for operators >, >=, < or <=
 									} else if (/^[<>]=?/.test(val)){
 										// xi may be numeric - see issue #149
-										rg = isNaN(xi) ? fmt(xi.replace(reg["nondigit"], ''), table) : fmt(xi, table);
-										s = fmt(val.replace(reg["nondigit"], '').replace(reg["operators"],''), table);
+										rg = isNaN(xi) ? fmt(xi.replace(reg.nondigit, ''), table) : fmt(xi, table);
+										s = fmt(val.replace(reg.nondigit, '').replace(reg.operators,''), table);
 										if (/>/.test(val)) { ff = />=/.test(val) ? rg >= s : rg > s; }
 										if (/</.test(val)) { ff = /<=/.test(val) ? rg <= s : rg < s; }
 										if (s === '') { ff = true; } // keep showing all rows if nothing follows the operator
@@ -436,10 +436,10 @@ $.tablesorter.addWidget({
 										}
 									// Look for a range (using " to " or " - ") - see issue #166; thanks matzhu!
 									} else if (/\s+(-|to)\s+/.test(val)){
-										rg = isNaN(xi) ? fmt(xi.replace(reg["nondigit"], ''), table) : fmt(xi, table);
+										rg = isNaN(xi) ? fmt(xi.replace(reg.nondigit, ''), table) : fmt(xi, table);
 										s = val.split(/(?: - | to )/); // make sure the dash is for a range and not indicating a negative number
-										r1 = fmt(s[0].replace(reg["nondigit"], ''), table);
-										r2 = fmt(s[1].replace(reg["nondigit"], ''), table);
+										r1 = fmt(s[0].replace(reg.nondigit, ''), table);
+										r2 = fmt(s[1].replace(reg.nondigit, ''), table);
 										if (r1 > r2) { ff = r1; r1 = r2; r2 = ff; } // swap
 										ff = (rg >= r1 && rg <= r2) || (r1 === '' || r2 === '') ? true : false;
 									// Look for wild card: ? = single, * = multiple, or | = logical OR
