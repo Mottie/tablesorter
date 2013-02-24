@@ -2348,6 +2348,18 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
+
+			<tr id="savesortreset">
+				<td><a href="#" class="toggle2">saveSortReset</a></td>
+				<td>Trigger the saveSort widget to clear any saved sorts for that specific table. <span class="tip"><em>New!</em></span> v2.7.11.
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">$(function(){
+  $('button').click(function(){
+    $('table').trigger('saveSortReset');
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
 		</tbody>
 
 		<!-- non-sorting tbody -->

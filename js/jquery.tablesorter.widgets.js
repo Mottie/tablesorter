@@ -982,14 +982,15 @@ $.tablesorter.addWidget({
 		thisWidget.format(table, true);
 	},
 	format: function(table, init){
-		var sl, time, c = table.config,
+		var sl, time, $t = $(table),
+			c = table.config,
 			wo = c.widgetOptions,
 			ss = wo.saveSort !== false, // make saveSort active/inactive; default to true
 			sortList = { "sortList" : c.sortList };
 		if (c.debug){
 			time = new Date();
 		}
-		if ($(table).hasClass('hasSaveSort')){
+		if ($t.hasClass('hasSaveSort')){
 			if (ss && table.hasInitialized && $.tablesorter.storage){
 				$.tablesorter.storage( table, 'tablesorter-savesort', sortList );
 				if (c.debug){
@@ -998,7 +999,7 @@ $.tablesorter.addWidget({
 			}
 		} else {
 			// set table sort on initial run of the widget
-			$(table).addClass('hasSaveSort');
+			$t.addClass('hasSaveSort');
 			sortList = '';
 			// get data
 			if ($.tablesorter.storage){
@@ -1007,6 +1008,9 @@ $.tablesorter.addWidget({
 				if (c.debug){
 					$.tablesorter.benchmark('saveSort: Last sort loaded: "' + sortList + '"', time);
 				}
+				$t.bind('saveSortReset', function(){
+					$.tablesorter.storage( table, 'tablesorter-savesort', '' );
+				});
 			}
 			// init is true when widget init is run, this will run this widget before all other widgets have initialized
 			// this method allows using this widget in the original tablesorter plugin; but then it will run all widgets twice.
@@ -1014,7 +1018,7 @@ $.tablesorter.addWidget({
 				c.sortList = sortList;
 			} else if (table.hasInitialized && sortList && sortList.length > 0){
 				// update sort change
-				$(table).trigger('sorton', [sortList]);
+				$t.trigger('sorton', [sortList]);
 			}
 		}
 	},

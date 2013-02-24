@@ -29,6 +29,12 @@
 
 	});
 
+	$('button').click(function(){
+		$('table')
+			.trigger('saveSortReset') // clear saved sort
+			.trigger("sortReset");    // reset current table sort
+	});
+
 });</script>
 </head>
 <body>
@@ -45,13 +51,16 @@
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
 			<li>Sort one or more columns, then reload the page to see that this widget remembers the last table sort.</li>
-			<li>Sort saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file. <span class="tip"><em>New! v2.1</em></span></li>
+			<li>Sort saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>
 			<li>Because this widget uses jQuery's <code>parseJson()</code> function, it requires jQuery version 1.4.1+.</li>
+			<li>Added a <code>saveSortReset</code> method which only clears the stored information. <span class="tip"><em>New! v2.7.11</em></span>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+	<div id="demo"><button>Reset Sort</button>
+<br>
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Account #</th>
