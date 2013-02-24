@@ -963,7 +963,7 @@
 			ts.getTextValue = function(a, mx, d) {
 				if (mx) {
 					// make sure the text value is greater than the max numerical value (mx)
-					var i, l = a.length, n = mx + d;
+					var i, l = a ? a.length : 0, n = mx + d;
 					for (i = 0; i < l; i++) {
 						n += a.charCodeAt(i);
 					}
