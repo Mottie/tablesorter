@@ -42,6 +42,21 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.7.11 (2/24/2013)
+
+* Fixed several javascript errors:
+  * Empty cells in a numeric column should no longer cause an error - fixes [issue #246](https://github.com/Mottie/tablesorter/issues/246).
+  * The tablesorter storage function should no longer cause an error when provided an undefined key - fixes [issue #244](https://github.com/Mottie/tablesorter/issues/244).
+* Added `saveSortReset` method to clear any saved sorts for a specific table. Use it as follows:
+
+    ```javascript
+    $('table').trigger('saveSortReset');
+    ```
+
+* Added `delayed` options to several filter formatter functions.
+  * Selectors that can be changed quickly - uiSlider, uiRange, uiSpinner, html5Range and html5Number - will now execute the filter query after a short delay.
+  * The filter delay time is set in the filter function option `filter_searchDelay`. The default delay is 300 milliseconds.
+
 #### Version 2.7.10 (2/22/2013)
 
 * Updated widget storage function to ensure no invalid strings are passed to the `$.parseJSON` function.
