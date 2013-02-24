@@ -74,11 +74,11 @@ $.tablesorter.storage = function(table, key, val){
 	// *** get val ***
 	if ($.parseJSON){
 		if (ls){
-			v = $.parseJSON(localStorage[key] || '') || {};
+			v = $.parseJSON(localStorage[key] || '{}');
 		} else {
 			k = document.cookie.split(/[;\s|=]/); // cookie
 			d = $.inArray(key, k) + 1; // add one to get from the key to the value
-			v = (d !== 0) ? $.parseJSON(k[d] || '') || {} : {};
+			v = (d !== 0) ? $.parseJSON(k[d] || '{}') : {};
 		}
 	}
 	// allow val to be an empty string to 
