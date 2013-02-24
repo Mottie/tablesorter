@@ -410,7 +410,7 @@ $.tablesorter.addWidget({
 										}
 									// Look for quotes or equals to get an exact match; ignore type since xi could be numeric
 									/*jshint eqeqeq:false */
-									} else if (reg.exact.test(val) && xi == val.replace(reg.exact, '')){
+									} else if (val.replace(reg.exact, '') == xi){
 										ff = true;
 									// Look for a not match
 									} else if (/^\!/.test(val)){
@@ -576,22 +576,23 @@ $.tablesorter.addWidget({
 				if (e.type === 'filterReset') {
 					$t.find('.' + css).val('');
 				}
-				checkFilters(e.type === 'search' ? filter : '');
+				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
+				checkFilters(e.type === 'search' ? filter : false);
 				return false;
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){
 				// ignore arrow and meta keys; allow backspace
-				if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
+				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40))) { return; }
 				// skip delay
-				if (typeof filter !== 'undefined'){
+				if (typeof filter !== 'undefined' && filter !== true){
 					checkFilters(filter);
-					return false;
 				}
 				// delay filtering
 				clearTimeout(timer);
 				timer = setTimeout(function(){
-					checkFilters();
+					checkFilters(false);
 				}, wo.filter_searchDelay || 300);
+				return false;
 			});
 
 			// parse columns after formatter, in case the class is added at that point

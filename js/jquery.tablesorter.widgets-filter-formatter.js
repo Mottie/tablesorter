@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/17/2013
+/*! Filter widget formatter functions - updated 2/24/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * jQuery UI spinner
@@ -26,6 +26,7 @@ $.tablesorter.filterFormatter = {
 			max : 100,
 			step: 1,
 			value: 1,
+			delayed: true,
 			addToggle: true,
 			disabled: false,
 			exactMatch: true,
@@ -44,7 +45,7 @@ $.tablesorter.filterFormatter = {
 			}
 			$cell.find('.filter')
 				.val( chkd ? v + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
-				.trigger('search').end()
+				.trigger('search', o.delayed).end()
 				.find('#spinner' + indx).spinner( o.disabled || !chkd ? 'disable' : 'enable' );
 		};
 
@@ -99,6 +100,7 @@ $.tablesorter.filterFormatter = {
 			max: 100,
 			step: 1,
 			range: "min",
+			delayed: true,
 			valueToHeader : false,
 			exactMatch: true,
 			allText: 'all'
@@ -120,7 +122,7 @@ $.tablesorter.filterFormatter = {
 			// update the hidden input;
 			// ****** ADD AN EQUAL SIGN TO THE END! <- this makes the slide exactly match the number ******
 			// when the value is at the minimum, clear the hidden input so all rows will be seen
-			$cell.find('.filter').val(v === o.min ? '' : v + (o.exactMatch ? '=' : '')).trigger('search');
+			$cell.find('.filter').val(v === o.min ? '' : v + (o.exactMatch ? '=' : '')).trigger('search', o.delayed);
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 
@@ -163,6 +165,7 @@ $.tablesorter.filterFormatter = {
 			min : 0,
 			max : 100,
 			range: true,
+			delayed: true,
 			valueToHeader : false
 		}, rangeDef ),
 		// Add a hidden input to hold the range values
@@ -184,7 +187,7 @@ $.tablesorter.filterFormatter = {
 					.eq(1).attr('data-value', val[1]);      // value popup shown via css
 			}
 			// update the hidden input
-			$cell.find('.filter').val(range).trigger('search');
+			$cell.find('.filter').val(range).trigger('search', o.delayed);
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 
@@ -286,6 +289,7 @@ $.tablesorter.filterFormatter = {
 			min: 0,
 			max: 100,
 			step: 1,
+			delayed: true,
 			disabled: false,
 			addToggle: true,
 			exactMatch: true
@@ -296,13 +300,11 @@ $.tablesorter.filterFormatter = {
 		// test if HTML5 number is supported - from Modernizr
 		numberSupported = $number.attr('type') === 'number' && $number.val() !== 'test',
 		updateNumber = function(){
-			var chkd = true, val = $cell.find('.number').val();
-			if (o.addToggle) {
-				chkd = $cell.find('.toggle').is(':checked');
-			}
+			var val = $cell.find('.number').val(),
+				chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true;
 			$cell
 				.find('input[type=hidden]').val( chkd ? val + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
-				.trigger('search');
+				.trigger('search', o.delayed);
 			if ($cell.find('.number').length) {
 				$cell.find('.number')[0].disabled = (o.disabled || !chkd);
 			}
@@ -342,6 +344,7 @@ $.tablesorter.filterFormatter = {
 			min: 0,
 			max: 100,
 			step: 1,
+			delayed: true,
 			valueToHeader: true,
 			exactMatch: true,
 			allText: 'all'
@@ -357,7 +360,7 @@ $.tablesorter.filterFormatter = {
 			var val = $cell.find('.range').val();
 			$cell
 				.find('input[type=hidden]').val( val == o.min ? '' : val + (o.exactMatch ? '=' : '')) // add equal to the end, so we filter exact numbers
-				.trigger('search');
+				.trigger('search', o.delayed);
 			// or add current color to the header cell, if desired
 			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (val == o.min ? o.allText : val) + ')');
 		};

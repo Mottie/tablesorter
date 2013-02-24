@@ -47,6 +47,7 @@
 						value: 0,
 						min: 0,
 						max: 100,
+						delayed: true,
 						valueToHeader: true
 					});
 				},
@@ -62,6 +63,7 @@
 						value: 1,
 						min: 1,
 						max: 65,
+						delayed: true,
 						addToggle: true,
 						exactMatch: true
 					});
@@ -119,6 +121,7 @@
             value: 0,
             min: 0,
             max: 100,
+            delayed: true,
             valueToHeader: true,
             exactMatch: true,
             allText: 'all'
@@ -133,6 +136,7 @@
 				<li>The tooltip above the slider is NOT added in this example because the slider handle is not a separate element. But if you are interested, you can use <a href="http://codepen.io/chriscoyier/pen/lokyH">this code</a> by Chris Coyier to animate a range slider bubble.</li>
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
 				<li>Notice that the left-most value, zero in this case, will clear the column filter to allow a method to show all column content. You can modify the "all" text using the <code>allText</code> option.</li>
+				<li>A search delay option was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
 			</ul>
 		</div>
 
@@ -195,6 +199,7 @@
             value: 1,
             min: 1,
             max: 65,
+            delayed: true,
             addToggle: true,
             exactMatch: true
           });
@@ -206,6 +211,7 @@
 });</pre></li>
 				<li>This is spinner includes a toggle button. The toggle button is added by default, but if you don't want it, set the <code>addToggle</code> option to <code>false</code>. Without the toggle button, the filter is always active.</li>
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
+				<li>A search delay option was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
 			</ul>
 		</div>
 

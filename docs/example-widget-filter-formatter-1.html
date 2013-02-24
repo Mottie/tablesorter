@@ -49,6 +49,7 @@
 						value: 0,
 						min: 0,
 						max: 100,
+						delayed: true,
 						valueToHeader: false
 					});
 				},
@@ -57,6 +58,7 @@
 						values: [1, 70],
 						min: 1,
 						max: 70,
+						delayed: true,
 						valueToHeader: false
 					});
 				},
@@ -66,6 +68,7 @@
 						max : 45,
 						value: 1,
 						step: 1,
+						delayed: true,
 						addToggle: true,
 						exactMatch: true,
 						numberFormat: "n"
@@ -85,6 +88,7 @@
 						values: [1, 160],
 						min: 1,
 						max: 160,
+						delayed: true,
 						valueToHeader: false
 					});
 				}
@@ -144,6 +148,7 @@
             value: 0,             // starting value
             min: 0,               // minimum value
             max: 100,             // maximum value
+            delayed: true,        // delay search (set by filter_searchDelay)
             valueToHeader: false, // add current slider value to the header cell
             exactMatch: true,     // exact (true) or match (false)
             allText: 'all',       // text shown when the slider is at the minimum value
@@ -157,6 +162,7 @@
 				<li>The tooltip above the slider is added using pure css, which is included in the "filter.formatter.css" file, but it won't work in IE7 and older. But, you set the <code>valueToHeader</code> option to <code>true</code> to add the slider value to the header cell above the filter.</li>
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
 				<li>Notice that the left-most value, zero in this case, will clear the column filter to allow a method to show all column content. You can modify the "all" text using the <code>allText</code> option.</li>
+				<li>A search delay was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
 			</ul>
 		</div>
 
@@ -187,6 +193,7 @@
             values: [1, 70],     // starting range
             min: 1,              // minimum value
             max: 70,             // maximum value
+            delayed: true,       // delay search (set by filter_searchDelay)
             exactMatch: true,    // exact (true) or match (false)
             valueToHeader: false // add current slider value to the header cell
           });
@@ -198,6 +205,7 @@
             values: [1, 160],    // starting range
             min: 1,              // minimum value
             max: 160,            // maximum value
+            delayed: true,       // delay search (set by filter_searchDelay)
             exactMatch: true,    // exact (true) or match (false)
             valueToHeader: false // add current slider value to the header cell
           });
@@ -210,6 +218,7 @@
 });</pre></li>
 				<li>The tooltip above the slider is added using pure css, which is included in the "filter.formatter.css" file, but it won't work in IE7 and older. But, you set the <code>valueToHeader</code> option to <code>true</code> to add the slider value to the header cell above the filter.</li>
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
+				<li>A search delay was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
 			</ul>
 		</div>
 
@@ -237,6 +246,7 @@
             max : 45,
             value: 1,
             step: 1,
+            delayed: true,
             addToggle: true,
             exactMatch: true,
             numberFormat: "n"
@@ -249,6 +259,7 @@
 });</pre></li>
 				<li>This is the only jQuery UI widget that includes a toggle button. The toggle button is added by default, but if you don't want it, set the <code>addToggle</code> option to <code>false</code>. Without the toggle button, the filter is always active.</li>
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
+				<li>A search delay was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
 			</ul>
 		</div>
 
@@ -320,6 +331,10 @@
 					<pre class="prettyprint lang-javascript">$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');</pre>
 				</li>
 				<li>Since, by default, the filter only matches cell content, a <code>1</code> in the filter will show all rows with a one no matter where it is located. So, if you need an exact match, add an equal sign to the end of the value (<code>1=</code>). This forces the filter to exactly match the value in the search input.</li>
+				<li>To include a search delay, trigger the search on the hidden input and pass a boolean. If <code>true</code> or undefined, the search will be delayed and not delayed if <code>false</code>. Delay time set by <code>filter_searchDelay</code> option).
+					<pre class="prettyprint lang-javascript">$input.val( newVal ).trigger('search', false); // no search delay</pre>
+				</li>
+
 			</ul>
 		</div>
 
