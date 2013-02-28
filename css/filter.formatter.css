@@ -1,16 +1,16 @@
 /**** Filter Formatter Elements ****/
-.tablesorter-blue .tablesorter-filter-row td {
+.tablesorter .tablesorter-filter-row td {
 	text-align: center;
 	font-size: 0.9em;
 	font-weight: normal;
 }
 
 /**** Sliders ****/
-/* shrink the ui sliders to look nicer inside of a table cell */
-.ui-slider {
+/* shrink the sliders to look nicer inside of a table cell */
+.ui-slider, input.range {
 	width: 90%;
 	margin: 12px auto 2px auto; /* add enough top margin so the tooltips will fit */
-	font-size: 0.5em;
+	font-size: 0.8em;
 }
 .ui-slider .ui-slider-handle{
 	width: 0.8em;
@@ -163,4 +163,16 @@
 input.number {
 	position: relative;
 	top: -5px;
+}
+
+/* hide filter row */
+.tablesorter .tablesorter-filter-row.hideme td * {
+	height: 1px;
+	min-height: 0;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	/* don't use visibility: hidden because it disables tabbing */
+	opacity: 0;
+	filter: alpha(opacity=0);
 }

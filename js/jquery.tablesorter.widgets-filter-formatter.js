@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/24/2013
+/*! Filter widget formatter functions - updated 2/28/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * jQuery UI spinner
@@ -175,7 +175,8 @@ $.tablesorter.filterFormatter = {
 		updateUiRange = function(ui) {
 			// ui.values are undefined for some reason on create
 			var val = typeof ui !== "undefined" && ui.values || o.values,
-				range = val[0] + ' - ' + val[1];
+				// make range an empty string if entire range is covered so the filter row will hide (if set)
+				range = val[0] === o.min && val[1] === o.max ? '' : val[0] + ' - ' + val[1];
 			if (o.valueToHeader) {
 				// add range indication to the header cell above (if not using the css method)!
 				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + range + ')');
@@ -399,6 +400,7 @@ $.tablesorter.filterFormatter = {
 			value: '#000000',
 			disabled: false,
 			addToggle: true,
+			exactMatch: true,
 			valueToHeader: false
 		}, defColor),
 		// Add a hidden input to hold the range values
@@ -414,7 +416,7 @@ $.tablesorter.filterFormatter = {
 				$cell.find('.colorpicker')[0].disabled = (o.disabled || !chkd);
 			}
 			$cell
-				.find('input[type=hidden]').val( chkd ? val : '' )
+				.find('input[type=hidden]').val( chkd ? val + (o.exactMatch ? '=' : '') : '' )
 				.trigger('search');
 			if (o.valueToHeader) {
 				// add current color to the header cell

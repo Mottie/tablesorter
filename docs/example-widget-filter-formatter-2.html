@@ -55,6 +55,7 @@
 					return $.tablesorter.filterFormatter.html5Color( $cell, indx, {
 						value: '#000000',
 						addToggle: true,
+						exactMatch: true,
 						valueToHeader: false
 					});
 				},
@@ -162,6 +163,7 @@
           return $.tablesorter.filterFormatter.html5Color( $cell, indx, {
             value: '#000000',
             addToggle: true,
+            exactMatch: true,
             valueToHeader: false
           });
         }
@@ -172,6 +174,7 @@
 });</pre></li>
 				<li>This color selector will only output the color as a hex value with a hash followed by six characters (<code>#000000</code>).</li>
 				<li>By default, this code has the <code>valueToHeader</code> option set to <code>false</code>. The currently selected color is added to a span within the cell by default.</li>
+				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content, in case you have multiple colors in one cell.</li>
 				<li>This selector includes a toggle button. The toggle button is added by default, but if you don't want it, set the <code>addToggle</code> option to <code>false</code>. Without the toggle button, the filter is always active.</li>
 			</ul>
 		</div>
