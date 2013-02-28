@@ -713,7 +713,7 @@
 					})
 					.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
 						// remove rows/elements before update
-						$(c.selectorRemove, $t0).remove();
+						$this.find(c.selectorRemove).remove();
 						// rebuild parsers
 						c.parsers = buildParserCache($t0);
 						// rebuild the cache map
@@ -721,6 +721,7 @@
 						checkResort($this, resort, callback);
 					})
 					.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
+						$this.find(c.selectorRemove).remove();
 						// get position from the dom
 						var l, row, icell,
 						$tb = $this.find('tbody'),
@@ -733,9 +734,9 @@
 						if ($tb.length && tbdy >= 0) {
 							row = $tb.eq(tbdy).find('tr').index( $row );
 							icell = cell.cellIndex;
-							l = $t0.config.cache[tbdy].normalized[row].length - 1;
-							$t0.config.cache[tbdy].row[$t0.config.cache[tbdy].normalized[row][l]] = $row;
-							$t0.config.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText($t0, cell, icell), $t0, cell, icell );
+							l = c.cache[tbdy].normalized[row].length - 1;
+							c.cache[tbdy].row[$t0.config.cache[tbdy].normalized[row][l]] = $row;
+							c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText($t0, cell, icell), $t0, cell, icell );
 							checkResort($this, resort, callback);
 						}
 					})
