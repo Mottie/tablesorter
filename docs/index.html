@@ -2216,10 +2216,16 @@ $("table")
 
   $("td.discount").click(function(){
 
-    // randomize a number
+        // Do we want to reapply the current sort on the column?
     var resort = false,
+        // Do something after the cell update in this callback function
+        callback = function(table){
+          /* do something */
+        },
+        // randomize a number & add it to the cell
         discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' +
           ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
+
     // add new table cell text
     $(this).text(discount);
 
@@ -2227,7 +2233,7 @@ $("table")
     // set resort flag to false to prevent automatic resort (since we're using a different sort below)
     // leave the resort flag as undefined, or with any other value, to automatically resort the table
     // $("table").trigger("updateCell", [this]); < - resort is undefined so the table WILL resort
-    $("table").trigger("updateCell", [this, resort]);
+    $("table").trigger("updateCell", [this, resort, callback]);
 
     // As of version 2.0.14, the table will automatically resort (using the current sort selection)
     // after the update, so include the following if you want to specify a different sort
