@@ -36,11 +36,18 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 * Big shout-out to [Nick Craver](https://github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
 * Also big thanks to [thezoggy](https://github.com/thezoggy) for helping with code, themes and providing valuable feedback.
-* And, thanks to everyone else that has contributed, and continue to contribute to this forked project!
+* And, thanks to everyone else that has contributed, and continues to contribute to this forked project!
 
 ### Change Log
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+
+#### Version 2.7.12 (3/1/2013)
+
+* Fixed hiding filter rows when using filter_formatter elements. See [issue #250](https://github.com/Mottie/tablesorter/issues/250).
+* Fixed an issue with `updateCell` method not removing extra table rows before computing the row index of the cell that was just updated.
+* Added an `exactMatch` option to the html5color filter_formatter function.
+* Added missing documentation for the `updateCell` callback method. It's been there for a while!
 
 #### Version 2.7.11 (2/24/2013)
 
@@ -132,8 +139,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * You can also choose to add the current selector value into a css3 tooltip or into the header by setting the `valueToHeader` option, if available.
   * Fulfills [ErinsMatthew](https://github.com/ErinsMatthew)'s feature request - [issue #232](https://github.com/Mottie/tablesorter/issues/232). Thanks for the great idea!
 * NOTE: I know the js folder is getting messy. In version 3, I plan on having a separate folder for widgets and parsers. And with the build system, you'll be able to pick and choose which components you need.
-
-
-#### Version 2.7.6 (2/6/2013)
-
-* Merged in an update from [Somebi](https://github.com/Somebi) to fix a javascript error which occurs when the table doesn't have a thead or tbody, or it is already initialized.
