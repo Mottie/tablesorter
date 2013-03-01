@@ -371,7 +371,7 @@
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
 					h, i, t, lock, time, $tableHeaders, c = table.config;
-					c.headerList = [], c.headerContent = [];
+					c.headerList = []; c.headerContent = [];
 				if (c.debug) {
 					time = new Date();
 				}
@@ -386,7 +386,13 @@
 						h = c.onRenderTemplate.apply($t, [index, t]);
 						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
 					}
-					this.innerHTML = '<div class="tablesorter-header-inner">' + t + '</div>'; // faster than wrapInner
+					$t.wrapInner(function() {
+						var $wrapper = $('<div class="tablesorter-header-inner"></div>');
+						var $content = $(this).children();
+						$wrapper
+							.append($content)
+							.appendTo(this);
+					});
 
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 
