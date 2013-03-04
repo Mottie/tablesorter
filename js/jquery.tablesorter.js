@@ -603,7 +603,7 @@
 							// $cell = $(this);
 							k = !e[c.sortMultiSortKey];
 							// get current column sort order
-							cell.count = e[c.sortResetKey] ? 2 : (cell.count + 1) % (c.sortReset ? 3 : 2);
+							cell.count = e[c.sortResetKey] ? 2 : (cell.count + ((cell.count == -1 || c.sortList.length == 0 || (c.sortList.length > 0 && c.sortList[0][0] == cell.column)) ? 1 : 0)) % (c.sortReset ? 3 : 2);
 							// reset all sorts on non-current column - issue #30
 							if (c.sortRestart) {
 								i = cell;
