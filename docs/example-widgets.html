@@ -28,9 +28,11 @@
 
 		// give the widget an id
 		id: "repeatHeaders",
-
-		// format is called when the on init and when a sorting has finished
-		format: function(table) {
+		options: {
+			rowsToSkip : 4
+		},
+		// format is called on init and when a sorting has finished
+		format: function(table, c, wo) {
 			var h, i, skip;
 			// cache and collect all TH headers
 			if (!this.headers) {
@@ -44,7 +46,7 @@
 			$(table).find("tr.repeated-header").remove();
 
 			// number of rows to skip
-			skip = 4;
+			skip = wo && wo.rowsToSkip || 4;
 
 			// loop all tr elements and insert a copy of the "headers"
 			for (i = skip; i < table.tBodies[0].rows.length; i += (skip + 1)) {
@@ -84,277 +86,120 @@
 </div>
 
 <div id="main">
+
+	<div class="tip">
+		Notes about the <code>addWidget</code> template below:
+		<ul>
+			<li>The <code>id</code> block is required and must be unique.</li>
+			<li>The <code>options</code> block (<span class="tip"><em>New!</em> in v2.8</span>):
+				<ul>
+					<li>Include any widget options to be automatically be extended with any set widgetOptions (from <code>table.config.widgetOptions</code>).</li>
+					<li>This block was added in tablesorter v2.8 and is not supported in older versions!</li>
+					<li>As of v2.8, no included widgets will be using this to maintain backwards compatibility with older versions. This will change when v3.0 is released.</li>
+					<li>This block is optional.</li>
+				</ul>
+			</li>
+			<li>The <code>init</code> block:
+				<ul>
+					<li>This code is called only after tablesorter has initialized, but before initial sort and before any of the widgets are applied; it is only run once.</li>
+					<li>This block was added in v2.0.28 and it not supported in older versions.</li>
+					<li>Since, v2.0.28, only the saveSort widget uses this block to ensure that the stored sort is applied before .</li>
+					<li>This block is optional.</li>
+				</ul>
+			</li>
+			<li>The <code>format</code> block:
+				<ul>
+					<li>This block is part of the original <code>addWidget</code> template and is required.</li>
+					<li>In the original template, only the <code>table</code> parameter is provided. After v2.0.28, <code>config</code> and <code>widgetOptions</code> were provided as additional parameters (sorry the previous docs were incorrect).</li>
+					<li>The <code>initFlag</code> is correctly set in v2.8+.</li>
+				</ul>
+			</li>
+			<li>The <code>remove</code> block:
+				<ul>
+					<li>This code is called when either the <a href="index.html#refreshwidgets"><code>refreshWidgets</code></a> or <a href="index.html#destroy"><code>destroy</code></a> methods are called.</li>
+					<li>The code contained within this block must remove all additional content/elements added by the widget. Also, any rows or content that is hidden must be restored.</li>
+					<li>If additional rows are added to the table, make sure to include the class name within the <a href="index.html#selectorremove"><code>selectorRemove</code></a> option.</li>
+					<li>This block was added in v2.4 and is optional.</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<h3>addWidget Template</h3>
+	<div>
+		<pre class="prettyprint lang-javascript">// addWidget Template
+// *******************
+// parameters:
+// table = table object (DOM)
+// config = config object (from table.config)
+// widgetOptions = all widget options (from table.config.widgetOptions)
+$.tablesorter.addWidget({
+  id: 'myWidget',
+  // widget options (added v2.8) - added to table.config.widgetOptions
+  options: {
+    myWidget_option1 : 'setting1',
+    myWidget_option2 : 'setting2'
+  },
+  // The init function (added v2.0.28) is called only after tablesorter has
+  // initialized, but before initial sort & before any of the widgets are applied.
+  init: function(table, thisWidget, config, widgetOptions){
+    // widget initialization code - this is only *RUN ONCE*
+    // but in this example, only the format function is called to from here
+    // to keep the widget backwards compatible with the original tablesorter
+    thisWidget.format(table, config, widgetOptions, true);
+  },
+  format: function(table, config, widgetOptions, initFlag) {
+    // widget code to apply to the table *AFTER EACH SORT*
+    // the initFlag is true when this format is called from the init
+    // function above otherwise initFlag is undefined
+    // * see the saveSort widget for a full example *
+  },
+  remove: function(table, config, widgetOptions){
+    // do what ever needs to be done to remove stuff added by your widget
+    // unbind events, restore hidden content, etc.
+  }
+});</pre>
+	</div>
+
 	<h1>Demo</h1>
 
 <table class="tablesorter">
 	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Major</th>
-			<th>Sex</th>
-			<th>English</th>
-			<th>Japanese</th>
-			<th>Calculus</th>
-			<th>Geometry</th>
-		</tr>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
 	</thead>
 	<tfoot>
-		<tr>
-			<th>Name</th>
-			<th>Major</th>
-			<th>Sex</th>
-			<th>English</th>
-			<th>Japanese</th>
-			<th>Calculus</th>
-			<th>Geometry</th>
-		</tr>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
 	</tfoot>
 	<tbody>
-		<tr>
-			<td>Student01</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>80</td>
-			<td>70</td>
-			<td>75</td>
-			<td>80</td>
-		</tr>
-		<tr>
-			<td>Student02</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>90</td>
-			<td>88</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student03</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>85</td>
-			<td>95</td>
-			<td>80</td>
-			<td>85</td>
-		</tr>
-		<tr>
-			<td>Student04</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>60</td>
-			<td>55</td>
-			<td>100</td>
-			<td>100</td>
-		</tr>
-		<tr>
-			<td>Student05</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>68</td>
-			<td>80</td>
-			<td>95</td>
-			<td>80</td>
-		</tr>
-		<tr>
-			<td>Student06</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>100</td>
-			<td>99</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student07</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>85</td>
-			<td>68</td>
-			<td>90</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student08</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>100</td>
-			<td>90</td>
-			<td>90</td>
-			<td>85</td>
-		</tr>
-		<tr>
-			<td>Student09</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>80</td>
-			<td>50</td>
-			<td>65</td>
-			<td>75</td>
-		</tr>
-		<tr>
-			<td>Student10</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>85</td>
-			<td>100</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student11</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>86</td>
-			<td>85</td>
-			<td>100</td>
-			<td>100</td>
-		</tr>
-		<tr>
-			<td>Student12</td>
-			<td>Mathematics</td>
-			<td>female</td>
-			<td>100</td>
-			<td>75</td>
-			<td>70</td>
-			<td>85</td>
-		</tr>
-		<tr>
-			<td>Student13</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>100</td>
-			<td>80</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student14</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>50</td>
-			<td>45</td>
-			<td>55</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student15</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>95</td>
-			<td>35</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student16</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>100</td>
-			<td>50</td>
-			<td>30</td>
-			<td>70</td>
-		</tr>
-		<tr>
-			<td>Student17</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>80</td>
-			<td>100</td>
-			<td>55</td>
-			<td>65</td>
-		</tr>
-		<tr>
-			<td>Student18</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>30</td>
-			<td>49</td>
-			<td>55</td>
-			<td>75</td>
-		</tr>
-		<tr>
-			<td>Student19</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>68</td>
-			<td>90</td>
-			<td>88</td>
-			<td>70</td>
-		</tr>
-		<tr>
-			<td>Student20</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>40</td>
-			<td>45</td>
-			<td>40</td>
-			<td>80</td>
-		</tr>
-		<tr>
-			<td>Student21</td>
-			<td>Languages</td>
-			<td>male</td>
-			<td>50</td>
-			<td>45</td>
-			<td>100</td>
-			<td>100</td>
-		</tr>
-		<tr>
-			<td>Student22</td>
-			<td>Mathematics</td>
-			<td>male</td>
-			<td>100</td>
-			<td>99</td>
-			<td>100</td>
-			<td>90</td>
-		</tr>
-		<tr>
-			<td>Student23</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>85</td>
-			<td>80</td>
-			<td>80</td>
-			<td>80</td>
-		</tr>
-		<tr>
-			<td>Student24</td>
-			<td>Languages</td>
-			<td>female</td>
-			<td>100</td>
-			<td>91</td>
-			<td>13</td>
-			<td>82</td>
-		</tr>
+		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td></tr>
+		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td></tr>
+		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td></tr>
+		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td></tr>
+		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td></tr>
+		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td></tr>
+		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td></tr>
+		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td></tr>
+		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td></tr>
+		<tr><td>Student21</td><td>Languages</td><td>male</td><td>50</td><td>45</td><td>100</td><td>100</td></tr>
+		<tr><td>Student22</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student23</td><td>Languages</td><td>female</td><td>85</td><td>80</td><td>80</td><td>80</td></tr>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td></tr>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td></tr>
+		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td></tr>
+		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td></tr>
+		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td></tr>
+		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td></tr>
+		<tr><td>Student24</td><td>Languages</td><td>female</td><td>100</td><td>91</td><td>13</td><td>82</td></tr>
 	</tbody>
 </table>
 
-
 	<h1>Javascript</h1>
-	<h3>Add Widget Template</h3>
-	<div>
-		<pre class="prettyprint lang-javascript">// addWidget Template
-// *******************
-$.tablesorter.addWidget({
-	id: 'myWidget',
-	// The init function (added in v2.0.28) is called only after tablesorter has
-	// initialized, but before initial sort & before any of the widgets are applied.
-	init: function(table, allWidgets, thisWidget){
-		// widget initialization code - this is only *RUN ONCE*
-		// but in this example, only the format function is called to from here
-		// to keep the widget backwards compatible with the original tablesorter
-		thisWidget.format(table, true);
-	},
-	format: function(table, initFlag) {
-		// widget code to apply to the table *AFTER EACH SORT*
-		// the initFlag is true when this format is called from the init
-		// function above otherwise initFlag is undefined
-		// * see the saveSort widget for a full example *
-	}
-});</pre>
-	</div>
-
-	<h3>Repeat Headers Widget Code</h3>
+	<h3>Repeat Headers Widget</h3>
 
 	<div id="javascript">
 		<pre class="prettyprint lang-javascript"></pre>

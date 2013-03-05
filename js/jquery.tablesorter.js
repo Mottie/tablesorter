@@ -1097,10 +1097,11 @@
 				for (i = 0; i < l; i++) {
 					w = ts.getWidgetById(ws[i]);
 					if ( w ) {
-						if (init === true && w.hasOwnProperty('init')) {
-							w.init(table, w, c, wo);
+						if (init) {
+							if (w.hasOwnProperty('options')) { $.extend( true, wo, w.options ); }
+							if (w.hasOwnProperty('init')) { w.init(table, w, c, wo); }
 						} else if (!init && w.hasOwnProperty('format')) {
-							w.format(table, c, wo);
+							w.format(table, c, wo, false);
 						}
 					}
 				}

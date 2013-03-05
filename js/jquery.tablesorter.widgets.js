@@ -977,14 +977,15 @@ $.tablesorter.resizableReset = function(table){
 // **************************
 $.tablesorter.addWidget({
 	id: 'saveSort',
-	init: function(table, thisWidget){
+	init: function(table, thisWidget, c, wo){
 		// run widget format before all other widgets are applied to the table
-		thisWidget.format(table, true);
+		thisWidget.format(table, c, wo, true);
 	},
-	format: function(table, init){
+	format: function(table, c, wo, init){
+		// redefining c & wo for backwards compatibility
+		c = table.config;
+		wo = c.widgetOptions;
 		var sl, time, $t = $(table),
-			c = table.config,
-			wo = c.widgetOptions,
 			ss = wo.saveSort !== false, // make saveSort active/inactive; default to true
 			sortList = { "sortList" : c.sortList };
 		if (c.debug){
