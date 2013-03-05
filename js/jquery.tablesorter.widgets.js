@@ -462,6 +462,7 @@ $.tablesorter.addWidget({
 				}
 
 				last = cv; // save last search
+				$t.data('lastSearch', last);
 				if (c.debug){
 					ts.benchmark("Completed filter widget search", time);
 				}
@@ -569,7 +570,7 @@ $.tablesorter.addWidget({
 				}
 			}
 			$t
-			.bind('addRows updateCell update updateRows appendCache filterReset search '.split(' ').join('.tsfilter '), function(e, filter){
+			.bind('addRows updateCell update updateRows updateComplete appendCache filterReset search '.split(' ').join('.tsfilter '), function(e, filter){
 				if (!/(search|filterReset)/.test(e.type)){
 					buildDefault(true);
 				}
@@ -577,7 +578,8 @@ $.tablesorter.addWidget({
 					$t.find('.' + css).val('');
 				}
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
-				checkFilters(e.type === 'search' ? filter : false);
+				filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : false;
+				checkFilters(filter);
 				return false;
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){
@@ -700,7 +702,7 @@ $.tablesorter.addWidget({
 		$t
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
-			.unbind('addRows updateCell update appendCache search filterStart filterEnd '.split(' ').join('.tsfilter '))
+			.unbind('addRows updateCell update updateComplete appendCache search filterStart filterEnd '.split(' ').join('.tsfilter '))
 			.find('.tablesorter-filter-row').remove();
 		for (k = 0; k < b.length; k++ ){
 			$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
