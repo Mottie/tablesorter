@@ -370,13 +370,13 @@
 
 			function buildHeaders(table) {
 				var header_index = computeThIndexes(table), ch, $t,
-					h, i, t, lock, time, $tableHeaders, c = table.config;
+					h, i, t, lock, time, c = table.config;
 					c.headerList = [], c.headerContent = [];
 				if (c.debug) {
 					time = new Date();
 				}
 				i = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
-				$tableHeaders = $(table).find(c.selectorHeaders).each(function(index) {
+				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
 					c.headerContent[index] = this.innerHTML; // save original header content
@@ -393,28 +393,34 @@
 					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					if (ts.getData($t, ch, 'sorter') === 'false') {
-						this.sortDisabled = true;
-						$t.addClass('sorter-false');
-					} else {
-						$t.removeClass('sorter-false');
-					}
 					this.lockedOrder = false;
 					lock = ts.getData($t, ch, 'lockedOrder') || false;
 					if (typeof(lock) !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
-					$t.addClass( (this.sortDisabled ? 'sorter-false ' : ' ') + c.cssHeader );
+					$t.addClass(c.cssHeader);
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
 					$t.parent().addClass(c.cssHeaderRow);
 				});
-				if (table.config.debug) {
+				// enable/disable sorting
+				updateHeader(table);
+				if (c.debug) {
 					benchmark("Built headers:", time);
-					log($tableHeaders);
+					log(c.$headers);
 				}
-				return $tableHeaders;
+			}
+
+			function updateHeader(table) {
+				var s, th,
+					c = table.config;
+				c.$headers.each(function(index, th){
+					s = ts.getData( th, c.headers[index], 'sorter' ) === 'false';
+					th.sortDisabled = s;
+					// $t.toggleClass('sorter-false', this.sortDisabled); not supported until jQuery 1.3
+					$(th)[ s ? 'addClass' : 'removeClass' ]('sorter-false');
+				});
 			}
 
 			function setHeadersCss(table) {
@@ -568,7 +574,7 @@
 					c.$table = $this.addClass(c.tableClass + k);
 					c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
 					// build headers
-					c.$headers = buildHeaders($t0);
+					buildHeaders($t0);
 					// fixate columns if the users supplies the fixedWidth option
 					// do this after theme has been applied
 					fixColumnWidth($t0);
@@ -714,6 +720,8 @@
 					.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
 						// remove rows/elements before update
 						$this.find(c.selectorRemove).remove();
+						// update sorting
+						updateHeader($t0);
 						// rebuild parsers
 						c.parsers = buildParserCache($t0);
 						// rebuild the cache map
