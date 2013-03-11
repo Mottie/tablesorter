@@ -24,7 +24,7 @@
 			table2 = $table2[0],
 			th0 = $table1.find('th')[0], // first table header cell
 			init = false,
-			c1, c2, i, l, t;
+			undef, c1, c2, i, l, t;
 
 		$('.tester:eq(0)')
 			.bind('tablesorter-initialized', function(){
@@ -154,7 +154,7 @@
 		************************************************/
 		var p = ts.parsers,
 			// test by parser
-			parserTests = 54,
+			parserTests = 84,
 			// skipping metadata parser
 			sample1 = {
 				'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': 'á test' },
@@ -164,7 +164,7 @@
 				'isoDate'   : { '2012/12/12': 1355292000000, '2012-12/12': 1355292000000, '2013-1-1': 1357020000000, '2013/1/1 12:34:56 AM': 1357022096000 },
 				'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4 },
 				'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000, '01 Jan 2013': 1357020000000 },
-				'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000 },
+				'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000, '1/2/2001 12:34 PM' : 978460440000, '1.2.2001 13:34' : 978464040000 },
 				'time'      : { '12:34 AM': 946708440000, '1:00 pm': 946753200000 },
 				'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
 			},
@@ -190,6 +190,9 @@
 								equal( p[i].format(k, table1, th0, 0), v, t + ' parser **NOT DETECTED**: "' + k + '", but returns ' + v );
 							}
 						});
+						// test for undefined & null - probably overkill
+						strictEqual( p[i].format(undef, table1, th0, 0), undef, t + ' parser: will return undefined values properly' );
+						strictEqual( p[i].format(null, table1, th0, 0), null, t + ' parser: will return null values properly' );
 					}
 				}
 			};
@@ -209,9 +212,9 @@
 			report(sample3);
 
 			// undocumented sortValue
-			equal( p[10].format(null, table1, th0, 0), 'zzz', 'metadata parser found sortValue');
+			equal( ts.getParserById('metadata').format(null, table1, th0, 0), 'zzz', 'metadata parser found sortValue');
 			c1.parserMetadataName = 'poe';
-			equal( p[10].format(null, table1, th0, 0), 'nevermore', 'metadata parser found poe');
+			equal( ts.getParserById('metadata').format(null, table1, th0, 0), 'nevermore', 'metadata parser found poe');
 
 		});
 

@@ -143,7 +143,8 @@
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
-				var i, l = ts.parsers.length,
+				var cur,
+				i = ts.parsers.length,
 				node = false,
 				nodeValue = '',
 				keepLooking = true;
@@ -159,13 +160,15 @@
 						keepLooking = false;
 					}
 				}
-				for (i = 1; i < l; i++) {
-					if (ts.parsers[i].is && ts.parsers[i].is(nodeValue, table, node)) {
-						return ts.parsers[i];
+				while (--i >= 0) {
+					cur = ts.parsers[i];
+					// ignore the default text parser because it will always be true
+					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node)) {
+						return cur;
 					}
 				}
-				// 0 is always the generic parser (text)
-				return ts.parsers[0];
+				// nothing found, return the generic parser (text)
+				return ts.getParserById('text');
 			}
 
 			function buildParserCache(table) {
@@ -708,9 +711,9 @@
 							};
 						});
 					}
-					// apply easy methods that trigger boundd events
+					// apply easy methods that trigger bound events
 					$this
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
+					.unbind('sortReset update updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
 					.bind("sortReset.tablesorter", function(){
 						c.sortList = [];
 						setHeadersCss($t0);
@@ -1204,10 +1207,24 @@
 		},
 		format: function(s, table, cell, cellIndex) {
 			var c = table.config;
-			s = $.trim( c.ignoreCase ? s.toLocaleLowerCase() : s );
-			return c.sortLocaleCompare ? ts.replaceAccents(s) : s;
+			if (s) {
+				s = $.trim( c.ignoreCase ? s.toLocaleLowerCase() : s );
+				s = c.sortLocaleCompare ? ts.replaceAccents(s) : s;
+			}
+			return s;
 		},
 		type: "text"
+	});
+
+	ts.addParser({
+		id: "digit",
+		is: function(s) {
+			return ts.isDigit(s);
+		},
+		format: function(s, table) {
+			return s ? ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table) : s;
+		},
+		type: "numeric"
 	});
 
 	ts.addParser({
@@ -1216,7 +1233,7 @@
 			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test((s || '').replace(/[,. ]/g,'')); // £$€¤¥¢
 		},
 		format: function(s, table) {
-			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
+			return s ? ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table) : s;
 		},
 		type: "numeric"
 	});
@@ -1227,13 +1244,13 @@
 			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
 		},
 		format: function(s, table) {
-			var i, a = s.split("."),
+			var i, a = s ? s.split(".") : '',
 			r = "",
 			l = a.length;
 			for (i = 0; i < l; i++) {
 				r += ("00" + a[i]).slice(-3);
 			}
-			return ts.formatFloat(r, table);
+			return s ? ts.formatFloat(r, table) : s;
 		},
 		type: "numeric"
 	});
@@ -1244,7 +1261,7 @@
 			return (/^(https?|ftp|file):\/\//).test(s);
 		},
 		format: function(s) {
-			return $.trim(s.replace(/(https?|ftp|file):\/\//, ''));
+			return s ? $.trim(s.replace(/(https?|ftp|file):\/\//, '')) : s;
 		},
 		type: "text"
 	});
@@ -1255,7 +1272,7 @@
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/).test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat((s !== "") ? (new Date(s.replace(/-/g, "/")).getTime() || "") : "", table);
+			return s ? ts.formatFloat((s !== "") ? (new Date(s.replace(/-/g, "/")).getTime() || "") : "", table) : s;
 		},
 		type: "numeric"
 	});
@@ -1266,7 +1283,7 @@
 			return (/(\d\s?%|%\s?\d)/).test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat(s.replace(/%/g, ""), table);
+			return s ? ts.formatFloat(s.replace(/%/g, ""), table) : s;
 		},
 		type: "numeric"
 	});
@@ -1279,7 +1296,7 @@
 			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i).test(s) || (/^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i).test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat( (new Date(s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ''), table);
+			return s ? ts.formatFloat( (new Date(s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ''), table) : s;
 		},
 		type: "numeric"
 	});
@@ -1288,24 +1305,26 @@
 		id: "shortDate", // "mmddyyyy", "ddmmyyyy" or "yyyymmdd"
 		is: function(s) {
 			// testing for ####-##-####, so it's not perfect
-			return (/^(\d{1,2}|\d{4})[\/\-\,\.\s+]\d{1,2}[\/\-\.\,\s+](\d{1,2}|\d{4})$/).test(s);
+			return (/^(\d{1,2}|\d{4})[\/\-\,\.\s+]\d{1,2}[\/\-\.\,\s+](\d{1,2}|\d{4})/).test(s);
 		},
 		format: function(s, table, cell, cellIndex) {
-			var c = table.config, ci = c.headerList[cellIndex],
-			format = ci.shortDateFormat;
-			if (typeof format === 'undefined') {
-				// cache header formatting so it doesn't getData for every cell in the column
-				format = ci.shortDateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+			if (s) {
+				var c = table.config, ci = c.headerList[cellIndex],
+				format = ci.shortDateFormat;
+				if (typeof format === 'undefined') {
+					// cache header formatting so it doesn't getData for every cell in the column
+					format = ci.shortDateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+				}
+				s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
+				if (format === "mmddyyyy") {
+					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
+				} else if (format === "ddmmyyyy") {
+					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
+				} else if (format === "yyyymmdd") {
+					s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
+				}
 			}
-			s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
-			if (format === "mmddyyyy") {
-				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
-			} else if (format === "ddmmyyyy") {
-				s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
-			} else if (format === "yyyymmdd") {
-				s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
-			}
-			return ts.formatFloat( (new Date(s).getTime() || ''), table);
+			return s ? ts.formatFloat( (new Date(s).getTime() || ''), table) : s;
 		},
 		type: "numeric"
 	});
@@ -1316,18 +1335,7 @@
 			return (/^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i).test(s);
 		},
 		format: function(s, table) {
-			return ts.formatFloat( (new Date("2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ""), table);
-		},
-		type: "numeric"
-	});
-
-	ts.addParser({
-		id: "digit",
-		is: function(s) {
-			return ts.isDigit(s);
-		},
-		format: function(s, table) {
-			return ts.formatFloat(s.replace(/[^\w,. \-()]/g, ""), table);
+			return s ? ts.formatFloat( (new Date("2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || ""), table) : s;
 		},
 		type: "numeric"
 	});
