@@ -852,9 +852,10 @@
 			// *** Process table ***
 			// add processing indicator
 			ts.isProcessing = function(table, toggle, $ths) {
-				var c = table.config,
+				table = $(table);
+				var c = table[0].config,
 					// default to all headers
-					$h = $ths || $(table).find('.' + c.cssHeader);
+					$h = $ths || table.find('.' + c.cssHeader);
 				if (toggle) {
 					if (c.sortList.length > 0) {
 						// get headers from the sortList
@@ -884,10 +885,11 @@
 			};
 
 			ts.clearTableBody = function(table) {
-				table.config.$tbodies.empty();
+				$(table)[0].config.$tbodies.empty();
 			};
 
 			ts.destroy = function(table, removeClasses, callback){
+				table = $(table)[0];
 				if (!table.hasInitialized) { return; }
 				// remove all widgets
 				ts.refreshWidgets(table, true, true);
@@ -1096,6 +1098,7 @@
 			};
 
 			ts.applyWidget = function(table, init) {
+				table = $(table)[0];
 				var c = table.config,
 					wo = c.widgetOptions,
 					ws = c.widgets.sort().reverse(), // ensure that widgets are always applied in a certain order
@@ -1127,6 +1130,7 @@
 			};
 
 			ts.refreshWidgets = function(table, doAll, dontapply) {
+				table = $(table)[0]; // see issue #243
 				var i, c = table.config,
 					cw = c.widgets,
 					w = ts.widgets, l = w.length;
