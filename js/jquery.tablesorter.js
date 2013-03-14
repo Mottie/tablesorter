@@ -1309,8 +1309,8 @@
 	ts.addParser({
 		id: "shortDate", // "mmddyyyy", "ddmmyyyy" or "yyyymmdd"
 		is: function(s) {
-			// testing for ####-##-####, so it's not perfect
-			return (/^(\d{1,2}|\d{4})[\/\-\,\.\s+]\d{1,2}[\/\-\.\,\s+](\d{1,2}|\d{4})/).test(s);
+			// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
+			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test((s || '').replace(/\s+/g," ").replace(/[-.,]/g, "/"));
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
@@ -1320,7 +1320,7 @@
 					// cache header formatting so it doesn't getData for every cell in the column
 					format = ci.shortDateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
 				}
-				s = s.replace(/\s+/g," ").replace(/[\-|\.|\,]/g, "/");
+				s = s.replace(/\s+/g," ").replace(/[-.,]/g, "/");
 				if (format === "mmddyyyy") {
 					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
 				} else if (format === "ddmmyyyy") {
