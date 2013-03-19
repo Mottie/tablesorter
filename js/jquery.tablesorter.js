@@ -1163,8 +1163,8 @@
 				} else if (ch && typeof ch[key] !== 'undefined') {
 					val += ch[key];
 				} else if (cl !== ' ' && cl.match(' ' + key + '-')) {
-					// include sorter class name "sorter-text", etc
-					val = cl.match( new RegExp(' ' + key + '-(\\w+)') )[1] || '';
+					// include sorter class name "sorter-text", etc; now works with "sorter-my-custom-parser"
+					val = cl.match( new RegExp('\\s' + key + '-([\\w-]+)') )[1] || '';
 				}
 				return $.trim(val);
 			};
