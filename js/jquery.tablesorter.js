@@ -1117,7 +1117,7 @@
 					w = ts.getWidgetById(ws[i]);
 					if ( w ) {
 						if (init) {
-							if (w.hasOwnProperty('options')) { $.extend( true, wo, w.options ); }
+							if (w.hasOwnProperty('options')) { $.extend( true, w.options, wo ); }
 							if (w.hasOwnProperty('init')) { w.init(table, w, c, wo); }
 						} else if (!init && w.hasOwnProperty('format')) {
 							w.format(table, c, wo, false);
