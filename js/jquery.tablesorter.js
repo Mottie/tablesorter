@@ -154,7 +154,7 @@
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = getElementText(table, node, cellIndex);
 						if (table.config.debug) {
-							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': ' + nodeValue);
+							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
 					} else {
 						keepLooking = false;
@@ -286,7 +286,7 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					$bk = $(b[k]);
-					if (!$bk.hasClass(c.cssInfoBlock)) {
+					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
 						r = c2[k].row;
@@ -635,7 +635,9 @@
 			}
 
 			function checkResort($table, flag, callback) {
-				if (flag !== false) {
+				// don't try to resort if the table is still processing
+				// this will catch spamming of the updateCell method
+				if (flag !== false && !$table[0].isProcessing) {
 					$table.trigger("sorton", [$table[0].config.sortList, function(){
 						resortComplete($table, callback);
 					}]);
@@ -657,6 +659,8 @@
 						m = $.metadata;
 					// initialization flag
 					table.hasInitialized = false;
+					// table is being processed flag
+					table.isProcessing = true;
 					// new blank config object
 					table.config = {};
 					// merge and extend
@@ -841,6 +845,7 @@
 
 					// initialized
 					table.hasInitialized = true;
+					table.isProcessing = false;
 					if (c.debug) {
 						ts.benchmark("Overall initialization time", $.data( table, 'startoveralltimer'));
 					}
@@ -875,6 +880,7 @@
 			ts.processTbody = function(table, $tb, getIt){
 				var t, holdr;
 				if (getIt) {
+					table.isProcessing = true;
 					$tb.before('<span class="tablesorter-savemyplace"/>');
 					holdr = ($.fn.detach) ? $tb.detach() : $tb.remove();
 					return holdr;
@@ -882,6 +888,7 @@
 				holdr = $(table).find('span.tablesorter-savemyplace');
 				$tb.insertAfter( holdr );
 				holdr.remove();
+				table.isProcessing = false;
 			};
 
 			ts.clearTableBody = function(table) {
@@ -902,7 +909,7 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave sortBegin sortEnd '.split(' ').join('.tablesorter '));
+					.unbind('sortReset update updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
 					.removeAttr('data-column');
