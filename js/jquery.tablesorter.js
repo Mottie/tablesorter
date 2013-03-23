@@ -724,12 +724,14 @@
 					$this
 					.unbind('sortReset update updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
 					.bind("sortReset.tablesorter", function(){
+						e.stopPropagation();
 						c.sortList = [];
 						setHeadersCss(table);
 						multisort(table);
 						appendToTable(table);
 					})
 					.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
+						e.stopPropagation();
 						// remove rows/elements before update
 						$this.find(c.selectorRemove).remove();
 						// update sorting
@@ -741,6 +743,7 @@
 						checkResort($this, resort, callback);
 					})
 					.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
+						e.stopPropagation();
 						$this.find(c.selectorRemove).remove();
 						// get position from the dom
 						var l, row, icell,
@@ -761,6 +764,7 @@
 						}
 					})
 					.bind("addRows.tablesorter", function(e, $row, resort, callback) {
+						e.stopPropagation();
 						var i, rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length,
 						tbdy = $this.find('tbody').index( $row.closest('tbody') );
@@ -785,6 +789,7 @@
 						checkResort($this, resort, callback);
 					})
 					.bind("sorton.tablesorter", function(e, list, callback, init) {
+						e.stopPropagation();
 						$this.trigger("sortStart", this);
 						// update header count index
 						updateHeaderSortCount(table, list);
@@ -798,22 +803,27 @@
 						}
 					})
 					.bind("appendCache.tablesorter", function(e, callback, init) {
+						e.stopPropagation();
 						appendToTable(table, init);
 						if (typeof callback === "function") {
 							callback(table);
 						}
 					})
 					.bind("applyWidgetId.tablesorter", function(e, id) {
+						e.stopPropagation();
 						ts.getWidgetById(id).format(table, c, c.widgetOptions);
 					})
 					.bind("applyWidgets.tablesorter", function(e, init) {
+						e.stopPropagation();
 						// apply widgets
 						ts.applyWidget(table, init);
 					})
 					.bind("refreshWidgets.tablesorter", function(e, all, dontapply){
+						e.stopPropagation();
 						ts.refreshWidgets(table, all, dontapply);
 					})
 					.bind("destroy.tablesorter", function(e, c, cb){
+						e.stopPropagation();
 						ts.destroy(table, c, cb);
 					});
 

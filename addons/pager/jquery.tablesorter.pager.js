@@ -469,23 +469,29 @@
 						fixHeight(table, c);
 					})
 					.bind('disable.pager', function(){
+						e.stopPropagation();
 						showAllRows(table, c);
 					})
 					.bind('enable.pager', function(){
+						e.stopPropagation();
 						enablePager(table, c, true);
 					})
 					.bind('destroy.pager', function(){
+						e.stopPropagation();
 						destroyPager(table, c);
 					})
 					.bind('update.pager', function(){
+						e.stopPropagation();
 						hideRows(table, c);
 					})
 					.bind('pageSize.pager', function(e,v){
+						e.stopPropagation();
 						c.size = parseInt(v, 10) || 10;
 						hideRows(table, c);
 						updatePageDisplay(table, c);
 					})
 					.bind('pageSet.pager', function(e,v){
+						e.stopPropagation();
 						c.page = (parseInt(v, 10) || 1) - 1;
 						moveToPage(table, c);
 						updatePageDisplay(table, c);

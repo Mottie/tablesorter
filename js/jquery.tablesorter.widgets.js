@@ -572,6 +572,7 @@ $.tablesorter.addWidget({
 			$t
 			.bind('addRows updateCell update updateRows updateComplete appendCache filterReset search '.split(' ').join('.tsfilter '), function(e, filter){
 				if (!/(search|filterReset)/.test(e.type)){
+					e.stopPropagation();
 					buildDefault(true);
 				}
 				if (e.type === 'filterReset') {
@@ -1011,7 +1012,8 @@ $.tablesorter.addWidget({
 				if (c.debug){
 					$.tablesorter.benchmark('saveSort: Last sort loaded: "' + sortList + '"', time);
 				}
-				$t.bind('saveSortReset', function(){
+				$t.bind('saveSortReset', function(e){
+					e.stopPropagation();
 					$.tablesorter.storage( table, 'tablesorter-savesort', '' );
 				});
 			}
