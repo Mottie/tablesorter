@@ -1,4 +1,4 @@
-﻿/*! Two digit year parser
+/*! Two digit year parser
  * Demo: http://jsfiddle.net/Mottie/abkNM/427/
  */
 /*jshint jquery:true */

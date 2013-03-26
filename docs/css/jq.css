@@ -1,7 +1,9 @@
 body,div,h1 {font-family:'trebuchet ms', verdana, arial;margin:0;padding:0;}
 body {background-color:#fff;color:#333;margin:0;padding:0;}
-h1 {font-size:large;font-weight:400;margin:0;}
-h2 {color:#333;font-size:small;font-weight:400;margin:0;}
+h1,h2 {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;margin:0;}
+h1 {font-size:large;font-weight:400;}
+h2 {color:#333;font-size:small;font-weight:400;}
+h3 {color:#444;}
 .demo {width:600px;margin:20px auto;}
 .demo h1,.demo h1 a {font-size:120%;text-align:center;text-decoration:none;color:#000;}
 .demo p,.center {text-align:center;}
@@ -64,7 +66,9 @@ span.deprecated { background: #a00; color: #fff; padding: 1px 3px; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }
 #main .ui-accordion-header a { font-size: 14px; margin-left: 24px; }
 #main .ui-accordion-content { font-size: 14px; }
-
+.remark { font-weight: bold; color: red; font-size: 18px; }
+#group #slider0,#group #slider1,#group #slider2 { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
+#group .label { display: inline-block; min-width: 120px; }
 @media all and (max-width: 650px) {
  table.compatibility { float: none; }
 }

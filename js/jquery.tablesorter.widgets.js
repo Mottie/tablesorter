@@ -262,7 +262,7 @@ $.tablesorter.addWidget({
 	remove: function(table, c, wo){
 		var k, $tb,
 			b = c.$tbodies,
-			rmv = (c.widgetOptions.columns || [ "primary", "secondary", "tertiary" ]).join(' ');
+			rmv = (wo.columns || [ "primary", "secondary", "tertiary" ]).join(' ');
 		c.$headers.removeClass(rmv);
 		$(table).children('tfoot').children('tr').children('th, td').removeClass(rmv);
 		for (k = 0; k < b.length; k++ ){
@@ -352,7 +352,7 @@ $.tablesorter.addWidget({
 				}
 			},
 			findRows = function(filter, v, cv){
-				var $tb, $tr, $td, cr, r, l, ff, time, arry, r1, r2;
+				var $tb, $tr, $td, cr, r, l, ff, time, r1, r2;
 				if (c.debug) { time = new Date(); }
 
 				for (k = 0; k < b.length; k++ ){
@@ -944,7 +944,7 @@ $.tablesorter.addWidget({
 			position = e.pageX;
 		});
 		$tbl.find('thead:first')
-		.bind('mouseup.tsresize mouseleave.tsresize', function(e){
+		.bind('mouseup.tsresize mouseleave.tsresize', function(){
 			stopResize();
 		})
 		// right click to reset columns to default widths
@@ -956,7 +956,7 @@ $.tablesorter.addWidget({
 				return rtn;
 		});
 	},
-	remove: function(table, c, wo){
+	remove: function(table){
 		$(table)
 			.removeClass('hasResizable')
 			.find('thead')
@@ -1027,7 +1027,7 @@ $.tablesorter.addWidget({
 			}
 		}
 	},
-	remove: function(table, c, wo){
+	remove: function(table){
 		// clear storage
 		if ($.tablesorter.storage) { $.tablesorter.storage( table, 'tablesorter-savesort', '' ); }
 	}

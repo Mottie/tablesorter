@@ -468,19 +468,19 @@
 						updatePageDisplay(table, c);
 						fixHeight(table, c);
 					})
-					.bind('disable.pager', function(){
+					.bind('disable.pager', function(e){
 						e.stopPropagation();
 						showAllRows(table, c);
 					})
-					.bind('enable.pager', function(){
+					.bind('enable.pager', function(e){
 						e.stopPropagation();
 						enablePager(table, c, true);
 					})
-					.bind('destroy.pager', function(){
+					.bind('destroy.pager', function(e){
 						e.stopPropagation();
 						destroyPager(table, c);
 					})
-					.bind('update.pager', function(){
+					.bind('update.pager', function(e){
 						e.stopPropagation();
 						hideRows(table, c);
 					})
