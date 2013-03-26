@@ -304,7 +304,7 @@ $.tablesorter.addWidget({
 			wo = c.widgetOptions,
 			css = wo.filter_cssFilter || 'tablesorter-filter',
 			$t = $(table).addClass('hasFilters'),
-			b = c.$tbodies,
+			b = $t.find('tbody'),
 			cols = c.parsers.length,
 			reg = { // regex used in filter "check" functions
 				"regex" : /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // regex to test for regex
@@ -356,6 +356,7 @@ $.tablesorter.addWidget({
 				if (c.debug) { time = new Date(); }
 
 				for (k = 0; k < b.length; k++ ){
+					if (b.eq(k).hasClass(c.cssInfoBlock)) { continue; } // ignore info blocks, issue #264
 					$tb = $.tablesorter.processTbody(table, b.eq(k), true);
 					$tr = $tb.children('tr');
 					l = $tr.length;
