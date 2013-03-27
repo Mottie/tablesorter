@@ -25,6 +25,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+.
 * Small code size.
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
+* Works with jQuery 1.9+ ($.browser.msie was removed; needed in the original version).
 
 ### Licensing
 
@@ -41,6 +42,110 @@ tablesorter can successfully parse and sort many types of data including linked 
 ### Change Log
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+
+#### Version 2.8 (3/27/2013)
+
+* Added an `updateAll` method
+  * This method allows you to update the cache with data from both the `thead` and `tbody` of the table.
+  * The `update` method only updates the cache from the `tbody`.
+  * This fixes [issue #262](https://github.com/Mottie/tablesorter/issues/262).
+
+* Added a grouping rows widget:
+  * It only works in tablesorter 2.8+ and jQuery v1.7+.
+  * This widget was added to a subfolder named `widgets` within the `js` directory.
+  * A group header is added, after sorting a column, which groups rows that match the selector.
+  * Selectors include whole words, letters, numbers and dates (year, month, day, weekday and time).
+  * Check out [the demo](http://mottie.github.com/tablesorter/docs/example-widget-grouping.html) and get more details on how to use the widget there.
+  * Thanks to [Brian Ghidinelli](http://www.ghidinelli.com/) for sharing his custom widget code.
+
+* Added multiple parsers
+  * [Month](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html)
+  * [Two digit year](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html) (mmddyy, ddmmyy and yymmdd)
+  * [Weekday](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html)
+  * [Date library](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html) (sugar &amp; datejs)
+  * ISO 8601 date by [Sean Ellingham](https://github.com/seanellingham) (no demo, yet)
+  * [Metric prefixes](http://mottie.github.com/tablesorter/docs/example-parsers-metric.html)
+  * [Ignore leads](example-parsers-ignore-leads.html) parser (ignores "A", "An" and "The" in titles)
+  * [Inputs, checkbox and select parsers](http://mottie.github.com/tablesorter/docs/example-widget-grouping.html). These parsers automatically update on element changes, but requires jQuery 1.7+.
+
+* Tablesorter's "update" method now checks if a column sort has been enabled or disabled:
+  * Please note that the sorter precendence (order of priority) is still inforced ([reference](http://mottie.github.com/tablesorter/docs/example-options-headers.html)).
+  * So, for example, if you add a "sorter-false" class name to the header, it will disable the column sort if **no** jQuery data, metadata, headers option or other `"sorter-{some parser}" class name is already in place.
+  * To make sure a column becomes disabled, set it's jQuery data, then update:
+
+    ```javascript
+    $('th:eq(0)').data('sorter', false);
+    $('table').trigger('update');
+    ```
+
+  * Thanks to dibs76 for asking about this on [StackOverflow](http://stackoverflow.com/questions/15222170/jquery-tablesorter-addclasssorter-false-not-disabling-sort).
+  * This is also related to [issue #262](https://github.com/Mottie/tablesorter/issues/262).
+
+* Custom parsers detection now has higher priority over default parsers:
+  * If your custom parser just has an `is()` check that only returns false, nothing will change. You can still set the parser using jQuery data, metadata, the `headers` option or header class name as usual (in this [order of priority](http://mottie.github.com/tablesorter/docs/example-parsers-class-name.html)).
+  * What this means is that if you wrote a custom parser with an `is()` check (which tests the string and returns a boolean where `true` shows a match for your parser), it would have previously been checked after all of the default parsers were checked.
+  * Now the automatic parser detection works in reverse, from newest (custom parsers) to oldest (default parsers). So the default text and digit parsers will always be checked last.
+
+* The `addWidget` method will now extend an included `options` object into the widget options (`table.config.widgetOptions`).
+  * Default widgets will not use this functionality until version 3.0, to keep them backwards compatible.
+  * Include any widget options, when writing a new widget, as follows:
+
+    ```javascript
+    // *******************
+    // parameters:
+    // table = table object (DOM)
+    // c = config object (from table.config)
+    // wo = all widget options (from table.config.widgetOptions)
+    $.tablesorter.addWidget({
+      id: 'myWidget',
+      // widget options (added v2.8) - added to table.config.widgetOptions
+      options: {
+        myWidget_option1 : 'setting1',
+        myWidget_option2 : 'setting2'
+      },
+      // The init function (added v2.0.28) is called only after tablesorter has
+      // initialized, but before initial sort & before any of the widgets are applied.
+      init: function(table, thisWidget, c, wo){
+        // widget initialization code - this is only *RUN ONCE*
+        // but in this example, only the format function is called to from here
+        // to keep the widget backwards compatible with the original tablesorter
+        thisWidget.format(table, config, widgetOptions, true);
+      },
+      format: function(table, c, wo, initFlag) {
+        // widget code to apply to the table *AFTER EACH SORT*
+        // the initFlag is true when this format is called from the init
+        // function above otherwise initFlag is undefined
+        // * see the saveSort widget for a full example *
+        // access the widget options as follows:
+        if (wo.myWidget_option1 === 'setting1') {
+          alert('YAY');
+        }
+      },
+      remove: function(table, c, wo){
+        // do what ever needs to be done to remove stuff added by your widget
+        // unbind events, restore hidden content, etc.
+      }
+    });
+    ```
+
+  * Updated the demo showing how you can write your own widget
+
+* Updated all methods to stop event propagation past the table. This prevents sorted inner tables from also sorting the outer table. Fixes [issue #263](https://github.com/Mottie/tablesorter/issues/263).
+* Updated filter widget to restore previous search after an update. Fixes [issue #253](https://github.com/Mottie/tablesorter/issues/253).
+* Updated bower manifest file, thanks to [joyvuu-dave](https://github.com/joyvuu-dave) for the [pull request #252](https://github.com/Mottie/tablesorter/pull/252).
+* Updated several public methods that require a table element:
+  * These methods will now accept either a <em>table DOM element</em> or a <em>jQuery object</em>; previously it would only accept a DOM element.
+  * Modified these `$.tablesorter` functions: `isProcessing`, `clearTableBody`, `destroy`, `applyWidget` and `refreshWidgets`.
+  * Example: `$.tablesorter.destroy( document.getElementById('myTable') );` or `$.tablesorter.destroy( $('#myTable') );`
+  * See [issue #243](https://github.com/Mottie/tablesorter/issues/243).
+* Updated Bootstrap from version 2.1.1 to 2.3.1.
+* Fixed issue with bootstrap demo not working in IE7. It was a silly trailing comma. Fixes [issue #265](https://github.com/Mottie/tablesorter/issues/265).
+* Fixed the filter widget to work properly across tbodies. It now leaves non-sortable tbodies intact. Fixes [issue #264](https://github.com/Mottie/tablesorter/issues/264).
+* Fixed the `updateCell` method which would cause a javascript error when spammed. It would try to resort the table while the tbody was detached.
+* Fixed `shortDate` parser so that it no longer detects semantic version numbers (e.g. "1.0.0").
+* Fixed the internal `getData()` function to properly get dashed class names; e.g. `"sorter-my-custom-parser"` will look for a parser with an id of `"my-custom-parser"`.
+* Fixed IE code examples all appearing in line.
+* Did some general code cleanup and rearranging.
 
 #### Version 2.7.12 (3/1/2013)
 
@@ -83,59 +188,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 
 * Fixed an issue with the pager targetting an incorrect page when the table starts out empty.
 * Get the correct number of columns when `widthFixed` is `true` and the first row contains a table. See [issue #238](https://github.com/Mottie/tablesorter/issues/238).
-
-#### Version 2.7.8 (2/17/2013)
-
-* Fixed script errors:
-  * Comment start was stripped when converting files from UTF-8 w/BOM to UTF-8 w/o BOM.
-  * Fixed Firefox error in the filter-formatter files, when HTML5 elements don't exist, oops!
-
-#### Version 2.7.7 (2/17/2013)
-
-* Updated the currency parser to ignore formatting (commas, decimals and spaces) when detecting the column parser.
-* Updated the natural sort regex to better work with scientific notation and alphanumerics with the number first - see [this issue](https://github.com/overset/javascript-natural-sort/issues/8).
-* Reverted code to only add a colgroup if the [`widthFixed`](http://mottie.github.com/tablesorter/docs/#widthfixed) option is `true` and no colgroup exists. Fixes issues [#238](https://github.com/Mottie/tablesorter/issues/238) and [#239](https://github.com/Mottie/tablesorter/issues/239).
-* Added a tablesorter namespace to all bound events. Fixes [issue #233](https://github.com/Mottie/tablesorter/issues/233).
-* Added a [`filterReset`](http://mottie.github.com/tablesorter/docs/#filterreset) method which is the same code executed when the [`filter_reset`](http://mottie.github.com/tablesorter/docs/#widget-filter-reset) element is clicked.
-* Added a `pageSet` method to the pager which allows you to easily change the pager page (see [issue #231](https://github.com/Mottie/tablesorter/issues/231)):
-
-    ```javascript
-    // go to page 3
-    $('table').trigger('pageSet', 3);
-    ```
-
-* Added a range filter to the filter widget.
-  * You can now search for a range of values using either of these formats: `10 - 20` or `10 to 20`. Note the space before and after the dash so as to differentiate it from a negative sign.
-  * You can also use symbols within the range `10% - 20%` or `$10 - $20`.
-  * Thanks to [matzhu](https://github.com/matzhu) and [satacoy](https://github.com/satacoy) for code ideas in [issue #166](https://github.com/Mottie/tablesorter/issues/166#issuecomment-10167129).
-* Added logical AND and OR operators to the filters to the filter widget.
-  * Entering `box && bat` (or `box AND bat`) will only show rows that contain `box` and `bat` within the same column below the filter. It does not search other columns. The spaces between the operators and the queries are important.
-  * Entering `box|bat` (or `box OR bat`) will only show rows that contain either `box` or `bat` within the same column below the filter. It does not search other columns. The spaces between the operators and the queries are important.
-  * At this time you cannot combine different operators. So, `>= 100 AND <= 200` will not work, use the range filter operator (`100 - 200`) instead.
-  * Using the `|` (or operator) was previously undocumented, but useable.
-  * This was also requested in [issue #166](https://github.com/Mottie/tablesorter/issues/166).
-* Added a new filter widget option named [`filter_formatter`](http://mottie.github.com/tablesorter/docs/#widget-filter-formatter):
-  * This option allows you to add custom selectors into the filter row.
-  * Because of the amount of coding, new files named "jquery.tablesorter.widgets-filter-formatter.js" and "filter.formatter.css" were added. They include code to add jQuery UI and HTML5 controls via the filter_formatter option.
-  * Filter formatter functions include: "uiSpinner", "uiSlider", "uiRange" (uiSlider ranged), "uiDatepicker" (range only), "html5Number", "html5Range" and "html5Color".
-  * As an example, this code will add the jQuery UI spinner to the first column:
-
-      ```javascript
-      filter_formatter : {
-        0 : function($cell, indx){
-          return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
-            value : 0,  // starting value
-            min   : 0,  // minimum value
-            max   : 50, // maximum value
-            step  : 1,  // increment value by
-            addToggle: true, // enable or disable the control
-            exactMatch: true,
-            numberFormat: "n"
-          });
-        }
-      }
-      ```
-
-  * You can also choose to add the current selector value into a css3 tooltip or into the header by setting the `valueToHeader` option, if available.
-  * Fulfills [ErinsMatthew](https://github.com/ErinsMatthew)'s feature request - [issue #232](https://github.com/Mottie/tablesorter/issues/232). Thanks for the great idea!
-* NOTE: I know the js folder is getting messy. In version 3, I plan on having a separate folder for widgets and parsers. And with the build system, you'll be able to pick and choose which components you need.
