@@ -45,7 +45,9 @@
 
 	// call the tablesorter plugin and apply the uitheme widget
 	$("table").tablesorter({
-		theme : "bootstrap", // this will 
+		// this will apply the bootstrap theme if "uitheme" widget is included
+		// the widgetOptions.uitheme is no longer required to be set
+		theme : "bootstrap",
 
 		widthFixed: true,
 
@@ -61,10 +63,11 @@
 			zebra : ["even", "odd"],
 
 			// reset filters button
-			filter_reset : ".reset",
+			filter_reset : ".reset"
 
 			// set the uitheme widget to use the bootstrap theme class names
-			// uitheme : "bootstrap"
+			// this is no longer required, if theme is set
+			// ,uitheme : "bootstrap"
 
 		}
 	})
