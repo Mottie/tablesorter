@@ -13,7 +13,7 @@
 			return false;
 		},
 		format: function(s) {
-			// Add more lead words inside the parentheses below 
+			// Add more lead words inside the parentheses below
 			// separated by a vertical bar (shift + \)
 			return (s || '').replace(/^(The|A|An)\s/i, '');
 		},

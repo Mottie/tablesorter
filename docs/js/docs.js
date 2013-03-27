@@ -2,16 +2,33 @@ $(function(){
 
 	$("a.external").each(function(){this.target = '_new';});
 
+	var cleanupCode = function(code){
+		return code.replace(/[<>\"\'\t\n]/g, function(m) { return {
+			'<' : '&lt;',
+			'>' : '&gt;',
+			"'" : '&#39;',
+			'"' : '&quot;',
+			'\t': '  ',
+			'\n': '<br/>' // needed for IE
+		}[m]});
+	};
+
 	// get javascript source
 	if ($("#js").length) {
-		$("#javascript pre").text( $("#js").html().replace(/\t/g, "  ") );
+		$("#javascript pre").addClass('mod').html( cleanupCode( $("#js").html() ) );
 	}
 	if ($("#css").length) {
-		$("pre.lang-css").text( $("#css").html().replace(/\t/g, "  ") );
+		$("pre.lang-css").addClass('mod').html( cleanupCode( $("#css").html() ) );
 	}
 	if ($("#demo").length) {
-		$("#html pre").text( $("#demo").html().replace(/\t/g, "  ") );
+		$("#html pre").addClass('mod').html( cleanupCode( $("#demo").html() ) );
 	}
+
+	// apply to already pre-formatted blocks to add <br> for IE
+	$('pre:not(.mod)').each(function(){
+		var $t = $(this);
+		$t.html( cleanupCode( $t.html() ) );
+	});
 
 	if (typeof prettyPrint !== 'undefined') { prettyPrint(); }
 
@@ -80,3 +97,22 @@ $(window).load(function(){
 	showProperty();
 
 });
+
+// append hidden parsed value to cell
+var addParsedValues = function($t, cols, format){
+	var i, j, r,
+		$r = $t.find('tbody tr'),
+		c = $t[0].config.cache[0].normalized,
+		l = c.length - 1;
+	$r.each(function(i){
+		r = this;
+		$.each(cols, function(v,j){
+			r.cells[j].innerHTML += ' <span class="val hidden">(<span class="results">' + (format ? format(c[i][j]) : c[i][j]) + '</span>)</span>';
+		});
+	});
+
+	$('.toggleparsedvalue').on('click', function(){
+		$('.val').toggleClass('hidden');
+	});
+
+};

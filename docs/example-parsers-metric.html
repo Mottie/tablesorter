@@ -24,7 +24,6 @@
 
 	<script id="js">$(function() {
 
-	// call the tablesorter plugin
 	$("table").tablesorter({
 		theme : 'blue',
 		widgets : ["zebra"]
@@ -61,63 +60,26 @@
 	</p>
 
 	<h1>Demo</h1>
-	<button>Toggle parsed values</button>
+	<button class="toggleparsedvalue">Toggle parsed values</button>
 	<div id="demo"><table class="tablesorter">
   <thead>
-    <tr>
-      <th class="sorter-metric" data-metric-name="b|byte">Metric (binary) Size</th>
+    <tr><th class="sorter-metric" data-metric-name="b|byte">Metric (binary) Size</th>
       <th class="sorter-metric" data-metric-name="m|meter">Metric Length</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>1 byte</td>
-      <td>1 nm</td>
-    </tr>
-    <tr>
-      <td>1 kb</td>
-      <td>1 kilometer</td>
-    </tr>
-    <tr>
-      <td>1 Gigabyte</td>
-      <td>1 Gm</td>
-    </tr>
-    <tr>
-      <td>10 Mb</td>
-      <td>1 Tm</td>
-    </tr>
-    <tr>
-      <td>1 Mb</td>
-      <td>1,000 mm</td>
-    </tr>
-    <tr>
-      <td>1 Tb</td>
-      <td>1 meter</td>
-    </tr>
-    <tr>
-      <td>1 Petabyte</td>
-      <td>1 hm</td>
-    </tr>
-    <tr>
-      <td>1 Zb</td>
-      <td>1 dam</td>
-    </tr>
-    <tr>
-      <td>1,025 Mb</td>
-      <td>1 Mm</td>
-    </tr>
-    <tr>
-      <td>1,000 kilobytes</td>
-      <td>1 dm</td>
-    </tr>
-    <tr>
-      <td>1 Eb</td>
-      <td>1 µm</td>
-    </tr>
-    <tr>
-      <td>1023 Mb</td>
-      <td>1 pm</td>
-    </tr>
+    <tr><td>1 byte</td><td>1 nm</td></tr>
+    <tr><td>1 kb</td><td>1 kilometer</td></tr>
+    <tr><td>1 Gigabyte</td><td>1 Gm</td></tr>
+    <tr><td>10 Mb</td><td>1 Tm</td></tr>
+    <tr><td>1 Mb</td><td>1,000 mm</td></tr>
+    <tr><td>1 Tb</td><td>1 meter</td></tr>
+    <tr><td>1 Petabyte</td><td>1 hm</td></tr>
+    <tr><td>1 Zb</td><td>1 dam</td></tr>
+    <tr><td>1,025 Mb</td><td>1 Mm</td></tr>
+    <tr><td>1,000 kilobytes</td><td>1 dm</td></tr>
+    <tr><td>1 Eb</td><td>1 µm</td></tr>
+    <tr><td>1023 Mb</td><td>1 pm</td></tr>
   </tbody>
 </table></div>
 
@@ -149,29 +111,10 @@
 
 </div>
 
-<style>
-.hidden { display: none; }
-.results { color: red; }
-</style>
 <script>
 $(function(){
-
-	// append hidden value to cell
-	var i, j,
-		$t = $('table'),
-		$r = $t.find('tbody tr'),
-		c = $t[0].config.cache[0].normalized,
-		l = c.length - 1;
-	$r.each(function(i){
-		for (j = 0; j < 2; j++) {
-			this.cells[j].innerHTML += ' <span class="val hidden">(<span class="results">' + c[i][j].toExponential() + '</span>)</span>';
-		}
-	});
-
-	$('button').on('click', function(){
-		$('.val').toggleClass('hidden');
-	});
-
+	// add parsed values to columns [0,1]
+	addParsedValues($('table'), [0,1], function(num){ return num.toExponential(); });
 });
 </script>
 
