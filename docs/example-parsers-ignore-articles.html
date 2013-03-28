@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Ignore leads parser</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Ignore leading articles parser</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-	<script src="../js/parsers/parser-ignore-leads.js"></script>
+	<script src="../js/parsers/parser-ignore-articles.js"></script>
 
 	<script id="js">$(function() {
 
@@ -26,7 +26,10 @@
 		widgets: ['zebra'],
 		sortList: [[2, 0]],
 		headers: {
-			2: { sorter: 'ignoreLeads' }
+			2: {
+				sorter: 'ignoreArticles',
+				ignoreArticles : 'en'
+			}
 		}
 	});
 
@@ -36,17 +39,71 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Ignore leads parser</h2>
+	<h2>Ignore leading articles parser</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This parser can not be applied to the original plugin.</li>
+			<li>Set the language to use by adding any of the following (they all do the same thing), set in order of priority <span class="tip"><em>New!</em></span> v2.8.2:
+				<ul>
+					<li>jQuery data <code>data-ignore-articles="fr"</code>.</li>
+					<li>metadata <code>class="{ ignoreArticles : 'fr' }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { ignoreArticles : 'fr' } }</code>.</li>
+					<li>header class name <code>class="ignoreArticles-fr"</code>.</li>
+				</ul>
+			</li>
+			<li>To add a custom language to the parser, use the following code:
+				<pre class="prettyprint lang-javascript">$.extend( $.tablesorter.ignoreArticles, {
+  "xx" : "a, l'_, de la"
+});
+
+$('table').tablesorter({
+  headers: {
+    2: {
+      sorter: 'ignoreArticles',
+      ignoreArticles : 'xx'
+    }
+  }
+});</pre>
+				<ul>
+					<li>where <code>xx</code> is the <code>ignoreArticles</code> id (abbreviation for the language)</li>
+					<li>Each leading article must be separated by a comma and will be case-insensitive.</li>
+					<li>Leading articles will only be removed if they are followed by a space; spaces are automatically included when parsed unless the article definition is followed by an underscore. See the <code>l'_</code> note below.</li>
+					<li><code>a</code> is an example of a leading article which will be removed. So, "A Fistfull of Dollars" will only parse "Fistfull of Dollars" and will sort with the other words that start with an "F".</li>
+					<li><code>l'_</code> includes an underscore (<code>_</code>); this tells the parser to <strong><em>not</em></strong> add a space after the word. So a title like "l'enfant" will parse as "enfant".</li>
+					<li><code>de la</code> is an example showing that the parser can remove a multiple-word article.</li>
+				</ul>
+			</li>
+			<li>Some languages have been included by default. The information below was obtained from <a href="http://en.wikipedia.org/wiki/Article_%28grammar%29#Variation_among_languages">this wikipedia page</a>, so if you discover any errors, or if you want to contribute another language, please <a href="https://github.com/Mottie/tablesorter/issues">open an issue</a>.
+				<pre class="prettyprint lang-javascript">$.tablesorter.ignoreArticles = {
+  "en" : "the, a, an",
+  "de" : "der, die, das, des, dem, den, ein, eine, einer, eines, einem, einen",
+  "nl" : "de, het, de, een",
+  "es" : "el, la, lo, los, las, un, una, unos, unas",
+  "pt" : "o, a, os, as, um, uma, uns, umas",
+  "fr" : "le, la, l'_, les, un, une, des",
+  "it" : "il, lo, la, l'_, i, gli, le, un', uno, una, un",
+  "hu" : "a, az, egy"
+};</pre></li>
+		</ul>
+	</p>
+
 	<h1>Demo</h1>
+	<br>
 	<div id="demo"><h2><a href="http://www.imdb.com/chart/top">IMDB top 250 movies</a> (3/27/2013)</h2>
 <table>
 	<thead>
-		<tr><td class="center">Rank</td><td class="center">Rating</td><td>Title</td><td class="right">Votes</td></tr>
+		<tr>
+			<td class="center">Rank</td>
+			<td class="center">Rating</td>
+			<td>Title</td> <!-- data-sorter="ignoreArticles" data-ignore-articles="en" -->
+			<td class="right">Votes</td>
+		</tr>
 	</thead>
 	<tbody>
 		<tr><td class="right">1.</td><td class="center">9.2</td><td><a href="http://www.imdb.com/title/tt0111161/">The Shawshank Redemption</a> (1994)</td><td class="right">941,067</td></tr>
@@ -306,13 +363,29 @@
 
 	<h1>Page Header</h1>
 	<div>
-		<pre class="prettyprint lang-html">&lt;!-- blue theme stylesheet --&gt;
+		<pre class="prettyprint lang-html">&lt;!-- tablesorter --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
-&lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
 
-&lt;!-- load ignore-leads parser --&gt;
-&lt;script src=&quot;../js/parsers/parser-ignore-leads.js&quot;&gt;&lt;/script&gt;</pre>
+&lt;!-- load ignore-articles parser --&gt;
+&lt;script src=&quot;../js/parsers/parser-ignore-articles.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$(function() {
+
+  $('table').tablesorter({
+    theme: 'blue',
+    widgets: ['zebra'],
+    sortList: [[2, 0]],
+    headers: {
+      2: {
+        sorter: 'ignoreArticles',
+        ignoreArticles : 'fr'
+      }
+    }
+  });
+
+});
+&lt;/script&gt;</pre>
 	</div>
 
 </div>

@@ -72,7 +72,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * [Date library](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html) (sugar &amp; datejs)
   * ISO 8601 date by [Sean Ellingham](https://github.com/seanellingham) (no demo, yet)
   * [Metric prefixes](http://mottie.github.com/tablesorter/docs/example-parsers-metric.html)
-  * [Ignore leads](example-parsers-ignore-leads.html) parser (ignores "A", "An" and "The" in titles)
+  * [Ignore leads](http://mottie.github.com/tablesorter/docs/example-parsers-ignore-articles.html) parser (ignores "A", "An" and "The" in titles)
   * [Inputs, checkbox and select parsers](http://mottie.github.com/tablesorter/docs/example-widget-grouping.html). These parsers automatically update on element changes, but requires jQuery 1.7+.
 
 * Tablesorter's "update" method now checks if a column sort has been enabled or disabled:
