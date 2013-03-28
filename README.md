@@ -43,6 +43,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### Version 2.8.1 (3/27/2013)
+
+* Added `customAjaxUrl` option to the pager:
+  * This function is called after all processing has been applied to the `ajaxUrl` string.
+  * Use this function to make any other string modifications, as desired.
+  * Thanks to [Cthulhu59](https://github.com/Cthulhu59) for contributing. See [pull request #256](https://github.com/Mottie/tablesorter/pull/256).
+
 #### Version 2.8 (3/27/2013)
 
 * Added an `updateAll` method

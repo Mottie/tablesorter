@@ -34,6 +34,9 @@
 		// use this url format "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
 		ajaxUrl: null,
 
+		// modify the url after all processing has been applied
+		customAjaxUrl: function(table, url) { return url; },
+
 		// process ajax so that the data object is returned along with the total number of rows
 		// example: { "data" : [{ "ID": 1, "Name": "Foo", "Last": "Bar" }], "total_rows" : 100 }
 		ajaxProcessing: function(ajax){
