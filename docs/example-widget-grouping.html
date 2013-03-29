@@ -108,6 +108,7 @@
 					<li><code>group_collapsible</code> - when <code>true</code> the group headers become clickable and collapse the rows below it.</li>
 					<li><code>group_count</code> - Allows you to add custom formatting, or remove, the group count within the group header. Set it to <code>false</code> or an empty string to remove the count.</li>
 					<li><code>group_months</code>, <code>group_week</code> and <code>group_time</code> - Name arrays included so that the language of the date groups can be modified easily.</li>
+					<li><code>group_formatter</code> - Use this function to modify the group header text before it gets applied. It provides various parameters to make it work for any of the table columns and data. See the comments in the example below for more details.</li>
 				</ul>
 			</li>
 			<li>Group header class names (when changing the grouping, notice that the <em>sort doesn't change, just the position and names of the group headers</em>):
@@ -125,7 +126,7 @@
 					<li><code>"group-date-week"</code> - group the rows by day of the week<span class="remark">*</span></li>
 					<li><code>"group-date-time"</code> - group the rows by time<span class="remark">*</span></li>
 				</ul>
-				
+
 				<span class="remark">*</span> When sorting some columns, different group headers with the same group name may exist (try "group-date-week" and "group-date-time"). To make these columns sort specifically by the group you want, you'll need to modify the parser.
 			</li>
 		</ul>
@@ -198,7 +199,7 @@ $(function(){
     theme : &#39;blue&#39;,
     headers: {
       0: { sorter: 'checkbox' },
-      2: { sorter: 'select' },
+      3: { sorter: 'select' },
       6: { sorter: 'inputs' }
     },
     widgets: [&#39;group&#39;],
