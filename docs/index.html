@@ -300,7 +300,7 @@
 			</ul>
 		</li>
 		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Modified</em></span> v2.7.4)</li>
+		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Updated</em></span> v2.8.3)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
 		<li>UITheme widget:
@@ -740,14 +740,14 @@
 			<tr id="headertemplate">
 				<td><a href="#" class="toggle2">headerTemplate</a></td>
 				<td>String</td>
-				<td>'{content} {icon}'</td>
+				<td>'{content}'</td>
 				<td>This is a template string which allows adding additional content to the header while it is being built. <span class="tip"><em>New!</em></span> v2.7.
 					<div class="collapsible"><br>
-						This template string has two default tags: <code>{content}</code> and <code>{icon}</code>.<br>
+						This template string has two modifying tags: <code>{content}</code> and <code>{icon}</code>.<br>
 						<code>{content}</code> will be replaced by the current header HTML content.<br>
 						<code>{icon}</code> will be replaced by <code>&lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;</code>, but only if a class name is defined in the <code>cssIcon</code> option.<br>
 						<br>
-						This template string may also contain HTML, e.g (<code>'&lt;em&gt;{content}&lt;/em&gt;'</code>)<br>
+						This template string may also contain HTML, e.g (<code>'&lt;em&gt;{content}&lt;/em&gt; {icon}'</code>)<br>
 						<br>
 						After the template string is built, the <code>onRenderTemplate</code> function is called to allow further manipulation. Please read more about this <a href="#onrendertemplate"><code>onRenderTemplate</code> function</a> and/or check out the example (link to the right).
 					</div>
@@ -1310,6 +1310,8 @@ $(function(){
       // *** resizable widget ***
       // if false, resized columns are not saved for next page reload
       resizable : true,
+      // if true, the last column will be resizable (use in non-full width tables)
+      resizable_addLastColumn: false,
 
       // *** savesort widget ***
       // if false, the sort will not be saved for next page reload
@@ -1600,7 +1602,7 @@ $(function(){
 				<td>Object</td>
 				<td>null</td>
 				<td>
-					Filter widget: This option allows you to add custom controls within the filter widget row. <span class="tip"><em>New! v2.7.7</em></span><br>
+					Filter widget: This option allows you to add custom controls within the filter widget row. <span class="tip"><em>New!</em> v2.7.7</span><br>
 					<div class="collapsible">
 					<br>
 					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
@@ -1995,13 +1997,37 @@ $('table').trigger('search', false);</pre></div>
 					Resizable widget: If this option is set to <code>false</code>, resized column widths will not be saved. Previous saved values will be restored on page reload (v2.4).
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widget-resizable"><code>"resizable"</code></a> option to change the css class name as follows:
+					Use the <a href="#widget-resizable"><code>"resizable"</code></a> option to not save the resized widths:
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
     widgets: ["resizable"],
     widgetOptions : {
       // css class name applied to the sticky header
       resizable : false
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-resizable.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-resizable-addlastcolumn">
+				<td><a href="#" class="toggle2">resizable_addLastColumn</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Resizable widget: If this option is set to <code>true</code>, a resizing anchor will be included in the last column of the table <span class="tip"><em>New!</em></span> v2.8.3.
+					<div class="collapsible">
+					<br>
+					If an anchor was included and the table is full width, the column would resize in the opposite direction which my not be intuitive to the user. So set this option as desired, but please be mindful of the user experience.<br>
+					<br>
+					Use the <a href="#widget-resizable-addlastcolumn"><code>"resizable_addLastColumn"</code></a> option to include the last column resizer as follows:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["resizable"],
+    widgetOptions : {
+      // css class name applied to the sticky header
+      resizable_addlastcolumn : true
     }
   });
 });</pre></div>
@@ -2017,7 +2043,7 @@ $('table').trigger('search', false);</pre></div>
 					saveSort widget: If this option is set to <code>false</code>, new sorts will not be saved. Any previous saved sort will be restored on page reload (v2.4).
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widget-savesort"><code>"saveSort"</code></a> option to change the css class name as follows:
+					Use the <a href="#widget-savesort"><code>"saveSort"</code></a> option to not save the current sort:
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
     widgets: ["saveSort"],

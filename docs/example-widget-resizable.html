@@ -23,13 +23,22 @@
 
 <script id="js">$(function() {
 
-	// call the tablesorter plugin
-	$("table").tablesorter({
+	$("table:first").tablesorter({
 		theme : 'blue',
-
 		// initialize zebra striping and resizable widgets on the table
-		widgets: [ "zebra", "resizable" ]
+		widgets: [ "zebra", "resizable" ],
+		widgetOptions: {
+			resizable_addLastColumn : true
+		}
+	});
 
+	$("table:last").tablesorter({
+		theme : 'blue',
+		// initialize zebra striping and resizable widgets on the table
+		widgets: [ "zebra", "resizable" ],
+		widgetOptions: {
+			resizable_addLastColumn : true
+		}
 	});
 
 });</script>

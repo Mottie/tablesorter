@@ -906,7 +906,8 @@ $.tablesorter.addWidget({
 				// Firefox needs this inner div to position the resizer correctly
 				$c.wrapInner('<div class="tablesorter-wrapper" style="position:relative;height:100%;width:100%"></div>');
 			}
-			$c = $c.slice(0,-1); // don't include the last column of the row
+			// don't include the last column of the row
+			if (!wo.resizable_addLastColumn) { $c = $c.slice(0,-1); }
 			$cols = $cols ? $cols.add($c) : $c;
 		});
 		$cols
