@@ -22,7 +22,8 @@ Default Theme
 	border-bottom: #ccc 2px solid;
 	padding: 0;
 }
-.tablesorter-default tfoot th {
+.tablesorter-default tfoot th,
+.tablesorter-default tfoot td {
 	border: 0;
 }
 .tablesorter-default .header,

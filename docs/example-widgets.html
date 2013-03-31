@@ -26,42 +26,42 @@
 	// ************************************
 	$.tablesorter.addWidget({
 
-		// give the widget an id
 		id: "repeatHeaders",
+		priority: 10,
 		options: {
 			rowsToSkip : 4
 		},
 		// format is called on init and when a sorting has finished
 		format: function(table, c, wo) {
-			var h, i, skip;
+			var h = '', i, $tr, l, skip;
 			// cache and collect all TH headers
-			if (!this.headers) {
-				h = this.headers = [];
-				$("thead th",table).each(function() {
-					h.push( "<th>" + $(this).text() + "</th>" );
+			if (!wo.repeatHeaders) {
+				h = '<tr class="repeated-header remove-me">';
+				$.each(c.headerContent, function(i,t) {
+					h += '<th>' + t + '</th>';
 				});
+				// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
+				// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
+				wo.repeatHeaders = h + '</tr>';
 			}
-
-			// remove appended headers by classname
-			$(table).find("tr.repeated-header").remove();
 
 			// number of rows to skip
 			skip = wo && wo.rowsToSkip || 4;
 
+			// remove appended headers by classname
+			c.$table.find("tr.repeated-header").remove();
+			$tr = c.$tbodies.find('tr');
+			l = $tr.length;
 			// loop all tr elements and insert a copy of the "headers"
-			for (i = skip; i < table.tBodies[0].rows.length; i += (skip + 1)) {
+			for (i = skip; i < l; i += skip) {
 				// insert a copy of the table head every X rows
-				$("tbody tr:eq(" + i + ")",table).before(
-					// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
-					// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
-					$("<tr></tr>").addClass("repeated-header remove-me").html(this.headers.join(""))
-				);
+				$tr.eq(i).before(wo.repeatHeaders);
 			}
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo){
-			$(table).find("tr.repeated-header").remove();
+		remove: function(table, c){
+			c.$table.find("tr.repeated-header").remove();
 		}
 
 	});
@@ -91,6 +91,13 @@
 		Notes about the <code>addWidget</code> template:
 		<ul>
 			<li>The <code>id</code> block is required and must be unique.</li>
+			<li>The <code>priority</code> block is optional (<span class="tip"><em>New!</em> in v2.9</span>):
+				<ul>
+					<li>Set the widget priority using any number; think of it like setting the css z-index.</li>
+					<li>This tells the plugin the order in which to run the widgets, lowest number priority first.</li>
+					<li>The default widgets have priorities set in intervals of 10 (see the <a href="index.html#Widget-options"> widget priority table</a>), so to run your custom widget before a specific widget, set your widget priority to less than that number.</li>
+				</ul>
+			</li>
 			<li>The <code>options</code> block (<span class="tip"><em>New!</em> in v2.8</span>):
 				<ul>
 					<li>Include any widget options to be automatically be extended with any set widgetOptions (from <code>table.config.widgetOptions</code>).</li>
@@ -135,6 +142,8 @@
 // widgetOptions = all widget options (from table.config.widgetOptions)
 $.tablesorter.addWidget({
   id: 'myWidget',
+  // set the priority of the widget (optional)
+  priority: 10,
   // widget options (added v2.8) - added to table.config.widgetOptions
   options: {
     myWidget_option1 : 'setting1',

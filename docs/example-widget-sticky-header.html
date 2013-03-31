@@ -96,21 +96,19 @@ $(function() {
 		<em>NOTE!</em>
 		<ul>
 			<li>This widget can be applied to the original plugin. The code is in the "jquery.tablesorter.widgets.js" file.</li>
-			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
-			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
-			<li>Added <code>widgetOptions.stickyHeader</code> option which contains the css class name applied to the actual sticky header. <span class="tip"><em>New! v2.1</em></span></li>
-			<li>Multiple rows in the header will become sticky. <span class="tip"><em>New! v2.1.17</em></span></li>
-			<li>The filter widget adds a row to the table header, but that row will not be included in the sticky header.</li>
-			<li>Add the class name <code>sticky-false</code> to any header rows you don't want to become sticky. <span class="tip"><em>New! v2.1.18</em></span></li>
-			<li><del>Because of an issue with jQuery version 1.3 and older causing an error, this widget needs at least jQuery version 1.4+ in order to work.</del> Now working with jQuery 1.2.6+ again.</li>
-			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
-			<li><del>For the sticky header to work properly if any <code>&lt;TD&gt;</code>'s are included within the header:</del> <span class="tip"><em>Fixed! v2.4</em></span>
+			<li>Added a widget option named <code>stickyHeaders_cloneId</code> <span class="tip"><em>New!</em></span> v2.9!
 				<ul>
-					<li><del>Set the <code>selectorHeaders</code> option to <code>thead th, thead td</code>.</del></li>
-					<li><del>The <code>&lt;TD&gt;</code> may not be styled properly, so CSS changes may be needed.</del></li>
-					<li><del>To prevent the <code>&lt;TD&gt;</code> from being sortable, add a <code>sorter-false</code> class name.</del></li>
+					<li>It contains a suffix to add to any table id.</li>
+					<li>Its default value is <code>-sticky</code> </li>
 				</ul>
 			</li>
+			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
+			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
+			<li>Added a widget option named <code>stickyHeader</code> option which contains the css class name applied to the actual sticky header (v2.1).</li>
+			<li>Multiple rows in the header will become sticky (v2.1.17).</li>
+			<li>The filter widget adds a row to the table header, but that row will not be included in the sticky header.</li>
+			<li>Add the class name <code>sticky-false</code> to any header rows you don't want to become sticky (v2.1.18).</li>
+			<li>Because of the limitations of Internet Explorer version 7 and older, this widget will not work.</li>
 		</ul>
 	</p>
 
@@ -126,13 +124,8 @@ $(function() {
 	</select>
 	<br><br>
 
-	<table class="tablesorter" borderspacing="10">
-	<caption>Table caption</caption>
+	<table class="tablesorter">
 	<thead>
-		<tr>
-			<th colspan="3" class="sorter-false">Personal Information for each person (resize the browser to check expanding height)</th>
-			<td colspan="4" class="sorter-false">Courses (this is a TD cell)</td>
-		</tr>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th class="filter-false sorter-false">Geometry</th></tr>
 	</thead>
 	<tfoot>
