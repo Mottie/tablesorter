@@ -529,7 +529,7 @@ ts.addWidget({
 				for (i = 0; i < cols; i++){
 					t += '<td></td>';
 				}
-				$fr = $t.find('thead').eq(0).append(t += '</tr>').find('td');
+				$fr = $(t += '</tr>').appendTo( $t.find('thead:first') ).find('td');
 				// build each filter input
 				for (i = 0; i < cols; i++){
 					dis = false;
