@@ -55,6 +55,14 @@
 			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
 			ajaxUrl : 'assets/City{page}.json',
 
+			// modify the url after all processing has been applied
+			customAjaxUrl: function(table, url) {
+					// trigger my custom event
+					$(table).trigger('changingUrl');
+					// send the server the current page
+					return url += '&currentUrl=' + window.location.href;
+			},
+
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 			// example:
