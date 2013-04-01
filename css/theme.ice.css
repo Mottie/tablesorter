@@ -122,6 +122,11 @@
 	background-color: #ebfafa;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-ice .tablesorter-filter-row td {
 	background: #eee;
@@ -162,7 +167,7 @@
 /* filters */
 .tablesorter-ice .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 4px;
 	padding: 4px;
 	background-color: #fff;

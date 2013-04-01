@@ -113,6 +113,11 @@
 	background-color: #5a646b;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-blackice .tablesorter-filter-row td {
 	background: #222;
@@ -153,7 +158,7 @@
 /* filters */
 .tablesorter-blackice .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 0;
 	padding: 4px;
 	background-color: #fff;

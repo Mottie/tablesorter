@@ -71,10 +71,15 @@
 	z-index: 1000;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 0 auto;
 	padding: 4px 6px;
 	background-color: #fff;

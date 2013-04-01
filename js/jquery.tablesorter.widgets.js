@@ -196,7 +196,7 @@ ts.addWidget({
 // **************************
 ts.addWidget({
 	id: "columns",
-	priority: 60,
+	priority: 30,
 	options : {
 		columns : [ "primary", "secondary", "tertiary" ]
 	},
@@ -308,11 +308,11 @@ ts.addWidget({
 	format: function(table, c, wo){
 		if (c.parsers && !c.$table.hasClass('hasFilters')){
 			var i, j, k, l, val, ff, x, xi, st, sel, str,
-			ft, ft2, $th, $fr, rg, s, t, dis, col,
+			ft, ft2, $th, rg, s, t, dis, col,
 			fmt = ts.formatFloat,
 			last = '', // save last filter search
 			$ths = c.$headers,
-			css = wo.filter_cssFilter || 'tablesorter-filter',
+			css = wo.filter_cssFilter,
 			$t = c.$table.addClass('hasFilters'),
 			b = $t.find('tbody'),
 			cols = c.parsers.length,
@@ -321,8 +321,7 @@ ts.addWidget({
 			// dig fer gold
 			checkFilters = function(filter){
 				var arry = $.isArray(filter),
-					$inpts = $t.find('thead').eq(0).find('.tablesorter-filter-row').children(),
-					v = (arry) ? filter : $inpts.map(function(t){
+					v = (arry) ? filter : c.$filters.map(function(t){
 						// make sure input arry index matches header indexes.
 						t = $(this).find('select.' + css + ', input.' + css);
 						return t.length ? t.val() || '' : '';
@@ -330,7 +329,7 @@ ts.addWidget({
 					cv = (v || []).join(''); // combined filter values
 				// add filter array back into inputs
 				if (arry) {
-					$inpts.each(function(i,el){
+					c.$filters.each(function(i,el){
 						$(el).val(filter[i] || '');
 					});
 				}
@@ -529,7 +528,7 @@ ts.addWidget({
 				for (i = 0; i < cols; i++){
 					t += '<td></td>';
 				}
-				$fr = $(t += '</tr>').appendTo( $t.find('thead:first') ).find('td');
+				c.$filters = $(t += '</tr>').appendTo( $t.find('thead').eq(0) ).find('td');
 				// build each filter input
 				for (i = 0; i < cols; i++){
 					dis = false;
@@ -545,18 +544,18 @@ ts.addWidget({
 					}
 
 					if (sel){
-						t = $('<select>').appendTo( $fr.eq(i) );
+						t = $('<select>').appendTo( c.$filters.eq(i) );
 					} else {
 						if (wo.filter_formatter && $.isFunction(wo.filter_formatter[i])) {
-							t = wo.filter_formatter[i]( $fr.eq(i), i );
+							t = wo.filter_formatter[i]( c.$filters.eq(i), i );
 							// no element returned, so lets go find it
-							if (t && t.length === 0) { t = $fr.eq(i).children('input'); }
+							if (t && t.length === 0) { t = c.$filters.eq(i).children('input'); }
 							// element not in DOM, so lets attach it
-							if (t && (t.parent().length === 0 || (t.parent().length && t.parent()[0] !== $fr[i]))) {
-								$fr.eq(i).append(t);
+							if (t && (t.parent().length === 0 || (t.parent().length && t.parent()[0] !== c.$filters[i]))) {
+								c.$filters.eq(i).append(t);
 							}
 						} else {
-							t = $('<input type="search">').appendTo( $fr.eq(i) );
+							t = $('<input type="search">').appendTo( c.$filters.eq(i) );
 						}
 						if (t) {
 							t.attr('placeholder', $th.attr('data-placeholder') || '');
@@ -722,74 +721,71 @@ ts.addWidget({
 // **************************
 ts.addWidget({
 	id: "stickyHeaders",
-	priority: 20,
+	priority: 60,
 	options: {
 		stickyHeaders: 'tablesorter-stickyHeader',
 		stickyHeaders_cloneId: '-sticky', // added to table ID, if it exists
 	},
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
-		var $table = c.$table.addClass('hasStickyHeaders'),
+		var $t = c.$table,
 			win = $(window),
-			header = c.$table.children('thead:first'), //.add( c.$table.find('caption') ),
+			header = $t.children('thead:first'),
 			hdrCells = header.children('tr:not(.sticky-false)').children(),
 			innr = '.tablesorter-header-inner',
-			firstRow = hdrCells.eq(0).parent(),
-			tfoot = $table.find('tfoot'),
-			t2 = wo.$sticky = $table.clone(),
-			// clone the entire thead - seems to work in IE8+
-			stkyHdr = t2.children('thead:first')
-				.addClass(wo.stickyHeaders)
+			tfoot = $t.find('tfoot'),
+			filterInputs = 'input, select',
+			t2 = wo.$sticky = $t.clone()
+				.addClass('containsStickyHeaders')
 				.css({
-					width      : header.outerWidth(true),
 					position   : 'fixed',
 					margin     : 0,
 					top        : 0,
 					visibility : 'hidden',
 					zIndex     : 1
 				}),
-			stkyCells = stkyHdr.children('tr:not(.sticky-false)').children(), // issue #172
+			stkyHdr = t2.children('thead:first').addClass(wo.stickyHeaders),
+			stkyCells,
 			laststate = '',
 			spacing = 0,
+			flag = false,
 			resizeHdr = function(){
 				var bwsr = navigator.userAgent;
 				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
 				// webkit automatically compensates for border spacing
-				if ($table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(bwsr)) {
+				if ($t.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(bwsr)) {
 					// Firefox & Opera use the border-spacing
 					// update border-spacing here because of demos that switch themes
 					spacing = parseInt(hdrCells.eq(0).css('border-left-width'), 10) * 2;
 				}
-				stkyHdr.css({
+				t2.css({
 					left : header.offset().left - win.scrollLeft() - spacing,
-					width: header.outerWidth()
+					width: $t.width()
 				});
-				stkyCells
-				.each(function(i){
+				stkyCells.each(function(i){
 					var $h = hdrCells.eq(i);
-					$(this).css({
-						width: $h.width() - spacing,
-						height: $h.height()
-					});
-				})
-				.find(innr).each(function(i){
-					var hi = hdrCells.eq(i).find(innr),
-						w = hi.width(); // - ( parseInt(hi.css('padding-left'), 10) + parseInt(hi.css('padding-right'), 10) );
-					$(this).width(w);
+					$(this)
+						.css({
+							width: $h.width() - spacing,
+							height: $h.height()
+						})
+						.find(innr).width( $h.find(innr).width() );
 				});
 			};
 		// fix clone ID, if it exists - fixes #271
 		if (t2.attr('id')) { t2[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
-		t2.find('thead:gt(0), tr.sticky-false, tbody, tfoot, caption').remove();
+		// include caption & filter row (fixes #126 & #249)
+		t2.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
+		// issue #172 - find td/th in sticky header
+		stkyCells = stkyHdr.children().children();
 		t2.css({ height:0, width:0, padding:0, margin:0, border:0 });
-		// remove rows you don't want to be sticky
-		stkyHdr.find('tr.sticky-false').remove();
 		// remove resizable block
 		stkyCells.find('.tablesorter-resizer').remove();
 		// update sticky header class names to match real header after sorting
-		$table
+		$t
+		.addClass('hasStickyHeaders')
 		.bind('sortEnd.tsSticky', function(){
 			hdrCells.each(function(i){
 				var t = stkyCells.eq(i);
@@ -807,7 +803,7 @@ ts.addWidget({
 		// set sticky header cell width and link clicks to real header; andSelf() deprecated in jQuery 1.8
 		hdrCells.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort).each(function(i){
 			var t = $(this);
-			stkyCells.eq(i)
+			stkyHdr.children('tr.tablesorter-headerRow').children().eq(i)
 			// clicking on sticky will trigger sort
 			.bind('mouseup', function(e){
 				t.trigger(e, true); // external mouseup flag (click timer is ignored)
@@ -819,28 +815,50 @@ ts.addWidget({
 			});
 		});
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
-		$table.after( t2 );
+		$t.after( t2 );
 		// make it sticky!
 		win
-		.bind('scroll.tsSticky', function(){
-			var offset = firstRow.offset(),
+		.bind('scroll.tsSticky resize.tsSticky', function(e){
+			var pre = 'tablesorter-sticky-',
+				offset = $t.offset(),
 				sTop = win.scrollTop(),
-				tableHt = $table.height() - (stkyHdr.height() + (tfoot.height() || 0)),
+				tableHt = $t.height() - (t2.height() + (tfoot.height() || 0)),
 				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
-			stkyHdr.css({
+			t2
+			.removeClass(pre + 'visible ' + pre + 'hidden')
+			.addClass(pre + vis)
+			.css({
 				// adjust when scrolling horizontally - fixes issue #143
 				left : header.offset().left - win.scrollLeft() - spacing,
 				visibility : vis
 			});
-			if (vis !== laststate){
+			if (vis !== laststate || e.type === 'resize'){
 				// make sure the column widths match
 				resizeHdr();
 				laststate = vis;
 			}
-		})
-		.bind('resize.tsSticky', function(){
-			resizeHdr();
 		});
+
+		// look for filter widget
+		$t.bind('filterEnd', function(){
+			if (flag) { return; }
+			stkyHdr.find('.tablesorter-filter-row').children().each(function(i){
+				$(this).find(filterInputs).val( c.$filters.find(filterInputs).eq(i).val() );
+			});
+		});
+		stkyCells.find(filterInputs).bind('keyup search', function(e){
+			// ignore arrow and meta keys; allow backspace
+			if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
+			flag = true;
+			var $f = $(this), col = $f.attr('data-column');
+			c.$filters.find(filterInputs).eq(col)
+				.val( $f.val() )
+				.trigger('search');
+			setTimeout(function(){
+				flag = false;
+			}, wo.filter_searchDelay);
+		});
+
 	},
 	remove: function(table, c, wo){
 		c.$table
@@ -986,7 +1004,7 @@ ts.resizableReset = function(table){
 // **************************
 ts.addWidget({
 	id: 'saveSort',
-	priority: 30,
+	priority: 20,
 	options: {
 		saveSort : true
 	},

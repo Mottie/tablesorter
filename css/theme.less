@@ -30,6 +30,8 @@
 @headerSortUp          : lighten(spin(@headerBackground, 5), 10%); /* desaturate(@headerBackground, 10%); */
 @headerSortDown        : darken(spin(@headerBackground, -5), 10%); /* darken(@headerSortUp, 5%); */
 
+@captionBackground     : #fff; /* it might be best to match the document body background color here */
+
 @filterCellBackground  : #eee;
 @filterElementTextColor: #333;
 @filterElementBkgd     : #fff;
@@ -269,11 +271,16 @@
 		background-color: @tertiaryEven;
 	}
 
+	/* caption (non-theme matching) */
+	caption {
+		background: @captionBackground ;
+	}
+
 	/* filter widget */
 	.tablesorter-filter-row input,
 	.tablesorter-filter-row select{
 		width: 98%;
-		height: inherit;
+		height: auto;
 		margin: 0;
 		padding: @overallPadding;
 		color: @filterElementTextColor;

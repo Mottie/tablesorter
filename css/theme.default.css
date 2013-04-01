@@ -115,6 +115,11 @@ Default Theme
 	background-color: #f2f2f2;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-default .tablesorter-filter-row td {
 	background: #eee;
@@ -156,7 +161,7 @@ Default Theme
 /* filters */
 .tablesorter-default .tablesorter-filter {
 	width: 95%;
-	height: inherit;
+	height: auto;
 	margin: 4px;
 	padding: 4px;
 	background-color: #fff;

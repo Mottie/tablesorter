@@ -1423,12 +1423,12 @@ $(function(){
 			<tr><th>Widget Priority</th><th>Name</th><th>Requires jQuery</th><th>Limiting function</th></tr>
 		</thead>
 		<tbody>
-			<tr><td>60</td><td>columns</td><td>v1.2.6</td><td></td></tr>
+			<tr><td>30</td><td>columns</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>50</td><td>filter</td><td>v1.4.3</td><td>1.4.3 (nextUntil)</td></tr>
 			<tr><td>Last</td><td>pager</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>40</td><td>resizable</td><td>v1.4.1*</td><td>1.4 (isEmptyObject); 1.4.1 (parseJSON)*</td></tr>
-			<tr><td>30</td><td>saveSort</td><td>v1.4.1</td><td>1.4.1 (parseJSON)*</td></tr>
-			<tr><td>20</td><td>stickyHeaders</td><td>v1.2.6</td><td></td></tr>
+			<tr><td>20</td><td>saveSort</td><td>v1.4.1</td><td>1.4.1 (parseJSON)*</td></tr>
+			<tr><td>60</td><td>stickyHeaders</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>10</td><td>uitheme</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>90</td><td>zebra</td><td>v1.2.6</td><td></td></tr>
 		</tbody>
@@ -1757,7 +1757,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The rows is revealed by hovering over the filter row or giving any filter input/select focus (v2.4).
+					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The row is revealed by hovering over the visible portion of the filter row or by giving any filter input/select focus (tab key) (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-hidefilters"><code>filter_hideFilters</code></a> option as follows:
@@ -1972,8 +1972,10 @@ $('table').trigger('search', false);</pre></div>
 				<td>String</td>
 				<td>"tablesorter-stickyHeader"</td>
 				<td>
-					Sticky Headers widget: This is the class name applied to the sticky header row (tr). If you change it from the default class name of <code>"tablesorter-stickyHeader"</code> make sure you also update the css! (v2.1).
+					Sticky Headers widget: This is the class name applied to the sticky header row (tr) (v2.1).
 					<div class="collapsible">
+					<br>
+					If you change it from the default class name of <code>"tablesorter-stickyHeader"</code> make sure you also update the css!<br>
 					<br>
 					Use the <a href="#widget-sticky-headers"><code>"stickyHeaders"</code></a> option to change the css class name as follows:
 					<pre class="prettyprint lang-javascript">$(function(){
@@ -1987,6 +1989,30 @@ $('table').trigger('search', false);</pre></div>
 });</pre></div>
 				</td>
 				<td><a href="example-widget-sticky-header.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-cloneid">
+				<td><a href="#" class="toggle2">stickyHeaders_cloneId</a></td>
+				<td>String</td>
+				<td>"-sticky"</td>
+				<td>
+					Sticky Headers widget: If the table has an ID defined, the suffix from this option will be added to the ID in the cloned sticky table <span class="tip"><em>New!</em></span> v2.9.
+					<div class="collapsible">
+					<br>
+					So if your table ID is <code>"gummy"</code>, then the cloned sticky table id becomes <code>"gummy-sticky"</code><br>
+					<br>
+					Use the <a href="#widget-sticky-headers-cloneid"><code>"stickyHeaders_cloneId"</code></a> option to change the cloned table id as follows:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // cloned table id suffix
+      stickyHeaders_cloneId : "-clone"
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-resizable">
@@ -2062,7 +2088,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>String</td>
 				<td>"jui"</td>
 				<td>
-					Instead of the array of icon class names, this option now contains the name of the theme. Currently jQuery UI ("jui") and Bootstrap ("bootstrap") themes are supported. To modify the class names used, extend from the theme (updated v2.4)
+					This option contains the name of the theme. Currently jQuery UI ("jui") and Bootstrap ("bootstrap") themes are supported. To modify the class names used, extend from the theme (updated v2.4)
 					<div class="collapsible">
 					<p></p>
 					<pre class="prettyprint lang-javascript">// Extend the themes to change any of the default class names ** NEW **

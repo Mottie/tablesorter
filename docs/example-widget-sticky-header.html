@@ -37,7 +37,7 @@
 
 		headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-		widgets: ["columns", "filter", "stickyHeaders", "uitheme", "zebra"] , //[ 'uitheme', 'zebra', 'stickyHeaders' ],
+		widgets: [ 'uitheme', 'zebra', 'stickyHeaders', 'filter' ],
 
 		widgetOptions: {
 
@@ -102,6 +102,7 @@ $(function() {
 					<li>Its default value is <code>-sticky</code> </li>
 				</ul>
 			</li>
+			<li>Table captions and any additional rows (filter widget row) will also be included in the sticky header <span class="tip"><em>New!</em></span> v2.9!</li> 
 			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
 			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
 			<li>Added a widget option named <code>stickyHeader</code> option which contains the css class name applied to the actual sticky header (v2.1).</li>
@@ -125,6 +126,7 @@ $(function() {
 	<br><br>
 
 	<table class="tablesorter">
+	<caption>Student Grades</caption>
 	<thead>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th class="filter-false sorter-false">Geometry</th></tr>
 	</thead>

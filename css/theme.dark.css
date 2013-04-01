@@ -112,6 +112,11 @@
 	background-color: #0f0f0f;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-dark .tablesorter-filter-row td {
 	background: #202020;
@@ -154,7 +159,7 @@
 /* filters */
 .tablesorter-dark .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 4px;
 	padding: 4px;
 	background-color: #111;

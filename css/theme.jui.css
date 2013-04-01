@@ -78,6 +78,11 @@
 	background-color: rgba(255,255,255,0.8);
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-jui .tablesorter-filter-row td {
 	background: transparent;
@@ -118,7 +123,7 @@
 /* filters */
 .tablesorter-jui .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 0;
 	padding: 4px;
 	background-color: #fff;

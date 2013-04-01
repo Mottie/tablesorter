@@ -148,6 +148,11 @@
 	background-color: #ebf0fa;
 }
 
+/* caption */
+caption {
+	background: #fff;
+}
+
 /* filter widget */
 .tablesorter-blue .tablesorter-filter-row td {
 	background: #eee;
@@ -188,7 +193,7 @@
 /* filters */
 .tablesorter-blue .tablesorter-filter {
 	width: 98%;
-	height: inherit;
+	height: auto;
 	margin: 0;
 	padding: 4px;
 	background-color: #fff;
