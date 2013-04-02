@@ -789,7 +789,10 @@ ts.addWidget({
 		.bind('sortEnd.tsSticky', function(){
 			hdrCells.each(function(i){
 				var t = stkyCells.eq(i);
-				t.attr('class', $(this).attr('class'));
+				t
+					.attr('class', $(this).attr('class'))
+					// remove processing icon
+					.removeClass(c.cssProcessing);
 				if (c.cssIcon){
 					t
 					.find('.' + c.cssIcon)
