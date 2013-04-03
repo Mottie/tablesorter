@@ -75,6 +75,8 @@
 		<li>Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria)</li>
 		<li>Extensibility via <a href="example-widgets.html">widget system</a></li>
 		<li>Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+</li>
+		<li>Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).</li>
+		<li>Works with jQuery 1.9+ ($.browser.msie was removed; needed in the original version).</li>
 		<li>Small code size</li>
 	</ul>
 
@@ -1794,47 +1796,6 @@ $(function(){
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
-<!--
-			<tr id="widget-filter-quickSearch">
-				<td><a href="#" class="toggle2">filter_quickSearch</a></td>
-				<td>String</td>
-				<td>null</td>
-				<td>
-					This option is only available when using the advanced filter ("filter") contained in the <code>jquery.tablesorter.widgets.js</code> file. <span class="tip"><em>New! v2.4</em></span><br>
-					<div class="collapsible"><br>
-					To use it, point to the quick search input by adding the selector string to this option. For example, add this input (<code>&lt;input type="search"&gt;</code>) to the table header, or anywhere else on the page. That input will be used as a quick search filter for all table data when the input is targetted as follows:
-					<br>
-					Use the <a href="#widget-filter-quickSearch"><code>filter_quickSearch</code></a> option as follows:
-					<pre class="prettyprint lang-javascript">$(function(){
-  $("table").tablesorter({
-    widgets: ["filter"],
-    widgetOptions : {
-      filter_quickSearch : '.quicksearch'
-    }
-  });
-});</pre>
-					The quicksearch input:
-					<ul>
-						<li>applies to all columns and works with "AND" and "OR" operators (i.e. look for "!female AND >40"). See the updated <a href="http://mottie.github.com/tablesorter/docs/example-widget-filter-custom.html">custom filter widget demo</a>.</li>
-						<li>To exclude a specific column from the quick search, use any of the following settings, in order of priority:
-							<ul>
-								<li>jQuery data <code>data-filter="noquicksearch"</code>.</li>
-								<li>metadata <code>class="{ filter: 'noquicksearch'}"</code>. This requires the metadata plugin.</li>
-								<li>headers option <code>headers : { 0 : { filter : 'noquicksearch' } }</code>.</li>
-								<li>header class name <code>class="filter-noquicksearch"</code>.</li>
-							</ul>
-						</li>
-					</ul>
-					Performing a quick search externally by triggering a search on the table as follows:
-<pre class="prettyprint lang-javascript">$('table').trigger('search', [' AND h']);</pre>
-					<ul>
-						
-				</div>
-				</td>
-				<td><a href="example-widget-filter-custom.html">Example</a></td>
-			</tr>
--->
-
 			<tr id="widget-filter-reset">
 				<td><a href="#" class="toggle2">filter_reset</a></td>
 				<td>String</td>
@@ -2171,6 +2132,7 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 		</tbody>
+
 	</table>
 
 	<a id="methods"></a>
@@ -2215,6 +2177,28 @@ $.extend($.tablesorter.themes.jui, {
     .trigger('addRows', [$row, resort, callback]);</pre></div>
 				</td>
 				<td><a href="example-add-rows.html">Example</a></td>
+			</tr>
+
+			<tr id="sort">
+				<td><a href="#" class="toggle2">sort</a></td>
+				<td>Use this method to initialize a sort while targeting a specific column header. <span class="tip"><em>New!</em></span> v2.9.
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">// Target a specific header
+$('table').find('th:eq(2)').trigger('sort');</pre>Using this method will maintain the sorting order; so, if the column is already sorted in ascending order, this method will act as if you manually clicked on the header. Whatever sort order is applied is dependent on other option settings such as <code>initialSortOrder</code>, <code>lockedOrder</code> (set within the <code>headers</code>), <code>sortReset</code> option, <code>sortRestart</code> and will be ignored if the column sort is disabled (<code>sorter: false</code>).<br>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="sortreset-method">
+				<td><a href="#" class="toggle2">sortReset</a></td>
+				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7).
+					<div class="collapsible">
+						Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. This method immediately resets the entire table sort, while the option only resets the column sort after a third click.
+						<pre class="prettyprint lang-javascript">// Reset the table (make it unsorted)
+$("table").trigger("sortReset");</pre></div>
+				</td>
+				<td><a href="example-method-sortreset.html">Example</a></td>
 			</tr>
 
 			<tr id="sorton">

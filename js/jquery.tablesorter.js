@@ -665,12 +665,12 @@
 				c.$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self; andSelf() deprecated in jQuery 1.8
 				.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort)
-				.unbind('mousedown.tablesorter mouseup.tablesorter')
-				.bind('mousedown.tablesorter mouseup.tablesorter', function(e, external) {
+				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter')
+				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter', function(e, external) {
 					// jQuery v1.2.6 doesn't have closest()
 					var $cell = this.tagName.match('TH|TD') ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 					// only recognize left clicks
-					if ((e.which || e.button) !== 1) { return false; }
+					if ((e.which || e.button) !== 1 && e.type !== 'sort') { return false; }
 					// set timer on mousedown
 					if (e.type === 'mousedown') {
 						downTime = new Date().getTime();
