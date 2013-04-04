@@ -724,7 +724,7 @@ ts.addWidget({
 	priority: 60,
 	options: {
 		stickyHeaders: 'tablesorter-stickyHeader',
-		stickyHeaders_cloneId: '-sticky', // added to table ID, if it exists
+		stickyHeaders_cloneId: '-sticky' // added to table ID, if it exists
 	},
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
