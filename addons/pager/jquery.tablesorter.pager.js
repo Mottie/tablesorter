@@ -275,7 +275,10 @@
 		},
 
 		getAjaxUrl = function(table, c) {
-			var url = (c.ajaxUrl) ? c.ajaxUrl.replace(/\{page\}/g, c.page).replace(/\{size\}/g, c.size) : '',
+			var url = (c.ajaxUrl) ? c.ajaxUrl
+				// allow using "{page+1}" in the url string to switch to a non-zero based index
+				.replace(/\{page([\-+]\d+)?\}/, function(s,n){ return c.page + (n ? parseInt(n, 10) : 0); })
+				.replace(/\{size\}/g, c.size) : '',
 			sl = table.config.sortList,
 			fl = c.currentFilters || [],
 			sortCol = url.match(/\{sortList[\s+]?:[\s+]?([^}]*)\}/),

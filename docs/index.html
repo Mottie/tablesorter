@@ -50,7 +50,7 @@
 		<li><a href="#Getting-Started">Getting started</a></li>
 		<li><a href="#Examples">Examples</a></li>
 		<li><a href="#Configuration">Configuration</a></li>
-		<li><a href="#Widget-options">Widget Options</a> (v2.1)</li>
+		<li><a href="#Widget-options">Widget &amp; Pager Options</a> (v2.1)</li>
 		<li><a href="#Methods">Methods</a></li>
 		<li><a href="#Events">Events</a></li>
 		<li><a href="#Download">Download</a></li>
@@ -1418,7 +1418,7 @@ $(function(){
 	</table>
 
 	<a id="Widget-options"></a>
-	<h1>Widget Options</h1>
+	<h1>Widget &amp; Pager Options</h1>
 
 	<table class="tablesorter compatibility">
 		<thead>
@@ -2129,6 +2129,395 @@ $.extend($.tablesorter.themes.jui, {
 });</pre></div>
 				</td>
 				<td><a href="example-widget-zebra.html">Example</a></td>
+			</tr>
+
+		</tbody>
+
+		<!-- non-sorting tbody -->
+		<tbody id="pager" class="tablesorter-infoOnly">
+			<tr><th colspan="5">Pager</th></tr>
+		</tbody>
+
+		<tbody>
+			<tr id="pager-container">
+				<td><a href="#" class="toggle2">container</a></td>
+				<td>Object</td>
+				<td>null</td>
+				<td>
+					Target your one or more pager markup blocks by setting this option with a jQuery selector.
+					<div class="collapsible">
+						<br>
+						This is some example pager markup. It <em>should</em> contain all of the controls set by the multiple css-named options:<pre class="prettyprint lang-html">
+&lt;div class=&quot;pager&quot;&gt;
+  &lt;form&gt;
+    &lt;img src=&quot;first.png&quot; class=&quot;first&quot;/&gt;
+    &lt;img src=&quot;prev.png&quot; class=&quot;prev&quot;/&gt;
+    &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
+    &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
+    &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
+    &lt;select class=&quot;pagesize&quot;&gt;
+      &lt;option selected=&quot;selected&quot; value=&quot;10&quot;&gt;10&lt;/option&gt;
+      &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
+      &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
+      &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;select class="gotoPage" title="Select page number"&gt;&lt;/select&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</pre>Add this option as follows:<pre class="prettyprint lang-javascript">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      container: $(".pager")
+    });
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-ajaxurl">
+				<td><a href="#" class="toggle2">ajaxUrl</a></td>
+				<td>String</td>
+				<td>null</td>
+				<td>
+					Set this option to include a url template to use so that the pager plugin can interact with your database (Added v2.1; <span class="tip"><em>Last Updated!</em></span> v2.9).
+					<div class="collapsible">
+					<br>
+					Here is an example of how to include the option, it should <em>always</em> be paired with an <code>ajaxProcessing</code> function:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      ajaxUrl: "http://mydatabase.com?page={page}&size={size}&{sortList:col}&{filterList:fcol}",
+      ajaxProcessing: function(ajax){
+        // do something with the ajax
+        return [ formatted_data, total_rows ];
+      }
+    });
+  });
+});</pre>The <code>ajaxUrl</code> template replaces the following tags with values from the tablesorter plugin and pager addon:
+<br>
+<table class="info">
+	<thead>
+		<tr><td>Tag</td><td>Replaced with</td></tr>
+	</thead>
+	<tbody>
+		<tr><td><code>{page}</code></td><td>Zero-based index of the current pager page</td></tr>
+		<tr><td><code>{page+1}</code></td><td>One-based index of the current pager page (replace "+1" with any number) (e.g. <code>{page+3}</code>). <span class="tip"><em>New!</em></span> v2.9</td></tr>
+		<tr><td><code>{size}</code></td><td>Number of rows showing, or number of rows to get from the server</td></tr>
+		<tr>
+			<td><code>{sortList:col}</code></td>
+			<td>Adds the current sort to the ajax url string into a "col" array, so your server-side code knows how to sort the data (v2.4.5).<br>
+				The <code>col</code> portion of the <code>{sortList:col}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current sortList is <code>[[2,0],[3,0]]</code>, it becomes <code>"&sort[2]=0&sort[3]=0"</code> in the url.
+			</td>
+		</tr>
+		<tr>
+			<td><code>{filterList:fcol}</code></td>
+			<td>Adds the value of the current filters to the ajax url string into a "fcol" array, so your server-side code knows how to filter the data (v2.6).<br>
+				The <code>fcol</code> portion of the <code>{filterList:fcol}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current filters are <code>['','Blue',13]</code>, it becomes <code>"&fcol[2]=Blue&fcol[3]=13"</code> in the url.
+			</td>
+		</tr>
+	</tbody>
+</table></div>
+				</td>
+				<td><a href="example-pager-ajax.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-customajaxurl">
+				<td><a href="#" class="toggle2">customAjaxUrl</a></td>
+				<td>function</td>
+				<td>function(table, url) { return url; }</td>
+				<td>
+					This callback function allows you to modify the processed URL as desired. <span class="tip"><em>New!</em></span> v2.8.1.
+					<div class="collapsible">
+					<br>
+					The <code>customAjaxUrl</code> function has two parameters, the table DOM element and the processed url string (all tags within the <code>ajaxUrl</code> have been replaced with their appropriate values).
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      ajaxUrl: "http://mydatabase.com?page={page}&size={size}&{sortList:col}&{filterList:fcol}",
+      ajaxProcessing: function(ajax){
+        // do something with the ajax
+        return [ formatted_data, total_rows ];
+      },
+      // modify the url after all processing has been applied
+      customAjaxUrl: function(table, url) {
+        // trigger my custom event
+        $(table).trigger('changingUrl');
+        // send the server the current page
+        return url += '&currntUrl=' + window.location.href;
+      },
+    });
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-pager-ajax.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-ajaxprocessing">
+				<td><a href="#" class="toggle2">ajaxProcessing</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>
+					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1).
+					<div class="collapsible">
+					<br>
+					Process your ajax data so that the following information is returned:
+					<pre class="prettyprint lang-javascript">// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+[
+  100, // total rows
+  [
+    [ "row1cell1", "row1cell2", ... "row1cellN" ],
+    [ "row2cell1", "row2cell2", ... "row2cellN" ],
+    ...
+    [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
+  ],
+  [ "header1", "header2", ... "headerN" ] // optional
+]</pre>Here is some example JSON (comments added, but not allowed in JSON) which is contained in the <a href="https://github.com/Mottie/tablesorter/blob/master/docs/assets/City0.json">City0.json</a> file:
+<pre class="prettyprint lang-javascript">{
+  // total rows
+  "total_rows": "80",
+  // headers
+  "cols" : [
+    "ID", "Name", "Country Code", "District", "Population"
+  ],
+  // row data...
+  "rows" : [{
+    "ID": 1,
+    "Name": "Kabul",
+    "CountryCode": "AFG",
+    "District": "Kabol",
+    "Population": 1780000
+  }, {
+    // row 2, etc...
+  }]
+}
+</pre>The above JSON is processed by the following code:
+<pre class="prettyprint lang-javascript">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      ajaxUrl: "http://mydatabase.com?page={page}&size={size}",
+      ajaxProcessing: function(data){
+        if (data && data.hasOwnProperty('rows')) {
+          var r, row, c, d = data.rows,
+          // total number of rows (required)
+          total = data.total_rows,
+          // array of header names (optional)
+          headers = data.cols,
+          // all rows: array of arrays; each internal array has the table cell data for that row
+          rows = [],
+          // len should match pager set size (c.size)
+          len = d.length;
+          // this will depend on how the json is set up - see City0.json
+          // rows
+          for ( r=0; r < len; r++ ) {
+            row = []; // new row array
+            // cells
+            for ( c in d[r] ) {
+              if (typeof(c) === "string") {
+                row.push(d[r][c]); // add each table cell data to row array
+              }
+            }
+            rows.push(row); // add new row array to rows array
+          }
+          return [ total, rows, headers ];
+        }
+      }
+    });
+});
+</pre>
+					</div>
+				</td>
+				<td><a href="example-pager-ajax.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-output">
+				<td><a href="#" class="toggle2">output</a></td>
+				<td>String</td>
+				<td>'{page}/{totalPages}'</td>
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9).<div class="collapsible">
+					<br>
+					This option replaced the original <code>separator</code> option, which only separated the page number from the total number of pages. The formatted output from this option is placed inside the information block targeted by the <code>cssPageDisplay</code> option.<br>
+					<br>
+					Use it as follows:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      output: '{startRow} to {endRow} of {totalRows} rows'
+    });
+  });
+});</pre>The following tags are replaced within the output string:
+<table class="info">
+	<thead>
+		<tr><td>Tag</td><td>Replaced with</td></tr>
+	</thead>
+	<tbody>
+		<tr><td><code>{page}</code></td><td>The current pager page</td></tr>
+		<tr><td><code>{totalPages}</code></td><td>Total number of pager pages</td></tr>
+		<tr><td><code>{filteredPages}</code></td><td>Total number of pages left after being filtered</td></tr>
+		<tr><td><code>{startRow}</code></td><td>Starting row number currently displayed</td></tr>
+		<tr><td><code>{endRow}</code></td><td>Ending row number currently displayed</td></tr>
+		<tr><td><code>{filteredRows}</code></td><td>Total number of rows left after being filtered</td></tr>
+		<tr><td><code>{totalRows}</code></td><td>Total number of rows</td></tr>
+	</tbody>
+</table></div>
+				</td>
+				<td>Ex: <a href="example-pager.html">1</a> <a href="example-pager-ajax.html">2</a> <a href="example-pager-filtered.html">3</a> <a href="example-widget-bootstrap-theme.html">4</a></td>
+			</tr>
+
+			<tr id="pager-updatearrows">
+				<td><a href="#" class="toggle2">updateArrows</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					If <code>true</code>, the addon hides the left pager arrow on the first page and right pager arrow on the last page.
+					<div class="collapsible">
+					<br>
+					If <code>true</code> the classname from the <code>cssDisabled</code> option is applied to the arrows when at either page extreme.</div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-page">
+				<td><span class="permalink">page</span></td>
+				<td>Numeric</td>
+				<td>0</td>
+				<td>Set the starting page of the pager (zero-based index).</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-size">
+				<td><span class="permalink">size</span></td>
+				<td>Numeric</td>
+				<td>10</td>
+				<td>Set initial number of visible rows. This value is changed by the dropdown selector targeted by the <code>cssPageSize</code> option.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-fixedheight">
+				<td><a href="#" class="toggle2">fixedHeight</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>Maintain the height of the table even when fewer than the set number of records is shown (v2.1; updated 2.7.1).
+					<div class="collapsible">
+					<br>
+					This option replaced the original <code>positionFixed</code> and <code>offset</code> options which set the absolute position of the pager block.<br>
+					<br>
+					If <code>true</code>, it should maintain the height of the table, even when viewing fewer than the set number of records (go to the last page of any demo to see this in action). It works by adding an empty row to make up the differences in height.
+					</div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-removerows">
+				<td><a href="#" class="toggle2">removeRows</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					If <code>true</code>, rows are removed from the table to speed up the sort of large tables (v2.0.21).
+					<div class="collapsible">
+					<br>
+					The original tablesorter plugin (v2.0.5) removed rows automatically, without providing an option. It really does speed up sorting of very large tables, but also breaks updating and modifying table content dynamically.<br>
+					<br>
+					If this option is <code>false</code>, the addon only hides the non-visible rows; this is useful if you plan to add/remove rows with the pager enabled.
+					</div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-cssfirst">
+				<td><span class="permalink">cssFirst</span></td>
+				<td>String</td>
+				<td>'.first'</td>
+				<td>This option contains a jQuery selector string pointing to the go to first page arrow. See <a href="#pager-container">container</a> for full HTML.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-cssprev">
+				<td><span class="permalink">cssPrev</span></td>
+				<td>String</td>
+				<td>'.prev'</td>
+				<td>This option contains a jQuery selector string pointing to the go to previous page arrow. See <a href="#pager-container">container</a> for full HTML.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-cssnext">
+				<td><span class="permalink">cssNext</span></td>
+				<td>String</td>
+				<td>'.next'</td>
+				<td>This option contains a jQuery selector string pointing to the go to next page arrow. See <a href="#pager-container">container</a> for full HTML.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-csslast">
+				<td><span class="permalink">cssLast</span></td>
+				<td>String</td>
+				<td>'.last'</td>
+				<td>This option contains a jQuery selector string pointing to the go to last page arrow. See <a href="#pager-container">container</a> for full HTML.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-cssgoto">
+				<td><a href="#" class="toggle2">cssGoto</a></td>
+				<td>String</td>
+				<td>'.gotoPage'</td>
+				<td>This option contains a jQuery selector string pointing to the page select dropdown. See <a href="#pager-container">container</a> for full HTML (v2.4)
+					<div class="collapsible">
+					<br>
+					Please note that this select dropdown is initially empty and automatically updated by the plugin with the correct number of pages, which depends on the <code>size</code> setting.
+					</div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-csspagedisplay">
+				<td><a href="#" class="toggle2">cssPageDisplay</a></td>
+				<td>String</td>
+				<td>'.pagedisplay'</td>
+				<td>This option contains a jQuery selector string pointing to the output element (v2.0.9)
+					<div class="collapsible">
+					<br>
+					In the original tablesorter (v2.0.5) this option could only target an input, it was updated (v2.0.9) to display the formatted output from the <code>output</code> option inside of any element (span, div or input).
+					</div>
+				</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-csspagesize">
+				<td><span class="permalink">cssPageSize</span></td>
+				<td>String</td>
+				<td>'.pagesize'</td>
+				<td>This option contains a jQuery selector string pointing to the page size selector. See <a href="#pager-container">container</a> for full HTML.</td>
+				<td><a href="example-pager.html">Example</a></td>
+			</tr>
+
+			<tr id="pager-csserrorrow">
+				<td><a href="#" class="toggle2">cssErrorRow</a></td>
+				<td>String</td>
+				<td>'tablesorter-errorRow'</td>
+				<td>This option contains the class name that is applied to the error information row that is added inside the pager with any ajax exceptions.
+					<div class="collapsible">
+					<br>
+					Note there is no period "." in front of this class name (it is not a selector).
+					</div></td>
+				<td></td>
+			</tr>
+
+			<tr id="pager-cssdisabled">
+				<td><a href="#" class="toggle2">cssDisabled</a></td>
+				<td>String</td>
+				<td>'disabled'</td>
+				<td>This option contains the class name that is applied to disabled pager controls.
+					<div class="collapsible">
+					<br>
+					More explicitly, this class is applied to the pager arrows when they are at either extreme of pages. When the pager has been disabled, this class is applied to all controls.<br>
+					<br>
+					Note there is no period "." in front of this class name (it is not a selector).
+					</div></td>
+				<td></td>
 			</tr>
 
 		</tbody>

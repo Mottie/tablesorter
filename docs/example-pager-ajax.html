@@ -48,7 +48,8 @@
 			container: $(".pager"),
 
 			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
-			// where {page} is replaced by the page number, {size} is replaced by the number of records to show,
+			// where {page} is replaced by the page number (or use {page+1} to get a one-based index),
+			// {size} is replaced by the number of records to show,
 			// {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
 			// the filterList to the url into an "fcol" array.
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
@@ -59,8 +60,9 @@
 			customAjaxUrl: function(table, url) {
 					// trigger my custom event
 					$(table).trigger('changingUrl');
-					// send the server the current page
-					return url += '&currentUrl=' + window.location.href;
+					// send the server the current page; separated & and "curr"
+					// because the browser things we're typing to use &curr;
+					return url += '&currntUrl=' + window.location.href;
 			},
 
 			// process ajax so that the following information is returned:
@@ -159,13 +161,13 @@
 		<p class="tip">
 			<em>NOTE!</em>:
 			<ul>
-				<li><code>{sortList:col}</code> was added to the <code>ajaxUrl</code> in version 2.6.</li>
-				<li><code>{filterList:fcol}</code> was added to the <code>ajaxUrl</code> in version 2.4.5.</li>
+				<li><code>{filterList:fcol}</code> was added to the <code>ajaxUrl</code> in version 2.6.</li>
+				<li><code>{sortList:col}</code> was added to the <code>ajaxUrl</code> in version 2.4.5.</li>
 				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
 				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
 				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>
 				<li>The <code>ajaxProcessing</code> function must* return the data in the following format <code>[ total, rows, headers ]</code> - <span class="tip"><em>Modified</em></span> in 2.1.3:
-					<pre class="prettyprint lang-javascript"><code>[
+					<pre class="prettyprint lang-javascript">[
   // total # rows contained in the database
   100,
   // row data: array of arrays; each internal array has the table cell data for that row
@@ -177,7 +179,7 @@
   ],
   // header text (optional)
   [ "Header1", "Header2", ... "HeaderN" ]
-] </code></pre></li>
+]</pre></li>
 				<li>The table header and footer text will be updated to match the JSON "header column #" text; but there is an issue with the table rendering improperly if the number of columns in the HTML and the number of columns in the JSON don't match.</li>
 				<li>Limitations of this demo:
 					<ul>
