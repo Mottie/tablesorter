@@ -298,12 +298,13 @@
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6)</li>
-				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="">HTML5 Elements</a>) <span class="tip"><em>New</em></span> v2.7.7.</li>
+				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
 		</li>
 		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> <span class="tip"><em>New</em></span> v2.8.</li>
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Updated</em></span> v2.8.3)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> <span class="tip"><em>New</em></span> v2.9.</li>
 		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
 		<li>UITheme widget:
 			<ul>
@@ -354,7 +355,7 @@
 	<ul>
 		<li><a href="example-widget-ui-theme.html">UITheme widget</a> (v2.0.9)</li>
 		<li><a href="example-option-render-header.html">Modifying the Header during rendering.</a></li>
-		<li><a href="example-option-render-template.html">Modifying the Header using a template</a>. <span class="tip"><em>New!</em></span> v2.7</li>
+		<li><a href="example-option-render-template.html">Modifying the Header using a template</a> (v2.7)</li>
 	</ul>
 
 	<br/>
@@ -544,7 +545,7 @@
 				<td><a href="#" class="toggle2">cssIcon</a></td>
 				<td>String</td>
 				<td>"tablesorter-icon"</td>
-				<td>The CSS style used to style the header cell icon. <span class="tip"><em>Modified!</em></span> v2.7.
+				<td>The CSS style used to style the header cell icon (modified v2.7).
 					<div class="collapsible"><br>
 						As of v2.4, an &lt;i&gt; element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an &lt;i&gt; element to the headers, set the <code>cssIcon</code> option to an empty string.<br>
 						<br>
@@ -743,7 +744,7 @@
 				<td><a href="#" class="toggle2">headerTemplate</a></td>
 				<td>String</td>
 				<td>'{content}'</td>
-				<td>This is a template string which allows adding additional content to the header while it is being built. <span class="tip"><em>New!</em></span> v2.7.
+				<td>This is a template string which allows adding additional content to the header while it is being built (v2.7).
 					<div class="collapsible"><br>
 						This template string has two modifying tags: <code>{content}</code> and <code>{icon}</code>.<br>
 						<code>{content}</code> will be replaced by the current header HTML content.<br>
@@ -814,7 +815,7 @@
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This function is called after the template string has been built, but before the template string is applied to the header and before the <code>onRenderHeader</code> function is called. <span class="tip"><em>New!</em></span> v2.7.
+					This function is called after the template string has been built, but before the template string is applied to the header and before the <code>onRenderHeader</code> function is called (v2.7).
 					<div class="collapsible">
 					<br>
 					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it. Here is an example:
@@ -1604,7 +1605,7 @@ $(function(){
 				<td>Object</td>
 				<td>null</td>
 				<td>
-					Filter widget: This option allows you to add custom controls within the filter widget row. <span class="tip"><em>New!</em> v2.7.7</span><br>
+					Filter widget: This option allows you to add custom controls within the filter widget row (v2.7.7).<br>
 					<div class="collapsible">
 					<br>
 					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
@@ -1794,6 +1795,20 @@ $(function(){
 });</pre></div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-livesearch">
+				<td><a href="#" class="toggle2">filter_liveSearch</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: Search the column content as the user types, with the delay set in the <code>filter_searchDelay</code> option <span class="tip"><em>New!</em></span> v2.9.
+					<div class="collapsible">
+					<br>
+					This option allows you to disable the live search behavior so that a filter is only applied when the user presses enter (or uses escape to clear and cancel the search).
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-reset">
@@ -2820,7 +2835,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 
 			<tr id="filterreset">
 				<td><a href="#" class="toggle2">filterReset</a></td>
-				<td>Trigger the filter widget to reset the search criteria. <span class="tip"><em>New!</em></span> v2.7.7.
+				<td>Trigger the filter widget to reset the search criteria (v2.7.7).
 					<div class="collapsible">
 						If you are using the <code>filter_formatter</code> option to add custom input elements, this function may not work on those columns. Please refer to the <code>filter_formatter</code> section for more details.
 						<pre class="prettyprint lang-javascript">$(function(){
@@ -2834,7 +2849,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 
 			<tr id="savesortreset">
 				<td><a href="#" class="toggle2">saveSortReset</a></td>
-				<td>Trigger the saveSort widget to clear any saved sorts for that specific table. <span class="tip"><em>New!</em></span> v2.7.11.
+				<td>Trigger the saveSort widget to clear any saved sorts for that specific table (v2.7.11).
 					<div class="collapsible">
 						<pre class="prettyprint lang-javascript">$(function(){
   $('button').click(function(){
@@ -2853,7 +2868,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 		<tbody>
 			<tr id="pagesize">
 				<td><a href="#" class="toggle2">pageSize</a></td>
-				<td>Trigger the pager to change the page size. <span class="tip"><em>New!</em></span> v2.7.4.
+				<td>Trigger the pager to change the page size (v2.7.4).
 					<div class="collapsible">
 						<pre class="prettyprint lang-javascript">$(function(){
   $('table').trigger('pageSize', 15);
@@ -2863,7 +2878,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 			</tr>
 			<tr id="pageset">
 				<td><a href="#" class="toggle2">pageSet</a></td>
-				<td>Trigger the pager to change the current page. <span class="tip"><em>New!</em></span> v2.7.7.
+				<td>Trigger the pager to change the current page (v2.7.7).
 					<div class="collapsible">
 						<pre class="prettyprint lang-javascript">$(function(){
   $('table').trigger('pageSet', 3);

@@ -58,6 +58,10 @@
 			// css class applied to the table row containing the filters & the inputs within that row
 			filter_cssFilter : 'tablesorter-filter',
 
+			// add custom filter elements to the filter row
+			// see the filter formatter demos for more specifics
+			filter_formatter : null,
+
 			// add custom filter functions using this option
 			// see the filter widget custom demo for more specifics on how to use this option
 			filter_functions : null,
@@ -69,12 +73,19 @@
 			// Set this option to false to make the searches case sensitive
 			filter_ignoreCase : true,
 
+			// if true, search column content while the user types (with a delay)
+			filter_liveSearch : true,
+
 			// jQuery selector string of an element used to reset the filters
 			filter_reset : 'button.reset',
 
 			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
 			// every character while typing and should make searching large tables faster.
 			filter_searchDelay : 300,
+
+			// if true, server-side filtering should be performed because client-side filtering will be disabled, but
+			// the ui and events will still be used.
+			filter_serversideFiltering: false,
 
 			// Set this option to true to use the filter to find text from the start of the column
 			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
@@ -186,14 +197,16 @@ $(function(){
 				<li><code>filter_childRows : false</code> - if true, filter includes child row content in the search.</li>
 				<li><code>filter_columnFilters : true</code> - if true, a filter will be added to the top of each table column.</li>
 				<li><code>filter_cssFilter : 'tablesorter-filter'</code> - css class name added to the filter row & each input in the row.</li>
+				<li><code>filter_formatter : null</code> - add custom filter elements to the filter row.</li>
 				<li><code>filter_functions : null</code> - add custom filter functions using this option.</li>
 				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon.</li>
 				<li><code>filter_ignoreCase : true</code> - if true, make all searches case-insensitive.</li>
+				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay).</li>
 				<li><code>filter_reset : null</code> - jQuery selector string of an element used to reset the filters.</li>
 				<li><code>filter_searchDelay : 300</code> - typing delay in milliseconds before starting a search.</li>
+				<li><code>filter_serversideFiltering : false</code> - if true, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used..</li>
 				<li><code>filter_startsWith : false</code> - if true, filter start from the beginning of the cell contents.</li>
 				<li><code>filter_useParsedData : false</code> - filter all data using parsed content.</li>
-				<li><code>filter_serversideFiltering : false</code> - if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.</li>
 			</ul>
 		</div>
 

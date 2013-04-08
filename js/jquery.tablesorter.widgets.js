@@ -291,6 +291,7 @@ ts.addWidget({
 		filter_functions     : null,  // add custom filter functions using this option
 		filter_hideFilters   : false, // collapse filter row when mouse leaves the area
 		filter_ignoreCase    : true,  // if true, make all searches case-insensitive
+		filter_liveSearch    : true,  // if true, search column content while the user types (with a delay)
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
@@ -585,7 +586,7 @@ ts.addWidget({
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){
 				// ignore arrow and meta keys; allow backspace
-				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40))) { return; }
+				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
 				// skip delay
 				if (typeof filter !== 'undefined' && filter !== true){
 					checkFilters(filter);
