@@ -322,11 +322,7 @@ ts.addWidget({
 			// dig fer gold
 			checkFilters = function(filter){
 				var arry = $.isArray(filter),
-					v = (arry) ? filter : c.$filters.map(function(t){
-						// make sure input arry index matches header indexes.
-						t = $(this).find('select.' + css + ', input.' + css);
-						return t.length ? t.val() || '' : '';
-					}).get(),
+					v = (arry) ? filter : ts.getFilters(table),
 					cv = (v || []).join(''); // combined filter values
 				// add filter array back into inputs
 				if (arry) {
@@ -464,7 +460,7 @@ ts.addWidget({
 				}
 
 				last = cv; // save last search
-				$t.data('lastSearch', last);
+				$t.data('lastSearch', v);
 				if (c.debug){
 					ts.benchmark("Completed filter widget search", time);
 				}
@@ -580,7 +576,7 @@ ts.addWidget({
 					$t.find('.' + css).val('');
 				}
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
-				filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : false;
+				filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : '';
 				checkFilters(filter);
 				return false;
 			})
@@ -588,15 +584,16 @@ ts.addWidget({
 				// ignore arrow and meta keys; allow backspace
 				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
 				// skip delay
-				if (typeof filter !== 'undefined' && filter !== true){
-					checkFilters(filter);
+				if (typeof filter === 'undefined' || filter === false){
+					checkFilters();
+				} else {
+					// delay filtering
+					clearTimeout(timer);
+					timer = setTimeout(function(){
+						checkFilters(filter);
+					}, wo.filter_searchDelay);
+					return false;
 				}
-				// delay filtering
-				clearTimeout(timer);
-				timer = setTimeout(function(){
-					checkFilters(false);
-				}, wo.filter_searchDelay);
-				return false;
 			});
 
 			// parse columns after formatter, in case the class is added at that point
@@ -635,8 +632,8 @@ ts.addWidget({
 			// it would append the same options twice.
 			buildDefault(true);
 
-			$t.find('select.' + css).bind('change search', function(){
-				checkFilters();
+			$t.find('select.' + css).bind('change search', function(e, filter){
+				checkFilters(filter);
 			});
 
 			if (wo.filter_hideFilters){
@@ -714,6 +711,21 @@ ts.addWidget({
 		if (wo.filterreset) { $(wo.filter_reset).unbind('click.tsfilter'); }
 	}
 });
+ts.getFilters = function(table) {
+	var c = table ? $(table)[0].config : {};
+	return c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).map(function(i, el) {
+		return $(el).val();
+	}).get() || [] : false;
+};
+ts.setFilters = function(table, filter, apply) {
+	var $t = $(table),
+		c = $t.length ? $t[0].config : {},
+		valid = c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).each(function(i, el) {
+			$(el).val(filter[i] || '');
+		}) || false : false;
+	if (valid && apply) { $t.trigger('search'); }
+	return !!valid;
+};
 
 // Widget: Sticky headers
 // based on this awesome article:
