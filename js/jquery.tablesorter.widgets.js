@@ -297,7 +297,9 @@ ts.addWidget({
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
 		filter_serversideFiltering : false, // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
-		filter_regex : { // regex used in filter "check" functions
+
+		// regex used in filter "check" functions - not for general use and not documented
+		filter_regex : {
 			"regex" : /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // regex to test for regex
 			"child" : /tablesorter-childRow/, // child row class name; this gets updated in the script
 			"type" : /undefined|number/, // check type
@@ -835,6 +837,7 @@ ts.addWidget({
 		// make it sticky!
 		win
 		.bind('scroll.tsSticky resize.tsSticky', function(e){
+			if (!$t.is(':visible')) { return; } // fixes #278
 			var pre = 'tablesorter-sticky-',
 				offset = $t.offset(),
 				sTop = win.scrollTop(),
