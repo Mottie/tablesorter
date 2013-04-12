@@ -816,8 +816,8 @@ ts.addWidget({
 		.bind('pagerComplete.tsSticky', function(){
 			resizeHdr();
 		});
-		// set sticky header cell width and link clicks to real header; andSelf() deprecated in jQuery 1.8
-		hdrCells.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort).each(function(i){
+		// http://stackoverflow.com/questions/5312849/jquery-find-self;
+		hdrCells.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) ).each(function(i){
 			var t = $(this);
 			stkyHdr.children('tr.tablesorter-headerRow').children().eq(i)
 			// clicking on sticky will trigger sort

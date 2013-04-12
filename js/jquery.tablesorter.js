@@ -663,8 +663,8 @@
 					j, downTime;
 				// apply event handling to headers
 				c.$headers
-				// http://stackoverflow.com/questions/5312849/jquery-find-self; andSelf() deprecated in jQuery 1.8
-				.find('*')[ $.fn.addBack ? 'addBack': 'andSelf' ]().filter(c.selectorSort)
+				// http://stackoverflow.com/questions/5312849/jquery-find-self;
+				.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) )
 				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter')
 				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter', function(e, external) {
 					// jQuery v1.2.6 doesn't have closest()
