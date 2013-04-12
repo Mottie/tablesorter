@@ -1,7 +1,7 @@
 {
-	"total_rows": "80",
+	"total_rows": 80,
 
-	"cols" : [
+	"headers" : [
 		"ID", "Name", "Country Code", "District", "Population"
 	],
 

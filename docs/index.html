@@ -2815,10 +2815,10 @@ $.tablesorter.refreshWidgets(table, doAll, dontapply)</pre>
 
 		<tbody>
 			<tr id="search">
-				<td><a href="#" class="toggle2">search</a></td>
+				<td>filter: <a href="#" class="toggle2">search</a></td>
 				<td>Trigger the filter widget to update the search from current inputs and/or selections (v2.4).
 					<div class="collapsible">
-						This first method sends an array with the search strings to the filter widget.<pre class="prettyprint lang-javascript">$(function(){
+					This first method sends an array with the search strings to the filter widget.<pre class="prettyprint lang-javascript">$(function(){
   // apply "2?%" filter to the fifth column (zero-based index)
   var columns = [];
   columns[4] = '2?%'; // or define the array this way [ '', '', '', '', '2?%' ]
@@ -2830,13 +2830,39 @@ or, directly add the search string to the filter input as follows:<pre class="pr
   $('table').trigger('search', false); // add a false flag to skip the search delay
 });</pre></div>
 				</td>
-				<td>Ex: <a href="example-widget-filter.html">1</a> <a href="example-widget-filter-custom.html">2</a> <a href="example-option-show-processing.html">3</a></td>
+			<td></td>
+			</tr>
+
+			<tr id="getfilters">
+				<td>filter: <a href="#" class="toggle2">getFilters</a></td>
+				<td>Get the currently applied filters in an array <span class="tip"><em>New!</em></span> v2.9:
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">$.tablesorter.getFilters( $('table') ); // or use $('table.hasFilters') to make sure the table has a filter row</pre>
+						This method returns an array of filter values (e.g. <code>[ '', '', '', '', '', '2?%' ]</code>) or <code>false</code> if the selected table does not have a filter row.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="setfilters">
+				<td>filter: <a href="#" class="toggle2">setFilters</a></td>
+				<td>Set the filters using this method; include a <code>true</code> boolean to actually apply the search <span class="tip"><em>New!</em></span> v2.9:
+					<div class="collapsible">
+						<pre class="prettyprint lang-javascript">// update filters, but don't apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] );
+
+// update filters, AND apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true ); // this will now use the search method</pre>
+						This method returns <code>true</code> if the filters were sucessfully applied, or <code>false</code> if the table does not have a filter row.
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="filterreset">
-				<td><a href="#" class="toggle2">filterReset</a></td>
+				<td>filter: <a href="#" class="toggle2">filterReset</a></td>
 				<td>Trigger the filter widget to reset the search criteria (v2.7.7).
-					<div class="collapsible">
+					<div class="collapsible"><br>
 						If you are using the <code>filter_formatter</code> option to add custom input elements, this function may not work on those columns. Please refer to the <code>filter_formatter</code> section for more details.
 						<pre class="prettyprint lang-javascript">$(function(){
   // this is the same code that the <code>filter_reset</code> element runs to clear out the filters.
@@ -2854,6 +2880,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
 						<pre class="prettyprint lang-javascript">$(function(){
   $('button').click(function(){
     $('table').trigger('saveSortReset');
+  });
 });</pre></div>
 				</td>
 				<td></td>

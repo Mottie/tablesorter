@@ -105,12 +105,19 @@
 	$('button.search').click(function(){
 		/*** first method *** data-filter-column="1" data-filter-text="!son"
 			add search value to Discount column (zero based index) input */
-		var filters = $('table.tablesorter').find('input.tablesorter-filter'),
+		var filters = [],
 			col = $(this).data('filter-column'), // zero-based index
 			txt = $(this).data('filter-text'); // text to add to filter
 
+		filters[col] = txt;
+		$.tablesorter.setFilters( $('table.hasFilters'), filters, true ); // new v2.9
+
+		/** old method (prior to tablsorter v2.9 ***
+		var filters = $('table.tablesorter').find('input.tablesorter-filter');
 		filters.val(''); // clear all filters
 		filters.eq(col).val(txt).trigger('search', false);
+		******/
+
 
 		/*** second method ***
 			this method bypasses the filter inputs, so the "filter_columnFilters"
@@ -118,8 +125,8 @@
 		******/
 		/*
 		var columns = [];
-		columns[4] = '2?%'; // or define the array this way [ '', '', '', '2?%' ]
-		$('table').trigger('search', [columns]);
+		columns[5] = '2?%'; // or define the array this way [ '', '', '', '', '', '2?%' ]
+		$('table').trigger('search', [ columns ]);
 		*/
 
 	});
@@ -176,7 +183,7 @@ $(function(){
 							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds "abc", "abcd", "abcde", etc)</td></tr>
 							<tr><td class="center"><code>"</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc"</code> or <code>abc=</code> (exactly match "abc")</td></tr>
 							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds "Jan" and "Jun", but not "Joan")</td></tr>
-							<tr><td class="center"><code>*</code></td><td>Wildcard for none, or multiple non-space characters.</td><td><code>B*k</code> (matches "Black" and "Book")</td></tr>
+							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches "Black" and "Book")</td></tr>
 							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds "bag", "beg", "BIG", "Bug", etc)</td></tr>
 							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query</td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with "female" in that column, but shows rows with "male")</td></tr>
@@ -220,6 +227,46 @@ $(function(){
 			</ul>
 		</div>
 
+		<h3><a href="#">Methods</a></h3>
+		<div>
+			<h3>filterReset</h3>
+			<blockquote>
+			Use the <code>filterReset</code> method to reset (clear) all of the current filters using this method
+			<pre class="prettyprint lang-javascript">$('table').trigger('filterReset');</pre>
+			</blockquote>
+
+			<h3>search</h3>
+			<blockquote>
+			With this method, you can pass an array of filter values:
+			<pre class="prettyprint lang-javascript">// apply "2?%" filter to the fifth column (zero-based index)
+var columns = [];
+columns[5] = '2?%';
+// or define the array this way var columns = [ '', '', '', '', '', '2?%' ]
+$('table').trigger('search', [ columns ]);</pre>
+			or, just pass <code>false</code> to refresh the current search:
+			<pre class="prettyprint lang-javascript">$('table').trigger('search', false);</pre>
+			* Note: using this search method <strong>will not</strong> update the contents of the filters within the filter row; use the <code>$.tablesorter.setFilter()</code> method below to do that.
+			</blockquote>
+
+			<h3>Get current filters</h3>
+			<blockquote>
+			Get an array of the currently applied filters <span class="tip"><em>New!</em></span> v2.9.
+			<pre class="prettyprint lang-javascript">$.tablesorter.getFilters( $('table') ); // or $('table.hasFilters')</pre>
+			This method returns an array of filter values or <code>false</code> if the selected table does not contain a filter row.
+			</blockquote>
+
+			<h3>Set current filters</h3>
+			<blockquote>
+			Set the values of the actual filters using this method; include a <code>true</code> boolean to actually apply the search <span class="tip"><em>New!</em></span> v2.9.
+			<pre class="prettyprint lang-javascript">// update filters, but don't apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] );
+
+// update filters, AND apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pre>
+			This method returns <code>true</code> if the filters were sucessfully applied, or <code>false</code> if the table does have a filter row.
+		</blockquote>
+		</div>
+
 		<h3><a href="#">Changes</a></h3>
 		<div class="inner">
 			<p>Moved to the wiki pages - <a href="https://github.com/Mottie/tablesorter/wiki/Change3">filter change log</a>.
@@ -248,123 +295,19 @@ $(function(){
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td>1</td>
-			<td>Philip Aaron</td>
-			<td>Johnson Sr Esq</td>
-			<td>25</td>
-			<td>$5.95</td>
-			<td>22%</td>
-			<td>Jun 26, 2004 7:22 AM</td>
-		</tr>
-		<tr>
-			<td>11</td>
-			<td>Aaron</td>
-			<td>Hibert</td>
-			<td>12</td>
-			<td>$2.99</td>
-			<td>5%</td>
-			<td>Aug 21, 2009 12:21 PM</td>
-		</tr>
-		<tr>
-			<td>12</td>
-			<td>Brandon Clark</td>
-			<td>Henry Jr</td>
-			<td>51</td>
-			<td>$42.29</td>
-			<td>18%</td>
-			<td>Oct 13, 2000 1:15 PM</td>
-		</tr>
-		<tr>
-			<td>111</td>
-			<td>Peter</td>
-			<td>Parker</td>
-			<td>28</td>
-			<td>$9.99</td>
-			<td>20%</td>
-			<td>Jul 6, 2006 8:14 AM</td>
-		</tr>
-		<tr>
-			<td>21</td>
-			<td>John</td>
-			<td>Hood</td>
-			<td>33</td>
-			<td>$19.99</td>
-			<td>25%</td>
-			<td>Dec 10, 2002 5:14 AM</td>
-		</tr>
-		<tr>
-			<td>013</td>
-			<td>Clark</td>
-			<td>Kent Sr.</td>
-			<td>18</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 12, 2003 11:14 AM</td>
-		</tr>
-		<tr>
-			<td>005</td>
-			<td>Bruce</td>
-			<td>Almighty Esq</td>
-			<td>45</td>
-			<td>$153.19</td>
-			<td>44%</td>
-			<td>Jan 18, 2021 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>10</td>
-			<td>Alex</td>
-			<td>Dumass</td>
-			<td>13</td>
-			<td>$5.29</td>
-			<td>4%</td>
-			<td>Jan 8, 2012 5:11 PM</td>
-		</tr>
-		<tr>
-			<td>16</td>
-			<td>Jim</td>
-			<td>Franco</td>
-			<td>24</td>
-			<td>$14.19</td>
-			<td>14%</td>
-			<td>Jan 14, 2004 11:23 AM</td>
-		</tr>
-		<tr>
-			<td>166</td>
-			<td>Bruce Lee</td>
-			<td>Evans</td>
-			<td>22</td>
-			<td>$13.19</td>
-			<td>11%</td>
-			<td>Jan 18, 2007 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>100</td>
-			<td>Brenda Lee</td>
-			<td>McMasters</td>
-			<td>18</td>
-			<td>$55.20</td>
-			<td>15%</td>
-			<td>Feb 12, 2010 7:23 PM</td>
-		</tr>
-		<tr>
-			<td>55</td>
-			<td>Dennis</td>
-			<td>Bronson</td>
-			<td>65</td>
-			<td>$123.00</td>
-			<td>32%</td>
-			<td>Jan 20, 2001 1:12 PM</td>
-		</tr>
-		<tr>
-			<td>9</td>
-			<td>Martha</td>
-			<td>delFuego</td>
-			<td>25</td>
-			<td>$22.09</td>
-			<td>17%</td>
-			<td>Jun 11, 2011 10:55 AM</td>
-		</tr>
+		<tr><td>1</td><td>Philip Aaron</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
+		<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
+		<tr><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
+		<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>21</td><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>013</td><td>Clark</td><td>Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>005</td><td>Bruce</td><td>Almighty Esq</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>
+		<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
+		<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td></tr>
+		<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+		<tr><td>100</td><td>Brenda Lee</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
+		<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
+		<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td></tr>
 	</tbody>
 </table></div>
 

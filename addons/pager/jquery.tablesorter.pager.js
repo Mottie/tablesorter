@@ -188,16 +188,19 @@
 			// process data
 			if ( typeof(c.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh,
+				var i, j, hsh, $f, $sh, th, d, l,
 				$t = $(table),
 				tc = table.config,
 				hl = $t.find('thead th').length, tds = '',
 				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace(/(tr)?\./g,'') + '"><td style="text-align: center;" colspan="' + hl + '">' +
 					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
 				result = c.ajaxProcessing(data) || [ 0, [] ],
-				d = result[1] || [],
-				l = d.length,
-				th = result[2];
+				// allow [ total, rows, headers ]  or [ rows, total, headers ]
+				t = isNaN(result[0]) && !isNaN(result[1]);
+				c.totalRows = result[t ? 1 : 0] || 0;
+				d = result[t ? 0 : 1] || []; // row data
+				l = d.length;
+				th = result[2]; // headers
 				if ( l > 0 ) {
 					for ( i = 0; i < l; i++ ) {
 						tds += '<tr>';
@@ -242,7 +245,6 @@
 					$.tablesorter.isProcessing(table); // remove loading icon
 				}
 				$t.trigger('update');
-				c.totalRows = result[0] || 0;
 				c.totalPages = Math.ceil( c.totalRows / c.size );
 				updatePageDisplay(table, c);
 				fixHeight(table, c);
@@ -281,17 +283,17 @@
 				.replace(/\{size\}/g, c.size) : '',
 			sl = table.config.sortList,
 			fl = c.currentFilters || [],
-			sortCol = url.match(/\{sortList[\s+]?:[\s+]?([^}]*)\}/),
-			filterCol = url.match(/\{filterList[\s+]?:[\s+]?([^}]*)\}/),
+			sortCol = url.match(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/),
+			filterCol = url.match(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/),
 			arry = [];
-
 			if (sortCol) {
 				sortCol = sortCol[1];
 				$.each(sl, function(i,v){
 					arry.push(sortCol + '[' + v[0] + ']=' + v[1]);
 				});
 				// if the arry is empty, just add the col parameter... "&{sortList:col}" becomes "&col"
-				url = url.replace(/\{sortList[\s+]?:[\s+]?([^\}]*)\}/g, arry.length ? arry.join('&') : sortCol );
+				url = url.replace(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join('&') : sortCol );
+				arry = [];
 			}
 			if (filterCol) {
 				filterCol = filterCol[1];
@@ -301,13 +303,11 @@
 					}
 				});
 				// if the arry is empty, just add the fcol parameter... "&{filterList:fcol}" becomes "&fcol"
-				url = url.replace(/\{filterList[\s+]?:[\s+]?([^\}]*)\}/g, arry.length ? arry.join('&') : filterCol );
+				url = url.replace(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join('&') : filterCol );
 			}
-
 			if ( typeof(c.customAjaxUrl) === "function" ) {
 				url = c.customAjaxUrl(table, url);
 			}
-
 			return url;
 		},
 
@@ -365,7 +365,7 @@
 			});
 		},
 
-		moveToPage = function(table, c) {
+		moveToPage = function(table, c, flag) {
 			if ( c.isDisabled ) { return; }
 			var p = Math.min( c.totalPages, c.filteredPages );
 			if ( c.page < 0 ) { c.page = 0; }
@@ -377,7 +377,9 @@
 			}
 			$.data(table, 'pagerLastPage', c.page);
 			$.data(table, 'pagerUpdateTriggered', true);
-			if (c.initialized) { $(table).trigger('pageMoved', c); }
+			if (c.initialized && flag !== false) {
+				$(table).trigger('pageMoved', c);
+			}
 		},
 
 		setPageSize = function(table, size, c) {
@@ -474,8 +476,7 @@
 							$.data(table, 'pagerUpdateTriggered', false);
 							return;
 						}
-						if (e.type === 'filterEnd') { c.page = 0; }
-						moveToPage(table, c);
+						moveToPage(table, c, false);
 						updatePageDisplay(table, c);
 						fixHeight(table, c);
 					})

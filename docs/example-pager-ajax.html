@@ -33,7 +33,7 @@
 			theme: 'blue',
 			widthFixed: true,
 			sortLocaleCompare: true, // needed for accented characters in the data
-			widgets: ['zebra']
+			widgets: ['zebra', 'filter']
 		})
 
 		// initialize the pager plugin
@@ -54,15 +54,16 @@
 			// the filterList to the url into an "fcol" array.
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
 			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
-			ajaxUrl : 'assets/City{page}.json',
+			ajaxUrl : 'assets/City{page}.json#{filterList:filter}&{sortList:column}',
 
 			// modify the url after all processing has been applied
 			customAjaxUrl: function(table, url) {
+					// manipulate the url string as you desire
+					// url += '&cPage=' + window.location.pathname;
 					// trigger my custom event
-					$(table).trigger('changingUrl');
-					// send the server the current page; separated & and "curr"
-					// because the browser things we're typing to use &curr;
-					return url += '&currntUrl=' + window.location.href;
+					$(table).trigger('changingUrl', url);
+					// send the server the current page
+					return url;
 			},
 
 			// process ajax so that the following information is returned:
@@ -84,7 +85,7 @@
 					// total number of rows (required)
 					total = data.total_rows,
 					// array of header names (optional)
-					headers = data.cols,
+					headers = data.headers,
 					// all rows: array of arrays; each internal array has the table cell data for that row
 					rows = [],
 					// len should match pager set size (c.size)
@@ -140,13 +141,7 @@
 		});
 
 });</script>
-	<script>
-		$(window).load(function(){
-			// allow THIS demo to sort the content; this variable is automatically set to true when ajax
-			// is used as there isn't any way to sort the server side data from the client side.
-			$('table')[0].config.serverSideSorting = false;
-		});
-	</script>
+
 </head>
 <body id="pager-demo">
 	<div id="banner">
@@ -158,7 +153,7 @@
 
 	<div id="main">
 
-		<p class="tip">
+		<div class="tip">
 			<em>NOTE!</em>:
 			<ul>
 				<li><code>{filterList:fcol}</code> was added to the <code>ajaxUrl</code> in version 2.6.</li>
@@ -166,33 +161,65 @@
 				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
 				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
 				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>
-				<li>The <code>ajaxProcessing</code> function must* return the data in the following format <code>[ total, rows, headers ]</code> - <span class="tip"><em>Modified</em></span> in 2.1.3:
+				<li>The <code>ajaxProcessing</code> function is needed to convert your custom JSON format into an array usable by the pager plugin (modified in 2.1.3)<br>
+					<br>
+					So, given this custom JSON format (this is only an example):
+					<pre class="prettyprint lang-javascript">{
+  "total_rows": 80,
+
+  "headers" : [
+    "ID", "Name", "Country Code", "District", "Population"
+  ],
+
+  "rows" : [{
+    "ID": 1,
+    "Name": "Kabul",
+    "CountryCode": "AFG",
+    "District": "Kabol",
+    "Population": 1780000
+  }, {
+    "ID": 2,
+    "Name": "Qandahar",
+    "CountryCode": "AFG",
+    "District": "Qandahar",
+    "Population": 237500
+  }, {
+    ...
+  }, {
+    "ID": 25,
+    "Name": "Haarlemmermeer",
+    "CountryCode": "NLD",
+    "District": "Noord-Holland",
+    "Population": 110722
+  }]
+}</pre>The <code>ajaxProcessing</code> function must* return the data in the following format <code>[ total, rows, headers (optional) ]</code>, or in version 2.9+ <code>[ rows, total, headers (optional) ]</code>:
 					<pre class="prettyprint lang-javascript">[
   // total # rows contained in the database
-  100,
+  80,
   // row data: array of arrays; each internal array has the table cell data for that row
   [
-    [ "row1cell1", "row1cell2", ... "row1cellN" ], // first row
-    [ "row2cell1", "row2cell2", ... "row2cellN" ], // second row
+    [ 1, "Kabul", "AFG", "Kabol", 1780000 ],                 // [ "row1cell1", "row1cell2", ... "row1cellN" ],
+    [ 2, "Qandahar", "AFG", "Qandahar", 237500 ],            // [ "row2cell1", "row2cell2", ... "row2cellN" ],
      ...
-    [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]  // last row
+    [ 25, "Haarlemmermeer", "NLD", "Noord-Holland", 110722 ] // [ "rowNcell1", "rowNcell2", ... "rowNcellN" ]
   ],
-  // header text (optional)
-  [ "Header1", "Header2", ... "HeaderN" ]
+  [ "ID", "Name", "Country Code", "District", "Population" ] // [ "Header1", "Header2", ... "HeaderN" ] (optional)
 ]</pre></li>
 				<li>The table header and footer text will be updated to match the JSON "header column #" text; but there is an issue with the table rendering improperly if the number of columns in the HTML and the number of columns in the JSON don't match.</li>
 				<li>Limitations of this demo:
 					<ul>
-						<li>This demo will not work in Chrome due to restrictions with browser and desktop interaction.</li>
+						<li>This demo will not work when viewing it locally due to communication restrictions between the browser and your desktop.</li>
 						<li>The record size is limited to 25 records because this demo is not interacting with an actual database, but with four JSON files containing 25 records each.</li>
 					</ul>
 				</li>
 			</ul>
-			<p class="small">* If you have a different JSON format and need help with the processing code, please ask the question on <a href="http://stackoverflow.com">StackOverflow</a> or message me directly (gmail; wowmotty). Please don't open an issue for help with code.</p>
-		</p>
+			<p class="small">* If you have a different JSON format and need help with the processing code, please ask the question on <a href="http://stackoverflow.com/questions/tagged/tablesorter">StackOverflow</a> or message me directly (gmail; wowmotty). Please don't open an issue for help with code.</p>
+		</div>
 
 	<h1>Demo</h1>
-
+Original Ajax url: <span id="origurl"></span><br>
+Current Ajax url: <span id="url"></span>
+<br>
 <table class="tablesorter">
 	<thead>
 		<tr>
@@ -346,6 +373,23 @@ td.pager {
 
 </div>
 
+<script>
+// allow THIS demo to sort the content; this variable is automatically set to true when ajax
+// is used as there isn't any way to sort the server side data from the client side.
+var $url = $('#url');
+$('table')
+
+	// show current URL for the DEMO ONLY
+	.on('changingUrl', function(e, url){
+		$url.html(url);
+	})
+
+	// show original URL & updated URL in demo
+	.on('pagerInitialized', function(){
+		this.config.serverSideSorting = false;
+		$('#origurl').html( this.config.pager.ajaxUrl.replace(/(\{.*?\})/g, '<span class="results">$1</span>') );
+	});
+</script>
+
 </body>
 </html>
-

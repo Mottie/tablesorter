@@ -42,7 +42,7 @@
 		ajaxProcessing: function(ajax){
 			if (ajax && ajax.hasOwnProperty('data')) {
 				// return [ "data", "total_rows" ];
-				return [ ajax.data, ajax.total_rows ];
+				return [ ajax.total_rows, ajax.data ];
 			}
 		},
 
