@@ -43,7 +43,149 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
-#### Version 2.8.2 (3/28/2013)
+#### <a name="v2.9.0">Version 2.9.0</a> (4/12/2013)
+
+* **Core changes**
+  * Added a column sort method.
+      * With this method, you can target a header column and trigger a sort:
+
+          ```javascript
+          $('table').find('th:eq(2)').trigger('sort');
+          ```
+
+      * This method will maintain the sorting order; so, if the column is already sorted in ascending order, this method will act as if you manually clicked on the header.
+      * Whatever next sort order is applied is dependent on other option settings such as `initialSortOrder`, `lockedOrder` (set within the `headers`), `sortReset` option, `sortRestart` and will be ignored if the column sort is disabled (`sorter: false`).
+      * Triggering a `click` on the header cell will not work as expected.
+
+* **Widgets, general**
+  * All of the current widgets within `jquery.tablesorter.widgets.js` and in the `js/widgets` directory use the newest addWidget template, and are **no longer compatible** with tablesorter versions older than 2.8!
+
+* **Added widget priorities**
+  * Basically when a widget is added, it can be assigned a priority number and applied in that order from lowest to highest.
+  * The priority can be any number and can be thought of as similar to applying a z-index to an element in that multiple widgets can have the same priority.
+  * This is needed in case a widget is applied to the table, but is dependent on another widget. For example:
+      * The `uitheme` widget is the first to be applied (priority of `10`) because other widgets that copy/clone the table will need the jQuery UI/Bootstrap class names already applied to the table.
+      * The sticky headers widget (priority `60`) is applied after the filter widget (priority `50`), so that it knows to update the filters within the sticky header.
+  * Priorities are *optional*, and any widget applied without a priority value will automatically be assigned a priority of `10`.
+  * Updated the [writing custom widgets](http://mottie.github.com/tablesorter/docs/example-widgets.html) demo to show how to add a widget priority.
+  * I was planning on adding this in version 3.0, but the need arose sooner with the additions of all of the new widgets.
+
+* **Updated Filter widget**
+  * Fixed a bug that only occurred when using the filter widget with the pager plugin getting ajax data
+      * The pager no longers repeatedly tries to get the first page of table content
+      * Fixes [issue #270](https://github.com/Mottie/tablesorter/issues/270).
+  * Fixed filter widget to correctly target the filter row cells.
+  * The current filter row cells (`td`'s) are now saved to `table.config.$filters`.
+  * Added a `filter_liveSearch` option:
+      * If `true` (default), a search is performed while the user is typing, after a short delay.
+      * If `false`, the user will have to press enter on the keyboard to initiate the search
+  * Added a filter get method to work with the filter inputs
+      * Use `$.tablesorter.getFilters( $('table') );` to get an array of the current filters applied to the table
+  * Added a filter set method to work with the filter inputs
+      * Use `$.tablesorter.setFilters( $('table'), ['abc', '1'] );` to set the first two filters values to "abc" and "1" respectively; but this does not initiate a search.
+      * Use `$.tablesorter.setFilters( $('table'), ['abc', '1'], true );` to set the filters values and initiate a search.
+      * The difference between `$.tablesorter.setFilters( $('table'), ['abc', '1'] );` and `$('table').trigger('search', [ ['abc', '1'] ]);` is that the `setFilters` method will update the actual filter inputs with the search query, whereas the triggered search will not.
+      * If the `$('table')` does not target a table with a filter widget applied, it will return `false`.
+
+* **Updated Resizable widget**
+  * Added `resizable_addLastColumn` option which allows you to make the last column resizable, essentially making a non-full width table resizable.
+  * Updated [the resizable demo](http://mottie.github.com/tablesorter/docs/example-widget-resizable.html) to show this option.
+  * The resizable demo also now highlights the non-resizable "Age" column to make it more obvious.
+
+* **Updated Sticky headers widget**
+  * Added a `stickyHeaders_cloneId` option
+      * This option is only used if the table has an ID defined, then the value from this option will be added to the end of the ID of the cloned sticky table.
+      * Default value is `-sticky`.
+      * Fixes [issue #271](https://github.com/Mottie/tablesorter/issues/271).
+  * Fixed an issue with scrolling lag:
+      * If the page had a large number of hidden tables (inside tabs), there would be a noticable delay while scrolling up.
+      * Only visible tables are now monitored.
+      * Fixes [issue #278](https://github.com/Mottie/tablesorter/issues/278).
+  * This widget will now include the table caption in the sticky header:
+      * Additional css was added to every theme to apply a background color to the caption, otherwise it would be transparent and content could then be seen to scroll behind it.
+
+          ```css
+          caption { background: #fff; }
+          ```
+
+      * This fullfills the enhancement request in [issue #126](https://github.com/Mottie/tablesorter/issues/126).
+  * This widget will now include the filter row in the sticky header:
+      * The filter row is duplicated, so searches within either filter row will update the content of the other filter row.
+      * This fullfills the enhancement request in [issue #249](https://github.com/Mottie/tablesorter/issues/249).
+  * Removed the processing icon from the sticky header (reported via email).
+
+* **Added a content editable widget**
+  * Added a widget to enable content editing of the table (using the contenteditable attribute), by column.
+  * It has four options, used as follows:
+
+      ```javascript
+      $('table.tablesorter').tablesorter({
+        widgets: ['editable'],
+        widgetOptions: {
+          editable_columns       : [0,1,2],  // array that points to the columns to make editable (zero-based index)
+          editable_enterToAccept : true,     // press enter to accept content, or click outside if false
+          editable_autoResort    : false,    // auto resort after the content has changed.
+          editable_noEdit        : 'no-edit' // class name of cell that is no editable
+        }
+      });
+      ```
+
+  * Make a table cell uneditable by added the class `no-edit`, set in the `editable_noEdit` option.
+  * Added a [content editable widget demo](http://mottie.github.com/tablesorter/docs/example-widget-editable.html).
+
+* **Added Repeat headers widget**
+  * This widget has always been the example used in the [Writing custom widgets](http://mottie.github.com/tablesorter/docs/example-widgets.html) demo.
+  * It has been updated and now follows the same format as the widget template for tablesorter version 2.9+
+  * As written, it will no longer work with tablesorter versions older than 2.8.
+  * Only one option for this widget is available:
+
+      ```javascript
+      $('table.tablesorter').tablesorter({
+        widgets: ['zebra', 'scroller'],
+        widgetOptions : {
+          rowsToSkip : 4 // number of rows to show between the repeated headers
+        }
+      });
+      ```
+
+* **Added Scroller widget**
+  * This widget is a modified version of the scroller widget made by Tim Connell ([original demo](http://tconnell.com/samples/scroller/))
+  * It has four options, used as follows:
+
+      ```javascript
+      $('table.tablesorter').tablesorter({
+        widgets: ['zebra', 'scroller'],
+        widgetOptions : {
+          scroller_height       : 300,  // height of scroll window
+          scroller_barWidth     : 17,   // scroll bar width
+          scroller_jumpToHeader : true, // header snap to browser top when scrolling the tbody
+          scroller_idPrefix     : 's_'  // cloned thead id prefix (random number added to end)
+        }
+      });
+      ```
+
+  * Added a [scroller widget demo](http://mottie.github.com/tablesorter/docs/example-widget-scroller.html).
+
+* **Updated Pager Plugin**
+  * Added all pager plugin options within the [widget options table](http://mottie.github.com/tablesorter/docs/index.html#Widget-options) on the main documentation page.
+  * Added a better example of how to use the `customAjaxUrl` function.
+  * Updated the `{page}` tag used withing the `ajaxUrl` option:
+      * Previously `{page}` was replaced with a zero-based index of the targetted page number, now this format can also be used `{page+1}`.
+      * A tag of `{page+1}` will be replaced with the targetted page number plus one, making it a one-based index.
+      * Actually any number can be added, or subtracted, from the page number using this format: `{page+2}`, `{page-1}`, `{page+10}`, etc.
+  * The `List` portion of the `{sortList:col}` and `{filterList:fcol}` tag are now optional:
+      * These tags are used within the `ajaxUrl` option.
+      * So, `{sort:col}` and `{filter:fcol}` can now be used. It just seems clearer/cleaner to me.
+  * The pager's `ajaxProcessing` function is now more flexible
+      * When returning the processed ajax data, it was required to return it in this form: `[ total, rows, headers ]`.
+      * With this update, you can now also return the data as `[ rows, total, headers ]`.
+      * If your database is dynamic and doesn't have a total, then you can just give it a really big number &amp; disable the "last" page button. The only reason the plugin needs the `total` is to calculate the total pages and to know what number to set when the user clicks on the last page button.
+
+* **General documentation cleanup &amp; updates**
+  * Grouping widget corrections
+  * Updated the [repeat headers widget](http://mottie.github.com/tablesorter/docs/example-widgets.html) to use the newest widget template.
+
+#### <a name="v2.8.2">Version 2.8.2</a> (3/28/2013)
 
 * Updated the "ignore-leads" parser:
   * Renamed the parser to "ignore-articles"
@@ -55,14 +197,14 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * The "priority (letter)" column was incorrectly parsing the data which, for some reason, worked in some browsers.
   * Thanks again to [thezoggy](https://github.com/thezoggy) for reporting [this issue](https://github.com/Mottie/tablesorter/issues/267).
 
-#### Version 2.8.1 (3/27/2013)
+#### <a name="v2.8.1">Version 2.8.1</a> (3/27/2013)
 
 * Added `customAjaxUrl` option to the pager:
   * This function is called after all processing has been applied to the `ajaxUrl` string.
   * Use this function to make any other string modifications, as desired.
   * Thanks to [Cthulhu59](https://github.com/Cthulhu59) for contributing. See [pull request #256](https://github.com/Mottie/tablesorter/pull/256).
 
-#### Version 2.8 (3/27/2013)
+#### <a name="v2.8.0">Version 2.8.0</a> (3/27/2013)
 
 * Added an `updateAll` method
   * This method allows you to update the cache with data from both the `thead` and `tbody` of the table.
@@ -166,44 +308,9 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Fixed IE code examples all appearing in line.
 * Did some general code cleanup and rearranging.
 
-#### Version 2.7.12 (3/1/2013)
+#### <a name="v2.7.12">Version 2.7.12</a> (3/1/2013)
 
 * Fixed hiding filter rows when using filter_formatter elements. See [issue #250](https://github.com/Mottie/tablesorter/issues/250).
 * Fixed an issue with `updateCell` method not removing extra table rows before computing the row index of the cell that was just updated.
 * Added an `exactMatch` option to the html5color filter_formatter function.
 * Added missing documentation for the `updateCell` callback method. It's been there for a while!
-
-#### Version 2.7.11 (2/24/2013)
-
-* Fixed several javascript errors:
-  * Empty cells in a numeric column should no longer cause an error - fixes [issue #246](https://github.com/Mottie/tablesorter/issues/246).
-  * The tablesorter storage function should no longer cause an error when provided an undefined key - fixes [issue #244](https://github.com/Mottie/tablesorter/issues/244).
-* Added `saveSortReset` method to clear any saved sorts for a specific table. Use it as follows:
-
-    ```javascript
-    $('table').trigger('saveSortReset');
-    ```
-
-* Added `delayed` options to several filter formatter functions.
-  * Selectors that can be changed quickly - uiSlider, uiRange, uiSpinner, html5Range and html5Number - will now execute the filter query after a short delay.
-  * The filter delay time is set in the filter function option `filter_searchDelay`. The default delay is 300 milliseconds.
-
-#### Version 2.7.10 (2/22/2013)
-
-* Updated widget storage function to ensure no invalid strings are passed to the `$.parseJSON` function.
-  * Thanks to [andriijas](https://github.com/andriijas) for the code suggestion :)
-  * Fixes [issue #240](https://github.com/Mottie/tablesorter/issues/240) &amp; [issue #244](https://github.com/Mottie/tablesorter/issues/244).
-* Updated filter widget:
-  * When cell content contains quotes and the filter select is added, the quotes are now properly processed to be included within the options. Fixes [issue #242](https://github.com/Mottie/tablesorter/issues/242).
-  * Empty cells are no longer added to the options. If you want to include empty cells, add the following (see [this StackOverflow question](http://stackoverflow.com/q/14990971/145346)):
-
-    ```html
-    <span style="display:none">{empty}</span>
-    ```
-
-    Then you'll get a select dropdown showing `{empty}` allowing you to select empty content.
-
-#### Version 2.7.9 (2/20/2013)
-
-* Fixed an issue with the pager targetting an incorrect page when the table starts out empty.
-* Get the correct number of columns when `widthFixed` is `true` and the first row contains a table. See [issue #238](https://github.com/Mottie/tablesorter/issues/238).

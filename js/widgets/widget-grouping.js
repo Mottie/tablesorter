@@ -1,7 +1,8 @@
-﻿/*! tablesorter Grouping widget - updated 3/18/2013
+﻿/*! tablesorter Grouping widget - updated 4/12/2013
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
+/*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
 "use strict";
@@ -28,7 +29,7 @@ $.tablesorter.addWidget({
 		}
 	},
 	format: function(table, c, wo) {
-		var j, k, curr, $tr, g, t, t2, time,
+		var j, k, curr, $tr, t, t2, time,
 		group = '',
 		col = c.sortList[0] ? c.sortList[0][0] : -1,
 		groupBy = {
