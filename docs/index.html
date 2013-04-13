@@ -294,6 +294,7 @@
 		<li><a href="example-pager.html">Pager plugin</a></li>
 		<br>
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
+		<li><a href="example-widget-editable.html">Content Editable widget</a> <span class="tip"><em>New</em></span> v2.9.</li>
 		<li>Filter Widget:
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18)</li>
@@ -301,8 +302,9 @@
 				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
 		</li>
-		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip"><em>Updated</em></span> v2.8.3)</li>
+		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> <span class="tip old"><em>New</em></span> v2.8.</li>
+		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="tip"><em>Updated</em></span> v2.9)</li>
+		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="tip old"><em>Updated</em></span> v2.8.3)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> <span class="tip"><em>New</em></span> v2.9.</li>
 		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1)</li>
@@ -314,11 +316,11 @@
 		</li>
 		<li><a href="example-widget-zebra.html">Zebra stripe widget</a></li>
 		<br>
-		<li><a href="example-parsers-dates.html">Assorted date parsers</a> <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore "A", "An" and "The" in titles) <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-parsers-metric.html">Metric parser</a> <span class="tip"><em>New</em></span> v2.8.</li>
-		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> <span class="tip"><em>New</em></span> v2.8.</li>
+		<li><a href="example-parsers-dates.html">Assorted date parsers</a> <span class="tip old"><em>New</em></span> v2.8.</li>
+		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore "A", "An" and "The" in titles) <span class="tip old"><em>New</em></span> v2.8.</li>
+		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) <span class="tip old"><em>New</em></span> v2.8.</li>
+		<li><a href="example-parsers-metric.html">Metric parser</a> <span class="tip old"><em>New</em></span> v2.8.</li>
+		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> <span class="tip old"><em>New</em></span> v2.8.</li>
 	</ul>
 
 	</div>
@@ -346,7 +348,7 @@
 		<li><a href="example-empty-table.html">Initializing tablesorter on a empty table</a></li>
 		<li><a href="example-ajax.html">Appending table data with ajax</a></li>
 		<li><a href="example-add-rows.html">Adding a table row</a> (v2.0.16)</li>
-		<li><a href="example-update-all.html">Update an entire table column (<code>thead</code> and <code>tbody</code>)</a> <span class="tip"><em>New!</em></span> v2.8</li>
+		<li><a href="example-update-all.html">Update an entire table column (<code>thead</code> and <code>tbody</code>)</a> <span class="tip old"><em>New!</em></span> v2.8</li>
 		<li><a href="example-update-cell.html">Update the table after cell content has changed</a></li>
 		<li><a href="example-pager.html">Pager plugin</a> - examples of how to add and remove rows</li>
 	</ul>
@@ -2018,7 +2020,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Resizable widget: If this option is set to <code>true</code>, a resizing anchor will be included in the last column of the table <span class="tip"><em>New!</em></span> v2.8.3.
+					Resizable widget: If this option is set to <code>true</code>, a resizing anchor will be included in the last column of the table <span class="tip old"><em>New!</em></span> v2.8.3.
 					<div class="collapsible">
 					<br>
 					If an anchor was included and the table is full width, the column would resize in the opposite direction which my not be intuitive to the user. So set this option as desired, but please be mindful of the user experience.<br>
@@ -2218,18 +2220,18 @@ $.extend($.tablesorter.themes.jui, {
 	</thead>
 	<tbody>
 		<tr><td><code>{page}</code></td><td>Zero-based index of the current pager page</td></tr>
-		<tr><td><code>{page+1}</code></td><td>One-based index of the current pager page (replace "+1" with any number) (e.g. <code>{page+3}</code>). <span class="tip"><em>New!</em></span> v2.9</td></tr>
+		<tr><td><code>{page+1}</code></td><td>One-based index of the current pager page (replace "+1" with any number) (e.g. <code>{page+3}</code>) <span class="tip"><em>New!</em></span> v2.9.</td></tr>
 		<tr><td><code>{size}</code></td><td>Number of rows showing, or number of rows to get from the server</td></tr>
 		<tr>
-			<td><code>{sortList:col}</code></td>
+			<td><code>{sortList:col}</code> or <code>{sort:col}</code></td>
 			<td>Adds the current sort to the ajax url string into a "col" array, so your server-side code knows how to sort the data (v2.4.5).<br>
-				The <code>col</code> portion of the <code>{sortList:col}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current sortList is <code>[[2,0],[3,0]]</code>, it becomes <code>"&sort[2]=0&sort[3]=0"</code> in the url.
+				The <code>col</code> portion of the <code>{sortList:col}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current sortList is <code>[[2,0],[3,0]]</code>, it becomes <code>"&sort[2]=0&sort[3]=0"</code> in the url. <code>{sort:col}</code> shortened tag also works <span class="tip"><em>Updated</em></span> v2.9.
 			</td>
 		</tr>
 		<tr>
-			<td><code>{filterList:fcol}</code></td>
+			<td><code>{filterList:fcol}</code> or <code>{filter:fcol}</code></td>
 			<td>Adds the value of the current filters to the ajax url string into a "fcol" array, so your server-side code knows how to filter the data (v2.6).<br>
-				The <code>fcol</code> portion of the <code>{filterList:fcol}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current filters are <code>['','Blue',13]</code>, it becomes <code>"&fcol[2]=Blue&fcol[3]=13"</code> in the url.
+				The <code>fcol</code> portion of the <code>{filterList:fcol}</code> tag can be any name string (no spaces) to indicate the name of the variable to apply. So if your current filters are <code>['','Blue',13]</code>, it becomes <code>"&fcol[2]=Blue&fcol[3]=13"</code> in the url. <code>{filter:col}</code> shortened tag also works <span class="tip"><em>Updated</em></span> v2.9.
 			</td>
 		</tr>
 	</tbody>
@@ -2243,7 +2245,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>function</td>
 				<td>function(table, url) { return url; }</td>
 				<td>
-					This callback function allows you to modify the processed URL as desired. <span class="tip"><em>New!</em></span> v2.8.1.
+					This callback function allows you to modify the processed URL as desired. <span class="tip old"><em>New!</em></span> v2.8.1.
 					<div class="collapsible">
 					<br>
 					The <code>customAjaxUrl</code> function has two parameters, the table DOM element and the processed url string (all tags within the <code>ajaxUrl</code> have been replaced with their appropriate values).
@@ -2292,7 +2294,7 @@ $.extend($.tablesorter.themes.jui, {
 ]</pre>Here is some example JSON (comments added, but not allowed in JSON) which is contained in the <a href="https://github.com/Mottie/tablesorter/blob/master/docs/assets/City0.json">City0.json</a> file:
 <pre class="prettyprint lang-javascript">{
   // total rows
-  "total_rows": "80",
+  "total_rows": 80,
   // headers
   "cols" : [
     "ID", "Name", "Country Code", "District", "Population"
@@ -2337,7 +2339,7 @@ $.extend($.tablesorter.themes.jui, {
             }
             rows.push(row); // add new row array to rows array
           }
-          return [ total, rows, headers ];
+          return [ total, rows, headers ]; // or return [ rows, total, headers ] in v2.9+
         }
       }
     });
@@ -2528,7 +2530,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>This option contains the class name that is applied to disabled pager controls.
 					<div class="collapsible">
 					<br>
-					More explicitly, this class is applied to the pager arrows when they are at either extreme of pages. When the pager has been disabled, this class is applied to all controls.<br>
+					More explicitly, this class is applied to the pager arrows when they are at either extreme of pages and the <code>updateArrows</code> option is <code>true</code>. When the pager has been disabled, this class is applied to all controls.<br>
 					<br>
 					Note there is no period "." in front of this class name (it is not a selector).
 					</div></td>
@@ -2661,7 +2663,7 @@ $("table").trigger("sorton", [sorting]);</pre></div>
 
 			<tr id="updateall">
 				<td><a href="#" class="toggle2">updateAll</a></td>
-				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) <span class="tip"><em>New!</em></span> v2.8.
+				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) <span class="tip old"><em>New!</em></span> v2.8.
 					<div class="collapsible">
 						<pre class="prettyprint lang-javascript">// Change thead & tbody column of cells
 // remember, "eq()" is zero based & "nth-child()" is 1 based
