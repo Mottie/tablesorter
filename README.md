@@ -43,6 +43,14 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.9.1">Version 2.9.1</a> (4/13/2013)
+
+* Modified `stickHeaders`:
+  * Only visible cells within the sticky header will be adjusted
+  * Fixes [issue #278](https://github.com/Mottie/tablesorter/issues/278).
+  * Thanks to [Exinaus](https://github.com/Exinaus) for sharing his code!
+  * This change doesn't fix the lag on a table with a lot of visible columns; I don't have an exact number where it will start lagging, but the one in issue #278 had 68 columns.
+
 #### <a name="v2.9.0">Version 2.9.0</a> (4/12/2013)
 
 * **Core changes**
@@ -307,10 +315,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Fixed the internal `getData()` function to properly get dashed class names; e.g. `"sorter-my-custom-parser"` will look for a parser with an id of `"my-custom-parser"`.
 * Fixed IE code examples all appearing in line.
 * Did some general code cleanup and rearranging.
-
-#### <a name="v2.7.12">Version 2.7.12</a> (3/1/2013)
-
-* Fixed hiding filter rows when using filter_formatter elements. See [issue #250](https://github.com/Mottie/tablesorter/issues/250).
-* Fixed an issue with `updateCell` method not removing extra table rows before computing the row index of the cell that was just updated.
-* Added an `exactMatch` option to the html5color filter_formatter function.
-* Added missing documentation for the `updateCell` callback method. It's been there for a while!

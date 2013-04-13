@@ -1,4 +1,4 @@
-/*! tableSorter 2.4+ widgets - updated 4/12/2013
+/*! tableSorter 2.8+ widgets - updated 4/13/2013
  *
  * Column Styles
  * Column Filters
@@ -778,8 +778,8 @@ ts.addWidget({
 					left : header.offset().left - win.scrollLeft() - spacing,
 					width: $t.width()
 				});
-				stkyCells.each(function(i){
-					var $h = hdrCells.eq(i);
+				stkyCells.filter(':visible').each(function(i){
+					var $h = hdrCells.filter(':visible').eq(i);
 					$(this)
 						.css({
 							width: $h.width() - spacing,
@@ -802,8 +802,8 @@ ts.addWidget({
 		$t
 		.addClass('hasStickyHeaders')
 		.bind('sortEnd.tsSticky', function(){
-			hdrCells.each(function(i){
-				var t = stkyCells.eq(i);
+			hdrCells.filter(':visible').each(function(i){
+				var t = stkyCells.filter(':visible').eq(i);
 				t
 					.attr('class', $(this).attr('class'))
 					// remove processing icon
