@@ -50,6 +50,12 @@
 
 			// Number of visible rows
 			size: 10,
+			
+			// Use to force a post call over a get 
+            		usePostOverGet: false,
+
+			// The post data to send in the post call
+			postData: null,
 
 			// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 			// table row set to a height to compensate; default is false
@@ -269,10 +275,22 @@
 						$(document).unbind('ajaxError.pager');
 					}
 				});
-				$.getJSON(url, function(data) {
-					renderAjax(data, table, c);
-					$(document).unbind('ajaxError.pager');
-				});
+		                if(c.usePostOverGet){
+					$.ajax({
+			                        type: "POST",
+			                        url: url,
+			                        data: c.postData,
+			                        success: function(data) {
+							renderAjax(data, table, c);
+							$(document).unbind('ajaxError.pager');
+						}
+		                    	});
+		                } else {
+				    $.getJSON(url, function(data) {
+					    renderAjax(data, table, c);
+					    $(document).unbind('ajaxError.pager');
+				    });
+		                }
 			}
 		},
 
