@@ -92,6 +92,9 @@ caption {
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
 }
+.tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter.disabled {
+	background: #eee;
+}
 .tablesorter-bootstrap .tablesorter-filter-row td {
 	background: #eee;
 	line-height: normal;
