@@ -329,9 +329,7 @@ ts.addWidget({
 					cv = (v || []).join(''); // combined filter values
 				// add filter array back into inputs
 				if (arry) {
-					c.$filters.each(function(i,el){
-						$(el).val(filter[i] || '');
-					});
+					ts.setFilters( $t, v );
 				}
 				if (wo.filter_hideFilters){
 					// show/hide filter row as needed
