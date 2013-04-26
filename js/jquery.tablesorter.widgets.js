@@ -583,16 +583,17 @@ ts.addWidget({
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){
 				// ignore arrow and meta keys; allow backspace
-				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
+				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8 && wo.filter_liveSearch && e.which !== 13) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
 				// skip delay
 				if (typeof filter !== 'undefined' || filter === false){
 					checkFilters();
+					// no return false; allow search event propogation up to table
 				} else {
 					// delay filtering
 					clearTimeout(timer);
 					timer = setTimeout(function(){
 						checkFilters(filter);
-					}, wo.filter_searchDelay);
+					}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
 					return false;
 				}
 			});
