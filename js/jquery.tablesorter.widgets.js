@@ -585,7 +585,7 @@ ts.addWidget({
 				// ignore arrow and meta keys; allow backspace
 				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
 				// skip delay
-				if (typeof filter === 'undefined' || filter === false){
+				if (typeof filter !== 'undefined' || filter === false){
 					checkFilters();
 				} else {
 					// delay filtering
