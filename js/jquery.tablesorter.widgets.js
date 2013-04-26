@@ -582,8 +582,14 @@ ts.addWidget({
 				return false;
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){
-				// ignore arrow and meta keys; allow backspace
-				if (e.type === 'keyup' && ((e.which < 32 && e.which !== 8 && wo.filter_liveSearch && e.which !== 13) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && !wo.filter_liveSearch))) { return; }
+				// emulate what webkit does.... escape clears the filter
+				if (e.which === 27) {
+					this.value = '';
+				// liveSearch can contain a min value length; ignore arrow and meta keys, but allow backspace
+				} else if ( (typeof wo.filter_liveSearch === 'number' && this.value.length < wo.filter_liveSearch && this.value !== '') || ( e.type === 'keyup' &&
+					( (e.which < 32 && e.which !== 8 && wo.filter_liveSearch === true && e.which !== 13) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && wo.filter_liveSearch === false) ) ) ) {
+					return;
+				}
 				// skip delay
 				if (typeof filter !== 'undefined' || filter === false){
 					checkFilters();
