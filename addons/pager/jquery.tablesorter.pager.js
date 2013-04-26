@@ -96,8 +96,9 @@
 		},
 
 		updatePageDisplay = function(table, c) {
-			var i, p, s, t, out, f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
-			c.filteredRows = (f) ? table.config.$tbodies.children('tr:not(.filtered,.remove-me)').length : c.totalRows;
+			var i, p, s, t, out,
+			f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
+			c.filteredRows = (f) ? table.config.$tbodies.children('tr:not(.' + (tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered') + ',' + tc.selectorRemove + ')').length : c.totalRows;
 			c.filteredPages = (f) ? Math.ceil( c.filteredRows / c.size ) : c.totalPages;
 			if ( Math.min( c.totalPages, c.filteredPages ) > 0 ) {
 				t = (c.size * c.page > c.filteredRows);
@@ -162,9 +163,10 @@
 				l = rows.length,
 				s = ( c.page * c.size ),
 				e =  s + c.size,
+				f = tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered',
 				j = 0; // size counter
 				for ( i = 0; i < l; i++ ){
-					if (!/filtered/.test(rows[i].className)) {
+					if ( !rows[i].className.match(f) ) {
 						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 						j++;
 					}

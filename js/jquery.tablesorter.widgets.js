@@ -287,6 +287,7 @@ ts.addWidget({
 		filter_childRows     : false, // if true, filter includes child row content in the search
 		filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 		filter_cssFilter     : 'tablesorter-filter', // css class name added to the filter row & each input in the row
+		filter_filteredRow   : 'filtered', // class added to filtered rows; needed by pager plugin
 		filter_formatter     : null,  // add custom filter elements to the filter row
 		filter_functions     : null,  // add custom filter functions using this option
 		filter_hideFilters   : false, // collapse filter row when mouse leaves the area
@@ -361,7 +362,7 @@ ts.addWidget({
 					$tr = $tb.children('tr');
 					l = $tr.length;
 					if (cv === '' || wo.filter_serversideFiltering){
-						$tr.show().removeClass('filtered');
+						$tr.show().removeClass(wo.filter_filteredRow);
 					} else {
 						// loop through the rows
 						for (j = 0; j < l; j++){
@@ -454,7 +455,7 @@ ts.addWidget({
 								}
 							}
 							$tr[j].style.display = (r ? '' : 'none');
-							$tr.eq(j)[r ? 'removeClass' : 'addClass']('filtered');
+							$tr.eq(j)[r ? 'removeClass' : 'addClass'](wo.filter_filteredRow);
 							if (cr.length) { cr[r ? 'show' : 'hide'](); }
 						}
 					}
@@ -707,7 +708,7 @@ ts.addWidget({
 			.find('.tablesorter-filter-row').remove();
 		for (k = 0; k < b.length; k++ ){
 			$tb = ts.processTbody(table, b.eq(k), true); // remove tbody
-			$tb.children().removeClass('filtered').show();
+			$tb.children().removeClass(wo.filter_filteredRow).show();
 			ts.processTbody(table, $tb, false); // restore tbody
 		}
 		if (wo.filterreset) { $(wo.filter_reset).unbind('click.tsfilter'); }
