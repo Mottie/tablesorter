@@ -94,6 +94,7 @@ caption {
 }
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter.disabled {
 	background: #eee;
+	cursor: not-allowed;
 }
 .tablesorter-bootstrap .tablesorter-filter-row td {
 	background: #eee;
