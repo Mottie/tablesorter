@@ -826,17 +826,21 @@ ts.addWidget({
 		});
 		// http://stackoverflow.com/questions/5312849/jquery-find-self;
 		hdrCells.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) ).each(function(i){
-			var t = $(this);
-			stkyHdr.children('tr.tablesorter-headerRow').children().eq(i)
+			var t = $(this),
 			// clicking on sticky will trigger sort
-			.bind('mouseup', function(e){
+			$cell = stkyHdr.children('tr.tablesorter-headerRow').children().eq(i).bind('mouseup', function(e){
 				t.trigger(e, true); // external mouseup flag (click timer is ignored)
-			})
-			// prevent sticky header text selection
-			.bind('mousedown', function(){
-				this.onselectstart = function(){ return false; };
-				return false;
 			});
+			// prevent sticky header text selection
+			if (c.cancelSelection) {
+				$cell
+					.attr('unselectable', 'on')
+					.bind('selectstart', false)
+					.css({
+						'user-select': 'none',
+						'MozUserSelect': 'none'
+					});
+			}
 		});
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$t.after( t2 );

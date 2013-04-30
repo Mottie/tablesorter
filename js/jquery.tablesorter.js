@@ -659,7 +659,7 @@
 
 			function bindEvents(table){
 				var c = table.config,
-					$this = $(table),
+					$this = c.$table,
 					j, downTime;
 				// apply event handling to headers
 				c.$headers
@@ -668,7 +668,7 @@
 				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter')
 				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter', function(e, external) {
 					// jQuery v1.2.6 doesn't have closest()
-					var $cell = this.tagName.match('TH|TD') ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
+					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 					// only recognize left clicks
 					if ((e.which || e.button) !== 1 && e.type !== 'sort') { return false; }
 					// set timer on mousedown
@@ -685,11 +685,13 @@
 				});
 				if (c.cancelSelection) {
 					// cancel selection
-					c.$headers.each(function() {
-						this.onselectstart = function() {
-							return false;
-						};
-					});
+					c.$headers
+						.attr('unselectable', 'on')
+						.bind('selectstart', false)
+						.css({
+							'user-select': 'none',
+							'MozUserSelect': 'none'
+						});
 				}
 				// apply easy methods that trigger bound events
 				$this
