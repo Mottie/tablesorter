@@ -875,7 +875,7 @@ ts.addWidget({
 				$(this).find(filterInputs).val( c.$filters.find(filterInputs).eq(i).val() );
 			});
 		});
-		stkyCells.find(filterInputs).bind('keyup search', function(e){
+		stkyCells.find(filterInputs).bind('keyup search change', function(e){
 			// ignore arrow and meta keys; allow backspace
 			if ((e.which < 32 && e.which !== 8) || (e.which >= 37 && e.which <=40)) { return; }
 			flag = true;
