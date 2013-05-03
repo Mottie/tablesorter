@@ -745,6 +745,7 @@ ts.addWidget({
 	priority: 60,
 	options: {
 		stickyHeaders: 'tablesorter-stickyHeader',
+		stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
 		stickyHeaders_cloneId: '-sticky' // added to table ID, if it exists
 	},
 	format: function(table, c, wo){
@@ -756,21 +757,24 @@ ts.addWidget({
 			innr = '.tablesorter-header-inner',
 			tfoot = $t.find('tfoot'),
 			filterInputs = 'input, select',
-			t2 = wo.$sticky = $t.clone()
+			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : 0,
+			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : wo.stickyHeaders_offset,
+			$stickyTable = wo.$sticky = $t.clone()
 				.addClass('containsStickyHeaders')
 				.css({
 					position   : 'fixed',
 					margin     : 0,
-					top        : 0,
+					top        : stickyOffset,
 					visibility : 'hidden',
-					zIndex     : 1
+					zIndex     : 2
 				}),
-			stkyHdr = t2.children('thead:first').addClass(wo.stickyHeaders),
+			stkyHdr = $stickyTable.children('thead:first').addClass(wo.stickyHeaders),
 			stkyCells,
 			laststate = '',
 			spacing = 0,
 			flag = false,
 			resizeHdr = function(){
+				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : wo.stickyHeaders_offset;
 				var bwsr = navigator.userAgent;
 				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
@@ -780,7 +784,7 @@ ts.addWidget({
 					// update border-spacing here because of demos that switch themes
 					spacing = parseInt(hdrCells.eq(0).css('border-left-width'), 10) * 2;
 				}
-				t2.css({
+				$stickyTable.css({
 					left : header.offset().left - win.scrollLeft() - spacing,
 					width: $t.width()
 				});
@@ -795,13 +799,13 @@ ts.addWidget({
 				});
 			};
 		// fix clone ID, if it exists - fixes #271
-		if (t2.attr('id')) { t2[0].id += wo.stickyHeaders_cloneId; }
+		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
 		// include caption & filter row (fixes #126 & #249)
-		t2.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
+		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
 		// issue #172 - find td/th in sticky header
 		stkyCells = stkyHdr.children().children();
-		t2.css({ height:0, width:0, padding:0, margin:0, border:0 });
+		$stickyTable.css({ height:0, width:0, padding:0, margin:0, border:0 });
 		// remove resizable block
 		stkyCells.find('.tablesorter-resizer').remove();
 		// update sticky header class names to match real header after sorting
@@ -843,17 +847,17 @@ ts.addWidget({
 			}
 		});
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
-		$t.after( t2 );
+		$t.after( $stickyTable );
 		// make it sticky!
 		win
 		.bind('scroll.tsSticky resize.tsSticky', function(e){
 			if (!$t.is(':visible')) { return; } // fixes #278
 			var pre = 'tablesorter-sticky-',
 				offset = $t.offset(),
-				sTop = win.scrollTop(),
-				tableHt = $t.height() - (t2.height() + (tfoot.height() || 0)),
+				sTop = win.scrollTop() + stickyOffset,
+				tableHt = $t.height() - ($stickyTable.height() + (tfoot.height() || 0)),
 				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
-			t2
+			$stickyTable
 			.removeClass(pre + 'visible ' + pre + 'hidden')
 			.addClass(pre + vis)
 			.css({
@@ -894,7 +898,7 @@ ts.addWidget({
 			.removeClass('hasStickyHeaders')
 			.unbind('sortEnd.tsSticky pagerComplete.tsSticky')
 			.find('.' + wo.stickyHeaders).remove();
-		if (wo.$sticky) { wo.$sticky.remove(); } // remove cloned thead
+		if (wo.$sticky) { wo.$sticky.remove(); } // remove cloned table
 		$(window).unbind('scroll.tsSticky resize.tsSticky');
 	}
 });
