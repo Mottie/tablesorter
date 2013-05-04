@@ -101,6 +101,44 @@ ts.storage = function(table, key, val){
 	}
 };
 
+// Add a resize event to table headers
+// **************************
+ts.addHeaderResizeEvent = function(table, disable, options){
+	var defaults = {
+		timer : 250
+	},
+	o = $.extend({}, defaults, options),
+	c = table.config,
+	wo = c.widgetOptions,
+	headers,
+	checkSizes = function(){
+		wo.resize_flag = true;
+		headers = [];
+		c.$headers.each(function(){
+			var d = $.data(this, 'savedSizes'),
+				w = this.offsetWidth,
+				h = this.offsetHeight;
+			if (w !== d[0] || h !== d[1]) {
+				$.data(this, 'savedSizes', [ w, h ]);
+				headers.push(this);
+			}
+		});
+		if (headers.length) { c.$table.trigger('resize', [ headers ]); }
+		wo.resize_flag = false;
+	};
+	clearInterval(wo.resize_timer);
+	if (disable) {
+		return wo.resize_flag = false;
+	}
+	c.$headers.each(function(){
+		$.data(this, 'savedSizes', [ this.offsetWidth, this.offsetHeight ]);
+	});
+	wo.resize_timer = setInterval(function(){
+		if (wo.resize_flag) { return; }
+		checkSizes();
+	}, o.timer);
+};
+
 // Widget: General UI theme
 // "uitheme" option in "widgetOptions"
 // **************************
@@ -744,9 +782,10 @@ ts.addWidget({
 	id: "stickyHeaders",
 	priority: 60,
 	options: {
-		stickyHeaders: 'tablesorter-stickyHeader',
+		stickyHeaders : 'tablesorter-stickyHeader',
 		stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
-		stickyHeaders_cloneId: '-sticky' // added to table ID, if it exists
+		stickyHeaders_cloneId : '-sticky', // added to table ID, if it exists
+		stickyHeaders_addResizeEvent : true // trigger "resize" event on headers
 	},
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
@@ -871,6 +910,9 @@ ts.addWidget({
 				laststate = vis;
 			}
 		});
+		if (wo.stickyHeaders_addResizeEvent) {
+			ts.addHeaderResizeEvent(table);
+		}
 
 		// look for filter widget
 		$t.bind('filterEnd', function(){
@@ -900,6 +942,7 @@ ts.addWidget({
 			.find('.' + wo.stickyHeaders).remove();
 		if (wo.$sticky) { wo.$sticky.remove(); } // remove cloned table
 		$(window).unbind('scroll.tsSticky resize.tsSticky');
+		ts.addHeaderResizeEvent(table, false);
 	}
 });
 
