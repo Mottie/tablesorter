@@ -95,7 +95,7 @@
 			}
 		},
 
-		updatePageDisplay = function(table, c) {
+		updatePageDisplay = function(table, c, flag) {
 			var i, p, s, t, out,
 			tc = table.config,
 			f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
@@ -128,12 +128,12 @@
 						for ( i = 1; i <= p; i++ ) {
 							t += '<option>' + i + '</option>';
 						}
-						c.$goto.html(t).val(c.page + 1);
+						c.$goto.html(t).val( c.page + 1 );
 					}
 				}
 			}
 			pagerArrows(c);
-			if (c.initialized) { $(table).trigger('pagerComplete', c); }
+			if (c.initialized && flag !== false) { $(table).trigger('pagerComplete', c); }
 		},
 
 		fixHeight = function(table, c) {
@@ -161,11 +161,11 @@
 		hideRows = function(table, c){
 			if (!c.ajaxUrl) {
 				var i,
-				rows = $(table.tBodies).children('tr:not(.' + table.config.cssChildRow + ')'),
+				tc = table.config,
+				rows = tc.$tbodies.children('tr:not(.' + tc.cssChildRow + ')'),
 				l = rows.length,
 				s = ( c.page * c.size ),
 				e =  s + c.size,
-				tc = table.config,
 				f = tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered',
 				j = 0; // size counter
 				for ( i = 0; i < l; i++ ){
@@ -482,7 +482,7 @@
 							return;
 						}
 						moveToPage(table, c, false);
-						updatePageDisplay(table, c);
+						updatePageDisplay(table, c, false);
 						fixHeight(table, c);
 					})
 					.bind('disable.pager', function(e){
@@ -505,7 +505,7 @@
 						e.stopPropagation();
 						c.size = parseInt(v, 10) || 10;
 						hideRows(table, c);
-						updatePageDisplay(table, c);
+						updatePageDisplay(table, c, false);
 						if (c.$size.length) { c.$size.val(c.size); } // twice?
 					})
 					.bind('pageSet.pager', function(e,v){
@@ -513,7 +513,7 @@
 						c.page = (parseInt(v, 10) || 1) - 1;
 						if (c.$goto.length) { c.$goto.val(c.size); } // twice?
 						moveToPage(table, c);
-						updatePageDisplay(table, c);
+						updatePageDisplay(table, c, false);
 					});
 
 				// clicked controls
@@ -543,7 +543,7 @@
 							c.page = $(this).val() - 1;
 							moveToPage(table, c);
 						});
-						updatePageDisplay(table, c);
+						updatePageDisplay(table, c, false);
 				}
 
 				// page size selector
