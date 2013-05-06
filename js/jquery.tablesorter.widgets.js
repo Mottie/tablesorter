@@ -790,14 +790,14 @@ ts.addWidget({
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
 		var $t = c.$table,
-			win = $(window),
+			$win = $(window),
 			header = $t.children('thead:first'),
 			hdrCells = header.children('tr:not(.sticky-false)').children(),
 			innr = '.tablesorter-header-inner',
 			tfoot = $t.find('tfoot'),
 			filterInputs = 'input, select',
-			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : 0,
-			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : wo.stickyHeaders_offset,
+			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
+			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
 			$stickyTable = wo.$sticky = $t.clone()
 				.addClass('containsStickyHeaders')
 				.css({
@@ -813,7 +813,7 @@ ts.addWidget({
 			spacing = 0,
 			flag = false,
 			resizeHdr = function(){
-				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : wo.stickyHeaders_offset;
+				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
 				var bwsr = navigator.userAgent;
 				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
@@ -824,7 +824,7 @@ ts.addWidget({
 					spacing = parseInt(hdrCells.eq(0).css('border-left-width'), 10) * 2;
 				}
 				$stickyTable.css({
-					left : header.offset().left - win.scrollLeft() - spacing,
+					left : header.offset().left - $win.scrollLeft() - spacing,
 					width: $t.width()
 				});
 				stkyCells.filter(':visible').each(function(i){
@@ -888,12 +888,11 @@ ts.addWidget({
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$t.after( $stickyTable );
 		// make it sticky!
-		win
-		.bind('scroll.tsSticky resize.tsSticky', function(e){
+		$win.bind('scroll.tsSticky resize.tsSticky', function(e){
 			if (!$t.is(':visible')) { return; } // fixes #278
 			var pre = 'tablesorter-sticky-',
 				offset = $t.offset(),
-				sTop = win.scrollTop() + stickyOffset,
+				sTop = $win.scrollTop() + stickyOffset,
 				tableHt = $t.height() - ($stickyTable.height() + (tfoot.height() || 0)),
 				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
 			$stickyTable
@@ -901,7 +900,7 @@ ts.addWidget({
 			.addClass(pre + vis)
 			.css({
 				// adjust when scrolling horizontally - fixes issue #143
-				left : header.offset().left - win.scrollLeft() - spacing,
+				left : header.offset().left - $win.scrollLeft() - spacing,
 				visibility : vis
 			});
 			if (vis !== laststate || e.type === 'resize'){
