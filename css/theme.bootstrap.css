@@ -131,3 +131,9 @@ caption {
 .tablesorter-bootstrap .tablesorter-pager .pagedisplay {
 	border: 0;
 }
+
+/* ajax error row */
+.tablesorter .tablesorter-errorRow td {
+	cursor: pointer;
+	background-color: #e6bf99;
+}

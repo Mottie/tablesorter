@@ -207,3 +207,9 @@ caption {
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
 }
+
+/* ajax error row */
+.tablesorter .tablesorter-errorRow td {
+	cursor: pointer;
+	background-color: #e6bf99;
+}

@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 4/12/2013
+ * updated 5/7/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -100,7 +100,7 @@
 			tc = table.config,
 			f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
 			c.totalPages = Math.ceil( c.totalRows / c.size ); // needed for "pageSize" method
-			c.filteredRows = (f) ? tc.$tbodies.children('tr:not(.' + (tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered') + ',' + tc.selectorRemove + ')').length : c.totalRows;
+			c.filteredRows = (f) ? tc.$tbodies.eq(0).children('tr:not(.' + (tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered') + ',' + tc.selectorRemove + ')').length : c.totalRows;
 			c.filteredPages = (f) ? Math.ceil( c.filteredRows / c.size ) : c.totalPages;
 			if ( Math.min( c.totalPages, c.filteredPages ) > 0 ) {
 				t = (c.size * c.page > c.filteredRows);
@@ -137,7 +137,7 @@
 		},
 
 		fixHeight = function(table, c) {
-			var d, h, $b = $(table.tBodies[0]);
+			var d, h, $b = table.config.$tbodies.eq(0);
 			if (c.fixedHeight) {
 				$b.find('tr.pagerSavedHeightSpacer').remove();
 				h = $.data(table, 'pagerSavedHeight');
@@ -151,7 +151,7 @@
 		},
 
 		changeHeight = function(table, c) {
-			var $b = $(table.tBodies[0]);
+			var $b = table.config.$tbodies.eq(0);
 			$b.find('tr.pagerSavedHeightSpacer').remove();
 			$.data(table, 'pagerSavedHeight', $b.height());
 			fixHeight(table, c);
@@ -162,7 +162,7 @@
 			if (!c.ajaxUrl) {
 				var i,
 				tc = table.config,
-				rows = tc.$tbodies.children('tr:not(.' + tc.cssChildRow + ')'),
+				rows = tc.$tbodies.eq(0).children('tr:not(.' + tc.cssChildRow + ')'),
 				l = rows.length,
 				s = ( c.page * c.size ),
 				e =  s + c.size,
@@ -189,62 +189,82 @@
 			}
 		},
 
-		renderAjax = function(data, table, c, exception){
+		renderAjax = function(data, table, c, xhr, exception){
 			// process data
 			if ( typeof(c.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh, th, d, l,
+				var i, j, hsh, $f, $sh, th, d, l, $err,
 				$t = $(table),
 				tc = table.config,
 				hl = $t.find('thead th').length, tds = '',
-				err = '<tr class="' + c.cssErrorRow + ' ' + tc.selectorRemove.replace(/(tr)?\./g,'') + '"><td style="text-align: center;" colspan="' + hl + '">' +
-					(exception ? exception.message + ' (' + exception.name + ')' : 'No rows found') + '</td></tr>',
-				result = c.ajaxProcessing(data) || [ 0, [] ],
+				result = c.ajaxProcessing(data, table) || [ 0, [] ],
 				// allow [ total, rows, headers ]  or [ rows, total, headers ]
 				t = isNaN(result[0]) && !isNaN(result[1]);
-				c.totalRows = result[t ? 1 : 0] || 0;
-				d = result[t ? 0 : 1] || []; // row data
-				l = d.length;
-				th = result[2]; // headers
-				if ( l > 0 ) {
-					for ( i = 0; i < l; i++ ) {
-						tds += '<tr>';
-						for ( j = 0; j < d[i].length; j++ ) {
-							// build tbody cells
-							tds += '<td>' + d[i][j] + '</td>';
-						}
-						tds += '</tr>';
-					}
-				}
-				// only add new header text if the length matches
-				if ( th && th.length === hl ) {
-					hsh = $t.hasClass('hasStickyHeaders');
-					$sh = $t.find('.' + ((tc.widgetOptions && tc.widgetOptions.stickyHeaders) || 'tablesorter-stickyheader'));
-					$f = $t.find('tfoot tr:first').children();
-					$t.find('th.' + tc.cssHeader).each(function(j){
-						var $t = $(this), icn;
-						// add new test within the first span it finds, or just in the header
-						if ( $t.find('.' + tc.cssIcon).length ) {
-							icn = $t.find('.' + tc.cssIcon).clone(true);
-							$t.find('.tablesorter-header-inner').html( th[j] ).append(icn);
-							if ( hsh && $sh.length ) {
-								icn = $sh.find('th').eq(j).find('.' + tc.cssIcon).clone(true);
-								$sh.find('th').eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icn);
-							}
-						} else {
-							$t.find('.tablesorter-header-inner').html( th[j] );
-							$sh.find('th').eq(j).find('.tablesorter-header-inner').html( th[j] );
-						}
-						$f.eq(j).html( th[j] );
-					});
-				}
 
 				$t.find('thead tr.' + c.cssErrorRow).remove(); // Clean up any previous error.
+
 				if ( exception ) {
+					$err = $('<tr class="' + c.cssErrorRow + '"><td style="text-align:center;" colspan="' + hl + '">' + (
+						xhr.status === 0 ? 'Not connected, verify Network' :
+						xhr.status === 404 ? 'Requested page not found [404]' :
+						xhr.status === 500 ? 'Internal Server Error [500]' :
+						exception === 'parsererror' ? 'Requested JSON parse failed' :
+						exception === 'timeout' ? 'Time out error' :
+						exception === 'abort' ? 'Ajax Request aborted' :
+						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' ) + '</td></tr>')
+					.click(function(){
+						$(this).remove();
+					})
 					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-					$t.find('thead').append(err);
+					.appendTo( $t.find('thead:first') );
+					tc.$tbodies.eq(0).empty();
 				} else {
-					$(table.tBodies[0]).html( tds ); // add rows to first tbody
+					c.totalRows = result[t ? 1 : 0] || c.totalRows || 0;
+					d = result[t ? 0 : 1] || []; // row data
+					l = d.length;
+					th = result[2]; // headers
+					if (d instanceof jQuery) {
+						// append jQuery object
+						tc.$tbodies.eq(0).empty().append(d);
+					} else if (d.length) {
+						// build table from array
+						if ( l > 0 ) {
+							for ( i = 0; i < l; i++ ) {
+								tds += '<tr>';
+								for ( j = 0; j < d[i].length; j++ ) {
+									// build tbody cells
+									tds += '<td>' + d[i][j] + '</td>';
+								}
+								tds += '</tr>';
+							}
+						}
+						// add rows to first tbody
+						tc.$tbodies.eq(0).html( tds );
+					}
+					// only add new header text if the length matches
+					if ( th && th.length === hl ) {
+						hsh = $t.hasClass('hasStickyHeaders');
+						$sh = hsh ? tc.$sticky.children('thead:first').children().children() : '';
+						$f = $t.find('tfoot tr:first').children();
+						$t.find('th.' + tc.cssHeader).each(function(j){
+							var $t = $(this), icn;
+							// add new test within the first span it finds, or just in the header
+							if ( $t.find('.' + tc.cssIcon).length ) {
+								icn = $t.find('.' + tc.cssIcon).clone(true);
+								$t.find('.tablesorter-header-inner').html( th[j] ).append(icn);
+								if ( hsh && $sh.length ) {
+									icn = $sh.eq(j).find('.' + tc.cssIcon).clone(true);
+									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icn);
+								}
+							} else {
+								$t.find('.tablesorter-header-inner').html( th[j] );
+								if (hsh && $sh.length) {
+									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] );
+								}
+							}
+							$f.eq(j).html( th[j] );
+						});
+					}
 				}
 				if (tc.showProcessing) {
 					$.tablesorter.isProcessing(table); // remove loading icon
@@ -263,20 +283,21 @@
 
 		getAjax = function(table, c){
 			var url = getAjaxUrl(table, c),
+			$doc = $(document),
 			tc = table.config;
 			if ( url !== '' ) {
 				if (tc.showProcessing) {
 					$.tablesorter.isProcessing(table, true); // show loading icon
 				}
-				$(document).bind('ajaxError.pager', function(e, xhr, settings, exception) {
-					if (settings.url === url) {
-						renderAjax(null, table, c, exception);
-						$(document).unbind('ajaxError.pager');
+				$doc.bind('ajaxError.pager', function(e, xhr, settings, exception) {
+					if (url.match(settings.url)) {
+						renderAjax(null, table, c, xhr, exception);
+						$doc.unbind('ajaxError.pager');
 					}
 				});
 				$.getJSON(url, function(data) {
 					renderAjax(data, table, c);
-					$(document).unbind('ajaxError.pager');
+					$doc.unbind('ajaxError.pager');
 				});
 			}
 		},
@@ -318,8 +339,7 @@
 
 		renderTable = function(table, rows, c) {
 			c.isDisabled = false; // needed because sorting will change the page and re-enable the pager
-			var i, j, o,
-			f = document.createDocumentFragment(),
+			var i, j, o, $tb,
 			l = rows.length,
 			s = ( c.page * c.size ),
 			e = ( s + c.size );
@@ -331,17 +351,16 @@
 				if ( e > rows.length ) {
 					e = rows.length;
 				}
-				$(table.tBodies[0]).addClass('tablesorter-hidden');
 				$.tablesorter.clearTableBody(table);
+				$tb = $.tablesorter.processTbody(table, table.config.$tbodies.eq(0), true);
 				for ( i = s; i < e; i++ ) {
 					o = rows[i];
 					l = o.length;
 					for ( j = 0; j < l; j++ ) {
-						f.appendChild(o[j]);
+						$tb.appendChild(o[j]);
 					}
 				}
-				table.tBodies[0].appendChild(f);
-				$(table.tBodies[0]).removeClass('tablesorter-hidden');
+				$.tablesorter.processTbody(table, $tb, false);
 			}
 			if ( c.page >= c.totalPages ) {
 				moveToLastPage(table, c);
@@ -361,7 +380,7 @@
 				c.page = 0;
 				c.size = c.totalRows;
 				c.totalPages = 1;
-				$('tr.pagerSavedHeightSpacer', table.tBodies[0]).remove();
+				$(table).find('tr.pagerSavedHeightSpacer').remove();
 				renderTable(table, table.config.rowsCopy, c);
 			}
 			// disable size selector
