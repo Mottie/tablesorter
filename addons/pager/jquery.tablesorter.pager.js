@@ -101,10 +101,10 @@
 			f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
 			c.totalPages = Math.ceil( c.totalRows / c.size ); // needed for "pageSize" method
 			c.filteredRows = (f) ? tc.$tbodies.eq(0).children('tr:not(.' + (tc.widgetOptions && tc.widgetOptions.filter_filteredRow || 'filtered') + ',' + tc.selectorRemove + ')').length : c.totalRows;
-			c.filteredPages = (f) ? Math.ceil( c.filteredRows / c.size ) : c.totalPages;
-			if ( Math.min( c.totalPages, c.filteredPages ) > 0 ) {
+			c.filteredPages = (f) ? Math.ceil( c.filteredRows / c.size ) || 1 : c.totalPages;
+			if ( Math.min( c.totalPages, c.filteredPages ) >= 0 ) {
 				t = (c.size * c.page > c.filteredRows);
-				c.startRow = (t) ? 1 : ( c.size * c.page ) + 1;
+				c.startRow = (t) ? 1 : (c.filteredRows === 0 ? 0 : c.size * c.page + 1);
 				c.page = (t) ? 0 : c.page;
 				c.endRow = Math.min( c.filteredRows, c.totalRows, c.size * ( c.page + 1 ) );
 				out = c.$container.find(c.cssPageDisplay);
