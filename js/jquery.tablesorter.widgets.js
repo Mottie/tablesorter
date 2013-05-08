@@ -456,9 +456,15 @@ ts.addWidget({
 										ff = val === '' ? true : !(wo.filter_startsWith ? s === 0 : s >= 0);
 									// Look for operators >, >=, < or <=
 									} else if (/^[<>]=?/.test(val)){
-										// xi may be numeric - see issue #149
-										rg = isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										s = fmt(val.replace(wo.filter_regex.nondigit, '').replace(wo.filter_regex.operators,''), table);
+										// parse filter value in case we're comparing numbers (dates)
+										if (parsed[i] || c.parsers[i].type === 'numeric') {
+											rg = c.parsers[i].format('' + s, table);
+											s = (rg !== '' && !isNaN(rg)) ? rg : s;
+										}
+										// xi may be numeric - see issue #149
+										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(s) ? c.cache[k].normalized[j][i] :
+											isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										if (/>/.test(val)) { ff = />=/.test(val) ? rg >= s : rg > s; }
 										if (/</.test(val)) { ff = /<=/.test(val) ? rg <= s : rg < s; }
 										if (s === '') { ff = true; } // keep showing all rows if nothing follows the operator
@@ -473,10 +479,18 @@ ts.addWidget({
 										}
 									// Look for a range (using " to " or " - ") - see issue #166; thanks matzhu!
 									} else if (/\s+(-|to)\s+/.test(val)){
-										rg = isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										s = val.split(/(?: - | to )/); // make sure the dash is for a range and not indicating a negative number
 										r1 = fmt(s[0].replace(wo.filter_regex.nondigit, ''), table);
 										r2 = fmt(s[1].replace(wo.filter_regex.nondigit, ''), table);
+										// parse filter value in case we're comparing numbers (dates)
+										if (parsed[i] || c.parsers[i].type === 'numeric') {
+											rg = c.parsers[i].format('' + r1, table);
+											r1 = (rg !== '' && !isNaN(rg)) ? rg : r1;
+											rg = c.parsers[i].format('' + r2, table);
+											r2 = (rg !== '' && !isNaN(rg)) ? rg : r2;
+										}
+										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(r1) && !isNaN(r2) ? c.cache[k].normalized[j][i] :
+											isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										if (r1 > r2) { ff = r1; r1 = r2; r2 = ff; } // swap
 										ff = (rg >= r1 && rg <= r2) || (r1 === '' || r2 === '') ? true : false;
 									// Look for wild card: ? = single, * = multiple, or | = logical OR
