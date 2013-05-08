@@ -23,6 +23,11 @@
 			// modify the url after all processing has been applied
 			customAjaxUrl: function(table, url) { return url; },
 
+			// modify the $.ajax object to allow complete control over your ajax requests
+			ajaxObject: {
+				dataType: 'json'
+			},
+
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 			// example:
@@ -295,10 +300,15 @@
 						$doc.unbind('ajaxError.pager');
 					}
 				});
-				$.getJSON(url, function(data) {
+				c.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
+				c.ajaxObject.success = function(data) {
 					renderAjax(data, table, c);
 					$doc.unbind('ajaxError.pager');
-				});
+					if (typeof c.oldAjaxSuccess === 'function') {
+						c.oldAjaxSuccess(data);
+					}
+				};
+				$.ajax(c.ajaxObject);
 			}
 		},
 
@@ -484,7 +494,9 @@
 				table = this,
 				tc = table.config,
 				$t = $(table),
-				pager = c.$container = $(c.container).addClass('tablesorter-pager').show(); // added in case the pager is reinitialized after being destroyed.
+				// added in case the pager is reinitialized after being destroyed.
+				pager = c.$container = $(c.container).addClass('tablesorter-pager').show();
+				c.oldAjaxSuccess = c.oldAjaxSuccess || c.ajaxObject.success;
 				config.appender = $this.appender;
 
 				$t
