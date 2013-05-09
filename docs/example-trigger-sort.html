@@ -22,12 +22,25 @@
 
 	$("table").tablesorter({ theme: 'blue' });
 
+	// ****************************************
+	// sort the "First Name" and "Age" columns
+	// ****************************************
 	$("#trigger-link").click(function() {
-		// set sorting column and direction, this will sort on the first and third column the column index starts at zero
+		// set sorting column and direction, this will sort on the
+		// first and third column the column index starts at zero
 		var sorting = [[0,0],[2,0]];
 		// sort on the first column and third columns
 		$("table").trigger("sorton",[sorting]);
 		// return false to stop default link action
+		return false;
+	});
+
+	// ****************************************
+	// toggle the sort on the 5th column
+	// (Discount) - New in v2.9!
+	// ****************************************
+	$("#toggle-link").click(function() {
+		$("table thead").find("th:eq(4)").trigger("sort");
 		return false;
 	});
 
@@ -97,7 +110,10 @@
 	</tbody>
 </table>
 
-<a href="#" id="trigger-link">Sort first and third columns</a></div>
+<a href="#" id="trigger-link">Sort first and third columns</a> | 
+<a href="#" id="toggle-link">Toggle sort on the "Discount" column</a> (v2.9)
+</div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="prettyprint lang-javascript"></pre>

@@ -1,6 +1,7 @@
 /* tables */
 .tester { /* */
-	visibility: hidden;
+	position: absolute;
+	top: -999em;
 }
 
 /* skipped tests */

@@ -14,31 +14,83 @@
 	<script src="testing/testing.js"></script>
 
 	<script>
+	/*
+	Core plugin tested
+	========================
+	OPTIONS:
+		cssAsc, cssChildRow, cssDesc, cssHeader, cssHeaderRow, cssInfoBlock, dateFormat, emptyTo, headerList,
+		headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, stringTo, tableClass,
+		usNumberFormat, widgets (just zebra)
+
+	METHODS:
+		addRows, applyWidgets, destroy, sorton, sortReset, update/updateRow, updateAll, updateCell
+
+	EVENTS:
+		initialized, sortBegin, sortEnd, sortStart, updateComplete
+
+	Not yet tested
+	=========================
+	OPTIONS:
+		cancelSelection, cssIcon, cssProcessing, debug, delayInit, headerTemplate, initWidgets, onRenderHeader,
+		onRenderTemplate, selectorHeaders, selectorRemove, selectorSort, serverSideSorting, showProcessing,
+		sortAppend, sortForce, sortInitialOrder, sortMultiSortKey, sortResetKey, sortRestart, strings,
+		textExtraction, textSorter, theme, widthFixed, widgets (also need priority testing)
+
+	METHODS:
+		appendCache, applyWidgetId, sort, refreshWidgets
+
+	EVENTS:
+		-
+	*/
 
 	$(function(){
 
 		var ts = $.tablesorter,
 			$table1 = $('.tester:eq(0)'),
 			$table2 = $('.tester:eq(1)'),
+			$table3 = $('.tester:eq(2)'),
 			table1 = $table1[0],
 			table2 = $table2[0],
+			table3 = $table3[0],
 			th0 = $table1.find('th')[0], // first table header cell
 			init = false,
-			undef, c1, c2, e, i, l, t;
+			sortIndx = 0,
+			updateIndx = 0,
+			updateCallback = 0,
+			events = ['sortStart', 'sortBegin', 'sortEnd' ],
+			undef, c1, c2, c3, e, i, l, t;
 
 		$table1
 			.bind('tablesorter-initialized', function(){
 				init = true;
 			})
+			.bind( events.join(' '), function(e){
+				if (e.type === events[sortIndx%3]) {
+					sortIndx++;
+				}
+			})
+			.bind('updateComplete', function(){
+				updateIndx++;
+			})
 			.tablesorter();
 
 		$table2.tablesorter({
-				headers: {
-					0: { sorter: 'text' },
-					1: { sorter: 'text' },
-					2: { sorter: false }
-				}
-			});
+			headers: {
+				0: { sorter: 'text' },
+				1: { sorter: 'text' },
+				2: { sorter: false }
+			}
+		});
+
+		$table3.tablesorter({
+			emptyTo: "bottom",
+			stringTo: "max", // non-numeric content is treated as a MAX value
+			headers: {
+				0: { empty : "top" }, // sort empty cells to the top
+				2: { string: "min" }, // non-numeric content is treated as a MIN value
+				3: { sorter: "digit", empty : "zero", string : "top" }
+			}
+		});
 
 		/************************************************
 			JSHint testing
@@ -62,6 +114,7 @@
 
 		c1 = table1.config;
 		c2 = table2.config;
+		c3 = table3.config;
 
 		/************************************************
 			check isDigit function
@@ -155,49 +208,49 @@
 			check all default parsers
 		************************************************/
 		var p = ts.parsers,
-			// test by parser
-			parserTests = 84,
-			// skipping metadata parser
-			sample1 = {
-				'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': 'á test' },
-				'currency'  : { '£1': 1, '($2.23)': -2.23, '5€': 5, '(11¤)': -11, '500¥': 500, '25¢': 25, '$1,000.50': 1000.5 },
-				'ipAddress' : { '255.255.255.255': 255255255255, '32.32.32.32': 32032032032, '1.1.1.1': 1001001001 },
-				'url'       : { 'http://google.com': 'google.com', 'ftp://fred.com': 'fred.com', 'https://github.com': 'github.com' },
-				'isoDate'   : { '2012/12/12': 1355292000000, '2012-12/12': 1355292000000, '2013-1-1': 1357020000000, '2013/1/1 12:34:56 AM': 1357022096000 },
-				'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4 },
-				'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000, '01 Jan 2013': 1357020000000 },
-				'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000, '1/2/2001 12:34 PM' : 978460440000, '1.2.2001 13:34' : 978464040000 },
-				'time'      : { '12:34 AM': 946708440000, '1:00 pm': 946753200000 },
-				'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
-			},
-			// switch ignoreCase, sortLocalCompare & shortDate "ddmmyyyy"
-			sample2 = {
-				'text'      : { 'TesT': 'TesT', '\u00e1 test': 'a test' },
-				'currency'  : { '€ 123 456,78': 123456.78, '€ 123.456,78': 123456.78 },
-				'shortDate' : { '2/1/2001': 978415200000, '2-1-2001': 978415200000, '2 1,2001': 978415200000 }
-			},
-			// shortdate to "yyyymmdd"
-			sample3 = {
-				'shortDate' : { '2001/1/2': 978415200000, '2001-1/2': 978415200000, '2001,1.2': 978415200000 }
-			},
-			report = function(s) {
-				for (i = 0; i < p.length; i++) {
-					t = p[i].id;
-					if (s.hasOwnProperty(t)) {
-						$.each(s[t], function(k,v){
-							// check "is" and "format" functions
-							if (p[i].is(k)) {
-								equal( p[i].format(k, table1, th0, 0), v, t + ' parser: "' + k + '" parsed to ' + v );
-							} else {
-								equal( p[i].format(k, table1, th0, 0), v, t + ' parser **NOT DETECTED**: "' + k + '", but returns ' + v );
-							}
-						});
-						// test for undefined & null - probably overkill
-						strictEqual( p[i].format(undef, table1, th0, 0), undef, t + ' parser: will return undefined values properly' );
-						strictEqual( p[i].format(null, table1, th0, 0), null, t + ' parser: will return null values properly' );
-					}
+		// test by parser
+		parserTests = 84,
+		// skipping metadata parser
+		sample1 = {
+			'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': 'á test' },
+			'currency'  : { '£1': 1, '($2.23)': -2.23, '5€': 5, '(11¤)': -11, '500¥': 500, '25¢': 25, '$1,000.50': 1000.5 },
+			'ipAddress' : { '255.255.255.255': 255255255255, '32.32.32.32': 32032032032, '1.1.1.1': 1001001001 },
+			'url'       : { 'http://google.com': 'google.com', 'ftp://fred.com': 'fred.com', 'https://github.com': 'github.com' },
+			'isoDate'   : { '2012/12/12': 1355292000000, '2012-12/12': 1355292000000, '2013-1-1': 1357020000000, '2013/1/1 12:34:56 AM': 1357022096000 },
+			'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4 },
+			'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000, '01 Jan 2013': 1357020000000 },
+			'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000, '1/2/2001 12:34 PM' : 978460440000, '1.2.2001 13:34' : 978464040000 },
+			'time'      : { '12:34 AM': 946708440000, '1:00 pm': 946753200000 },
+			'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
+		},
+		// switch ignoreCase, sortLocalCompare & shortDate "ddmmyyyy"
+		sample2 = {
+			'text'      : { 'TesT': 'TesT', '\u00e1 test': 'a test' },
+			'currency'  : { '€ 123 456,78': 123456.78, '€ 123.456,78': 123456.78 },
+			'shortDate' : { '2/1/2001': 978415200000, '2-1-2001': 978415200000, '2 1,2001': 978415200000 }
+		},
+		// shortdate to "yyyymmdd"
+		sample3 = {
+			'shortDate' : { '2001/1/2': 978415200000, '2001-1/2': 978415200000, '2001,1.2': 978415200000 }
+		},
+		report = function(s) {
+			for (i = 0; i < p.length; i++) {
+				t = p[i].id;
+				if (s.hasOwnProperty(t)) {
+					$.each(s[t], function(k,v){
+						// check "is" and "format" functions
+						if (p[i].is(k)) {
+							equal( p[i].format(k, table1, th0, 0), v, t + ' parser: "' + k + '" parsed to ' + v );
+						} else {
+							equal( p[i].format(k, table1, th0, 0), v, t + ' parser **NOT DETECTED**: "' + k + '", but returns ' + v );
+						}
+					});
+					// test for undefined & null - probably overkill
+					strictEqual( p[i].format(undef, table1, th0, 0), undef, t + ' parser: will return undefined values properly' );
+					strictEqual( p[i].format(null, table1, th0, 0), null, t + ' parser: will return null values properly' );
 				}
-			};
+			}
+		};
 
 		test( "testing parsers", function() {
 			expect(parserTests);
@@ -223,24 +276,72 @@
 		/************************************************
 			test parser cache
 		************************************************/
-		test( "parser cache; sorton methods", function() {
-			expect(3);
+		test( "parser cache; sorton methods; empty & string", function() {
+			expect(15);
 			$table1.trigger('sortReset');
 			// lower case because table was parsed before c1.ignoreCase was changed
-			tester.cacheCompare( table1, [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1', '', '', 'testb', 'x5', 'testc', 'x4', 'testa', 'x6' ], 'unsorted' );
+			tester.cacheCompare( table1, 'all', [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1', '', '', 'testb', 'x5', 'testc', 'x4', 'testa', 'x6' ], 'unsorted' );
 
 			$table1.trigger('sorton', [[[ 0,0 ]]]);
-			tester.cacheCompare( table1, [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1', '', '', 'testa', 'x6', 'testb', 'x5', 'testc', 'x4' ], 'ascending sort' );
+			tester.cacheCompare( table1, 'all', [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1', '', '', 'testa', 'x6', 'testb', 'x5', 'testc', 'x4' ], 'ascending sort' );
 
 			$table1.trigger('sorton', [[[ 0,1 ]]]);
-			tester.cacheCompare( table1, [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3', '', '', 'testc', 'x4', 'testb', 'x5', 'testa', 'x6' ], 'descending sort' );
+			tester.cacheCompare( table1, 'all', [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3', '', '', 'testc', 'x4', 'testb', 'x5', 'testa', 'x6' ], 'descending sort' );
+
+			// empty cell position
+			$table3.trigger('sorton', [[[ 0,0 ]]]);
+			tester.cacheCompare( table3, 0, [ '', 'a1', 'a02', 'a10', 'a33', 'a43', 'a55', 'a87', 'a102', 'a255' ], 'asc sort; empty to top' );
+
+			$table3.trigger('sorton', [[[ 0,1 ]]]);
+			tester.cacheCompare( table3, 0, [ '', 'a255', 'a102', 'a87', 'a55', 'a43', 'a33', 'a10', 'a02', 'a1' ], 'desc sort; empty to top' );
+
+			// string position within number column
+			$table3.trigger('sorton', [[[ 1,0 ]]]);
+			tester.cacheCompare( table3, 1, [ -35, -5, -1, 1, 2, 4, 33, 44, 'nr', '' ], 'asc sort; empty to bottom; string to max' );
+
+			$table3.trigger('sorton', [[[ 1,1 ]]]);
+			tester.cacheCompare( table3, 1, [ 'nr', 44, 33, 4, 2, 1, -1, -5, -35, '' ], 'desc sort; empty to bottom; string to max' );
+
+			$table3.trigger('sorton', [[[ 2,0 ]]]);
+			tester.cacheCompare( table3, 2, [ 'nr', 'nr', 1, 2, 3, 4, 5, 6, 7, '' ], 'asc sort; empty to bottom; string to min' );
+
+			$table3.trigger('sorton', [[[ 2,1 ]]]);
+			tester.cacheCompare( table3, 2, [ 7, 6, 5, 4, 3, 2, 1, 'nr', 'nr', '' ], 'desc sort; empty to bottom; string to min' );
+
+			$table3.trigger('sorton', [[[ 3,0 ]]]);
+			tester.cacheCompare( table3, 3, [ 'n/a #2', 'n/a #1', -8.4, -2.2, -0.1, '', 5.2, 11.4, 23.6, 97.4 ], 'asc sort; empty to zero; string to top' );
+
+			$table3.trigger('sorton', [[[ 3,1 ]]]);
+			tester.cacheCompare( table3, 3, [ 'n/a #2', 'n/a #1', 97.4, 23.6, 11.4, 5.2, '', -0.1, -2.2, -8.4 ], 'desc sort; empty to zero; string to top' );
+
+			$table3.find('th:eq(3)').data('string', 'bottom');
+			$table3.trigger('update');
+			tester.cacheCompare( table3, 3, [ 97.4, 23.6, 11.4, 5.2, '', -0.1, -2.2, -8.4, 'n/a #1', 'n/a #2' ], 'desc sort; empty to zero; string to bottom' );
+
+			$table3.trigger('sorton', [[[ 3,0 ]]]);
+			tester.cacheCompare( table3, 3, [ -8.4, -2.2, -0.1, '', 5.2, 11.4, 23.6, 97.4, 'n/a #1', 'n/a #2' ], 'asc sort; empty to zero; string to bottom' );
+
+			$table3.find('th:eq(3)').data('string', 'none');
+			c3.headers[3].empty = "bottom";
+			c3.sortList = [[ 3, 1 ]]; // added to test sortList
+			$table3.trigger('update');
+			tester.cacheCompare( table3, 3, [ 97.4, 23.6, 11.4, 5.2, 'n/a #1', 'n/a #2', -0.1, -2.2, -8.4, '' ], 'desc sort; empty to zero; string to none/zero' );
+
+			$table3.trigger('sorton', [[[ 3,0 ]]]);
+			tester.cacheCompare( table3, 3, [ -8.4, -2.2, -0.1, 'n/a #1', 'n/a #2', 5.2, 11.4, 23.6, 97.4, '' ], 'asc sort; empty to zero; string to none/zero' );
+
 		});
 
+		test( "sort Events", function(){
+			expect(1);
+			// table1 sorted twice in the above test; sortIndx = 6 (3 events x 2)
+			equal( sortIndx, 6, 'sortStart, sortBegin & sortComplet fired in order' );
+		});
 
 		/************************************************
 			test update methods
 		************************************************/
-		test( "parser cache; update methods", function() {
+		test( "parser cache; update methods & callbacks", function() {
 			expect(5);
 			c1.ignoreCase = true;
 
@@ -251,44 +352,58 @@
 					return h.substring(1);
 				});
 			$table1.trigger('updateAll', [false, function(){
-				c1 = $table1[0].config;
+				updateCallback++;
 				var nw = $table1.find('th:eq(1)')[0],
 					hc = c1.headerContent[1] === 'num',
 					hd = c1.$headers[1] === nw,
 					hl = c1.headerList[1] === nw,
 					p1 = c1.parsers[1].id === 'digit';
 				equal(hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
-				tester.cacheCompare( table1, [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
 			}]);
 
 			// addRows
 			t = $('<tr class="temp"><td>testd</td><td>7</td></tr>');
 			$table1.find('tbody:last').append(t);
 			$table1.trigger('addRows', [t, true, function(){
-				tester.cacheCompare( table1, [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
+				updateCallback++;
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
 			}]);
 
 			// updateCell
 			t = $table1.find('td:contains("testd")');
 			t.html('texte');
 			$table1.trigger('updateCell', [t[0], true, function(){
-				tester.cacheCompare( table1, [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'texte', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
+				updateCallback++;
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'texte', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
 			}]);
 
 			// update
 			$table1.find('tr.temp').remove();
 			$table1.trigger('update', [true, function(){
-				tester.cacheCompare( table1, [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
+				updateCallback++;
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
 			}]);
 
 		});
+
+		test( "UpdateComplete Event", function(){
+			expect(1);
+			// table1 updated 4x in the above test
+			equal( updateIndx, updateCallback, 'updatedComplete and update callback functions working properly' );
+		});
+
 
 		/************************************************
 			check header css
 		************************************************/
 		test( "testing header css & sortReset method", function(){
-			expect(3);
+			expect(7);
 			t = $(th0);
+			equal( $table1.hasClass(c1.tableClass), true, 'table class applied');
+			equal( t.hasClass(c1.cssHeader), true, 'Header class present' );
+			equal( t.parent().hasClass(c1.cssHeaderRow), true, 'Header row class present' );
+			equal( $table1.find('tbody:eq(1)').hasClass(c1.cssInfoBlock), true, 'Tbody info block class present' );
 			$table1.trigger('sorton', [[[ 0,1 ]]] );
 			equal( t.hasClass(c1.cssDesc), true, 'Descending class present' );
 			$table1.trigger('sorton', [[[ 0,0 ]]] );
@@ -349,8 +464,8 @@
 			<li>Core tests:
 				<ul>
 					<li>Test each option, event & callback</li>
-					<li>Sorting empty cells.</li>
-					<li>Sorting strings in numeric columns.</li>
+					<li><del>Sorting empty cells</del>.</li>
+					<li><del>Sorting strings in numeric columns</del>.</li>
 					<li>Internal rendering, caching &amp; indexing utilities.</li>
 					<li><del>Update methods</del>.</li>
 				</ul>
@@ -394,6 +509,29 @@
 			<tbody>
 				<tr><td>a</td><td>b</td><td>c</td><td>d</td></tr>
 				<tr><td>z</td><td>y</td><td>x</td><td>w</td></tr>
+			</tbody>
+		</table>
+
+		<table class="tester">
+			<thead>
+				<tr>
+					<th>1</th>
+					<th>2</th>
+					<th>3</th>
+					<th>4</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>A43</td><td>-35</td><td>01</td><td>-.1</td></tr>
+				<tr><td>A255</td><td>33</td><td>02</td><td>N/A #1</td></tr>
+				<tr><td>A33</td><td>2</td><td>03</td><td>N/A #2</td></tr>
+				<tr><td>A1</td><td>-5</td><td>04</td><td>-8.4</td></tr>
+				<tr><td>A102</td><td>NR</td><td>05</td><td>-2.2</td></tr>
+				<tr><td>A10</td><td>-1</td><td>06</td><td>97.4</td></tr>
+				<tr><td>A02</td><td>1</td><td>07</td><td>23.6</td></tr>
+				<tr><td>A55</td><td>44</td><td></td><td>11.4</td></tr>
+				<tr><td>A87</td><td>04</td><td>NR</td><td>5.2</td></tr>
+				<tr><td></td><td></td><td>NR</td><td></td></tr>
 			</tbody>
 		</table>
 

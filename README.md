@@ -43,6 +43,156 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10">Version 2.10</a> (5/8/2013)
+
+* Core changes:
+  * Fixed/updated content selection &amp; form interaction in both headers and sticky headers.
+  * Added missing `sortBegin` event when the `sorton` method is used. YAY for unit testing!
+  * Fixed digit and currency parsers not returning appropriately formatted text, when encountered. Another point for unit testing! :P
+
+* Added a public function `$.tablesorter.addHeaderResizeEvent`
+  * This function exists within the `jquery.tablesorter.widgets.js` file.
+  * There is no built-in resize event for non-window elements, so when this function is active it triggers a `resize` event when the header cell changes size.
+  * Enable the triggering of header cell resize events as follows:
+
+     ```js
+     var table = $('table')[0],
+         disable = false,
+         options = {
+           timer : 250 // header cell size is checked every 250 milliseconds (1/4 of a second)
+         };
+     $.tablesorter.addHeaderResizeEvent( table, disable, options );
+     ```
+
+  * To disable resize event triggering:
+
+     ```js
+     var table = $('table')[0];
+     $.tablesorter.addHeaderResizeEvent( table, true );
+     ```
+
+* Filter widget updates:
+  * Triggered filter searches now properly update the filter column inputs. See [issue #146](https://github.com/Mottie/tablesorter/issues/146).
+  * Added disabled filter styling to the Bootstrap theme. Thanks to [riker09](https://github.com/riker09) ([issue #283](https://github.com/Mottie/tablesorter/pull/283)).
+  * Fixed `filter_liveSearch` option to properly work in non-webkit browsers. See [issue #285](https://github.com/Mottie/tablesorter/issues/285).
+  * Modified `filter_liveSearch` to allow adding a numeric value to the option, this sets a character threshold which triggers the search when met. Fulfills [issue #286](https://github.com/Mottie/tablesorter/issues/286).
+  * Fixed select dropdowns within the sticky header now work properly. Fixes [issue #288](https://github.com/Mottie/tablesorter/issues/288).
+  * Added a method to allow properly parsed dates to be comparible using `<`, `<=`, `>`, `>=` and date ranges. Fulfills [issue #302](https://github.com/Mottie/tablesorter/issues/302).
+  * Added `filter_filteredRow` option which contains the class name added to each visible filtered row. Used by the pager to properly count filtered rows.
+  * Fixed a problem with `filter_searchDelay` which was broken in v2.9.0. Opps, sorry!
+  * Minor tweaks to the filter formatter file to allow elements in multiple tables (removed some IDs). More fixing needed!
+
+* Sticky Headers widget:
+  * Fixed/updated content selection &amp; form interaction in both headers and sticky headers. Fixes [issue #57](https://github.com/Mottie/tablesorter/issues/57).
+  * Fixed an issue with content resizing the table, but not the sticky header.
+      * Added `stickyHeaders_addResizeEvent` option to enable this updating.
+      * This option uses the new `$.tablesorter.addHeaderResizeEvent` function.
+      * Fixes [issue #289](https://github.com/Mottie/tablesorter/issues/289).
+  * Added `stickyHeaders_offset` option
+      * This option sets the point where the sticky header locks while scrolling. Allowing space for sticky navigation bars, etc.
+      * This option accepts:
+          * pixel value: `stickyHeaders_offset: 20`
+          * jQuery selector: `stickyHeaders_offset: '.navbar-fixed-top`
+          * jQuery object: `stickyHeaders_offset: $('.navbar-fixed-top')`
+      * Fullfills feature request [#294](https://github.com/Mottie/tablesorter/issues/294).
+
+* Pager addon updates:
+  * Controls are now cached internally.
+      * `table.config.pager.$container` now stores the jQuery object targeted by the pager `container` option.
+      * `table.config.pager.$goto` stores the jQuery object targeted by `cssGoto`.
+      * `table.config.pager.$size` stores the jQuery object targeted by `cssPageSize`.
+  * Page size selectors should now update properly when the `pageSet` or `pageSize` methods are used.
+  * The pager should now properly target the *first sortable* tbody (it will skip any "info-only" tbodies).
+  * Fixed `pagerComplete` callback firing more than once while sorting or filtering. Fixes [issue #291](https://github.com/Mottie/tablesorter/issues/291).
+  * Fixed pager not updating when the filter widget reveals zero matches. Fixes [issue #297](https://github.com/Mottie/tablesorter/issues/297).
+  * The pager ajax function now does better error handling.
+  * Updated the pager ajax error displayed row; including updating all themes.
+  * Added `ajaxObject` option:
+      * You can now customize how the pager plugin interacts performs its ajax functioning.
+      * Modify the `ajaxObject` to include any of the [ajax settings](http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings):
+
+          ```js
+          ajaxObject: {
+            dataType: 'json'
+          }
+          ```
+
+      * The only option that gets overwritten is the `url` option. It is set by the `ajaxUrl` and `customAjaxUrl` options.
+      * Fulfills [issue #280](https://github.com/Mottie/tablesorter/pull/280).
+  
+  * Updated `ajaxProcessing` to now make returning rows optional, or it can now accept the rows as a jQuery object instead of an array. The addon triggers an "update" event internally, so no need to include that.
+      * Return a jQuery object
+
+          ```js
+          ajaxProcessing: function(data, table){
+            if (data && data.hasOwnProperty('rows')) {
+              var r, row, c, d = data.rows,
+              // total number of rows (required)
+              total = data.total_rows,
+              // array of header names (optional)
+              headers = data.headers,
+              // all rows: array of arrays; each internal array has the table cell data for that row
+              rows = '',
+              // len should match pager set size (c.size)
+              len = d.length;
+              // this will depend on how the json is set up - see City0.json
+              // rows
+              for ( r=0; r < len; r++ ) {
+                rows += '<tr class="ajax-row">'; // new row array
+                // cells
+                for ( c in d[r] ) {
+                  if (typeof(c) === "string") {
+                    rows += '<td>' + d[r][c] + '</td>'; // add each table cell data to row array
+                  }
+                }
+                rows += '</tr>'; // add new row array to rows array
+              }
+              // don't attach the $(rows) because it's difficult to tell old from new data
+              // and no need to trigger an update method, it's done internally
+              return [ total, $(rows), headers ];
+            }
+          },
+          ```
+
+      * Build the table yourself (just return the total number of rows):
+
+          ```js
+          ajaxProcessing: function(data, table){
+            if (data && data.hasOwnProperty('rows')) {
+              var r, row, c, d = data.rows,
+              // total number of rows (required)
+              total = data.total_rows,
+              // all rows: array of arrays; each internal array has the table cell data for that row
+              rows = '',
+              // len should match pager set size (c.size)
+              len = d.length;
+              // this will depend on how the json is set up - see City0.json
+              // rows
+              for ( r=0; r < len; r++ ) {
+                rows += '<tr class="ajax-row">'; // new row array
+                // cells
+                for ( c in d[r] ) {
+                  if (typeof(c) === "string") {
+                    rows += '<td>' + d[r][c] + '</td>'; // add each table cell data to row array
+                  }
+                }
+                rows += '</tr>'; // add new row array to rows array
+              }
+              // find first sortable tbody, then add new rows
+              table.config.$tbodies.eq(0).html(rows);
+              return [ total ];
+            }
+          },
+          ```
+
+* Tablesorter unit testing updates; tests for the following have been added:
+  * `sortStart`, `sortBegin` &amp; `sortEnd` events.
+  * `updateComplete` event.
+  * empty cells: `emptyTo`, empty to `top`, `bottom` &amp; `zero`.
+  * strings in numeric columns: `stringTo`, string to `max`, `min`, `top`, `bottom` &amp; `none`.
+  * `sort` method
+  * table class, table header class &amp; tbody info only class.
+
 #### <a name="v2.9.1">Version 2.9.1</a> (4/13/2013)
 
 * Modified `stickHeaders`:
@@ -204,114 +354,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Fixed a bug in the grouping widget demo:
   * The "priority (letter)" column was incorrectly parsing the data which, for some reason, worked in some browsers.
   * Thanks again to [thezoggy](https://github.com/thezoggy) for reporting [this issue](https://github.com/Mottie/tablesorter/issues/267).
-
-#### <a name="v2.8.1">Version 2.8.1</a> (3/27/2013)
-
-* Added `customAjaxUrl` option to the pager:
-  * This function is called after all processing has been applied to the `ajaxUrl` string.
-  * Use this function to make any other string modifications, as desired.
-  * Thanks to [Cthulhu59](https://github.com/Cthulhu59) for contributing. See [pull request #256](https://github.com/Mottie/tablesorter/pull/256).
-
-#### <a name="v2.8.0">Version 2.8.0</a> (3/27/2013)
-
-* Added an `updateAll` method
-  * This method allows you to update the cache with data from both the `thead` and `tbody` of the table.
-  * The `update` method only updates the cache from the `tbody`.
-  * This fixes [issue #262](https://github.com/Mottie/tablesorter/issues/262).
-
-* Added a grouping rows widget:
-  * It only works in tablesorter 2.8+ and jQuery v1.7+.
-  * This widget was added to a subfolder named `widgets` within the `js` directory.
-  * A group header is added, after sorting a column, which groups rows that match the selector.
-  * Selectors include whole words, letters, numbers and dates (year, month, day, weekday and time).
-  * Check out [the demo](http://mottie.github.com/tablesorter/docs/example-widget-grouping.html) and get more details on how to use the widget there.
-  * Thanks to [Brian Ghidinelli](http://www.ghidinelli.com/) for sharing his custom widget code.
-
-* Added multiple parsers
-  * [Month](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html)
-  * [Two digit year](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html) (mmddyy, ddmmyy and yymmdd)
-  * [Weekday](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html)
-  * [Date library](http://mottie.github.com/tablesorter/docs/example-parsers-dates.html) (sugar &amp; datejs)
-  * ISO 8601 date by [Sean Ellingham](https://github.com/seanellingham) (no demo, yet)
-  * [Metric prefixes](http://mottie.github.com/tablesorter/docs/example-parsers-metric.html)
-  * [Ignore leads](http://mottie.github.com/tablesorter/docs/example-parsers-ignore-articles.html) parser (ignores "A", "An" and "The" in titles)
-  * [Inputs, checkbox and select parsers](http://mottie.github.com/tablesorter/docs/example-widget-grouping.html). These parsers automatically update on element changes, but requires jQuery 1.7+.
-
-* Tablesorter's "update" method now checks if a column sort has been enabled or disabled:
-  * Please note that the sorter precendence (order of priority) is still inforced ([reference](http://mottie.github.com/tablesorter/docs/example-options-headers.html)).
-  * So, for example, if you add a "sorter-false" class name to the header, it will disable the column sort if **no** jQuery data, metadata, headers option or other `"sorter-{some parser}" class name is already in place.
-  * To make sure a column becomes disabled, set it's jQuery data, then update:
-
-    ```javascript
-    $('th:eq(0)').data('sorter', false);
-    $('table').trigger('update');
-    ```
-
-  * Thanks to dibs76 for asking about this on [StackOverflow](http://stackoverflow.com/questions/15222170/jquery-tablesorter-addclasssorter-false-not-disabling-sort).
-  * This is also related to [issue #262](https://github.com/Mottie/tablesorter/issues/262).
-
-* Custom parsers detection now has higher priority over default parsers:
-  * If your custom parser just has an `is()` check that only returns false, nothing will change. You can still set the parser using jQuery data, metadata, the `headers` option or header class name as usual (in this [order of priority](http://mottie.github.com/tablesorter/docs/example-parsers-class-name.html)).
-  * What this means is that if you wrote a custom parser with an `is()` check (which tests the string and returns a boolean where `true` shows a match for your parser), it would have previously been checked after all of the default parsers were checked.
-  * Now the automatic parser detection works in reverse, from newest (custom parsers) to oldest (default parsers). So the default text and digit parsers will always be checked last.
-
-* The `addWidget` method will now extend an included `options` object into the widget options (`table.config.widgetOptions`).
-  * Default widgets will not use this functionality until version 3.0, to keep them backwards compatible.
-  * Include any widget options, when writing a new widget, as follows:
-
-    ```javascript
-    // *******************
-    // parameters:
-    // table = table object (DOM)
-    // c = config object (from table.config)
-    // wo = all widget options (from table.config.widgetOptions)
-    $.tablesorter.addWidget({
-      id: 'myWidget',
-      // widget options (added v2.8) - added to table.config.widgetOptions
-      options: {
-        myWidget_option1 : 'setting1',
-        myWidget_option2 : 'setting2'
-      },
-      // The init function (added v2.0.28) is called only after tablesorter has
-      // initialized, but before initial sort & before any of the widgets are applied.
-      init: function(table, thisWidget, c, wo){
-        // widget initialization code - this is only *RUN ONCE*
-        // but in this example, only the format function is called to from here
-        // to keep the widget backwards compatible with the original tablesorter
-        thisWidget.format(table, config, widgetOptions, true);
-      },
-      format: function(table, c, wo, initFlag) {
-        // widget code to apply to the table *AFTER EACH SORT*
-        // the initFlag is true when this format is called from the init
-        // function above otherwise initFlag is undefined
-        // * see the saveSort widget for a full example *
-        // access the widget options as follows:
-        if (wo.myWidget_option1 === 'setting1') {
-          alert('YAY');
-        }
-      },
-      remove: function(table, c, wo){
-        // do what ever needs to be done to remove stuff added by your widget
-        // unbind events, restore hidden content, etc.
-      }
-    });
-    ```
-
-  * Updated the demo showing how you can write your own widget
-
-* Updated all methods to stop event propagation past the table. This prevents sorted inner tables from also sorting the outer table. Fixes [issue #263](https://github.com/Mottie/tablesorter/issues/263).
-* Updated filter widget to restore previous search after an update. Fixes [issue #253](https://github.com/Mottie/tablesorter/issues/253).
-* Updated bower manifest file, thanks to [joyvuu-dave](https://github.com/joyvuu-dave) for the [pull request #252](https://github.com/Mottie/tablesorter/pull/252).
-* Updated several public methods that require a table element:
-  * These methods will now accept either a <em>table DOM element</em> or a <em>jQuery object</em>; previously it would only accept a DOM element.
-  * Modified these `$.tablesorter` functions: `isProcessing`, `clearTableBody`, `destroy`, `applyWidget` and `refreshWidgets`.
-  * Example: `$.tablesorter.destroy( document.getElementById('myTable') );` or `$.tablesorter.destroy( $('#myTable') );`
-  * See [issue #243](https://github.com/Mottie/tablesorter/issues/243).
-* Updated Bootstrap from version 2.1.1 to 2.3.1.
-* Fixed issue with bootstrap demo not working in IE7. It was a silly trailing comma. Fixes [issue #265](https://github.com/Mottie/tablesorter/issues/265).
-* Fixed the filter widget to work properly across tbodies. It now leaves non-sortable tbodies intact. Fixes [issue #264](https://github.com/Mottie/tablesorter/issues/264).
-* Fixed the `updateCell` method which would cause a javascript error when spammed. It would try to resort the table while the tbody was detached.
-* Fixed `shortDate` parser so that it no longer detects semantic version numbers (e.g. "1.0.0").
-* Fixed the internal `getData()` function to properly get dashed class names; e.g. `"sorter-my-custom-parser"` will look for a parser with an id of `"my-custom-parser"`.
-* Fixed IE code examples all appearing in line.
-* Did some general code cleanup and rearranging.

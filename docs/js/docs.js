@@ -1,8 +1,7 @@
 $(function(){
+	var $t, t, v, animate,
 
-	$("a.external").each(function(){this.target = '_new';});
-
-	var cleanupCode = function(code){
+	cleanupCode = function(code){
 		return code.replace(/[<>\"\'\t\n]/g, function(m) { return {
 			'<' : '&lt;',
 			'>' : '&gt;',
@@ -12,6 +11,8 @@ $(function(){
 			'\n': '<br/>' // needed for IE
 		}[m]});
 	};
+
+	$("a.external").each(function(){this.target = '_new';});
 
 	// get javascript source
 	if ($("#js").length) {
@@ -26,7 +27,7 @@ $(function(){
 
 	// apply to already pre-formatted blocks to add <br> for IE
 	$('pre:not(.mod)').each(function(){
-		var $t = $(this);
+		$t = $(this);
 		$t.html( cleanupCode( $t.html() ) );
 	});
 
@@ -40,7 +41,7 @@ $(function(){
 		return false;
 	});
 
-	var animating = false;
+	animating = false;
 
 	$('.collapsible').hide();
 	$('.toggle2')
@@ -59,16 +60,27 @@ $(function(){
 		});
 
 	$('.toggleAll, .showAll, .hideAll').click(function(){
-		var t = $.trim($(this).text());
+		t = $.trim($(this).text());
 		$(this).parent().next('table').find('.collapsible')[t]();
 		return false;
 	});
 
 	// update version number
-	var t = $('.current-version');
-	if (t.length) {
-		t.html($.tablesorter.version);
+	$t = $('.current-version');
+	if ($t.length) {
+		$t.html($.tablesorter.version);
 	}
+
+	// add high visibility tags for newest versions (just grab the major revision number 2.10.0 -> 10
+	v = parseFloat( $.tablesorter.version.split('.')[1] );
+	console.log(v);
+	$('.version').each(function(){
+		$t = $(this);
+		t = v - parseFloat( $t.text().replace(/(v|version|\+)/g, '').split('.')[1] );
+		if ( t <= 1 ) {
+			$t.prepend('<span class="tip' + ( t === 1 ? ' old' : '' ) + '"><em>'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</em></span> ');
+		}
+	});
 
 });
 
@@ -91,14 +103,17 @@ function showProperty(){
 
 $(window).load(function(){
 
-	$(window).bind('hashchange', function(){
+	if ($('#root').length) {
+		$(window).bind('hashchange', function(){
+			showProperty();
+		});
 		showProperty();
-	});
-	showProperty();
+	}
 
 });
 
 // append hidden parsed value to cell
+// used by feet-inch-fraction & metric parser demos
 var addParsedValues = function($t, cols, format){
 	var i, j, r,
 		$r = $t.find('tbody tr'),

@@ -58,6 +58,9 @@
 			// css class applied to the table row containing the filters & the inputs within that row
 			filter_cssFilter : 'tablesorter-filter',
 
+			// class added to filtered rows (rows that are not showing); needed by pager plugin
+			filter_filteredRow   : 'filtered',
+
 			// add custom filter elements to the filter row
 			// see the filter formatter demos for more specifics
 			filter_formatter : null,
@@ -118,7 +121,6 @@
 		filters.eq(col).val(txt).trigger('search', false);
 		******/
 
-
 		/*** second method ***
 			this method bypasses the filter inputs, so the "filter_columnFilters"
 			option can be set to false (no column filters showing)
@@ -178,21 +180,22 @@ $(function(){
 				<li>This widget does work with tablesorter v2.0.5.</li>
 				<li>Using the filters:
 					<table class="tablesorter-blue">
-						<thead><tr><th>Type</th><td>Description</th><th>Example</th></tr></thead>
+						<thead><tr><th>Type <small class="bright">(1)</small></th><td>Description</th><th>Example</th></tr></thead>
 						<tbody>
 							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds "abc", "abcd", "abcde", etc)</td></tr>
 							<tr><td class="center"><code>"</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc"</code> or <code>abc=</code> (exactly match "abc")</td></tr>
 							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds "Jan" and "Jun", but not "Joan")</td></tr>
 							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches "Black" and "Book")</td></tr>
 							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds "bag", "beg", "BIG", "Bug", etc)</td></tr>
-							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query</td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
+							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small></td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with "female" in that column, but shows rows with "male")</td></tr>
 							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical "and". Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both "box" and "bat")</td></tr>
 							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.</td><td><code>box|bat</code> (matches a column cell with either "box" or "bat")</td></tr>
-							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word "to").</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
+							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word "to") <small class="bright">(2)</small>.</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
 						</tbody>
 					</table>
-					* Note: You cannot combine these operators with each other (except for the wildcards).
+					<span class="bright">(1)</span> You cannot combine these operators with each other (except for the wildcards).<br>
+					<span class="bright">(2)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).
 				</li>
 			</ul>
 		</div>
@@ -204,11 +207,12 @@ $(function(){
 				<li><code>filter_childRows : false</code> - if true, filter includes child row content in the search.</li>
 				<li><code>filter_columnFilters : true</code> - if true, a filter will be added to the top of each table column.</li>
 				<li><code>filter_cssFilter : 'tablesorter-filter'</code> - css class name added to the filter row & each input in the row.</li>
+				<li><code>filter_filteredRow : 'filtered'</code> - css class name added to filtered rows (rows that are not showing); needed by pager plugin.</li>
 				<li><code>filter_formatter : null</code> - add custom filter elements to the filter row.</li>
 				<li><code>filter_functions : null</code> - add custom filter functions using this option.</li>
 				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon.</li>
 				<li><code>filter_ignoreCase : true</code> - if true, make all searches case-insensitive.</li>
-				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay).</li>
+				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay). If false, the user must press enter to start the search. If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
 				<li><code>filter_reset : null</code> - jQuery selector string of an element used to reset the filters.</li>
 				<li><code>filter_searchDelay : 300</code> - typing delay in milliseconds before starting a search.</li>
 				<li><code>filter_serversideFiltering : false</code> - if true, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used..</li>
@@ -219,6 +223,7 @@ $(function(){
 
 		<h3><a href="#">Classes</a></h3>
 		<div>
+			Class names that can be added to the <code>th</code> header cells:
 			<ul>
 				<li><code>filter-false</code> - disable the filter for a specific header column.</li>
 				<li><code>filter-select</code> - build a default select box for a column (shows unique column content). See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo for an example.</li>
@@ -250,14 +255,14 @@ $('table').trigger('search', [ columns ]);</pre>
 
 			<h3>Get current filters</h3>
 			<blockquote>
-			Get an array of the currently applied filters <span class="tip"><em>New!</em></span> v2.9.
+			Get an array of the currently applied filters (<span class="version">v2.9</span>).
 			<pre class="prettyprint lang-javascript">$.tablesorter.getFilters( $('table') ); // or $('table.hasFilters')</pre>
 			This method returns an array of filter values or <code>false</code> if the selected table does not contain a filter row.
 			</blockquote>
 
 			<h3>Set current filters</h3>
 			<blockquote>
-			Set the values of the actual filters using this method; include a <code>true</code> boolean to actually apply the search <span class="tip"><em>New!</em></span> v2.9.
+			Set the values of the actual filters using this method; include a <code>true</code> boolean to actually apply the search (<span class="version">v2.9</span>).
 			<pre class="prettyprint lang-javascript">// update filters, but don't apply the search
 $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] );
 
@@ -265,6 +270,15 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] );
 $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pre>
 			This method returns <code>true</code> if the filters were sucessfully applied, or <code>false</code> if the table does have a filter row.
 		</blockquote>
+		</div>
+
+		<h3><a href="#">Events</a></h3>
+		<div>
+			<ul>
+				<li><code>filterEnd</code> - Event triggered when the filter widget has finished processing the search.</li>
+				<li><code>filterInit</code> - Event triggered when the filter widget has finished initializing.</li>
+				<li><code>filterStart</code> - Event triggered when the filter widget has started processing the search.</li>
+			</ul>
 		</div>
 
 		<h3><a href="#">Changes</a></h3>

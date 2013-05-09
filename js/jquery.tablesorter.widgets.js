@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 4/13/2013
+/*! tableSorter 2.8+ widgets - updated 5/8/2013
  *
  * Column Styles
  * Column Filters
@@ -128,7 +128,8 @@ ts.addHeaderResizeEvent = function(table, disable, options){
 	};
 	clearInterval(wo.resize_timer);
 	if (disable) {
-		return wo.resize_flag = false;
+		wo.resize_flag = false;
+		return false;
 	}
 	c.$headers.each(function(){
 		$.data(this, 'savedSizes', [ this.offsetWidth, this.offsetHeight ]);

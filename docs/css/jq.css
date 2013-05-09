@@ -29,7 +29,7 @@ pre.normal {background-color:transparent;border:none;border-left-width:0;overflo
 #main {margin:0 20px 20px;padding:0 15px 15px 0;clear:both;}
 #content {padding:20px;}
 #busy {background-color:#e95555;border:1px ridge #ccc;color:#eee;display:none;padding:3px;position:absolute;right:7px;top:7px;}
-#start,#case {color:#007baa;}
+#start,#case,.bright {color:#007baa;}
 #demo strong {color:#a00;}
 hr {height:1px;}
 ul {color:#333;list-style:square;}
@@ -38,6 +38,7 @@ ul {color:#333;list-style:square;}
 #banner h1 {display:block;float:left;}
 #banner h1 em,.demo h1 em {color:#6cf;}
 #banner h2 {float:right;font-size:26px;margin:10px 10px -10px -10px;}
+#root #banner h2 { margin-right: 100px; }
 #banner h3 {clear:both;display:block;font-size:12px;margin-top:-20px;border-bottom:1px solid #888;}
 #banner a {display:block;font-size:14px;margin:5px 0 0;padding:10px 0 0;float:right;}
 a.external {background-image:url(../img/external.png);background-position:center right;background-repeat:no-repeat;padding-right:12px;}
@@ -45,7 +46,7 @@ form {font-size:10pt;margin-bottom:20px;width:auto;}
 form fieldset {padding:10px;text-align:left;width:140px;}
 div#main h1 {border-bottom:1px solid #CDCDCD;display:block;margin-top:20px;padding:10px 0 2px;}
 table#tablesorter-demo {margin: 10px 0 0 0;}
-table *, p.small {font-size:small;}
+table, p.small {font-size:small;}
 p.small {padding-left: 25px;}
 p.tip em, div.tip em {padding: 2px; background-color: #6cf; color: #fff;}
 span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }

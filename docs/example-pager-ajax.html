@@ -66,6 +66,12 @@
 					return url;
 			},
 
+			// add more ajax settings here
+			// see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
+			ajaxObject: {
+				dataType: 'json'
+			},
+
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 			// example:
@@ -79,6 +85,8 @@
 			//   ],
 			//   [ "header1", "header2", ... "headerN" ] // optional
 			// ]
+			// OR
+			// return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
 			ajaxProcessing: function(data){
 				if (data && data.hasOwnProperty('rows')) {
 					var r, row, c, d = data.rows,
@@ -102,6 +110,7 @@
 						}
 						rows.push(row); // add new row array to rows array
 					}
+					// in version 2.10, you can optionally return $(rows) a set of table rows within a jQuery object
 					return [ total, rows, headers ];
 				}
 			},
@@ -156,11 +165,12 @@
 		<div class="tip">
 			<em>NOTE!</em>:
 			<ul>
+				<li>In <span class="version updated">v2.10</span>, The <code>ajaxProcessing</code> function was updated to only require a total number of rows to be returned, also instead of returning an array of table rows, you can build the table yourself and just return the jQuery object containing those rows. The addon triggers an update.</li>
 				<li><code>{filterList:fcol}</code> was added to the <code>ajaxUrl</code> in version 2.6.</li>
 				<li><code>{sortList:col}</code> was added to the <code>ajaxUrl</code> in version 2.4.5.</li>
 				<li>This update to the pager plugin that interacts with a database via ajax was added in version 2.0.32 and can be applied to the original tablesorter.</li>
 				<li>The <code>ajaxUrl</code> and <code>ajaxProcessing</code> function are both required options for this interaction to work properly.</li>
-				<li>The <code>ajaxUrl</code> contains a replaceable string to sent the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>
+				<li>The <code>ajaxUrl</code> contains a replaceable string to send the requested page (<code>{page}</code>), block size (<code>{size}</code>) or sort order (<code>{sortList:name}</code>).</li>
 				<li>The <code>ajaxProcessing</code> function is needed to convert your custom JSON format into an array usable by the pager plugin (modified in 2.1.3)<br>
 					<br>
 					So, given this custom JSON format (this is only an example):
@@ -192,7 +202,8 @@
     "District": "Noord-Holland",
     "Population": 110722
   }]
-}</pre>The <code>ajaxProcessing</code> function must* return the data in the following format <code>[ total, rows, headers (optional) ]</code>, or in version 2.9+ <code>[ rows, total, headers (optional) ]</code>:
+}</pre>The <code>ajaxProcessing</code> function can return the data in the following format <code>[ total, rows, headers (optional) ]</code>, or in version 2.9+ <code>[ rows, total, headers (optional) ]</code>,
+					<br> or in <span class="version">v2.10</span>, return a jQuery object <code>[ total, $rows ]</code>, or just <code>[ total ]</code>:
 					<pre class="prettyprint lang-javascript">[
   // total # rows contained in the database
   80,
@@ -206,10 +217,12 @@
   [ "ID", "Name", "Country Code", "District", "Population" ] // [ "Header1", "Header2", ... "HeaderN" ] (optional)
 ]</pre></li>
 				<li>The table header and footer text will be updated to match the JSON "header column #" text; but there is an issue with the table rendering improperly if the number of columns in the HTML and the number of columns in the JSON don't match.</li>
-				<li>Limitations of this demo:
+				<li><strong>Limitations of this demo</strong>:
 					<ul>
 						<li>This demo will not work when viewing it locally due to communication restrictions between the browser and your desktop.</li>
 						<li>The record size is limited to 25 records because this demo is not interacting with an actual database, but with four JSON files containing 25 records each.</li>
+						<li>Sorting of columns is enabled in this demo by setting the <code>serverSideSorting</code> option to <code>false</code> after initialization. It only sorts the current table contents because there is no server to return sorted data.</li>
+						<li>The filters will only update the "Current Ajax url" because again, we're just working with JSON files here.</li>
 					</ul>
 				</li>
 			</ul>
@@ -374,8 +387,6 @@ td.pager {
 </div>
 
 <script>
-// allow THIS demo to sort the content; this variable is automatically set to true when ajax
-// is used as there isn't any way to sort the server side data from the client side.
 var $url = $('#url');
 $('table')
 
@@ -384,9 +395,11 @@ $('table')
 		$url.html(url);
 	})
 
-	// show original URL & updated URL in demo
 	.on('pagerInitialized', function(){
+		// allow THIS demo to sort the content; this variable is automatically set to true when ajax
+		// is used as there isn't any way to sort the server side data from the client side.
 		this.config.serverSideSorting = false;
+		// show original highlighted URL
 		$('#origurl').html( this.config.pager.ajaxUrl.replace(/(\{.*?\})/g, '<span class="results">$1</span>') );
 	});
 </script>

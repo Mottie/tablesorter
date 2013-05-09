@@ -91,14 +91,14 @@
 		Notes about the <code>addWidget</code> template:
 		<ul>
 			<li>The <code>id</code> block is required and must be unique.</li>
-			<li>The <code>priority</code> block is optional (<span class="tip"><em>New!</em> in v2.9</span>):
+			<li>The <code>priority</code> block is optional (<span class="version">v2.9</span>):
 				<ul>
 					<li>Set the widget priority using any number; think of it like setting the css z-index.</li>
 					<li>This tells the plugin the order in which to run the widgets, lowest number priority first.</li>
 					<li>The default widgets have priorities set in intervals of 10 (see the <a href="index.html#Widget-options"> widget priority table</a>), so to run your custom widget before a specific widget, set your widget priority to less than that number.</li>
 				</ul>
 			</li>
-			<li>The <code>options</code> block (<span class="tip"><em>New!</em> in v2.8</span>):
+			<li>The <code>options</code> block (<span class="version">v2.8</span>):
 				<ul>
 					<li>Include any widget options to be automatically be extended with any set widgetOptions (from <code>table.config.widgetOptions</code>).</li>
 					<li>This block was added in tablesorter v2.8 and is not supported in older versions!</li>

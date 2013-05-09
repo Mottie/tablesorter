@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/28/2013
+/*! Filter widget formatter functions - updated 5/8/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * jQuery UI spinner
@@ -39,14 +39,14 @@ $.tablesorter.filterFormatter = {
 		updateSpinner = function(ui) {
 			var chkd = true,
 				// ui is not undefined on create
-				v = ui && ui.value || $('#spinner' + indx).val() || o.value;
+				v = ui && ui.value || $cell.find('.spinner').val() || o.value;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
 			$cell.find('.filter')
 				.val( chkd ? v + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
 				.trigger('search', o.delayed).end()
-				.find('#spinner' + indx).spinner( o.disabled || !chkd ? 'disable' : 'enable' );
+				.find('.spinner').spinner( o.disabled || !chkd ? 'disable' : 'enable' );
 		};
 
 		// add callbacks; preserve added callbacks
@@ -71,7 +71,7 @@ $.tablesorter.filterFormatter = {
 		// make sure we use parsed data
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// add a jQuery UI slider!
-		$('<input id="spinner' + indx + '" />')
+		$('<input class="spinner spinner' + indx + '" />')
 			.val(o.value)
 			.appendTo($cell)
 			.spinner(o)
@@ -143,13 +143,13 @@ $.tablesorter.filterFormatter = {
 			if (typeof o.oldslide === 'function') { o.oldslide(event, ui); }
 		};
 		// add a jQuery UI slider!
-		$('<div id="slider' + indx + '"/>')
+		$('<div class="slider slider' + indx + '"/>')
 			.appendTo($cell)
 			.slider(o);
 
 		// on reset
 		$cell.closest('table').bind('filterReset', function(){
-			$cell.find('div[id*="slider"]').slider('value', o.value);
+			$cell.find('.slider').slider('value', o.value);
 			updateSlider();
 		});
 

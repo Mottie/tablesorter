@@ -57,7 +57,7 @@
 
 	});
 
-}); </script>
+});</script>
 <script>
 $(function() {
 	$('link.theme').each(function(){ this.disabled = true; });
@@ -68,7 +68,7 @@ $(function() {
 		o += '<option>' + t[i] + '</option>';
 	}
 
-	$('select')
+	$('select:first')
 		.append(o)
 		.change(function(){
 			var theme = $(this).val().toLowerCase(),
@@ -97,14 +97,15 @@ $(function() {
 		<em>NOTE!</em>
 		<ul>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
-			<li>Added a widget option named <code>stickyHeaders_cloneId</code> <span class="tip"><em>New!</em></span> v2.9!
+			<li>Added a widget option named <code>stickyHeaders_cloneId</code> (<span class="version">v2.9</span>)
 				<ul>
 					<li>It contains a suffix to add to any table id.</li>
 					<li>Its default value is <code>-sticky</code> </li>
 				</ul>
 			</li>
-			<li>Table captions and any additional rows (filter widget row) will also be included in the sticky header <span class="tip"><em>New!</em></span> v2.9!</li> 
-			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code. <span class="tip"><em>New!</em></span> v2.7!</li>
+			<li>To access the added sticky table content from your code without worrying about using the ID, you can use <code>table.config.widgetOptions.$sticky</code>.</li>
+			<li>Table captions and any additional rows (filter widget row) will also be included in the sticky header (<span class="version">v2.9</span>).</li>
+			<li>You will need to modify the <code>headerTemplate</code> option to include the jQuery UI icon! See the example in the code (v2.7).</li>
 			<li>Scroll down the page to see the headers stick. Then sort the columns using the sticky headers!</li>
 			<li>Added a widget option named <code>stickyHeader</code> option which contains the css class name applied to the actual sticky header (v2.1).</li>
 			<li>Multiple rows in the header will become sticky (v2.1.17).</li>

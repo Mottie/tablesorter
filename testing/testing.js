@@ -64,18 +64,24 @@ var tester = {
 	/************************************************
 		test table data cache
 	************************************************/
-	cacheCompare : function(table, expected, txt){
+	cacheCompare : function(table, col, expected, txt){
 		var i, j = 0, k, l,
 			result = [],
 			b = table.tBodies,
 			l2 = table.config.$headers.length;
 		for (k = 0; k < b.length; k++){
 			l = b[k].rows.length;
-			for (j = 0; j < l; j++) {
-				for (i = 0; i < l2; i++) {
-					result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][i] || '' : '' );
+				for (j = 0; j < l; j++) {
+					if (col === 'all') {
+						// return all columns
+						for (i = 0; i < l2; i++) {
+							result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][i] : '' );
+						}
+					} else {
+						// return specific column
+						result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][col] : '' );
+					}
 				}
-			}
 		}
 		deepEqual( result, expected, 'testing parser cache: ' + txt);
 	}
