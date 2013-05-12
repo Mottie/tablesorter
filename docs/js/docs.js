@@ -73,7 +73,6 @@ $(function(){
 
 	// add high visibility tags for newest versions (just grab the major revision number 2.10.0 -> 10
 	v = parseFloat( $.tablesorter.version.split('.')[1] );
-	console.log(v);
 	$('.version').each(function(){
 		$t = $(this);
 		t = v - parseFloat( $t.text().replace(/(v|version|\+)/g, '').split('.')[1] );
