@@ -118,6 +118,7 @@
 				log(s + " (" + (new Date().getTime() - d.getTime()) + "ms)");
 			}
 
+			ts.log = log;
 			ts.benchmark = benchmark;
 
 			function getElementText(table, node, cellIndex) {
@@ -705,6 +706,7 @@
 				})
 				.bind("updateAll.tablesorter", function(e, resort, callback){
 					e.stopPropagation();
+					ts.refreshWidgets(table, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
 					bindEvents(table);
@@ -929,7 +931,8 @@
 			// restore headers
 			ts.restoreHeaders = function(table){
 				var c = table.config;
-				c.$headers.each(function(i){
+				// don't use c.$headers here in case header cells were swapped
+				c.$table.find(c.selectorHeaders).each(function(i){
 					// only restore header cells if it is wrapped
 					// because this is also used by the updateAll method
 					if ($(this).find('.tablesorter-header-inner').length){
