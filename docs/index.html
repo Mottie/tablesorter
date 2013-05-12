@@ -1307,6 +1307,8 @@ $(function(){
       filter_ignoreCase    : true,
       // if true, search column content while the user types (with a delay)
       filter_liveSearch    : true,
+      // a selector in a header with this class name will only show selected options in the drop down
+      filter_onlyAvail     : 'filter-onlyAvail',
       // jQuery selector string of an element used to reset the filters.
       filter_reset         : null,
       // typing delay in milliseconds before starting a search.
@@ -1835,6 +1837,20 @@ $(function(){
 					</div>
 				</td>
 				<td></td>
+			</tr>
+
+			<tr id="widget-filter-onlyAvail">
+				<td><a href="#" class="toggle2">filter_onlyAvail</a></td>
+				<td>String</td>
+				<td>'filter-onlyAvail'</td>
+				<td>
+					Filter widget: If a header contains a select dropdown and this class name, only the available (visible) options in the column will show (<span class="version">v2.10.1</span>).
+					<div class="collapsible">
+					<br>
+					This option is useful after one or more columns have been filtered, then the column select filter with this class applied will only show the contents of the column within the dropdown that are currently visible. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example (sort the &quot;First Name&quot; column first).
+					</div>
+				</td>
+				<td><a href="example-widget-filter-custom.html">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-reset">

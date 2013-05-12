@@ -332,6 +332,7 @@ ts.addWidget({
 		filter_hideFilters   : false, // collapse filter row when mouse leaves the area
 		filter_ignoreCase    : true,  // if true, make all searches case-insensitive
 		filter_liveSearch    : true,  // if true, search column content while the user types (with a delay)
+		filter_onlyAvail     : 'filter-onlyAvail', // a header with a select dropdown & this class name will only show available (visible) options within the drop down
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
@@ -522,14 +523,16 @@ ts.addWidget({
 				$t.trigger('applyWidgets'); // make sure zebra widget is applied
 				$t.trigger('filterEnd');
 			},
-			buildSelect = function(i, updating){
-				var o, arry = [];
+			buildSelect = function(i, updating, onlyavail){
+				var o, t, arry = [], currentVal;
 				i = parseInt(i, 10);
 				o = '<option value="">' + ($ths.filter('[data-column="' + i + '"]:last').attr('data-placeholder') || '') + '</option>';
 				for (k = 0; k < b.length; k++ ){
 					l = c.cache[k].row.length;
 					// loop through the rows
 					for (j = 0; j < l; j++){
+						// check if has class filtered
+						if (onlyavail && c.cache[k].row[j][0].className.match(wo.filter_filteredRow)) { continue; }
 						// get non-normalized cell content
 						if (wo.filter_useParsedData){
 							arry.push( '' + c.cache[k].normalized[j][i] );
@@ -550,10 +553,14 @@ ts.addWidget({
 				});
 				arry = (ts.sortText) ? arry.sort(function(a, b){ return ts.sortText(table, a, b, i); }) : arry.sort(true);
 
+				// Get curent filter value
+				currentVal = $t.find('thead').find('select.' + css + '[data-column="' + i + '"]').val();
+
 				// build option list
 				for (k = 0; k < arry.length; k++){
+					t = arry[k].replace(/\"/g, "&quot;");
 					// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
-					o += arry[k] !== '' ? '<option value="' + arry[k].replace(/\"/g, "&quot;") + '">' + arry[k] + '</option>' : '';
+					o += arry[k] !== '' ? '<option value="' + t + '"' + (currentVal === t ? ' selected="selected"' : '') +'>' + arry[k] + '</option>' : '';
 				}
 				$t.find('thead').find('select.' + css + '[data-column="' + i + '"]')[ updating ? 'html' : 'append' ](o);
 			},
@@ -565,7 +572,7 @@ ts.addWidget({
 					if ((t.hasClass('filter-select') || wo.filter_functions && wo.filter_functions[i] === true) && !t.hasClass('filter-false')){
 						if (!wo.filter_functions) { wo.filter_functions = {}; }
 						wo.filter_functions[i] = true; // make sure this select gets processed by filter_functions
-						buildSelect(i, updating);
+						buildSelect(i, updating, t.hasClass(wo.filter_onlyAvail));
 					}
 				}
 			};
@@ -622,8 +629,8 @@ ts.addWidget({
 				}
 			}
 			$t
-			.bind('addRows updateCell update updateRows updateComplete appendCache filterReset search '.split(' ').join('.tsfilter '), function(e, filter){
-				if (!/(search|filterReset)/.test(e.type)){
+			.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join('.tsfilter '), function(e, filter){
+				if (!/(search|filterReset|filterEnd)/.test(e.type)){
 					e.stopPropagation();
 					buildDefault(true);
 				}
@@ -633,6 +640,9 @@ ts.addWidget({
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
 				filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : '';
 				checkFilters(filter);
+				if (e.type === 'filterEnd') {
+					buildDefault(true);
+				}
 				return false;
 			})
 			.find('input.' + css).bind('keyup search', function(e, filter){

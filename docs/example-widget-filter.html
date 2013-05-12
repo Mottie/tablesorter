@@ -182,16 +182,16 @@ $(function(){
 					<table class="tablesorter-blue">
 						<thead><tr><th>Type <small class="bright">(1)</small></th><td>Description</th><th>Example</th></tr></thead>
 						<tbody>
-							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds "abc", "abcd", "abcde", etc)</td></tr>
-							<tr><td class="center"><code>"</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc"</code> or <code>abc=</code> (exactly match "abc")</td></tr>
-							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds "Jan" and "Jun", but not "Joan")</td></tr>
-							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches "Black" and "Book")</td></tr>
-							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds "bag", "beg", "BIG", "Bug", etc)</td></tr>
+							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds &quot;abc&quot;, &quot;abcd&quot;, &quot;abcde&quot;, etc)</td></tr>
+							<tr><td class="center"><code>&quot;</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc&quot;</code> or <code>abc=</code> (exactly match &quot;abc&quot;)</td></tr>
+							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds &quot;Jan&quot; and &quot;Jun&quot;, but not &quot;Joan&quot;)</td></tr>
+							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches &quot;Black&quot; and &quot;Book&quot;)</td></tr>
+							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc)</td></tr>
 							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small></td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
-							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with "female" in that column, but shows rows with "male")</td></tr>
-							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical "and". Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both "box" and "bat")</td></tr>
-							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.</td><td><code>box|bat</code> (matches a column cell with either "box" or "bat")</td></tr>
-							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word "to") <small class="bright">(2)</small>.</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
+							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with &quot;female&quot; in that column, but shows rows with &quot;male&quot;)</td></tr>
+							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical &quot;and&quot;. Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both &quot;box&quot; and &quot;bat&quot;)</td></tr>
+							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;)</td></tr>
+							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(2)</small>.</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
 						</tbody>
 					</table>
 					<span class="bright">(1)</span> You cannot combine these operators with each other (except for the wildcards).<br>
@@ -213,9 +213,10 @@ $(function(){
 				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon.</li>
 				<li><code>filter_ignoreCase : true</code> - if true, make all searches case-insensitive.</li>
 				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay). If false, the user must press enter to start the search. If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
+				<li><code>filter_onlyAvail : 'filter-onlyAvail'</code> - a header with a select dropdown &amp; this class name will only show available (visible) options within that drop down.</li>
 				<li><code>filter_reset : null</code> - jQuery selector string of an element used to reset the filters.</li>
 				<li><code>filter_searchDelay : 300</code> - typing delay in milliseconds before starting a search.</li>
-				<li><code>filter_serversideFiltering : false</code> - if true, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used..</li>
+				<li><code>filter_serversideFiltering : false</code> - if true, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used.</li>
 				<li><code>filter_startsWith : false</code> - if true, filter start from the beginning of the cell contents.</li>
 				<li><code>filter_useParsedData : false</code> - filter all data using parsed content.</li>
 			</ul>
@@ -227,8 +228,9 @@ $(function(){
 			<ul>
 				<li><code>filter-false</code> - disable the filter for a specific header column.</li>
 				<li><code>filter-select</code> - build a default select box for a column (shows unique column content). See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo for an example.</li>
-				<li><code>filter-match</code> - only applies to "filter-select" columns. Makes the select match the column contents instead of exactly matching.</li>
+				<li><code>filter-match</code> - only applies to &quot;filter-select&quot; columns. Makes the select match the column contents instead of exactly matching.</li>
 				<li><code>filter-parsed</code> - set a column to filter through parsed data instead of the actual table cell content.</li>
+				<li><code>filter-onlyAvail</code> - show only available (visible) options within a default select box. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example.</li>
 			</ul>
 		</div>
 
@@ -243,7 +245,7 @@ $(function(){
 			<h3>search</h3>
 			<blockquote>
 			With this method, you can pass an array of filter values:
-			<pre class="prettyprint lang-javascript">// apply "2?%" filter to the fifth column (zero-based index)
+			<pre class="prettyprint lang-javascript">// apply &quot;2?%&quot; filter to the fifth column (zero-based index)
 var columns = [];
 columns[5] = '2?%';
 // or define the array this way var columns = [ '', '', '', '', '', '2?%' ]
@@ -293,7 +295,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 	<hr>
 
 	<div id="demo">
-	<button class="search" data-filter-column="5" data-filter-text="2?%">Saved Search</button> (search the Discount column for "2?%")<br>
+	<button class="search" data-filter-column="5" data-filter-text="2?%">Saved Search</button> (search the Discount column for &quot;2?%&quot;)<br>
 	<button class="reset">Reset Search</button> <!-- targetted by the "filter_reset" option -->
 
 	<table class="tablesorter">

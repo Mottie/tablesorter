@@ -165,24 +165,25 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Default Select</strong> ("First Name" column)</a></h3>
+		<h3><a href="#"><strong>Default Select</strong> (&quot;First Name&quot; column)</a></h3>
 		<div>
 			<ul>
 				<li>To enable this type of select, set the <code>filter_functions</code> option for the column to <code>true</code>,<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Add select menu to this column
-  // set the column value to true, and/or add "filter-select" class name to header
+  // set the column value to true, and/or add &quot;filter-select&quot; class name to header
   0 : true
 
-}</pre>or add a "filter-select" class to the column header cell (see code below).</li>
-				<li>The default option text, "Select a name", is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
-				<li>Add a "filter-match" class to only match instead of exactly match the selected value. Click on the "Match" button below to see the difference.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
-				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three "Aaron"'s in the first column, but only one in the dropdown.</li>
+}</pre>or add a &quot;filter-select&quot; class to the column header cell (see code below).</li>
+				<li>The default option text, &quot;Select a name&quot;, is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+				<li>Add a &quot;filter-match&quot; class to only match instead of exactly match the selected value. Click on the &quot;Match&quot; button below to see the difference.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
+				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three &quot;Aaron&quot;'s in the first column, but only one in the dropdown.</li>
 				<li>Select options are automatically alphanumerically (new in v2.4) sorted.</li>
+				<li>Please check out what the &quot;filter-onlyAvail&quot; class name does by reviewing the details below (in the &quot;Discount&quot; column) (<span class="version">v2.10.1</span>).</li>
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Custom Filter Function</strong> ("Last Name" column)</a></h3>
+		<h3><a href="#"><strong>Custom Filter Function</strong> (&quot;Last Name&quot; column)</a></h3>
 		<div>
 			<ul>
 				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre class="prettyprint lang-javascript">filter_functions : {
@@ -194,27 +195,27 @@
 
 }</pre></li>
 				<li>The example shows you how to show only exact matches. The problem with this is that you can't see the matches while typing unless you set the <code>filter_searchDelay</code> option to be a bit longer.</li>
-				<li>Also, the example only checks for an exact match (<code>===</code>) meaning the <code>filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive "i" flag.</li>
+				<li>Also, the example only checks for an exact match (<code>===</code>) meaning the <code>filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive &quot;i&quot; flag.</li>
 				<li>See the filter function information below.</li>
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Custom Select</strong> ("City" or "Total" column)</a></h3>
+		<h3><a href="#"><strong>Custom Select</strong> (&quot;City&quot; or &quot;Total&quot; column)</a></h3>
 		<div>
 			<ul>
 				<li>To enable this type of select, add your custom options within the <code>filter_functions</code> option.</li>
-				<li>Each option is set as a "key:value" pair where the "key" is the actual text of the option and the "value" is the function associated with the option.</li>
+				<li>Each option is set as a &quot;key:value&quot; pair where the &quot;key&quot; is the actual text of the option and the &quot;value&quot; is the function associated with the option.</li>
 				<li>Here is an example using alphabetical comparisons (using regular expressions):<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Add these options to the select dropdown (regex example)
   2 : {
-    "A - D" : function(e, n, f, i) { return /^[A-D]/.test(e); },
-    "E - H" : function(e, n, f, i) { return /^[E-H]/.test(e); },
-    "I - L" : function(e, n, f, i) { return /^[I-L]/.test(e); },
-    "M - P" : function(e, n, f, i) { return /^[M-P]/.test(e); },
-    "Q - T" : function(e, n, f, i) { return /^[Q-T]/.test(e); },
-    "U - X" : function(e, n, f, i) { return /^[U-X]/.test(e); },
-    "Y - Z" : function(e, n, f, i) { return /^[Y-Z]/.test(e); }
+    &quot;A - D&quot; : function(e, n, f, i) { return /^[A-D]/.test(e); },
+    &quot;E - H&quot; : function(e, n, f, i) { return /^[E-H]/.test(e); },
+    &quot;I - L&quot; : function(e, n, f, i) { return /^[I-L]/.test(e); },
+    &quot;M - P&quot; : function(e, n, f, i) { return /^[M-P]/.test(e); },
+    &quot;Q - T&quot; : function(e, n, f, i) { return /^[Q-T]/.test(e); },
+    &quot;U - X&quot; : function(e, n, f, i) { return /^[U-X]/.test(e); },
+    &quot;Y - Z&quot; : function(e, n, f, i) { return /^[Y-Z]/.test(e); }
   }
 
 }</pre></li>
@@ -223,12 +224,29 @@
   // Note that only the normalized (n) value will contain numerical data
   // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
   4 : {
-    "< $10"      : function(e, n, f, i) { return n < 10; },
-    "$10 - $100" : function(e, n, f, i) { return n >= 10 && n <=100; },
-    "> $100"     : function(e, n, f, i) { return n > 100; }
+    &quot;< $10&quot;      : function(e, n, f, i) { return n < 10; },
+    &quot;$10 - $100&quot; : function(e, n, f, i) { return n >= 10 && n <=100; },
+    &quot;> $100&quot;     : function(e, n, f, i) { return n > 100; }
   }
 }</pre></li>
-				<li>See the "Filter function information" section below.</li>
+				<li>See the &quot;Filter function information&quot; section below.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#"><strong>Default Select showing only available options (&quot;Discount&quot; column)</strong></a></h3>
+		<div>
+			<ul>
+				<li>This column uses the same method as the &quot;First Name&quot; column with one exception, it also includes the &quot;filter-onlyAvail&quot; class name in the header
+					cell:<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select filter-onlyAvail&quot;&gt;Discount&lt;/th&gt;</pre></li>
+				<li>To see how this works, do the following:
+					<ul>
+						<li>First, filter the &quot;First Name&quot; column by selecting the name &quot;Clark&quot;</li>
+						<li>Now use the &quot;Discount&quot; filter select box, you'll notice that only the values associated with the first name of Clark are showing as options.</li>
+					</ul>
+				</li>
+				<li>Conversely, if you reset the filters, select &quot;44%&quot; in the &quot;Discount&quot; column, then look at the &quot;First Name&quot; filter selector, you'll notice that it still contains all of the original options; because the &quot;filter-onlyAvail&quot; class name is not included in that column's header cell.</li>
+				<li>Sorry, this only functionalirt only works for default select filters.</li>
+				<li>This funcitonality was added in <span class="version">v2.10.1</span>.</li>
 			</ul>
 		</div>
 
@@ -253,7 +271,7 @@
 	</div>
 
 	<h1>Demo</h1>
-	<button class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle "filter-match" class on First Name column)<br>
+	<button class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle &quot;filter-match&quot; class on First Name column)<br>
 	<button class="reset">Reset Search</button>
 
 	<div id="demo"><table class="tablesorter">
@@ -266,7 +284,7 @@
 			<th data-placeholder="Choose a city">City</th>
 			<th>Age</th>
 			<th data-placeholder="Select a filter">Total</th>
-			<th>Discount</th>
+			<th class="filter-select filter-onlyAvail">Discount</th>
 			<th>Date</th>
 		</tr>
 	</thead>
