@@ -70,7 +70,14 @@ ts.storage = function(table, key, val){
 	var d, k, ls = false, v = {},
 	id = table.id || $('.tablesorter').index( $(table) ),
 	url = window.location.pathname;
-	try { ls = !!(localStorage.getItem); } catch(e) {}
+	// https://gist.github.com/paulirish/5558557
+	if ("localStorage" in window) {
+		try {
+			window.localStorage.setItem('_tmptest', 'temp');
+			ls = true;
+			window.localStorage.removeItem('_tmptest');
+		} catch(e) {}
+	}
 	// *** get val ***
 	if ($.parseJSON){
 		if (ls){
