@@ -461,7 +461,7 @@ ts.addWidget({
 										s = fmt(val.replace(wo.filter_regex.nondigit, '').replace(wo.filter_regex.operators,''), table);
 										// parse filter value in case we're comparing numbers (dates)
 										if (parsed[i] || c.parsers[i].type === 'numeric') {
-											rg = c.parsers[i].format('' + s, table);
+											rg = c.parsers[i].format('' + val.replace(wo.filter_regex.operators,''), table);
 											s = (rg !== '' && !isNaN(rg)) ? rg : s;
 										}
 										// xi may be numeric - see issue #149;
@@ -487,9 +487,9 @@ ts.addWidget({
 										r2 = fmt(s[1].replace(wo.filter_regex.nondigit, ''), table);
 										// parse filter value in case we're comparing numbers (dates)
 										if (parsed[i] || c.parsers[i].type === 'numeric') {
-											rg = c.parsers[i].format('' + r1, table);
+											rg = c.parsers[i].format('' + s[0], table);
 											r1 = (rg !== '' && !isNaN(rg)) ? rg : r1;
-											rg = c.parsers[i].format('' + r2, table);
+											rg = c.parsers[i].format('' + s[1], table);
 											r2 = (rg !== '' && !isNaN(rg)) ? rg : r2;
 										}
 										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(r1) && !isNaN(r2) ? c.cache[k].normalized[j][i] :
