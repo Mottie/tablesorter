@@ -2,7 +2,7 @@
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * jQuery UI spinner
- * jQuery UI silder
+ * jQuery UI slider
  * jQuery UI range slider
  * jQuery UI datepicker (range)
  * HTML5 number (spinner)
@@ -30,6 +30,7 @@ $.tablesorter.filterFormatter = {
 			addToggle: true,
 			disabled: false,
 			exactMatch: true,
+			compare: '',
 			numberFormat: "n"
 		}, spinnerDef ),
 		// Add a hidden input to hold the range values
@@ -44,7 +45,8 @@ $.tablesorter.filterFormatter = {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
 			$cell.find('.filter')
-				.val( chkd ? v + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
+				// add equal to the beginning, so we filter exact numbers
+				.val( chkd ? (o.exactMatch ? '=' : o.compare) + v : '' )
 				.trigger('search', o.delayed).end()
 				.find('.spinner').spinner( o.disabled || !chkd ? 'disable' : 'enable' );
 		};
@@ -103,6 +105,7 @@ $.tablesorter.filterFormatter = {
 			delayed: true,
 			valueToHeader : false,
 			exactMatch: true,
+			compare: '',
 			allText: 'all'
 		}, sliderDef ),
 		// Add a hidden input to hold the range values
@@ -120,9 +123,11 @@ $.tablesorter.filterFormatter = {
 				$cell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', v === o.min ? o.allText : v);
 			}
 			// update the hidden input;
-			// ****** ADD AN EQUAL SIGN TO THE END! <- this makes the slide exactly match the number ******
+			// ****** ADD AN EQUAL SIGN TO THE BEGINNING! <- this makes the slide exactly match the number ******
 			// when the value is at the minimum, clear the hidden input so all rows will be seen
-			$cell.find('.filter').val(v === o.min ? '' : v + (o.exactMatch ? '=' : '')).trigger('search', o.delayed);
+			$cell.find('.filter')
+				.val(v === o.min ? '' : (o.exactMatch ? '=' : o.compare) + v)
+				.trigger('search', o.delayed);
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 
@@ -293,7 +298,8 @@ $.tablesorter.filterFormatter = {
 			delayed: true,
 			disabled: false,
 			addToggle: true,
-			exactMatch: true
+			exactMatch: true,
+			compare: ''
 		}, def5Num),
 
 		// test browser for HTML5 range support
@@ -303,8 +309,9 @@ $.tablesorter.filterFormatter = {
 		updateNumber = function(){
 			var val = $cell.find('.number').val(),
 				chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true;
-			$cell
-				.find('input[type=hidden]').val( chkd ? val + (o.exactMatch ? '=' : '') : '' ) // add equal to the end, so we filter exact numbers
+			$cell.find('input[type=hidden]')
+				// add equal to the beginning, so we filter exact numbers
+				.val( chkd ? (o.exactMatch ? '=' : o.compare) + val : '' )
 				.trigger('search', o.delayed);
 			if ($cell.find('.number').length) {
 				$cell.find('.number')[0].disabled = (o.disabled || !chkd);
@@ -348,6 +355,7 @@ $.tablesorter.filterFormatter = {
 			delayed: true,
 			valueToHeader: true,
 			exactMatch: true,
+			compare: '',
 			allText: 'all'
 		}, def5Range),
 
@@ -359,8 +367,9 @@ $.tablesorter.filterFormatter = {
 		updateRange = function(){
 			/*jshint eqeqeq:false */
 			var val = $cell.find('.range').val();
-			$cell
-				.find('input[type=hidden]').val( val == o.min ? '' : val + (o.exactMatch ? '=' : '')) // add equal to the end, so we filter exact numbers
+			$cell.find('input[type=hidden]')
+				// add equal to the beginning, so we filter exact numbers
+				.val( val == o.min ? '' : (o.exactMatch ? '=' : o.compare) + val)
 				.trigger('search', o.delayed);
 			// or add current color to the header cell, if desired
 			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (val == o.min ? o.allText : val) + ')');
@@ -415,8 +424,8 @@ $.tablesorter.filterFormatter = {
 			if ($cell.find('.colorpicker').length) {
 				$cell.find('.colorpicker')[0].disabled = (o.disabled || !chkd);
 			}
-			$cell
-				.find('input[type=hidden]').val( chkd ? val + (o.exactMatch ? '=' : '') : '' )
+			$cell.find('input[type=hidden]')
+				.val( chkd ? val + (o.exactMatch ? '=' : '') : '' )
 				.trigger('search');
 			if (o.valueToHeader) {
 				// add current color to the header cell
