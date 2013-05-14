@@ -1387,10 +1387,10 @@
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
 				var c = table.config, ci = c.headerList[cellIndex],
-				format = ci.shortDateFormat;
+				format = ci.dateFormat;
 				if (typeof format === 'undefined') {
 					// cache header formatting so it doesn't getData for every cell in the column
-					format = ci.shortDateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+					format = ci.dateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
 				}
 				s = s.replace(/\s+/g," ").replace(/[\-.,]/g, "/"); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === "mmddyyyy") {
