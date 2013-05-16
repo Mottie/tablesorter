@@ -300,7 +300,7 @@
 		<li>Filter Widget:
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.10</span>)</li>
-				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6)</li>
+				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
 				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
 		</li>
@@ -1847,7 +1847,9 @@ $(function(){
 					Filter widget: If a header contains a select dropdown and this class name, only the available (visible) options in the column will show (<span class="version">v2.10.1</span>).
 					<div class="collapsible">
 					<br>
-					This option is useful after one or more columns have been filtered, then the column select filter with this class applied will only show the contents of the column within the dropdown that are currently visible. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example (sort the &quot;First Name&quot; column first).
+					This option is useful after one or more columns have been filtered, then the column select filter with this class applied will only show the contents of the column within the dropdown that are currently visible. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example (sort the &quot;First Name&quot; column first).<br>
+					<br>
+					<span class="alert">Caution:</span> The main issue with this functionality is with keyboard accessibility. If the keyboard is used to select an option, only the first and default options will be available for chosing. The only way to select other options is with the mouse.
 					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
@@ -2923,6 +2925,7 @@ $("table")
   // click a button to apply the zebra striping
   $("button").click(function(){
     $('table').trigger('applyWidgetId', ['zebra']);
+    return false;
   });
 
 });</pre></div>
@@ -3040,6 +3043,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true ); // 
   // this is the same code that the <code>filter_reset</code> element runs to clear out the filters.
   $('button').click(function(){
     $('table').trigger('filterReset');
+    return false;
 });</pre></div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
@@ -3078,6 +3082,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 						<pre class="prettyprint lang-javascript">$(function(){
   $('button').click(function(){
     $('table').trigger('saveSortReset');
+    return false;
   });
 });</pre></div>
 				</td>

@@ -104,7 +104,7 @@
 
 	// External search
 	// buttons set up like this:
-	// <button class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
+	// <button type="button" class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
 	$('button.search').click(function(){
 		/*** first method *** data-filter-column="1" data-filter-text="!son"
 			add search value to Discount column (zero based index) input */
@@ -131,6 +131,7 @@
 		$('table').trigger('search', [ columns ]);
 		*/
 
+		return false;
 	});
 
 });</script>
@@ -153,6 +154,7 @@ $(function(){
 		}
 		// update search after option change; add false to trigger to skip search delay
 		$('table.tablesorter').trigger('search', false);
+		return false;
 	});
 
 });
@@ -290,13 +292,13 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 	</div>
 
 	<h1>Demo</h1>
-	<button class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
-	<button class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)
+	<button type="button" class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
+	<button type="button" class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)
 	<hr>
 
 	<div id="demo">
-	<button class="search" data-filter-column="5" data-filter-text="2?%">Saved Search</button> (search the Discount column for &quot;2?%&quot;)<br>
-	<button class="reset">Reset Search</button> <!-- targetted by the "filter_reset" option -->
+	<button type="button" class="search" data-filter-column="5" data-filter-text="2?%">Saved Search</button> (search the Discount column for &quot;2?%&quot;)<br>
+	<button type="button" class="reset">Reset Search</button> <!-- targetted by the "filter_reset" option -->
 
 	<table class="tablesorter">
 	<thead>

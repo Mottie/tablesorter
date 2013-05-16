@@ -127,6 +127,7 @@ var addParsedValues = function($t, cols, format){
 
 	$('.toggleparsedvalue').on('click', function(){
 		$('.val').toggleClass('hidden');
+		return false;
 	});
 
 };

@@ -26,6 +26,7 @@
 
 	$('button').click(function(){
 		$('table').trigger('sortReset');
+		return false;
 	});
 
 });</script>
@@ -49,7 +50,7 @@
 	</p>
 
 <h1>Demo</h1>
-<button>Reset</button>
+<button type="button">Reset</button>
 <div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>

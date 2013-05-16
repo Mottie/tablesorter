@@ -65,6 +65,7 @@
 		$('.state').html(o.toString());
 		// update filter; include false parameter to force a new search
 		$('input.tablesorter-filter').trigger('search', false);
+		return false;
 	});
 
 });</script>
@@ -90,7 +91,7 @@
 
 	<h1>Demo</h1>
 	<br>
-	<div id="demo"><button class="toggle-option">Toggle Child Row Content</button> : <span class="state">true</span>
+	<div id="demo"><button type="button" class="toggle-option">Toggle Child Row Content</button> : <span class="state">true</span>
 
 	<ul>
 		<li>If true, the child row content is included in ALL filters. Enter "cal" (california) in any column filter and the same rows show up.</li>

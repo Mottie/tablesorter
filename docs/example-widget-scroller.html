@@ -79,6 +79,7 @@ $(function() {
 			this.config.widgetOptions.scroller_jumpToHeader = b;
 			$c.html(b + '');
 		});
+		return false;
 	});
 
 });
@@ -123,7 +124,7 @@ $(function() {
 		<option value="jui">Jquery UI</option>
 	</select><br>
 	<br>
-	<button>Toggle</button> scroller_jumpToHeader : <span id="case">true</span> (see the note above)<span class="remark">*</span>
+	<button type="button">Toggle</button> scroller_jumpToHeader : <span id="case">true</span> (see the note above)<span class="remark">*</span>
 	<br>
 
 	<table class="tablesorter">

@@ -53,16 +53,29 @@
 						valueToHeader: false
 					});
 				},
+				2 : function($cell, indx){
+					return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
+						// add any of the jQuery UI Slider options here
+						value: 1,
+						min: 1,
+						max: 65,
+						delayed: false,
+						valueToHeader: false,
+						exactMatch: false,
+						allText: 'all', // need to show "1" as the minimum value (instead of "all")
+						compare : '>='
+					});
+				},
 				3 : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
-						values: [1, 70],
+						values: [1, 160],
 						min: 1,
-						max: 70,
-						delayed: true,
+						max: 160,
+						delayed: false,
 						valueToHeader: false
 					});
 				},
-				5 : function($cell, indx){
+				4 : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
 						min : 0,
 						max : 45,
@@ -81,18 +94,7 @@
 						changeMonth: true,
 						changeYear : true
 					});
-				},
-
-				4 : function($cell, indx){
-					return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
-						values: [1, 160],
-						min: 1,
-						max: 160,
-						delayed: true,
-						valueToHeader: false
-					});
 				}
-
 			}
 		}
 	});
@@ -123,7 +125,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>jQuery UI Single Slider</strong> ("Rank" column)</a></h3>
+		<h3><a href="#"><strong>jQuery UI Single Slider</strong> ("Rank" and "Age" columns)</a></h3>
 		<div>
 			<ul>
 				<li>This example shows how you can add a jQuery UI slider to filter column content.</li>
@@ -142,6 +144,7 @@
       filter_reset : 'button.reset',
       // add custom selector elements to the filter row
       filter_formatter : {
+
         0 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
             // add any of the jQuery UI Slider options here
@@ -153,7 +156,22 @@
             exactMatch: true,     // exact (true) or match (false)
             allText: 'all',       // text shown when the slider is at the minimum value
           });
+        },
+
+        2 : function($cell, indx){
+          return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
+            // add any of the jQuery UI Slider options here
+            value: 0,             // starting value
+            min: 0,               // minimum value
+            max: 100,             // maximum value
+            delayed: true,        // delay search (set by filter_searchDelay)
+            valueToHeader: false, // add current slider value to the header cell
+            exactMatch: false,    // exact (true) or match (false)
+            allText: 'all',       // text shown when the slider is at the minimum value
+            compare : '>='        // show values >= selected value
+          });
         }
+
       }
     }
   });
@@ -163,10 +181,11 @@
 				<li>Another option named <code>exactMatch</code> was added to allow exact or general matching of column content.</li>
 				<li>Notice that the left-most value, zero in this case, will clear the column filter to allow a method to show all column content. You can modify the "all" text using the <code>allText</code> option.</li>
 				<li>A search delay was added in v2.7.11 (time set by <code>filter_searchDelay</code> option). It can be disabled by setting the <code>delayed</code> option to <code>false</code>.</li>
+				<li>In <span class="version">v2.10.1</span> the <code>compare</code> option was added. This allows comparing the slider's value to the column value. The slider in the Age column is selecting values greater than or equal to itself.</li>
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>jQuery UI Range Slider</strong> ("Age" and "Total" columns)</a></h3>
+		<h3><a href="#"><strong>jQuery UI Range Slider</strong> ("Total" column)</a></h3>
 		<div>
 			<ul>
 				<li>This example shows how you can add a jQuery UI range slider to filter column content.</li>
@@ -187,27 +206,15 @@
       // add custom selector elements to the filter row
       filter_formatter : {
 
-        // Age column
+        // Total column
         3 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
-            values: [1, 70],     // starting range
-            min: 1,              // minimum value
-            max: 70,             // maximum value
-            delayed: true,       // delay search (set by filter_searchDelay)
-            exactMatch: true,    // exact (true) or match (false)
-            valueToHeader: false // add current slider value to the header cell
-          });
-        },
-
-        // Total column
-        4 : function($cell, indx){
-          return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
-            values: [1, 160],    // starting range
-            min: 1,              // minimum value
-            max: 160,            // maximum value
-            delayed: true,       // delay search (set by filter_searchDelay)
-            exactMatch: true,    // exact (true) or match (false)
-            valueToHeader: false // add current slider value to the header cell
+            values: [1, 160],     // starting range
+            min: 1,               // minimum value
+            max: 160,             // maximum value
+            delayed: true,        // delay search (set by filter_searchDelay)
+            exactMatch: true,     // exact (true) or match (false)
+            valueToHeader: false, // add current slider value to the header cell
           });
         }
 
@@ -240,7 +247,7 @@
       filter_reset : 'button.reset',
       // add custom selector elements to the filter row
       filter_formatter : {
-        5 : function($cell, indx){
+        4 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
             min : 0,
             max : 45,
@@ -341,137 +348,33 @@
 	</div>
 
 	<h1>Demo</h1>
-	<button class="reset">Reset Search</button>
+	<button type="button" class="reset">Reset Search</button>
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Rank</th>
-			<th>Color</th>
 			<th>Name</th>
 			<th>Age</th>
 			<th>Total</th>
 			<th>Discount</th>
-			<th>Date</th>
+			<th>Date 1</th>
+			<th>Date 2</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td>1</td>
-			<td>#ff0000</td>
-			<td>Johnson</td>
-			<td>25</td>
-			<td>$5.95</td>
-			<td>22%</td>
-			<td>Jun 26, 2013 7:22 AM</td>
-		</tr>
-		<tr>
-			<td>11</td>
-			<td>#00ff00</td>
-			<td>Hibert</td>
-			<td>12</td>
-			<td>$2.99</td>
-			<td>5%</td>
-			<td>Aug 21, 2013 12:21 PM</td>
-		</tr>
-		<tr>
-			<td>12</td>
-			<td>#0000ff</td>
-			<td>Henry</td>
-			<td>51</td>
-			<td>$42.29</td>
-			<td>18%</td>
-			<td>Oct 13, 2013 1:15 PM</td>
-		</tr>
-		<tr>
-			<td>51</td>
-			<td>#00ffff</td>
-			<td>Parker</td>
-			<td>28</td>
-			<td>$9.99</td>
-			<td>20%</td>
-			<td>Jul 6, 2013 8:14 AM</td>
-		</tr>
-		<tr>
-			<td>21</td>
-			<td>#ffff00</td>
-			<td>Hood</td>
-			<td>33</td>
-			<td>$19.99</td>
-			<td>25%</td>
-			<td>Dec 10, 2012 5:14 AM</td>
-		</tr>
-		<tr>
-			<td>013</td>
-			<td>#ff0000</td>
-			<td>Kent</td>
-			<td>18</td>
-			<td>$15.89</td>
-			<td>45%</td>
-			<td>Jan 12, 2013 11:14 AM</td>
-		</tr>
-		<tr>
-			<td>005</td>
-			<td>#00ff00</td>
-			<td>Bruce</td>
-			<td>45</td>
-			<td>$153.19</td>
-			<td>45%</td>
-			<td>Jan 18, 2014 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>10</td>
-			<td>#00ffff</td>
-			<td>Alex</td>
-			<td>3</td>
-			<td>$5.29</td>
-			<td>4%</td>
-			<td>Jan 8, 2013 5:11 PM</td>
-		</tr>
-		<tr>
-			<td>16</td>
-			<td>#ffff00</td>
-			<td>Franco</td>
-			<td>24</td>
-			<td>$14.19</td>
-			<td>14%</td>
-			<td>Jan 14, 2014 11:23 AM</td>
-		</tr>
-		<tr>
-			<td>66</td>
-			<td>#000000</td>
-			<td>Evans</td>
-			<td>22</td>
-			<td>$13.19</td>
-			<td>11%</td>
-			<td>Jan 18, 2013 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>100</td>
-			<td>#ffffff</td>
-			<td>Brenda</td>
-			<td>18</td>
-			<td>$55.20</td>
-			<td>15%</td>
-			<td>Feb 12, 2013 7:23 PM</td>
-		</tr>
-		<tr>
-			<td>55</td>
-			<td>#ffff00</td>
-			<td>Bronson</td>
-			<td>65</td>
-			<td>$123.00</td>
-			<td>32%</td>
-			<td>Jan 20, 2014 1:12 PM</td>
-		</tr>
-		<tr>
-			<td>9</td>
-			<td>#000000</td>
-			<td>Martha</td>
-			<td>25</td>
-			<td>$22.09</td>
-			<td>17%</td>
-			<td>Jun 11, 2013 10:55 AM</td>
-		</tr>
+		<tr><td>1</td><td>Johnson</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2013 7:22 AM</td><td>Jun 26, 2013 7:22 AM</td></tr>
+		<tr><td>11</td><td>Hibert</td><td>12</td><td>$82.99</td><td>5%</td><td>Aug 21, 2013 12:21 PM</td><td>Aug 21, 2013 12:21 PM</td></tr>
+		<tr><td>12</td><td>Henry</td><td>51</td><td>$99.29</td><td>18%</td><td>Oct 13, 2013 1:15 PM</td><td>Oct 13, 2013 1:15 PM</td></tr>
+		<tr><td>51</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2013 8:14 AM</td><td>Jul 6, 2013 8:14 AM</td></tr>
+		<tr><td>21</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2012 5:14 AM</td><td>Dec 10, 2012 5:14 AM</td></tr>
+		<tr><td>013</td><td>Kent</td><td>18</td><td>$65.89</td><td>45%</td><td>Jan 12, 2013 11:14 AM</td><td>Jan 12, 2013 11:14 AM</td></tr>
+		<tr><td>005</td><td>Bruce</td><td>45</td><td>$153.19</td><td>45%</td><td>Jan 18, 2014 9:12 AM</td><td>Jan 18, 2014 9:12 AM</td></tr>
+		<tr><td>10</td><td>Alex</td><td>3</td><td>$5.29</td><td>4%</td><td>Jan 8, 2013 5:11 PM</td><td>Jan 8, 2013 5:11 PM</td></tr>
+		<tr><td>16</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2014 11:23 AM</td><td>Jan 14, 2014 11:23 AM</td></tr>
+		<tr><td>66</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2013 9:12 AM</td><td>Jan 18, 2013 9:12 AM</td></tr>
+		<tr><td>100</td><td>Brenda</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2013 7:23 PM</td><td>Feb 12, 2013 7:23 PM</td></tr>
+		<tr><td>55</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2014 1:12 PM</td><td>Jan 20, 2014 1:12 PM</td></tr>
+		<tr><td>9</td><td>Martha</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2013 10:55 AM</td><td>Jun 11, 2013 10:55 AM</td></tr>
 	</tbody>
 </table></div>
 

@@ -25,6 +25,7 @@
 	$("button.applyid").click(function(){
 		// This method needs to be applied after each sort
 		$('table').trigger('applyWidgetId', ['zebra']);
+		return false;
 	});
 
 	$("button.apply").click(function(){
@@ -32,6 +33,7 @@
 		$("table").data("tablesorter").widgets = ["zebra"];
 		// This method applies the widget - no need to keep updating
 		$('table').trigger('applyWidgets');
+		return false;
 	});
 
 });</script>
@@ -51,7 +53,7 @@
 
 	<h1>Demo</h1>
 	<br>
-	<div id="demo"><button class="applyid">Apply Widget Id</button> <button class="apply">Apply Widgets</button>
+	<div id="demo"><button type="button" class="applyid">Apply Widget Id</button> <button type="button" class="apply">Apply Widgets</button>
 
 <table class="tablesorter">
 	<thead>

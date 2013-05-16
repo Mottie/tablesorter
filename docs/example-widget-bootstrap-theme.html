@@ -100,6 +100,7 @@
 				txt = $(this).data('filter');
 			$('table').find('.tablesorter-filter').val('').eq(col).val(txt);
 			$('table').trigger('search', false);
+			return false;
 		});
 
 		// toggle zebra widget
@@ -120,6 +121,7 @@
 				.find('span')
 				.text(t ? 'disabled' : 'enabled');
 			$('table').trigger('refreshWidgets', [false]);
+			return false;
 		});
 	});
 	</script>
@@ -157,8 +159,8 @@
 			<li>This demo shows how to get around an issue with the filter widget:
 				<ul>
 					<li>The <span class="label label-success">zebra widget button</span> below was added to show that when bootstrap's "table-striped" class is applied, the css defined zebra striping will not apply correctly because table rows are hidden but still accounted for by the css <code>nth-child()</code> selector.</li>
-					<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button class="filter btn btn-small btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
-					<li>Try other filter searches with the zebra widget disabled, like <button class="filter btn btn-small btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
+					<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button type="button" class="filter btn btn-small btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
+					<li>Try other filter searches with the zebra widget disabled, like <button type="button" class="filter btn btn-small btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
 					<li>To solve this issue, just enable the zebra widget and the "even" and "odd" row class names <del>will</del> should over-ride the <code>nth-child()</code> styling.<br><span class="label label-warning">NOTE!</span> This doesn't seem to work in the latest Bootstrap version, so you'll have to remove the "table-striped" class completely from the table.</li>
 					<li>The only down side is that for custom bootstrap themes, you'll need to edit the "theme.bootstrap.css" file for bootstrap.</li>
 				</ul>
@@ -170,9 +172,9 @@
 	<h1>Demo</h1>
 	<!-- use the filter_reset : '.reset' option or include data-filter="" using the filter button demo code to reset the filters -->
 	<div class="bootstrap_buttons">
-		Reset filter : <button class="reset btn btn-primary" data-column="0" data-filter=""><i class="icon-white icon-refresh"></i> Reset filters</button>
+		Reset filter : <button type="button" class="reset btn btn-primary" data-column="0" data-filter=""><i class="icon-white icon-refresh"></i> Reset filters</button>
 		<br>
-		Zebra widget : <button class="zebra btn btn-success"><i class="icon-white icon-ok"></i> <span>enabled</span></button>
+		Zebra widget : <button type="button" class="zebra btn btn-success"><i class="icon-white icon-ok"></i> <span>enabled</span></button>
 	</div>
 	<br>
 
@@ -198,11 +200,11 @@
 			<th>Geometry</th></tr>
 		<tr>
 			<th colspan="7" class="pager form-horizontal">
-				<button class="btn first"><i class="icon-step-backward"></i></button>
-				<button class="btn prev"><i class="icon-arrow-left"></i></button>
+				<button type="button" class="btn first"><i class="icon-step-backward"></i></button>
+				<button type="button" class="btn prev"><i class="icon-arrow-left"></i></button>
 				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-				<button class="btn next"><i class="icon-arrow-right"></i></button>
-				<button class="btn last"><i class="icon-step-forward"></i></button>
+				<button type="button" class="btn next"><i class="icon-arrow-right"></i></button>
+				<button type="button" class="btn last"><i class="icon-step-forward"></i></button>
 				<select class="pagesize input-mini" title="Select page size">
 					<option selected="selected" value="10">10</option>
 					<option value="20">20</option>

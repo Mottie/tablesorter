@@ -30,7 +30,7 @@
 
 		// External search
 		// buttons set up like this:
-		// <button class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
+		// <button type="button" class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
 		$('button.match').click(function(){
 
 			// toggle "filter-match" class on first column
@@ -46,6 +46,7 @@
 			filters.val(''); // clear all filters
 			filters.eq(col).val(txt).trigger('search', false);
 
+			return false;
 		});
 
 	});
@@ -271,8 +272,8 @@
 	</div>
 
 	<h1>Demo</h1>
-	<button class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle &quot;filter-match&quot; class on First Name column)<br>
-	<button class="reset">Reset Search</button>
+	<button type="button" class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle &quot;filter-match&quot; class on First Name column)<br>
+	<button type="button" class="reset">Reset Search</button>
 
 	<div id="demo"><table class="tablesorter">
 	<thead>

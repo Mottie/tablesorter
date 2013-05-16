@@ -47,9 +47,10 @@
 	$('button').click(function(){
 		var search = $(this).attr('data-search').split(',');
 		$('table').trigger('search', [search]);
+		return false;
 	});
 
-}); </script>
+});</script>
 </head>
 <body>
 
@@ -77,9 +78,9 @@
 	<h1>Demo</h1>
 
 	<!-- ",l,f,>80".split(",") ends up as an array [ "", "l", "f", ">80" ] -->
-	<button data-search=",l,f,>80">Filter</button> (females majoring in languages with a score >80)<br>
-	<button data-search=",l,!female,>80">Filter</button> (males majoring in languages with a score >80)<br>
-	<button class="reset">Reset</button>
+	<button type="button" data-search=",l,f,>80">Filter</button> (females majoring in languages with a score >80)<br>
+	<button type="button" data-search=",l,!female,>80">Filter</button> (males majoring in languages with a score >80)<br>
+	<button type="button" class="reset">Reset</button>
 
 	<table class="tablesorter">
 	<thead>

@@ -33,6 +33,7 @@
 		$('table')
 			.trigger('saveSortReset') // clear saved sort
 			.trigger("sortReset");    // reset current table sort
+		return false;
 	});
 
 });</script>
@@ -58,7 +59,7 @@
 	</p>
 
 	<h1>Demo</h1>
-	<div id="demo"><button>Reset Sort</button>
+	<div id="demo"><button type="button">Reset Sort</button>
 <br>
 <table class="tablesorter">
 	<thead>

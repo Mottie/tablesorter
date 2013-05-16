@@ -39,6 +39,7 @@
 		$('table')
 			.find('tbody').append($row)
 			.trigger('addRows', [$row, resort]);
+		return false;
 	});
 
 });</script>
@@ -66,7 +67,7 @@
 
 	<h1>Demo</h1>
 	<br>
-	<button>Add Rows</button>
+	<button type="button">Add Rows</button>
 	<br>
 	<div id="demo"><table class="tablesorter">
 	<thead>
