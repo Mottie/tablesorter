@@ -16,6 +16,7 @@
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 /*global console:false, alert:false */
+
 !(function($) {
 	"use strict";
 	$.extend({
@@ -408,6 +409,8 @@
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
 					$t.parent().addClass(c.cssHeaderRow);
+					// allow keyboard cursor to focus on element
+					$t.attr("tabindex", 0);
 				});
 				// enable/disable sorting
 				updateHeader(table);
@@ -666,19 +669,25 @@
 				c.$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) )
-				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter')
-				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter', function(e, external) {
+				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter')
+				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
+					if (e.keyCode && e.keyCode !== 13) { return; }
 					// jQuery v1.2.6 doesn't have closest()
 					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
-					// only recognize left clicks
-					if ((e.which || e.button) !== 1 && e.type !== 'sort') { return false; }
+					// only recognize left clicks or enter
+					if (e.keyCode) {
+						if (e.keyCode !== 13) { return false; }
+					}
+					else if ( (e.which || e.button) !== 1 && e.type !== 'sort') {
+						return false;
+					}
 					// set timer on mousedown
 					if (e.type === 'mousedown') {
 						downTime = new Date().getTime();
 						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 					}
 					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (external !== true && (new Date().getTime() - downTime > 250)) { return false; }
+					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return false; }
 					if (c.delayInit && !c.cache) { buildCache(table); }
 					if (!cell.sortDisabled) {
 						initSort(table, cell, e);
@@ -955,11 +964,11 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave sortBegin sortEnd '.split(' ').join('.tablesorter '));
+					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
 					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
 					.removeAttr('data-column');
-				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter');
+				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter keypress.tablesorter');
 				ts.restoreHeaders(table);
 				if (removeClasses !== false) {
 					$t.removeClass(c.tableClass + ' tablesorter-' + c.theme);
