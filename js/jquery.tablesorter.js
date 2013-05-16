@@ -16,7 +16,6 @@
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 /*global console:false, alert:false */
-
 !(function($) {
 	"use strict";
 	$.extend({
@@ -421,15 +420,14 @@
 			}
 
 			function commonUpdate(table, resort, callback) {
-				var $t = $(table),
-					c = table.config;
+				var c = table.config;
 				// remove rows/elements before update
-				$t.find(c.selectorRemove).remove();
+				c.$table.find(c.selectorRemove).remove();
 				// rebuild parsers
 				buildParserCache(table);
 				// rebuild the cache map
 				buildCache(table);
-				checkResort($t, resort, callback);
+				checkResort(c.$table, resort, callback);
 			}
 
 			function updateHeader(table) {
@@ -671,24 +669,20 @@
 				.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) )
 				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter')
 				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
-					if (e.keyCode && e.keyCode !== 13) { return; }
-					// jQuery v1.2.6 doesn't have closest()
-					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 					// only recognize left clicks or enter
-					if (e.keyCode) {
-						if (e.keyCode !== 13) { return false; }
-					}
-					else if ( (e.which || e.button) !== 1 && e.type !== 'sort') {
+					if ( ((e.which || e.button) !== 1 && !/sort|keypress/.test(e.type)) || (e.type === 'keypress' && e.which !== 13) ) {
 						return false;
 					}
+					// ignore long clicks (prevents resizable widget from initializing a sort)
+					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return false; }
 					// set timer on mousedown
 					if (e.type === 'mousedown') {
 						downTime = new Date().getTime();
 						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 					}
-					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return false; }
 					if (c.delayInit && !c.cache) { buildCache(table); }
+					// jQuery v1.2.6 doesn't have closest()
+					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
 					if (!cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
