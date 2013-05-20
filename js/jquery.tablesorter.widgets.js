@@ -582,6 +582,18 @@ ts.addWidget({
 						buildSelect(i, updating, t.hasClass(wo.filter_onlyAvail));
 					}
 				}
+			},
+			searching = function(filter){
+				if (typeof filter === 'undefined' || filter === true){
+					// delay filtering
+					clearTimeout(timer);
+					timer = setTimeout(function(){
+						checkFilters(filter); 
+					}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
+				} else {
+					// skip delay
+					checkFilters(filter);
+				}
 			};
 			if (c.debug){
 				time = new Date();
@@ -644,11 +656,12 @@ ts.addWidget({
 				if (e.type === 'filterReset') {
 					$t.find('.' + css).val('');
 				}
-				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
-				filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : '';
-				checkFilters(filter);
 				if (e.type === 'filterEnd') {
 					buildDefault(true);
+				} else {
+					// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
+					filter = e.type === 'search' ? filter : e.type === 'updateComplete' ? $t.data('lastSearch') : '';
+					searching(filter);
 				}
 				return false;
 			})
@@ -661,18 +674,7 @@ ts.addWidget({
 					( (e.which < 32 && e.which !== 8 && wo.filter_liveSearch === true && e.which !== 13) || (e.which >= 37 && e.which <=40) || (e.which !== 13 && wo.filter_liveSearch === false) ) ) ) {
 					return;
 				}
-				// skip delay
-				if (typeof filter !== 'undefined' || filter === false){
-					checkFilters();
-					// no return false; allow search event propogation up to table
-				} else {
-					// delay filtering
-					clearTimeout(timer);
-					timer = setTimeout(function(){
-						checkFilters(filter);
-					}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
-					return false;
-				}
+				searching(filter);
 			});
 
 			// parse columns after formatter, in case the class is added at that point
@@ -802,7 +804,7 @@ ts.setFilters = function(table, filter, apply) {
 		valid = c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).each(function(i, el) {
 			$(el).val(filter[i] || '');
 		}) || false : false;
-	if (valid && apply) { $t.trigger('search'); }
+	if (valid && apply) { $t.trigger('search', false); }
 	return !!valid;
 };
 
