@@ -350,6 +350,7 @@ ts.addWidget({
 		filter_regex : {
 			"regex" : /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // regex to test for regex
 			"child" : /tablesorter-childRow/, // child row class name; this gets updated in the script
+			"filtered" : /filtered/, // filtered (hidden) row class name; updated in the script
 			"type" : /undefined|number/, // check type
 			"exact" : /(^[\"|\'|=])|([\"|\'|=]$)/g, // exact match
 			"nondigit" : /[^\w,. \-()]/g, // replace non-digits (from digit & currency parser)
@@ -398,9 +399,8 @@ ts.addWidget({
 				}
 			},
 			findRows = function(filter, v, cv){
-				var $tb, $tr, $td, cr, r, l, ff, time, r1, r2;
+				var $tb, $tr, $td, cr, r, l, ff, time, r1, r2, searchFiltered;
 				if (c.debug) { time = new Date(); }
-
 				for (k = 0; k < b.length; k++ ){
 					if (b.eq(k).hasClass(c.cssInfoBlock)) { continue; } // ignore info blocks, issue #264
 					$tb = ts.processTbody(table, b.eq(k), true);
@@ -409,10 +409,17 @@ ts.addWidget({
 					if (cv === '' || wo.filter_serversideFiltering){
 						$tr.show().removeClass(wo.filter_filteredRow);
 					} else {
+						// optimize searching only through already filtered rows - see #313
+						searchFiltered = true;
+						r = $t.data('lastSearch') || [];
+						$.each(v, function(i,val){
+							searchFiltered = val.indexOf(r[i] || '') === 0 && searchFiltered;
+						});
 						// loop through the rows
 						for (j = 0; j < l; j++){
-							// skip child rows
-							if (wo.filter_regex.child.test($tr[j].className)) { continue; }
+							r = $tr[j].className;
+							// skip child rows & already filtered rows
+							if ( wo.filter_regex.child.test(r) || (searchFiltered && wo.filter_regex.filtered.test(r)) ) { continue; }
 							r = true;
 							cr = $tr.eq(j).nextUntil('tr:not(.' + c.cssChildRow + ')');
 							// so, if "table.config.widgetOptions.filter_childRows" is true and there is
@@ -599,6 +606,7 @@ ts.addWidget({
 				time = new Date();
 			}
 			wo.filter_regex.child = new RegExp(c.cssChildRow);
+			wo.filter_regex.filtered = new RegExp(wo.filter_filteredRow);
 			// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
 			if (wo.filter_columnFilters !== false && $ths.filter('.filter-false').length !== $ths.length){
 				// build filter row
