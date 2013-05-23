@@ -139,18 +139,27 @@
 <script>
 $(function(){
 
+	$('.firstname').click(function(){
+		$.tablesorter.setFilters( $('table.tablesorter'), ['', 'alex|br*|c'], true );
+		return false;
+	});
+
 	// *** widgetfilter_startsWith toggle button ***
 	$('button.toggle').click(function(){
 		var c = $('table.tablesorter')[0].config,
+		$t = $(this),
 		// toggle the boolean
 		fsw = !c.widgetOptions.filter_startsWith,
 		fic = !c.widgetOptions.filter_ignoreCase;
-		if ($(this).hasClass('fsw')) {
+		if ($t.hasClass('fsw')) {
 			c.widgetOptions.filter_startsWith = fsw;
 			$('#start').html(fsw.toString());
-		} else {
+		} else if ($t.hasClass('fic')) {
 			c.widgetOptions.filter_ignoreCase = fic;
 			$('#case').html(fic.toString());
+		} else {
+			$t = c.$headers.eq(1).toggleClass('filter-match');
+			$t.find('span').html( $t.hasClass('filter-match') ? '' : ' No' );
 		}
 		// update search after option change; add false to trigger to skip search delay
 		$('table.tablesorter').trigger('search', false);
@@ -189,15 +198,16 @@ $(function(){
 							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds &quot;Jan&quot; and &quot;Jun&quot;, but not &quot;Joan&quot;)</td></tr>
 							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches &quot;Black&quot; and &quot;Book&quot;)</td></tr>
 							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc)</td></tr>
-							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small></td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
+							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small>.</td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with &quot;female&quot; in that column, but shows rows with &quot;male&quot;)</td></tr>
 							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical &quot;and&quot;. Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both &quot;box&quot; and &quot;bat&quot;)</td></tr>
-							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;)</td></tr>
+							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar <small class="bright">(3)</small>.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;)</td></tr>
 							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(2)</small>.</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
 						</tbody>
 					</table>
 					<span class="bright">(1)</span> You cannot combine these operators with each other (except for the wildcards).<br>
-					<span class="bright">(2)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).
+					<span class="bright">(2)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).<br>
+					<span class="bright">(3)</span> Logical "or" comparisons can now show exact matches (by default; <span class="version">v2.10.1</span>) or just match cell contents.
 				</li>
 			</ul>
 		</div>
@@ -230,7 +240,7 @@ $(function(){
 			<ul>
 				<li><code>filter-false</code> - disable the filter for a specific header column.</li>
 				<li><code>filter-select</code> - build a default select box for a column (shows unique column content). See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo for an example.</li>
-				<li><code>filter-match</code> - only applies to &quot;filter-select&quot; columns. Makes the select match the column contents instead of exactly matching.</li>
+				<li><code>filter-match</code> - applies to &quot;filter-select&quot; columns and columns where the user can use the logical "or" search. Makes the filter/select match the column contents instead of exactly matching.</li>
 				<li><code>filter-parsed</code> - set a column to filter through parsed data instead of the actual table cell content.</li>
 				<li><code>filter-onlyAvail</code> - show only available (visible) options within a default select box. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example.</li>
 			</ul>
@@ -293,7 +303,8 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 
 	<h1>Demo</h1>
 	<button type="button" class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
-	<button type="button" class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)
+	<button type="button" class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)<br>
+	<button type="button" class="toggle ffm">Toggle</button> filter-match (if class name added to the "First Name" column, all "or" searches will only match the content; Search <button type="button" class="firstname">alex|br*|c</button> in the First Name column (<span class="version">2.10.1</span>).
 	<hr>
 
 	<div id="demo">
@@ -304,7 +315,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 	<thead>
 		<tr>
 			<th data-placeholder="" class="filter-false">Rank</th>
-			<th data-placeholder="Try B*{space}">First Name</th>
+			<th data-placeholder="Try B*{space} or alex|br*|c" class="filter-match">First Name (<span></span> filter-match )</th>
 			<th data-placeholder="Try <d">Last Name</th>
 			<th data-placeholder="Try >=33">Age</th>
 			<th data-placeholder="Try <9.99">Total</th>

@@ -6,7 +6,7 @@
  * Sticky Header
  * UI Theme (generalized)
  * Save Sort
- * ["zebra", "uitheme", "stickyHeaders", "filter", "columns"]
+ * [ "columns", "filter", "resizable", "stickyHeaders", "uitheme", "saveSort" ]
  */
 /*jshint browser:true, jquery:true, unused:false, loopfunc:true */
 /*global jQuery: false, localStorage: false, navigator: false */
@@ -413,7 +413,8 @@ ts.addWidget({
 						searchFiltered = true;
 						r = $t.data('lastSearch') || [];
 						$.each(v, function(i,val){
-							searchFiltered = val.indexOf(r[i] || '') === 0 && searchFiltered;
+							// check for changes from beginning of filter; but ignore if there is a logical "or" in the string
+							searchFiltered = (val || '').indexOf(r[i] || '') === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
 						});
 						// loop through the rows
 						for (j = 0; j < l; j++){
@@ -512,7 +513,12 @@ ts.addWidget({
 										ff = (rg >= r1 && rg <= r2) || (r1 === '' || r2 === '') ? true : false;
 									// Look for wild card: ? = single, * = multiple, or | = logical OR
 									} else if ( /[\?|\*]/.test(val) || /\s+OR\s+/.test(v[i]) ){
-										ff = new RegExp( val.replace(/\s+or\s+/gi,"|").replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(xi);
+										s = val.replace(/\s+OR\s+/gi,"|");
+										// look for an exact match with the "or" unless the "filter-match" class is found
+										if (!$ths.filter('[data-column="' + i + '"]:last').hasClass('filter-match') && /\|/.test(s)) {
+											s = '^(' + s + ')$';
+										}
+										ff = new RegExp( s.replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(xi);
 									// Look for match, and add child row data for matching
 									} else {
 										x = (xi + t).indexOf(val);
@@ -528,7 +534,6 @@ ts.addWidget({
 					}
 					ts.processTbody(table, $tb, false);
 				}
-
 				last = cv; // save last search
 				$t.data('lastSearch', v);
 				if (c.debug){
@@ -802,6 +807,7 @@ ts.addWidget({
 });
 ts.getFilters = function(table) {
 	var c = table ? $(table)[0].config : {};
+	if (c && c.widgetOptions && !c.widgetOptions.filter_columnFilters) { return $(table).data('lastSearch'); }
 	return c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).map(function(i, el) {
 		return $(el).val();
 	}).get() || [] : false;
@@ -812,7 +818,7 @@ ts.setFilters = function(table, filter, apply) {
 		valid = c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).each(function(i, el) {
 			$(el).val(filter[i] || '');
 		}) || false : false;
-	if (valid && apply) { $t.trigger('search', false); }
+	if (apply) { $t.trigger('search', [filter, false]); }
 	return !!valid;
 };
 
