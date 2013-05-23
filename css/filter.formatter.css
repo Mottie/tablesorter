@@ -7,26 +7,31 @@
 
 /**** Sliders ****/
 /* shrink the sliders to look nicer inside of a table cell */
-.ui-slider, input.range {
+.tablesorter .ui-slider, .tablesorter input.range {
 	width: 90%;
-	margin: 12px auto 2px auto; /* add enough top margin so the tooltips will fit */
+	margin: 2px auto 2px auto; /* add enough top margin so the tooltips will fit */
 	font-size: 0.8em;
 }
-.ui-slider .ui-slider-handle{
-	width: 0.8em;
-	height: 0.8em;
+.tablesorter .ui-slider {
+	top: 12px;
 }
-.ui-datepicker {
+.tablesorter .ui-slider .ui-slider-handle {
+	width: 0.9em;
+	height: 0.9em;
+}
+.tablesorter .ui-datepicker {
 	font-size: 0.8em;
 }
-
+.tablesorter .ui-slider-horizontal {
+	height: 0.5em;
+}
 /* Add tooltips to slider handles */
-.value-popup:after {
+.tablesorter .value-popup:after {
 	content : attr(data-value);
 	position: absolute;
-	bottom: 15px;
-	left: -3px;
-	min-width: 14px;
+	bottom: 14px;
+	left: -7px;
+	min-width: 18px;
 	height: 12px;
 	background-color: #444;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#444444), to(#999999));
@@ -41,11 +46,11 @@
 	box-shadow: 0px 0px 4px 0px #777;
 	border: #444 1px solid;
 	color: #fff;
-	font: bold 0.8em/1em Arial;
+	font: 1em/1.1em Arial, Sans-Serif;
 	padding: 1px;
 	text-align: center;
 }
-.value-popup:before {
+.tablesorter .value-popup:before {
 	content: "";
 	position: absolute;
 	width: 0;
@@ -60,13 +65,13 @@
 }
 
 /**** Date Picker ****/
-.dateFrom, .dateTo {
+.tablesorter .dateFrom, .tablesorter .dateTo {
 	width: 80px;
 	margin: 2px 5px;
 }
 
-/**** Color Picker Toggle button ****/
-.button {
+/**** Color Picker/HTML5Number Toggle button ****/
+.tablesorter .button {
 	width: 14px;
 	height: 14px;
 	background: #fcfff4;
@@ -76,7 +81,7 @@
 	background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
 	background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
-	margin: 5px;
+	margin: 1px 5px 1px 1px;
 	-webkit-border-radius: 25px;
 	-moz-border-radius: 25px;
 	border-radius: 25px;
@@ -84,10 +89,17 @@
 	-moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
 	box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
 	position: relative;
+	top: 3px;
 	display: inline-block;
 }
+.tablesorter .color-controls-wrapper .button {
+	top: -5px;
+}
+.tablesorter .color-controls-wrapper .currentColor {
+	top: -8px;
+}
 
-.button label {
+.tablesorter .button label {
 	cursor: pointer;
 	position: absolute;
 	width: 10px;
@@ -108,7 +120,7 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#45484d',GradientType=0 );
 }
 
-.button label:after {
+.tablesorter .button label:after {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 	filter: alpha(opacity=0);
 	opacity: 0;
@@ -132,37 +144,35 @@
 	box-shadow: inset 0px 1px 1px #fff, 0px 1px 3px rgba(0,0,0,0.5);
 }
 
-.button label:hover::after {
+.tablesorter .button label:hover::after {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
 	filter: alpha(opacity=30);
 	opacity: 0.3;
 }
 
-.button input[type=checkbox] {
+.tablesorter .button input[type=checkbox] {
 	visibility: hidden;
 }
 
-.button input[type=checkbox]:checked + label:after {
+.tablesorter .button input[type=checkbox]:checked + label:after {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	filter: alpha(opacity=100);
 	opacity: 1;
 }
 
-.colorpicker {
+.tablesorter .colorpicker {
 	width: 30px;
 	height: 18px;
 }
-.ui-spinner-input {
+.tablesorter .ui-spinner-input {
 	width: 100px;
 	height: 18px;
 }
-.currentColor, .ui-spinner {
+.tablesorter .currentColor, .tablesorter .ui-spinner {
 	position: relative;
-	top: -8px;
 }
-input.number {
+.tablesorter input.number {
 	position: relative;
-	top: -5px;
 }
 
 /* hide filter row */

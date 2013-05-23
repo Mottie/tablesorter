@@ -42,6 +42,7 @@
 			filter_reset : 'button.reset',
 			// add custom selector elements to the filter row
 			filter_formatter : {
+				// Rank
 				0 : function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
 						value: 0,
@@ -51,6 +52,7 @@
 						valueToHeader: true
 					});
 				},
+				// Color
 				1 : function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Color( $cell, indx, {
 						value: '#000000',
@@ -59,6 +61,7 @@
 						valueToHeader: false
 					});
 				},
+				// Age
 				3: function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
 						value: 1,
@@ -66,7 +69,18 @@
 						max: 65,
 						delayed: true,
 						addToggle: true,
-						exactMatch: true
+						exactMatch: true,
+						compare : ''
+					});
+				},
+				5 : function($cell, indx){
+					return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
+						value: 0,
+						min: 0,
+						max: 44,
+						delayed: true,
+						valueToHeader: true,
+						compare : '>='
 					});
 				}
 			}
@@ -93,7 +107,7 @@
 		<div>
 			<ul>
 				<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
-				<li>At this time, these widgets do not work with the sticky header widget.
+				<li>At this time, these widgets do not work with the sticky header widget.</li>
 				<li>This page shows you how to add a few default <strong>HTML5 elements</strong> to interact with the filter widget.</li>
 				<li>If the HTML5 elements are not supported by your browser, you'll just see an input.</li>
 				<li>Custom filter widget option <code>filter_formatter</code> was added in version 2.7.7.</li>
@@ -126,6 +140,7 @@
             delayed: true,
             valueToHeader: true,
             exactMatch: true,
+            compare : '',
             allText: 'all'
           });
         }

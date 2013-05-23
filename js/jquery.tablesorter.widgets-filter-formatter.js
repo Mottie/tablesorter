@@ -24,14 +24,13 @@ $.tablesorter.filterFormatter = {
 		var o = $.extend({
 			min : 0,
 			max : 100,
-			step: 1,
-			value: 1,
-			delayed: true,
-			addToggle: true,
-			disabled: false,
-			exactMatch: true,
-			compare: '',
-			numberFormat: "n"
+			step : 1,
+			value : 1,
+			delayed : true,
+			addToggle : true,
+			disabled : false,
+			exactMatch : true,
+			compare : ''
 		}, spinnerDef ),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">').appendTo($cell),
@@ -46,7 +45,8 @@ $.tablesorter.filterFormatter = {
 			}
 			$cell.find('.filter')
 				// add equal to the beginning, so we filter exact numbers
-				.val( chkd ? (o.exactMatch ? '=' : o.compare) + v : '' )
+				//.val( chkd ? (o.exactMatch ? '=' : o.compare) + v : '' )
+				.val( chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + v : '' )
 				.trigger('search', o.delayed).end()
 				.find('.spinner').spinner( o.disabled || !chkd ? 'disable' : 'enable' );
 		};
@@ -97,16 +97,16 @@ $.tablesorter.filterFormatter = {
 	\**********************/
 	uiSlider: function($cell, indx, sliderDef) {
 		var o = $.extend({
-			value: 0,
-			min: 0,
-			max: 100,
-			step: 1,
-			range: "min",
-			delayed: true,
+			value : 0,
+			min : 0,
+			max : 100,
+			step : 1,
+			range : "min",
+			delayed : true,
 			valueToHeader : false,
-			exactMatch: true,
-			compare: '',
-			allText: 'all'
+			exactMatch : true,
+			compare : '',
+			allText : 'all'
 		}, sliderDef ),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">').appendTo($cell),
@@ -114,19 +114,20 @@ $.tablesorter.filterFormatter = {
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSlider = function(ui) {
 			// ui is not undefined on create
-			var v = typeof ui !== "undefined" ? ui.value : o.value;
+			var v = typeof ui !== "undefined" ? ui.value : o.value,
+				val = o.compare ? v : v === o.min ? o.allText : v;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above!
-				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (v === o.min ? o.allText : v) + ')');
+				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + o.compare + val + ')');
 			} else {
 				// add values to the handle data-value attribute so the css tooltip will work properly
-				$cell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', v === o.min ? o.allText : v);
+				$cell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', o.compare + val);
 			}
 			// update the hidden input;
 			// ****** ADD AN EQUAL SIGN TO THE BEGINNING! <- this makes the slide exactly match the number ******
 			// when the value is at the minimum, clear the hidden input so all rows will be seen
 			$cell.find('.filter')
-				.val(v === o.min ? '' : (o.exactMatch ? '=' : o.compare) + v)
+				.val( ( o.compare ? o.compare + v : v === o.min ? '' : (o.exactMatch ? '=' : '') + v ) )
 				.trigger('search', o.delayed);
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
@@ -169,8 +170,8 @@ $.tablesorter.filterFormatter = {
 			values : [0, 100],
 			min : 0,
 			max : 100,
-			range: true,
-			delayed: true,
+			range : true,
+			delayed : true,
 			valueToHeader : false
 		}, rangeDef ),
 		// Add a hidden input to hold the range values
@@ -229,15 +230,61 @@ $.tablesorter.filterFormatter = {
 	},
 
 	/*************************\
+	jQuery UI Datepicker compare (1 inputs)
+	\*************************/
+	uiDateCompare: function($cell, indx, defDate) {
+		var o = $.extend({
+			defaultDate : '',
+			cellText : '',
+			changeMonth : true,
+			changeYear : true,
+			numberOfMonths : 1,
+			compare : ''
+		}, defDate),
+		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']'),
+		// Add a hidden input to hold the range values
+		$input = $('<input class="dateCompare" type="hidden">').appendTo($cell);
+
+		// make sure we're using parsed dates in the search
+		$hdr.addClass('filter-parsed');
+		// Add date range picker
+		$('<span>' + o.cellText + '<input type="text" class="date" placeholder="' + $hdr.attr('data-placeholder') + '" />').appendTo($cell);
+
+		// add callbacks; preserve added callbacks
+		o.oldonClose = o.onClose;
+
+		o.defaultDate = o.defaultDate || new Date();
+		o.onClose = function( selectedDate, ui ) {
+			var date = ( (new Date(selectedDate)).getTime() || '');
+			$cell
+				// update hidden input
+				.find('.dateCompare').val(o.compare + date)
+				.trigger('search');
+			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
+		};
+		$cell.find('.date').datepicker(o);
+
+		// on reset
+		$cell.closest('table').bind('filterReset', function(){
+			$cell.find('.date').val('').datepicker('option', 'currentText', '' );
+		});
+
+		// return the hidden input so the filter widget has a reference to it
+		return $input;
+	},
+
+	/*************************\
 	jQuery UI Datepicker (2 inputs)
 	\*************************/
 	uiDatepicker: function($cell, indx, defDate) {
 		var o = $.extend({
-			from: '',
-			to: '',
-			changeMonth: true,
-			changeYear: true,
-			numberOfMonths: 1
+			from : '',
+			to : '',
+			textFrom : 'from',
+			textTo : 'to',
+			changeMonth : true,
+			changeYear : true,
+			numberOfMonths : 1
 		}, defDate),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">').appendTo($cell);
@@ -245,16 +292,16 @@ $.tablesorter.filterFormatter = {
 		// make sure we're using parsed dates in the search
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// Add date range picker
-		$('<label>From</label><input type="text" class="dateFrom" /><label>to</label><input type="text" class="dateTo" />').appendTo($cell);
+		$('<label>' + o.textFrom + '</label><input type="text" class="dateFrom" /><label>' + o.textTo + '</label><input type="text" class="dateTo" />').appendTo($cell);
 
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
 
-		o.defaultDate = o.defaultDate || o.from;
+		o.defaultDate = o.from || o.defaultDate || new Date();
 		o.onClose = function( selectedDate, ui ) {
 			var from = ( (new Date(selectedDate)).getTime() || ''),
 				to = (new Date($cell.find('.dateTo').val()).getTime() || ''),
-				range = from && to ? from + ' - ' + to : '';
+				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateTo').datepicker('option', 'minDate', selectedDate).end()
 				// update hidden input
@@ -263,12 +310,11 @@ $.tablesorter.filterFormatter = {
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
 		$cell.find('.dateFrom').datepicker(o);
-
-		o.defaultDate = o.defaultDate || o.to;
+		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
 		o.onClose = function( selectedDate, ui ) {
 			var from = ( new Date($cell.find('.dateFrom').val()).getTime() || ''),
 				to = ((new Date(selectedDate)).getTime() || ''),
-				range = from && to ? from + ' - ' + to : '';
+				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
 				.find('.dateRange').val(range)
@@ -291,15 +337,15 @@ $.tablesorter.filterFormatter = {
 	\**********************/
 	html5Number : function($cell, indx, def5Num) {
 		var t, o = $.extend({
-			value: 0,
-			min: 0,
-			max: 100,
-			step: 1,
-			delayed: true,
-			disabled: false,
-			addToggle: true,
-			exactMatch: true,
-			compare: ''
+			value : 0,
+			min : 0,
+			max : 100,
+			step : 1,
+			delayed : true,
+			disabled : false,
+			addToggle : true,
+			exactMatch : true,
+			compare : ''
 		}, def5Num),
 
 		// test browser for HTML5 range support
@@ -311,7 +357,7 @@ $.tablesorter.filterFormatter = {
 				chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true;
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
-				.val( chkd ? (o.exactMatch ? '=' : o.compare) + val : '' )
+				.val( !o.addToggle || chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + val : '' )
 				.trigger('search', o.delayed);
 			if ($cell.find('.number').length) {
 				$cell.find('.number')[0].disabled = (o.disabled || !chkd);
@@ -348,15 +394,15 @@ $.tablesorter.filterFormatter = {
 	\**********************/
 	html5Range : function($cell, indx, def5Range) {
 		var t, o = $.extend({
-			value: 0,
-			min: 0,
-			max: 100,
-			step: 1,
-			delayed: true,
-			valueToHeader: true,
-			exactMatch: true,
-			compare: '',
-			allText: 'all'
+			value : 0,
+			min : 0,
+			max : 100,
+			step : 1,
+			delayed : true,
+			valueToHeader : true,
+			exactMatch : true,
+			compare : '',
+			allText : 'all'
 		}, def5Range),
 
 		// test browser for HTML5 range support
@@ -366,13 +412,14 @@ $.tablesorter.filterFormatter = {
 		rangeSupported = $range.attr('type') === 'range' && $range.val() !== 'test',
 		updateRange = function(){
 			/*jshint eqeqeq:false */
-			var val = $cell.find('.range').val();
+			var v = $cell.find('.range').val(); console.log(v, v == o.min);
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
-				.val( val == o.min ? '' : (o.exactMatch ? '=' : o.compare) + val)
+				.val( ( o.compare ? o.compare + v : (v == o.min ? '' : (o.exactMatch ? '=' : '') + v ) ) )
+				//( val == o.min ? '' : val + (o.exactMatch ? '=' : ''))
 				.trigger('search', o.delayed);
 			// or add current color to the header cell, if desired
-			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (val == o.min ? o.allText : val) + ')');
+			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (v == o.min ? o.allText : o.compare + v) + ')');
 		};
 		$range.remove();
 
@@ -406,11 +453,11 @@ $.tablesorter.filterFormatter = {
 	\**********************/
 	html5Color: function($cell, indx, defColor) {
 		var t, o = $.extend({
-			value: '#000000',
-			disabled: false,
-			addToggle: true,
-			exactMatch: true,
-			valueToHeader: false
+			value : '#000000',
+			disabled : false,
+			addToggle : true,
+			exactMatch : true,
+			valueToHeader : false
 		}, defColor),
 		// Add a hidden input to hold the range values
 		$color = $('<input type="color" style="visibility:hidden;" value="test">').appendTo($cell),
@@ -439,10 +486,11 @@ $.tablesorter.filterFormatter = {
 
 		if (colorSupported) {
 			// add HTML5 color picker
-			t = o.addToggle ? '<div class="button"><input id="button' + indx + '" type="checkbox" class="toggle" /><label for="button' + indx + '"></label></div>' : '';
+			t = '<div class="color-controls-wrapper">';
+			t += o.addToggle ? '<div class="button"><input id="button' + indx + '" type="checkbox" class="toggle" /><label for="button' + indx + '"></label></div>' : '';
 			t += '<input type="hidden"><input class="colorpicker" type="color" />';
 			t += o.valueToHeader ? '' : '<span class="currentColor">(#000000)</span>';
-			$cell.html(t);
+			$cell.html(t + '</div>');
 
 			// add span to header for the current color value - only works if the line in the updateColor() function is also un-commented out
 			if (o.valueToHeader) {
