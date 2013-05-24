@@ -416,6 +416,8 @@ ts.addWidget({
 							// check for changes from beginning of filter; but ignore if there is a logical "or" in the string
 							searchFiltered = (val || '').indexOf(r[i] || '') === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
 						});
+						// can't search when all rows are hidden - this happens when looking for exact matches
+						if (searchFiltered && $tr.filter(':visible').length === 0) { searchFiltered = false; }
 						// loop through the rows
 						for (j = 0; j < l; j++){
 							r = $tr[j].className;
