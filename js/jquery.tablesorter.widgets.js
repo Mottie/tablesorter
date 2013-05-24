@@ -547,7 +547,9 @@ ts.addWidget({
 			buildSelect = function(i, updating, onlyavail){
 				var o, t, arry = [], currentVal;
 				i = parseInt(i, 10);
-				o = '<option value="">' + ($ths.filter('[data-column="' + i + '"]:last').attr('data-placeholder') || '') + '</option>';
+				t = $ths.filter('[data-column="' + i + '"]:last');
+				// t.data('placeholder') won't work in jQuery older than 1.4.3
+				o = '<option value="">' + (t.data('placeholder') || t.attr('data-placeholder') || '') + '</option>';
 				for (k = 0; k < b.length; k++ ){
 					l = c.cache[k].row.length;
 					// loop through the rows
@@ -651,7 +653,7 @@ ts.addWidget({
 							t = $('<input type="search">').appendTo( c.$filters.eq(i) );
 						}
 						if (t) {
-							t.attr('placeholder', $th.attr('data-placeholder') || '');
+							t.attr('placeholder', $th.data('placeholder') || $th.attr('data-placeholder') || '');
 						}
 					}
 					if (t) {
@@ -715,7 +717,7 @@ ts.addWidget({
 							// add custom drop down list
 							for (str in wo.filter_functions[col]){
 								if (typeof str === 'string'){
-									ff += ff === '' ? '<option value="">' + (t.attr('data-placeholder') || '') + '</option>' : '';
+									ff += ff === '' ? '<option value="">' + (t.data('placeholder') || t.attr('data-placeholder') ||  '') + '</option>' : '';
 									ff += '<option value="' + str + '">' + str + '</option>';
 								}
 							}

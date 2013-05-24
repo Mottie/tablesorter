@@ -1,13 +1,14 @@
-/*! Filter widget formatter functions - updated 5/8/2013
+/*! Filter widget formatter functions - updated 5/24/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
- * jQuery UI spinner
- * jQuery UI slider
- * jQuery UI range slider
- * jQuery UI datepicker (range)
- * HTML5 number (spinner)
- * HTML5 range slider
- * HTML5 color selector
+ * uiSpinner (jQuery UI spinner)
+ * uiSlider (jQuery UI slider)
+ * uiRange (jQuery UI range slider)
+ * uiDateCompare (jQuery UI datepicker; 1 input)
+ * uiDatepicker (jQuery UI datepicker; 2 inputs, filter range)
+ * html5Number (spinner)
+ * html5Range (slider)
+ * html5Color (color)
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
@@ -248,7 +249,7 @@ $.tablesorter.filterFormatter = {
 		// make sure we're using parsed dates in the search
 		$hdr.addClass('filter-parsed');
 		// Add date range picker
-		$('<span>' + o.cellText + '<input type="text" class="date" placeholder="' + $hdr.attr('data-placeholder') + '" />').appendTo($cell);
+		$('<span>' + o.cellText + '<input type="text" class="date" placeholder="' + ($hdr.data('placeholder') || $hdr.attr('data-placeholder') || '') + '" />').appendTo($cell);
 
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
