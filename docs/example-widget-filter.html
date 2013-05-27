@@ -71,7 +71,7 @@
 
 			// if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
 			// below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
-			filter_hideFilters : true,
+			filter_hideFilters : false, // true, (see note in the options section above)
 
 			// Set this option to false to make the searches case sensitive
 			filter_ignoreCase : true,
@@ -113,6 +113,7 @@
 			txt = $(this).data('filter-text'); // text to add to filter
 
 		filters[col] = txt;
+		// using "table.hasFilters" here to make sure we aren't targetting a sticky header
 		$.tablesorter.setFilters( $('table.hasFilters'), filters, true ); // new v2.9
 
 		/** old method (prior to tablsorter v2.9 ***
@@ -222,7 +223,7 @@ $(function(){
 				<li><code>filter_filteredRow : 'filtered'</code> - css class name added to filtered rows (rows that are not showing); needed by pager plugin.</li>
 				<li><code>filter_formatter : null</code> - add custom filter elements to the filter row.</li>
 				<li><code>filter_functions : null</code> - add custom filter functions using this option.</li>
-				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon.</li>
+				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon <span class="remark">*</span>.</li>
 				<li><code>filter_ignoreCase : true</code> - if true, make all searches case-insensitive.</li>
 				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay). If false, the user must press enter to start the search. If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
 				<li><code>filter_onlyAvail : 'filter-onlyAvail'</code> - a header with a select dropdown &amp; this class name will only show available (visible) options within that drop down.</li>
@@ -232,6 +233,7 @@ $(function(){
 				<li><code>filter_startsWith : false</code> - if true, filter start from the beginning of the cell contents.</li>
 				<li><code>filter_useParsedData : false</code> - filter all data using parsed content.</li>
 			</ul>
+			<span class="alert">Caution</span>: In my testing, it appears that Chrome does not properly render a previously hidden search input text properly (<a href="http://jsfiddle.net/Mottie/Mjbab/1/">demo</a>), so for now, I'm changing this demo's <code>filter_hideFilters</code> option to <code>false</code> until the source of this problem is determined.
 		</div>
 
 		<h3><a href="#">Classes</a></h3>
@@ -314,6 +316,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 	<table class="tablesorter">
 	<thead>
 		<tr>
+			<!-- you can also add a placeholder using script; $('.tablesorter th:eq(0)').data('placeholder', 'hello') -->
 			<th data-placeholder="" class="filter-false">Rank</th>
 			<th data-placeholder="Try B*{space} or alex|br*|c" class="filter-match">First Name (<span></span> filter-match )</th>
 			<th data-placeholder="Try <d">Last Name</th>

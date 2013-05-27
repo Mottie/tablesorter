@@ -62,7 +62,7 @@
 						// add any of the jQuery UI Slider options here
 						value : 1,
 						min : 1,
-						max : 15,
+						max : 65,
 						delayed : false,
 						valueToHeader : false,
 						exactMatch : false,
@@ -97,7 +97,7 @@
 				4 : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
 						date : '1/1/2013', // default from date
-						cellText : 'dates >=', // text added before the input
+						cellText : 'dates >= ', // text added before the input
 						changeMonth : true,
 						changeYear : true,
 						compare : '>='

@@ -92,10 +92,12 @@ function showProperty(){
 			if (h === '#csschildrow') {
 				$('#root .tablesorter-childRow').show();
 			}
-			// move below sticky header
-			if (/options/.test(prop.closest('table').attr('id') || '')) {
-				$(window).scrollTop( prop.position().top - 30 );
-			}
+			// move below sticky header; added delay as there could be some lag
+			setTimeout(function(){
+				if (/options/.test(prop.closest('table').attr('id') || '')) {
+					$(window).scrollTop( prop.position().top - 28 );
+				}
+			}, 200);
 		}
 	}
 }

@@ -21,7 +21,7 @@ $.tablesorter.filterFormatter = {
 	/**********************\
 	jQuery UI Spinner
 	\**********************/
-	uiSpinner: function($cell, indx, spinnerDef){
+	uiSpinner: function($cell, indx, spinnerDef) {
 		var o = $.extend({
 			min : 0,
 			max : 100,
@@ -186,7 +186,7 @@ $.tablesorter.filterFormatter = {
 				range = val[0] === o.min && val[1] === o.max ? '' : val[0] + ' - ' + val[1];
 			if (o.valueToHeader) {
 				// add range indication to the header cell above (if not using the css method)!
-				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + range + ')');
+				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + val[0] + ' - ' + val[1] + ')');
 			} else {
 				// add values to the handle data-value attribute so the css tooltip will work properly
 				$cell.find('.ui-slider-handle')
@@ -231,7 +231,7 @@ $.tablesorter.filterFormatter = {
 	},
 
 	/*************************\
-	jQuery UI Datepicker compare (1 inputs)
+	jQuery UI Datepicker compare (1 input)
 	\*************************/
 	uiDateCompare: function($cell, indx, defDate) {
 		var o = $.extend({
@@ -413,7 +413,7 @@ $.tablesorter.filterFormatter = {
 		rangeSupported = $range.attr('type') === 'range' && $range.val() !== 'test',
 		updateRange = function(){
 			/*jshint eqeqeq:false */
-			var v = $cell.find('.range').val(); console.log(v, v == o.min);
+			var v = $cell.find('.range').val();
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
 				.val( ( o.compare ? o.compare + v : (v == o.min ? '' : (o.exactMatch ? '=' : '') + v ) ) )

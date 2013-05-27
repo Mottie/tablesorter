@@ -1,9 +1,9 @@
 tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
-### [Documentation](http://mottie.github.com/tablesorter/docs/)
+### [Documentation](http://mottie.github.io/tablesorter/docs/)
 
-* See the [full documentation](http://mottie.github.com/tablesorter/docs/).
+* See the [full documentation](http://mottie.github.io/tablesorter/docs/).
 * All of the [original document pages](http://tablesorter.com/docs/) have been included.
 * Information from my blog post on [undocumented options](http://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
 * Change log moved from included text file into the [wiki documentation](https://github.com/Mottie/tablesorter/wiki/Change).
@@ -11,17 +11,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 ### Demos
 
 * [Basic alpha-numeric sort Demo](http://mottie.github.com/tablesorter/).
-* Links to demo pages can be found within the main [documentation](http://mottie.github.com/tablesorter/docs/).
+* Links to demo pages can be found within the main [documentation](http://mottie.github.io/tablesorter/docs/).
 * More demos & playgrounds - updated in the [wiki pages](https://github.com/Mottie/tablesorter/wiki).
 
 ### Features
 
 * Multi-column alphanumeric sorting.
-* Multi-tbody sorting - see the [options](http://mottie.github.com/tablesorter/docs/index.html#options) table on the main document page.
-* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](http://mottie.github.com/tablesorter/docs/example-parsers.html).
+* Multi-tbody sorting - see the [options](http://mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
+* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](http://mottie.github.io/tablesorter/docs/example-parsers.html).
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
-* Extensibility via [widget system](http://mottie.github.com/tablesorter/docs/example-widgets.html).
+* Extensibility via [widget system](http://mottie.github.io/tablesorter/docs/example-widgets.html).
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+.
 * Small code size.
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
@@ -42,6 +42,73 @@ tablesorter can successfully parse and sort many types of data including linked 
 ### Change Log
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+
+#### <a name="v2.10.1">Version 2.10.1</a> (5/14/2013)
+
+* Core fixes
+  * Fixed `updateAll` function to properly refresh the widgets.
+  * Added keyboard accessibility
+      * Header cells can now be accessed using the tab key and sorted by pressing enter when they have "focus".
+      * Thanks to [debugwand](https://github.com/debugwand) for sharing the code!
+
+* Filter widget updates:
+  * Added `filter_onlyAvail` option
+      * Updated main &amp; filter demo page docs.
+      * Updated [custom filter demo](http://mottie.github.io/tablesorter/docs/example-widget-filter-custom.html) (see the Discount column).
+      * Fixes [issue #292](https://github.com/Mottie/tablesorter/issues/292).
+      * Thanks to [The Sin-](https://github.com/TheSin-) for sharing the idea and code!
+  * Added `compare` option to various filter formatter functions
+      * This addition was made to the "uiSpinner", "uiSlider", "html5Range", "html5Number" and the new "uiDateCompare" functions
+      * So, for example the html5Number function can be set up as follows:
+
+          ```js
+          filter_formatter : {
+            0: function($cell, indx) {
+              return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
+                value: 1,
+                min: 1,
+                max: 100,
+                delay: true,
+                addToggle: false,
+                exactMatch: false,
+                compare: '>='
+              })
+            }
+          }
+          ```
+
+          now the number type input will allow filtering rows with values greater than or equal to the selected value.
+
+      * Thanks to [The Sin-](https://github.com/TheSin-) for sharing the idea and code in [issue #304](https://github.com/Mottie/tablesorter/issues/304).
+  * The jQuery UI Datepicker range filter formatter code has been updated:
+      * Use the new `uiDateCompare` filter formatter for one input comparisons, or use this `uiDatepicker` update to do comparisons within the two inputs.
+      * The two input now functions so that when the "to" input is empty, all dates greater than the "from" date are shown.
+      * If the "from" input is empty, all dates less than the "to" input date are shown.
+      * Added options `textFrom` (default is `from`) and `textTo` (default is `to`) to allow changing the text label language.
+  * Modified the logical "or" search such that it tries to find an exact match for each "or". For example:
+      * If `"1|2|3"` is entered into the filter, only column cells that exactly match `1`, `2`, or `3` will be visible.
+      * If `"Mike|Br|John"` is entered, only cells with `Mike`, `Br` and `John` will be visible. If you want to include `Bruce`, then use a wild card: `"Mike|Br*|John"`.
+      * To only match content using the logical "or" search, simply add the class name `filter-match` to the header cell, then `"1|2|3"` will show cells with `1`, `11`, `12`, etc.
+      * Updated the [basic filter widget demo](http://mottie.github.io/tablesorter/docs/example-widget-filter.html) to include a "filter-match" column toggle.
+  * Fixed javascript error from improper reference to the "dateFormat". Fixes [issue #306](https://github.com/Mottie/tablesorter/issues/306).
+  * Fixed `$.tablesorter.getFilters()` and `$.tablesorter.setFilters()` functions to work properly when the `filter_columnFilters` option is `false` (do not build filter row).
+  * Fixed filter widget numeric range error introduces in v2.10.0. Sorry =(.
+  * Fixed filter search delay issue, again. =(
+  * Fixed filter widget data comparisons, so now you can type in the filter something like `> 1/1/2010` (using the same date format as the column).
+  * Filter search input placeholders can now be set using jQuery data:
+      * Previously, only a data attribute could contain the filter placeholder text `data-placeholder="Enter something..."`
+      * Another method using script can now be used: `$('.tablesorter th:eq(0)').data('placeholder', 'Enter something...');` (where `eq()` contains a zero-based index of the column).
+  * Optimized filter queries to search already filtered rows if the previous search is contained within the current search. Fulfills part of [issue #313](https://github.com/Mottie/tablesorter/issues/313).
+  * Added a caution note in the filter widget (basic) demo stating the issue with Chrome not rendering search input text properly when previously hidden.
+      * For now, I set the `filter_hideFilters` option to `false` until the source of this problem is determined.
+      * Check out [this demo](http://jsfiddle.net/Mottie/Mjbab/1/) to see the issue (in Chrome); but I think I'm the only one seeing it.
+* Updated the `$.tablesorter.storage()` function
+  * The update is to checking for localStorage browser support.
+  * It should now work properly in iOS with private browsing protection.
+  * Check out [this great summary](https://gist.github.com/paulirish/5558557) of [Modernizr](http://modernizr.com/) updates by Paul Irish.
+* Documentation fixes
+  * Removed `console.log` from the documentation script. Fixes [issue #309](https://github.com/Mottie/tablesorter/issues/309).
+  * Updated all `<button>` elements in the documentation to include a type (`<button type="button">`) to prevent IE from triggering a form submit. Fixes [issue #285](https://github.com/Mottie/tablesorter/issues/285#issuecomment-17991235).
 
 #### <a name="v2.10">Version 2.10</a> (5/8/2013)
 
@@ -151,7 +218,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
               // and no need to trigger an update method, it's done internally
               return [ total, $(rows), headers ];
             }
-          },
+          }
           ```
 
       * Build the table yourself (just return the total number of rows):
@@ -182,7 +249,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
               table.config.$tbodies.eq(0).html(rows);
               return [ total ];
             }
-          },
+          }
           ```
 
 * Tablesorter unit testing updates; tests for the following have been added:
@@ -225,7 +292,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
       * The `uitheme` widget is the first to be applied (priority of `10`) because other widgets that copy/clone the table will need the jQuery UI/Bootstrap class names already applied to the table.
       * The sticky headers widget (priority `60`) is applied after the filter widget (priority `50`), so that it knows to update the filters within the sticky header.
   * Priorities are *optional*, and any widget applied without a priority value will automatically be assigned a priority of `10`.
-  * Updated the [writing custom widgets](http://mottie.github.com/tablesorter/docs/example-widgets.html) demo to show how to add a widget priority.
+  * Updated the [writing custom widgets](http://mottie.github.io/tablesorter/docs/example-widgets.html) demo to show how to add a widget priority.
   * I was planning on adding this in version 3.0, but the need arose sooner with the additions of all of the new widgets.
 
 * **Updated Filter widget**
@@ -247,7 +314,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 
 * **Updated Resizable widget**
   * Added `resizable_addLastColumn` option which allows you to make the last column resizable, essentially making a non-full width table resizable.
-  * Updated [the resizable demo](http://mottie.github.com/tablesorter/docs/example-widget-resizable.html) to show this option.
+  * Updated [the resizable demo](http://mottie.github.io/tablesorter/docs/example-widget-resizable.html) to show this option.
   * The resizable demo also now highlights the non-resizable "Age" column to make it more obvious.
 
 * **Updated Sticky headers widget**
@@ -289,10 +356,10 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
       ```
 
   * Make a table cell uneditable by added the class `no-edit`, set in the `editable_noEdit` option.
-  * Added a [content editable widget demo](http://mottie.github.com/tablesorter/docs/example-widget-editable.html).
+  * Added a [content editable widget demo](http://mottie.github.io/tablesorter/docs/example-widget-editable.html).
 
 * **Added Repeat headers widget**
-  * This widget has always been the example used in the [Writing custom widgets](http://mottie.github.com/tablesorter/docs/example-widgets.html) demo.
+  * This widget has always been the example used in the [Writing custom widgets](http://mottie.github.io/tablesorter/docs/example-widgets.html) demo.
   * It has been updated and now follows the same format as the widget template for tablesorter version 2.9+
   * As written, it will no longer work with tablesorter versions older than 2.8.
   * Only one option for this widget is available:
@@ -322,10 +389,10 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
       });
       ```
 
-  * Added a [scroller widget demo](http://mottie.github.com/tablesorter/docs/example-widget-scroller.html).
+  * Added a [scroller widget demo](http://mottie.github.io/tablesorter/docs/example-widget-scroller.html).
 
 * **Updated Pager Plugin**
-  * Added all pager plugin options within the [widget options table](http://mottie.github.com/tablesorter/docs/index.html#Widget-options) on the main documentation page.
+  * Added all pager plugin options within the [widget options table](http://mottie.github.io/tablesorter/docs/index.html#Widget-options) on the main documentation page.
   * Added a better example of how to use the `customAjaxUrl` function.
   * Updated the `{page}` tag used withing the `ajaxUrl` option:
       * Previously `{page}` was replaced with a zero-based index of the targetted page number, now this format can also be used `{page+1}`.
@@ -341,7 +408,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 
 * **General documentation cleanup &amp; updates**
   * Grouping widget corrections
-  * Updated the [repeat headers widget](http://mottie.github.com/tablesorter/docs/example-widgets.html) to use the newest widget template.
+  * Updated the [repeat headers widget](http://mottie.github.io/tablesorter/docs/example-widgets.html) to use the newest widget template.
 
 #### <a name="v2.8.2">Version 2.8.2</a> (3/28/2013)
 
@@ -349,7 +416,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Renamed the parser to "ignore-articles"
   * Added language support and a few languages
   * Added a method to add custom articles.
-  * Please see the [updated demo](http://mottie.github.com/tablesorter/docs/example-parsers-ignore-articles.html) (also renamed)
+  * Please see the [updated demo](http://mottie.github.io/tablesorter/docs/example-parsers-ignore-articles.html) (also renamed)
   * Thanks for [thezoggy](https://github.com/thezoggy) for feedback.
 * Fixed a bug in the grouping widget demo:
   * The "priority (letter)" column was incorrectly parsing the data which, for some reason, worked in some browsers.

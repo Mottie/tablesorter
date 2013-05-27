@@ -746,7 +746,7 @@
 					e.stopPropagation();
 					var i, rows = $row.filter('tr').length,
 					dat = [], l = $row[0].cells.length,
-					tbdy = $this.find('tbody').index( $row.closest('tbody') );
+					tbdy = $this.find('tbody').index( $row.parents('tbody').filter(':last') );
 					// fixes adding rows to an empty table - see issue #179
 					if (!c.parsers) {
 						buildParserCache(table);
@@ -1390,11 +1390,7 @@
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
 				var c = table.config, ci = c.headerList[cellIndex],
-				format = ci.dateFormat;
-				if (typeof format === 'undefined') {
-					// cache header formatting so it doesn't getData for every cell in the column
-					format = ci.dateFormat = ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
-				}
+				format = ci.dateFormat || ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
 				s = s.replace(/\s+/g," ").replace(/[\-.,]/g, "/"); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === "mmddyyyy") {
 					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
