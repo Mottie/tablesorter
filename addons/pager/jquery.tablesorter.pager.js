@@ -418,6 +418,7 @@
 
 		setPageSize = function(table, size, c) {
 			c.size = size;
+			c.$size.val(size);
 			$.data(table, 'pagerLastPage', c.page);
 			$.data(table, 'pagerLastSize', c.size);
 			c.totalPages = Math.ceil( c.totalRows / c.size );
@@ -534,7 +535,7 @@
 					})
 					.bind('pageSize.pager', function(e,v){
 						e.stopPropagation();
-						c.size = parseInt(v, 10) || 10;
+						setPageSize(table, parseInt(v, 10) || 10, c);
 						hideRows(table, c);
 						updatePageDisplay(table, c, false);
 						if (c.$size.length) { c.$size.val(c.size); } // twice?

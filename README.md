@@ -43,6 +43,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10.3">Version 2.10.3</a> (5/27/2013)
+
+* Updated pager `pageSize` method to properly store the set page size; [fixes #287](https://github.com/Mottie/tablesorter/issues/287).
+
 #### <a name="v2.10.2">Version 2.10.2</a> (5/27/2013)
 
 * The minified scripts are now updated =/.
