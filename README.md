@@ -43,7 +43,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
-#### <a name="v2.10.1">Version 2.10.1</a> (5/14/2013)
+#### <a name="v2.10.2">Version 2.10.2</a> (5/27/2013)
+
+* The minified scripts are now updated =/.
+
+#### <a name="v2.10.1">Version 2.10.1</a> (5/27/2013)
 
 * Core fixes
   * Fixed `updateAll` function to properly refresh the widgets.
