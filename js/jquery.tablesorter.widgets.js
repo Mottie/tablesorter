@@ -985,6 +985,7 @@ ts.addWidget({
 				flag = false;
 			}, wo.filter_searchDelay);
 		});
+		$t.trigger('stickyHeadersInit');
 
 	},
 	remove: function(table, c, wo){

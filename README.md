@@ -43,6 +43,11 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10.4">Version 2.10.4</a> (5/28/2013)
+
+* Added `stickyHeadersInit` event, which is triggered on the table after the sticky headers widget has completed initializing.
+* Filtering child rows should now work properly; [fixes #306](https://github.com/Mottie/tablesorter/issues/306).
+
 #### <a name="v2.10.3">Version 2.10.3</a> (5/27/2013)
 
 * Updated pager `pageSize` method to properly store the set page size; [fixes #287](https://github.com/Mottie/tablesorter/issues/287).

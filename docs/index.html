@@ -2486,14 +2486,14 @@ $.extend($.tablesorter.themes.jui, {
     // this will depend on how the json is set up - see City0.json
     // rows
     for ( r=0; r &lt; len; r++ ) {
-      rows += '&lt;tr class="ajax-row"&gt;'; // new row array
+      rows += '&lt;tr class="ajax-row"&gt;'; // new row
       // cells
       for ( c in d[r] ) {
         if (typeof(c) === "string") {
-          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row array
+          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
         }
       }
-      rows += '&lt;/tr&gt;'; // add new row array to rows array
+      rows += '&lt;/tr&gt;'; // end new row
     }
     // don't attach the $(rows) because it's difficult to tell old from new data
     // and no need to trigger an update method, it's done internally
@@ -2512,14 +2512,14 @@ $.extend($.tablesorter.themes.jui, {
     // this will depend on how the json is set up - see City0.json
     // rows
     for ( r=0; r &lt; len; r++ ) {
-      rows += '&lt;tr class="ajax-row"&gt;'; // new row array
+      rows += '&lt;tr class="ajax-row"&gt;'; // new row
       // cells
       for ( c in d[r] ) {
         if (typeof(c) === "string") {
-          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row array
+          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
         }
       }
-      rows += '&lt;/tr&gt;'; // add new row array to rows array
+      rows += '&lt;/tr&gt;'; // end new row
     }
     // find first sortable tbody, then add new rows
     table.config.$tbodies.eq(0).html(rows);
@@ -2846,7 +2846,7 @@ $("table tbody").find('td:nth-child(3)').html(function(i,h){
 });
 
 var resort = true, // re-apply the current sort
-  callback = function(){
+  callback = function(table){
     alert('table updated!');
   };
 
@@ -3303,7 +3303,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 			<tr id="filterinit">
 				<td><a href="#" class="toggle2">filterInit</a></td>
 				<td>Event triggered when the filter widget has finished initializing (v2.4).
-					<div class="collapsible">
+					<div class="collapsible"><br>
 						You can use this event to modify the filter elements (row, inputs and/or selects) as desired. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
   $('table').bind('filterInit', function(){
     $(this).find('tr.tablesorter-filter-row').addClass('fred');
@@ -3316,7 +3316,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 			<tr id="filterstart">
 				<td><a href="#" class="toggle2">filterStart</a></td>
 				<td>Event triggered when the filter widget has started processing the search (v2.4).
-					<div class="collapsible">
+					<div class="collapsible"><br>
 						You can use this event to do something like add a class to the filter row. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
   $('table').bind('filterStart', function(){
     $(this).find('tr.tablesorter-filter-row').addClass('filtering');
@@ -3329,7 +3329,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 			<tr id="filterend">
 				<td><a href="#" class="toggle2">filterEnd</a></td>
 				<td>Event triggered when the filter widget has finished processing the search (v2.4).
-					<div class="collapsible">
+					<div class="collapsible"><br>
 						You can use this event to do something like remove the class added to the filter row when the filtering started. Use it as follows:<pre class="prettyprint lang-javascript">$(function(){
   $('table').bind('filterEnd', function(){
     $(this).find('tr.tablesorter-filter-row').removeClass('filtering');
@@ -3337,6 +3337,20 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 });</pre></div>
 				</td>
 				<td><a href="example-option-show-processing.html">Example</a></td>
+			</tr>
+
+			<tr id="stickyheadersinit">
+				<td><a href="#" class="toggle2">stickyHeadersInit</a></td>
+				<td>Event triggered when the stickyHeader widget has finished initializing (<span class="version">v2.10.4</span>).
+					<div class="collapsible"><br>
+						You can use this event to do something like modify content within the sticky header:<pre class="prettyprint lang-javascript">$(function(){
+  $('table').bind('stickyHeadersInit', function(){
+    // this.config.widgetOptions.$sticky contains the entire sticky header table
+    this.config.widgetOptions.$sticky.find('tr.tablesorter-headerRow').addClass('sticky-styling');
+  });
+});</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 		</tbody>
