@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 5/27/2013
+/*! tableSorter 2.8+ widgets - updated 5/28/2013
  *
  * Column Styles
  * Column Filters
@@ -404,10 +404,10 @@ ts.addWidget({
 				for (k = 0; k < b.length; k++ ){
 					if (b.eq(k).hasClass(c.cssInfoBlock)) { continue; } // ignore info blocks, issue #264
 					$tb = ts.processTbody(table, b.eq(k), true);
-					$tr = $tb.children('tr');
+					$tr = $tb.children('tr:not(.' + c.cssChildRow + ')');
 					l = $tr.length;
 					if (cv === '' || wo.filter_serversideFiltering){
-						$tr.show().removeClass(wo.filter_filteredRow);
+						$tb.children().show().removeClass(wo.filter_filteredRow);
 					} else {
 						// optimize searching only through already filtered rows - see #313
 						searchFiltered = true;
@@ -478,7 +478,7 @@ ts.addWidget({
 										s = fmt(val.replace(wo.filter_regex.nondigit, '').replace(wo.filter_regex.operators,''), table);
 										// parse filter value in case we're comparing numbers (dates)
 										if (parsed[i] || c.parsers[i].type === 'numeric') {
-											rg = c.parsers[i].format('' + val.replace(wo.filter_regex.operators,''), table);
+											rg = c.parsers[i].format('' + val.replace(wo.filter_regex.operators,''), table, $ths.eq(i), i);
 											s = (rg !== '' && !isNaN(rg)) ? rg : s;
 										}
 										// xi may be numeric - see issue #149;
@@ -504,9 +504,9 @@ ts.addWidget({
 										r2 = fmt(s[1].replace(wo.filter_regex.nondigit, ''), table);
 										// parse filter value in case we're comparing numbers (dates)
 										if (parsed[i] || c.parsers[i].type === 'numeric') {
-											rg = c.parsers[i].format('' + s[0], table);
+											rg = c.parsers[i].format('' + s[0], table, $ths.eq(i), i);
 											r1 = (rg !== '' && !isNaN(rg)) ? rg : r1;
-											rg = c.parsers[i].format('' + s[1], table);
+											rg = c.parsers[i].format('' + s[1], table, $ths.eq(i), i);
 											r2 = (rg !== '' && !isNaN(rg)) ? rg : r2;
 										}
 										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(r1) && !isNaN(r2) ? c.cache[k].normalized[j][i] :
@@ -848,7 +848,7 @@ ts.addWidget({
 			hdrCells = header.children('tr:not(.sticky-false)').children(),
 			innr = '.tablesorter-header-inner',
 			tfoot = $t.find('tfoot'),
-			filterInputs = 'input, select',
+			filterInputs = '.' + (wo.filter_cssFilter || 'tablesorter-filter'),
 			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
 			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
 			$stickyTable = wo.$sticky = $t.clone()
