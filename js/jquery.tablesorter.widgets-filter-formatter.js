@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 5/27/2013
+/*! Filter widget formatter functions - updated 5/30/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -35,21 +35,30 @@ $.tablesorter.filterFormatter = {
 		}, spinnerDef ),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">').appendTo($cell),
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSpinner = function(ui) {
-			var chkd = true,
+			var chkd = true, state,
 				// ui is not undefined on create
 				v = ui && ui.value || $cell.find('.spinner').val() || o.value;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
+			state = o.disabled || !chkd ? 'disable' : 'enable';
 			$cell.find('.filter')
 				// add equal to the beginning, so we filter exact numbers
-				//.val( chkd ? (o.exactMatch ? '=' : o.compare) + v : '' )
 				.val( chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + v : '' )
 				.trigger('search', o.delayed).end()
-				.find('.spinner').spinner( o.disabled || !chkd ? 'disable' : 'enable' );
+				.find('.spinner').spinner(state).val(v);
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.spinner').spinner(state).val(v);
+				if (o.addToggle) {
+					$shcell.find('.toggle')[0].checked = chkd;
+				}
+			}
 		};
 
 		// add callbacks; preserve added callbacks
@@ -64,7 +73,7 @@ $.tablesorter.filterFormatter = {
 			if (typeof o.oldspin === 'function') { o.oldspin(event, ui); }
 		};
 		if (o.addToggle) {
-			$('<div class="button"><input id="button' + indx + '" type="checkbox" class="toggle" /><label for="button' + indx + '"></label></div>')
+			$('<div class="button"><input id="uispinnerbutton' + indx + '" type="checkbox" class="toggle" /><label for="uispinnerbutton' + indx + '"></label></div>')
 				.appendTo($cell)
 				.find('.toggle')
 				.bind('change', function(){
@@ -73,7 +82,7 @@ $.tablesorter.filterFormatter = {
 		}
 		// make sure we use parsed data
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
-		// add a jQuery UI slider!
+		// add a jQuery UI spinner!
 		$('<input class="spinner spinner' + indx + '" />')
 			.val(o.value)
 			.appendTo($cell)
@@ -82,10 +91,35 @@ $.tablesorter.filterFormatter = {
 				updateSpinner();
 			});
 
+		// has sticky headers?
+		c.$table.bind('stickyHeadersInit', function(){
+			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+			if (o.addToggle) {
+				$('<div class="button"><input id="stickyuispinnerbutton' + indx + '" type="checkbox" class="toggle" /><label for="stickyuispinnerbutton' + indx + '"></label></div>')
+					.appendTo($shcell)
+					.find('.toggle')
+					.bind('change', function(){
+						$cell.find('.toggle')[0].checked = this.checked;
+						updateSpinner();
+					});
+			}
+			// add a jQuery UI spinner!
+			$('<input class="spinner spinner' + indx + '" />')
+				.val(o.value)
+				.appendTo($shcell)
+				.spinner(o)
+				.bind('change keyup', function(e){
+					$cell.find('.spinner').val( this.value );
+					updateSpinner();
+				});
+		});
+
 		// on reset
-		$cell.closest('table').bind('filterReset', function(){
+		c.$table.bind('filterReset', function(){
 			// turn off the toggle checkbox
-			$cell.find('.toggle')[0].checked = false;
+			if (o.addToggle) {
+				$cell.find('.toggle')[0].checked = false;
+			}
 			updateSpinner();
 		});
 
@@ -111,25 +145,40 @@ $.tablesorter.filterFormatter = {
 		}, sliderDef ),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">').appendTo($cell),
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSlider = function(ui) {
 			// ui is not undefined on create
 			var v = typeof ui !== "undefined" ? ui.value : o.value,
-				val = o.compare ? v : v === o.min ? o.allText : v;
+				val = o.compare ? v : v === o.min ? o.allText : v,
+				result = o.compare + val;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above!
-				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + o.compare + val + ')');
+				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + result + ')');
 			} else {
 				// add values to the handle data-value attribute so the css tooltip will work properly
-				$cell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', o.compare + val);
+				$cell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', result);
 			}
 			// update the hidden input;
 			// ****** ADD AN EQUAL SIGN TO THE BEGINNING! <- this makes the slide exactly match the number ******
 			// when the value is at the minimum, clear the hidden input so all rows will be seen
 			$cell.find('.filter')
 				.val( ( o.compare ? o.compare + v : v === o.min ? '' : (o.exactMatch ? '=' : '') + v ) )
-				.trigger('search', o.delayed);
+				.trigger('search', o.delayed).end()
+				.find('.slider').slider('value', v);
+
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.slider').slider('value', v);
+				if (o.valueToHeader) {
+					$shcell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + result + ')');
+				} else {
+					$shcell.find('.ui-slider-handle').addClass('value-popup').attr('data-value', result);
+				}
+			}
+
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 
@@ -155,9 +204,25 @@ $.tablesorter.filterFormatter = {
 			.slider(o);
 
 		// on reset
-		$cell.closest('table').bind('filterReset', function(){
+		c.$table.bind('filterReset', function(){
 			$cell.find('.slider').slider('value', o.value);
 			updateSlider();
+		});
+
+		// has sticky headers?
+		c.$table.bind('stickyHeadersInit', function(){
+			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+
+		// add a jQuery UI slider!
+		$('<div class="slider slider' + indx + '"/>')
+			.val(o.value)
+			.appendTo($shcell)
+			.slider(o)
+			.bind('change keyup', function(e){
+				$cell.find('.slider').val( this.value );
+				updateSlider();
+			});
+
 		});
 
 		return $input;
@@ -177,16 +242,19 @@ $.tablesorter.filterFormatter = {
 		}, rangeDef ),
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">').appendTo($cell),
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateUiRange = function(ui) {
 			// ui.values are undefined for some reason on create
 			var val = typeof ui !== "undefined" && ui.values || o.values,
+				result = val[0] + ' - ' + val[1],
 				// make range an empty string if entire range is covered so the filter row will hide (if set)
-				range = val[0] === o.min && val[1] === o.max ? '' : val[0] + ' - ' + val[1];
+				range = val[0] === o.min && val[1] === o.max ? '' : result;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above (if not using the css method)!
-				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + val[0] + ' - ' + val[1] + ')');
+				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + result + ')');
 			} else {
 				// add values to the handle data-value attribute so the css tooltip will work properly
 				$cell.find('.ui-slider-handle')
@@ -195,11 +263,27 @@ $.tablesorter.filterFormatter = {
 					.eq(1).attr('data-value', val[1]);      // value popup shown via css
 			}
 			// update the hidden input
-			$cell.find('.filter').val(range).trigger('search', o.delayed);
+			$cell.find('.filter').val(range)
+				.trigger('search', o.delayed).end()
+				.find('.range').slider('values', val);
+
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.range').slider('values', val);
+				if (o.valueToHeader) {
+					$shcell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + result + ')');
+				} else {
+					$shcell.find('.ui-slider-handle')
+					.addClass('value-popup')
+					.eq(0).attr('data-value', val[0]).end() // adding value to data attribute
+					.eq(1).attr('data-value', val[1]);      // value popup shown via css
+				}
+			}
+
 		};
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 
-		// add span to header for value - only works if the line in the updateSlider() function is also un-commented out
+		// add span to header for value - only works if the line in the updateUiRange() function is also un-commented out
 		if (o.valueToHeader) {
 			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.tablesorter-header-inner').append('<span class="currange"/>');
 		}
@@ -216,14 +300,30 @@ $.tablesorter.filterFormatter = {
 			updateUiRange(ui);
 			if (typeof o.oldslide === 'function') { o.oldslide(event, ui); }
 		};
-		$('<div id="range' + indx +'"/>')
+		$('<div class="range range' + indx +'"/>')
 			.appendTo($cell)
 			.slider(o);
 
 		// on reset
-		$cell.closest('table').bind('filterReset', function(){
-			$cell.find('div[id*="range"]').slider('values', o.values);
+		c.$table.bind('filterReset', function(){
+			$cell.find('.range').slider('values', o.values);
 			updateUiRange();
+		});
+
+		// has sticky headers?
+		c.$table.bind('stickyHeadersInit', function(){
+			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+
+		// add a jQuery UI slider!
+		$('<div class="range range' + indx + '"/>')
+			.val(o.value)
+			.appendTo($shcell)
+			.slider(o)
+			.bind('change keyup', function(e){
+				$cell.find('.range').val( this.value );
+				updateUiRange();
+			});
+
 		});
 
 		// return the hidden input so the filter widget has a reference to it
@@ -244,12 +344,16 @@ $.tablesorter.filterFormatter = {
 		}, defDate),
 		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']'),
 		// Add a hidden input to hold the range values
-		$input = $('<input class="dateCompare" type="hidden">').appendTo($cell);
+		$input = $('<input class="dateCompare" type="hidden">').appendTo($cell),
+		t, $shcell = [],
+		c = $cell.closest('table')[0].config;
 
 		// make sure we're using parsed dates in the search
 		$hdr.addClass('filter-parsed');
 		// Add date range picker
-		$('<span>' + o.cellText + '<input type="text" class="date" placeholder="' + ($hdr.data('placeholder') || $hdr.attr('data-placeholder') || '') + '" />').appendTo($cell);
+		t = '<label>' + o.cellText + '</label><input type="text" class="date date' + indx + 
+			'" placeholder="' + ($hdr.data('placeholder') || $hdr.attr('data-placeholder') || '') + '" />';
+		$(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
@@ -260,14 +364,35 @@ $.tablesorter.filterFormatter = {
 			$cell
 				// update hidden input
 				.find('.dateCompare').val(o.compare + date)
-				.trigger('search');
+				.trigger('search').end()
+				.find('.date')
+				.datepicker('setDate', selectedDate);
+
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.date').datepicker('setDate', selectedDate);
+			}
+
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
 		$cell.find('.date').datepicker(o);
 
 		// on reset
-		$cell.closest('table').bind('filterReset', function(){
+		c.$table.bind('filterReset', function(){
 			$cell.find('.date').val('').datepicker('option', 'currentText', '' );
+			if ($shcell.length) {
+				$shcell.find('.date').val('').datepicker('option', 'currentText', '' );
+			}
+		});
+
+		// has sticky headers?
+		c.$table.bind('stickyHeadersInit', function(){
+			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+			// add a jQuery datepicker!
+			$shcell
+				.append(t)
+				.find('.date')
+				.datepicker(o);
 		});
 
 		// return the hidden input so the filter widget has a reference to it
@@ -288,28 +413,39 @@ $.tablesorter.filterFormatter = {
 			numberOfMonths : 1
 		}, defDate),
 		// Add a hidden input to hold the range values
-		$input = $('<input class="dateRange" type="hidden">').appendTo($cell);
+		$input = $('<input class="dateRange" type="hidden">').appendTo($cell),
+		t, closeFrom, $shcell = [],
+		c = $cell.closest('table')[0].config;
 
 		// make sure we're using parsed dates in the search
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// Add date range picker
-		$('<label>' + o.textFrom + '</label><input type="text" class="dateFrom" /><label>' + o.textTo + '</label><input type="text" class="dateTo" />').appendTo($cell);
+		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" /><label>' + o.textTo + '</label><input type="text" class="dateTo" />';
+		$(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
 
 		o.defaultDate = o.from || o.defaultDate || new Date();
-		o.onClose = function( selectedDate, ui ) {
+		closeFrom = o.onClose = function( selectedDate, ui ) {
 			var from = ( (new Date(selectedDate)).getTime() || ''),
 				to = (new Date($cell.find('.dateTo').val()).getTime() || ''),
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
-				.find('.dateTo').datepicker('option', 'minDate', selectedDate).end()
+				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
+				.find('.dateFrom').val(selectedDate).end()
 				// update hidden input
 				.find('.dateRange').val(range)
 				.trigger('search');
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell
+					.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
+					.find('.dateFrom').val(selectedDate);
+			}
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
+
 		$cell.find('.dateFrom').datepicker(o);
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
 		o.onClose = function( selectedDate, ui ) {
@@ -318,15 +454,35 @@ $.tablesorter.filterFormatter = {
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
+				.find('.dateTo').val(selectedDate).end()
 				.find('.dateRange').val(range)
 				.trigger('search');
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell
+					.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
+					.find('.dateTo').val(selectedDate);
+			}
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
 		$cell.find('.dateTo').datepicker(o);
 
+		// has sticky headers?
+		c.$table.bind('stickyHeadersInit', function(){
+			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+			// add a jQuery datepicker!
+			$shcell.append(t).find('.dateTo').datepicker(o);
+			o.defaultDate = o.from || o.defaultDate || new Date();
+			o.onClose = closeFrom;
+			$shcell.find('.dateFrom').datepicker(o);
+		});
+
 		// on reset
 		$cell.closest('table').bind('filterReset', function(){
-			$cell.find('.dateFrom, .dateTo').val('').datepicker('option', 'currentText', '' );
+			$cell.find('.dateFrom, .dateTo').val('');
+			if ($shcell.length) {
+				$shcell.find('.dateFrom, .dateTo').val('');
+			}
 		});
 
 		// return the hidden input so the filter widget has a reference to it
@@ -353,40 +509,68 @@ $.tablesorter.filterFormatter = {
 		$number = $('<input type="number" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 number is supported - from Modernizr
 		numberSupported = $number.attr('type') === 'number' && $number.val() !== 'test',
-		updateNumber = function(){
-			var val = $cell.find('.number').val(),
-				chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true;
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
+
+		updateNumber = function(v){
+			var chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true;
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
-				.val( !o.addToggle || chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + val : '' )
-				.trigger('search', o.delayed);
+				.val( !o.addToggle || chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + v : '' )
+				.trigger('search', o.delayed).end()
+				.find('.number').val(v);
 			if ($cell.find('.number').length) {
 				$cell.find('.number')[0].disabled = (o.disabled || !chkd);
+			}
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.number').val(v)[0].disabled = (o.disabled || !chkd);
+				if (o.addToggle) {
+					$shcell.find('.toggle')[0].checked = chkd;
+				}
 			}
 		};
 		$number.remove();
 
 		if (numberSupported) {
-			t = o.addToggle ? '<div class="button"><input id="button' + indx + '" type="checkbox" class="toggle" /><label for="button' + indx + '"></label></div>' : '';
-			t += '<input type="hidden"><input class="number" type="number" min="' + o.min + '" max="' + o.max + '" value="' +
+			t = o.addToggle ? '<div class="button"><input id="html5button' + indx + '" type="checkbox" class="toggle" /><label for="html5button' + indx + '"></label></div>' : '';
+			t += '<input class="number" type="number" min="' + o.min + '" max="' + o.max + '" value="' +
 				o.value + '" step="' + o.step + '" />';
 			// add HTML5 number (spinner)
 			$cell
-				.html(t)
+				.html(t + '<input type="hidden" />')
 				.find('.toggle, .number').bind('change', function(){
-					updateNumber();
+					updateNumber( $cell.find('.number').val() );
 				})
 				.closest('thead').find('th[data-column=' + indx + ']')
 				.addClass('filter-parsed') // get exact numbers from column
 				// on reset
 				.closest('table').bind('filterReset', function(){
 					// turn off the toggle checkbox
-					$cell.find('.toggle')[0].checked = false;
-					updateNumber();
+					if (o.addToggle) {
+						$cell.find('.toggle')[0].checked = false;
+						if ($shcell.length) {
+							$shcell.find('.toggle')[0].checked = false;
+						}
+					}
+					updateNumber( $cell.find('.number').val() );
 				});
+
+			// has sticky headers?
+			c.$table.bind('stickyHeadersInit', function(){
+				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+				$shcell
+					.html(t)
+					.find('.toggle, .number').bind('change', function(){
+						updateNumber( $shcell.find('.number').val() );
+					});
+				updateNumber( $cell.find('.number').val() );
+			});
+
+			updateNumber( $cell.find('.number').val() );
+
 		}
 
-		updateNumber();
 		return numberSupported ? $cell.find('input[type="hidden"]') : $('<input type="search">');
 	},
 
@@ -411,16 +595,25 @@ $.tablesorter.filterFormatter = {
 		// test if HTML5 range is supported - from Modernizr (but I left out the method to detect in Safari 2-4)
 		// see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/inputtypes.js
 		rangeSupported = $range.attr('type') === 'range' && $range.val() !== 'test',
-		updateRange = function(){
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
+
+		updateRange = function(v){
 			/*jshint eqeqeq:false */
-			var v = $cell.find('.range').val();
+			var t = ' (' + (o.compare ? o.compare + v : v == o.min ? o.allText : v) + ')';
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
 				.val( ( o.compare ? o.compare + v : (v == o.min ? '' : (o.exactMatch ? '=' : '') + v ) ) )
 				//( val == o.min ? '' : val + (o.exactMatch ? '=' : ''))
-				.trigger('search', o.delayed);
+				.trigger('search', o.delayed).end()
+				.find('.range').val(v);
 			// or add current color to the header cell, if desired
-			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + (v == o.min ? o.allText : o.compare + v) + ')');
+			$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(t);
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.range').val(v);
+				$shcell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(t);
+			}
 		};
 		$range.remove();
 
@@ -434,18 +627,30 @@ $.tablesorter.filterFormatter = {
 				.find('.tablesorter-header-inner').append('<span class="curvalue" />');
 
 			$cell.find('.range').bind('change', function(){
-				updateRange();
+				updateRange( $cell.find('.range').val() );
+			});
+
+			// has sticky headers?
+			c.$table.bind('stickyHeadersInit', function(){
+				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+				$shcell
+					.html('<input class="range" type="range" min="' + o.min + '" max="' + o.max + '" value="' + o.value + '" />')
+					.find('.range').bind('change', function(){
+						updateRange( $shcell.find('.range').val() );
+					});
+				updateRange( $cell.find('.range').val() );
 			});
 
 			// on reset
 			$cell.closest('table').bind('filterReset', function(){
 				// just turn off the colorpicker
-				$cell.find('input.range').val(o.value);
-				updateRange();
+				updateRange(o.value);
 			});
+
+			updateRange( $cell.find('.range').val() );
+
 		}
 
-		updateRange();
 		return rangeSupported ? $cell.find('input[type="hidden"]') : $('<input type="search">');
 	},
 
@@ -464,23 +669,41 @@ $.tablesorter.filterFormatter = {
 		$color = $('<input type="color" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 color is supported - from Modernizr
 		colorSupported = $color.attr('type') === 'color' && $color.val() !== 'test',
-		updateColor = function(){
-			var chkd = true, val = $cell.find('.colorpicker').val();
+		$shcell = [],
+		c = $cell.closest('table')[0].config,
+
+		updateColor = function(v){
+			var chkd = true,
+				t = ' (' + v + ')';
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
 			if ($cell.find('.colorpicker').length) {
-				$cell.find('.colorpicker')[0].disabled = (o.disabled || !chkd);
+				$cell.find('.colorpicker').val(v)[0].disabled = (o.disabled || !chkd);
 			}
 			$cell.find('input[type=hidden]')
-				.val( chkd ? val + (o.exactMatch ? '=' : '') : '' )
+				.val( chkd ? v + (o.exactMatch ? '=' : '') : '' )
 				.trigger('search');
 			if (o.valueToHeader) {
 				// add current color to the header cell
-				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curcolor').html(' (' + val + ')');
+				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curcolor').html(t);
 			} else {
 				// current color to span in cell
-				$cell.find('.currentColor').html(' (' + val + ')');
+				$cell.find('.currentColor').html(t);
+			}
+			// update sticky header cell
+			if ($shcell.length) {
+				$shcell.find('.colorpicker').val(v)[0].disabled = (o.disabled || !chkd);
+				if (o.addToggle) {
+					$shcell.find('.toggle')[0].checked = chkd;
+				}
+				if (o.valueToHeader) {
+					// add current color to the header cell
+					$shcell.closest('thead').find('th[data-column=' + indx + ']').find('.curcolor').html(t);
+				} else {
+					// current color to span in cell
+					$shcell.find('.currentColor').html(t);
+				}
 			}
 		};
 		$color.remove();
@@ -488,10 +711,10 @@ $.tablesorter.filterFormatter = {
 		if (colorSupported) {
 			// add HTML5 color picker
 			t = '<div class="color-controls-wrapper">';
-			t += o.addToggle ? '<div class="button"><input id="button' + indx + '" type="checkbox" class="toggle" /><label for="button' + indx + '"></label></div>' : '';
+			t += o.addToggle ? '<div class="button"><input id="colorbutton' + indx + '" type="checkbox" class="toggle" /><label for="colorbutton' + indx + '"></label></div>' : '';
 			t += '<input type="hidden"><input class="colorpicker" type="color" />';
-			t += o.valueToHeader ? '' : '<span class="currentColor">(#000000)</span>';
-			$cell.html(t + '</div>');
+			t += (o.valueToHeader ? '' : '<span class="currentColor">(#000000)</span>') + '</div>';
+			$cell.html(t);
 
 			// add span to header for the current color value - only works if the line in the updateColor() function is also un-commented out
 			if (o.valueToHeader) {
@@ -499,17 +722,29 @@ $.tablesorter.filterFormatter = {
 			}
 
 			$cell.find('.toggle, .colorpicker').bind('change', function(){
-				updateColor();
+				updateColor( $cell.find('.colorpicker').val() );
 			});
 
 			// on reset
 			$cell.closest('table').bind('filterReset', function(){
 				// just turn off the colorpicker
 				$cell.find('.toggle')[0].checked = false;
-				updateColor();
+				updateColor( $cell.find('.colorpicker').val() );
 			});
+
+			// has sticky headers?
+			c.$table.bind('stickyHeadersInit', function(){
+				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx);
+				$shcell
+					.html(t)
+					.find('.toggle, .colorpicker').bind('change', function(){
+						updateColor( $shcell.find('.colorpicker').val() );
+					});
+				updateColor( $shcell.find('.colorpicker').val() );
+			});
+
+			updateColor( $cell.find('.colorpicker').val() );
 		}
-		updateColor();
 		return colorSupported ? $cell.find('input[type="hidden"]') : $('<input type="search">');
 	}
 
