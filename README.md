@@ -43,6 +43,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10.6">Version 2.10.6</a> (5/30/2013)
+
+* Added `skipTest` options to the HTML5 filter formatter functions. Fixes [issue #307](https://github.com/Mottie/tablesorter/issues/307).
+
 #### <a name="v2.10.5">Version 2.10.5</a> (5/30/2013)
 
 * Filter formatter functions now works properly within sticky headers. Fixes issues [#290](https://github.com/Mottie/tablesorter/issues/290) &amp; [#317](https://github.com/Mottie/tablesorter/issues/317).

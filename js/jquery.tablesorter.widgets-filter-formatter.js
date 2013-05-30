@@ -502,13 +502,14 @@ $.tablesorter.filterFormatter = {
 			disabled : false,
 			addToggle : true,
 			exactMatch : true,
-			compare : ''
+			compare : '',
+			skipTest: false
 		}, def5Num),
 
 		// test browser for HTML5 range support
 		$number = $('<input type="number" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 number is supported - from Modernizr
-		numberSupported = $number.attr('type') === 'number' && $number.val() !== 'test',
+		numberSupported = o.skipTest || $number.attr('type') === 'number' && $number.val() !== 'test',
 		$shcell = [],
 		c = $cell.closest('table')[0].config,
 
@@ -587,14 +588,15 @@ $.tablesorter.filterFormatter = {
 			valueToHeader : true,
 			exactMatch : true,
 			compare : '',
-			allText : 'all'
+			allText : 'all',
+			skipTest : false
 		}, def5Range),
 
 		// test browser for HTML5 range support
 		$range = $('<input type="range" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 range is supported - from Modernizr (but I left out the method to detect in Safari 2-4)
 		// see https://github.com/Modernizr/Modernizr/blob/master/feature-detects/inputtypes.js
-		rangeSupported = $range.attr('type') === 'range' && $range.val() !== 'test',
+		rangeSupported = o.skipTest || $range.attr('type') === 'range' && $range.val() !== 'test',
 		$shcell = [],
 		c = $cell.closest('table')[0].config,
 
@@ -663,12 +665,13 @@ $.tablesorter.filterFormatter = {
 			disabled : false,
 			addToggle : true,
 			exactMatch : true,
-			valueToHeader : false
+			valueToHeader : false,
+			skipTest : false
 		}, defColor),
 		// Add a hidden input to hold the range values
 		$color = $('<input type="color" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 color is supported - from Modernizr
-		colorSupported = $color.attr('type') === 'color' && $color.val() !== 'test',
+		colorSupported = o.skipTest || $color.attr('type') === 'color' && $color.val() !== 'test',
 		$shcell = [],
 		c = $cell.closest('table')[0].config,
 
