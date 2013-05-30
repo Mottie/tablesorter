@@ -43,6 +43,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10.5">Version 2.10.5</a> (5/30/2013)
+
+* Filter formatter functions now works properly within sticky headers. Fixes issues [#290](https://github.com/Mottie/tablesorter/issues/290) &amp; [#317](https://github.com/Mottie/tablesorter/issues/317).
+
 #### <a name="v2.10.4">Version 2.10.4</a> (5/28/2013)
 
 * Added `stickyHeadersInit` event, which is triggered on the table after the sticky headers widget has completed initializing.
