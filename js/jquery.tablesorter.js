@@ -1,5 +1,5 @@
 /*!
-* TableSorter 2.10.6 - Client-side table sorting with ease!
+* TableSorter 2.10.7 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.10.6";
+			ts.version = "2.10.7";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -682,7 +682,7 @@
 					}
 					if (c.delayInit && !c.cache) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
-					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':last'), cell = $cell[0];
+					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':first'), cell = $cell[0];
 					if (!cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
@@ -729,8 +729,8 @@
 					$tb = $this.find('tbody'),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
-					tbdy = $tb.index( $(cell).parents('tbody').filter(':last') ),
-					$row = $(cell).parents('tr').filter(':last');
+					tbdy = $tb.index( $(cell).parents('tbody').filter(':first') ),
+					$row = $(cell).parents('tr').filter(':first');
 					cell = $(cell)[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
@@ -746,7 +746,7 @@
 					e.stopPropagation();
 					var i, rows = $row.filter('tr').length,
 					dat = [], l = $row[0].cells.length,
-					tbdy = $this.find('tbody').index( $row.parents('tbody').filter(':last') );
+					tbdy = $this.find('tbody').index( $row.parents('tbody').filter(':first') );
 					// fixes adding rows to an empty table - see issue #179
 					if (!c.parsers) {
 						buildParserCache(table);
