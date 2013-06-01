@@ -47,6 +47,15 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.10.7">Version 2.10.7</a> (5/31/2013)
+
+* Now using correct `closest()` function equivalent. Thanks to [isuTony](https://github.com/isuTony); Fixes [issue #319](https://github.com/Mottie/tablesorter/issues/319).
+* Anticipating my sabbitical, I've added a few "beta-testing" scripts into a new folder for feedback, code fixes and help:
+    * [Custom pager control script](http://mottie.github.io/tablesorter/beta-testing/example-pager-custom-controls.html) - should be working properly.
+    * [External filters using Select2 plugin](http://mottie.github.io/tablesorter/beta-testing/example-external-filters-using-select2.html) - should be working properly.
+    * [Column reorder widget](http://mottie.github.io/tablesorter/beta-testing/example-widget-column-reorder.html) - not working 100% with sticky headers.
+    * [Column sum widget](http://mottie.github.io/tablesorter/beta-testing/example-widget-sum-columns.html) - still needs LOTS of work!
+
 #### <a name="v2.10.6">Version 2.10.6</a> (5/30/2013)
 
 * Added `skipTest` options to the HTML5 filter formatter functions. Fixes [issue #307](https://github.com/Mottie/tablesorter/issues/307).
