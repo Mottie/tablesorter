@@ -101,7 +101,7 @@
 		},
 
 		updatePageDisplay = function(table, c, flag) {
-			var i, p, s, t, out,
+			var i, p, s, t, out, rows,
 			tc = table.config,
 			f = $(table).hasClass('hasFilters') && !c.ajaxUrl;
 			c.totalPages = Math.ceil( c.totalRows / c.size ); // needed for "pageSize" method
@@ -113,6 +113,7 @@
 				c.page = (t) ? 0 : c.page;
 				c.endRow = Math.min( c.filteredRows, c.totalRows, c.size * ( c.page + 1 ) );
 				out = c.$container.find(c.cssPageDisplay);
+				rows = (f) ? c.filteredRows : c.totalRows;
 				// form the output string
 				s = c.output.replace(/\{(page|filteredRows|filteredPages|totalPages|startRow|endRow|totalRows)\}/gi, function(m){
 							return {
@@ -122,7 +123,7 @@
 								'{totalPages}'      : c.totalPages,
 								'{startRow}'        : c.startRow,
 								'{endRow}'          : c.endRow,
-								'{totalRows}'       : c.totalRows
+								'{totalRows}'       : rows
 							}[m];
 						});
 				if (out.length) {
