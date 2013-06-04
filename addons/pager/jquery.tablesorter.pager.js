@@ -198,7 +198,7 @@
 			// process data
 			if ( typeof(c.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh, th, d, l, $err,
+				var i, j, hsh, $f, $sh, th, d, l, $err, rr_count,
 				$t = $(table),
 				tc = table.config,
 				hl = $t.find('thead th').length, tds = '',
@@ -224,7 +224,9 @@
 					.appendTo( $t.find('thead:first') );
 					tc.$tbodies.eq(0).empty();
 				} else {
-					c.totalRows = result[t ? 1 : 0] || c.totalRows || 0;
+					//ensure a zero returned row count doesn't fail the logical ||
+					rr_count = result[t ? 1 : 0];
+					c.totalRows = isNaN(rr_count) ? c.totalRows || 0 : rr_count;
 					d = result[t ? 0 : 1] || []; // row data
 					l = d.length;
 					th = result[2]; // headers
