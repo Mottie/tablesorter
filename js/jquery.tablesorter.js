@@ -1360,7 +1360,7 @@
 	ts.addParser({
 		id: "percent",
 		is: function(s) {
-			return (/(\d\s?%|%\s?\d)/).test(s);
+			return (/(\d\s*?%|%\s*?\d)/).test(s) && s.length < 15;
 		},
 		format: function(s, table) {
 			return s ? ts.formatFloat(s.replace(/%/g, ""), table) : s;
