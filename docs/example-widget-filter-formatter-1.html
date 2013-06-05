@@ -96,7 +96,7 @@
 				// Date (one input)
 				4 : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
-						date : '1/1/2013', // default from date
+						// defaultDate : '1/1/2014', // default date
 						cellText : 'dates >= ', // text added before the input
 						changeMonth : true,
 						changeYear : true,
@@ -106,8 +106,8 @@
 				// Date (two inputs)
 				5 : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
-						from : '12/1/2012', // default from date
-						to   : '2/1/2014',  // default to date
+						// from : '08/01/2013', // default from date
+						// to   : '1/18/2014',  // default to date
 						changeMonth : true,
 						changeYear : true
 					});
@@ -312,7 +312,7 @@
         4 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
             // add any of the jQuery UI Datepicker options here (http://api.jqueryui.com/datepicker/)
-            defaultDate : '1/1/2013', // default date
+            // defaultDate : '1/1/2014', // default date
             cellText : 'dates >=', // text added before the input
             changeMonth : true,
             changeYear : true,
@@ -328,7 +328,7 @@
 					<ul>
 						<li>Table data that contains dates with times will be parsed into values that include time.</li>
 						<li>So if the <code>compare</code> option is set to <code>=</code>, it may not show any filtered table rows as none match that date at midnight. To fix this, either remove times from the table data, use a column parser that ignores the time, or use the Datepicker range selector and set the "from" input to the desired day and the "to" input to be the next day (at midnight).</li>
-						<li>Using a <code>compare</code> of <code>&lt;=</code> will only show filtered dates from the selected day <em>at midnight</em> with earlier dates; i.e. a cell with the selected date but a time set to noon will not be visible.</li>
+						<li><del>Using a <code>compare</code> of <code>&lt;=</code> will only show filtered dates from the selected day <em>at midnight</em> with earlier dates; i.e. a cell with the selected date but a time set to noon will not be visible</del>. As of <span class="version">v2.10/8</span>, the comparison of dates less than the selected date, now adds a time of 11:59:59 so it will include times within the selected date.</li>
 					</ul>
 				</li>
 			</ul>
@@ -358,8 +358,8 @@
         6 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
             // add any of the jQuery UI Datepicker options here (http://api.jqueryui.com/datepicker/)
-            from : '12/1/2012', // starting date
-            to   : '2/1/2014',  // ending date
+            // from : '8/1/2013', // starting date
+            // to   : '1/18/2014',  // ending date
             textFrom: 'from',   // "from" label text
             textTo: 'to',       // "to" label text
             changeMonth: true,
@@ -375,6 +375,7 @@
 					<ul>
 						<li>Instead of using the <code>defaultDate</code> option of the datepicker widget, it has a <code>from</code> and <code>to</code> option to fullfill that purpose.</li>
 						<li>The options added to this function will be applied to both the from and to datepicker inputs.</li>
+						<li>As of <span class="version">v2.10.8</span>, the comparison of dates less than the selected "to" date, now adds a time of 11:59:59 so it will include times within the selected dates.</li>
 					</ul>
 				</li>
 			</ul>

@@ -160,7 +160,8 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
+				<li>For <span class="version">v2.10.8</span>, the Age column includes the new <code>data-value</code> set to <code>&lt;30</code> which sets the default (starting) filter value (see <a href="index.html#widget-filter-defaultattrib">filter_defaultAttrib</a> for more details).</li>
+				<li>As of tablesorter <span class="version">v2.9</span>, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
 				<li>Custom filter widget option <code>filter_functions</code> was added in version 2.3.6.</li>
 				<li>jQuery v1.4.3+ required.</li>
 			</ul>
@@ -246,7 +247,7 @@
 					</ul>
 				</li>
 				<li>Conversely, if you reset the filters, select &quot;44%&quot; in the &quot;Discount&quot; column, then look at the &quot;First Name&quot; filter selector, you'll notice that it still contains all of the original options; because the &quot;filter-onlyAvail&quot; class name is not included in that column's header cell.</li>
-				<li>Sorry, this only functionalirt only works for default select filters.</li>
+				<li>Sorry, this functionality only works for default select filters.</li>
 				<li>This funcitonality was added in <span class="version">v2.10.1</span>.</li>
 			</ul>
 		</div>
@@ -283,7 +284,7 @@
 			<th class="filter-select" data-placeholder="Select a name">First Name</th>
 			<th data-placeholder="Exact matches only">Last Name</th>
 			<th data-placeholder="Choose a city">City</th>
-			<th>Age</th>
+			<th data-value="<30">Age</th>
 			<th data-placeholder="Select a filter">Total</th>
 			<th class="filter-select filter-onlyAvail">Discount</th>
 			<th>Date</th>
