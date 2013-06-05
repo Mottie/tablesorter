@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 5/28/2013
+/*! tableSorter 2.8+ widgets - updated 6/4/2013
  *
  * Column Styles
  * Column Filters
@@ -345,6 +345,7 @@ ts.addWidget({
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
 		filter_serversideFiltering : false, // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
+		filter_defaultAttrib : 'data-value', // data attribute in the header cell that contains the default filter value
 
 		// regex used in filter "check" functions - not for general use and not documented
 		filter_regex : {
@@ -787,6 +788,14 @@ ts.addWidget({
 			if (c.debug){
 				ts.benchmark("Applying Filter widget", time);
 			}
+			// add default values
+			$t.bind('tablesorter-initialized', function(){
+				ff = ts.getFilters(table);
+				for (i = 0; i < ff.length; i++) {
+					ff[i] = $ths.filter('[data-column="' + i + '"]:last').attr(wo.filter_defaultAttrib) || ff[i];
+				}
+				ts.setFilters(table, ff, true);
+			});
 			// filter widget initialized
 			$t.trigger('filterInit');
 			checkFilters();
@@ -821,7 +830,7 @@ ts.setFilters = function(table, filter, apply) {
 		c = $t.length ? $t[0].config : {},
 		valid = c && c.$filters ? c.$filters.find('.' + c.widgetOptions.filter_cssFilter).each(function(i, el) {
 			$(el).val(filter[i] || '');
-		}) || false : false;
+		}).trigger('change.tsfilter') || false : false;
 	if (apply) { $t.trigger('search', [filter, false]); }
 	return !!valid;
 };
@@ -993,8 +1002,11 @@ ts.addWidget({
 			.removeClass('hasStickyHeaders')
 			.unbind('sortEnd.tsSticky pagerComplete.tsSticky')
 			.find('.' + wo.stickyHeaders).remove();
-		if (wo.$sticky) { wo.$sticky.remove(); } // remove cloned table
-		$(window).unbind('scroll.tsSticky resize.tsSticky');
+		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
+		// don't unbind if any table on the page still has stickyheaders applied
+		if (!$('.hasStickyHeaders').length) {
+			$(window).unbind('scroll.tsSticky resize.tsSticky');
+		}
 		ts.addHeaderResizeEvent(table, false);
 	}
 });
