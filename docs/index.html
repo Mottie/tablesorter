@@ -1294,7 +1294,9 @@ $(function(){
       // show column filters
       filter_columnFilters : true,
       // css class applied to the filter row inputs/select
-      filter_cssFilter     : "tablesorter-filter",
+      filter_cssFilter     : 'tablesorter-filter',
+      // data attribute in the header cell that contains the default filter value
+      filter_defaultAttrib : 'data-value',
       // class added to filtered rows; needed by pager plugin
       filter_filteredRow   : 'filtered',
       // add custom filter elements to the filter row
@@ -1987,6 +1989,27 @@ $('table').trigger('search', false);</pre></div>
 				<td></td>
 			</tr>
 
+			<tr id="widget-filter-defaultattrib">
+				<td><a href="#" class="toggle2">filter_defaultAttrib</a></td>
+				<td>String</td>
+				<td>'data-value'</td>
+				<td>
+					Filter widget: This option contains the name of the data-attribute which contains the default (starting) filter value (<span class="version">v2.10.8</span>).
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-defaultattrib"><code>filter_defaultAttrib</code></a> option as follows:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_defaultAttrib : 'data-value'
+    }
+  });
+});</pre>Then add the default filter value to the table header as follows:<pre class="prettyprint lang-html">&lt;th data-value=&quot;&lt;30&quot;&gt;Age&lt;/th&gt;</pre></div>
+				</td>
+				<td><a href="example-widget-filter-custom.html">Example</a></td>
+			</tr>
+
 			<tr id="widget-sticky-headers">
 				<td><a href="#" class="toggle2">stickyHeaders</a></td>
 				<td>String</td>
@@ -2028,6 +2051,28 @@ $('table').trigger('search', false);</pre></div>
     widgetOptions : {
       // cloned table id suffix
       stickyHeaders_cloneId : "-clone"
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-include-caption">
+				<td><a href="#" class="toggle2">stickyHeaders_includeCaption</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Sticky Headers widget: If this option is <code>false</code> and a caption exists, it will not be included in the sticky header (<span class="version">v2.10.8</span>).
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-sticky-headers-include-caption"><code>stickyHeaders_includeCaption</code></a> option as follows:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // cloned table id suffix
+      stickyHeaders_includeCaption : false
     }
   });
 });</pre></div>

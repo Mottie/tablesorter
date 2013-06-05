@@ -847,7 +847,8 @@ ts.addWidget({
 		stickyHeaders : 'tablesorter-stickyHeader',
 		stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
 		stickyHeaders_cloneId : '-sticky', // added to table ID, if it exists
-		stickyHeaders_addResizeEvent : true // trigger "resize" event on headers
+		stickyHeaders_addResizeEvent : true, // trigger "resize" event on headers
+		stickyHeaders_includeCaption : true // if false and a caption exist, it won't be included in the sticky header
 	},
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
@@ -904,6 +905,9 @@ ts.addWidget({
 		// clear out cloned table, except for sticky header
 		// include caption & filter row (fixes #126 & #249)
 		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
+		if (!wo.stickyHeaders_includeCaption) {
+			$stickyTable.find('caption').remove();
+		}
 		// issue #172 - find td/th in sticky header
 		stkyCells = stkyHdr.children().children();
 		$stickyTable.css({ height:0, width:0, padding:0, margin:0, border:0 });
@@ -954,9 +958,10 @@ ts.addWidget({
 			if (!$t.is(':visible')) { return; } // fixes #278
 			var pre = 'tablesorter-sticky-',
 				offset = $t.offset(),
+				cap = -(wo.stickyHeaders_includeCaption ? 0 : $t.find('caption').height()),
 				sTop = $win.scrollTop() + stickyOffset,
 				tableHt = $t.height() - ($stickyTable.height() + (tfoot.height() || 0)),
-				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
+				vis = (sTop > offset.top - cap) && (sTop < offset.top - cap + tableHt) ? 'visible' : 'hidden';
 			$stickyTable
 			.removeClass(pre + 'visible ' + pre + 'hidden')
 			.addClass(pre + vis)
