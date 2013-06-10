@@ -958,10 +958,10 @@ ts.addWidget({
 			if (!$t.is(':visible')) { return; } // fixes #278
 			var pre = 'tablesorter-sticky-',
 				offset = $t.offset(),
-				cap = -(wo.stickyHeaders_includeCaption ? 0 : $t.find('caption').height()),
-				sTop = $win.scrollTop() + stickyOffset,
+				cap = (wo.stickyHeaders_includeCaption ? 0 : $t.find('caption').outerHeight(true)),
+				sTop = $win.scrollTop() + stickyOffset - cap,
 				tableHt = $t.height() - ($stickyTable.height() + (tfoot.height() || 0)),
-				vis = (sTop > offset.top - cap) && (sTop < offset.top - cap + tableHt) ? 'visible' : 'hidden';
+				vis = (sTop > offset.top) && (sTop < offset.top + tableHt) ? 'visible' : 'hidden';
 			$stickyTable
 			.removeClass(pre + 'visible ' + pre + 'hidden')
 			.addClass(pre + vis)
