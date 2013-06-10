@@ -385,7 +385,7 @@ $.tablesorter.filterFormatter = {
 		o.oldonClose = o.onClose;
 
 		o.onClose = function( selectedDate, ui ) {
-			var date = new Date(selectedDate + ( o.compare.match('<') ? ' 23:59:59' : '' )).getTime() || '';
+			var date = new Date($cell.find('.date').datepicker('getDate')).getTime() || '';
 			$cell
 				// update hidden input
 				.find('.dateCompare').val( o.compare + date )
@@ -472,8 +472,8 @@ $.tablesorter.filterFormatter = {
 		o.defaultDate = o.from || o.defaultDate;
 
 		closeFrom = o.onClose = function( selectedDate, ui ) {
-			var from = ( (new Date(selectedDate)).getTime() || ''),
-				to = (new Date($cell.find('.dateTo').val() + ' 23:59:59').getTime() || ''),
+			var from = (new Date($cell.find('.dateFrom').datepicker('getDate')).getTime() || ''),
+				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
