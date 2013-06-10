@@ -603,9 +603,11 @@ $.tablesorter.filterFormatter = {
 				});
 
 			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			$cell.find('input[type=hidden]').bind('change.tsfilter', function(){
-				updateNumber( this.value );
-			});
+			// FIXME TheSin, Not sure why but this breaks updates
+			// Commenting out till it's fixed.
+			//$cell.find('input[type=hidden]').bind('change.tsfilter', function(){
+			//	updateNumber( this.value );
+			//});
 
 			// has sticky headers?
 			c.$table.bind('stickyHeadersInit', function(){
