@@ -868,7 +868,7 @@ ts.addWidget({
 					margin     : 0,
 					top        : stickyOffset,
 					visibility : 'hidden',
-					zIndex     : 2
+					zIndex     : 300
 				}),
 			stkyHdr = $stickyTable.children('thead:first').addClass(wo.stickyHeaders),
 			stkyCells,
