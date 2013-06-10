@@ -472,8 +472,8 @@ $.tablesorter.filterFormatter = {
 		o.defaultDate = o.from || o.defaultDate;
 
 		closeFrom = o.onClose = function( selectedDate, ui ) {
-			var from = (new Date($cell.find('.dateFrom').datepicker('getDate')).getTime() || ''),
-				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
+			var from = new Date($cell.find('.dateFrom').datepicker('getDate')).getTime() || '',
+				to = new Date($cell.find('.dateTo').datepicker('getDate')).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
@@ -493,8 +493,8 @@ $.tablesorter.filterFormatter = {
 		$cell.find('.dateFrom').datepicker(o);
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
 		o.onClose = function( selectedDate, ui ) {
-			var from = new Date( $cell.find('.dateFrom').val() ).getTime() || '',
-				to = new Date( selectedDate + ' 23:59:59' ).getTime() || '',
+			var from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
+				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
