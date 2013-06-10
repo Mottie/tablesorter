@@ -848,7 +848,8 @@ ts.addWidget({
 		stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
 		stickyHeaders_cloneId : '-sticky', // added to table ID, if it exists
 		stickyHeaders_addResizeEvent : true, // trigger "resize" event on headers
-		stickyHeaders_includeCaption : true // if false and a caption exist, it won't be included in the sticky header
+		stickyHeaders_includeCaption : true, // if false and a caption exist, it won't be included in the sticky header
+		stickyHeaders_zIndex : 2 // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
 	},
 	format: function(table, c, wo){
 		if (c.$table.hasClass('hasStickyHeaders')) { return; }
@@ -861,6 +862,7 @@ ts.addWidget({
 			filterInputs = '.' + (wo.filter_cssFilter || 'tablesorter-filter'),
 			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
 			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
+			stickyzIndex = wo.stickyHeaders_zIndex ? wo.stickyHeaders_zIndex : 2,
 			$stickyTable = wo.$sticky = $t.clone()
 				.addClass('containsStickyHeaders')
 				.css({
@@ -868,7 +870,7 @@ ts.addWidget({
 					margin     : 0,
 					top        : stickyOffset,
 					visibility : 'hidden',
-					zIndex     : 2
+					zIndex     : stickyzIndex
 				}),
 			stkyHdr = $stickyTable.children('thead:first').addClass(wo.stickyHeaders),
 			stkyCells,
