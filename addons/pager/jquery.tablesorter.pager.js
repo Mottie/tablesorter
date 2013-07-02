@@ -295,7 +295,8 @@
 					$.tablesorter.isProcessing(table, true); // show loading icon
 				}
 				$doc.bind('ajaxError.pager', function(e, xhr, settings, exception) {
-					if (url.match(settings.url)) {
+					//show the error message on the table
+					if (url === settings.url) {
 						renderAjax(null, table, c, xhr, exception);
 						$doc.unbind('ajaxError.pager');
 					}
