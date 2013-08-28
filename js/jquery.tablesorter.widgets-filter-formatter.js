@@ -488,7 +488,7 @@ $.tablesorter.filterFormatter = {
 			changeYear : true,
 			numberOfMonths : 1
 		}, defDate),
-		t, closeFrom, $shcell = [],
+		t, closeTo, closeFrom, $shcell = [],
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">')
 			.appendTo($cell)
@@ -502,7 +502,7 @@ $.tablesorter.filterFormatter = {
 				} else if (v.match('>=')) {
 					closeFrom( v.replace('>=', '') );
 				} else if (v.match('<=')) {
-					o.onClose( v.replace('<=', '') );
+					closeTo( v.replace('<=', '') );
 				}
 			}),
 		c = $cell.closest('table')[0].config;
@@ -516,18 +516,18 @@ $.tablesorter.filterFormatter = {
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
 
-		o.defaultDate = o.from || o.defaultDate;
+		var localfrom = o.defaultDate = o.from || o.defaultDate;
 
 		closeFrom = o.onClose = function( selectedDate, ui ) {
-			var from = new Date($cell.find('.dateFrom').datepicker('getDate')).getTime() || '',
-				to = new Date($cell.find('.dateTo').datepicker('getDate')).getTime() || '',
+			var from = new Date( selectedDate ).getTime() || '',
+				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
-				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
-				.find('.dateFrom').val(selectedDate).end()
-				// update hidden input
 				.find('.dateRange').val(range)
-				.trigger('search');
+				.trigger('search').end()
+				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
+				.find('.dateFrom').val(selectedDate);
+
 			// update sticky header cell
 			if ($shcell.length) {
 				$shcell
@@ -538,16 +538,18 @@ $.tablesorter.filterFormatter = {
 		};
 
 		$cell.find('.dateFrom').datepicker(o);
+
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
-		o.onClose = function( selectedDate, ui ) {
+		closeTo = o.onClose = function( selectedDate, ui ) {
 			var from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
+				to = new Date( selectedDate ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
-				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
-				.find('.dateTo').val(selectedDate).end()
 				.find('.dateRange').val(range)
-				.trigger('search');
+				.trigger('search').end()
+				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
+				.find('.dateTo').val(selectedDate);
+
 			// update sticky header cell
 			if ($shcell.length) {
 				$shcell
@@ -561,24 +563,27 @@ $.tablesorter.filterFormatter = {
 		// has sticky headers?
 		c.$table.bind('stickyHeadersInit', function(){
 			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+			$shcell.append(t);
+
 			// add a jQuery datepicker!
-			$shcell.append(t).find('.dateTo').datepicker(o);
-			o.defaultDate = o.from || o.defaultDate || new Date();
+			o.onClose = closeTo;
+			$shcell.find('.dateTo').datepicker(o);
+
+			o.defaultDate = localfrom;
 			o.onClose = closeFrom;
 			$shcell.find('.dateFrom').datepicker(o);
 		});
 
 		// on reset
 		$cell.closest('table').bind('filterReset', function(){
-			$cell.find('.dateFrom, .dateTo').val('');
+			$cell.find('.dateFrom, .dateTo').val('').datepicker('option', 'currentText', '' );
 			if ($shcell.length) {
-				$shcell.find('.dateFrom, .dateTo').val('');
+				$shcell.find('.dateFrom, .dateTo').val('').datepicker('option', 'currentText', '' );
 			}
 		});
 
 		// return the hidden input so the filter widget has a reference to it
-		t = o.from ? ( o.to ? o.from + ' - ' + o.to : '>=' + o.from ) : (o.to ? '<=' + o.to : '');
-		return $input.val( t );
+		return $input.val( o.from ? ( o.to ? o.from + ' - ' + o.to : '>=' + o.from ) : (o.to ? '<=' + o.to : '') );
 	},
 
 	/**********************\
