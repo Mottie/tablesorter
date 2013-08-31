@@ -1,4 +1,6 @@
-#### **I'll be on sabbitical starting June 5, 2013 for approximately 2-3 months. So, sadly, I won't be able to fix any problems or add enhancements until I return. And I will return :)**
+#### **I'll be on sabbitical starting June 5, 2013 for approximately 2-3 months. So, sadly, I won't be able to fix any problems or add enhancements until I return; I will return :)**
+
+#### 8/31/2013 update: *** sorry everyone, I'm going to be away a bit longer. At least another month and a half :( ***
 
 ---
 
