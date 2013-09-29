@@ -353,7 +353,7 @@ ts.addWidget({
 			"child" : /tablesorter-childRow/, // child row class name; this gets updated in the script
 			"filtered" : /filtered/, // filtered (hidden) row class name; updated in the script
 			"type" : /undefined|number/, // check type
-			"exact" : /(^[\"|\'|=])|([\"|\'|=]$)/g, // exact match
+			"exact" : /(^[\"|\'|=]+)|([\"|\'|=]+$)/g, // exact match (allow '==')
 			"nondigit" : /[^\w,. \-()]/g, // replace non-digits (from digit & currency parser)
 			"operators" : /[<>=]/g // replace operators
 		}
