@@ -201,8 +201,8 @@
 				var i, j, hsh, $f, $sh, th, d, l, $err, rr_count,
 				$t = $(table),
 				tc = table.config,
-				hl = $t.find('thead th').length, tds = '',
 				result = c.ajaxProcessing(data, table) || [ 0, [] ],
+				hl = $t.find('thead th').length, tds = '',
 				// allow [ total, rows, headers ]  or [ rows, total, headers ]
 				t = isNaN(result[0]) && !isNaN(result[1]);
 
