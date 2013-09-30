@@ -303,7 +303,7 @@
 				}
 				$doc.bind('ajaxError.pager', function(e, xhr, settings, exception) {
 					//show the error message on the table
-					if (url === settings.url) {
+					if (url.match(settings.url)) {
 						renderAjax(null, table, p, xhr, exception);
 						$doc.unbind('ajaxError.pager');
 					}
