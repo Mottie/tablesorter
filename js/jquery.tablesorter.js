@@ -822,25 +822,35 @@
 			/* public methods */
 			ts.construct = function(settings) {
 				return this.each(function() {
-					// if no thead or tbody, or tablesorter is already present, quit
-					if (!this.tHead || this.tBodies.length === 0 || this.hasInitialized === true) {
-						return (this.config && this.config.debug) ? log('stopping initialization! No thead, tbody or tablesorter has already been initialized') : '';
-					}
-					// declare
-					var $this = $(this), table = this,
-						c, k = '',
+
+					var $this, k = '',
+						table = this,
+						// merge & extend config options
+						c = $.extend(true, {}, ts.defaults, settings),
 						m = $.metadata;
+
+					// create a table from data (build table widget)
+					if (!table.hasInitialized && ts.buildTable && c.data) {
+						// return the table (in case the original target is the table's container)
+						table = ts.buildTable(table, c);
+					}
+
+					// if no thead or tbody, or tablesorter is already present, quit
+					if (!table.tHead || table.tBodies.length === 0 || table.hasInitialized === true) {
+						return (c && c.debug) ? log('stopping initialization! No thead, tbody or tablesorter has already been initialized') : '';
+					}
+
 					// initialization flag
 					table.hasInitialized = false;
 					// table is being processed flag
 					table.isProcessing = true;
 					// new blank config object
-					table.config = {};
-					// merge and extend
-					c = $.extend(true, table.config, ts.defaults, settings);
+					table.config = c;
+					$this = $(table);
 					// save the settings where they read
 					$.data(table, "tablesorter", c);
 					if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
+
 					// constants
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
 					// removing this in version 3 (only supports jQuery 1.7+)
