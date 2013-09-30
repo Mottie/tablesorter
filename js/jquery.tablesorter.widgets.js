@@ -452,10 +452,10 @@ ts.addWidget({
 											ff = ($ths.filter('[data-column="' + i + '"]:last').hasClass('filter-match')) ? xi.search(val) >= 0 : v[i] === x;
 										} else if (typeof wo.filter_functions[i] === 'function'){
 											// filter callback( exact cell content, parser normalized content, filter input value, column index )
-											ff = wo.filter_functions[i](x, c.cache[k].normalized[j][i], v[i], i);
+											ff = wo.filter_functions[i](x, c.cache[k].normalized[j][i], v[i], i, $tr.eq(j));
 										} else if (typeof wo.filter_functions[i][v[i]] === 'function'){
 											// selector option function
-											ff = wo.filter_functions[i][v[i]](x, c.cache[k].normalized[j][i], v[i], i);
+											ff = wo.filter_functions[i][v[i]](x, c.cache[k].normalized[j][i], v[i], i, $tr.eq(j));
 										}
 									// Look for regex
 									} else if (wo.filter_regex.regex.test(val)){
