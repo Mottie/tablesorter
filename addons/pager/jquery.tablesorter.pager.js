@@ -101,11 +101,12 @@
 		},
 
 		updatePageDisplay = function(table, p, flag) {
-			var i, pg, s, t, out,
-			c = table.config,
-			f = c.$table.hasClass('hasFilters') && !p.ajaxUrl;
+			var i, pg, s, out,
+				c = table.config,
+				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
+				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove;
 			p.totalPages = Math.ceil( p.totalRows / p.size ); // needed for "pageSize" method
-			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove + ')').length : p.totalRows;
+			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
 			p.filteredPages = (f) ? Math.ceil( p.filteredRows / p.size ) || 1 : p.totalPages;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows);
@@ -169,7 +170,7 @@
 			if (!p.ajaxUrl) {
 				var i,
 				c = table.config,
-				rows = c.$tbodies.eq(0).children('tr:not(.' + c.cssChildRow + ')'),
+				rows = c.$tbodies.eq(0).children(),
 				l = rows.length,
 				s = ( p.page * p.size ),
 				e =  s + p.size,
@@ -178,7 +179,8 @@
 				for ( i = 0; i < l; i++ ){
 					if ( !rows[i].className.match(f) ) {
 						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
-						j++;
+						// don't count child rows
+						j += rows[i].className.match(c.cssChildRow) ? 0 : 1;
 					}
 				}
 			}
@@ -287,7 +289,7 @@
 			}
 			if (!p.initialized) {
 				p.initialized = true;
-				c.$table.trigger('pagerInitialized', p);
+				$(table).trigger('pagerInitialized', p);
 			}
 		},
 
@@ -370,11 +372,7 @@
 				$.tablesorter.clearTableBody(table);
 				$tb = $.tablesorter.processTbody(table, table.config.$tbodies.eq(0), true);
 				for ( i = s; i < e; i++ ) {
-					o = rows[i];
-					l = o.length;
-					for ( j = 0; j < l; j++ ) {
-						$tb.appendChild(o[j]);
-					}
+					$tb.append(rows[i]);
 				}
 				$.tablesorter.processTbody(table, $tb, false);
 			}
@@ -519,8 +517,8 @@
 							return;
 						}
 						//only run the server side sorting if it has been enabled
-						if (e.type === "filterEnd" || (e.type === "sortEnd" && tc.serverSideSorting)) {
-						  moveToPage(table, p, false);
+						if (e.type === "filterEnd" || (e.type === "sortEnd" && c.serverSideSorting)) {
+							moveToPage(table, p, false);
 						}
 						updatePageDisplay(table, p, false);
 						fixHeight(table, p);
