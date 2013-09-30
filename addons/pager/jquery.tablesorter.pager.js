@@ -516,7 +516,10 @@
 							$.data(table, 'pagerUpdateTriggered', false);
 							return;
 						}
-						moveToPage(table, c, false);
+						//only run the server side sorting if it has been enabled
+						if (e.type === "filterEnd" || (e.type === "sortEnd" && tc.serverSideSorting)) {
+						  moveToPage(table, c, false);
+						}
 						updatePageDisplay(table, c, false);
 						fixHeight(table, c);
 					})
