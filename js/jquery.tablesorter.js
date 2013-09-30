@@ -121,6 +121,14 @@
 			ts.log = log;
 			ts.benchmark = benchmark;
 
+			// $.isEmptyObject from jQuery v1.4
+			function isEmptyObject(obj) {
+				for (var name in obj) {
+					return false;
+				}
+				return true;
+			}
+
 			function getElementText(table, node, cellIndex) {
 				if (!node) { return ""; }
 				var c = table.config,
@@ -281,7 +289,7 @@
 				c2 = c.cache,
 				r, n, totalRows, checkCell, $bk, $tb,
 				i, j, k, l, pos, appendTime;
-				if (!c2[0]) { return; } // empty table - fixes #206
+				if (isEmptyObject(c2)) { return; } // empty table - fixes #206/#346
 				if (c.debug) {
 					appendTime = new Date();
 				}
@@ -606,7 +614,7 @@
 				var dir = 0, tc = table.config,
 				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
 				sortTime, i, k, c, colMax, cache, lc, s, order, orgOrderCol;
-				if (tc.serverSideSorting || !tc.cache[0]) { // empty table - fixes #206
+				if (tc.serverSideSorting || isEmptyObject(tc.cache)) { // empty table - fixes #206/#346
 					return;
 				}
 				if (tc.debug) { sortTime = new Date(); }
@@ -680,7 +688,7 @@
 						downTime = new Date().getTime();
 						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
 					}
-					if (c.delayInit && !c.cache) { buildCache(table); }
+					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
 					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':first'), cell = $cell[0];
 					if (!cell.sortDisabled) {
@@ -768,12 +776,15 @@
 					checkResort($this, resort, callback);
 				})
 				.bind("sorton.tablesorter", function(e, list, callback, init) {
+					var c = table.config;
 					e.stopPropagation();
 					$this.trigger("sortStart", this);
 					// update header count index
 					updateHeaderSortCount(table, list);
 					// set css for headers
 					setHeadersCss(table);
+					// fixes #346
+					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					$this.trigger("sortBegin", this);
 					// sort the table and append it to the dom
 					multisort(table);
@@ -832,7 +843,11 @@
 					if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
 					// constants
 					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
-					c.supportsDataObject = (function(version) { version[0] = parseInt(version[0]) ; return (version[0] > 1) || (version[0] == 1 && parseInt(version[1]) >= 4); })($.fn.jquery.split("."));
+					// removing this in version 3 (only supports jQuery 1.7+)
+					c.supportsDataObject = (function(version) {
+						version[0] = parseInt(version[0], 10);
+						return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
+					})($.fn.jquery.split("."));
 					// digit sort text location; keeping max+/- for backwards compatibility
 					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 					// add table theme class only if there isn't already one there
