@@ -679,10 +679,10 @@
 				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
 					// only recognize left clicks or enter
 					if ( ((e.which || e.button) !== 1 && !/sort|keypress/.test(e.type)) || (e.type === 'keypress' && e.which !== 13) ) {
-						return false;
+						return;
 					}
 					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return false; }
+					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return; }
 					// set timer on mousedown
 					if (e.type === 'mousedown') {
 						downTime = new Date().getTime();
