@@ -52,6 +52,7 @@ p.tip em, div.tip em {padding: 2px; background-color: #6cf; color: #fff;}
 span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }
 span.tip.old em { background-color: #cfd; color: #000; }
 span.warn em { background-color: #ce5300; }
+.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
 div.digg {float: right;}
 .next-up { padding-top: 10px; font-size: 90%; }
 .narrow-block { width: 50%; margin: 50px auto; }

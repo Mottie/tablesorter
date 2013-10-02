@@ -62,10 +62,15 @@ ts.addWidget({
 	init: function(table, thisWidget, c, wo){
 		if (wo.group_collapsible) {
 			// .on() requires jQuery 1.7+
-			c.$table.on('click', 'tr.group-header', function(){
+			c.$table.on('click toggleGroup', 'tr.group-header', function(e){
+				// use shift-click to toggle ALL groups
+				if (e.type === 'click' && e.shiftKey) {
+					$(this).siblings('.group-header').trigger('toggleGroup');
+				}
 				$(this).toggleClass('collapsed');
 				// nextUntil requires jQuery 1.4+
 				$(this).nextUntil('tr.group-header').toggleClass('group-hidden', $(this).hasClass('collapsed') );
+				e.stopPropagation();
 			});
 		}
 	},
@@ -80,7 +85,7 @@ ts.addWidget({
 			// clear pager saved spacer height (in case the rows are collapsed)
 			$.data(table, 'pagerSavedHeight', 0);
 		}
-		if (col >= 0) {
+		if (col >= 0 && !c.$headers.eq(col).hasClass('group-false')) {
 			if (c.debug){ time = new Date(); }
 			for (k = 0; k < c.$tbodies.length; k++) {
 				n = c.cache[k].normalized;
