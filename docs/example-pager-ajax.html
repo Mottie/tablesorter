@@ -54,7 +54,7 @@
 			// the filterList to the url into an "fcol" array.
 			// So a sortList = [[2,0],[3,0]] becomes "&col[2]=0&col[3]=0" in the url
 			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
-			ajaxUrl : 'assets/City{page}.json#{filterList:filter}&{sortList:column}',
+			ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
 
 			// modify the url after all processing has been applied
 			customAjaxUrl: function(table, url) {

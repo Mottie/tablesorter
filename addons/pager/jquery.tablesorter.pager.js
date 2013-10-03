@@ -302,11 +302,8 @@
 					$.tablesorter.isProcessing(table, true); // show loading icon
 				}
 				$doc.bind('ajaxError.pager', function(e, xhr, settings, exception) {
-					//show the error message on the table
-					if (url.match(settings.url)) {
-						renderAjax(null, table, p, xhr, exception);
-						$doc.unbind('ajaxError.pager');
-					}
+					renderAjax(null, table, p, xhr, exception);
+					$doc.unbind('ajaxError.pager');
 				});
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 				p.ajaxObject.success = function(data) {
