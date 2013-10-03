@@ -6,6 +6,8 @@
 ;(function($) {
 	"use strict";
 	/*jshint supernew:true */
+	var ts = $.tablesorter;
+
 	$.extend({ tablesorterPager: new function() {
 
 		this.defaults = {
@@ -55,6 +57,9 @@
 
 			// Number of visible rows
 			size: 10,
+
+			// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
+			savePages: true,
 
 			// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 			// table row set to a height to compensate; default is false
@@ -139,7 +144,16 @@
 				}
 			}
 			pagerArrows(p);
-			if (p.initialized && flag !== false) { c.$table.trigger('pagerComplete', p); }
+			if (p.initialized && flag !== false) {
+				c.$table.trigger('pagerComplete', p);
+				// save pager info to storage
+				if (p.savePages && ts.storage) {
+					ts.storage(table, 'tablesorter-pager', {
+						page : p.page,
+						size : p.size
+					});
+				}
+			}
 		},
 
 		fixHeight = function(table, p) {
@@ -279,13 +293,15 @@
 					}
 				}
 				if (c.showProcessing) {
-					$.tablesorter.isProcessing(table); // remove loading icon
+					ts.isProcessing(table); // remove loading icon
 				}
 				$t.trigger('update');
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				updatePageDisplay(table, p);
 				fixHeight(table, p);
-				if (p.initialized) { $t.trigger('pagerChange', p); }
+				if (p.initialized) {
+					$t.trigger('pagerChange', p);
+				}
 			}
 			if (!p.initialized) {
 				p.initialized = true;
@@ -299,7 +315,7 @@
 			c = table.config;
 			if ( url !== '' ) {
 				if (c.showProcessing) {
-					$.tablesorter.isProcessing(table, true); // show loading icon
+					ts.isProcessing(table, true); // show loading icon
 				}
 				$doc.bind('ajaxError.pager', function(e, xhr, settings, exception) {
 					renderAjax(null, table, p, xhr, exception);
@@ -366,12 +382,12 @@
 				if ( e > rows.length ) {
 					e = rows.length;
 				}
-				$.tablesorter.clearTableBody(table);
-				$tb = $.tablesorter.processTbody(table, table.config.$tbodies.eq(0), true);
+				ts.clearTableBody(table);
+				$tb = ts.processTbody(table, table.config.$tbodies.eq(0), true);
 				for ( i = s; i < e; i++ ) {
 					$tb.append(rows[i]);
 				}
-				$.tablesorter.processTbody(table, $tb, false);
+				ts.processTbody(table, $tb, false);
 			}
 			if ( p.page >= p.totalPages ) {
 				moveToLastPage(table, p);
@@ -497,8 +513,14 @@
 					$t = c.$table,
 					// added in case the pager is reinitialized after being destroyed.
 					pager = p.$container = $(p.container).addClass('tablesorter-pager').show();
-					p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
-					c.appender = $this.appender;
+				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
+				c.appender = $this.appender;
+
+				if (p.savePages && ts.storage) {
+					t = ts.storage(table, 'tablesorter-pager');
+					p.page = isNaN(t.page) ? p.page : t.page;
+					p.size = isNaN(t.size) ? p.size : t.size;
+				}
 
 				$t
 					.unbind('filterStart.pager filterEnd.pager sortEnd.pager disable.pager enable.pager destroy.pager update.pager pageSize.pager')
@@ -578,7 +600,6 @@
 							p.page = $(this).val() - 1;
 							moveToPage(table, p);
 						});
-						updatePageDisplay(table, p, false);
 				}
 
 				// page size selector
