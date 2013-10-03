@@ -287,20 +287,16 @@ ts.addWidget({
 			ts.processTbody(table, $tb, false);
 		}
 		// add classes to thead and tfoot
-		$tr = wo.columns_thead !== false ? 'thead tr' : '';
+		$tr = wo.columns_thead !== false ? ['thead tr'] : [];
 		if (wo.columns_tfoot !== false) {
-			$tr += ($tr === '' ? '' : ',') + 'tfoot tr';
+			$tr.push('tfoot tr');
 		}
 		if ($tr.length) {
-			$t = $tbl.find($tr).children().removeClass(rmv);
-			if (list && list[0]){
-				// primary sort column class
-				$t.filter('[data-column="' + list[0][0] + '"]').addClass(css[0]);
-				if (len > 1){
-					for (i = 1; i < len; i++){
-						// secondary, tertiary, etc sort column classes
-						$t.filter('[data-column="' + list[i][0] + '"]').addClass(css[i] || css[last]);
-					}
+			$t = $tbl.find($tr.join(',')).children().removeClass(rmv);
+			if (len){
+				for (i = 0; i < len; i++){
+					// add primary. secondary, tertiary, etc sort column classes
+					$t.filter('[data-column="' + list[i][0] + '"]').addClass(css[i] || css[last]);
 				}
 			}
 		}
