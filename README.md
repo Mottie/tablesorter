@@ -1,9 +1,3 @@
-#### **I'll be on sabbitical starting June 5, 2013 for approximately 2-3 months. So, sadly, I won't be able to fix any problems or add enhancements until I return; I will return :)**
-
-#### 8/31/2013 update: *** sorry everyone, I'm going to be away a bit longer. At least another month and a half :( ***
-
----
-
 tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
