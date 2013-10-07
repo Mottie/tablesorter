@@ -822,97 +822,98 @@
 			/* public methods */
 			ts.construct = function(settings) {
 				return this.each(function() {
-
-					var $this, k = '',
-						table = this,
+					var table = this,
 						// merge & extend config options
-						c = $.extend(true, {}, ts.defaults, settings),
-						m = $.metadata;
-
+						c = $.extend(true, {}, ts.defaults, settings);
 					// create a table from data (build table widget)
-					if (!table.hasInitialized && ts.buildTable && c.data) {
+					if (!table.hasInitialized && ts.buildTable && this.tagName !== 'TABLE') {
 						// return the table (in case the original target is the table's container)
-						table = ts.buildTable(table, c);
+						ts.buildTable(table, c);
 					}
-
-					// if no thead or tbody, or tablesorter is already present, quit
-					if (!table.tHead || table.tBodies.length === 0 || table.hasInitialized === true) {
-						return (c && c.debug) ? log('stopping initialization! No thead, tbody or tablesorter has already been initialized') : '';
-					}
-
-					// initialization flag
-					table.hasInitialized = false;
-					// table is being processed flag
-					table.isProcessing = true;
-					// new blank config object
-					table.config = c;
-					$this = $(table);
-					// save the settings where they read
-					$.data(table, "tablesorter", c);
-					if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
-
-					// constants
-					c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
-					// removing this in version 3 (only supports jQuery 1.7+)
-					c.supportsDataObject = (function(version) {
-						version[0] = parseInt(version[0], 10);
-						return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
-					})($.fn.jquery.split("."));
-					// digit sort text location; keeping max+/- for backwards compatibility
-					c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
-					// add table theme class only if there isn't already one there
-					if (!/tablesorter\-/.test($this.attr('class'))) {
-						k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
-					}
-					c.$table = $this.addClass(c.tableClass + k);
-					c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
-					// build headers
-					buildHeaders(table);
-					// fixate columns if the users supplies the fixedWidth option
-					// do this after theme has been applied
-					fixColumnWidth(table);
-					// try to auto detect column type, and store in tables config
-					buildParserCache(table);
-					// build the cache for the tbody cells
-					// delayInit will delay building the cache until the user starts a sort
-					if (!c.delayInit) { buildCache(table); }
-					// bind all header events and methods
-					bindEvents(table);
-					// get sort list from jQuery data or metadata
-					// in jQuery < 1.4, an error occurs when calling $this.data()
-					if (c.supportsDataObject && typeof $this.data().sortlist !== 'undefined') {
-						c.sortList = $this.data().sortlist;
-					} else if (m && ($this.metadata() && $this.metadata().sortlist)) {
-						c.sortList = $this.metadata().sortlist;
-					}
-					// apply widget init code
-					ts.applyWidget(table, true);
-					// if user has supplied a sort list to constructor
-					if (c.sortList.length > 0) {
-						$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
-					} else if (c.initWidgets) {
-						// apply widget format
-						ts.applyWidget(table);
-					}
-
-					// show processesing icon
-					if (c.showProcessing) {
-						$this
-						.unbind('sortBegin.tablesorter sortEnd.tablesorter')
-						.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
-							ts.isProcessing(table, e.type === 'sortBegin');
-						});
-					}
-
-					// initialized
-					table.hasInitialized = true;
-					table.isProcessing = false;
-					if (c.debug) {
-						ts.benchmark("Overall initialization time", $.data( table, 'startoveralltimer'));
-					}
-					$this.trigger('tablesorter-initialized', table);
-					if (typeof c.initialized === 'function') { c.initialized(table); }
+					ts.setup(table, c);
 				});
+			};
+
+			ts.setup = function(table, c) {
+				// if no thead or tbody, or tablesorter is already present, quit
+				if (!table || !table.tHead || table.tBodies.length === 0 || table.hasInitialized === true) {
+					return c.debug ? log('stopping initialization! No table, thead, tbody or tablesorter has already been initialized') : '';
+				}
+
+				var k = '',
+					$this = $(table),
+					m = $.metadata;
+				// initialization flag
+				table.hasInitialized = false;
+				// table is being processed flag
+				table.isProcessing = true;
+				// make sure to store the config object
+				table.config = c;
+				// save the settings where they read
+				$.data(table, "tablesorter", c);
+				if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
+
+				// constants
+				c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
+				// removing this in version 3 (only supports jQuery 1.7+)
+				c.supportsDataObject = (function(version) {
+					version[0] = parseInt(version[0], 10);
+					return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
+				})($.fn.jquery.split("."));
+				// digit sort text location; keeping max+/- for backwards compatibility
+				c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				// add table theme class only if there isn't already one there
+				if (!/tablesorter\-/.test($this.attr('class'))) {
+					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
+				}
+				c.$table = $this.addClass(c.tableClass + k);
+				c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
+				// build headers
+				buildHeaders(table);
+				// fixate columns if the users supplies the fixedWidth option
+				// do this after theme has been applied
+				fixColumnWidth(table);
+				// try to auto detect column type, and store in tables config
+				buildParserCache(table);
+				// build the cache for the tbody cells
+				// delayInit will delay building the cache until the user starts a sort
+				if (!c.delayInit) { buildCache(table); }
+				// bind all header events and methods
+				bindEvents(table);
+				// get sort list from jQuery data or metadata
+				// in jQuery < 1.4, an error occurs when calling $this.data()
+				if (c.supportsDataObject && typeof $this.data().sortlist !== 'undefined') {
+					c.sortList = $this.data().sortlist;
+				} else if (m && ($this.metadata() && $this.metadata().sortlist)) {
+					c.sortList = $this.metadata().sortlist;
+				}
+				// apply widget init code
+				ts.applyWidget(table, true);
+				// if user has supplied a sort list to constructor
+				if (c.sortList.length > 0) {
+					$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
+				} else if (c.initWidgets) {
+					// apply widget format
+					ts.applyWidget(table);
+				}
+
+				// show processesing icon
+				if (c.showProcessing) {
+					$this
+					.unbind('sortBegin.tablesorter sortEnd.tablesorter')
+					.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
+						ts.isProcessing(table, e.type === 'sortBegin');
+					});
+				}
+
+				// initialized
+				table.hasInitialized = true;
+				table.isProcessing = false;
+				if (c.debug) {
+					ts.benchmark("Overall initialization time", $.data( table, 'startoveralltimer'));
+				}
+				$this.trigger('tablesorter-initialized', table);
+				if (typeof c.initialized === 'function') { c.initialized(table); }
 			};
 
 			// *** Process table ***
