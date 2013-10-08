@@ -300,6 +300,7 @@
 				fixHeight(table, p);
 				if (p.initialized) {
 					$t.trigger('pagerChange', p);
+					$t.trigger('updateComplete');
 				}
 			}
 			if (!p.initialized) {

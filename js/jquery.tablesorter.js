@@ -664,7 +664,10 @@
 			}
 
 			function resortComplete($table, callback){
-				$table.trigger('updateComplete');
+				var c = $table[0].config;
+				if (c.pager && !c.pager.ajax) {
+					$table.trigger('updateComplete');
+				}
 				if (typeof callback === "function") {
 					callback($table[0]);
 				}
