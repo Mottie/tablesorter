@@ -75,16 +75,17 @@
 				// *** callbacks
 				initialized      : null,       // function(table){},
 
-				// *** css class names
-				tableClass       : 'tablesorter',
-				cssAsc           : 'tablesorter-headerAsc',
-				cssChildRow      : 'tablesorter-childRow', // previously "expand-child"
-				cssDesc          : 'tablesorter-headerDesc',
-				cssHeader        : 'tablesorter-header',
-				cssHeaderRow     : 'tablesorter-headerRow',
-				cssIcon          : 'tablesorter-icon', //  if this class exists, a <i> will be added to the header automatically
-				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name
-				cssProcessing    : 'tablesorter-processing', // processing icon applied to header during sort/filter
+				// *** extra css class names
+				tableClass       : '',
+				cssAsc           : '',
+				cssDesc          : '',
+				cssHeader        : '',
+				cssHeaderRow     : '',
+				cssProcessing    : '', // processing icon applied to header during sort/filter
+
+				cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent 
+				cssIcon          : 'tablesorter-icon',     //  if this class exists, a <i> will be added to the header automatically
+				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 
 				// *** selectors
 				selectorHeaders  : '> thead th, > thead td',
@@ -103,6 +104,20 @@
 				// deprecated; but retained for backwards compatibility
 				// widgetZebra: { css: ["even", "odd"] }
 
+			};
+
+			// internal css classes - these will ALWAYS be added to
+			// the table and MUST only contain one class name - fixes #381
+			ts.css = {
+				table      : 'tablesorter',
+				childRow   : 'tablesorter-childRow',
+				header     : 'tablesorter-header',
+				headerRow  : 'tablesorter-headerRow',
+				icon       : 'tablesorter-icon',
+				info       : 'tablesorter-infoOnly',
+				processing : 'tablesorter-processing',
+				sortAsc    : 'tablesorter-headerAsc',
+				sortDesc   : 'tablesorter-headerDesc'
 			};
 
 			/* debuging utils */
@@ -242,7 +257,7 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					tc.cache[k] = { row: [], normalized: [] };
-					// ignore tbodies with class name from css.cssInfoBlock
+					// ignore tbodies with class name from c.cssInfoBlock
 					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
 						totalRows = (b[k] && b[k].rows.length) || 0;
 						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
@@ -388,7 +403,7 @@
 				if (c.debug) {
 					time = new Date();
 				}
-				i = c.cssIcon ? '<i class="' + c.cssIcon + '"></i>' : ''; // add icon if cssIcon option exists
+				i = c.cssIcon ? '<i class="' + c.cssIcon + ' ' + ts.css.icon + '"></i>' : ''; // add icon if cssIcon option exists
 				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
@@ -411,11 +426,11 @@
 					if (typeof lock !== 'undefined' && lock !== false) {
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
-					$t.addClass(c.cssHeader);
+					$t.addClass(ts.css.header + ' ' + c.cssHeader);
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
-					$t.parent().addClass(c.cssHeaderRow);
+					$t.parent().addClass(ts.css.headerRow + ' ' + c.cssHeaderRow);
 					// allow keyboard cursor to focus on element
 					$t.attr("tabindex", 0);
 				});
@@ -451,7 +466,7 @@
 				var f, i, j, l,
 					c = table.config,
 					list = c.sortList,
-					css = [c.cssAsc, c.cssDesc],
+					css = [ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc],
 					// find the footer
 					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
 				// remove all header information
@@ -524,7 +539,7 @@
 					i = cell;
 					c.$headers.each(function() {
 						// only reset counts on columns that weren't just clicked on and if not included in a multisort
-						if (this !== i && (k || !$(this).is('.' + c.cssDesc + ',.' + c.cssAsc))) {
+						if (this !== i && (k || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
 							this.count = -1;
 						}
 					});
@@ -866,7 +881,7 @@
 				if (!/tablesorter\-/.test($this.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
 				}
-				c.$table = $this.addClass(c.tableClass + k);
+				c.$table = $this.addClass(ts.css.table + ' ' + c.tableClass + k);
 				c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
 				// build headers
 				buildHeaders(table);
@@ -922,7 +937,7 @@
 				table = $(table);
 				var c = table[0].config,
 					// default to all headers
-					$h = $ths || table.find('.' + c.cssHeader);
+					$h = $ths || table.find('.' + ts.css.header);
 				if (toggle) {
 					if (c.sortList.length > 0) {
 						// get headers from the sortList
@@ -931,9 +946,9 @@
 							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList);
 						});
 					}
-					$h.addClass(c.cssProcessing);
+					$h.addClass(ts.css.processing + ' ' + c.cssProcessing);
 				} else {
-					$h.removeClass(c.cssProcessing);
+					$h.removeClass(ts.css.processing + ' ' + c.cssProcessing);
 				}
 			};
 
@@ -977,7 +992,7 @@
 				ts.refreshWidgets(table, true, true);
 				var $t = $(table), c = table.config,
 				$h = $t.find('thead:first'),
-				$r = $h.find('tr.' + c.cssHeaderRow).removeClass(c.cssHeaderRow),
+				$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
 				$f = $t.find('tfoot:first > tr').children('th, td');
 				// remove widget added rows, just in case
 				$h.find('tr').not($r).remove();
@@ -986,12 +1001,12 @@
 					.removeData('tablesorter')
 					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
-					.removeClass(c.cssHeader + ' ' + c.cssAsc + ' ' + c.cssDesc)
+					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc].join(' ') )
 					.removeAttr('data-column');
 				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter keypress.tablesorter');
 				ts.restoreHeaders(table);
 				if (removeClasses !== false) {
-					$t.removeClass(c.tableClass + ' tablesorter-' + c.theme);
+					$t.removeClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme);
 				}
 				// clear flag in case the plugin is initialized again
 				table.hasInitialized = false;

@@ -55,8 +55,8 @@
 			// if you set this to false, make sure you perform a search using the second method below
 			filter_columnFilters : true,
 
-			// css class applied to the table row containing the filters & the inputs within that row
-			filter_cssFilter : 'tablesorter-filter',
+			// extra css class applied to the table row containing the filters & the inputs within that row
+			filter_cssFilter : '',
 
 			// class added to filtered rows (rows that are not showing); needed by pager plugin
 			filter_filteredRow   : 'filtered',
@@ -219,7 +219,7 @@ $(function(){
 			<ul>
 				<li><code>filter_childRows : false</code> - if true, filter includes child row content in the search.</li>
 				<li><code>filter_columnFilters : true</code> - if true, a filter will be added to the top of each table column.</li>
-				<li><code>filter_cssFilter : 'tablesorter-filter'</code> - css class name added to the filter row & each input in the row.</li>
+				<li><code>filter_cssFilter : ''</code> - extra css class name added to the filter row & each input in the row.</li>
 				<li><code>filter_filteredRow : 'filtered'</code> - css class name added to filtered rows (rows that are not showing); needed by pager plugin.</li>
 				<li><code>filter_formatter : null</code> - add custom filter elements to the filter row.</li>
 				<li><code>filter_functions : null</code> - add custom filter functions using this option.</li>

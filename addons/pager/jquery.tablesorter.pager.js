@@ -275,11 +275,11 @@
 						c.$headers.each(function(j){
 							var $t = $(this), icn;
 							// add new test within the first span it finds, or just in the header
-							if ( $t.find('.' + c.cssIcon).length ) {
-								icn = $t.find('.' + c.cssIcon).clone(true);
+							if ( $t.find('.' + ts.css.icon).length ) {
+								icn = $t.find('.' + ts.css.icon).clone(true);
 								$t.find('.tablesorter-header-inner').html( th[j] ).append(icn);
 								if ( hsh && $sh.length ) {
-									icn = $sh.eq(j).find('.' + c.cssIcon).clone(true);
+									icn = $sh.eq(j).find('.' + ts.css.icon).clone(true);
 									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icn);
 								}
 							} else {

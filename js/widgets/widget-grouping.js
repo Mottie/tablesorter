@@ -12,7 +12,7 @@ ts.grouping = {
 	number : function(c, $col, txt, num, group){
 		var t, w;
 		if (num > 1 && txt !== '') {
-			if ($col.hasClass(c.cssAsc)) {
+			if ($col.hasClass(ts.css.sortAsc)) {
 				t = Math.floor(parseFloat(txt)/num) * num;
 				return t > parseFloat(group || 0) ? t : parseFloat(group || 0);
 			} else {
@@ -104,7 +104,7 @@ ts.addWidget({
 							group = curr;
 							// show range if number > 1
 							if (t2[1] === 'number' && t2[2] > 1 && curr !== '') {
-								curr += ' - ' + (parseInt(curr, 10) + ((parseInt(t2[2],10) - 1) * (c.$headers.eq(col).hasClass(c.cssAsc) ? 1 : -1)));
+								curr += ' - ' + (parseInt(curr, 10) + ((parseInt(t2[2],10) - 1) * (c.$headers.eq(col).hasClass(ts.css.sortAsc) ? 1 : -1)));
 							}
 							if ($.isFunction(wo.group_formatter)) {
 								curr = wo.group_formatter((curr || '').toString(), col, table, c, wo) || curr;
