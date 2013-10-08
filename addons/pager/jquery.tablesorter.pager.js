@@ -295,7 +295,6 @@
 				if (c.showProcessing) {
 					ts.isProcessing(table); // remove loading icon
 				}
-				$t.trigger('update');
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				updatePageDisplay(table, p);
 				fixHeight(table, p);
