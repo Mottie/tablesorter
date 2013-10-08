@@ -1017,31 +1017,32 @@
 
 			// *** sort functions ***
 			// regex used in natural sort
-			ts.regex = [
-				/(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi, // chunk/tokenize numbers & letters
-				/(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/, //date
-				/^0x[0-9a-f]+$/i // hex
-			];
+			ts.regex = {
+				chunk : /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi, // chunk/tokenize numbers & letters
+				hex: /^0x[0-9a-f]+$/i // hex
+			};
 
-			// Natural sort - https://github.com/overset/javascript-natural-sort
+			// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
 			ts.sortText = function(table, a, b, col) {
 				if (a === b) { return 0; }
 				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
 					r = ts.regex, xN, xD, yN, yD, xF, yF, i, mx;
+				// sorting empty cells
 				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : -e || -1; }
 				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : e || 1; }
+				// custom sorter
 				if (typeof c.textSorter === 'function') { return c.textSorter(a, b, table, col); }
-				// chunk/tokenize
-				xN = a.replace(r[0], '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
-				yN = b.replace(r[0], '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
-				// numeric, hex or date detection
-				xD = parseInt(a.match(r[2]),16) || (xN.length !== 1 && a.match(r[1]) && Date.parse(a));
-				yD = parseInt(b.match(r[2]),16) || (xD && b.match(r[1]) && Date.parse(b)) || null;
-				// first try and sort Hex codes or Dates
+				// numeric or hex detection
+				yD = parseInt(b.match(r.hex), 16);
+				// first try and sort Hex codes
 				if (yD) {
+					xD = parseInt(a.match(r.hex), 16);
 					if ( xD < yD ) { return -1; }
 					if ( xD > yD ) { return 1; }
 				}
+				// chunk/tokenize
+				xN = a.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
+				yN = b.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
 				mx = Math.max(xN.length, yN.length);
 				// natural sorting through split numeric strings and default strings
 				for (i = 0; i < mx; i++) {
