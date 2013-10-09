@@ -362,7 +362,7 @@ ts.addWidget({
 			last = '', // save last filter search
 			$ths = c.$headers,
 			$t = c.$table.addClass('hasFilters'),
-			b = $t.find('tbody'),
+			b = c.$tbodies,
 			cols = c.parsers.length,
 			parsed, time, timer,
 
@@ -748,7 +748,7 @@ ts.addWidget({
 								if ($(document.activeElement).closest('tr')[0] !== ft[0]){
 									// get all filter values
 									all = $t.find('.tablesorter-filter').map(function(){
-										return $(this).val() || ''; 
+										return $(this).val() || '';
 									}).get().join('');
 									// don't hide row if any filter has a value
 									if (all === ''){
