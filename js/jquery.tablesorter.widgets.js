@@ -667,7 +667,7 @@ ts.addWidget({
 					buildDefault(true);
 				}
 				if (e.type === 'filterReset') {
-					$t.find('.tablesorter-filter').val('');
+					searching([]);
 				}
 				if (e.type === 'filterEnd') {
 					buildDefault(true);
@@ -786,10 +786,13 @@ ts.addWidget({
 			// add default values
 			$t.bind('tablesorter-initialized', function(){
 				ff = ts.getFilters(table);
-				for (i = 0; i < ff.length; i++) {
-					ff[i] = $ths.filter('[data-column="' + i + '"]:last').attr(wo.filter_defaultAttrib) || ff[i];
+				// ff is undefined when filter_columnFilters = false
+				if (ff) {
+					for (i = 0; i < ff.length; i++) {
+						ff[i] = $ths.filter('[data-column="' + i + '"]:last').attr(wo.filter_defaultAttrib) || ff[i];
+					}
+					ts.setFilters(table, ff, true);
 				}
-				ts.setFilters(table, ff, true);
 			});
 			// filter widget initialized
 			$t.trigger('filterInit');
