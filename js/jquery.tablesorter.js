@@ -886,6 +886,7 @@
 				}
 				c.$table = $this.addClass(ts.css.table + ' ' + c.tableClass + k);
 				c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
+				c.widgetInit = {}; // keep a list of initialized widgets
 				// build headers
 				buildHeaders(table);
 				// fixate columns if the users supplies the fixedWidth option
@@ -1220,18 +1221,19 @@
 					widgets.sort(function(a, b){
 						return a.priority < b.priority ? -1 : a.priority === b.priority ? 0 : 1;
 					});
-
 					// add/update selected widgets
 					$.each(widgets, function(i,w){
 						if (w) {
-							if (init) {
+							if (init || !(c.widgetInit[w.id])) {
 								if (w.hasOwnProperty('options')) {
 									wo = table.config.widgetOptions = $.extend( true, {}, w.options, wo );
+									c.widgetInit[w.id] = true;
 								}
 								if (w.hasOwnProperty('init')) {
 									w.init(table, w, c, wo);
 								}
-							} else if (!init && w.hasOwnProperty('format')) {
+							}
+							if (!init && w.hasOwnProperty('format')) {
 								w.format(table, c, wo, false);
 							}
 						}
@@ -1252,7 +1254,10 @@
 				for (i = 0; i < l; i++){
 					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
 						if (c.debug) { log( 'Refeshing widgets: Removing ' + w[i].id  ); }
-						if (w[i].hasOwnProperty('remove')) { w[i].remove(table, c, c.widgetOptions); }
+						if (w[i].hasOwnProperty('remove')) {
+							w[i].remove(table, c, c.widgetOptions);
+							c.widgetInit[w[i].id] = false;
+						}
 					}
 				}
 				if (dontapply !== true) {
