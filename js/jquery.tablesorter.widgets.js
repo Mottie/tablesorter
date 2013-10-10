@@ -699,7 +699,7 @@ ts.addWidget({
 
 			// reset button/link
 			if (wo.filter_reset){
-				$(document).on('click.tsfilter', wo.filter_reset, function(){
+				$(document).delegate(wo.filter_reset, 'click.tsfilter', function(){
 					$t.trigger('filterReset');
 				});
 			}
@@ -815,7 +815,7 @@ ts.addWidget({
 			$tb.children().removeClass(wo.filter_filteredRow).show();
 			ts.processTbody(table, $tb, false); // restore tbody
 		}
-		if (wo.filterreset) { $(wo.filter_reset).unbind('click.tsfilter'); }
+		if (wo.filterreset) { $(document).undelegate(wo.filter_reset, 'click.tsfilter'); }
 	}
 });
 ts.getFilters = function(table) {
