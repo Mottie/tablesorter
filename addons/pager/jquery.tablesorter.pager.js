@@ -119,18 +119,17 @@
 				p.page = (t) ? 0 : p.page;
 				p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
 				out = p.$container.find(p.cssPageDisplay);
-				// form the output string
-				s = p.output.replace(/\{(page|filteredRows|filteredPages|totalPages|startRow|endRow|totalRows)\}/gi, function(m){
-							return {
-								'{page}'            : p.page + 1,
-								'{filteredRows}'    : p.filteredRows,
-								'{filteredPages}'   : p.filteredPages,
-								'{totalPages}'      : p.totalPages,
-								'{startRow}'        : p.startRow,
-								'{endRow}'          : p.endRow,
-								'{totalRows}'       : p.totalRows
-							}[m];
-						});
+				// form the output string (can now get a new output string from the server)
+				s = ( p.ajaxData && p.ajaxData.hasOwnProperty('output') ? p.ajaxData.output || p.output : p.output )
+					// {page} = one-based index; {page+#} = zero based index +/- value
+					.replace(/\{page([\-+]\d+)?\}/gi, function(m,n){
+						return p.page + (n ? parseInt(n, 10) : 1);
+					})
+					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
+					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
+						var t = m.replace(/[{}\s]/g,''), a = t.split(':'); console.log(n);
+						return a.length > 1 && p.ajaxData && p.ajaxData[a[0]] ? p.ajaxData[a[0]][a[1]] : p[t] || p.ajaxData[t] || '';
+					});
 				if (out.length) {
 					out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 					if ( p.$goto.length ) {
@@ -216,14 +215,12 @@
 			// process data
 			if ( typeof(p.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh, th, d, l, $err, rr_count,
+				var i, j, hsh, $f, $sh, t, th, d, l, $err, rr_count,
 					c = table.config,
 					$t = c.$table,
 					tds = '',
 					result = p.ajaxProcessing(data, table) || [ 0, [] ],
-					hl = $t.find('thead th').length,
-					// allow [ total, rows, headers ]  or [ rows, total, headers ]
-					t = isNaN(result[0]) && !isNaN(result[1]);
+					hl = $t.find('thead th').length;
 
 				$t.find('thead tr.' + p.cssErrorRow).remove(); // Clean up any previous error.
 
@@ -243,16 +240,26 @@
 					.appendTo( $t.find('thead:first') );
 					c.$tbodies.eq(0).empty();
 				} else {
-					//ensure a zero returned row count doesn't fail the logical ||
-					rr_count = result[t ? 1 : 0];
-					p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
-					d = result[t ? 0 : 1] || []; // row data
+					// process ajax object
+					if (toString.call(result) !== "[object Array]") {
+						p.ajaxData = result;
+						p.totalRows = result.total;
+						th = result.headers;
+						d = result.rows;
+					} else {
+						// allow [ total, rows, headers ]  or [ rows, total, headers ]
+						t = isNaN(result[0]) && !isNaN(result[1]);
+						//ensure a zero returned row count doesn't fail the logical ||
+						rr_count = result[t ? 1 : 0];
+						p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
+						d = result[t ? 0 : 1] || []; // row data
+						th = result[2]; // headers
+					}
 					l = d.length;
-					th = result[2]; // headers
 					if (d instanceof jQuery) {
 						// append jQuery object
 						c.$tbodies.eq(0).empty().append(d);
-					} else if (d.length) {
+					} else if (l) {
 						// build table from array
 						if ( l > 0 ) {
 							for ( i = 0; i < l; i++ ) {
