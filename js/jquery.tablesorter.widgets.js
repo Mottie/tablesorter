@@ -439,6 +439,8 @@ ts.addWidget({
 									}
 									xi = !wo.filter_regex.type.test(typeof x) && wo.filter_ignoreCase ? x.toLocaleLowerCase() : x;
 									ff = r; // if r is true, show that row
+									// replace accents - see #357
+									v[i] = c.sortLocaleCompare ? ts.replaceAccents(v[i]) : v[i];
 									// val = case insensitive, v[i] = case sensitive
 									val = wo.filter_ignoreCase ? v[i].toLocaleLowerCase() : v[i];
 									if (wo.filter_functions && wo.filter_functions[i]){
