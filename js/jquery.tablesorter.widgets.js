@@ -22,8 +22,8 @@ ts.themes = {
 		footerCells: '',
 		icons      : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
 		sortNone   : 'bootstrap-icon-unsorted',
-		sortAsc    : 'icon-chevron-up',
-		sortDesc   : 'icon-chevron-down',
+		sortAsc    : 'icon-chevron-up glyphicon glyphicon-chevron-up',
+		sortDesc   : 'icon-chevron-down glyphicon glyphicon-chevron-down',
 		active     : '', // applied when column is sorted
 		hover      : '', // use custom css here - bootstrap class may not override it
 		filterRow  : '', // filter row class
