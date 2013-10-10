@@ -88,7 +88,7 @@ ts.storage = function(table, key, val){
 			v = (d !== 0) ? $.parseJSON(k[d] || '{}') : {};
 		}
 	}
-	// allow val to be an empty string to 
+	// allow val to be an empty string to
 	if ((val || val === '') && window.JSON && JSON.hasOwnProperty('stringify')){
 		// add unique identifiers = url pathname > table ID/index on page > data
 		if (!v[url]) {
@@ -605,7 +605,7 @@ ts.addWidget({
 					// delay filtering
 					clearTimeout(timer);
 					timer = setTimeout(function(){
-						checkFilters(filter); 
+						checkFilters(filter);
 					}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
 				} else {
 					// skip delay
@@ -701,8 +701,8 @@ ts.addWidget({
 			}).get();
 
 			// reset button/link
-			if (wo.filter_reset && $(wo.filter_reset).length){
-				$(wo.filter_reset).bind('click.tsfilter', function(){
+			if (wo.filter_reset){
+				$(document).on('click.tsfilter', wo.filter_reset, function(){
 					$t.trigger('filterReset');
 				});
 			}
@@ -753,7 +753,7 @@ ts.addWidget({
 								if ($(document.activeElement).closest('tr')[0] !== ft[0]){
 									// get all filter values
 									all = $t.find('.' + wo.filter_cssFilter).map(function(){
-										return $(this).val() || ''; 
+										return $(this).val() || '';
 									}).get().join('');
 									// don't hide row if any filter has a value
 									if (all === ''){
@@ -837,7 +837,7 @@ ts.setFilters = function(table, filter, apply) {
 
 // Widget: Sticky headers
 // based on this awesome article:
-// http://css-tricks.com/13465-persistent-headers/ 
+// http://css-tricks.com/13465-persistent-headers/
 // and https://github.com/jmosbech/StickyTableHeaders by Jonas Mosbech
 // **************************
 ts.addWidget({
