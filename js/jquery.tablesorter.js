@@ -497,7 +497,8 @@
 				if (table.config.widthFixed && $(table).find('colgroup').length === 0) {
 					var colgroup = $('<colgroup>'),
 						overallWidth = $(table).width();
-					$(table.tBodies[0]).find("tr:first").children("td").each(function() {
+					// only add col for visible columns - fixes #371
+					$(table.tBodies[0]).find("tr:first").children("td:visible").each(function() {
 						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
 					$(table).prepend(colgroup);
