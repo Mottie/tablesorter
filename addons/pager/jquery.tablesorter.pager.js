@@ -127,8 +127,8 @@
 					})
 					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
-						var t = m.replace(/[{}\s]/g,''), a = t.split(':'); console.log(n);
-						return a.length > 1 && p.ajaxData && p.ajaxData[a[0]] ? p.ajaxData[a[0]][a[1]] : p[t] || p.ajaxData[t] || '';
+						var t = m.replace(/[{}\s]/g,''), a = t.split(':'), d = p.ajaxData;
+						return a.length > 1 && d && d[a[0]] ? d[a[0]][a[1]] : p[t] || (d ? d[t] : '') || '';
 					});
 				if (out.length) {
 					out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
