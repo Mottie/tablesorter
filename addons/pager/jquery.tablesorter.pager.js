@@ -279,7 +279,8 @@
 						hsh = $t.hasClass('hasStickyHeaders');
 						$sh = hsh ? c.$sticky.children('thead:first').children().children() : '';
 						$f = $t.find('tfoot tr:first').children();
-						c.$headers.each(function(j){
+						// don't change td headers (may contain pager)
+						c.$headers.filter('th').each(function(j){
 							var $t = $(this), icn;
 							// add new test within the first span it finds, or just in the header
 							if ( $t.find('.' + ts.css.icon).length ) {
