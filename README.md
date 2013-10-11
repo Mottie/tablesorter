@@ -43,6 +43,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.11.1">Version 2.11.1</a> (10/11/2013)
+
+* Fixed an updating bug:
+  * The pager was not updating properly
+  * The `updateComplete` event was not firing when not using ajax.
+  * Thanks @sbine for sharing the fix!
+
 #### <a name="v2.11">Version 2.11</a> (10/10/2013)
 
 **Core**

@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/10/2013
+ * updated 10/11/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global toString:true */
@@ -310,6 +310,8 @@
 				if (p.initialized) {
 					$t.trigger('pagerChange', p);
 					$t.trigger('updateComplete');
+				} else {
+					$t.trigger('update');
 				}
 			}
 			if (!p.initialized) {
