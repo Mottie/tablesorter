@@ -301,7 +301,7 @@
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.10</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
-				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="">HTML5 Elements</a>) (v2.7.7).</li>
+				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
 		</li>
 		<li><a href="example-widget-build-table.html">Build Table Widget</a> (<span class="version">v2.11</span>).</li>
@@ -381,6 +381,10 @@
 		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a></li>
 		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a></li>
 		<li><a href="http://codepen.io/Mottie/pen/eqBbn">tableSorter LESS theme; modify the colors dynamically in this LESS theme demo!</a></li>
+		<li class="beta"> <a href="http://mottie.github.io/tablesorter/beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
+		<li class="beta"> <a href="http://mottie.github.io/tablesorter/beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
+		<li class="beta"> <a href="http://mottie.github.io/tablesorter/beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
+		<li class="beta"> <a href="http://mottie.github.io/tablesorter/beta-testing/example-widget-sum-columns.html">Column sum widget</a> - still needs LOTS of work!</li>
 		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="tip"><em>more demos</em></span>!</li>
 	</ul>
 
@@ -1473,7 +1477,7 @@ $(function(){
 		</thead>
 		<tbody>
 			<tr><td>30</td><td>columns</td><td>v1.2.6</td><td></td></tr>
-			<tr><td>50</td><td>filter</td><td>v1.4.3</td><td>1.4.3 (nextUntil)</td></tr>
+			<tr><td>50</td><td>filter</td><td>v1.4.3</td><td>1.4.3 (nextUntil &amp; delegate)</td></tr>
 			<tr><td>Last</td><td>pager</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>40</td><td>resizable</td><td>v1.4.1*</td><td>1.4 (isEmptyObject); 1.4.1 (parseJSON)*</td></tr>
 			<tr><td>20</td><td>saveSort</td><td>v1.4.1</td><td>1.4.1 (parseJSON)*</td></tr>
@@ -3603,7 +3607,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 	<a id="Download"></a>
 	<h1>Download</h1>
 
-	<p><strong>Full release</strong> - Plugin, Documentation, Add-ons, Themes. Download: <a class="download zip" href="https://github.com/Mottie/tablesorter/zipball/master">zip</a> or <a class="download tar" href="https://github.com/Mottie/tablesorter/tarball/master">tar.gz</a></p>
+	<p><strong>Full release</strong> - Plugin, Documentation, Add-ons, Themes. Download: <a class="download zip" href="https://github.com/Mottie/tablesorter/archive/master.zip">zip</a> or <a class="download tar" href="https://github.com/Mottie/tablesorter/archive/master.tar.gz">tar.gz</a></p>
 
 	<p><strong>Pick n choose</strong> - Place at least the required files in a directory on your webserver that is accessible to a web browser.  Record this location.</p>
 
@@ -3615,7 +3619,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
-		<li><a class="external" href="http://plugins.jquery.com/files/jquery.metadata.2.1.zip">jQuery Metadata 2.1</a> (4kb, required for setting <a href="#metadata">inline options</a>)</li>
+		<li><a class="external" href="https://github.com/jquery-orphans/jquery-metadata">jQuery Metadata 2.1</a> (4kb, required for setting <a href="#metadata">inline options</a>)</li>
 		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (47kb/<a href="../js/jquery.tablesorter.min.js">23kb min</a>)</li>
 		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (16kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">8kb min</a>, <a href="example-pager.html">demo</a>)</li>
 		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (36kb/<a href="../js/jquery.tablesorter.widgets.min.js">17kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets.</li>

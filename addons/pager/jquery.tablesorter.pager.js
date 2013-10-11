@@ -1,8 +1,9 @@
 /*!
  * tablesorter pager plugin
- * updated 5/27/2013
+ * updated 10/10/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
+/*global toString:true */
 ;(function($) {
 	"use strict";
 	/*jshint supernew:true */
