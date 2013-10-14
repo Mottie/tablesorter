@@ -528,7 +528,7 @@
 				c.appender = $this.appender;
 
 				if (p.savePages && ts.storage) {
-					t = ts.storage(table, 'tablesorter-pager');
+					t = ts.storage(table, 'tablesorter-pager') || {};
 					p.page = isNaN(t.page) ? p.page : t.page;
 					p.size = isNaN(t.size) ? p.size : t.size;
 				}
