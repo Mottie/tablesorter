@@ -273,7 +273,7 @@
 		<li><a href="example-option-selectorsort.html">Using selectorSort option</a> (v2.4)</li>
 		<li><a href="example-option-sort-empty.html">Sorting empty cells</a> (v2.1.11)</li>
 		<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a></li>
-		<li><a href="example-option-custom-sort.html">Custom sort script</a> (v2.2)</li>
+		<li><a href="example-option-custom-sort.html">Custom sort script</a> (v2.2; <span class="version updated">v2.12</span>)</li>
 		<li><a href="example-locale-sort.html">Sorting Accented Characters</a> (v2.24; <a href="https://github.com/Mottie/tablesorter/wiki/Language">languages</a>)</li>
 		<li><a href="example-multiple-tbodies.html">Sorting with Multiple Tbodies</a> (v2.2)</li>
 		<li><a href="example-header-column-span.html">Sorting Across Multiple Columns</a> (v2.3)</li>
@@ -1210,12 +1210,35 @@ $(function(){
 				<td><a href="example-option-text-extraction.html">Example</a></td>
 			</tr>
 
+			<tr id="numbersorter">
+				<td><a href="#" class="toggle2">numberSorter</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>
+					Replace the default number sorting algorithm with a custom one using this option <span class="version">v2.12</span>.
+					<div class="collapsible">
+					<br>
+					Here is an example:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    numberSorter : function(a, b, direction, maxColumnValue){
+      // direction; true = ascending; false = descending
+      // maxColumnValue = the maximum value of that column (ignoring its sign)
+      return a - b;
+    }
+  });
+});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches `a` and `b` depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="textsorter">
 				<td><a href="#" class="toggle2">textSorter</a></td>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Replace the default sorting algorithm with a custom one using this option.
+					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="alert">*NOTE*</span> The parameters have changed!!.
 					<div class="collapsible">
 					<br>
 					Include a script like <a href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
@@ -1227,11 +1250,33 @@ $(function(){
 					or use the localeCompare sort
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
-    textSorter: function(a,b) {
+    // replace the OVERALL text sorter function
+    textSorter: function(a, b, direction, columnIndex, table){
+      // direction: true = ascending; false = descending
+      // columnIndex: zero-based index of the current table column being sorted
+      // table: table DOM element (access options by using table.config)
       return a.localeCompare(b);
     }
   });
-});</pre>There's no need to worry about reverse sorting, it's taken care of by the plugin.
+});</pre>In <span class="version updated">v2.12</span>, the <code>textSorter</code> option will now accept a text sorter per column:
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    textSorter : {
+      // replace INDIVIDUAL COLUMN text sorter functions
+      0 : function(a, b, direction, columnIndex, table){
+        // same as $.tablesorter.sortText
+        // direction: true = ascending; false = descending
+        // columnIndex: zero-based index of the current table column being sorted
+        // table: table DOM element (access options by using table.config)
+        return a > b ? 1 : (a < b ? -1 : 0);
+      },
+      1 : $.tablesorter.sortText,    // same as the function in column 0 above (modified in v2.12)
+      2 : $.tablesorter.sortNatural, // renamed v2.12 from $.tablesorter.sortText - performs natural sort
+      3 : Array.AlphanumericSort     // alphanumeric sort from sugar (http://sugarjs.com/arrays#sorting)
+    }
+  });
+});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches `a` and `b` depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
+
 					</div>
 				</td>
 				<td><a href="example-option-custom-sort.html">Example</a></td>

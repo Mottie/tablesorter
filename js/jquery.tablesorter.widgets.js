@@ -575,7 +575,7 @@ ts.addWidget({
 				arry = $.grep(arry, function(v, k){
 					return $.inArray(v, arry) === k;
 				});
-				arry = (ts.sortText) ? arry.sort(function(a, b){ return ts.sortText(table, a, b, i); }) : arry.sort(true);
+				arry = (ts.sortNatural) ? arry.sort(function(a, b){ return ts.sortNatural(a, b); }) : arry.sort(true);
 
 				// Get curent filter value
 				currentVal = $t.find('thead').find('select.tablesorter-filter[data-column="' + i + '"]').val();

@@ -63,7 +63,8 @@
 				emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero
 				stringTo         : 'max',      // sort strings in numerical column as max, min, top, bottom, zero
 				textExtraction   : 'simple',   // text extraction method/function - function(node, table, cellIndex){}
-				textSorter       : null,       // use custom text sorter - function(a,b){ return a.sort(b); } // basic sort
+				textSorter       : null,       // choose overall or specific column sorter function(a, b, direction, table, columnIndex) [alt: ts.sortText]
+				numberSorter     : null,       // choose overall numeric sorter function(a, b, direction, maxColumnValue)
 
 				// *** widget options
 				widgets: [],                   // method to add widgets, e.g. widgets: ['zebra']
@@ -630,41 +631,71 @@
 
 			// sort multiple columns
 			function multisort(table) { /*jshint loopfunc:true */
-				var dir = 0, tc = table.config,
-				sortList = tc.sortList, l = sortList.length, bl = table.tBodies.length,
-				sortTime, i, k, c, colMax, cache, lc, s, order, orgOrderCol;
-				if (tc.serverSideSorting || isEmptyObject(tc.cache)) { // empty table - fixes #206/#346
+				var i, k, e, num, col, colMax, cache, lc,
+					order, orgOrderCol, sortTime, sort, x, y,
+					dir = 0,
+					c = table.config,
+					cts = c.textSorter || '',
+					sortList = c.sortList,
+					l = sortList.length,
+					bl = table.tBodies.length;
+				if (c.serverSideSorting || isEmptyObject(c.cache)) { // empty table - fixes #206/#346
 					return;
 				}
-				if (tc.debug) { sortTime = new Date(); }
+				if (c.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
-					colMax = tc.cache[k].colMax;
-					cache = tc.cache[k].normalized;
+					colMax = c.cache[k].colMax;
+					cache = c.cache[k].normalized;
 					lc = cache.length;
 					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
 					cache.sort(function(a, b) {
 						// cache is undefined here in IE, so don't use it!
 						for (i = 0; i < l; i++) {
-							c = sortList[i][0];
+							col = sortList[i][0];
 							order = sortList[i][1];
+							// sort direction, true = asc, false = desc
+							dir = order === 0;
+
+							// set a & b depending on sort direction
+							x = dir ? a : b;
+							y = dir ? b : a;
+
+							// determine how to sort empty cells
+							e = c.string[ (c.empties[col] || c.emptyTo ) ];
+							if (x[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? -1 : 1) : (e || 1)) * (dir ? 1 : -1); }
+							if (y[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? 1 : -1) : (-e || -1)) * (dir ? 1 : -1); }
+
 							// fallback to natural sort since it is more robust
-							s = /n/i.test(getCachedSortType(tc.parsers, c)) ? "Numeric" : "Text";
-							s += order === 0 ? "" : "Desc";
-							if (/Numeric/.test(s) && tc.strings[c]) {
+							num = /n/i.test(getCachedSortType(c.parsers, col));
+							if (num && c.strings[col]) {
 								// sort strings in numerical columns
-								if (typeof (tc.string[tc.strings[c]]) === 'boolean') {
-									dir = (order === 0 ? 1 : -1) * (tc.string[tc.strings[c]] ? -1 : 1);
+								if (typeof (c.string[c.strings[col]]) === 'boolean') {
+									num = (dir ? 1 : -1) * (c.string[c.strings[col]] ? -1 : 1);
 								} else {
-									dir = (tc.strings[c]) ? tc.string[tc.strings[c]] || 0 : 0;
+									num = (c.strings[col]) ? c.string[c.strings[col]] || 0 : 0;
+								}
+								// fall back to built-in numeric sort
+								// var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
+								sort = c.numberSorter ? c.numberSorter(x[col], y[col], dir, colMax[col], table) : ts.sortNumeric(x[col], y[col], num, colMax[col]);
+							} else {
+								// text sort function
+								if (typeof(cts) === 'function') {
+									// custom OVERALL text sorter
+									sort = cts(x[col], y[col], dir, col, table);
+								} else if (typeof(cts) === 'object' && cts.hasOwnProperty(col)) {
+									// custom text sorter for a SPECIFIC COLUMN
+									sort = cts[col](x[col], y[col], dir, col, table);
+								} else {
+									// fall back to natural sort
+									sort = ts.sortNatural(x[col], y[col]);
 								}
 							}
-							var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
 							if (sort) { return sort; }
 						}
 						return a[orgOrderCol] - b[orgOrderCol];
 					});
 				}
-				if (tc.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
+				if (c.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
 			}
 
 			function resortComplete($table, callback){
@@ -1031,15 +1062,10 @@
 			};
 
 			// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
-			ts.sortText = function(table, a, b, col) {
+			ts.sortNatural = function(a, b) {
 				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ],
-					r = ts.regex, xN, xD, yN, yD, xF, yF, i, mx;
-				// sorting empty cells
-				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : -e || -1; }
-				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : e || 1; }
-				// custom sorter
-				if (typeof c.textSorter === 'function') { return c.textSorter(a, b, table, col); }
+				var xN, xD, yN, yD, xF, yF, i, mx,
+					r = ts.regex;
 				// numeric or hex detection
 				yD = parseInt(b.match(r.hex), 16);
 				// first try and sort Hex codes
@@ -1070,19 +1096,15 @@
 				return 0;
 			};
 
-			ts.sortTextDesc = function(table, a, b, col) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : e || 1; }
-				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : -e || -1; }
-				if (typeof c.textSorter === 'function') { return c.textSorter(b, a, table, col); }
-				return ts.sortText(table, b, a);
+			// basic alphabetical sort
+			ts.sortText = function(a, b) {
+				return a > b ? 1 : (a < b ? -1 : 0);
 			};
 
 			// return text string value by adding up ascii value
 			// so the text is somewhat sorted when using a digital sort
 			// this is NOT an alphanumeric sort
-			ts.getTextValue = function(a, mx, d) {
+			ts.getTextValue = function(a, d, mx) {
 				if (mx) {
 					// make sure the text value is greater than the max numerical value (mx)
 					var i, l = a ? a.length : 0, n = mx + d;
@@ -1094,24 +1116,11 @@
 				return 0;
 			};
 
-			ts.sortNumeric = function(table, a, b, col, mx, d) {
+			ts.sortNumeric = function(a, b, dir, mx) {
 				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : -e || -1; }
-				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : e || 1; }
-				if (isNaN(a)) { a = ts.getTextValue(a, mx, d); }
-				if (isNaN(b)) { b = ts.getTextValue(b, mx, d); }
+				if (isNaN(a)) { a = ts.getTextValue(a, dir, mx); }
+				if (isNaN(b)) { b = ts.getTextValue(b, dir, mx); }
 				return a - b;
-			};
-
-			ts.sortNumericDesc = function(table, a, b, col, mx, d) {
-				if (a === b) { return 0; }
-				var c = table.config, e = c.string[ (c.empties[col] || c.emptyTo ) ];
-				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : e || 1; }
-				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : -e || -1; }
-				if (isNaN(a)) { a = ts.getTextValue(a, mx, d); }
-				if (isNaN(b)) { b = ts.getTextValue(b, mx, d); }
-				return b - a;
 			};
 
 			// used when replacing accented characters during sorting
@@ -1205,7 +1214,7 @@
 				var c = table.config,
 					wo = c.widgetOptions,
 					widgets = [],
-					time, i, w, wd;
+					time, w, wd;
 				if (c.debug) { time = new Date(); }
 				if (c.widgets.length) {
 					// ensure unique widget ids
