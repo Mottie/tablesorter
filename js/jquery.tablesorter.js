@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.11.1 - Client-side table sorting with ease!
+* TableSorter 2.12.0 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.11.1";
+			ts.version = "2.12.0";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -411,14 +411,14 @@
 				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					ch = c.headers[index];
-					c.headerContent[index] = this.innerHTML; // save original header content
+					c.headerContent[index] = $(this).html(); // save original header content
 					// set up header template
-					t = c.headerTemplate.replace(/\{content\}/g, this.innerHTML).replace(/\{icon\}/g, i);
+					t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
 					if (c.onRenderTemplate) {
 						h = c.onRenderTemplate.apply($t, [index, t]);
 						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
 					}
-					this.innerHTML = '<div class="tablesorter-header-inner">' + t + '</div>'; // faster than wrapInner
+					$(this).html('<div class="tablesorter-header-inner">' + t + '</div>'); // faster than wrapInner
 
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 
