@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 10/17/2013 */
+/* Pager widget (beta) for TableSorter 10/18/2013 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -7,7 +7,7 @@ var tsp,
 
 ts.addWidget({
 	id: "pager",
-	priority: 60,
+	priority: 5,
 	options : {
 		// output default: '{page}/{totalPages}'
 		// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
@@ -138,7 +138,7 @@ tsp = ts.pager = {
 		if (wo.pager_savePages && ts.storage) {
 			t = ts.storage(table, 'tablesorter-pager') || {}; // fixes #387
 			p.page = isNaN(t.page) ? p.page : t.page;
-			p.size = isNaN(t.size) ? p.size : t.size;
+			p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 		}
 
 		// clear initialized flag
@@ -299,12 +299,13 @@ tsp = ts.pager = {
 			wo = c.widgetOptions,
 			p = c.pager,
 			f = c.$table.hasClass('hasFilters') && !wo.pager_ajaxUrl,
-			t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove;
+			t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove,
+			sz = p.size || 10; // don't allow dividing by zero
 		p.$size.removeClass(wo.pager_css.disabled).removeAttr('disabled');
 		p.$goto.removeClass(wo.pager_css.disabled).removeAttr('disabled');
-		p.totalPages = Math.ceil( p.totalRows / p.size ); // needed for "pageSize" method
+		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
-		p.filteredPages = (f) ? Math.ceil( p.filteredRows / p.size ) || 1 : p.totalPages;
+		p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 			t = (p.size * p.page > p.filteredRows);
 			p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -493,7 +494,7 @@ tsp = ts.pager = {
 			if (c.showProcessing) {
 				ts.isProcessing(table); // remove loading icon
 			}
-			p.totalPages = Math.ceil( p.totalRows / p.size );
+			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 			tsp.updatePageDisplay(table, c);
 			tsp.fixHeight(table, c);
 			if (p.initialized) {
@@ -665,7 +666,7 @@ tsp = ts.pager = {
 		p.$size.val(size);
 		$.data(table, 'pagerLastPage', p.page);
 		$.data(table, 'pagerLastSize', p.size);
-		p.totalPages = Math.ceil( p.totalRows / p.size );
+		p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 		tsp.moveToPage(table, p);
 	},
 
@@ -714,7 +715,7 @@ tsp = ts.pager = {
 		p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 		p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size;
 		p.$size.val(p.size); // set page size
-		p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / p.size);
+		p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / ( p.size || 10 ) );
 		c.$table.removeClass('pagerDisabled');
 		if ( triggered ) {
 			c.$table.trigger('update');
@@ -730,7 +731,7 @@ tsp = ts.pager = {
 			table.config.rowsCopy = rows;
 			p.totalRows = rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size;
-			p.totalPages = Math.ceil(p.totalRows / p.size);
+			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 			tsp.moveToPage(table, p);
 			// tsp.renderTable(table, rows);
 		}

@@ -25,22 +25,13 @@
 	<!-- Tablesorter: optional -->
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-	<script>
-	$(function(){
-		$('.accordion').accordion({
-			autoHeight: false,
-			collapsible : true
-		});
-	});
-	</script>
-
 	<script id="js">$(function(){
 
 	// Initialize tablesorter
 	// ***********************
 	$("table")
 		.tablesorter({
-			theme: 'blue', debug: true,
+			theme: 'blue',
 			widthFixed: true,
 			sortLocaleCompare: true, // needed for accented characters in the data
 			widgets: ['zebra', 'filter', 'pager'],

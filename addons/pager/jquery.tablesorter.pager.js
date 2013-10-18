@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/17/2013
+ * updated 10/18/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global toString:true */
@@ -115,10 +115,11 @@
 			var i, pg, s, out,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
-				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove;
-			p.totalPages = Math.ceil( p.totalRows / p.size ); // needed for "pageSize" method
+				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove,
+				sz = p.size || 10; // don't allow dividing by zero
+			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
-			p.filteredPages = (f) ? Math.ceil( p.filteredRows / p.size ) || 1 : p.totalPages;
+			p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows);
 				p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -309,7 +310,7 @@
 				if (c.showProcessing) {
 					ts.isProcessing(table); // remove loading icon
 				}
-				p.totalPages = Math.ceil( p.totalRows / p.size );
+				p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 				updatePageDisplay(table, p);
 				fixHeight(table, p);
 				if (p.initialized) {
@@ -466,7 +467,7 @@
 			p.$size.val(size);
 			$.data(table, 'pagerLastPage', p.page);
 			$.data(table, 'pagerLastSize', p.size);
-			p.totalPages = Math.ceil( p.totalRows / p.size );
+			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 			moveToPage(table, p);
 		},
 
@@ -514,7 +515,7 @@
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			p.size = $.data(table, 'pagerLastSize') || parseInt(pg.find('option[selected]').val(), 10) || p.size;
 			pg.val(p.size); // set page size
-			p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / p.size);
+			p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / ( p.size || 10 ) );
 			if ( triggered ) {
 				$(table).trigger('update');
 				setPageSize(table, p.size, p);
@@ -529,7 +530,7 @@
 				table.config.rowsCopy = rows;
 				p.totalRows = rows.length;
 				p.size = $.data(table, 'pagerLastSize') || p.size;
-				p.totalPages = Math.ceil(p.totalRows / p.size);
+				p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 				renderTable(table, rows, p);
 			}
 		};
@@ -551,7 +552,7 @@
 				if (p.savePages && ts.storage) {
 					t = ts.storage(table, 'tablesorter-pager') || {}; // fixes #387
 					p.page = isNaN(t.page) ? p.page : t.page;
-					p.size = isNaN(t.size) ? p.size : t.size;
+					p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 				}
 
 				$t
