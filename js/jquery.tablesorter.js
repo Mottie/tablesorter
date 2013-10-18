@@ -388,7 +388,8 @@
 						}
 					}
 				}
-				t.config.columns = cols; // may not be accurate if # header columns !== # tbody columns
+				// may not be accurate if # header columns !== # tbody columns
+				t.config.columns = cols + 1; // add one because it's a zero-based index
 				return lookup;
 			}
 

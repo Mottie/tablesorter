@@ -355,7 +355,9 @@ ts.addWidget({
 		}
 	},
 	format: function(table, c, wo){
-		if (c.parsers && !c.$table.hasClass('hasFilters')){
+		if (c.$table.hasClass('hasFilters')) { return; }
+		// allow filter widget to work if it is being used 
+		if (c.parsers || !c.parsers && wo.filter_serversideFiltering){
 			var i, j, k, l, val, ff, x, xi, st, sel, str,
 			ft, ft2, $th, rg, s, t, dis, col,
 			fmt = ts.formatFloat,
@@ -363,7 +365,8 @@ ts.addWidget({
 			$ths = c.$headers,
 			$t = c.$table.addClass('hasFilters'),
 			b = c.$tbodies,
-			cols = c.parsers.length,
+			// c.columns defined in computeThIndexes()
+			cols = c.columns || c.$headers.filter('th').length,
 			parsed, time, timer,
 
 			// dig fer gold
@@ -615,6 +618,7 @@ ts.addWidget({
 			wo.filter_regex.child = new RegExp(c.cssChildRow);
 			wo.filter_regex.filtered = new RegExp(wo.filter_filteredRow);
 			// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
+
 			if (wo.filter_columnFilters !== false && $ths.filter('.filter-false').length !== $ths.length){
 				// build filter row
 				t = '<tr class="tablesorter-filter-row">';
