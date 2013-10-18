@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 6/4/2013
+/*! tableSorter 2.8+ widgets - updated 10/18/2013
  *
  * Column Styles
  * Column Filters
@@ -66,10 +66,11 @@ ts.themes = {
    val = (v && v.hasOwnProperty('mywidget')) ? v.mywidget : '';
    alert(val); // "data1" if saved, or "" if not
 */
-ts.storage = function(table, key, val){
+ts.storage = function(table, key, val, options){
 	var d, k, ls = false, v = {},
-	id = table.id || $('.tablesorter').index( $(table) ),
-	url = window.location.pathname;
+	c = table.config,
+	id = options && options.id || $(table).attr(options && options.group || 'data-table-group') || table.id || $('.tablesorter').index( $(table) ),
+	url = options && options.url || $(table).attr(options && options.page || 'data-table-page') || c && c.fixedUrl || window.location.pathname;
 	// https://gist.github.com/paulirish/5558557
 	if ("localStorage" in window) {
 		try {
