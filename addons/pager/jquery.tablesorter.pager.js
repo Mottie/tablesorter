@@ -3,7 +3,6 @@
  * updated 10/18/2013
  */
 /*jshint browser:true, jquery:true, unused:false */
-/*global toString:true */
 ;(function($) {
 	"use strict";
 	/*jshint supernew:true */
@@ -386,7 +385,7 @@
 		},
 
 		renderTable = function(table, rows, p) {
-			var i, j, o, $tb,
+			var i, $tb,
 				l = rows && rows.length || 0, // rows may be undefined
 				s = ( p.page * p.size ),
 				e = ( s + p.size );
@@ -632,7 +631,7 @@
 						.bind('change', function(){
 							p.page = $(this).val() - 1;
 							moveToPage(table, p);
-							updatePageDisplay(table, p, false)
+							updatePageDisplay(table, p, false);
 						});
 				}
 
