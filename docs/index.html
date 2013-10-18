@@ -305,7 +305,7 @@
 			</ul>
 		</li>
 		<li><a href="example-widget-build-table.html">Build Table Widget</a> (<span class="version">v2.11</span>).</li>
-		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> (<span class="version">v2.8</span>).</li>
+		<li><a href="example-widget-grouping.html">Grouping rows Widget</a> (v2.8; <span class="version updated">v2.12</span>).</li>
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.9</span>)</li>
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.8.3</span>)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
@@ -1537,8 +1537,8 @@ $(function(){
 		<p></p>
 		tablesorter widgets have many options, and to better organize them, they now are grouped together inside of the <code>widgetOptions</code>. Thanks to thezoggy for putting together this jQuery-widget compatibility table, but please note:
 		<ul>
-			<li>The applied order will not change depending on the widgets applied, but the numbers will change.</li>
-			<li>The widgets are actually applied in reverse alphabetical order. This includes any custom widget names, so a custom widget named &quot;zoom&quot; will be the first applied widget. The only exception is the zebra widget which will always be the last widget applied.</li>
+			<li>The applied order of widget is dependent of the widget priority, from low to high.</li>
+			<li>Widget priority values do not need to be unique. Any new widget without a defined priority will automatically have a priority of <code>10</code>.</li>
 			<li>The pager, being a plugin, is actually initialized after tablesorter has initialized and all selected widgets applied.</li>
 			<li>* The <code>saveSort</code> and <code>resizable</code> widgets use the <code>$.tablesorter.storage</code> function by default and thus need the <code>parseJSON</code> function which is available in jQuery 1.4.1+.</li>
 		</ul>
