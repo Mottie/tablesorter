@@ -123,7 +123,7 @@ ts.addHeaderResizeEvent = function(table, disable, options){
 		wo.resize_flag = true;
 		headers = [];
 		c.$headers.each(function(){
-			var d = $.data(this, 'savedSizes'),
+			var d = $.data(this, 'savedSizes') || [0,0], // fixes #394
 				w = this.offsetWidth,
 				h = this.offsetHeight;
 			if (w !== d[0] || h !== d[1]) {
@@ -134,14 +134,14 @@ ts.addHeaderResizeEvent = function(table, disable, options){
 		if (headers.length) { c.$table.trigger('resize', [ headers ]); }
 		wo.resize_flag = false;
 	};
+	c.$headers.each(function(){
+		$.data(this, 'savedSizes', [ this.offsetWidth, this.offsetHeight ]);
+	});
 	clearInterval(wo.resize_timer);
 	if (disable) {
 		wo.resize_flag = false;
 		return false;
 	}
-	c.$headers.each(function(){
-		$.data(this, 'savedSizes', [ this.offsetWidth, this.offsetHeight ]);
-	});
 	wo.resize_timer = setInterval(function(){
 		if (wo.resize_flag) { return; }
 		checkSizes();
@@ -820,7 +820,7 @@ ts.addWidget({
 			$tb.children().removeClass(wo.filter_filteredRow).show();
 			ts.processTbody(table, $tb, false); // restore tbody
 		}
-		if (wo.filterreset) { $(document).undelegate(wo.filter_reset, 'click.tsfilter'); }
+		if (wo.filter_reset) { $(document).undelegate(wo.filter_reset, 'click.tsfilter'); }
 	}
 });
 ts.getFilters = function(table) {
