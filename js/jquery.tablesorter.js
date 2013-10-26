@@ -1317,7 +1317,7 @@
 				}
 				if(/^\s*\([.\d]+\)/.test(s)) {
 					// make (#) into a negative number -> (10) = -10
-					s = s.replace(/^\s*\(/,'-').replace(/\)/,'');
+					s = s.replace(/^\s*\(([.\d]+)\)/, '-$1');
 				}
 				i = parseFloat(s);
 				// return the text instead of zero
