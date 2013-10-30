@@ -1066,11 +1066,10 @@
 				if (a === b) { return 0; }
 				var xN, xD, yN, yD, xF, yF, i, mx,
 					r = ts.regex;
-				// numeric or hex detection
-				yD = parseInt(b.match(r.hex), 16);
 				// first try and sort Hex codes
-				if (yD) {
+				if (r.hex.test(b)) {
 					xD = parseInt(a.match(r.hex), 16);
+					yD = parseInt(b.match(r.hex), 16);
 					if ( xD < yD ) { return -1; }
 					if ( xD > yD ) { return 1; }
 				}
