@@ -519,7 +519,7 @@ $.tablesorter.filterFormatter = {
 		var localfrom = o.defaultDate = o.from || o.defaultDate;
 
 		closeFrom = o.onClose = function( selectedDate, ui ) {
-			var from = new Date( selectedDate ).getTime() || '',
+			var from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
 				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
@@ -542,7 +542,7 @@ $.tablesorter.filterFormatter = {
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
 		closeTo = o.onClose = function( selectedDate, ui ) {
 			var from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = new Date( selectedDate ).getTime() || '',
+				to = new Date( $cell.find('.dateTo').datepicker('getDate') ).getTime() || '',
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell
 				.find('.dateRange').val(range)
