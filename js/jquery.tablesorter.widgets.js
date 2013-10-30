@@ -835,7 +835,7 @@ ts.setFilters = function(table, filter, apply) {
 		c = $t.length ? $t[0].config : {},
 		valid = c && c.$filters ? c.$filters.find('.tablesorter-filter').each(function(i, el) {
 			$(el).val(filter[i] || '');
-		}).trigger('change.tsfilter') || false : false;
+		}) || false : false;
 	if (apply) { $t.trigger('search', [filter, false]); }
 	return !!valid;
 };
