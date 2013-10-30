@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 10/10/2013
+/*! Filter widget formatter functions - updated 10/30/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -608,7 +608,7 @@ $.tablesorter.filterFormatter = {
 		$number = $('<input type="number" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 number is supported - from Modernizr
 		numberSupported = o.skipTest || $number.attr('type') === 'number' && $number.val() !== 'test',
-		t, l, $shcell = [],
+		l, $shcell = [],
 		c = $cell.closest('table')[0].config,
 
 		updateCompare = function(v) {
