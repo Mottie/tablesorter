@@ -57,18 +57,19 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * This can cause problems as a child row may not appear associated with its parent, may be split across pages or possibly distort the table layout if the parent or child row contain row or cell spans.
   * When `false` the pager always includes the child row with its parent, ignoring the set pager size.
   * See [issue #396](https://github.com/Mottie/tablesorter/issues/396).
-* Updated LESS theme to work properly with LESS 4.1+
+* Removed triggered change event to fix [issue #400](https://github.com/Mottie/tablesorter/issues/400).
+* Merged in filter formatter fix for jQuery UI dateFormat conflict; [pull #403](https://github.com/Mottie/tablesorter/pull/403). Thanks @Craga89!
+
 * Grouping widget update
   * Added `group_separator` option which is used when a `group-separator-#` class name is applied
   * Updated [grouping widget demo](http://mottie.github.io/tablesorter/docs/example-widget-grouping.html).
 * Added a file-type parser
   * Optimally used with the grouping widget to sort similar file types (e.g. video extensions: .mp4, .avi, .mov, etc)
   * [File type sorting demo](http://mottie.github.io/tablesorter/docs/example-parsers-file-type.html) added.
-* Internal changes
+* Updated LESS theme to work properly with LESS 4.1+
+* Other changes
   * Improved `formatFloat()` replace method.
   * Sorting a zero hex value (`0x00`) is now possible.
-
-
 
 #### <a name="v2.12">Version 2.12</a> (10/18/2013)
 
