@@ -65,6 +65,11 @@
 			// table row set to a height to compensate; default is false
 			fixedHeight: false,
 
+			// count child rows towards the set page size? (set true if it is a visible table row within the pager)
+			// if true, child row(s) may not appear to be attached to its parent row, may be split across pages or
+			// may distort the table if rowspan or cellspans are included.
+			countChildRows: false,
+
 			// remove rows from the table to speed up the sort of large tables.
 			// setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
 			removeRows: false, // removing rows in larger tables speeds up the sort
@@ -199,7 +204,7 @@
 					if ( !rows[i].className.match(f) ) {
 						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 						// don't count child rows
-						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) ? 0 : 1;
+						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !p.countChildRows ? 0 : 1;
 					}
 				}
 			}

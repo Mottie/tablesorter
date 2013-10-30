@@ -2781,6 +2781,28 @@ $.extend($.tablesorter.themes.jui, {
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
+			// count child rows towards the set page size? (set true if it is a visible table row within the pager)
+			// if true, child row(s) may not appear to be attached to its parent row, may be split across pages or
+			// may distort the table if rowspan or cellspans are included.
+			countChildRows: false,
+
+			<tr id="pager-countchildrows">
+				<td><a href="#" class="toggle2">countChildRows</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					If <code>true</code>, child rows will be counted towards the pager set size (<span class="version">v2.13</span>).
+					<div class="collapsible">
+					<br>
+					Caution: when <code>true</code>, child row(s) may not appear to be attached to its parent row, may be split across pages or
+					may distort the table if rowspan or cellspans are included within the child row.<br>
+					<br>
+					If this option is <code>false</code>, child row(s) will always appear on the same page as its parent.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="pager-removerows">
 				<td><a href="#" class="toggle2">removeRows</a></td>
 				<td>Boolean</td>
