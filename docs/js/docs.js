@@ -72,12 +72,15 @@ $(function(){
 	}
 
 	// add high visibility tags for newest versions (just grab the major revision number 2.10.0 -> 10
-	v = parseFloat( $.tablesorter.version.split('.')[1] );
+	t = $.tablesorter.version.replace(/(v|version|\+)/g, '').split('.');
+	v = [ parseInt(t[0], 10) || 1, parseInt(t[1], 10) || 0 ];
 	$('.version').each(function(){
+		var i;
 		$t = $(this);
-		t = v - parseFloat( $t.text().replace(/(v|version|\+)/g, '').split('.')[1] );
-		if ( t <= 1 ) {
-			$t.prepend('<span class="tip' + ( t === 1 ? ' old' : '' ) + '"><em>'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</em></span> ');
+		i = $t.text().replace(/(v|version|\+)/g, '').split('.');
+		t = [ parseInt(i[0], 10) || 1, parseInt(i[1], 10) || 0 ];
+		if (t[0] === v[0] && t[1] >= v[1] - 1 ) {
+			$t.prepend('<span class="tip' + ( t[0] === v[0] && t[1] < v[1] ? ' old' : '' ) + '"><em>'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</em></span> ');
 		}
 	});
 
@@ -123,7 +126,7 @@ var addParsedValues = function($t, cols, format){
 	$r.each(function(i){
 		r = this;
 		$.each(cols, function(v,j){
-			r.cells[j].innerHTML += ' <span class="val hidden">(<span class="results">' + (format ? format(c[i][j]) : c[i][j]) + '</span>)</span>';
+			r.cells[j].innerHTML += ' <span class="val hidden removeme">(<span class="results">' + (format ? format(c[i][j]) : c[i][j]) + '</span>)</span>';
 		});
 	});
 
