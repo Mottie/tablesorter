@@ -240,27 +240,28 @@
 			/* utils */
 			function buildCache(table) {
 				var b = table.tBodies,
-				tc = table.config,
+				config = table.config,
 				totalRows,
 				totalCells,
-				parsers = tc.parsers;
-				tc.cache = {};
+				parsers = config.parsers;
+				config.cache = {};
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
-					return tc.debug ? log('*Empty table!* Not building a cache') : '';
+					return config.debug ? log('*Empty table!* Not building a cache') : '';
 				}
-				if (tc.debug) {
+				if (config.debug) {
 					var cacheTime = new Date();
 				}
 				// processing icon
-				if (tc.showProcessing) {
+				if (config.showProcessing) {
 					ts.isProcessing(table, true);
 				}
-				for (var k = 0; k < b.length; k++) {
-					var tableBody = b[k];
+				for (var bodyIndex = 0; bodyIndex < b.length; bodyIndex++) {
+					var tableBody = b[bodyIndex];
+										config.cache[bodyIndex] = getCacheForParent(table, jTableBody, []);
 					// ignore tbodies with class name from c.cssInfoBlock
 					var jTableBody = $(tableBody);
-					if (jTableBody.hasClass(tc.cssInfoBlock))
+					if (jTableBody.hasClass(config.cssInfoBlock))
 						continue;
 
 					totalRows = (tableBody && tableBody.rows.length) || 0;
@@ -268,13 +269,13 @@
 
 					if (totalRows !== 0 && totalCells !== 0)
 					{
-						tc.cache[k] = getCacheForParent(table, jTableBody, jTableBody.find('tr:not([data-tt-parent-id])'));
+						config.cache[bodyIndex] = getCacheForParent(table, jTableBody, jTableBody.find('tr:not([data-tt-parent-id])'));
 					}
 				}
-				if (tc.showProcessing) {
+				if (config.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
 				}
-				if (tc.debug) {
+				if (config.debug) {
 					benchmark("Building cache for " + totalRows + " rows", cacheTime);
 				}
 			}
@@ -663,7 +664,6 @@
 				if (config.debug) { sortTime = new Date(); }
 				for (var bodyIndex = 0; bodyIndex < bl; bodyIndex++) {
 					var bodyNode = config.cache[bodyIndex];
-					cache = config.cache[bodyIndex].normalized;
 					recursiveSortNodes(bodyNode, table);
 				}
 				if (config.debug) {
@@ -684,7 +684,7 @@
 			{
 				var colMax = nodes.colMax;
 				var config = table.config;
-                var textSorter = config.textSorter || '';
+				var textSorter = config.textSorter || '';
 				var sortList = config.sortList;
 				var l = sortList.length;
 				var sort;
