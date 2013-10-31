@@ -137,7 +137,7 @@
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.</li>
-			<li>In <span class="version">v2.13</span>, added <code>group_separator</code> option &amp; <code>group-separator-#</code> header class name.</li>
+			<li>In <span class="version">v2.13</span>, added <code>group_separator</code> option &amp; <code>group-separator-#</code> header class name. To see this in action, check out the <a href="example-parsers-file-type.html">file type parser demo</a>.</li>
 			<li>In <span class="version">v2.12</span>, added <code>group_callback</code> &amp; <code>group_complete</code> options. See options section below for details.</li>
 			<li>In <span class="version">v2.11</span>:
 				<ul>
@@ -177,7 +177,7 @@
 						<li><code>wo</code> - table widget options from <code>table.config.widgetOptions</code>.</li>
 					</ul>
 				</li>
-				<li><code>group_separator</code> (<code>&quot;-&quot;</code>) - when the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.12.1</span>.</li>
+				<li><code>group_separator</code> (<code>&quot;-&quot;</code>) - when the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.</li>
 				<li>group date/time options - Name arrays included so that the language of the date groups can be modified easily. Defaults (English):
 					<ul>
 						<li><code>group_months</code> (<code>[ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</code>) - Month names.</li>
@@ -194,8 +194,8 @@
 			<ul>
 				<li><code>&quot;group-word&quot;</code> (same as <code>&quot;group-word-1&quot;</code>) - group the rows using the first word it finds in the column's parsed data.</li>
 				<li><code>&quot;group-word-n&quot;</code> (<code>&quot;n&quot;</code> can be any number) - group the rows using the nth word in the column<span class="remark">*</span>.</li>
-				<li><code>&quot;group-separator&quot;</code> (same as <code>&quot;group-separator-1&quot;</code>) - group the rows using the text between the start and first separator that it finds in the column's parsed data (<span class="version">v2.12.1</span>).</li>
-				<li><code>&quot;group-separator-n&quot;</code> (<code>&quot;n&quot;</code> can be any number) - group the rows using the nth separated group in the column (<span class="version">v2.12.1</span>)<span class="remark">*</span>.</li>
+				<li><code>&quot;group-separator&quot;</code> (same as <code>&quot;group-separator-1&quot;</code>) - group the rows using the text between the start and first separator that it finds in the column's parsed data (<span class="version">v2.13</span>).</li>
+				<li><code>&quot;group-separator-n&quot;</code> (<code>&quot;n&quot;</code> can be any number) - group the rows using the nth separated group in the column (<span class="version">v2.13</span>)<span class="remark">*</span>.</li>
 				<li><code>&quot;group-letter&quot;</code> (same as <code>&quot;group-letter-1&quot;</code>) - group the rows using the first letter it finds in the column's parsed data.</li>
 				<li><code>&quot;group-letter-n&quot;</code> (<code>&quot;n&quot;</code> can be any number) - group the rows using letters 1 through n (if n = 2, then it's the first 2 letters) in the column's parsed data.</li>
 				<li><code>&quot;group-number&quot;</code> (same as <code>&quot;group-number-1&quot;</code>) - group the rows by the number it finds in the column (step of one).</li>
