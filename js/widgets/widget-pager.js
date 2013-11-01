@@ -732,14 +732,14 @@ tsp = ts.pager = {
 	},
 
 	appender: function(table, rows) {
-		var p = table.config.pager;
+		var c = table.config,
+			p = c.pager;
 		if ( !p.ajax ) {
-			table.config.rowsCopy = rows;
-			p.totalRows = rows.length;
+			c.rowsCopy = rows;
+			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size;
 			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
 			tsp.moveToPage(table, p);
-			// tsp.renderTable(table, rows);
 		}
 	}
 
