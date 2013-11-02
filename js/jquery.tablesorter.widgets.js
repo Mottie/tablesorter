@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 10/31/2013
+/*! tableSorter 2.8+ widgets - updated 11/2/2013
  *
  * Column Styles
  * Column Filters
@@ -533,7 +533,12 @@ ts.addWidget({
 							}
 							$tr[j].style.display = (r ? '' : 'none');
 							$tr.eq(j)[r ? 'removeClass' : 'addClass'](wo.filter_filteredRow);
-							if (cr.length) { cr[r ? 'show' : 'hide'](); }
+							if (cr.length) {
+								if (c.pager && c.pager.countChildRows || wo.pager_countChildRows) {
+									cr[r ? 'removeClass' : 'addClass'](wo.filter_filteredRow); // see issue #396
+								}
+								cr[r ? 'show' : 'hide']();
+							}
 						}
 					}
 					ts.processTbody(table, $tb, false);
