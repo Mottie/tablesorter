@@ -464,6 +464,21 @@
 		************************************************/
 		ipv6tests();
 
+        /************************************************
+         test child rows.
+         ************************************************/
+        test('test child rows', function() {
+            expect(2);
+            var $childRowTable = $('#testChildRows');
+            var childRowTable = $childRowTable[0];
+            $childRowTable.tablesorter();
+
+            $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
+            tester.cacheCompare( childRowTable, 'all', [ 1, 2, '', '', '', ''  ], 'asc sort' );
+
+            $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
+            tester.cacheCompare( childRowTable, 'all', [ 2, 1, '', '', '', ''  ], 'desc sort' );
+        });
 	});
 	</script>
 
@@ -547,6 +562,20 @@
 				<tr><td></td><td></td><td>NR</td><td></td></tr>
 			</tbody>
 		</table>
+
+        <table id="testChildRows">
+            <thead>
+                <th>1</th>
+            </thead>
+            <tbody>
+                <tr><td>1</td></tr>
+                <tr class="tablesorter-childRow"><td>1.1</td></tr>
+                <tr class="tablesorter-childRow"><td>1.2</td></tr>
+                <tr><td>2</td></tr>
+                <tr class="tablesorter-childRow"><td>2.1</td></tr>
+                <tr class="tablesorter-childRow"><td>2.2</td></tr>
+            </tbody>
+        </table>
 
 	</body>
 </html>
