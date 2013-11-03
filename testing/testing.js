@@ -70,20 +70,34 @@ var tester = {
 			b = table.tBodies,
 			l2 = table.config.$headers.length;
 		for (k = 0; k < b.length; k++){
-			l = b[k].rows.length;
-				for (j = 0; j < l; j++) {
-					if (col === 'all') {
-						// return all columns
-						for (i = 0; i < l2; i++) {
-							result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][i] : '' );
-						}
-					} else {
-						// return specific column
-						result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][col] : '' );
-					}
+			var normalizedRows = getCacheValues(table.config.cache[k]);			
+			if (col === 'all') {
+				// return all columns
+				$.each(normalizedRows, function(_,row) {
+					for (i = 0; i < l2; i++) {
+						result.push( row[i] );
 				}
+				});
+			} else {
+				// return specific column
+				$.each(normalizedRows, function(_,row) {
+					result.push(row[col]);
+				});
+			}
 		}
 		deepEqual( result, expected, 'testing parser cache: ' + txt);
 	}
 
 };
+
+function getCacheValues(nodes)
+{
+  var result = [];
+  $.each(nodes, function(index,child) {
+    result.push(child.normalized);
+    $.each(getCacheValues(child.cache), function(_,childResult) {
+      result.push(childResult);
+    });
+  });
+  return result;
+}
