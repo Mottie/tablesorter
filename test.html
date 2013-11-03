@@ -488,13 +488,13 @@
             expect(2);
             var $childRowTable = $('#testChildRows');
             var childRowTable = $childRowTable[0];
-            $childRowTable.tablesorter();
+            $childRowTable.tablesorter({ headers: [{ sorter: 'text' }]});
 
             $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
             tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
 
             $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
-            tester.domCompare( childRowTable, 'all', [ '2', '2.1', '2.2', '1', '1.1', '1.2' ], 'desc sort' );
+            tester.domCompare( childRowTable, 'all', [ '2', '2.2', '2.1', '1', '1.2', '1.1' ], 'desc sort' );
         });
 	});
 	</script>
@@ -618,12 +618,12 @@
                 <th>1</th>
             </thead>
             <tbody>
-                <tr><td>1</td></tr>
-                <tr class="tablesorter-childRow"><td>1.1</td></tr>
-                <tr class="tablesorter-childRow"><td>1.2</td></tr>
                 <tr><td>2</td></tr>
                 <tr class="tablesorter-childRow"><td>2.1</td></tr>
                 <tr class="tablesorter-childRow"><td>2.2</td></tr>
+                <tr><td>1</td></tr>
+                <tr class="tablesorter-childRow"><td>1.2</td></tr>
+                <tr class="tablesorter-childRow"><td>1.1</td></tr>
             </tbody>
         </table>
 
