@@ -282,13 +282,13 @@
 			expect(17);
 			$table1.trigger('sortReset');
 			// lower case because table was parsed before c1.ignoreCase was changed
-			tester.cacheCompare( table1, 'all', [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1', '', '', 'testb', 'x5', 'testc', 'x4', 'testa', 'x6' ], 'unsorted' );
+			tester.domCompare( table1, 'all', [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1', 'Info', 'testB', 'x5', 'testC', 'x4', 'testA', 'x6' ], 'unsorted' );
 
 			$table1.trigger('sorton', [[[ 0,0 ]]]);
-			tester.cacheCompare( table1, 'all', [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1', '', '', 'testa', 'x6', 'testb', 'x5', 'testc', 'x4' ], 'ascending sort' );
+			tester.domCompare( table1, 'all', [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1', 'Info', 'testA', 'x6', 'testB', 'x5', 'testC', 'x4' ], 'ascending sort' );
 
 			$table1.trigger('sorton', [[[ 0,1 ]]]);
-			tester.cacheCompare( table1, 'all', [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3', '', '', 'testc', 'x4', 'testb', 'x5', 'testa', 'x6' ], 'descending sort' );
+			tester.domCompare( table1, 'all', [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3', 'Info', 'testC', 'x4', 'testB', 'x5', 'testA', 'x6' ], 'descending sort' );
 
 			// empty cell position
 			$table3.trigger('sorton', [[[ 0,0 ]]]);
@@ -491,10 +491,10 @@
             $childRowTable.tablesorter();
 
             $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
-            tester.cacheCompare( childRowTable, 'all', [ 1, 2, '', '', '', ''  ], 'asc sort' );
+            tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
 
             $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
-            tester.cacheCompare( childRowTable, 'all', [ 2, 1, '', '', '', ''  ], 'desc sort' );
+            tester.domCompare( childRowTable, 'all', [ '2', '2.1', '2.2', '1', '1.1', '1.2' ], 'desc sort' );
         });
 	});
 	</script>
@@ -580,7 +580,7 @@
 			</tbody>
 		</table>
 
-        <table id="hierarchicalTable">
+        <table id="hierarchicalTable" class="tester">
             <thead>
             <tr>
                 <th>Hierarchy</th>
@@ -613,7 +613,7 @@
             </thead>
         </table>
 
-        <table id="testChildRows">
+        <table id="testChildRows" class="tester">
             <thead>
                 <th>1</th>
             </thead>

@@ -83,8 +83,16 @@ var tester = {
 			}
 		}
 		deepEqual( result, expected, 'testing parser cache: ' + txt);
-	}
+	},
 
+    domCompare : function(table, col, expected, txt)
+    {
+        var jTable = $(table);
+        var rows = jTable.find('tr');
+        var cells = col === 'all' ? rows.find('td') : rows.find('td:eq(' + col + ')');
+        var result = $.map($.makeArray(cells), function(cell, _) { return cell.innerHTML; });
+        deepEqual( result, expected, 'testing dom cache: ' + txt);
+    }
 };
 
 function flatten(arrayOfArrays)
