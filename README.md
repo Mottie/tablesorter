@@ -44,6 +44,16 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.13.2">Version 2.13.2</a> (11/2/2013)
+
+* Updated pager &amp; filter widget to work when the pager `countChildRows` option is `true`:
+  * Filter widget now properly added a "filtered" class to child rows
+  * Pager plugin & widget now properly calculate a correct total number of rows
+  * See [issue #396](https://github.com/Mottie/tablesorter/issues/396).
+* Updated editable widget to target table cell children if they exist
+  * This fixes the issue in IE where making a table element contenteditable is not allowed.
+  * See [issue #404](https://github.com/Mottie/tablesorter/issues/404) for further details.
+
 #### <a name="v2.13.1">Version 2.13.1</a> (10/31/2013)
 
 * Fixed filter widget issues
