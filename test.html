@@ -464,7 +464,23 @@
 		************************************************/
 		ipv6tests();
 
-	});
+        /************************************************
+         test hierarchical table
+         ************************************************/
+
+        test( "hierarchical table", function() {
+            expect(2);
+            var $hTable = $('#hierarchicalTable');
+            var hTable = $hTable[0];
+            $hTable.tablesorter({ headers: [{ sorter: 'text' }]});
+
+            $hTable.trigger('sorton', [[[ 0,0 ]]]);
+            tester.cacheCompare( hTable, '0', [ '1', '1.1', '1.1.1', '1.1.2', '1.2', '1.2.1', '2' ], 'ascending' );
+
+            $hTable.trigger('sorton', [[[ 0,1 ]]]);
+            tester.cacheCompare( hTable, '0', [ '2', '1', '1.2', '1.2.1', '1.1', '1.1.2', '1.1.1' ], 'descending' );
+        });
+    });
 	</script>
 
 	</head>
@@ -548,5 +564,37 @@
 			</tbody>
 		</table>
 
+        <table id="hierarchicalTable">
+            <thead>
+            <tr>
+                <th>Hierarchy</th>
+                <th>Asc</th>
+                <th>Dsc</th>
+            </tr>
+            <tbody>
+            <tr data-tt-id="1.1" data-tt-parent-id="1">
+                <td>1.1</td><td>b</td><td>e</td>
+            </tr>
+            <tr data-tt-id="1.1.2" data-tt-parent-id="1.1">
+                <td>1.1.2</td><td>d</td><td>f</td>
+            </tr>
+            <tr data-tt-id="1">
+                <td>1</td><td>a</td><td>b</td>
+            </tr>
+            <tr data-tt-id="1.2" data-tt-parent-id="1">
+                <td>1.2</td><td>e</td><td>c</td>
+            </tr>
+            <tr data-tt-id="1.2.1" data-tt-parent-id="1.2">
+                <td>1.2.1</td><td>f</td><td>d</td>
+            </tr>
+            <tr data-tt-id="1.1.1" data-tt-parent-id="1.1">
+                <td>1.1.1</td><td>c</td><td>g</td>
+            </tr>
+            <tr data-tt-id="2">
+                <td>2</td><td>g</td><td>a</td>
+            </tr>
+            </tbody>
+            </thead>
+        </table>
 	</body>
 </html>

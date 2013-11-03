@@ -76,13 +76,10 @@ var tester = {
 				$.each(normalizedRows, function(_,row) {
 					for (i = 0; i < l2; i++) {
 						result.push( row[i] );
-				}
+				    }
 				});
 			} else {
-				// return specific column
-				$.each(normalizedRows, function(_,row) {
-					result.push(row[col]);
-				});
+                result = normalizedRows.map(function(row) { return row[col]; });
 			}
 		}
 		deepEqual( result, expected, 'testing parser cache: ' + txt);
@@ -90,14 +87,17 @@ var tester = {
 
 };
 
+function flatten(arrayOfArrays)
+{
+    return arrayOfArrays.reduce(function(a,b) { return a.concat(b); },[]);
+}
+
 function getCacheValues(nodes)
 {
-  var result = [];
-  $.each(nodes, function(index,child) {
-    result.push(child.normalized);
-    $.each(getCacheValues(child.cache), function(_,childResult) {
-      result.push(childResult);
-    });
-  });
-  return result;
+    return flatten(nodes.map(getNodeValues));
+}
+
+function getNodeValues(node)
+{
+    return [node.normalized].concat(getCacheValues(node.cache));
 }
