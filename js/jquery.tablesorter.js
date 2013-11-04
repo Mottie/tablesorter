@@ -258,9 +258,12 @@
 				}
 				for (var bodyIndex = 0; bodyIndex < b.length; bodyIndex++) {
 					var tableBody = b[bodyIndex];
-										config.cache[bodyIndex] = getCacheForParent(table, jTableBody, []);
-					// ignore tbodies with class name from c.cssInfoBlock
+
 					var jTableBody = $(tableBody);
+					//make sure there always is a cache
+					config.cache[bodyIndex] = getCacheForParent(table, jTableBody, []);
+
+					// ignore tBodies with class name from c.cssInfoBlock
 					if (jTableBody.hasClass(config.cssInfoBlock))
 						continue;
 
@@ -304,7 +307,7 @@
 
 					var itemId = jChild.attr('data-tt-id');
 					var childRows = jTableBody.find('tr[data-tt-parent-id="' + itemId + '"]');
-                    var oldStyleChildRows = jChild.hasClass(table.config.cssChildRow) ? $('') : jChild.nextUntil(':not(.' + table.config.cssChildRow + ')');
+          var oldStyleChildRows = jChild.hasClass(table.config.cssChildRow) ? $('') : jChild.nextUntil(':not(.' + table.config.cssChildRow + ')');
 					row.cache = getCacheForParent(table, jTableBody, childRows.add(oldStyleChildRows));
 					return row;
 				}
@@ -827,7 +830,7 @@
 					e.stopPropagation();
 					$this.find(c.selectorRemove).remove();
 					// get position from the dom
-					var l, row, icell,
+					var l, rowIndex, icell,
 					$tb = $this.find('tbody'),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
@@ -836,11 +839,12 @@
 					cell = $(cell)[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
-						row = $tb.eq(tbdy).find('tr').index( $row );
+						rowIndex = $tb.eq(tbdy).find('tr').index( $row );
 						icell = cell.cellIndex;
-						l = c.cache[tbdy].normalized[row].length - 1;
-						c.cache[tbdy].row[table.config.cache[tbdy].normalized[row][l]] = $row;
-						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						var bodyCache = c.cache[tbdy];
+						var rowNode = bodyCache[rowIndex];
+						rowNode.original = $row;
+						rowNode.normalized[icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
 						checkResort($this, resort, callback);
 					}
 				})
@@ -860,10 +864,9 @@
 							dat[j] = c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
 						}
 						// add the row index to the end
-						dat.push(c.cache[tbdy].row.length);
+						dat.push(c.cache[tbdy].length);
 						// update cache
-						c.cache[tbdy].row.push([$row[i]]);
-						c.cache[tbdy].normalized.push(dat);
+						c.cache[tbdy].push({normalized: dat, original: $($row[i]), cache: [] });
 						dat = [];
 					}
 					// resort using current settings

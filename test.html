@@ -367,7 +367,7 @@
 					hl = c1.headerList[1] === nw,
 					p1 = c1.parsers[1].id === 'digit';
 				equal(hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
-				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
 			}]);
 
 			// addRows
@@ -375,7 +375,7 @@
 			$table1.find('tbody:last').append(t);
 			$table1.trigger('addRows', [t, true, function(){
 				updateCallback++;
-				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
 			}]);
 
 			// updateCell
@@ -383,14 +383,14 @@
 			t.html('texte');
 			$table1.trigger('updateCell', [t[0], true, function(){
 				updateCallback++;
-				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'texte', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, 'texte', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
 			}]);
 
 			// update
 			$table1.find('tr.temp').remove();
 			$table1.trigger('update', [true, function(){
 				updateCallback++;
-				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
+				tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
 			}]);
 
 		});
@@ -464,38 +464,38 @@
 		************************************************/
 		ipv6tests();
 
-        /************************************************
-         test hierarchical table
-         ************************************************/
+    /************************************************
+     test hierarchical table
+     ************************************************/
 
-        test( "hierarchical table", function() {
-            expect(2);
-            var $hTable = $('#hierarchicalTable');
-            var hTable = $hTable[0];
-            $hTable.tablesorter({ headers: [{ sorter: 'text' }]});
+    test( "hierarchical table", function() {
+      expect(2);
+      var $hTable = $('#hierarchicalTable');
+      var hTable = $hTable[0];
+      $hTable.tablesorter({ headers: [{ sorter: 'text' }]});
 
-            $hTable.trigger('sorton', [[[ 0,0 ]]]);
-            tester.cacheCompare( hTable, '0', [ '1', '1.1', '1.1.1', '1.1.2', '1.2', '1.2.1', '2' ], 'ascending' );
+      $hTable.trigger('sorton', [[[ 0,0 ]]]);
+      tester.cacheCompare( hTable, '0', [ '1', '1.1', '1.1.1', '1.1.2', '1.2', '1.2.1', '2' ], 'ascending' );
 
-            $hTable.trigger('sorton', [[[ 0,1 ]]]);
-            tester.cacheCompare( hTable, '0', [ '2', '1', '1.2', '1.2.1', '1.1', '1.1.2', '1.1.1' ], 'descending' );
-        });
+      $hTable.trigger('sorton', [[[ 0,1 ]]]);
+      tester.cacheCompare( hTable, '0', [ '2', '1', '1.2', '1.2.1', '1.1', '1.1.2', '1.1.1' ], 'descending' );
+    });
         
-        /************************************************
-         test child rows.
-         ************************************************/
-        test('test child rows', function() {
-            expect(2);
-            var $childRowTable = $('#testChildRows');
-            var childRowTable = $childRowTable[0];
-            $childRowTable.tablesorter({ headers: [{ sorter: 'text' }]});
+    /************************************************
+     test child rows.
+     ************************************************/
+    test('test child rows', function() {
+      expect(2);
+      var $childRowTable = $('#testChildRows');
+      var childRowTable = $childRowTable[0];
+      $childRowTable.tablesorter({ headers: [{ sorter: 'text' }]});
 
-            $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
-            tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
+      $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
+      tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
 
-            $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
-            tester.domCompare( childRowTable, 'all', [ '2', '2.2', '2.1', '1', '1.2', '1.1' ], 'desc sort' );
-        });
+      $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
+      tester.domCompare( childRowTable, 'all', [ '2', '2.2', '2.1', '1', '1.2', '1.1' ], 'desc sort' );
+    });
 	});
 	</script>
 
