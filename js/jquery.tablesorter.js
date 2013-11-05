@@ -272,7 +272,7 @@
 
 					if (totalRows !== 0 && totalCells !== 0)
 					{
-						config.cache[bodyIndex] = getCacheForParent(table, jTableBody, jTableBody.find('tr:not([data-tt-parent-id],.' + config.cssChildRow + ')'));
+						config.cache[bodyIndex] = getCacheForParent(table, jTableBody, jTableBody.children('tr:not([data-tt-parent-id],.' + config.cssChildRow + ')'));
 					}
 				}
 				if (config.showProcessing) {
@@ -306,7 +306,7 @@
 					}
 
 					var itemId = jChild.attr('data-tt-id');
-					var childRows = jTableBody.find('tr[data-tt-parent-id="' + itemId + '"]');
+					var childRows = jTableBody.children('tr[data-tt-parent-id="' + itemId + '"]');
           var oldStyleChildRows = jChild.hasClass(table.config.cssChildRow) ? $('') : jChild.nextUntil(':not(.' + table.config.cssChildRow + ')');
 					row.cache = getCacheForParent(table, jTableBody, childRows.add(oldStyleChildRows));
 					return row;
