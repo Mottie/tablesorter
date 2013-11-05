@@ -464,38 +464,54 @@
 		************************************************/
 		ipv6tests();
 
-    /************************************************
-     test hierarchical table
-     ************************************************/
+		/************************************************
+		 test hierarchical table
+		 ************************************************/
 
-    test( "hierarchical table", function() {
-      expect(2);
-      var $hTable = $('#hierarchicalTable');
-      var hTable = $hTable[0];
-      $hTable.tablesorter({ headers: [{ sorter: 'text' }]});
+		test( "hierarchical table", function() {
+			expect(2);
+			var $hTable = $('#hierarchicalTable');
+			var hTable = $hTable[0];
+			$hTable.tablesorter({ headers: [{ sorter: 'text' }]});
 
-      $hTable.trigger('sorton', [[[ 0,0 ]]]);
-      tester.cacheCompare( hTable, '0', [ '1', '1.1', '1.1.1', '1.1.2', '1.2', '1.2.1', '2' ], 'ascending' );
+			$hTable.trigger('sorton', [[[ 0,0 ]]]);
+			tester.cacheCompare( hTable, '0', [ '1', '1.1', '1.1.1', '1.1.2', '1.2', '1.2.1', '2' ], 'ascending' );
 
-      $hTable.trigger('sorton', [[[ 0,1 ]]]);
-      tester.cacheCompare( hTable, '0', [ '2', '1', '1.2', '1.2.1', '1.1', '1.1.2', '1.1.1' ], 'descending' );
-    });
-        
-    /************************************************
-     test child rows.
-     ************************************************/
-    test('test child rows', function() {
-      expect(2);
-      var $childRowTable = $('#testChildRows');
-      var childRowTable = $childRowTable[0];
-      $childRowTable.tablesorter({ headers: [{ sorter: 'text' }]});
+			$hTable.trigger('sorton', [[[ 0,1 ]]]);
+			tester.cacheCompare( hTable, '0', [ '2', '1', '1.2', '1.2.1', '1.1', '1.1.2', '1.1.1' ], 'descending' );
+		});
 
-      $childRowTable.trigger('sorton', [[[ 0,0 ]]]);
-      tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
+		/************************************************
+		 test child rows.
+		 ************************************************/
+		test('test child rows', function() {
+			expect(2);
+			var $childRowTable = $('#testChildRows');
+			var childRowTable = $childRowTable[0];
+			$childRowTable.tablesorter({ headers: [{ sorter: 'text' }]});
 
-      $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
-      tester.domCompare( childRowTable, 'all', [ '2', '2.2', '2.1', '1', '1.2', '1.1' ], 'desc sort' );
-    });
+			$childRowTable.trigger('sorton', [[[ 0,0 ]]]);
+			tester.domCompare( childRowTable, 'all', [ '1', '1.1', '1.2', '2', '2.1', '2.2' ], 'asc sort' );
+
+			$childRowTable.trigger('sorton', [[[ 0,1 ]]]);
+			tester.domCompare( childRowTable, 'all', [ '2', '2.2', '2.1', '1', '1.2', '1.1' ], 'desc sort' );
+		});
+
+		/************************************************
+		 nested tables
+		 ************************************************/
+		test('nested tables', function() {
+			expect(2);
+			var $nestedtable = $('#nestedtable');
+			var nestedstable = $nestedtable[0];
+			$nestedtable.tablesorter({ headers: [{ sorter: 'text' }]});
+
+			$nestedtable.trigger('sorton', [[[ 0,0 ]]]);
+			tester.domcompare( nestedstable, 0, [ 'a', 'b' ], 'asc sort' );
+
+			$nestedtable.trigger('sorton', [[[ 0,1 ]]]);
+			tester.domcompare( nestedstable, 0, [ 'b', 'a' ], 'desc sort' );
+		});
 	});
 	</script>
 
@@ -580,52 +596,65 @@
 			</tbody>
 		</table>
 
-        <table id="hierarchicalTable" class="tester">
-            <thead>
-            <tr>
-                <th>Hierarchy</th>
-                <th>Asc</th>
-                <th>Dsc</th>
-            </tr>
-            <tbody>
-            <tr data-tt-id="1.1" data-tt-parent-id="1">
-                <td>1.1</td><td>b</td><td>e</td>
-            </tr>
-            <tr data-tt-id="1.1.2" data-tt-parent-id="1.1">
-                <td>1.1.2</td><td>d</td><td>f</td>
-            </tr>
-            <tr data-tt-id="1">
-                <td>1</td><td>a</td><td>b</td>
-            </tr>
-            <tr data-tt-id="1.2" data-tt-parent-id="1">
-                <td>1.2</td><td>e</td><td>c</td>
-            </tr>
-            <tr data-tt-id="1.2.1" data-tt-parent-id="1.2">
-                <td>1.2.1</td><td>f</td><td>d</td>
-            </tr>
-            <tr data-tt-id="1.1.1" data-tt-parent-id="1.1">
-                <td>1.1.1</td><td>c</td><td>g</td>
-            </tr>
-            <tr data-tt-id="2">
-                <td>2</td><td>g</td><td>a</td>
-            </tr>
-            </tbody>
-            </thead>
-        </table>
+		<table id="hierarchicalTable" class="tester">
+				<thead>
+				<tr>
+						<th>Hierarchy</th>
+						<th>Asc</th>
+						<th>Dsc</th>
+				</tr>
+				<tbody>
+				<tr data-tt-id="1.1" data-tt-parent-id="1">
+						<td>1.1</td><td>b</td><td>e</td>
+				</tr>
+				<tr data-tt-id="1.1.2" data-tt-parent-id="1.1">
+						<td>1.1.2</td><td>d</td><td>f</td>
+				</tr>
+				<tr data-tt-id="1">
+						<td>1</td><td>a</td><td>b</td>
+				</tr>
+				<tr data-tt-id="1.2" data-tt-parent-id="1">
+						<td>1.2</td><td>e</td><td>c</td>
+				</tr>
+				<tr data-tt-id="1.2.1" data-tt-parent-id="1.2">
+						<td>1.2.1</td><td>f</td><td>d</td>
+				</tr>
+				<tr data-tt-id="1.1.1" data-tt-parent-id="1.1">
+						<td>1.1.1</td><td>c</td><td>g</td>
+				</tr>
+				<tr data-tt-id="2">
+						<td>2</td><td>g</td><td>a</td>
+				</tr>
+				</tbody>
+				</thead>
+		</table>
 
-        <table id="testChildRows" class="tester">
-            <thead>
-                <th>1</th>
-            </thead>
-            <tbody>
-                <tr><td>2</td></tr>
-                <tr class="tablesorter-childRow"><td>2.1</td></tr>
-                <tr class="tablesorter-childRow"><td>2.2</td></tr>
-                <tr><td>1</td></tr>
-                <tr class="tablesorter-childRow"><td>1.2</td></tr>
-                <tr class="tablesorter-childRow"><td>1.1</td></tr>
-            </tbody>
-        </table>
+		<table id="testChildRows" class="tester">
+				<thead>
+						<th>1</th>
+				</thead>
+				<tbody>
+						<tr><td>2</td></tr>
+						<tr class="tablesorter-childRow"><td>2.1</td></tr>
+						<tr class="tablesorter-childRow"><td>2.2</td></tr>
+						<tr><td>1</td></tr>
+						<tr class="tablesorter-childRow"><td>1.2</td></tr>
+						<tr class="tablesorter-childRow"><td>1.1</td></tr>
+				</tbody>
+		</table>
+
+		<table id="nestedTable">
+			<thead>
+				<tr><th>SortHere</th><th>May contain nested tables.</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>a</td><td><table>
+					<tr><td>1</td><td>2</td></tr>
+					<tr><td>3</td><td>4</td></tr>
+				</table></td></tr>
+				<tr><td>b</td><td>Nothing much</td></tr>
+			</tbody>
+		</table>
 
 	</body>
 </html>
