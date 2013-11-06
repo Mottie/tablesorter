@@ -436,7 +436,7 @@ ts.addWidget({
 								if (v[i]){
 									// check if column data should be from the cell or from parsed data
 									if (wo.filter_useParsedData || parsed[i]){
-										x = c.cache[k].normalized[j][i];
+										x = c.cache[k][j].normalized[i];
 									} else {
 									// using older or original tablesorter
 										x = $.trim($td.eq(i).text());
@@ -453,10 +453,10 @@ ts.addWidget({
 											ff = ($ths.filter('[data-column="' + i + '"]:last').hasClass('filter-match')) ? xi.search(val) >= 0 : v[i] === x;
 										} else if (typeof wo.filter_functions[i] === 'function'){
 											// filter callback( exact cell content, parser normalized content, filter input value, column index )
-											ff = wo.filter_functions[i](x, c.cache[k].normalized[j][i], v[i], i, $tr.eq(j));
+											ff = wo.filter_functions[i](x, c.cache[k][j].normalized[i], v[i], i, $tr.eq(j));
 										} else if (typeof wo.filter_functions[i][v[i]] === 'function'){
 											// selector option function
-											ff = wo.filter_functions[i][v[i]](x, c.cache[k].normalized[j][i], v[i], i, $tr.eq(j));
+											ff = wo.filter_functions[i][v[i]](x, c.cache[k][j].normalized[i], v[i], i, $tr.eq(j));
 										}
 									// Look for regex
 									} else if (wo.filter_regex.regex.test(val)){
@@ -485,7 +485,7 @@ ts.addWidget({
 										}
 										// xi may be numeric - see issue #149;
 										// check if c.cache[k].normalized[j] is defined, because sometimes j goes out of range? (numeric columns)
-										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(s) && c.cache[k].normalized[j] ? c.cache[k].normalized[j][i] :
+										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(s) && c.cache[k][j].normalized? c.cache[k][j].normalized[i] :
 											isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										if (/>/.test(val)) { ff = />=/.test(val) ? rg >= s : rg > s; }
 										if (/</.test(val)) { ff = /<=/.test(val) ? rg <= s : rg < s; }
@@ -511,7 +511,7 @@ ts.addWidget({
 											rg = c.parsers[i].format('' + s[1], table, $ths.eq(i), i);
 											r2 = (rg !== '' && !isNaN(rg)) ? rg : r2;
 										}
-										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(r1) && !isNaN(r2) ? c.cache[k].normalized[j][i] :
+										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(r1) && !isNaN(r2) ? c.cache[k][j].normalized[i] :
 											isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										if (r1 > r2) { ff = r1; r1 = r2; r2 = ff; } // swap
 										ff = (rg >= r1 && rg <= r2) || (r1 === '' || r2 === '') ? true : false;
@@ -558,16 +558,16 @@ ts.addWidget({
 				// t.data('placeholder') won't work in jQuery older than 1.4.3
 				o = '<option value="">' + (t.data('placeholder') || t.attr('data-placeholder') || '') + '</option>';
 				for (k = 0; k < b.length; k++ ){
-					l = c.cache[k].row.length;
+					l = c.cache[k].length;
 					// loop through the rows
 					for (j = 0; j < l; j++){
 						// check if has class filtered
-						if (onlyavail && c.cache[k].row[j][0].className.match(wo.filter_filteredRow)) { continue; }
+						if (onlyavail && c.cache[k][j].original[0].className.match(wo.filter_filteredRow)) { continue; }
 						// get non-normalized cell content
 						if (wo.filter_useParsedData){
-							arry.push( '' + c.cache[k].normalized[j][i] );
+							arry.push( '' + c.cache[k][j].normalized[i] );
 						} else {
-							t = c.cache[k].row[j][0].cells[i];
+							t = c.cache[k][j].original[0].cells[i];
 							if (t){
 								arry.push( $.trim(c.supportsTextContent ? t.textContent : $(t).text()) );
 							}
