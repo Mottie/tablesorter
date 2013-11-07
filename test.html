@@ -10,6 +10,7 @@
 	<script src="testing/jshint-r12.js"></script>
 	<script src="testing/jquery-1.8.3.min.js"></script>
 	<script src="js/jquery.tablesorter.js"></script>
+	<script src="js/widgets/widget-grouping.js"></script>
 	<script src="js/jquery.metadata.js"></script>
 	<script src="js/parsers/parser-ipv6.js"></script>
 	<script src="testing/testing.js"></script>
@@ -479,6 +480,21 @@
             $childRowTable.trigger('sorton', [[[ 0,1 ]]]);
             tester.cacheCompare( childRowTable, 'all', [ 2, 1, '', '', '', ''  ], 'desc sort' );
         });
+
+		/************************************************
+		 grouping widget
+		 ************************************************/
+
+		test('grouped table', function() {
+			expect(1);
+
+			var $groupedTable = $('#groupedTable');
+			var groupedTable = $groupedTable[0];
+			$groupedTable.tablesorter({ widgets: ["group"]});
+
+			$groupedTable.trigger('sorton', [[[ 1,0 ]]]);
+			tester.cacheCompare( groupedTable, 1, [ 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4 ], 'asc sort numeric' );
+		});
 	});
 	</script>
 
@@ -576,6 +592,48 @@
                 <tr class="tablesorter-childRow"><td>2.2</td></tr>
             </tbody>
         </table>
+
+		<table id="groupedTable" class="">
+		  <thead>
+			<tr>
+			  <th class="group-word"></th> <!-- checkbox status -->
+			  <th class="group-number">Quality (number)</th> <!-- notice this uses the same class name as the Numeric column, it's just left at 1 -->
+			  <th class="group-number-10">Numeric (every <span>10</span>)</th>
+			  <th class="group-letter-1">Priority (letter)</th>
+			  <th class="group-letter-1">Animals (first <span>letter</span>)</th>
+			  <th class="group-word-1">Natural Sort (first word)</th>
+			  <th class="group-word-2">Inputs (second word)</th>
+			  <!-- try "group-date", "group-date-year", "group-date-month", "group-date-day", "group-date-week" or "group-date-time" -->
+			  <th class="group-date">Date (<span>Full</span>)</th>
+			</tr>
+		  </thead>
+		  <tfoot>
+			<tr>
+			  <th></th>
+			  <th>Quality</th>
+			  <th>Numeric</th>
+			  <th>Priority</th>
+			  <th>Animals</th>
+			  <th>Natural Sort</th>
+			  <th>Inputs</th>
+			  <th>Date</th>
+			</tr>
+		  </tfoot>
+		  <tbody>
+			<tr><td><input type="checkbox" checked=""></td><td>1</td><td>10</td><td><select><option selected="">A</option><option>B</option><option>C</option></select></td><td>Koala</td><td>abc 123</td><td><input type="text" value="item: truck"></td><td>1/13/2013 12:01 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>3</td><td>29</td><td><select><option>A</option><option>B</option><option selected="">C</option></select></td><td>Kangaroo</td><td>abc 1</td><td><input type="text" value="item: car"></td><td>1/15/2013</td></tr>
+			<tr><td><input type="checkbox"></td><td>2</td><td>10</td><td><select><option>A</option><option>B</option><option selected="">C</option></select></td><td>Ant</td><td>abc 9</td><td><input type="text" value="item: motorcycle"></td><td>1/13/2013</td></tr>
+			<tr><td><input type="checkbox"></td><td>3</td><td>81</td><td><select><option>A</option><option selected="">B</option><option>C</option></select></td><td>Bee</td><td>zyx 24</td><td><input type="text" value="item: golf cart"></td><td>1/11/2013</td></tr>
+			<tr><td><input type="checkbox" checked=""></td><td>3</td><td>21</td><td><select><option>A</option><option selected="">B</option><option>C</option></select></td><td>Aardwolf</td><td>zyx 55</td><td><input type="text" value="item: scooter"></td><td>1/13/2013 03:30 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>1</td><td>3</td><td><select><option selected="">A</option><option>B</option><option>C</option></select></td><td>Bear</td><td>abc 11</td><td><input type="text"></td><td>1/15/2013</td></tr>
+			<tr><td><input type="checkbox"></td><td>4</td><td>12</td><td><select><option>A</option><option selected="">B</option><option>C</option></select></td><td>Armadillo</td><td>zyx 2</td><td><input type="text"></td><td>1/15/2013 12:30 PM</td></tr>
+			<tr><td><input type="checkbox" checked=""></td><td>2</td><td>56</td><td><select><option selected="">A</option><option>B</option><option>C</option></select></td><td>Aardvark</td><td>abc 2</td><td><input type="text" value="item: skateboard"></td><td>1/22/2013</td></tr>
+			<tr><td><input type="checkbox"></td><td>1</td><td>55</td><td><select><option selected="">A</option><option>B</option><option>C</option></select></td><td>Lion</td><td>abc 9</td><td><input type="text"></td><td>2/15/2013</td></tr>
+			<tr><td><input type="checkbox" checked=""></td><td>4</td><td>87</td><td><select><option>A</option><option selected="">B</option><option>C</option></select></td><td>Anteater</td><td>ABC 10</td><td><input type="text" value="item: skates"></td><td>1/3/2013</td></tr>
+			<tr><td><input type="checkbox" checked=""></td><td>2</td><td>98</td><td><select><option>A</option><option>B</option><option selected="">C</option></select></td><td>Lemur</td><td>zyx 1</td><td><input type="text"></td><td>1/11/2013</td></tr>
+			<tr><td><input type="checkbox"></td><td>1</td><td>20</td><td><select><option>A</option><option>B</option><option selected="">C</option></select></td><td>Llama</td><td>zyx 12</td><td><input type="text"></td><td>12/13/2012</td></tr>
+		  </tbody>
+		</table>
 
 	</body>
 </html>
