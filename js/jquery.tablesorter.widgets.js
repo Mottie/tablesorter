@@ -484,7 +484,7 @@ ts.addWidget({
 											s = (isNaN(s) && rg !== '' && !isNaN(rg)) ? rg : s;
 										}
 										// xi may be numeric - see issue #149;
-										// check if c.cache[k].normalized[j] is defined, because sometimes j goes out of range? (numeric columns)
+										// check if c.cache[k][j].normalized is defined, because sometimes j goes out of range? (numeric columns)
 										rg = ( parsed[i] || c.parsers[i].type === 'numeric' ) && !isNaN(s) && c.cache[k][j].normalized? c.cache[k][j].normalized[i] :
 											isNaN(xi) ? fmt(xi.replace(wo.filter_regex.nondigit, ''), table) : fmt(xi, table);
 										if (/>/.test(val)) { ff = />=/.test(val) ? rg >= s : rg > s; }
