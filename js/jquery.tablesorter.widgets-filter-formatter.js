@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 10/30/2013
+/*! Filter widget formatter functions - updated 11/8/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -630,8 +630,7 @@ $.tablesorter.filterFormatter = {
 			var compare = ( $cell.find('.compare').val() || o.compare);
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
-				.val( !o.addToggle || chkd ? (o.compare ? o.compare : o.exactMatch ? '=' : '') + v : '' )
-				.val( !o.addToggle || chkd ? compare + v : '' )
+				.val( !o.addToggle || chkd ? (compare ? compare : o.exactMatch ? '=' : '') + v : '' )
 				.trigger('search', delayed ? delayed : o.delayed).end()
 				.find('.number').val(v);
 			if ($cell.find('.number').length) {
