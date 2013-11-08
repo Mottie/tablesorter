@@ -445,12 +445,14 @@
 				<td>&quot;&quot;</td>
 				<td>Additional CSS class applied to style the header with a ascending sort - <span class="version updated">v2.11</span>.
 					<div class="collapsible"><br>
-						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerAsc&quot;</code> class will always be added to a header cell with an ascending sort; this option now contains any additional class names to add. Previous default value changed v2.5.
+						Changed to empty string (<code>&quot;&quot;</code>) in v2.11, as the <code>&quot;tablesorter-headerAsc&quot;</code> class will always be added to a header cell with an ascending sort; this option now contains any additional class names to add.
+
 						<p>Example from the blue theme:</p>
 						<pre class="prettyprint lang-css">.tablesorter-blue .tablesorter-headerAsc {
   background-color: #9fbfdf;
   background-image: url(black-asc.gif);
-}</pre></div>
+}</pre>
+					Default changed v2.5 to <code>&quot;tablesorter-headerAsc&quot;</code>. Default changed v2.1.7 to <code>&quot;tablesorter-headerSortUp&quot;</code>. Original default: <code>&quot;headerSortUp&quot;</code></div>
 				</td>
 				<td></td>
 			</tr>
@@ -459,7 +461,7 @@
 				<td><a class="toggle" href="#">cssChildRow</a></td>
 				<td>String</td>
 				<td>&quot;tablesorter-childRow&quot;</td>
-				<td>Add this css class to a child row that should always be attached to its parent. Click on the &quot;cssChildRow&quot; link to toggle the view on the attached child row. Previous default was &quot;expand-child&quot; (Changed in v2.4).</td>
+				<td>Add this css class to a child row that should always be attached to its parent. Click on the &quot;cssChildRow&quot; link to toggle the view on the attached child row. Previous default was <code>&quot;expand-child&quot;</code> (Changed in v2.4).</td>
 				<td>Ex:<a href="example-child-rows.html">1</a> <a href="example-child-rows-filtered.html">2</a></td>
 			</tr>
 			<tr class="tablesorter-childRow">
@@ -516,12 +518,13 @@
 				<td>&quot;&quot;</td>
 				<td>Additional CSS class applied to style the header with a descending sort - <span class="version updated">v2.11</span>.
 					<div class="collapsible"><br>
-						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerDesc&quot;</code> class will always be added to a header cell with a descending sort; this option now contains any additional class names to add. Previous default value changed v2.5.
+						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerDesc&quot;</code> class will always be added to a header cell with a descending sort; this option now contains any additional class names to add.
 						<p>Example from the blue theme:</p>
 						<pre class="prettyprint lang-css">.tablesorter-blue .tablesorter-headerDesc {
   background-color: #8cb3d9;
   background-image: url(black-desc.gif);
-}</pre></div>
+}</pre>
+						Default changed v2.5 to <code>&quot;tablesorter-headerDesc&quot;</code>. Default changed v2.1.7 to <code>&quot;tablesorter-headerSortDown&quot;</code>. Original default: <code>&quot;headerSortDown&quot;</code></div>
 				</td>
 				<td></td>
 			</tr>
@@ -541,7 +544,8 @@
   padding: 4px 20px 4px 4px;
   white-space: normal;
   cursor: pointer;
-}</pre></div>
+}</pre>
+						Default changed v2.1.7 to <code>&quot;tablesorter-header&quot;</code>. Original default: <code>&quot;header&quot;</code></div>
 				</td>
 				<td></td>
 			</tr>
@@ -1211,7 +1215,7 @@ $(function(){
   $("#myTable").tableSorter( { textExtraction: myTextExtraction } );
 });</pre>
 					tablesorter will pass the current table cell object for you to parse and return.  Thanks to Josh Nathanson for the examples. Updated to a jQuery example by Rob G (Mottie).
-					<p>Now if the text you are finding in the script above is say a number, then just include the <a href="#headers"><code>headers</code></a> sorter option to specify how to sort it. Also in this example, we will specify that the special textExtraction code is only needed for the second column ("1" because we are using a zero-based index). All other columns will ignore this textExtraction function.</p>
+					<p>Now if the text you are finding in the script above is say a number, then just include the <a href="#headers"><code>headers</code></a> sorter option to specify how to sort it. Also in this example, we will specify that the special textExtraction code is only needed for the second column (<code>1</code> because we are using a zero-based index). All other columns will ignore this textExtraction function.</p>
 					<p>Added <code>table</code> and <code>cellIndex</code> variables to the <code>textExtraction</code> function in version 2.1.2.</p>
 					<pre class="prettyprint lang-javascript">$(function(){
   $("table").tablesorter({
@@ -1283,7 +1287,7 @@ $(function(){
     textSorter : {
       // replace INDIVIDUAL COLUMN text sorter functions
       0 : function(a, b, direction, columnIndex, table){
-        // same as $.tablesorter.sortText
+        // same as $.tablesorter.sortText (basic alphabetical sort)
         // direction: true = ascending; false = descending
         // columnIndex: zero-based index of the current table column being sorted
         // table: table DOM element (access options by using table.config)
