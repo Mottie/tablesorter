@@ -17,6 +17,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 ts.themes = {
 	"bootstrap" : {
 		table      : 'table table-bordered table-striped',
+		caption    : 'caption',
 		header     : 'bootstrap-header', // give the header a gradient background
 		footerRow  : '',
 		footerCells: '',
@@ -32,6 +33,7 @@ ts.themes = {
 	},
 	"jui" : {
 		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		caption    : 'ui-widget-content ui-corner-all',
 		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
 		footerRow  : '',
 		footerCells: '',
@@ -167,10 +169,13 @@ ts.addWidget({
 			sh = 'tr.' + (wo.stickyHeaders || 'tablesorter-stickyHeader'),
 			rmv = o.sortNone + ' ' + o.sortDesc + ' ' + o.sortAsc;
 		if (c.debug) { time = new Date(); }
+		// initialization code - run once
 		if (!$t.hasClass('tablesorter-' + theme) || c.theme === theme || !table.hasInitialized){
 			// update zebra stripes
 			if (o.even !== '') { wo.zebra[0] += ' ' + o.even; }
 			if (o.odd !== '') { wo.zebra[1] += ' ' + o.odd; }
+			// add caption style
+			$t.find('caption').addClass(o.caption);
 			// add table/footer class names
 			t = $t
 				// remove other selected themes; use widgetOptions.theme_remove
