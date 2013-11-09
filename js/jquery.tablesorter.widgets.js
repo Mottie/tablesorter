@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/8/2013
+/*! tableSorter 2.8+ widgets - updated 11/9/2013
  *
  * Column Styles
  * Column Filters
@@ -526,7 +526,7 @@ ts.filter = {
 		}
 	},
 	init: function(table, c, wo) {
-		var indx, options, string, $header, column, filters, time;
+		var options, string, $header, column, filters, time;
 		if (c.debug) {
 			time = new Date();
 		}

@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 11/8/2013
+/*! Filter widget formatter functions - updated 11/9/2013
  * requires: tableSorter 2.7.7+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -92,7 +92,7 @@ $.tablesorter.filterFormatter = {
 			.val(o.value)
 			.appendTo($cell)
 			.spinner(o)
-			.bind('change keyup', function(e){
+			.bind('change keyup', function(){
 				updateSpinner();
 			});
 
@@ -113,7 +113,7 @@ $.tablesorter.filterFormatter = {
 				.val(o.value)
 				.appendTo($shcell)
 				.spinner(o)
-				.bind('change keyup', function(e){
+				.bind('change keyup', function(){
 					$cell.find('.spinner').val( this.value );
 					updateSpinner();
 				});
@@ -228,7 +228,7 @@ $.tablesorter.filterFormatter = {
 			.val(o.value)
 			.appendTo($shcell)
 			.slider(o)
-			.bind('change keyup', function(e){
+			.bind('change keyup', function(){
 				$cell.find('.slider').val( this.value );
 				updateSlider();
 			});
@@ -337,7 +337,7 @@ $.tablesorter.filterFormatter = {
 			.val(o.value)
 			.appendTo($shcell)
 			.slider(o)
-			.bind('change keyup', function(e){
+			.bind('change keyup', function(){
 				$cell.find('.range').val( this.value );
 				updateUiRange();
 			});
@@ -731,7 +731,7 @@ $.tablesorter.filterFormatter = {
 	HTML5 range slider
 	\**********************/
 	html5Range : function($cell, indx, def5Range) {
-		var t, o = $.extend({
+		var o = $.extend({
 			value : 0,
 			min : 0,
 			max : 100,
