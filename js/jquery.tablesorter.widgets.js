@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/2/2013
+/*! tableSorter 2.8+ widgets - updated 11/8/2013
  *
  * Column Styles
  * Column Filters
@@ -590,24 +590,30 @@ ts.filter = {
 				ts.isProcessing(table, event.type === 'filterStart', columns ? $header : '');
 			});
 		}
-
 		if (c.debug) {
 			ts.benchmark("Applying Filter widget", time);
 		}
 		// add default values
-		c.$table.bind('tablesorter-initialized', function() {
-			filters = ts.getFilters(table);
-			// filters is undefined when filter_columnFilters = false
-			if (filters) {
-				for (indx = 0; indx < filters.length; indx++) {
-					filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
-				}
+		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
+			filters = ts.filter.setDefaults(table, c, wo) || [];
+			if (filters.length) {
 				ts.setFilters(table, filters, true);
 			}
 		});
 		// filter widget initialized
+		wo.filter_Initialized = true;
 		c.$table.trigger('filterInit');
 		ts.filter.checkFilters(table);
+	},
+	setDefaults: function(table, c, wo){
+		var indx,
+			filters = [],
+			columns = c.columns;
+		for (indx = 0; indx < columns; indx++) {
+			filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+		}
+		$(table).data('lastSearch', filters);
+		return filters;
 	},
 	buildRow: function(table, c, wo) {
 		var column, $header, buildSelect, disabled,
