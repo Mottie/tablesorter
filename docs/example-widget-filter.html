@@ -140,8 +140,11 @@
 <script>
 $(function(){
 
-	$('.firstname').click(function(){
-		$.tablesorter.setFilters( $('table.tablesorter'), ['', 'alex|br*|c'], true );
+	$('button').not('.toggle').click(function(){
+		var $t = $(this),
+			filter = [];
+		filter[$t.attr('data-column')] = $t.text();
+		$.tablesorter.setFilters( $('table.tablesorter'), filter, true );
 		return false;
 	});
 
@@ -195,15 +198,16 @@ $(function(){
 						<thead><tr><th>Type <small class="bright">(1)</small></th><td>Description</th><th>Example</th></tr></thead>
 						<tbody>
 							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds &quot;abc&quot;, &quot;abcd&quot;, &quot;abcde&quot;, etc)</td></tr>
+							<tr><td class="center"><code>~</code></td><td>Fuzzy search (matches sequential characters) the query by adding a tilde to the beginning of the query (<span class="version">v2.13.3</span>)</td><td><button data-column="1">~bee</button> (matches &quot;Bruce Lee&quot; and &quot;Brenda Dexter&quot;) or <button data-column="1">~piano</button> (matches &quot;Philip Aaron Wong&quot;)</td></tr>
 							<tr><td class="center"><code>&quot;</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc&quot;</code> or <code>abc=</code> (exactly match &quot;abc&quot;)</td></tr>
 							<tr><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds &quot;Jan&quot; and &quot;Jun&quot;, but not &quot;Joan&quot;)</td></tr>
 							<tr><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches &quot;Black&quot; and &quot;Book&quot;)</td></tr>
 							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc)</td></tr>
-							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small>.</td><td><code>&gt;= 10</code> (find values greater than or equal to 10)</td></tr>
+							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small>.</td><td><button data-column="5">&gt;= 10</button> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center"><code>!</code></td><td>Not operator. Filter the column with content that <strong>do not</strong> match the query.</td><td><code>!fe</code> (hide rows with &quot;female&quot; in that column, but shows rows with &quot;male&quot;)</td></tr>
 							<tr><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical &quot;and&quot;. Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both &quot;box&quot; and &quot;bat&quot;)</td></tr>
 							<tr><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar <small class="bright">(3)</small>.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;)</td></tr>
-							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(2)</small>.</td><td><code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30)</td></tr>
+							<tr><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(2)</small>.</td><td><button data-column="3">10 - 30</button> or <button data-column="4">10 to 30</button> (match values between 10 and 30)</td></tr>
 						</tbody>
 					</table>
 					<span class="bright">(1)</span> You cannot combine these operators with each other (except for the wildcards).<br>
@@ -306,7 +310,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 	<h1>Demo</h1>
 	<button type="button" class="toggle fsw">Toggle</button> filter_startsWith : <span id="start">false</span> (if true, search from beginning of cell content only)<br>
 	<button type="button" class="toggle fic">Toggle</button> filter_ignoreCase : <span id="case">true</span> (if false, the search will be case sensitive)<br>
-	<button type="button" class="toggle ffm">Toggle</button> filter-match (if class name added to the "First Name" column, all "or" searches will only match the content; Search <button type="button" class="firstname">alex|br*|c</button> in the First Name column (<span class="version">2.10.1</span>).
+	<button type="button" class="toggle ffm">Toggle</button> filter-match (if class name added to the "First Name" column, all "or" searches will only match the content; Search <button data-column="1">alex|br*|c</button> in the First Name column (<span class="version">2.10.1</span>).
 	<hr>
 
 	<div id="demo">
@@ -327,7 +331,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>1</td><td>Philip Aaron</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
+		<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
 		<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
 		<tr><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
 		<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
@@ -337,7 +341,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 		<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
 		<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td></tr>
 		<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
-		<tr><td>100</td><td>Brenda Lee</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
+		<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
 		<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
 		<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td></tr>
 	</tbody>

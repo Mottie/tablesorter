@@ -503,6 +503,25 @@ ts.filter = {
 				return new RegExp( query.replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(iExact);
 			}
 			return null;
+		},
+		// fuzzy text search; modified from https://github.com/mattyork/fuzzy (MIT license)
+		fuzzy: function( filter, iFilter, exact, iExact ) {
+			if ( /^~/.test(iFilter) ) {
+				var indx,
+					patternIndx = 0,
+					len = iExact.length,
+					pattern = iFilter.slice(1);
+				for (indx = 0; indx < len; indx++) {
+					if (iExact[indx] === pattern[patternIndx]) {
+						patternIndx += 1;
+					}
+				}
+				if (patternIndx === pattern.length) {
+					return true;
+				}
+				return false;
+			}
+			return null;
 		}
 	},
 	init: function(table, c, wo) {
