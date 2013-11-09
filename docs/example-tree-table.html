@@ -6,6 +6,7 @@
 
 	<!-- jQuery -->
 	<script src="../testing/jquery-1.8.3.min.js"></script>
+	<script src="js/jquery.treetable.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -15,6 +16,8 @@
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
+	<link rel="stylesheet" href="css/jquery.treetable.theme.default.css">
+	<link rel="stylesheet" href="css/jquery.treetable.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<!-- Tablesorter: optional -->
@@ -26,10 +29,11 @@
 		.tablesorter({
 			theme : 'blue'
 		})
-		.tablesorterPager({
-			container: $("#pager"),
-			positionFixed: false
-		});
+		// .tablesorterPager({
+		// 	container: $("#pager"),
+		// 	positionFixed: false
+		// })
+		.treetable({ expandable: true});;
 
 });</script>
 </head>
@@ -49,25 +53,33 @@
 	<thead>
 		<tr>
 			<th>Name</th>
-			<th>Actual Population</th>
+			<th>Fake Population</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr data-tt-id='europe'><td>Europe</td><td>300</td></tr>
 		<tr data-tt-id='netherlands' data-tt-parent-id='europe'><td>Netherlands</td><td>10</td></tr>
 		<tr data-tt-id='molenhoek' data-tt-parent-id='netherlands'><td>Molenhoek</td><td>1</td></tr>
-		<tr data-tt-parent-id='netherlands'><td>Nijmegen</td><td>2</td></tr>
-		<tr data-tt-id='germany'><td>Germany</td><td>50</td></tr>
-		<tr data-tt-parent-id='germany'><td>Berlin</td><td>8</td></tr>
-		<tr data-tt-id='us'><td>United States</td>400<td></td></tr>
+		<tr data-tt-id='nijmegen' data-tt-parent-id='netherlands'><td>Nijmegen</td><td>2</td></tr>
+		<tr data-tt-id='germany' data-tt-parent-id='europe'><td>Germany</td><td>50</td></tr>
+		<tr data-tt-id='berlin' data-tt-parent-id='germany'><td>Berlin</td><td>8</td></tr>
+		<tr data-tt-id='northAmerica'><td>North America</td><td>550</td></tr>
+		<tr data-tt-id='us' data-tt-parent-id='northAmerica'><td>United States</td><td>450</td></tr>
+		<tr data-tt-id='newYork' data-tt-parent-id='us'><td>New York</td><td>5</td></tr>
+		<tr data-tt-id='losAngeles' data-tt-parent-id='us'><td>Los Angeles</td><td>7</td></tr>
+		<tr data-tt-id='canada' data-tt-parent-id='northAmerica'><td>Canada</td><td>100</td></tr>
+		<tr data-tt-id='toronto' data-tt-parent-id='canada'><td>Toronto</td><td>4</td></tr>
+		<tr data-tt-id='otawa' data-tt-parent-id='canada'><td>Otawa</td><td>3</td></tr>
 		<tr data-tt-id='africa'><td>Africa</td><td>500</td></tr>
 		<tr data-tt-id='egypt' data-tt-parent-id='africa'><td>Egypt</td><td>100</td></tr>
 		<tr data-tt-id='cairo' data-tt-parent-id='egypt'><td>Caïro</td><td>10</td></tr>
+		<tr data-tt-id='luxor' data-tt-parent-id='egypt'><td>Luxor</td><td>5</td></tr>
 		<tr data-tt-id='zimbabwe' data-tt-parent-id='africa'><td>Zimbabwe</td><td>90</td></tr>
+		<tr data-tt-id='harare' data-tt-parent-id='zimbabwe'><td>Harare</td><td>10</td></tr>
 	</tbody>
 </table>
 
-<div id="pager" class="pager">
+<!-- <div id="pager" class="pager">
 	<form>
 		<input type="button" value="&lt;&lt;" class="first" />
 		<input type="button" value="&lt;" class="prev" />
@@ -81,89 +93,7 @@
 			<option value="40">40</option>
 		</select>
 	</form>
-</div></div>
-
-	<h1>Javascript</h1>
-	<div id="javascript">
-		<pre class="prettyprint lang-javascript"></pre>
-	</div>
-	<h1>HTML</h1>
-	<div>
-		<pre class="prettyprint lang-html">&lt;table class=&quot;tablesorter&quot;&gt;
-  &lt;colgroup&gt;
-    &lt;col width=&quot;85&quot; /&gt;
-    &lt;col width=&quot;250&quot; /&gt;
-    &lt;col width=&quot;100&quot; /&gt;
-    &lt;col width=&quot;90&quot; /&gt;
-    &lt;col width=&quot;70&quot; /&gt;
-  &lt;/colgroup&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Order #&lt;/th&gt;
-      &lt;th&gt;Customer&lt;/th&gt;
-      &lt;th&gt;PO&lt;/th&gt;
-      &lt;th&gt;Date&lt;/th&gt;
-      &lt;th&gt;Total&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td rowspan=&quot;2&quot;&gt; &lt;!-- rowspan=&quot;2&quot; makes the table look nicer --&gt;
-        &lt;a href=&quot;#&quot; class=&quot;toggle&quot;&gt;SO71774&lt;/a&gt; &lt;!-- link to toggle view of the child row --&gt;
-      &lt;/td&gt;
-      &lt;td&gt;Good Toys&lt;/td&gt;
-      &lt;td&gt;PO348186287&lt;/td&gt;
-      &lt;td&gt;Jul 20, 2007&lt;/td&gt;
-      &lt;td&gt;$972.78&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr class=&quot;tablesorter-childRow&quot;&gt;
-      &lt;td colspan=&quot;4&quot;&gt;
-        &lt;div class=&quot;bold&quot;&gt;Shipping Address&lt;/div&gt;
-        &lt;div&gt;99700 Bell Road&lt;br&gt;Auburn, California 95603&lt;/div&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td rowspan=&quot;2&quot;&gt; &lt;!-- rowspan=&quot;2&quot; makes the table look nicer --&gt;
-        &lt;a href=&quot;#&quot; class=&quot;toggle&quot;&gt;SO71775&lt;/a&gt; &lt;!-- link to toggle view of the child row --&gt;
-      &lt;/td&gt;
-      &lt;td&gt;Cycle Clearance&lt;/td&gt;
-      &lt;td&gt;PO58159451&lt;/td&gt;
-      &lt;td&gt;May 6, 2007&lt;/td&gt;
-      &lt;td&gt;$2,313.13&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr class=&quot;tablesorter-childRow&quot;&gt;
-      &lt;td colspan=&quot;4&quot;&gt;
-        &lt;div class=&quot;bold&quot;&gt;Shipping Address&lt;/div&gt;
-        &lt;div&gt;2255 254th Avenue Se&lt;br&gt;Albany, Oregon 97321&lt;/div&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-
-    &lt;!-- View page source for complete HTML markup --&gt;
-
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;div id=&quot;pager&quot; class=&quot;pager&quot;&gt;
-  &lt;form&gt;
-    &lt;input type=&quot;button&quot; value=&quot;&amp;lt;&amp;lt;&quot; class=&quot;first&quot; /&gt;
-    &lt;input type=&quot;button&quot; value=&quot;&amp;lt;&quot; class=&quot;prev&quot; /&gt;
-    &lt;input type=&quot;text&quot; class=&quot;pagedisplay&quot;/&gt;
-    &lt;input type=&quot;button&quot; value=&quot;&amp;gt;&quot; class=&quot;next&quot; /&gt;
-    &lt;input type=&quot;button&quot; value=&quot;&amp;gt;&amp;gt;&quot; class=&quot;last&quot; /&gt;
-    &lt;select class=&quot;pagesize&quot;&gt;
-      &lt;option selected=&quot;selected&quot;  value=&quot;10&quot;&gt;10&lt;/option&gt;
-      &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
-      &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
-      &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
-    &lt;/select&gt;
-  &lt;/form&gt;
-&lt;/div&gt;</pre>
-	</div>
-
-<div class="next-up">
-	<hr />
-	Next up: <a href="example-child-rows-filtered.html">Child Rows with Filter Widget &rsaquo;&rsaquo;</a>
-</div>
+</div></div> -->
 
 </div>
 
