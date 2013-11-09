@@ -292,7 +292,7 @@
 	<h4 id="extras">Plugins / Custom Widgets / Custom Parsers</h4>
 	<ul>
 		<li>
-			<a href="example-pager.html">Pager plugin</a> (<span class="version updated">v2.13.2</span>).<br>
+			<a href="example-pager.html">Pager plugin</a> (<span class="version updated">v2.13.3</span>).<br>
 			<br>
 		</li>
 		<li><a href="example-widget-columns.html">Columns widget</a> (v2.0.17)</li>
@@ -300,6 +300,7 @@
 		<li>Filter Widget:
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.13.3</span>)</li>
+				<li><a href="example-widget-filter-any-match.html">any-match</a> (<span class="version">v2.13.3</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
 				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
@@ -557,7 +558,7 @@
 				<td>Additional CSS class applied to style the header row - <span class="version updated">v2.11</span>
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerRow&quot;</code> class will always be added to a table header row; this option now contains any additional class names to add.<br>
-						<p>This CSS style was added in v2.4, prior to that the row would get the same class as the header cells. This class was added to make it easier to determine what element was being targetted in the plugin.</p>
+						<p>This CSS style was added in v2.4, prior to that the row would get the same class as the header cells. This class was added to make it easier to determine what element was being targeted in the plugin.</p>
 					</div>
 				</td>
 				<td></td>
@@ -1382,6 +1383,8 @@ $(function(){
       columns_tfoot : true,
 
       // *** filter widget ***
+      // show any column matches
+      filter_anyMatch      : false,
       // Include child rows content in the search
       filter_childRows     : false,
       // show column filters
@@ -1652,6 +1655,38 @@ $(function(){
 });</pre></div>
 				</td>
 				<td><a href="example-widget-columns.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-anymatch">
+				<td><a href="#" class="toggle2">filter_anyMatch</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Filter widget: Show any rows that match a search query. If this option is <code>true</code> any column match will show that row; but there are limitations (<span class="version">v2.13.3</span>).
+					<div class="collapsible">
+					<br>
+					It is best if this <a href="#widget-filter-anymatch"><code>filter_anyMatch</code></a> option is used with a single search input as follows:
+					<pre class="prettyprint lang-html">&lt;input class=&quot;search&quot; type=&quot;search&quot;&gt;
+&lt;button type=&quot;button&quot; class=&quot;reset&quot;&gt;Reset Search&lt;/button&gt;</pre>
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_anyMatch : true,
+      filter_columnFilters: false,
+      filter_reset: '.reset'
+    }
+  });
+
+  // Target the $('.search') input using built in functioning
+  // this binds to the search using "search" and "keyup"
+  // Allows using filter_liveSearch or delayed search &
+  // pressing escape to cancel the search
+  $.tablesorter.filter.bindSearch( $table, $('.search') );
+
+});</pre></div>
+				</td>
+				<td><a href="example-widget-filter-any-match.html">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-childrows">
@@ -1946,7 +1981,7 @@ $(function(){
 			<tr id="widget-filter-onlyAvail">
 				<td><a href="#" class="toggle2">filter_onlyAvail</a></td>
 				<td>String</td>
-				<td>'filter-onlyAvail'</td>
+				<td>&quot;filter-onlyAvail&quot;</td>
 				<td>
 					Filter widget: If a header contains a select dropdown and this class name, only the available (visible) options in the column will show (<span class="version">v2.10.1</span>).
 					<div class="collapsible">
@@ -2094,7 +2129,7 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="widget-filter-defaultattrib">
 				<td><a href="#" class="toggle2">filter_defaultAttrib</a></td>
 				<td>String</td>
-				<td>'data-value'</td>
+				<td>&quot;data-value&quot;</td>
 				<td>
 					Filter widget: This option contains the name of the data-attribute which contains the default (starting) filter value (<span class="version">v2.10.8</span>).
 					<div class="collapsible">

@@ -332,6 +332,7 @@ ts.addWidget({
 	id: "filter",
 	priority: 50,
 	options : {
+		filter_anyMatch      : false, // if true overrides default find rows behaviours and if any column matches query it returns that row
 		filter_childRows     : false, // if true, filter includes child row content in the search
 		filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 		filter_cssFilter     : '',    // css class name added to the filter row & each input in the row (tablesorter-filter is ALWAYS added)
@@ -689,7 +690,8 @@ ts.filter = {
 		}
 	},
 	bindSearch: function(table, $el) {
-		var wo = table.config.widgetOptions;
+		table = $(table)[0];
+		var external, wo = table.config.widgetOptions;
 		$el.bind('keyup search', function(event, filter) {
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {
@@ -700,7 +702,9 @@ ts.filter = {
 				( event.which >= 37 && event.which <= 40 ) || (event.which !== 13 && wo.filter_liveSearch === false) ) ) ) {
 					return;
 			}
-			ts.filter.searching(table, filter);
+			// external searches won't have a filter parameter, so grab the value
+			external = $(this).hasClass('tablesorter-filter') ? filter : [ $(this).val() ];
+			ts.filter.searching(table, filter, external);
 		});
 	},
 	checkFilters: function(table, filter) {
@@ -777,6 +781,8 @@ ts.filter = {
 			wo = c.widgetOptions,
 			columns = c.columns,
 			$tbodies = c.$tbodies,
+			// anyMatch really screws up with these types of filters
+			anyMatchNotAllowedTypes = [ 'range',  'operators' ],
 			// parse columns after formatter, in case the class is added at that point
 			parsed = c.$headers.map(function(columnIndex) {
 				return (ts.getData) ? 
@@ -817,7 +823,7 @@ ts.filter = {
 					$cells = $rows.eq(rowIndex).children('td');
 					for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 						// ignore if filter is empty or disabled
-						if (filters[columnIndex]) {
+						if (filters[columnIndex] || wo.filter_anyMatch) {
 							cached = c.cache[tbodyIndex].normalized[rowIndex][columnIndex];
 							// check if column data should be from the cell or from parsed data
 							if (wo.filter_useParsedData || parsed[columnIndex]) {
@@ -825,9 +831,15 @@ ts.filter = {
 							} else {
 							// using older or original tablesorter
 								exact = $.trim($cells.eq(columnIndex).text());
+								exact = c.sortLocaleCompare ? ts.replaceAccents(exact) : exact; // issue #405
 							}
 							iExact = !ts.filter.regex.type.test(typeof exact) && wo.filter_ignoreCase ? exact.toLocaleLowerCase() : exact;
 							result = showRow; // if showRow is true, show that row
+
+							if (typeof filters[columnIndex] === "undefined" || filters[columnIndex] === null) {
+								filters[columnIndex] = wo.filter_anyMatch ? combinedFilters : filters[columnIndex];
+							}
+
 							// replace accents - see #357
 							filters[columnIndex] = c.sortLocaleCompare ? ts.replaceAccents(filters[columnIndex]) : filters[columnIndex];
 							// val = case insensitive, filters[columnIndex] = case sensitive
@@ -848,11 +860,13 @@ ts.filter = {
 								filterMatched = null;
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
-								$.each(ts.filter.types, function(indx, type) {
-									matches = type( filters[columnIndex], iFilter, exact, iExact, cached, columnIndex, table, wo, parsed );
-									if (matches !== null) {
-										filterMatched = matches;
-										return false;
+								$.each(ts.filter.types, function(type, typeFunction) {
+									if (!wo.filter_anyMatch || (wo.filter_anyMatch && anyMatchNotAllowedTypes.indexOf(type) < 0)) {
+										matches = typeFunction( filters[columnIndex], iFilter, exact, iExact, cached, columnIndex, table, wo, parsed );
+										if (matches !== null) {
+											filterMatched = matches;
+											return false;
+										}
 									}
 								});
 								if (filterMatched !== null) {
@@ -863,7 +877,14 @@ ts.filter = {
 									result = ( (!wo.filter_startsWith && exact >= 0) || (wo.filter_startsWith && exact === 0) );
 								}
 							}
-							showRow = (result) ? showRow : false;
+							if (wo.filter_anyMatch) {
+								showRow = result;
+								if (showRow){
+									break;
+								}
+							} else {
+								showRow = (result) ? showRow : false;
+							}
 						}
 					}
 					$rows[rowIndex].style.display = (showRow ? '' : 'none');
@@ -951,13 +972,13 @@ ts.filter = {
 			}
 		}
 	},
-	searching: function(table, filter) {
-		if (typeof filter === 'undefined' || filter === true) {
+	searching: function(table, filter, external) {
+		if (typeof filter === 'undefined' || filter === true || external) {
 			var wo = table.config.widgetOptions;
 			// delay filtering
 			clearTimeout(wo.searchTimer);
 			wo.searchTimer = setTimeout(function() {
-				ts.filter.checkFilters(table, filter);
+				ts.filter.checkFilters(table, external || filter);
 			}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
 		} else {
 			// skip delay
