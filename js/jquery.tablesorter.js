@@ -335,7 +335,7 @@
 				var config = table.config,
 				bodies = table.tBodies,
 				rows = [],
-				wo = c.widgetOptions,
+				wo = config.widgetOptions,
 				bodyCaches = config.cache;
 				if (isEmptyObject(bodyCaches)) { return; } // empty table - fixes #206
 				if (config.debug) {
@@ -350,7 +350,7 @@
 						var originalRow = rowData.original;
 						rows.push(originalRow);
 						// removeRows used by the pager plugin; don't render if using ajax - fixes #411used by the pager plugin
-						if (!c.appender || (c.pager && (!c.pager.removeRows || !wo.pager_removeRows) && !c.pager.ajax)) {eRows) {
+						if (!config.appender || (config.pager && (!config.pager.removeRows || !wo.pager_removeRows) && !config.pager.ajax)) {
 							processedBody.append(originalRow[0]);
 						}
 						appendNodesToTable(rowData.cache)
@@ -376,7 +376,7 @@
 					benchmark("Rebuilt table", appendTime);
 				}
 				// apply table widgets; but not before ajax completes
-				if (!init && !c.appender) { ts.applyWidget(table); }
+				if (!init && !config.appender) { ts.applyWidget(table); }
 				// trigger sortend
 				$(table).trigger("sortEnd", table);
 				$(table).trigger("updateComplete", table);
