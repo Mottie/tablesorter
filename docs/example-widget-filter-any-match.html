@@ -75,7 +75,7 @@
 					</li>
 					<li>Range query - A search for any number range (<code>1 - 10</code>) is not allowed because, if any columns contain text, then no rows will result. The examples are the same as the search operators examples above.</li>
 					<li>Not Match query - A search for not matches (<code>!a</code>) is not allowed because tables that contain both numbers and text (in separate columns) will always show all rows. For example:
-						<pre class="prettyprint lang-javascript">&quot;Frank&quot;.search(&quot;a&quot;))    //  2 (a match, so this row "may" be hidden)
+						<pre class="prettyprint lang-javascript">&quot;Frank&quot;.search(&quot;a&quot;)    //  2 (a match, so this row "may" be hidden)
 &quot;Fred&quot;.search(&quot;a&quot;)      // -1 (a not match! so this row will always show)
 &quot;25&quot;.search(&quot;a&quot;)        // -1 (a not match! so this row will always show)
 &quot;1/1/2014&quot;.search(&quot;a&quot;)  // -1 (a not match! so this row will always show)</pre>
