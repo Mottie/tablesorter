@@ -41,6 +41,7 @@
 
 				// *** functionality
 				cancelSelection  : true,       // prevent text selection in the header
+				tabIndex         : true,       // add tabindex to header for keyboard accessibility
 				dateFormat       : 'mmddyyyy', // other options: "ddmmyyy" or "yyyymmdd"
 				sortMultiSortKey : 'shiftKey', // key used to select additional columns
 				sortResetKey     : 'ctrlKey',  // key used to remove sorting on a column
@@ -443,7 +444,7 @@
 					// add to parent in case there are multiple rows
 					$t.parent().addClass(ts.css.headerRow + ' ' + c.cssHeaderRow);
 					// allow keyboard cursor to focus on element
-					$t.attr("tabindex", 0);
+					if (c.tabIndex) { $t.attr("tabindex", 0); }
 				});
 				// enable/disable sorting
 				updateHeader(table);
