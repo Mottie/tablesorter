@@ -2974,6 +2974,52 @@ $.extend($.tablesorter.themes.jui, {
 
 		</tbody>
 
+		<!-- non-sorting tbody -->
+		<tbody id="pager-removed" class="tablesorter-infoOnly">
+			<tr><th colspan="5">Removed Options</th></tr>
+		</tbody>
+
+		<tbody>
+			<tr id="pager-offset">
+				<td><a href="#" class="permalink removed">offset</a></td>
+				<td>Numeric</td>
+				<td>0</td>
+				<td>
+					This pager plugin option has been <span class="alert">removed</span>!
+					<div class="collapsible">
+					<br>
+					The original tablesorter pager plugin absolutely positioned the pager controls at the bottom of the table. It appears that this option was intended to tweak the position of the pager container. The option exists, but no code was found.</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="pager-positionfixed">
+				<td><a href="#" class="permalink removed">positionFixed</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					This pager plugin option has been <span class="alert">removed</span>!
+					<div class="collapsible">
+					<br>
+					If this option were true, the original tablesorter pager plugin would absolutely position the pager controls at the bottom of the table.</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="pager-seperator">
+				<td><a href="#" class="permalink removed">seperator</a></td>
+				<td>String</td>
+				<td>&quot;/&quot;</td>
+				<td>
+					This pager plugin option has been <span class="alert">removed</span>! Use the <a href="#pager-output">output</a> option to allow for more control over the formatting.
+					<div class="collapsible">
+					<br>
+					The original tablesorter pager plugin would combine the current page with the calculated total number of pages within the <a href="#pager-csspagedisplay">cssPageDisplay</a> with this separator string inbetween.</div>
+				</td>
+				<td></td>
+			</tr>
+		</tbody>
+
 	</table>
 
 	<a id="methods"></a>
@@ -3774,7 +3820,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 	</ul>
 
 	<strong id="Download-Themes">Themes:</strong>
-	<p>Theme zip files have been removed. There are now numerous themes available which <a href="themes.html">can be seen here</a></p>
+	<p>Theme zip files have been removed. There are now numerous themes available which <a href="themes.html">can be seen here</a>.</p>
 
 	<a id="Compatibility"></a>
 	<h1>Browser Compatibility</h1>
