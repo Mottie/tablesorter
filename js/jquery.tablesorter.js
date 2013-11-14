@@ -1517,7 +1517,7 @@
 				l = $tb.children('tr').length;
 				if (l > 1) {
 					row = 0;
-					$tv = $tb.children('tr:visible');
+					$tv = $tb.children('tr:visible').not(c.selectorRemove);
 					// revered back to using jQuery each - strangely it's the fastest method
 					/*jshint loopfunc:true */
 					$tv.each(function(){
