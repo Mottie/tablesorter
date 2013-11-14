@@ -1,5 +1,5 @@
 $(function(){
-	var $t, t, v, animate,
+	var $t, t, v, animate, clicked,
 
 	cleanupCode = function(code){
 		return code.replace(/[<>\"\'\t\n]/g, function(m) { return {
@@ -42,22 +42,26 @@ $(function(){
 	});
 
 	animating = false;
-
+	clicked = false;
 	$('.collapsible').hide();
-	$('.toggle2')
-		.click(function(e){
-			if (!animating) {
+
+	$('a.permalink').click(function(e){
+		var $el = $(this);
+		setTimeout(function(){
+			if (!animating && !clicked) {
 				animating = true;
-				$(this).closest('tr').find('.collapsible').slideToggle();
+				$el.closest('tr').find('.collapsible').slideToggle();
 				setTimeout(function(){ animating = false; }, 200);
 			}
-			return false;
-		});
-	$('.toggle2, span.permalink')
-		.dblclick(function(){
-			window.location.hash = '#' + $(this).closest('tr')[0].id;
-			return false;
-		});
+		}, 200);
+		return false;
+	});
+	$('.permalink').dblclick(function(){
+		clicked = true;
+		window.location.hash = '#' + $(this).closest('tr')[0].id;
+		setTimeout(function(){ clicked = false; }, 500);
+		return false;
+	});
 
 	$('.toggleAll, .showAll, .hideAll').click(function(){
 		t = $.trim($(this).text());
