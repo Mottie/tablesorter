@@ -708,7 +708,15 @@ ts.filter = {
 					return;
 			}
 			// external searches won't have a filter parameter, so grab the value
-			external = $(this).hasClass('tablesorter-filter') ? filter : [ $(this).val() ];
+			if ($(this).hasClass('tablesorter-filter')) {
+				external = filter;
+			} else {
+				external = [];
+				$el.each(function(){
+					// target the appropriate column if the external input has a data-column attribute
+					external[ $(this).data('column') || 0 ] = $(this).val();
+				});
+			}
 			ts.filter.searching(table, filter, external);
 		});
 	},
