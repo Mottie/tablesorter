@@ -48,7 +48,7 @@ a { text-decoration: none; }
 .page-search { padding: 10px; }
 .search-prev, .search-next, .search-clear { font-size: 11px; padding: 6px 3px; }
 .input-group-btn { width: auto; }
-.input-group .search.form-control { width: 150px; }
+.input-group .search.form-control { width: 100%; }
 .status { float: right; font-size: 10px; margin: 9px 0 0 4px; }
 
 .highlight { background: yellow; color: black; -webkit-border-radius: 4px; border-radius: 4px; padding: 0 5px; cursor: pointer; }

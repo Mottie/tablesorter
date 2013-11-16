@@ -47,7 +47,7 @@ ul {list-style:square;}
 a.external {background-image:url(../img/external.png);background-position:center right;background-repeat:no-repeat;padding-right:12px;}
 form {font-size:10pt;margin-bottom:20px;width:auto;}
 form fieldset {padding:10px;text-align:left;width:140px;}
-div#main h1 {border-bottom:1px solid #CDCDCD;display:block;margin-top:20px;padding:10px 0 2px;}
+div#main h1 {border-bottom:1px solid #cdcdcd;display:block;padding:4px 0 2px;}
 table#tablesorter-demo {margin: 10px 0 0 0;}
 table, p.small {font-size:small;}
 p.small {padding-left: 25px;}
