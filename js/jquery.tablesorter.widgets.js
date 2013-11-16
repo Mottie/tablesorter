@@ -69,13 +69,15 @@ ts.themes = {
    alert(val); // "data1" if saved, or "" if not
 */
 ts.storage = function(table, key, value, options) {
+	table = $(table)[0];
 	var cookieIndex, cookies, date,
 		hasLocalStorage = false,
 		values = {},
 		c = table.config,
-		id = options && options.id || $(table).attr(options && options.group ||
-			'data-table-group') || table.id || $('.tablesorter').index( $(table) ),
-		url = options && options.url || $(table).attr(options && options.page ||
+		$table = $(table),
+		id = options && options.id || $table.attr(options && options.group ||
+			'data-table-group') || table.id || $('.tablesorter').index( $table ),
+		url = options && options.url || $table.attr(options && options.page ||
 			'data-table-page') || c && c.fixedUrl || window.location.pathname;
 	// https://gist.github.com/paulirish/5558557
 	if ("localStorage" in window) {
