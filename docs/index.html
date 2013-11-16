@@ -8,10 +8,13 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
 <!-- Demo stuff -->
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/jq.css">
+<link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
 <script src="js/prettify.js"></script>
 <script src="js/docs.js"></script>
+<script src="js/search.js"></script>
 
 <!-- Tablesorter: required -->
 <link href="../css/theme.blue.css" rel="stylesheet">
@@ -27,19 +30,61 @@
 </script>
 </head>
 <body id="root">
-<div id="banner">
-	<h1>table<em>sorter</em></h1>
-	<h2>Documentation</h2>
-	<h3>Flexible client-side table sorting</h3>
+
+<input type="checkbox" class="main-nav-check" id="main-nav-check" />
+<div class="main-nav" id="main-nav">
+	<div class="page-search">
+		<h2 class="title">table<em>sorter</em></h2>
+		<div class="status"></div>
+		<div class="input-group">
+			<input type="search" placeholder="Find on page..." size="25" maxlength="25" class="search form-control input-sm">
+			<div class="input-group-btn">
+				<button type="button" class="search-prev btn btn-default">
+					<span class="glyphicon glyphicon-chevron-up"></span>
+				</button>
+				<button type="button" class="search-next btn btn-default">
+					<span class="glyphicon glyphicon-chevron-down"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<a href="#Introduction">Introduction</a>
+	<a href="#Demo">Demo</a>
+	<a href="#Getting-Started">Getting started</a>
+	<a href="#Examples">Examples</a>
+	<a href="#Configuration">Configuration</a>
+	<a href="#Widget-options">Widget &amp; Pager Options</a>
+	<a href="#methods">Methods</a>
+	<a href="#events">Events</a>
+	<a href="#Download">Download</a>
+	<a href="#Compatibility">Compatibility</a>
+	<a href="#Support">Support</a>
+	<a href="#Credits">Credits</a>
 </div>
 
 <div id="main">
+
+	<label for="main-nav-check" class="toggle-menu main-header">
+		&#9776;
+	</label>
+
+	<div id="banner">
+		<h1>table<em>sorter</em></h1>
+		<h2>Documentation</h2>
+		<h3>Flexible client-side table sorting</h3>
+	</div>
+
 	<p>
 		<strong>Author:</strong> Christian Bach<br>
-		<strong>Version:</strong> <a class="current-version" href="https://github.com/Mottie/tablesorter/archive/master.zip">2.1+</a> (<a href="https://github.com/Mottie/tablesorter">forked on github</a> from <a href="http://tablesorter.com/docs/">version 2.0.5</a>, <a href="https://github.com/Mottie/tablesorter/wiki/Change">changelog</a>)<br>
+		<strong>Maintainer:</strong> Rob Garrison (Mottie)<br>
+		<strong>Version:</strong> <a class="current-version" href="https://github.com/Mottie/tablesorter/archive/master.zip">2.1+</a> (<a href="https://github.com/Mottie/tablesorter/wiki/Change">changelog</a>)&nbsp;
+		<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=mottie&amp;repo=tablesorter&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+		<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=mottie&amp;repo=tablesorter&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+		<br>
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
-		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
+		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.<br>
 	</p>
 
 	<a id="Contents"></a>
@@ -161,9 +206,8 @@
 	</table>
 
 	<p class="tip">
-		<em>TIP!</em> Sort multiple columns simultaneously by holding down the <kbd>Shift</kbd> key and clicking a second, third or even fourth column header!
+		<span class="label label-primary">TIP!</span>  Sort multiple columns simultaneously by holding down the <kbd>Shift</kbd> key and clicking a second, third or even fourth column header!
 	</p>
-
 
 	<a id="Getting-Started"></a>
 	<h1>Getting started</h1>
@@ -244,7 +288,7 @@
 });</pre>
 
 	<p class="tip">
-		<em>NOTE!</em> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
+		<span class="label label-primary">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
 	</p>
 
 	<a id="Examples"></a>
@@ -385,12 +429,12 @@
 		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a></li>
 		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a></li>
 		<li><a href="http://codepen.io/Mottie/pen/eqBbn">tableSorter LESS theme; modify the colors dynamically in this LESS theme demo!</a></li>
-		<li class="beta"> pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
-		<li class="beta"> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
-		<li class="beta"> <a href="../beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
-		<li class="beta"> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
-		<li class="beta"> <a href="../beta-testing/example-widget-sum-columns.html">Column sum widget</a> - still needs LOTS of work!</li>
-		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="tip"><em>more demos</em></span>!</li>
+		<li><span class="label label-default">Beta</span> pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
+		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
+		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
+		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
+		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-widget-sum-columns.html">Column sum widget</a> - still needs LOTS of work!</li>
+		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="label label-success"><em>more demos</em></span>!</li>
 	</ul>
 
 	<h4 id="metadata">Metadata - setting inline options</h4>
@@ -409,7 +453,7 @@
 	<div class="tip">
 		<p></p>
 		tablesorter has many options you can pass in at initialization to achieve different effects<br>
-		<em>TIP!</em> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-primary">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="options" class="tablesorter options">
@@ -611,7 +655,7 @@
 					As an example, I've split up this options table into three (3) tbodies. The first contains the active options, the second is the info block with a row that only contains the text "Deprecated Options", and the last tbody contains the deprecated options. Sort the table to see how each tbody sorts separately.
 					<br>
 					<p class="tip">
-						<em>NOTE!</em> The pager plugin will only be applied to the first tbody, as always. I may work on modifying this behavior in the future, if I can figure out the best implementation.
+						<span class="label label-primary">NOTE!</span> The pager plugin will only be applied to the first tbody, as always. I may work on modifying this behavior in the future, if I can figure out the best implementation.
 					</p>
 					</div>
 				</td>
@@ -1070,7 +1114,7 @@ From the example function above, you'll end up with something similar to this HT
 });</pre></li>
 					</ul>
 					<p class="tip">
-						<em>NOTE:</em> See the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki page for language specific examples and how to extend the character equivalent tables seen in the <a href="example-locale-sort.html">sortLocaleCompare demo</a>.
+						<span class="label label-primary">NOTE!</span> See the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki page for language specific examples and how to extend the character equivalent tables seen in the <a href="example-locale-sort.html">sortLocaleCompare demo</a>.
 					</p>
 					<del>Boolean flag indicating whenever to use javascript <code>String.localeCompare</code> method or not.<br>
 				This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.</del>
@@ -1246,7 +1290,7 @@ $(function(){
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="alert">*NOTE*</span> The parameters have changed!!.
+					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
 					<div class="collapsible">
 					<br>
 					Include a script like <a href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
@@ -1494,11 +1538,11 @@ $(function(){
 
 		<tbody>
 			<tr id="widgetcolumns">
-				<td><a href="#" class="permalink deprecated">widgetColumns</a></td>
+				<td><a href="#" class="permalink alert">widgetColumns</a></td>
 				<td>Object with Array</td>
 				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
 				<td>
-					This option is being <span class="deprecated">deprecated</span>!
+					This option is being <span class="label label-danger">deprecated</span>!
 					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
@@ -1515,11 +1559,11 @@ $(function(){
 			</tr>
 
 			<tr id="widgetuitheme">
-				<td><a href="#" class="permalink deprecated">widgetUitheme</a></td>
+				<td><a href="#" class="permalink alert">widgetUitheme</a></td>
 				<td>Object with Array</td>
 				<td>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</td>
 				<td>
-					This option is being <span class="deprecated">deprecated</span>!
+					This option is being <span class="label label-danger">deprecated</span>!
 					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
@@ -1544,11 +1588,11 @@ $(function(){
 			</tr>
 
 			<tr id="widgetzebra">
-				<td><a href="#" class="permalink deprecated">widgetZebra</a></td>
+				<td><a href="#" class="permalink alert">widgetZebra</a></td>
 				<td>Object with Array</td>
 				<td>{ css: [ &quot;even&quot;, &quot;odd&quot; ] }</td>
 				<td>
-					This option is being <span class="deprecated">deprecated</span>!
+					This option is being <span class="label label-danger">deprecated</span>!
 					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible">
 					<br>
@@ -1597,7 +1641,7 @@ $(function(){
 		</ul>
 
 		<br class="clear">
-		<em>TIP!</em> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-primary">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="widget-options" class="tablesorter options">
@@ -2015,7 +2059,7 @@ $(function(){
 					<br>
 					This option is useful after one or more columns have been filtered, then the column select filter with this class applied will only show the contents of the column within the dropdown that are currently visible. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example (sort the &quot;First Name&quot; column first).<br>
 					<br>
-					<span class="alert">Caution:</span> The main issue with this functionality is with keyboard accessibility. If the keyboard is used to select an option, only the first and default options will be available for chosing. The only way to select other options is with the mouse.
+					<span class="label label-warning">Caution:</span> The main issue with this functionality is with keyboard accessibility. If the keyboard is used to select an option, only the first and default options will be available for chosing. The only way to select other options is with the mouse.
 					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
@@ -2981,11 +3025,11 @@ $.extend($.tablesorter.themes.jui, {
 
 		<tbody>
 			<tr id="pager-offset">
-				<td><a href="#" class="permalink removed">offset</a></td>
+				<td><a href="#" class="permalink alert">offset</a></td>
 				<td>Numeric</td>
 				<td>0</td>
 				<td>
-					This pager plugin option has been <span class="alert">removed</span>!
+					This pager plugin option has been <span class="label label-danger">removed</span>!
 					<div class="collapsible">
 					<br>
 					The original tablesorter pager plugin absolutely positioned the pager controls at the bottom of the table. It appears that this option was intended to tweak the position of the pager container. The option exists, but no code was found.</div>
@@ -2994,11 +3038,11 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 			<tr id="pager-positionfixed">
-				<td><a href="#" class="permalink removed">positionFixed</a></td>
+				<td><a href="#" class="permalink alert">positionFixed</a></td>
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					This pager plugin option has been <span class="alert">removed</span>!
+					This pager plugin option has been <span class="label label-danger">removed</span>!
 					<div class="collapsible">
 					<br>
 					If this option were true, the original tablesorter pager plugin would absolutely position the pager controls at the bottom of the table.</div>
@@ -3007,11 +3051,11 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 			<tr id="pager-seperator">
-				<td><a href="#" class="permalink removed">seperator</a></td>
+				<td><a href="#" class="permalink alert">seperator</a></td>
 				<td>String</td>
 				<td>&quot;/&quot;</td>
 				<td>
-					This pager plugin option has been <span class="alert">removed</span>! Use the <a href="#pager-output">output</a> option to allow for more control over the formatting.
+					This pager plugin option has been <span class="label label-danger">removed</span>! Use the <a href="#pager-output">output</a> option to allow for more control over the formatting.
 					<div class="collapsible">
 					<br>
 					The original tablesorter pager plugin would combine the current page with the calculated total number of pages within the <a href="#pager-csspagedisplay">cssPageDisplay</a> with this separator string inbetween.</div>
@@ -3029,7 +3073,7 @@ $.extend($.tablesorter.themes.jui, {
 		<p></p>
 		tablesorter has some methods available to allow updating, resorting or applying widgets to a table after it has been initialized.
 		<br>
-		<em>TIP!</em> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-primary">TIP!</span> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="method" class="tablesorter">
@@ -3470,7 +3514,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 		<p></p>
 		tablesorter has some methods available to allow updating, resorting or applying widgets to a table after it has been initialized.
 		<br>
-		<em>TIP!</em> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-primary">TIP!</span> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="event" class="tablesorter">
@@ -3801,7 +3845,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 	<a id="Download"></a>
 	<h1>Download</h1>
 
-	<p><strong>Full release</strong> - Plugin, Documentation, Add-ons, Themes. Download: <a class="download zip" href="https://github.com/Mottie/tablesorter/archive/master.zip">zip</a> or <a class="download tar" href="https://github.com/Mottie/tablesorter/archive/master.tar.gz">tar.gz</a></p>
+	<p><strong>Full release</strong> - Plugin, Documentation, Add-ons, Themes. Download: <a class="btn btn-primary" href="https://github.com/Mottie/tablesorter/archive/master.zip">zip</a> or <a class="btn btn-primary" href="https://github.com/Mottie/tablesorter/archive/master.tar.gz">tar.gz</a></p>
 
 	<p><strong>Pick n choose</strong> - Place at least the required files in a directory on your webserver that is accessible to a web browser.  Record this location.</p>
 
