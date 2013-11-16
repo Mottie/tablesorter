@@ -577,7 +577,7 @@ ts.filter = {
 					$header = c.$headers.filter('[data-column="' + column + '"]:last');
 					options = '';
 					if (wo.filter_functions[column] === true && !$header.hasClass('filter-false')) {
-						ts.filter.buildSelect(column);
+						ts.filter.buildSelect(table, column);
 					} else if (typeof column === 'string' && !$header.hasClass('filter-false')) {
 						// add custom drop down list
 						for (string in wo.filter_functions[column]) {
