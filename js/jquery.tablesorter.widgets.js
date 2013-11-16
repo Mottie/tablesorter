@@ -348,6 +348,7 @@ ts.addWidget({
 		filter_liveSearch    : true,  // if true, search column content while the user types (with a delay)
 		filter_onlyAvail     : 'filter-onlyAvail', // a header with a select dropdown & this class name will only show available (visible) options within the drop down
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
+		filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
@@ -624,18 +625,26 @@ ts.filter = {
 			if (filters.length) {
 				ts.setFilters(table, filters, true);
 			}
+			ts.filter.checkFilters(table, filters);
 		});
 		// filter widget initialized
 		wo.filter_Initialized = true;
 		c.$table.trigger('filterInit');
-		ts.filter.checkFilters(table);
 	},
 	setDefaults: function(table, c, wo) {
 		var indx,
 			filters = [],
 			columns = c.columns;
-		for (indx = 0; indx < columns; indx++) {
-			filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+		if (wo.filter_saveFilters && ts.storage) {
+			filters = ts.storage( table, 'tablesorter-filters' ) || [];
+			// make sure we're not just saving an empty array
+			if (filters.join('') === '') { filters = []; }
+		}
+		// if not filters saved, then check default settings
+		if (!filters.length) {
+			for (indx = 0; indx < columns; indx++) {
+				filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+			}
 		}
 		$(table).data('lastSearch', filters);
 		return filters;
@@ -915,6 +924,9 @@ ts.filter = {
 		c.lastCombinedFilter = combinedFilters; // save last search
 		c.lastSearch = filters;
 		c.$table.data('lastSearch', filters);
+		if (wo.filter_saveFilters && ts.storage) {
+			ts.storage( table, 'tablesorter-filters', filters );
+		}
 		if (c.debug) {
 			ts.benchmark("Completed filter widget search", time);
 		}
