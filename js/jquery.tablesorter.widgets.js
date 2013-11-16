@@ -708,7 +708,7 @@ ts.filter = {
 	bindSearch: function(table, $el) {
 		table = $(table)[0];
 		var external, wo = table.config.widgetOptions;
-		$el.bind('keyup search', function(event, filter) {
+		$el.unbind('keyup search').bind('keyup search', function(event, filter) {
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {
 				this.value = '';
