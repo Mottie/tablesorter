@@ -52,8 +52,9 @@ table#tablesorter-demo {margin: 10px 0 0 0;}
 table, p.small {font-size:small;}
 p.small {padding-left: 25px;}
 p.tip em, div.tip em {padding: 2px; background-color: #6cf; color: #fff;}
-span.tip em {padding: 0 2px;background-color: #00ce53; color: #fff; font-size:90%; }
-span.tip.old em { background-color: #cfd; color: #000; }
+.label { padding: .2em .6em .3em; font-size: 75%; color: #fff; border-radius: .25em; }
+span.tip em, .label-success { background-color: #5cb85c; }
+span.tip.old em, .label-default { background-color: #999; }
 span.warn em { background-color: #ce5300; }
 tr td.lookhere, span.lookhere { background-color: rgba(230,191,153,0.5); }
 .ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }

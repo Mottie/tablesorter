@@ -39,6 +39,9 @@
 		<div class="input-group">
 			<input type="search" placeholder="Find on page..." size="25" maxlength="25" class="search form-control input-sm">
 			<div class="input-group-btn">
+				<button type="button" class="search-clear btn btn-default">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
 				<button type="button" class="search-prev btn btn-default">
 					<span class="glyphicon glyphicon-chevron-up"></span>
 				</button>
@@ -65,7 +68,7 @@
 
 <div id="main">
 
-	<label for="main-nav-check" class="toggle-menu main-header">
+	<label for="main-nav-check" class="toggle-menu main-header" onclick="">
 		&#9776;
 	</label>
 
@@ -206,7 +209,7 @@
 	</table>
 
 	<p class="tip">
-		<span class="label label-primary">TIP!</span>  Sort multiple columns simultaneously by holding down the <kbd>Shift</kbd> key and clicking a second, third or even fourth column header!
+		<span class="label label-info">TIP!</span>  Sort multiple columns simultaneously by holding down the <kbd>Shift</kbd> key and clicking a second, third or even fourth column header!
 	</p>
 
 	<a id="Getting-Started"></a>
@@ -288,7 +291,7 @@
 });</pre>
 
 	<p class="tip">
-		<span class="label label-primary">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
+		<span class="label label-info">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
 	</p>
 
 	<a id="Examples"></a>
@@ -343,7 +346,7 @@
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.13.2</span>).</li>
 		<li>Filter Widget:
 			<ul>
-				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.13.3</span>)</li>
+				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.14</span>)</li>
 				<li><a href="example-widget-filter-any-match.html">any-match</a> (<span class="version">v2.13.3</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
 				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a>) (v2.7.7).</li>
@@ -429,12 +432,12 @@
 		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a></li>
 		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a></li>
 		<li><a href="http://codepen.io/Mottie/pen/eqBbn">tableSorter LESS theme; modify the colors dynamically in this LESS theme demo!</a></li>
-		<li><span class="label label-default">Beta</span> pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
-		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
-		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
-		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
-		<li><span class="label label-default">Beta</span> <a href="../beta-testing/example-widget-sum-columns.html">Column sum widget</a> - still needs LOTS of work!</li>
-		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="label label-success"><em>more demos</em></span>!</li>
+		<li><span class="label label-info">Beta</span> pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>).</li>
+		<li><span class="label label-info">Beta</span> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a></li>
+		<li><span class="label label-info">Beta</span> <a href="../beta-testing/example-external-filters-using-select2.html">External filters using Select2 plugin</a></li>
+		<li><span class="label label-info">Beta</span> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers</li>
+		<li><span class="label label-info">Beta</span> <a href="../beta-testing/example-widget-sum-columns.html">Column sum widget</a> - still needs LOTS of work!</li>
+		<li>Check out the <a href="https://github.com/Mottie/tablesorter/wiki">home wiki page</a> <span class="label label-info">more demos</span>!</li>
 	</ul>
 
 	<h4 id="metadata">Metadata - setting inline options</h4>
@@ -453,7 +456,7 @@
 	<div class="tip">
 		<p></p>
 		tablesorter has many options you can pass in at initialization to achieve different effects<br>
-		<span class="label label-primary">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-info">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="options" class="tablesorter options">
@@ -655,7 +658,7 @@
 					As an example, I've split up this options table into three (3) tbodies. The first contains the active options, the second is the info block with a row that only contains the text "Deprecated Options", and the last tbody contains the deprecated options. Sort the table to see how each tbody sorts separately.
 					<br>
 					<p class="tip">
-						<span class="label label-primary">NOTE!</span> The pager plugin will only be applied to the first tbody, as always. I may work on modifying this behavior in the future, if I can figure out the best implementation.
+						<span class="label label-info">NOTE!</span> The pager plugin will only be applied to the first tbody, as always. I may work on modifying this behavior in the future, if I can figure out the best implementation.
 					</p>
 					</div>
 				</td>
@@ -1114,7 +1117,7 @@ From the example function above, you'll end up with something similar to this HT
 });</pre></li>
 					</ul>
 					<p class="tip">
-						<span class="label label-primary">NOTE!</span> See the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki page for language specific examples and how to extend the character equivalent tables seen in the <a href="example-locale-sort.html">sortLocaleCompare demo</a>.
+						<span class="label label-info">NOTE!</span> See the <a href="https://github.com/Mottie/tablesorter/wiki/Language">Language</a> wiki page for language specific examples and how to extend the character equivalent tables seen in the <a href="example-locale-sort.html">sortLocaleCompare demo</a>.
 					</p>
 					<del>Boolean flag indicating whenever to use javascript <code>String.localeCompare</code> method or not.<br>
 				This is only used when comparing text with international character strings. A sort using localeCompare will sort accented characters the same as their unaccented counterparts.</del>
@@ -1643,7 +1646,7 @@ $(function(){
 		</ul>
 
 		<br class="clear">
-		<span class="label label-primary">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-info">TIP!</span> Click on the link in the property column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="widget-options" class="tablesorter options">
@@ -3092,7 +3095,7 @@ $.extend($.tablesorter.themes.jui, {
 		<p></p>
 		tablesorter has some methods available to allow updating, resorting or applying widgets to a table after it has been initialized.
 		<br>
-		<span class="label label-primary">TIP!</span> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-info">TIP!</span> Click on the link in the method column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="method" class="tablesorter">
@@ -3533,7 +3536,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 		<p></p>
 		tablesorter has some methods available to allow updating, resorting or applying widgets to a table after it has been initialized.
 		<br>
-		<span class="label label-primary">TIP!</span> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+		<span class="label label-info">TIP!</span> Click on the link in the event column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 	</div>
 
 	<table id="event" class="tablesorter">

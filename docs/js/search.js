@@ -25,12 +25,15 @@ jQuery(function($){
 		$window = $(window),
 		$main = $('#main'),
 		$body = $('body'),
+		$search = $('.search'),
 		$status = $('.status'),
 		updateStatus = function(){
 			$status.empty();
 			if (resultsLength) {
 				$results.removeClass('selected').eq(index).addClass('selected');
-				$status.html( (index + 1) + ' of ' + resultsLength );
+			}
+			if ($search.val() !== '') {
+				$status.html( (resultsLength === 0 ? 0 : index + 1) + ' of ' + resultsLength );
 			}
 		},
 		jumpTo = function(){
@@ -55,14 +58,14 @@ jQuery(function($){
 			searching = queryString.parse(search);
 			if (searching.q) {
 				$('#main-nav-check').prop('checked', true);
-				$('.search')
+				$search
 					.val( searching.q )
 					// make searching.index a zero-based index
 					.trigger('change', [ isNaN(searching.index) ? 0 : parseInt(searching.index, 10) - 1 ]);
 			}
 		};
 
-	$('.search').change(function(event, newIndex){
+	$search.change(function(event, newIndex){
 		index = newIndex || 0;
 		$main.unhighlight().highlight( $(this).val() );
 		$results = $('.highlight');
@@ -79,6 +82,9 @@ jQuery(function($){
 			if (index > resultsLength - 1) { index = 0; }
 			jumpTo();
 		}
+	});
+	$('.search-clear').click(function(){
+		$search.val('').change();
 	});
 	$main.on('click', '.highlight', function(){
 		index = $results.index(this);

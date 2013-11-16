@@ -85,7 +85,7 @@ $(function(){
 		t = [ parseInt(i[0], 10) || 1, parseInt(i[1], 10) || 0 ];
 		if (t[0] === v[0] && t[1] >= v[1] - 1 ) {
 			$t.prepend('<span class="label ' + ( t[0] === v[0] && t[1] < v[1] ? ' label-default' : ' label-success' ) +
-				'"><em>'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</em></span> ');
+				'">'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</span> ');
 		}
 	});
 
