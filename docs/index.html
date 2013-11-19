@@ -5,16 +5,19 @@
 <title>jQuery plugin: Tablesorter 2.0</title>
 
 <!-- jQuery -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
 
 <!-- Demo stuff -->
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
 <script src="js/prettify.js"></script>
 <script src="js/docs.js"></script>
 <script src="js/search.js"></script>
+<!--[if lte IE 8]>
+<script src="js/search-ie.js"></script>
+<![endif]-->
 
 <!-- Tablesorter: required -->
 <link href="../css/theme.blue.css" rel="stylesheet">
@@ -28,6 +31,7 @@
 		$("#method,#event").tablesorter({theme:'blue',sortList:[[0,0]],headers:{1:{sorter:false},2:{sorter:false}},widgets:['stickyHeaders'],widthFixed:true});
 	});
 </script>
+
 </head>
 <body id="root">
 
@@ -35,19 +39,35 @@
 <div class="main-nav" id="main-nav">
 	<div class="page-search">
 		<h2 class="title">table<em>sorter</em></h2>
-		<div class="status"></div>
-		<div class="input-group">
-			<input type="search" placeholder="Find on page..." size="25" maxlength="25" class="search form-control input-sm">
+		<div class="input-group search-group">
+			<div class="status" title="results"></div>
+			<input type="text" placeholder="Find on page..." size="25" maxlength="25" class="search form-control input-sm">
 			<div class="input-group-btn">
-				<button type="button" class="search-clear btn btn-default">
+				<button type="button" class="search-clear btn btn-default tooltip-top" title="Clear search">
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>
-				<button type="button" class="search-prev btn btn-default">
+				<button type="button" class="search-prev btn btn-default tooltip-top" title="Previous result">
 					<span class="glyphicon glyphicon-chevron-up"></span>
 				</button>
-				<button type="button" class="search-next btn btn-default">
+				<button type="button" class="search-next btn btn-default tooltip-top" title="Next search">
 					<span class="glyphicon glyphicon-chevron-down"></span>
 				</button>
+			</div>
+		</div>
+		<div class="search-options input-group-btn">
+			<div class="switch">
+				<input type="radio" class="switch-input" name="view" value="Word" id="word" checked="checked">
+				<label for="word" class="switch-label switch-label-off tooltip-edge-left" title="Search for whole word only">Word</label>
+				<input type="radio" class="switch-input" name="view" value="letter" id="letter">
+				<label for="letter" class="switch-label switch-label-on tooltip-bottom" title="Search for letters">Letter</label>
+				<span class="switch-selection btn-primary"></span>
+			</div>
+			<div class="switch">
+				<input type="radio" class="switch-input" name="view2" value="Ab" id="cstrue">
+				<label for="cstrue" class="switch-label switch-label-off tooltip-bottom" title="Case-Sensitive search">Ab</label>
+				<input type="radio" class="switch-input" name="view2" value="aa" id="csfalse" checked="checked">
+				<label for="csfalse" class="switch-label switch-label-on tooltip-edge-right" title="Case-Insensitive search">ab</label>
+				<span class="switch-selection btn-primary"></span>
 			</div>
 		</div>
 	</div>
@@ -69,7 +89,7 @@
 <div id="main">
 
 	<label for="main-nav-check" class="toggle-menu main-header" onclick="">
-		&#9776;
+		<span></span>
 	</label>
 
 	<div id="banner">
@@ -349,7 +369,7 @@
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.14</span>)</li>
 				<li><a href="example-widget-filter-any-match.html">any-match</a> (<span class="version">v2.13.3</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
-				<li><a href="example-widget-filter-external-inputs">external</a> (<span class="version">v2.14</span>)</li>
+				<li><a href="example-widget-filter-external-inputs.html">external</a> (<span class="version">v2.14</span>)</li>
 				<li>formatter (<a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a>) (v2.7.7).</li>
 			</ul>
 		</li>
