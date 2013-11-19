@@ -968,7 +968,7 @@ ts.filter = {
 		arry = $.grep(arry, function(value, indx) {
 			return $.inArray(value, arry) === indx;
 		});
-		arry = (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b); }) : arry.sort(true);
+		arry = (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b, column, tabl); }) : arry.sort(true);
 
 		// Get curent filter value
 		currentValue = c.$table.find('thead').find('select.tablesorter-filter[data-column="' + column + '"]').val();

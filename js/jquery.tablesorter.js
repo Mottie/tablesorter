@@ -55,6 +55,7 @@
 				sortForce        : null,       // column(s) first sorted; always applied
 				sortList         : [],         // Initial sort order; applied initially; updated when manually sorted
 				sortAppend       : null,       // column(s) sorted last; always applied
+				sortStable       : false,      // when sorting two rows with exactly the same content, the original sort order is maintained
 
 				sortInitialOrder : 'asc',      // sort direction on first click
 				sortLocaleCompare: false,      // replace equivalent character (accented characters)
@@ -665,14 +666,9 @@
 							// sort direction, true = asc, false = desc
 							dir = order === 0;
 
-							// set a & b depending on sort direction
-							x = dir ? a : b;
-							y = dir ? b : a;
-
-							// determine how to sort empty cells
-							e = c.string[ (c.empties[col] || c.emptyTo ) ];
-							if (x[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? -1 : 1) : (e || 1)) * (dir ? 1 : -1); }
-							if (y[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? 1 : -1) : (-e || -1)) * (dir ? 1 : -1); }
+							if (c.sortStable && a[col] === b[col] && l === 1) {
+								return a[orgOrderCol] - b[orgOrderCol];
+							}
 
 							// fallback to natural sort since it is more robust
 							num = /n/i.test(getCachedSortType(c.parsers, col));
@@ -685,8 +681,12 @@
 								}
 								// fall back to built-in numeric sort
 								// var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
-								sort = c.numberSorter ? c.numberSorter(x[col], y[col], dir, colMax[col], table) : ts.sortNumeric(x[col], y[col], num, colMax[col]);
+								sort = c.numberSorter ? c.numberSorter(x[col], y[col], dir, colMax[col], table) :
+									ts[ 'sortNumeric' + (dir ? 'Asc' : 'Desc') ](a[col], b[col], num, colMax[col], col, table);
 							} else {
+								// set a & b depending on sort direction
+								x = dir ? a : b;
+								y = dir ? b : a;
 								// text sort function
 								if (typeof(cts) === 'function') {
 									// custom OVERALL text sorter
@@ -696,7 +696,7 @@
 									sort = cts[col](x[col], y[col], dir, col, table);
 								} else {
 									// fall back to natural sort
-									sort = ts.sortNatural(x[col], y[col]);
+									sort = ts[ 'sortNatural' + (dir ? 'Asc' : 'Desc') ](a[col], b[col], col, table, c);
 								}
 							}
 							if (sort) { return sort; }
@@ -1082,6 +1082,7 @@
 					if ( xD < yD ) { return -1; }
 					if ( xD > yD ) { return 1; }
 				}
+
 				// chunk/tokenize
 				xN = a.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
 				yN = b.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
@@ -1104,6 +1105,22 @@
 				return 0;
 			};
 
+			ts.sortNaturalAsc = function(a, b, col, table, c) {
+				if (a === b) { return 0; }
+				var e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : e || 1; }
+				return ts.sortNatural(a, b);
+			};
+
+			ts.sortNaturalDesc = function(a, b, col, table, c) {
+				if (a === b) { return 0; }
+				var e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : -e || -1; }
+				return ts.sortNatural(b, a);
+			};
+
 			// basic alphabetical sort
 			ts.sortText = function(a, b) {
 				return a > b ? 1 : (a < b ? -1 : 0);
@@ -1112,22 +1129,41 @@
 			// return text string value by adding up ascii value
 			// so the text is somewhat sorted when using a digital sort
 			// this is NOT an alphanumeric sort
-			ts.getTextValue = function(a, d, mx) {
+			ts.getTextValue = function(a, num, mx) {
 				if (mx) {
 					// make sure the text value is greater than the max numerical value (mx)
-					var i, l = a ? a.length : 0, n = mx + d;
+					var i, l = a ? a.length : 0, n = mx + num;
 					for (i = 0; i < l; i++) {
 						n += a.charCodeAt(i);
 					}
-					return d * n;
+					return num * n;
 				}
 				return 0;
 			};
 
-			ts.sortNumeric = function(a, b, dir, mx) {
+			ts.sortNumericAsc = function(a, b, num, mx, col, table) {
 				if (a === b) { return 0; }
-				if (isNaN(a)) { a = ts.getTextValue(a, dir, mx); }
-				if (isNaN(b)) { b = ts.getTextValue(b, dir, mx); }
+				var c = table.config,
+					e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : -e || -1; }
+				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : e || 1; }
+				if (isNaN(a)) { a = ts.getTextValue(a, num, mx); }
+				if (isNaN(b)) { b = ts.getTextValue(b, num, mx); }
+				return a - b;
+			};
+
+			ts.sortNumericDesc = function(a, b, num, mx, col, table) {
+				if (a === b) { return 0; }
+				var c = table.config,
+					e = c.string[ (c.empties[col] || c.emptyTo ) ];
+				if (a === '' && e !== 0) { return typeof e === 'boolean' ? (e ? -1 : 1) : e || 1; }
+				if (b === '' && e !== 0) { return typeof e === 'boolean' ? (e ? 1 : -1) : -e || -1; }
+				if (isNaN(a)) { a = ts.getTextValue(a, num, mx); }
+				if (isNaN(b)) { b = ts.getTextValue(b, num, mx); }
+				return b - a;
+			};
+
+			ts.sortNumeric = function(a, b) {
 				return a - b;
 			};
 
