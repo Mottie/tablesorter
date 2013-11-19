@@ -570,7 +570,8 @@ ts.filter = {
 		// reset button/link
 		if (wo.filter_reset) {
 			$(document).delegate(wo.filter_reset, 'click.tsfilter', function() {
-				ts.filter.searching(table, []);
+				// trigger a reset event, so other functions (filterFormatter) know when to reset
+				c.$table.trigger('filterReset');
 			});
 		}
 		if (wo.filter_functions) {
