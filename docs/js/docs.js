@@ -119,14 +119,14 @@ $(window).load(function(){
 // append hidden parsed value to cell
 // used by feet-inch-fraction & metric parser demos
 var addParsedValues = function($t, cols, format){
-	var i, j, r,
+	var r,
 		$r = $t.find('tbody tr'),
-		c = $t[0].config.cache[0].normalized,
-		l = c.length - 1;
+		cache = $t[0].config.cache[0];
 	$r.each(function(i){
 		r = this;
+		var normalized = cache[i].normalized;
 		$.each(cols, function(v,j){
-			r.cells[j].innerHTML += ' <span class="val hidden removeme">(<span class="results">' + (format ? format(c[i][j]) : c[i][j]) + '</span>)</span>';
+			r.cells[j].innerHTML += ' <span class="val hidden removeme">(<span class="results">' + (format ? format(normalized[j]) : normalized[j]) + '</span>)</span>';
 		});
 	});
 

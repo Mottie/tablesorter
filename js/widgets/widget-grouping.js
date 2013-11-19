@@ -84,7 +84,7 @@ ts.addWidget({
 		}
 	},
 	format: function(table, c, wo) {
-		var j, k, curr, $tr, t, t2, time, n,
+		var j, k, curr, $tr, t, t2, time, bodyCache,
 		group = '',
 		col = c.sortList[0] ? c.sortList[0][0] : -1;
 		c.$table
@@ -97,7 +97,7 @@ ts.addWidget({
 		if (col >= 0 && !c.$headers.eq(col).hasClass('group-false')) {
 			if (c.debug){ time = new Date(); }
 			for (k = 0; k < c.$tbodies.length; k++) {
-				n = c.cache[k].normalized;
+				bodyCache = c.cache[k];
 				group = ''; // clear grouping across tbodies
 				$tr = c.$tbodies.eq(k).children('tr').not('.' + c.cssChildRow );
 				if (wo.group_collapsed && wo.group_collapsible) {
@@ -108,7 +108,7 @@ ts.addWidget({
 						t = (c.$headers.eq(col).attr('class') || '').match(/(group-\w+(-\w+)?)/g);
 						// group-{type}-{number/date}
 						t2 = t ? t[0].split('-') : ['','letter',1]; // default to letter 1
-						curr = n[j] ? ts.grouping[t2[1]]( c, c.$headers.eq(col), c.cache[k].normalized[j][col], /date/.test(t) ? t2[2] : parseInt(t2[2] || 1, 10) || 1, group ) : curr;
+						curr = bodyCache[j] ? ts.grouping[t2[1]]( c, c.$headers.eq(col), bodyCache[j].normalized[col], /date/.test(t) ? t2[2] : parseInt(t2[2] || 1, 10) || 1, group ) : curr;
 						if (group !== curr) {
 							group = curr;
 							// show range if number > 1

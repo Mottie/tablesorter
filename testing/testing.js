@@ -70,20 +70,42 @@ var tester = {
 			b = table.tBodies,
 			l2 = table.config.$headers.length;
 		for (k = 0; k < b.length; k++){
-			l = b[k].rows.length;
-				for (j = 0; j < l; j++) {
-					if (col === 'all') {
-						// return all columns
-						for (i = 0; i < l2; i++) {
-							result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][i] : '' );
-						}
-					} else {
-						// return specific column
-						result.push( table.config.cache[k].normalized[j] ? table.config.cache[k].normalized[j][col] : '' );
-					}
-				}
+			var normalizedRows = getCacheValues(table.config.cache[k]);			
+			if (col === 'all') {
+				// return all columns
+				$.each(normalizedRows, function(_,row) {
+					for (i = 0; i < l2; i++) {
+						result.push( row[i] );
+				    }
+				});
+			} else {
+                result = normalizedRows.map(function(row) { return row[col]; });
+			}
 		}
 		deepEqual( result, expected, 'testing parser cache: ' + txt);
-	}
+	},
 
+  domCompare : function(table, col, expected, txt)
+  {
+      var jTable = $(table);
+      var rows = jTable.children('tbody').children('tr');
+      var cells = col === 'all' ? rows.children('td') : rows.children('td:nth-child(' + (col + 1) + ')');
+      var result = $.map($.makeArray(cells.filter(':visible')), function(cell, _) { return cell.innerHTML; });
+      deepEqual( result, expected, 'testing dom cache: ' + txt);
+  }
 };
+
+function flatten(arrayOfArrays)
+{
+    return arrayOfArrays.reduce(function(a,b) { return a.concat(b); },[]);
+}
+
+function getCacheValues(nodes)
+{
+    return flatten(nodes.map(getNodeValues));
+}
+
+function getNodeValues(node)
+{
+    return [node.normalized].concat(getCacheValues(node.cache));
+}

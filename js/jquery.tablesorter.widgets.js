@@ -824,7 +824,7 @@ ts.filter = {
 					for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 						// ignore if filter is empty or disabled
 						if (filters[columnIndex] || wo.filter_anyMatch) {
-							cached = c.cache[tbodyIndex].normalized[rowIndex][columnIndex];
+							cached = c.cache[tbodyIndex][rowIndex].normalized[columnIndex];
 							// check if column data should be from the cell or from parsed data
 							if (wo.filter_useParsedData || parsed[columnIndex]) {
 								exact = cached;
@@ -919,16 +919,16 @@ ts.filter = {
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || '' ) + '</option>';
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
-			len = c.cache[tbodyIndex].row.length;
+			len = c.cache[tbodyIndex].length;
 			// loop through the rows
 			for (rowIndex = 0; rowIndex < len; rowIndex++) {
 				// check if has class filtered
-				if (onlyavail && c.cache[tbodyIndex].row[rowIndex][0].className.match(wo.filter_filteredRow)) { continue; }
+				if (onlyavail && c.cache[tbodyIndex][rowIndex].original[0].className.match(wo.filter_filteredRow)) { continue; }
 				// get non-normalized cell content
 				if (wo.filter_useParsedData) {
-					arry.push( '' + c.cache[tbodyIndex].normalized[rowIndex][column] );
+					arry.push( '' + c.cache[tbodyIndex][rowIndex].normalized[column] );
 				} else {
-					node = c.cache[tbodyIndex].row[rowIndex][0].cells[column];
+					node = c.cache[tbodyIndex][rowIndex].original[0].cells[column];
 					if (node) {
 						arry.push( $.trim( node.textContent || node.innerText || $(node).text() ) );
 					}

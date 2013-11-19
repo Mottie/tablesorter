@@ -245,109 +245,138 @@
 			/* utils */
 			function buildCache(table) {
 				var b = table.tBodies,
-				tc = table.config,
+				config = table.config,
 				totalRows,
 				totalCells,
-				parsers = tc.parsers,
-				t, v, i, j, k, c, cols, cacheTime, colMax = [];
-				tc.cache = {};
+				parsers = config.parsers;
+				config.cache = {};
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
-					return tc.debug ? log('*Empty table!* Not building a cache') : '';
+					return config.debug ? log('*Empty table!* Not building a cache') : '';
 				}
-				if (tc.debug) {
-					cacheTime = new Date();
+				if (config.debug) {
+					var cacheTime = new Date();
 				}
 				// processing icon
-				if (tc.showProcessing) {
+				if (config.showProcessing) {
 					ts.isProcessing(table, true);
 				}
-				for (k = 0; k < b.length; k++) {
-					tc.cache[k] = { row: [], normalized: [] };
-					// ignore tbodies with class name from c.cssInfoBlock
-					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
-						totalRows = (b[k] && b[k].rows.length) || 0;
-						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
-						for (i = 0; i < totalRows; ++i) {
-							/** Add the table data to main data array */
-							c = $(b[k].rows[i]);
-							cols = [];
-							// if this is a child row, add it to the last row's children and continue to the next row
-							if (c.hasClass(tc.cssChildRow)) {
-								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
-								// go to the next for loop
-								continue;
-							}
-							tc.cache[k].row.push(c);
-							for (j = 0; j < totalCells; ++j) {
-								t = getElementText(table, c[0].cells[j], j);
-								// allow parsing if the string is empty, previously parsing would change it to zero,
-								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].format(t, table, c[0].cells[j], j);
-								cols.push(v);
-								if ((parsers[j].type || '').toLowerCase() === "numeric") {
-									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0); // determine column max value (ignore sign)
-								}
-							}
-							cols.push(tc.cache[k].normalized.length); // add position for rowCache
-							tc.cache[k].normalized.push(cols);
-						}
-						tc.cache[k].colMax = colMax;
+				for (var bodyIndex = 0; bodyIndex < b.length; bodyIndex++) {
+					var tableBody = b[bodyIndex];
+
+					var jTableBody = $(tableBody);
+					//make sure there always is a cache
+					config.cache[bodyIndex] = getCacheForParent(table, jTableBody, []);
+
+					// ignore tBodies with class name from c.cssInfoBlock
+					if (jTableBody.hasClass(config.cssInfoBlock))
+						continue;
+
+					totalRows = (tableBody && tableBody.rows.length) || 0;
+					totalCells = (tableBody.rows[0] && tableBody.rows[0].cells.length) || 0;
+
+					if (totalRows !== 0 && totalCells !== 0)
+					{
+						config.cache[bodyIndex] = getCacheForParent(table, jTableBody, jTableBody.children('tr:not([data-tt-parent-id],.' + config.cssChildRow + ')'));
 					}
 				}
-				if (tc.showProcessing) {
+				if (config.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
 				}
-				if (tc.debug) {
+				if (config.debug) {
 					benchmark("Building cache for " + totalRows + " rows", cacheTime);
 				}
 			}
 
+			function getCacheForParent(table, jTableBody, jChildRows)
+			{
+				var colMax = [];
+				var parsers = table.config.parsers;
+
+				function getCacheForChild(jChild) {
+					var row = { normalized: [] };
+					var child = jChild.get(0);
+					row.original = jChild;
+					var cells = child.cells;
+					var totalCells = cells.length;
+					for (var columnIndex = 0; columnIndex < totalCells; ++columnIndex) {
+						var t = getElementText(table, child.cells[columnIndex], columnIndex);
+						// allow parsing if the string is empty, previously parsing would change it to zero,
+						// in case the parser needs to extract data from the table cell attributes
+						var v = parsers[columnIndex].format(t, table, jChild[0].cells[columnIndex], columnIndex);
+						row.normalized.push(v);
+						if ((parsers[columnIndex].type || '').toLowerCase() === "numeric") {
+							colMax[columnIndex] = Math.max(Math.abs(v) || 0, colMax[columnIndex] || 0); // determine column max value (ignore sign)
+						}
+					}
+
+					var itemId = jChild.attr('data-tt-id');
+					var childRows = jTableBody.children('tr[data-tt-parent-id="' + itemId + '"]');
+					var oldStyleChildRows = jChild.hasClass(table.config.cssChildRow) ? $('') : jChild.nextUntil(':not(.' + table.config.cssChildRow + ')');
+					row.cache = getCacheForParent(table, jTableBody, childRows.add(oldStyleChildRows));
+					return row;
+				}
+
+				var result = [];
+				var totalRows = jChildRows.length;
+				for (var rowIndex = 0; rowIndex < totalRows; ++rowIndex) {
+					/** Add the table data to main data array */
+					var child = jChildRows[rowIndex];
+					var row = getCacheForChild($(child));
+					row.originalOrder = rowIndex;
+					result.push(row);
+				}
+				result.colMax = colMax;
+				return result;
+			}
+
 			// init flag (true) used by pager plugin to prevent widget application
 			function appendToTable(table, init) {
-				var c = table.config,
-					wo = c.widgetOptions,
-					b = table.tBodies,
-					rows = [],
-					c2 = c.cache,
-					r, n, totalRows, checkCell, $bk, $tb,
-					i, j, k, l, pos, appendTime;
-				if (isEmptyObject(c2)) { return; } // empty table - fixes #206/#346
-				if (c.debug) {
-					appendTime = new Date();
+				var config = table.config,
+				bodies = table.tBodies,
+				rows = [],
+				wo = config.widgetOptions,
+				bodyCaches = config.cache;
+				if (isEmptyObject(bodyCaches)) { return; } // empty table - fixes #206
+				if (config.debug) {
+					var appendTime = new Date();
 				}
-				for (k = 0; k < b.length; k++) {
-					$bk = $(b[k]);
-					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
-						// get tbody
-						$tb = ts.processTbody(table, $bk, true);
-						r = c2[k].row;
-						n = c2[k].normalized;
-						totalRows = n.length;
-						checkCell = totalRows ? (n[0].length - 1) : 0;
-						for (i = 0; i < totalRows; i++) {
-							pos = n[i][checkCell];
-							rows.push(r[pos]);
-							// removeRows used by the pager plugin; don't render if using ajax - fixes #411
-							if (!c.appender || (c.pager && (!c.pager.removeRows || !wo.pager_removeRows) && !c.pager.ajax)) {
-								l = r[pos].length;
-								for (j = 0; j < l; j++) {
-									$tb.append(r[pos][j]);
-								}
-							}
+
+				function appendNodesToTable(nodes)
+				{
+					var totalRows = nodes.length;
+					for (var i = 0; i < totalRows; i++) {
+						var rowData = nodes[i];
+						var originalRow = rowData.original;
+						rows.push(originalRow);
+						// removeRows used by the pager plugin; don't render if using ajax - fixes #411used by the pager plugin
+						if (!config.appender || (config.pager && (!config.pager.removeRows || !wo.pager_removeRows) && !config.pager.ajax)) {
+							processedBody.append(originalRow[0]);
 						}
-						// restore tbody
-						ts.processTbody(table, $tb, false);
+						appendNodesToTable(rowData.cache)
 					}
 				}
-				if (c.appender) {
-					c.appender(table, rows);
+
+				for (var bodyIndex = 0; bodyIndex < bodies.length; bodyIndex++) {
+					var jBody = $(bodies[bodyIndex]);
+					if (jBody.length && !jBody.hasClass(config.cssInfoBlock)) {
+						// get tbody
+						var processedBody = ts.processTbody(table, jBody, true);
+						var bodyCache = bodyCaches[bodyIndex];
+
+						appendNodesToTable(bodyCache);
+						// restore tbody
+						ts.processTbody(table, processedBody, false);
+					}
 				}
-				if (c.debug) {
+				if (config.appender) {
+					config.appender(table, rows);
+				}
+				if (config.debug) {
 					benchmark("Rebuilt table", appendTime);
 				}
 				// apply table widgets; but not before ajax completes
-				if (!init && !c.appender) { ts.applyWidget(table); }
+				if (!init && !config.appender) { ts.applyWidget(table); }
 				// trigger sortend
 				$(table).trigger("sortEnd", table);
 				$(table).trigger("updateComplete", table);
@@ -638,60 +667,77 @@
 
 			// sort multiple columns
 			function multisort(table) { /*jshint loopfunc:true */
-				var i, k, e, num, col, colMax, cache, lc,
-					order, orgOrderCol, sortTime, sort, x, y,
-					dir = 0,
-					c = table.config,
-					cts = c.textSorter || '',
-					sortList = c.sortList,
-					l = sortList.length,
-					bl = table.tBodies.length;
-				if (c.serverSideSorting || isEmptyObject(c.cache)) { // empty table - fixes #206/#346
+				var config = table.config, bl = table.tBodies.length,
+				sortTime, cache;
+				if (config.serverSideSorting || isEmptyObject(config.cache)) { // empty table - fixes #206
 					return;
 				}
-				if (c.debug) { sortTime = new Date(); }
-				for (k = 0; k < bl; k++) {
-					colMax = c.cache[k].colMax;
-					cache = c.cache[k].normalized;
-					lc = cache.length;
-					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
-					cache.sort(function(a, b) {
-						// cache is undefined here in IE, so don't use it!
-						for (i = 0; i < l; i++) {
-							col = sortList[i][0];
-							order = sortList[i][1];
+				if (config.debug) { sortTime = new Date(); }
+				for (var bodyIndex = 0; bodyIndex < bl; bodyIndex++) {
+					var bodyNode = config.cache[bodyIndex];
+					recursiveSortNodes(bodyNode, table);
+				}
+				if (config.debug) {
+					var sortList = config.sortList;
+					benchmark("Sorting on " + sortList.toString() + " time", sortTime);
+				}
+			}
+
+			function recursiveSortNodes(nodes, table)
+			{
+				sortNodes(nodes,table);
+				$.each(nodes, function(index,node) {
+					recursiveSortNodes(node.cache, table);
+				});
+			}
+
+			function sortNodes(nodes, table)
+			{
+				var colMax = nodes.colMax;
+				var config = table.config;
+				var textSorter = config.textSorter || '';
+				var sortList = config.sortList;
+				var l = sortList.length;
+				var sort;
+				nodes.sort(function(node1, node2) {
+					var normalized1 = node1.normalized;
+					var normalized2 = node2.normalized;
+					// cache is undefined here in IE, so don't use it!
+					for (var i = 0; i < l; i++) {
+							var col = sortList[i][0];
+							var order = sortList[i][1];
 							// sort direction, true = asc, false = desc
-							dir = order === 0;
+							var dir = order === 0;
 
 							// set a & b depending on sort direction
-							x = dir ? a : b;
-							y = dir ? b : a;
+							var x = dir ? normalized1 : normalized2;
+							var y = dir ? normalized2 : normalized1;
 
 							// determine how to sort empty cells
-							e = c.string[ (c.empties[col] || c.emptyTo ) ];
+							var e = config.string[ (config.empties[col] || config.emptyTo ) ];
 							if (x[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? -1 : 1) : (e || 1)) * (dir ? 1 : -1); }
 							if (y[col] === '' && e !== 0) { return ((typeof(e) === 'boolean') ? (e ? 1 : -1) : (-e || -1)) * (dir ? 1 : -1); }
 
 							// fallback to natural sort since it is more robust
-							num = /n/i.test(getCachedSortType(c.parsers, col));
-							if (num && c.strings[col]) {
+							var num = /n/i.test(getCachedSortType(config.parsers, col));
+							if (num && config.strings[col]) {
 								// sort strings in numerical columns
-								if (typeof (c.string[c.strings[col]]) === 'boolean') {
-									num = (dir ? 1 : -1) * (c.string[c.strings[col]] ? -1 : 1);
+								if (typeof (config.string[config.strings[col]]) === 'boolean') {
+									num = (dir ? 1 : -1) * (config.string[config.strings[col]] ? -1 : 1);
 								} else {
-									num = (c.strings[col]) ? c.string[c.strings[col]] || 0 : 0;
+									num = (config.strings[col]) ? config.string[config.strings[col]] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
 								// var sort = $.tablesorter["sort" + s](table, a[c], b[c], c, colMax[c], dir);
-								sort = c.numberSorter ? c.numberSorter(x[col], y[col], dir, colMax[col], table) : ts.sortNumeric(x[col], y[col], num, colMax[col]);
+								sort = config.numberSorter ? config.numberSorter(x[col], y[col], dir, colMax[col], table) : ts.sortNumeric(x[col], y[col], num, colMax[col]);
 							} else {
 								// text sort function
-								if (typeof(cts) === 'function') {
+								if (typeof(textSorter) === 'function') {
 									// custom OVERALL text sorter
-									sort = cts(x[col], y[col], dir, col, table);
-								} else if (typeof(cts) === 'object' && cts.hasOwnProperty(col)) {
+									sort = textSorter(x[col], y[col], dir, col, table);
+								} else if (typeof(textSorter) === 'object' && textSorter.hasOwnProperty(col)) {
 									// custom text sorter for a SPECIFIC COLUMN
-									sort = cts[col](x[col], y[col], dir, col, table);
+									sort = textSorter[col](x[col], y[col], dir, col, table);
 								} else {
 									// fall back to natural sort
 									sort = ts.sortNatural(x[col], y[col]);
@@ -699,10 +745,8 @@
 							}
 							if (sort) { return sort; }
 						}
-						return a[orgOrderCol] - b[orgOrderCol];
-					});
-				}
-				if (c.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
+					return node1.originalOrder - node2.originalOrder;
+				});
 			}
 
 			function resortComplete($table, callback){
@@ -793,7 +837,7 @@
 					e.stopPropagation();
 					$this.find(c.selectorRemove).remove();
 					// get position from the dom
-					var l, row, icell,
+					var l, rowIndex, icell,
 					$tb = $this.find('tbody'),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
@@ -802,11 +846,12 @@
 					cell = $(cell)[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
-						row = $tb.eq(tbdy).find('tr').index( $row );
+						rowIndex = $tb.eq(tbdy).find('tr').index( $row );
 						icell = cell.cellIndex;
-						l = c.cache[tbdy].normalized[row].length - 1;
-						c.cache[tbdy].row[table.config.cache[tbdy].normalized[row][l]] = $row;
-						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						var bodyCache = c.cache[tbdy];
+						var rowNode = bodyCache[rowIndex];
+						rowNode.original = $row;
+						rowNode.normalized[icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
 						checkResort($this, resort, callback);
 					}
 				})
@@ -826,10 +871,9 @@
 							dat[j] = c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
 						}
 						// add the row index to the end
-						dat.push(c.cache[tbdy].row.length);
+						dat.push(c.cache[tbdy].length);
 						// update cache
-						c.cache[tbdy].row.push([$row[i]]);
-						c.cache[tbdy].normalized.push(dat);
+						c.cache[tbdy].push({normalized: dat, original: $($row[i]), cache: [] });
 						dat = [];
 					}
 					// resort using current settings

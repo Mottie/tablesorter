@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Tree Table</title>
+
+	<!-- jQuery -->
+	<script src="../testing/jquery-1.8.3.min.js"></script>
+	<script src="js/jquery.treetable.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<link rel="stylesheet" href="css/jquery.treetable.theme.default.css">
+	<link rel="stylesheet" href="css/jquery.treetable.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- Tablesorter: optional -->
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+
+	<script id="js">$(function() {
+
+	$(".tablesorter")
+		.tablesorter({
+			theme : 'blue'
+		})
+		// .tablesorterPager({
+		// 	container: $("#pager"),
+		// 	positionFixed: false
+		// })
+		.treetable({ expandable: true});;
+
+});</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Working with Tree Tables</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Fake Population</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-tt-id='europe'><td>Europe</td><td>300</td></tr>
+		<tr data-tt-id='netherlands' data-tt-parent-id='europe'><td>Netherlands</td><td>10</td></tr>
+		<tr data-tt-id='molenhoek' data-tt-parent-id='netherlands'><td>Molenhoek</td><td>1</td></tr>
+		<tr data-tt-id='nijmegen' data-tt-parent-id='netherlands'><td>Nijmegen</td><td>2</td></tr>
+		<tr data-tt-id='germany' data-tt-parent-id='europe'><td>Germany</td><td>50</td></tr>
+		<tr data-tt-id='berlin' data-tt-parent-id='germany'><td>Berlin</td><td>8</td></tr>
+		<tr data-tt-id='northAmerica'><td>North America</td><td>550</td></tr>
+		<tr data-tt-id='us' data-tt-parent-id='northAmerica'><td>United States</td><td>450</td></tr>
+		<tr data-tt-id='newYork' data-tt-parent-id='us'><td>New York</td><td>5</td></tr>
+		<tr data-tt-id='losAngeles' data-tt-parent-id='us'><td>Los Angeles</td><td>7</td></tr>
+		<tr data-tt-id='canada' data-tt-parent-id='northAmerica'><td>Canada</td><td>100</td></tr>
+		<tr data-tt-id='toronto' data-tt-parent-id='canada'><td>Toronto</td><td>4</td></tr>
+		<tr data-tt-id='otawa' data-tt-parent-id='canada'><td>Otawa</td><td>3</td></tr>
+		<tr data-tt-id='africa'><td>Africa</td><td>500</td></tr>
+		<tr data-tt-id='egypt' data-tt-parent-id='africa'><td>Egypt</td><td>100</td></tr>
+		<tr data-tt-id='cairo' data-tt-parent-id='egypt'><td>Caïro</td><td>10</td></tr>
+		<tr data-tt-id='luxor' data-tt-parent-id='egypt'><td>Luxor</td><td>5</td></tr>
+		<tr data-tt-id='zimbabwe' data-tt-parent-id='africa'><td>Zimbabwe</td><td>90</td></tr>
+		<tr data-tt-id='harare' data-tt-parent-id='zimbabwe'><td>Harare</td><td>10</td></tr>
+	</tbody>
+</table>
+
+<!-- <div id="pager" class="pager">
+	<form>
+		<input type="button" value="&lt;&lt;" class="first" />
+		<input type="button" value="&lt;" class="prev" />
+		<input type="text" class="pagedisplay"/>
+		<input type="button" value="&gt;" class="next" />
+		<input type="button" value="&gt;&gt;" class="last" />
+		<select class="pagesize">
+			<option selected="selected"  value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+		</select>
+	</form>
+</div></div> -->
+
+</div>
+
+</body>
+</html>

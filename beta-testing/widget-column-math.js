@@ -44,7 +44,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 				$row = $el.closest('tr'),
 				bIndex = $tb.index( $row.closest('tbody') ),
 				rIndex = $tb.eq(bIndex).find('tr').index( $row ),
-				row = c.cache[bIndex].normalized[rIndex] || [];
+				row = c.cache[bIndex][rIndex].normalized || [];
 			if (direct) {
 				arry = $row.children().map(function(){
 					txt = (c.supportsTextContent) ? this.textContent : $(this).text();
