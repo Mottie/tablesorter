@@ -52,7 +52,7 @@ table#tablesorter-demo {margin: 10px 0 0 0;}
 table, p.small {font-size:small;}
 p.small {padding-left: 25px;}
 p.tip em, div.tip em {padding: 2px; background-color: #6cf; color: #fff;}
-.label { padding: .2em .6em .3em; font-size: 75%; color: #fff; border-radius: .25em; }
+.label { padding: 0.1em 0.6em 0.1em; font-size: 75%; color: #fff; border-radius: .25em; }
 span.tip em, .label-success { background-color: #5cb85c; }
 span.tip.old em, .label-default { background-color: #999; }
 span.warn em { background-color: #ce5300; }
@@ -76,7 +76,7 @@ span.alert { padding: 1px 3px; }
 #main .ui-accordion-content { font-size: 14px; }
 .remark, .error { font-weight: bold; color: red; font-size: 18px; }
 #group #slider0,#group #slider1,#group #slider2 { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
-#group .label { display: inline-block; min-width: 120px; }
+#group .demo-label { display: inline-block; min-width: 120px; }
 @media all and (max-width: 650px) {
  table.compatibility { float: none; }
 }
