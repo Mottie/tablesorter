@@ -88,7 +88,7 @@
 
 <div id="main">
 
-	<label for="main-nav-check" class="toggle-menu main-header" onclick="">
+	<label for="main-nav-check" class="tooltip-right toggle-menu main-header" onclick="" title="Click to toggle the side menu">
 		<span></span>
 	</label>
 
@@ -1185,7 +1185,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td>
 					Setting this option to <code>true</code> and sorting two rows with exactly the same content, the original sort order is maintained (<span class="version">v2.14</span>).
 					<div class="collapsible"><br>
-						This isn't exactly a <a href="http://en.wikipedia.org/wiki/Unstable_sort#Stability">stable sort</a> because the sort order maintains the original unsorted order when sorting the column in an ascending direction. When sorting the column in a descending order, the opposite of the original unsorted order is returned. If that doesn't make any sense, please refer to <a href="">issue #
+						This isn't exactly a <a href="http://en.wikipedia.org/wiki/Unstable_sort#Stability">stable sort</a> because the sort order maintains the original unsorted order when sorting the column in an ascending direction. When sorting the column in a descending order, the opposite of the original unsorted order is returned. If that doesn't make any sense, please refer to <a href="https://github.com/Mottie/tablesorter/issues/419">issue #419</a>.
 					</div>
 				</td>
 				<td></td>
@@ -3943,7 +3943,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 
 	<p>If you would like to contribute, <a class="external" href="https://github.com/Mottie/tablesorter">fork a copy on github</a>.</p>
 
-	<p>Some basic <a href="../test.html">unit testing</a> has been added. If you would like to add more or report a problem, please use the appropriate link above (v2.6).</p>
+	<p>Some basic <a href="../test.html">unit testing</a> has been added (v2.6). If you would like to add more or report a problem, please use the appropriate link above.</p>
 
 	<p>Support is also available from <a class="external" href="http://stackoverflow.com/questions/tagged/tablesorter">stackoverflow</a>.</p>
 
@@ -3954,8 +3954,19 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
 	<p>Written by Christian Bach.</p>
 	<p>
 		Documentation written by <a class="external" href="http://www.ghidinelli.com">Brian Ghidinelli</a>,
-		based on <a class="external" href="http://malsup.com/jquery/">Mike Alsup's</a> great documention.<br>
+		based on <a class="external" href="http://malsup.com/jquery/">Mike Alsup's</a> great documention.
+	</p>
+	<p>
 		Additional &amp; Missing documentation, alphanumeric sort, numerous widgets, unit testing and other changes added by <a class="external" href="https://github.com/Mottie/tablesorter">Mottie</a>.
+	</p>
+	<p>
+		Thanks to all that have contributed code, comments, feedback and everything else. A special thanks goes out to:
+		<ul>
+			<li><a href="https://github.com/thezoggy">thezoggy</a></li>
+			<li><a href="https://github.com/TheSin-">TheSin-</a></li>
+			<li><a href="https://github.com/NickCraver">NickCraver</a></li>
+			<li>and <a href="https://github.com/Mottie/tablesorter/graphs/contributors">all the other contributors</a>!</li>
+		</ul>
 	</p>
 	<p>
 		<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>

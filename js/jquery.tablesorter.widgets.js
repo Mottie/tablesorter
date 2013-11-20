@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/9/2013
+/*! tableSorter 2.8+ widgets - updated 11/19/2013
  *
  * Column Styles
  * Column Filters
@@ -171,7 +171,7 @@ ts.addWidget({
 			$table = c.$table,
 			$headers = c.$headers,
 			theme = c.theme || 'jui',
-			themes = themesAll[theme] || themesAll['jui'],
+			themes = themesAll[theme] || themesAll.jui,
 			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc;
 		if (c.debug) { time = new Date(); }
 		// initialization code - run once
@@ -235,7 +235,7 @@ ts.addWidget({
 	remove: function(table, c, wo) {
 		var $table = c.$table,
 			theme = c.theme || 'jui',
-			themes = ts.themes[ theme ] || ts.themes['jui'],
+			themes = ts.themes[ theme ] || ts.themes.jui,
 			$headers = $table.children('thead').children(),
 			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc;
 		$table
@@ -261,7 +261,7 @@ ts.addWidget({
 		columns : [ "primary", "secondary", "tertiary" ]
 	},
 	format: function(table, c, wo) {
-		var time, $tbody, tbodyIndex, $rows, rows, $row, $cells, last, remove, indx,
+		var time, $tbody, tbodyIndex, $rows, rows, $row, $cells, remove, indx,
 			$table = c.$table,
 			$tbodies = c.$tbodies,
 			sortList = c.sortList,
@@ -969,7 +969,7 @@ ts.filter = {
 		arry = $.grep(arry, function(value, indx) {
 			return $.inArray(value, arry) === indx;
 		});
-		arry = (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b, column, tabl); }) : arry.sort(true);
+		arry = (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b); }) : arry.sort(true);
 
 		// Get curent filter value
 		currentValue = c.$table.find('thead').find('select.tablesorter-filter[data-column="' + column + '"]').val();

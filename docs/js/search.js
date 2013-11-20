@@ -144,6 +144,7 @@ jQuery(function($){
 	$('.tooltip-top').tipsy({ gravity: 's' });
 	$('.tooltip-edge-left').tipsy({ gravity: 'nw' });
 	$('.tooltip-edge-right').tipsy({ gravity: 'ne' });
+	$('.tooltip-right').tipsy({ gravity: 'w' });
 	$('.status').tipsy({
 		gravity: 's',
 		opacity: 1,
