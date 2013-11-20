@@ -99,7 +99,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Added removed options section.
   * This applies to pager options available in the original version of tablesorter which are no longer supported.
   * Fixes [issue #416](https://github.com/Mottie/tablesorter/issues/416).
-x* Added `kbd` styling for better visualization of keyboard keys.
+* Added `kbd` styling for better visualization of keyboard keys.
 
 **Other**
 * Renamed variables within the [pager custom control demo](http://mottie.github.io/tablesorter/beta-testing/example-pager-custom-controls.html) (still in beta)
