@@ -890,7 +890,7 @@ ts.filter = {
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
 								$.each(ts.filter.types, function(type, typeFunction) {
-									if (!wo.filter_anyMatch || (wo.filter_anyMatch && anyMatchNotAllowedTypes.indexOf(type) < 0)) {
+									if (!wo.filter_anyMatch || (wo.filter_anyMatch && $.inArray(type, anyMatchNotAllowedTypes) < 0)) {
 										matches = typeFunction( filters[columnIndex], iFilter, exact, iExact, cached, columnIndex, table, wo, parsed );
 										if (matches !== null) {
 											filterMatched = matches;

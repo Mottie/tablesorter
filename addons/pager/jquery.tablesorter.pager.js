@@ -585,7 +585,7 @@
 				}
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
-				if (ts.filter && c.widgets.indexOf('filter') >= 0) {
+				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 					// get any default filter settings (data-value attribute) fixes #388
 					p.currentFilters = c.$table.data('lastSearch') || ts.filter.setDefaults(table, c, c.widgetOptions) || [];
 					// set, but don't apply current filters
