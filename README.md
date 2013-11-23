@@ -44,6 +44,27 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.14.1">Version 2.14.1</a> (11/22/2013)
+
+* Filter widget
+  * External inputs bound using the filter `bindSearch` function now clear on the "filterReset" event.
+  * Replace `Array.indexOf()` due to IE8.
+* Pager (plugin &amp; widget)
+  * Replace `Array.indexOf()` due to IE8. Fixes [issue #388](https://github.com/Mottie/tablesorter/issues/388).
+* Themes
+  * Non-sortables headers now show the default cursor
+  * Fix Dropbox theme to work properly within the sticky header demo
+  * Fix Ice theme to include a top border in the sticky header demo
+  * Tweaked sticky header widget to better align columns in Firefox &amp; adjust caption to hide border edges.
+  * See the [sticky header demo](http://mottie.github.io/tablesorter/docs/example-widget-sticky-header.html) to see these changes.
+  * Fixes [#407](https://github.com/Mottie/tablesorter/issues/407).
+* Documentation
+  * Update FAQ page to include information on the zebra widget not always working.
+  * Update demos to use Bootstrap 3.0.2.
+  * Add search instructions to the wiki documentation pages.
+  * Add link to FAQ &amp; search instructions on the main documenation page.
+* Add associated core version number to pager addon &amp; widget, main widget file and filter formatter file.
+
 #### <a name="v2.14.0">Version 2.14.0</a> (11/19/2013)
 
 **Core**
