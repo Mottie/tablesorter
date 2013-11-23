@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/19/2013
+/*! tableSorter 2.8+ widgets - updated 11/22/2013 (v2.14.1)
  *
  * Column Styles
  * Column Filters
@@ -1082,12 +1082,13 @@ ts.addWidget({
 			laststate = '',
 			spacing = 0,
 			updatingStickyFilters = false,
+			nonwkie = $table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(navigator.userAgent),
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
 				spacing = 0;
 				// yes, I dislike browser sniffing, but it really is needed here :(
 				// webkit automatically compensates for border spacing
-				if ($table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(navigator.userAgent)) {
+				if (nonwkie) {
 					// Firefox & Opera use the border-spacing
 					// update border-spacing here because of demos that switch themes
 					spacing = parseInt($header.eq(0).css('border-left-width'), 10) * 2;
@@ -1097,13 +1098,15 @@ ts.addWidget({
 					width: $table.width()
 				});
 				$stickyCells.filter(':visible').each(function(i) {
-					var $cell = $header.filter(':visible').eq(i);
+					var $cell = $header.filter(':visible').eq(i),
+						// some wibbly-wobbly... timey-wimey... stuff, to make columns line up in Firefox
+						offset = nonwkie && $(this).attr('data-column') === ( '' + parseInt(c.columns/2, 10) ) ? 1 : 0;
 					$(this)
 						.css({
 							width: $cell.width() - spacing,
 							height: $cell.height()
 						})
-						.find(innerHeader).width( $cell.find(innerHeader).width() );
+						.find(innerHeader).width( $cell.find(innerHeader).width() - offset );
 				});
 			};
 		// fix clone ID, if it exists - fixes #271
@@ -1113,6 +1116,8 @@ ts.addWidget({
 		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
 		if (!wo.stickyHeaders_includeCaption) {
 			$stickyTable.find('caption').remove();
+		} else {
+			$stickyTable.find('caption').css( 'margin-left', '-1px' );
 		}
 		// issue #172 - find td/th in sticky header
 		$stickyCells = $stickyThead.children().children();
