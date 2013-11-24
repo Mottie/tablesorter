@@ -635,13 +635,14 @@ ts.filter = {
 		c.$table.trigger('filterInit');
 	},
 	setDefaults: function(table, c, wo) {
-		var indx,
+		var indx, isArray,
 			filters = [],
 			columns = c.columns;
 		if (wo.filter_saveFilters && ts.storage) {
 			filters = ts.storage( table, 'tablesorter-filters' ) || [];
+			isArray = $.isArray(filters);
 			// make sure we're not just saving an empty array
-			if (filters.join('') === '') { filters = []; }
+			if (isArray && filters.join('') === '' || !isArray ) { filters = []; }
 		}
 		// if not filters saved, then check default settings
 		if (!filters.length) {
