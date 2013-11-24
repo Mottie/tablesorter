@@ -804,6 +804,7 @@ ts.filter = {
 			});
 	},
 	findRows: function(table, filters, combinedFilters) {
+		if (table.config.lastCombinedFilter === combinedFilters) { return; }
 		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
 			searchFiltered, filterMatched, showRow, time,
