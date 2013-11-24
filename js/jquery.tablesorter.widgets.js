@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/22/2013 (v2.14.1)
+/*! tableSorter 2.8+ widgets - updated 11/24/2013 (v2.14.2)
  *
  * Column Styles
  * Column Filters
@@ -1083,6 +1083,7 @@ ts.addWidget({
 			spacing = 0,
 			updatingStickyFilters = false,
 			nonwkie = $table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(navigator.userAgent),
+			isWebkit = !/(webkit|msie)/i.test(navigator.userAgent),
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
 				spacing = 0;
@@ -1094,7 +1095,7 @@ ts.addWidget({
 					spacing = parseInt($header.eq(0).css('border-left-width'), 10) * 2;
 				}
 				$stickyTable.css({
-					left : $thead.offset().left - $win.scrollLeft() - spacing,
+					left : $thead.offset().left - $win.scrollLeft() - spacing - (isWebkit ? 1 : 0),
 					width: $table.width()
 				});
 				$stickyCells.filter(':visible').each(function(i) {
@@ -1177,7 +1178,7 @@ ts.addWidget({
 				.addClass(prefix + isVisible)
 				.css({
 					// adjust when scrolling horizontally - fixes issue #143
-					left : $thead.offset().left - $win.scrollLeft() - spacing,
+					left : $thead.offset().left - $win.scrollLeft() - spacing - (isWebkit ? 1 : 0),
 					visibility : isVisible
 				});
 			if (isVisible !== laststate || event.type === 'resize') {
