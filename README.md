@@ -44,6 +44,24 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.14.2">Version 2.14.2</a> (11/25/2013)
+
+* Removed Bootstrap filter cell background color. Fixes [issue #425](https://github.com/Mottie/tablesorter/issues/425).
+* Added css sticky header widget (beta)
+  * This widget uses [css3 transforms](http://caniuse.com/#search=transform) to make the table header sticky. It's a bit jumpy in Chrome, but works well in other tested browsers.
+  * This widget doesn't appear to work in IE10, but it should... it will not work in IE8 and older.
+  * See [issue #429](https://github.com/Mottie/tablesorter/issues/429) for more information.
+* Stop repeat filter widget searches. Fixes [issue #431](https://github.com/Mottie/tablesorter/issues/431).
+* Prevent filter error. Fixes [issue #432](https://github.com/Mottie/tablesorter/issues/432).
+* Merged in and reverted [issue #433](https://github.com/Mottie/tablesorter/issues/433).
+* Editable widget
+  * Updated docs with missing `editable_editComplete` callback event name option.
+  * Modified the `editable_columns` option to allow setting a column range string, e.g. `"2-4"` instead of creating an array (`[2,3,4]`).
+  * Fixes [issue #435](https://github.com/Mottie/tablesorter/issues/435).
+* Grouping widget
+  * Invalid group class now fails silently.
+  * Fixes [issue #438](https://github.com/Mottie/tablesorter/issues/438).
+
 #### <a name="v2.14.1">Version 2.14.1</a> (11/22/2013)
 
 * Filter widget
