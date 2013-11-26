@@ -279,7 +279,11 @@
 							tds += '<tr>';
 							for ( j = 0; j < d[i].length; j++ ) {
 								// build tbody cells
-								tds += '<td>' + d[i][j] + '</td>';
+								var temp = $("<td>").html(d[i][j]);
+								var inner = temp.find("td");
+								temp = inner.length ? inner : temp.wrap("<div>").parent();
+								
+								tds += temp.wrap("<div>").parent().html();
 							}
 							tds += '</tr>';
 						}
