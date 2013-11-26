@@ -464,8 +464,8 @@ tsp = ts.pager = {
 					for ( i = 0; i < l; i++ ) {
 						tds += '<tr>';
 						for ( j = 0; j < d[i].length; j++ ) {
-							// build tbody cells
-							tds += '<td>' + d[i][j] + '</td>';
+							// build tbody cells; watch for data containing HTML markup - see #434
+							tds += /^\s*\<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
 						}
 						tds += '</tr>';
 					}

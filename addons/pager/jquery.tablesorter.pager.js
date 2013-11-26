@@ -278,12 +278,8 @@
 						for ( i = 0; i < l; i++ ) {
 							tds += '<tr>';
 							for ( j = 0; j < d[i].length; j++ ) {
-								// build tbody cells
-								var temp = $("<td>").html(d[i][j]);
-								var inner = temp.find("td");
-								temp = inner.length ? inner : temp.wrap("<div>").parent();
-								
-								tds += temp.wrap("<div>").parent().html();
+								// build tbody cells; watch for data containing HTML markup - see #434
+								tds += /^\s*\<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
 							}
 							tds += '</tr>';
 						}
