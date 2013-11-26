@@ -479,7 +479,7 @@ ts.filter = {
 		// Look for a range (using " to " or " - ") - see issue #166; thanks matzhu!
 		range : function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
 			if ( /\s+(-|to)\s+/.test(iFilter) ) {
-				var result,
+				var result, tmp,
 					c = table.config,
 					query = iFilter.split(/(?: - | to )/), // make sure the dash is for a range and not indicating a negative number
 					range1 = ts.formatFloat(query[0].replace(ts.filter.regex.nondigit, ''), table),
@@ -494,7 +494,7 @@ ts.filter = {
 				result = ( parsed[index] || c.parsers[index].type === 'numeric' ) && !isNaN(range1) && !isNaN(range2) ? cached :
 					isNaN(iExact) ? ts.formatFloat( iExact.replace(ts.filter.regex.nondigit, ''), table) :
 					ts.formatFloat( iExact, table );
-				if (range1 > range2) { result = range1; range1 = range2; range2 = result; } // swap
+				if (range1 > range2) { tmp = range1; range1 = range2; range2 = tmp; } // swap
 				return (result >= range1 && result <= range2) || (range1 === '' || range2 === '');
 			}
 			return null;
