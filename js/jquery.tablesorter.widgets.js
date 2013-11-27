@@ -1201,7 +1201,9 @@ ts.addWidget({
 		});
 		$stickyCells.find(filterInputs).bind('keyup search change', function(event) {
 			// ignore arrow and meta keys; allow backspace
-			if ((event.which < 32 && event.which !== 8) || (event.which >= 37 && event.which <=40)) { return; }
+			if ( (typeof wo.filter_liveSearch === 'number' && this.value.length < wo.filter_liveSearch && this.value !== '') ||
+				( event.type === 'keyup' && ( (event.which < 32 && event.which !== 8 && wo.filter_liveSearch === true && event.which !== 13) ||
+				( event.which >= 37 && event.which <= 40 ) || (event.which !== 13 && wo.filter_liveSearch === false) ) ) ) { return; }
 			updatingStickyFilters = true;
 			var $f = $(this), column = $f.attr('data-column');
 			c.$filters.find(filterInputs).eq(column)
