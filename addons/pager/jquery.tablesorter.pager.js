@@ -29,6 +29,8 @@
 			ajaxObject: {
 				dataType: 'json'
 			},
+			
+			ajaxCounter: 0,
 
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
@@ -349,8 +351,17 @@
 					renderAjax(null, table, p, xhr, exception);
 					$doc.unbind('ajaxError.pager');
 				});
+
+				var counter = ++p.ajaxCounter;
+
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
-				p.ajaxObject.success = function(data) {
+				p.ajaxObject.success = function(data)
+				{
+					//	Refuse to process old ajax commands that were overwritten by new ones
+					if(counter != p.ajaxCounter){
+						return;
+					}
+					
 					renderAjax(data, table, p);
 					$doc.unbind('ajaxError.pager');
 					if (typeof p.oldAjaxSuccess === 'function') {
