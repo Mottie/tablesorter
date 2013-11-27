@@ -422,8 +422,8 @@ ts.filter = {
 		// Look for quotes or equals to get an exact match; ignore type since iExact could be numeric
 		exact: function( filter, iFilter, exact, iExact ) {
 			/*jshint eqeqeq:false */
-			if ( iFilter.replace(ts.filter.regex.exact, '') == iExact ) {
-				return true;
+			if (ts.filter.regex.exact.test(iFilter)) {
+				return iFilter.replace(ts.filter.regex.exact, '') == iExact;
 			}
 			return null;
 		},
