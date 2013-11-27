@@ -712,6 +712,7 @@ ts.filter = {
 		var external, wo = table.config.widgetOptions;
 		$el.unbind('keyup search filterReset')
 		.bind('keyup search', function(event, filter) {
+			var $this = $(this);
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {
 				this.value = '';
@@ -722,7 +723,7 @@ ts.filter = {
 					return;
 			}
 			// external searches won't have a filter parameter, so grab the value
-			if ($(this).hasClass('tablesorter-filter')) {
+			if ($this.hasClass('tablesorter-filter') && !$this.hasClass('tablesorter-external-filter')) {
 				external = filter;
 			} else {
 				external = [];
@@ -1193,24 +1194,20 @@ ts.addWidget({
 		}
 
 		// look for filter widget
-		$table.bind('filterEnd', function() {
-			if (updatingStickyFilters) { return; }
-			$stickyThead.find('.tablesorter-filter-row').children().each(function(indx) {
-				$(this).find(filterInputs).val( c.$filters.find(filterInputs).eq(indx).val() );
+		if ($table.hasClass('hasFilters')) {
+			$table.bind('filterEnd', function() {
+				// $(':focus') needs jQuery 1.6+
+				if ( $(document.activeElement).closest('thead')[0] !== $stickyThead[0] ) {
+					// don't update the stickyheader filter row if it already has focus
+					$stickyThead.find('.tablesorter-filter-row').children().each(function(indx) {
+						$(this).find(filterInputs).val( c.$filters.find(filterInputs).eq(indx).val() );
+					});
+				}
 			});
-		});
-		$stickyCells.find(filterInputs).bind('keyup search change', function(event) {
-			// ignore arrow and meta keys; allow backspace
-			if ((event.which < 32 && event.which !== 8) || (event.which >= 37 && event.which <=40)) { return; }
-			updatingStickyFilters = true;
-			var $f = $(this), column = $f.attr('data-column');
-			c.$filters.find(filterInputs).eq(column)
-				.val( $f.val() )
-				.trigger('search');
-			setTimeout(function() {
-				updatingStickyFilters = false;
-			}, wo.filter_searchDelay);
-		});
+
+			ts.filter.bindSearch( $table, $stickyCells.find('.tablesorter-filter').addClass('tablesorter-external-filter') );
+		}
+
 		$table.trigger('stickyHeadersInit');
 
 	},
