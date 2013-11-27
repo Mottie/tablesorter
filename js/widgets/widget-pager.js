@@ -124,6 +124,7 @@ tsp = ts.pager = {
 				size: wo.pager_size,
 				startRow: 0,
 				endRow: 0,
+				ajaxCounter: 0,
 				$size: null,
 				last: {}
 			}, c.pager);
@@ -524,10 +525,11 @@ tsp = ts.pager = {
 	},
 
 	getAjax: function(table, c){
-		var url = tsp.getAjaxUrl(table, c),
-		$doc = $(document),
-		wo = c.widgetOptions,
-		p = c.pager;
+		var counter,
+			url = tsp.getAjaxUrl(table, c),
+			$doc = $(document),
+			wo = c.widgetOptions,
+			p = c.pager;
 		if ( url !== '' ) {
 			if (c.showProcessing) {
 				ts.isProcessing(table, true); // show loading icon
@@ -536,8 +538,13 @@ tsp = ts.pager = {
 				tsp.renderAjax(null, table, c, xhr, exception);
 				$doc.unbind('ajaxError.pager');
 			});
+			counter = ++p.ajaxCounter;
 			wo.pager_ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 			wo.pager_ajaxObject.success = function(data) {
+				// Refuse to process old ajax commands that were overwritten by new ones - see #443
+				if (counter < p.ajaxCounter){
+					return;
+				}
 				tsp.renderAjax(data, table, c);
 				$doc.unbind('ajaxError.pager');
 				if (typeof p.oldAjaxSuccess === 'function') {

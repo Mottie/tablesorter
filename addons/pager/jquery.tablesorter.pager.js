@@ -29,8 +29,6 @@
 			ajaxObject: {
 				dataType: 'json'
 			},
-			
-			ajaxCounter: 0,
 
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
@@ -94,6 +92,7 @@
 			totalPages: 0,
 			filteredRows: 0,
 			filteredPages: 0,
+			ajaxCounter: 0,
 			currentFilters: [],
 			startRow: 0,
 			endRow: 0,
@@ -342,6 +341,7 @@
 		getAjax = function(table, p){
 			var url = getAjaxUrl(table, p),
 			$doc = $(document),
+			counter,
 			c = table.config;
 			if ( url !== '' ) {
 				if (c.showProcessing) {
@@ -352,16 +352,14 @@
 					$doc.unbind('ajaxError.pager');
 				});
 
-				var counter = ++p.ajaxCounter;
+				counter = ++p.ajaxCounter;
 
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
-				p.ajaxObject.success = function(data)
-				{
-					//	Refuse to process old ajax commands that were overwritten by new ones
-					if(counter != p.ajaxCounter){
+				p.ajaxObject.success = function(data) {
+					// Refuse to process old ajax commands that were overwritten by new ones - see #443
+					if (counter < p.ajaxCounter){
 						return;
 					}
-					
 					renderAjax(data, table, p);
 					$doc.unbind('ajaxError.pager');
 					if (typeof p.oldAjaxSuccess === 'function') {
