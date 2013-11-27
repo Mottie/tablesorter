@@ -1284,11 +1284,11 @@
 							if (init || !(c.widgetInit[w.id])) {
 								if (w.hasOwnProperty('options')) {
 									wo = table.config.widgetOptions = $.extend( true, {}, w.options, wo );
-									c.widgetInit[w.id] = true;
 								}
 								if (w.hasOwnProperty('init')) {
 									w.init(table, w, c, wo);
 								}
+								c.widgetInit[w.id] = true;
 							}
 							if (!init && w.hasOwnProperty('format')) {
 								w.format(table, c, wo, false);
@@ -1311,7 +1311,8 @@
 				for (i = 0; i < l; i++){
 					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
 						if (c.debug) { log( 'Refeshing widgets: Removing ' + w[i].id  ); }
-						if (w[i].hasOwnProperty('remove')) {
+						// only remove widgets that have been initialized - fixes #442
+						if (w[i].hasOwnProperty('remove') && c.widgetInit[w[i].id]) {
 							w[i].remove(table, c, c.widgetOptions);
 							c.widgetInit[w[i].id] = false;
 						}
