@@ -825,7 +825,8 @@ ts.filter = {
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if ($tbodies.eq(tbodyIndex).hasClass(ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
-			$rows = $tbody.children('tr').not('.' + c.cssChildRow).not('.group-header');
+			// skip child rows & widget added (removable) rows - fixes #448 thanks to @hempel!
+			$rows = $tbody.children('tr').not('.' + c.cssChildRow).not(c.selectorRemove);
 			len = $rows.length;
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
 				$tbody.children().show().removeClass(wo.filter_filteredRow);
