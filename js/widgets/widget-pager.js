@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 11/9/2013 (v2.14.1) */
+/* Pager widget (beta) for TableSorter 12/2/2013 (v2.14.3) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -470,7 +470,7 @@ tsp = ts.pager = {
 						tds += '<tr>';
 						for ( j = 0; j < d[i].length; j++ ) {
 							// build tbody cells; watch for data containing HTML markup - see #434
-							tds += /^\s*\<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
+							tds += /^\s*<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
 						}
 						tds += '</tr>';
 					}

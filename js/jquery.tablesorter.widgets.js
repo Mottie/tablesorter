@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 11/24/2013 (v2.14.2)
+/*! tableSorter 2.8+ widgets - updated 12/2/2013 (v2.14.3)
  *
  * Column Styles
  * Column Filters
@@ -605,7 +605,7 @@ ts.filter = {
 		});
 
 		if (wo.filter_hideFilters) {
-			ts.filter.hideFilters(table, c, wo);
+			ts.filter.hideFilters(table, c);
 		}
 
 		// show processing icon
@@ -767,7 +767,7 @@ ts.filter = {
 			return false;
 		}
 	},
-	hideFilters: function(table, c, wo) {
+	hideFilters: function(table, c) {
 		var $filterRow, $filterRow2, timer;
 		c.$table
 			.find('.tablesorter-filter-row')
@@ -1085,7 +1085,6 @@ ts.addWidget({
 			$stickyCells,
 			laststate = '',
 			spacing = 0,
-			updatingStickyFilters = false,
 			nonwkie = $table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(navigator.userAgent),
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
