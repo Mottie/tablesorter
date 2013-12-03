@@ -200,7 +200,7 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.unbind('filterStart filterEnd sortEnd disable enable destroy update pageSize '.split(' ').join('.pager '))
+			.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 			.bind('filterStart.pager', function(e, filters) {
 				p.currentFilters = filters;
 			})
@@ -224,7 +224,7 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				tsp.destroyPager(table, c);
 			})
-			.on('update.pager', function(e){
+			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 				e.stopPropagation();
 				tsp.hideRows(table, c);
 			})

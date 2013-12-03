@@ -612,7 +612,7 @@
 				}
 
 				$t
-					.unbind('filterStart filterEnd sortEnd disable enable destroy update pageSize '.split(' ').join('.pager '))
+					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
 					})
@@ -636,7 +636,7 @@
 						e.stopPropagation();
 						destroyPager(table, p);
 					})
-					.bind('update.pager', function(e){
+					.bind('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 						e.stopPropagation();
 						hideRows(table, p);
 					})
