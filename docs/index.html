@@ -383,7 +383,7 @@
 		<li><a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.8.3</span>)</li>
 		<li><a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>).</li>
-		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.10</span>)</li>
+		<li><a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.14.4</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">css3 sticky header widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.14.4</span>).</li>
 		<li>UITheme widget:
 			<ul>
@@ -1493,6 +1493,8 @@ $(function(){
       // *** stickyHeaders widget ***
       // extra class name added to the sticky header row
       stickyHeaders : '',
+      // jQuery selector or object to attach sticky header to
+      stickyHeaders_attachTo : null
       // number or jquery selector targeting the position:fixed element
       stickyHeaders_offset : 0,
       // added to table ID, if it exists
@@ -2344,7 +2346,29 @@ $('table').trigger('search', false);</pre></div>
   });
 });</pre></div>
 				</td>
-				<td></td>
+				<td><a href="example-widget-sticky-header.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-attachto">
+				<td><a href="#" class="permalink">stickyHeaders_attachTo</a></td>
+				<td>String</td>
+				<td>null</td>
+				<td>
+					Sticky Headers widget: points to the table wrapper to stick the headers to while scrolling. Use this option to point to their needs (<span class="version">v2.14.4</span>).
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-sticky-headers-attachto"><code>stickyHeaders_attachTo</code></a> option as follows:<br>
+					<pre class="prettyprint lang-javascript">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // Where to attach the stickyHeaders
+      stickyHeaders_attachTo : '.wrapper' // $('.wrapper') jQuery object can also be used
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-sticky-header.html">Example</a></td>
 			</tr>
 
 			<tr id="widget-sticky-headers-offset">
