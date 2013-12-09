@@ -927,7 +927,7 @@ ts.filter = {
 					$rows[rowIndex].style.display = (showRow ? '' : 'none');
 					$rows.eq(rowIndex)[showRow ? 'removeClass' : 'addClass'](wo.filter_filteredRow);
 					if (childRow.length) {
-						if (c.pager && c.pager.countChildRows || wo.pager_countChildRows) {
+						if (c.pager && c.pager.countChildRows || wo.pager_countChildRows || wo.filter_childRows) {
 							childRow[showRow ? 'removeClass' : 'addClass'](wo.filter_filteredRow); // see issue #396
 						}
 						childRow.toggle(showRow);
