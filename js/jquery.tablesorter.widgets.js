@@ -371,7 +371,7 @@ ts.addWidget({
 		$table
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
-			.unbind('addRows updateCell update updateComplete appendCache search filterStart filterEnd '.split(' ').join('.tsfilter '))
+			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join('.tsfilter '))
 			.find('.tablesorter-filter-row').remove();
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // remove tbody
@@ -555,8 +555,7 @@ ts.filter = {
 			}
 			if (event.type === 'filterReset') {
 				ts.filter.searching(table, []);
-			}
-			if (event.type === 'filterEnd') {
+			} else if (event.type === 'filterEnd') {
 				ts.filter.buildDefault(table, true);
 			} else {
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
@@ -754,7 +753,12 @@ ts.filter = {
 		}
 		// return if the last search is the same; but filter === false when updating the search
 		// see example-widget-filter.html filter toggle buttons
-		if (c.lastCombinedFilter === combinedFilters && filter !== false) { return; }
+		if (c.lastCombinedFilter === combinedFilters && filter !== false) {
+			return;
+		} else if (filter === false) {
+			// force filter refresh
+			c.lastCombinedFilter = null;
+		}
 		c.$table.trigger('filterStart', [filters]);
 		if (c.showProcessing) {
 			// give it time for the processing icon to kick in
