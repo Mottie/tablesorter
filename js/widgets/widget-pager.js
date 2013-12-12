@@ -307,12 +307,12 @@ tsp = ts.pager = {
 			wo = c.widgetOptions,
 			p = c.pager,
 			f = c.$table.hasClass('hasFilters') && !wo.pager_ajaxUrl,
-			t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove,
+			t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove +
+				(wo.pager_countChildRows ? '' : ',.' + c.cssChildRow),
 			sz = p.size || 10; // don't allow dividing by zero
-		p.$size.removeClass(wo.pager_css.disabled).removeAttr('disabled');
-		p.$goto.removeClass(wo.pager_css.disabled).removeAttr('disabled');
+		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled');
 		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
+		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr').not('.' + t).length : p.totalRows;
 		p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 			t = (p.size * p.page > p.filteredRows);

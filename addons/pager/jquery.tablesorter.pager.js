@@ -120,10 +120,11 @@
 			var i, pg, s, out,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
-				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove,
+				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove +
+					(p.countChildRows ? '' : ',.' + c.cssChildRow),
 				sz = p.size || 10; // don't allow dividing by zero
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr:not(.' + t + ')').length : p.totalRows;
+			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr').not('.' + t ).length : p.totalRows;
 			p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows);
