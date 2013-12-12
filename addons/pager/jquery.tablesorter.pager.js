@@ -615,6 +615,7 @@
 					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
+						p.page = 0; // fixes #456
 					})
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function() {
