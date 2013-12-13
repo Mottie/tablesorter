@@ -330,12 +330,12 @@
 				fixHeight(table, p);
 				// apply widgets after table has rendered
 				$t.trigger('applyWidgets');
-				if (p.initialized) {
-					$t.trigger('pagerChange', p);
-					$t.trigger('updateComplete');
-				} else {
-					$t.trigger('update');
-				}
+				$t.trigger('update', [false, function(){
+					if (p.initialized) {
+						$t.trigger('updateComplete');
+						$t.trigger('pagerChange', p);
+					}
+				}]);
 			}
 			if (!p.initialized) {
 				p.initialized = true;
