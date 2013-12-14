@@ -44,6 +44,23 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.14.4">Version 2.14.4</a> (12/14/2013)
+
+* Add Bootstrap 2 theme. Thanks to [themilkman](https://github.com/themilkman).
+* The `addRows` method now works with an empty table. Fixes [issue #450](https://github.com/Mottie/tablesorter/issues/450).
+* Sticky headers widget
+  * Add `stickyHeaders_attachTo` option. Fixes issues [#295](https://github.com/Mottie/tablesorter/issues/295) &amp; [#314](https://github.com/Mottie/tablesorter/issues/314).
+  * Add `cssStickyHeaders_attachTo` option. Fixes [issue #453](https://github.com/Mottie/tablesorter/issues/453).
+  * Added padding to wrapper in demo so Chrome doesn't add a horizontal scroll bar
+* Filter widget
+  * Fix forced search to work again (i.e. `$('table').trigger('search', false);`)
+  * Fix child row filtering - see [this Stackoverflow question](http://stackoverflow.com/q/20342203/145346)
+* Pager
+  * The pager will update properly when ajax returns no rows. Fixes [issue #456](https://github.com/Mottie/tablesorter/issues/456)
+  * Filter searches will now reset pager to the first page. Fixes [issue #456](https://github.com/Mottie/tablesorter/issues/456)
+  * The pager will now properly count filtered rows when including/excluding child rows. Fixes [this Stackoverflow question](http://stackoverflow.com/q/20342203/145346).
+  * The table cache will once again update after an ajax call. Fixes issues [#436](https://github.com/Mottie/tablesorter/issues/436) &amp; [#437](https://github.com/Mottie/tablesorter/issues/437).
+
 #### <a name="v2.14.3">Version 2.14.3</a> (12/2/2013)
 
 * Core

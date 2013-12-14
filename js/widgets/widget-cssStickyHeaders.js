@@ -1,4 +1,4 @@
-/*! tablesorter CSS Sticky Headers widget - updated 12/8/2013 (v2.14.4)
+/*! tablesorter CSS Sticky Headers widget - updated 12/14/2013 (v2.14.4)
 * Requires a modern browser, tablesorter v2.8+
 */
 /*global jQuery: false, unused:false */
