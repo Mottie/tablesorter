@@ -484,7 +484,7 @@ tsp = ts.pager = {
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
 					hsh = $t.hasClass('hasStickyHeaders');
-					$sh = hsh ? c.$sticky.children('thead:first').children().children() : '';
+					$sh = hsh ? wo.$sticky.children('thead:first').children().children() : '';
 					$f = $t.find('tfoot tr:first').children();
 					// don't change td headers (may contain pager)
 					c.$headers.filter('th').each(function(j){

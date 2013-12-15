@@ -1066,7 +1066,10 @@ ts.addWidget({
 		stickyHeaders_zIndex : 2 // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
 	},
 	format: function(table, c, wo) {
-		if (c.$table.hasClass('hasStickyHeaders')) { return; }
+		// filter widget doesn't initialize on an empty table. Fixes #449
+		if ( c.$table.hasClass('hasStickyHeaders') || ($.inArray('filter', c.widgets) >= 0 && !c.$table.hasClass('hasFilters')) ) {
+			return;
+		}
 		var $cell,
 			$table = c.$table,
 			$attach = $(wo.stickyHeaders_attachTo),
