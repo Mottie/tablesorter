@@ -2661,7 +2661,6 @@ $.extend($.tablesorter.themes.jui, {
         return [ formatted_data, total_rows ];
       }
     });
-  });
 });</pre>The <code>ajaxUrl</code> template replaces the following tags with values from the tablesorter plugin and pager addon:
 <br>
 <table class="info">
@@ -2716,7 +2715,6 @@ $.extend($.tablesorter.themes.jui, {
         return url += '&amp;currntUrl=' + window.location.href;
       }
     });
-  });
 });</pre></div>
 				</td>
 				<td><a href="example-pager-ajax.html">Example</a></td>
@@ -2748,7 +2746,6 @@ $.extend($.tablesorter.themes.jui, {
         return [ total_rows ];
       }
     });
-  });
 });</pre></div>
 				</td>
 				<td><a href="example-pager-ajax.html">Example</a></td>
@@ -3818,9 +3815,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pagerChange pagerComplete', function(e,c){
+    .bind('pagerChange pagerComplete', function(event, options){
+      // options = table.config.pager (pager addon)
+      // options = table.config (pager widget) - so use options.pager.page below
       // c.totalPages contains the total number of pages
-      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+      $('#display').html( event.type + " event triggered, now on page " + (options.page + 1) );
     });
 
 });</pre></div>
@@ -3844,9 +3843,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pagerChange pagerComplete', function(e,c){
+    .bind('pagerChange pagerComplete', function(event, options){
+      // options = table.config.pager (pager addon)
+      // options = table.config (pager widget) - so use options.pager.page below
       // c.totalPages contains the total number of pages
-      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+      $('#display').html( event.type + " event triggered, now on page " + (options.page + 1) );
     });
 
 });</pre></div>
@@ -3866,8 +3867,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     .tablesorter()
 
     // bind to pager initialized event BEFORE calling the addon
-    .bind('pagerBeforeInitialized', function(e, c){
-      // e = event object; c = pager options
+    .bind('pagerBeforeInitialized', function(event, options){
+      // options = table.config.pager (pager addon)
+      // options = table.config (pager widget)
+
+      // event = event object; options = pager options
     })
 
     // initialize the pager plugin
@@ -3892,9 +3896,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     .tablesorter()
 
     // bind to pager initialized event BEFORE calling the addon
-    .bind('pagerInitialized', function(e, c){
+    .bind('pagerInitialized', function(event, options){
+      // options = table.config.pager (pager addon)
+      // options = table.config (pager widget) - so use options.pager.page below
       // c.totalPages contains the total number of pages
-      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+      $('#display').html( e.type + " event triggered, now on page " + (options.page + 1) );
     })
 
     // initialize the pager plugin
@@ -3925,9 +3931,11 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre></div>
     })
 
     // bind to pager events
-    .bind('pageMoved', function(e, c){
+    .bind('pageMoved', function(event, options){
+      // options = table.config.pager (pager addon)
+      // options = table.config (pager widget) - so use options.pager.page below
       // c.totalPages contains the total number of pages
-      $('#display').html( e.type + " event triggered, now on page " + (c.page + 1) );
+      $('#display').html( event.type + " event triggered, now on page " + (options.page + 1) );
     });
 
 });</pre></div>

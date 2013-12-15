@@ -522,7 +522,7 @@ tsp = ts.pager = {
 			$t.trigger('update', [false, function(){
 				if (p.initialized) {
 					$t.trigger('updateComplete');
-					$t.trigger('pagerChange', p);
+					$t.trigger('pagerChange', c);
 				}
 			}]);
 		}
