@@ -272,7 +272,7 @@
 						//ensure a zero returned row count doesn't fail the logical ||
 						rr_count = result[t ? 1 : 0];
 						p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
-						d = p.totalRows === 0 ? [] : result[t ? 0 : 1] || []; // row data
+						d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
 						th = result[2]; // headers
 					}
 					l = d.length;
