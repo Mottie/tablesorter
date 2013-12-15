@@ -1089,7 +1089,7 @@ ts.addWidget({
 					margin     : 0,
 					top        : stickyOffset,
 					left       : 0,
-					visibility : $attach.length ? 'visible' : 'hidden',
+					visibility : 'hidden',
 					zIndex     : wo.stickyHeaders_zIndex ? wo.stickyHeaders_zIndex : 2
 				}),
 			$stickyThead = $stickyTable.children('thead:first').addClass('tablesorter-stickyHeader ' + wo.stickyHeaders),
@@ -1108,8 +1108,8 @@ ts.addWidget({
 					spacing = parseInt($header.eq(0).css('border-left-width'), 10) * 2;
 				}
 				$stickyTable.css({
-					left : $attach.length ? parseInt($table.css('padding-left'), 10) +
-						parseInt($table.css('margin-left'), 10) + parseInt($table.css('border-left-width'), 10) :
+					left : $attach.length ? parseInt($attach.css('padding-left'), 10) +
+						parseInt($attach.css('margin-left'), 10) + parseInt($table.css('border-left-width'), 10) :
 						$thead.offset().left - $win.scrollLeft() - spacing,
 					width: $table.width()
 				});
