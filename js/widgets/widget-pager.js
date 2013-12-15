@@ -54,6 +54,9 @@ ts.addWidget({
 			dataType: 'json'
 		},
 
+		// set this to false if you want to block ajax loading on init
+		pager_processAjaxOnInit: true,
+
 		// process ajax so that the following information is returned:
 		// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 		// example:
@@ -476,7 +479,7 @@ tsp = ts.pager = {
 						tds += '</tr>';
 					}
 					// add rows to first tbody
-					c.$tbodies.eq(0).html( tds );
+					wo.pager_processAjaxOnInit ? c.$tbodies.eq(0).html( tds ) : wo.pager_processAjaxOnInit = true;
 				}
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {

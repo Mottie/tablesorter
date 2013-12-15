@@ -30,6 +30,9 @@
 				dataType: 'json'
 			},
 
+			// set this to false if you want to block ajax loading on init
+			processAjaxOnInit: true,
+
 			// process ajax so that the following information is returned:
 			// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 			// example:
@@ -290,7 +293,7 @@
 							tds += '</tr>';
 						}
 						// add rows to first tbody
-						c.$tbodies.eq(0).html( tds );
+						p.processAjaxOnInit ? c.$tbodies.eq(0).html( tds ) : p.processAjaxOnInit = true;
 					}
 					// only add new header text if the length matches
 					if ( th && th.length === hl ) {
