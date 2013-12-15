@@ -115,7 +115,7 @@
 			tp = Math.min( p.totalPages, p.filteredPages );
 			if ( p.updateArrows ) {
 				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ ( dis || p.page === 0 ) ? a : r ](d);
-				p.$container.find(p.cssNext + ',' + p.cssLast)[ ( dis || p.page === tp - 1 ) ? a : r ](d);
+				p.$container.find(p.cssNext + ',' + p.cssLast)[ ( dis || p.page === tp - 1 || p.totalPages === 0 ) ? a : r ](d);
 			}
 		},
 
@@ -139,7 +139,7 @@
 				s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
 					// {page} = one-based index; {page+#} = zero based index +/- value
 					.replace(/\{page([\-+]\d+)?\}/gi, function(m,n){
-						return p.page + (n ? parseInt(n, 10) : 1);
+						return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
 					})
 					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){

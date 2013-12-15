@@ -301,7 +301,7 @@ tsp = ts.pager = {
 			tp = Math.min( p.totalPages, p.filteredPages );
 		if ( wo.pager_updateArrows ) {
 			p.$container.find(s.first + ',' + s.prev).toggleClass(wo.pager_css.disabled, dis || p.page === 0);
-			p.$container.find(s.next + ',' + s.last).toggleClass(wo.pager_css.disabled, dis || p.page === tp - 1);
+			p.$container.find(s.next + ',' + s.last).toggleClass(wo.pager_css.disabled, dis || p.page === tp - 1 || p.totalPages === 0);
 		}
 	},
 
@@ -327,7 +327,7 @@ tsp = ts.pager = {
 			s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
 				// {page} = one-based index; {page+#} = zero based index +/- value
 				.replace(/\{page([\-+]\d+)?\}/gi, function(m,n){
-					return p.page + (n ? parseInt(n, 10) : 1);
+					return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
 				})
 				// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 				.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
