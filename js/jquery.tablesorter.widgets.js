@@ -419,23 +419,6 @@ ts.filter = {
 			}
 			return null;
 		},
-		// Look for quotes or equals to get an exact match; ignore type since iExact could be numeric
-		exact: function( filter, iFilter, exact, iExact ) {
-			/*jshint eqeqeq:false */
-			if (ts.filter.regex.exact.test(iFilter)) {
-				return iFilter.replace(ts.filter.regex.exact, '') == iExact;
-			}
-			return null;
-		},
-		// Look for a not match
-		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo ) {
-			if ( /^\!/.test(iFilter) ) {
-				iFilter = iFilter.replace('!', '');
-				var indx = iExact.search( $.trim(iFilter) );
-				return iFilter === '' ? true : !(wo.filter_startsWith ? indx === 0 : indx >= 0);
-			}
-			return null;
-		},
 		// Look for operators >, >=, < or <=
 		operators: function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
 			if ( /^[<>]=?/.test(iFilter) ) {
@@ -459,6 +442,23 @@ ts.filter = {
 				// keep showing all rows if nothing follows the operator
 				if ( !result && savedSearch === '' ) { result = true; }
 				return result;
+			}
+			return null;
+		},
+		// Look for quotes or equals to get an exact match; ignore type since iExact could be numeric
+		exact: function( filter, iFilter, exact, iExact ) {
+			/*jshint eqeqeq:false */
+			if (ts.filter.regex.exact.test(iFilter)) {
+				return iFilter.replace(ts.filter.regex.exact, '') == iExact;
+			}
+			return null;
+		},
+		// Look for a not match
+		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo ) {
+			if ( /^\!/.test(iFilter) ) {
+				iFilter = iFilter.replace('!', '');
+				var indx = iExact.search( $.trim(iFilter) );
+				return iFilter === '' ? true : !(wo.filter_startsWith ? indx === 0 : indx >= 0);
 			}
 			return null;
 		},
