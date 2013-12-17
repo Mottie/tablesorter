@@ -88,6 +88,7 @@ ts.addWidget({
 		}
 	},
 	format: function(table, c, wo) {
+		if ($.isEmptyObject(c.cache)) { return; }
 		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, time, cache,
 			lang = wo.grouping_language,
 			group = '',
