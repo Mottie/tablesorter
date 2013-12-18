@@ -501,7 +501,7 @@ ts.filter = {
 		},
 		// Look for wild card: ? = single, * = multiple, or | = logical OR
 		wild : function( filter, iFilter, exact, iExact, cached, index, table ) {
-			if ( /[\?|\*]/.test(iFilter) || /\s+OR\s+/.test(filter) ) {
+			if ( /[\?|\*]/.test(iFilter) || /\s+OR\s+/i.test(filter) ) {
 				var c = table.config,
 					query = iFilter.replace(/\s+OR\s+/gi,"|");
 				// look for an exact match with the "or" unless the "filter-match" class is found
