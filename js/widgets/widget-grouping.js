@@ -64,7 +64,7 @@ ts.grouping = {
 			// clear pager saved spacer height (in case the rows are collapsed)
 			c.$table.data('pagerSavedHeight', 0);
 		}
-		if (column >= 0 && !c.$headers.eq(column).hasClass('group-false')) {
+		if (column >= 0 && !c.$headers.filter('[data-column="' + column + '"]:last').hasClass('group-false')) {
 			if (c.debug){ time = new Date(); }
 			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 				cache = c.cache[tbodyIndex].normalized;
@@ -76,20 +76,20 @@ ts.grouping = {
 				for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
 					if ( $rows.eq(rowIndex).is(':visible') ) {
 						// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
-						groupClass = (c.$headers.eq(column).attr('class') || '').match(/(group-\w+(-\w+)?)/g);
+						groupClass = (c.$headers.filter('[data-column="' + column + '"]:last').attr('class') || '').match(/(group-\w+(-\w+)?)/g);
 						// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
 						grouping = groupClass ? groupClass[0].split('-') : ['','letter',1]; // default to letter 1
 						// fixes #438
 						if (ts.grouping.types[grouping[1]]) {
 							currentGroup = cache[rowIndex] ? 
-								ts.grouping.types[grouping[1]]( c, c.$headers.eq(column), cache[rowIndex][column], /date/.test(groupClass) ?
+								ts.grouping.types[grouping[1]]( c, c.$headers.filter('[data-column="' + column + '"]:last'), cache[rowIndex][column], /date/.test(groupClass) ?
 								grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group, lang ) : currentGroup;
 							if (group !== currentGroup) {
 								group = currentGroup;
 								// show range if number > 1
 								if (grouping[1] === 'number' && grouping[2] > 1 && currentGroup !== '') {
 									currentGroup += ' - ' + (parseInt(currentGroup, 10) +
-										((parseInt(grouping[2],10) - 1) * (c.$headers.eq(column).hasClass(ts.css.sortAsc) ? 1 : -1)));
+										((parseInt(grouping[2],10) - 1) * (c.$headers.filter('[data-column="' + column + '"]:last').hasClass(ts.css.sortAsc) ? 1 : -1)));
 								}
 								if ($.isFunction(wo.group_formatter)) {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
