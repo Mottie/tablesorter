@@ -3243,7 +3243,7 @@ $("table").trigger("sortReset");</pre></div>
 			<tr id="update">
 				<td><a href="#" class="permalink">update</a> / <a href="#" class="permalink">updateRow</a></td>
 				<td>Update the <code>tbody</code>'s stored data (<code>update</code> &amp; <code>updateRow</code> do exactly the same thing)
-					<div class="collapsible">
+					<div class="collapsible"><br>
 						<pre class="prettyprint lang-javascript">// Add new content
 $("table tbody").append(html);
 
@@ -3264,7 +3264,9 @@ $("table").trigger("update", [resort, callback]);
 var sorting = [[2,1],[0,0]];
 $("table")
 	.trigger("update", [ false ])
-	.trigger("sorton", [sorting]);</pre></div>
+	.trigger("sorton", [sorting]);</pre>
+	Note: <code>updateRow</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
+	</div>
 				</td>
 				<td><a href="example-ajax.html">Example</a></td>
 			</tr>
