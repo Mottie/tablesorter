@@ -653,7 +653,7 @@ ts.filter = {
 		return filters;
 	},
 	buildRow: function(table, c, wo) {
-		var column, $header, buildSelect, disabled,
+		var column, $header, buildSelect, disabled, name,
 			// c.columns defined in computeThIndexes()
 			columns = c.columns,
 			buildFilter = '<tr class="tablesorter-filter-row">';
@@ -699,7 +699,11 @@ ts.filter = {
 				}
 			}
 			if (buildFilter) {
-				buildFilter.addClass('tablesorter-filter ' + wo.filter_cssFilter).attr('data-column', column);
+				// add filter class name
+				name = ( $.isArray(wo.filter_cssFilter) ?
+					(typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '') :
+					wo.filter_cssFilter ) || '';
+				buildFilter.addClass('tablesorter-filter ' + name).attr('data-column', column);
 				if (disabled) {
 					buildFilter.addClass('disabled')[0].disabled = true; // disabled!
 				}

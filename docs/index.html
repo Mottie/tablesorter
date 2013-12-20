@@ -1850,10 +1850,12 @@ $(function(){
 
 			<tr id="widget-filter-cssfilter">
 				<td><a href="#" class="permalink">filter_cssFilter</a></td>
-				<td>String</td>
+				<td>String or Array</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to each filter - <span class="version updated">v2.11</span>
+				<td>Additional CSS class applied to each filter - <span class="version updated">v2.14.6</span>
 					<div class="collapsible"><br>
+						As of v2.14.6, this option can also contain an array of class names that are to be applied to input filters.<br>
+						<br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-filter&quot;</code> class will always be added to the filter; this option now contains any additional class names to add.
 						<p>Use the <a href="#widget-filter-cssfilter"><code>&quot;tablesorter-filter&quot;</code></a> option to add an extra css class name as follows:</p>
 						<pre class="prettyprint lang-javascript">$(function(){
@@ -1861,6 +1863,7 @@ $(function(){
     widgets: ["filter"],
     widgetOptions : {
       // css class applied to the table row containing the filters & the inputs within that row
+      // or [ "filter1", "filter2", "filter3", etc... ]
       filter_cssFilter : "tablesorter-filter"
     }
   });
