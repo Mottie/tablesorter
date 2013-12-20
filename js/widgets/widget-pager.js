@@ -759,7 +759,7 @@ tsp = ts.pager = {
 		p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 		p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || 10;
 		p.$size.val(p.size); // set page size
-		p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / p.size );
+		p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 		c.$table.removeClass('pagerDisabled');
 		if ( triggered ) {
 			c.$table.trigger('updateRow');

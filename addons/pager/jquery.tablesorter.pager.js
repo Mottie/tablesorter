@@ -562,7 +562,7 @@
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			p.size = $.data(table, 'pagerLastSize') || parseInt(pg.find('option[selected]').val(), 10) || p.size || 10;
 			pg.val(p.size); // set page size
-			p.totalPages = Math.ceil( Math.min( p.totalPages, p.filteredPages ) / p.size );
+			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			if ( triggered ) {
 				$(table).trigger('updateRow');
 				setPageSize(table, p.size, p);
