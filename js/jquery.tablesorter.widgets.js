@@ -1264,7 +1264,8 @@ ts.addWidget({
 			$next = null,
 			fullWidth = Math.abs($table.parent().width() - $table.width()) < 20,
 			stopResize = function() {
-				if (ts.storage && $target) {
+				if (ts.storage && $target && $next) {
+					storedSizes = {};
 					storedSizes[$target.index()] = $target.width();
 					storedSizes[$next.index()] = $next.width();
 					$target.width( storedSizes[$target.index()] );
