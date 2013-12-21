@@ -634,22 +634,17 @@ ts.filter = {
 		c.$table.trigger('filterInit');
 	},
 	setDefaults: function(table, c, wo) {
-		var indx, isArray,
-			filters = [],
+		var indx, isArray, saved,
+			// get current (default) filters
+			filters = ts.getFilters(table),
 			columns = c.columns;
 		if (wo.filter_saveFilters && ts.storage) {
-			filters = ts.storage( table, 'tablesorter-filters' ) || [];
-			isArray = $.isArray(filters);
-			// make sure we're not just saving an empty array
-			if (isArray && filters.join('') === '' || !isArray ) { filters = []; }
+			saved = ts.storage( table, 'tablesorter-filters' ) || [];
+			isArray = $.isArray(saved);
+			// make sure we're not just getting an empty array
+			if ( !(isArray && saved.join('') === '' || !isArray) ) { filters = saved; }
 		}
-		// if not filters saved, then check default settings
-		if (!filters.length) {
-			for (indx = 0; indx < columns; indx++) {
-				filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
-			}
-		}
-		$(table).data('lastSearch', filters);
+		c.$table.data('lastSearch', filters);
 		return filters;
 	},
 	buildRow: function(table, c, wo) {
