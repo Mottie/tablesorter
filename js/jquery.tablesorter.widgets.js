@@ -809,7 +809,7 @@ ts.filter = {
 	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters) { return; }
-		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
+		var cached, len, $rows, cacheIndex, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
 			searchFiltered, filterMatched, showRow, time,
 			c = table.config,
@@ -829,10 +829,10 @@ ts.filter = {
 			if ($tbodies.eq(tbodyIndex).hasClass(ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
 			// skip child rows & widget added (removable) rows - fixes #448 thanks to @hempel!
-			$rows = $tbody.children('tr').not('.' + c.cssChildRow).not(c.selectorRemove);
+			$rows = $tbody.children('tr').not(c.selectorRemove);
 			len = $rows.length;
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$tbody.children().show().removeClass(wo.filter_filteredRow);
+				$tbody.children().not('.' + c.cssChildRow).show().removeClass(wo.filter_filteredRow);
 			} else {
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
@@ -844,6 +844,7 @@ ts.filter = {
 				// can't search when all rows are hidden - this happens when looking for exact matches
 				if (searchFiltered && $rows.filter(':visible').length === 0) { searchFiltered = false; }
 				// loop through the rows
+				cacheIndex = 0;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 					childRow = $rows[rowIndex].className;
 					// skip child rows & already filtered rows
@@ -860,7 +861,7 @@ ts.filter = {
 					for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 						// ignore if filter is empty or disabled
 						if (filters[columnIndex] || wo.filter_anyMatch) {
-							cached = c.cache[tbodyIndex].normalized[rowIndex][columnIndex];
+							cached = c.cache[tbodyIndex].normalized[cacheIndex][columnIndex];
 							// check if column data should be from the cell or from parsed data
 							if (wo.filter_useParsedData || parsed[columnIndex]) {
 								exact = cached;
@@ -931,6 +932,7 @@ ts.filter = {
 						}
 						childRow.toggle(showRow);
 					}
+					cacheIndex++;
 				}
 			}
 			ts.processTbody(table, $tbody, false);
@@ -1178,7 +1180,6 @@ ts.addWidget({
 			});
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$table.after( $stickyTable );
-
 		// make it sticky!
 		$win.bind('scroll.tsSticky resize.tsSticky', function(event) {
 			if (!$table.is(':visible')) { return; } // fixes #278
