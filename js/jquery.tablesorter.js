@@ -543,9 +543,9 @@
 				var a, i, j, o, s,
 					c = table.config,
 					k = !e[c.sortMultiSortKey],
-					$this = $(table);
+					$table = $(table);
 				// Only call sortStart if sorting is enabled
-				$this.trigger("sortStart", table);
+				$table.trigger("sortStart", table);
 				// get current column sort order
 				cell.count = e[c.sortResetKey] ? 2 : (cell.count + 1) % (c.sortReset ? 3 : 2);
 				// reset all sorts on non-current column - issue #30
@@ -629,7 +629,7 @@
 					}
 				}
 				// sortBegin event triggered immediately before the sort
-				$this.trigger("sortBegin", table);
+				$table.trigger("sortBegin", table);
 				// setTimeout needed so the processing icon shows up
 				setTimeout(function(){
 					// set css for headers
@@ -729,46 +729,11 @@
 				}
 			}
 
-			function bindEvents(table){
+			function bindMethods(table){
 				var c = table.config,
-					$this = c.$table,
-					j, downTime;
-				// apply event handling to headers
-				c.$headers
-				// http://stackoverflow.com/questions/5312849/jquery-find-self;
-				.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) )
-				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter')
-				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keypress.tablesorter', function(e, external) {
-					// only recognize left clicks or enter
-					if ( ((e.which || e.button) !== 1 && !/sort|keypress/.test(e.type)) || (e.type === 'keypress' && e.which !== 13) ) {
-						return;
-					}
-					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (e.type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return; }
-					// set timer on mousedown
-					if (e.type === 'mousedown') {
-						downTime = new Date().getTime();
-						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
-					}
-					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
-					// jQuery v1.2.6 doesn't have closest()
-					var $cell = /TH|TD/.test(this.tagName) ? $(this) : $(this).parents('th, td').filter(':first'), cell = $cell[0];
-					if (!cell.sortDisabled) {
-						initSort(table, cell, e);
-					}
-				});
-				if (c.cancelSelection) {
-					// cancel selection
-					c.$headers
-						.attr('unselectable', 'on')
-						.bind('selectstart', false)
-						.css({
-							'user-select': 'none',
-							'MozUserSelect': 'none' // not needed for jQuery 1.8+
-						});
-				}
+					$table = c.$table;
 				// apply easy methods that trigger bound events
-				$this
+				$table
 				.unbind('sortReset update updateRows updateCell updateAll addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
 				.bind("sortReset.tablesorter", function(e){
 					e.stopPropagation();
@@ -782,7 +747,8 @@
 					ts.refreshWidgets(table, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
-					bindEvents(table);
+					ts.bindEvents(table, c.$headers);
+					bindMethods(table);
 					commonUpdate(table, resort, callback);
 				})
 				.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
@@ -793,10 +759,10 @@
 				})
 				.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
 					e.stopPropagation();
-					$this.find(c.selectorRemove).remove();
+					$table.find(c.selectorRemove).remove();
 					// get position from the dom
 					var l, row, icell,
-					$tb = $this.find('tbody'),
+					$tb = $table.find('tbody'),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
 					tbdy = $tb.index( $(cell).parents('tbody').filter(':first') ),
@@ -809,7 +775,7 @@
 						l = c.cache[tbdy].normalized[row].length - 1;
 						c.cache[tbdy].row[table.config.cache[tbdy].normalized[row][l]] = $row;
 						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
-						checkResort($this, resort, callback);
+						checkResort($table, resort, callback);
 					}
 				})
 				.bind("addRows.tablesorter", function(e, $row, resort, callback) {
@@ -819,9 +785,10 @@
 						updateHeader(table);
 						commonUpdate(table, resort, callback);
 					} else {
-						var i, rows = $row.filter('tr').length,
+						var i, j,
+						rows = $row.filter('tr').length,
 						dat = [], l = $row[0].cells.length,
-						tbdy = $this.find('tbody').index( $row.parents('tbody').filter(':first') );
+						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!c.parsers) {
 							buildParserCache(table);
@@ -840,20 +807,20 @@
 							dat = [];
 						}
 						// resort using current settings
-						checkResort($this, resort, callback);
+						checkResort($table, resort, callback);
 					}
 				})
 				.bind("sorton.tablesorter", function(e, list, callback, init) {
 					var c = table.config;
 					e.stopPropagation();
-					$this.trigger("sortStart", this);
+					$table.trigger("sortStart", this);
 					// update header count index
 					updateHeaderSortCount(table, list);
 					// set css for headers
 					setHeadersCss(table);
 					// fixes #346
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
-					$this.trigger("sortBegin", this);
+					$table.trigger("sortBegin", this);
 					// sort the table and append it to the dom
 					multisort(table);
 					appendToTable(table, init);
@@ -909,7 +876,7 @@
 				}
 
 				var k = '',
-					$this = $(table),
+					$table = $(table),
 					m = $.metadata;
 				// initialization flag
 				table.hasInitialized = false;
@@ -931,11 +898,11 @@
 				// digit sort text location; keeping max+/- for backwards compatibility
 				c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 				// add table theme class only if there isn't already one there
-				if (!/tablesorter\-/.test($this.attr('class'))) {
+				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
 				}
-				c.$table = $this.addClass(ts.css.table + ' ' + c.tableClass + k);
-				c.$tbodies = $this.children('tbody:not(.' + c.cssInfoBlock + ')');
+				c.$table = $table.addClass(ts.css.table + ' ' + c.tableClass + k);
+				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')');
 				c.widgetInit = {}; // keep a list of initialized widgets
 				// build headers
 				buildHeaders(table);
@@ -948,19 +915,20 @@
 				// delayInit will delay building the cache until the user starts a sort
 				if (!c.delayInit) { buildCache(table); }
 				// bind all header events and methods
-				bindEvents(table);
+				ts.bindEvents(table, c.$headers);
+				bindMethods(table);
 				// get sort list from jQuery data or metadata
-				// in jQuery < 1.4, an error occurs when calling $this.data()
-				if (c.supportsDataObject && typeof $this.data().sortlist !== 'undefined') {
-					c.sortList = $this.data().sortlist;
-				} else if (m && ($this.metadata() && $this.metadata().sortlist)) {
-					c.sortList = $this.metadata().sortlist;
+				// in jQuery < 1.4, an error occurs when calling $table.data()
+				if (c.supportsDataObject && typeof $table.data().sortlist !== 'undefined') {
+					c.sortList = $table.data().sortlist;
+				} else if (m && ($table.metadata() && $table.metadata().sortlist)) {
+					c.sortList = $table.metadata().sortlist;
 				}
 				// apply widget init code
 				ts.applyWidget(table, true);
 				// if user has supplied a sort list to constructor
 				if (c.sortList.length > 0) {
-					$this.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
+					$table.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
 				} else if (c.initWidgets) {
 					// apply widget format
 					ts.applyWidget(table);
@@ -968,7 +936,7 @@
 
 				// show processesing icon
 				if (c.showProcessing) {
-					$this
+					$table
 					.unbind('sortBegin.tablesorter sortEnd.tablesorter')
 					.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
 						ts.isProcessing(table, e.type === 'sortBegin');
@@ -981,7 +949,7 @@
 				if (c.debug) {
 					ts.benchmark("Overall initialization time", $.data( table, 'startoveralltimer'));
 				}
-				$this.trigger('tablesorter-initialized', table);
+				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
 			};
 
@@ -1024,6 +992,46 @@
 
 			ts.clearTableBody = function(table) {
 				$(table)[0].config.$tbodies.empty();
+			};
+
+			ts.bindEvents = function(table, $headers){
+				var downTime,
+				c = table.config;
+				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
+				$headers
+				// http://stackoverflow.com/questions/5312849/jquery-find-self;
+				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
+				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keyup.tablesorter')
+				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keyup.tablesorter', function(e, external) {
+					var cell, type = e.type;
+					// only recognize left clicks or enter
+					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
+						return;
+					}
+					// ignore long clicks (prevents resizable widget from initializing a sort)
+					if (type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return; }
+					// set timer on mousedown
+					if (type === 'mousedown') {
+						downTime = new Date().getTime();
+						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
+					}
+					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
+					// jQuery v1.2.6 doesn't have closest()
+					cell = /TH|TD/.test(this.tagName) ? this : $(this).parents('th, td')[0];
+					if (!cell.sortDisabled) {
+						initSort(table, cell, e);
+					}
+				});
+				if (c.cancelSelection) {
+					// cancel selection
+					$headers
+						.attr('unselectable', 'on')
+						.bind('selectstart', false)
+						.css({
+							'user-select': 'none',
+							'MozUserSelect': 'none' // not needed for jQuery 1.8+
+						});
+				}
 			};
 
 			// restore headers

@@ -707,6 +707,7 @@ ts.filter = {
 	},
 	bindSearch: function(table, $el) {
 		table = $(table)[0];
+		$el = $($el); // allow passing a selector string
 		var external, wo = table.config.widgetOptions;
 		// include change for select - fixes #473
 		$el.unbind('keyup search change filterReset')
@@ -1161,24 +1162,9 @@ ts.addWidget({
 			.bind('pagerComplete.tsSticky', function() {
 				resizeHeader();
 			});
-			// http://stackoverflow.com/questions/5312849/jquery-find-self;
-			$header.find(c.selectorSort).add( c.$headers.filter(c.selectorSort) ).each(function(indx) {
-				var $header = $(this),
-				// clicking on sticky will trigger sort
-				$cell = $stickyThead.children('tr.tablesorter-headerRow').children().eq(indx).bind('mouseup', function(event) {
-					$header.trigger(event, true); // external mouseup flag (click timer is ignored)
-				});
-				// prevent sticky header text selection
-				if (c.cancelSelection) {
-					$cell
-						.attr('unselectable', 'on')
-						.bind('selectstart', false)
-						.css({
-							'user-select': 'none',
-							'MozUserSelect': 'none'
-						});
-				}
-			});
+
+		ts.bindEvents(table, $stickyThead.children().children());
+
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$table.after( $stickyTable );
 		// make it sticky!
