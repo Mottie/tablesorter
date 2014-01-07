@@ -479,7 +479,11 @@ tsp = ts.pager = {
 						tds += '</tr>';
 					}
 					// add rows to first tbody
-					wo.pager_processAjaxOnInit ? c.$tbodies.eq(0).html( tds ) : wo.pager_processAjaxOnInit = true;
+					if (wo.pager_processAjaxOnInit) {
+						c.$tbodies.eq(0).html( tds );
+					} else {
+						wo.pager_processAjaxOnInit = true;
+					}
 				}
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
@@ -519,7 +523,7 @@ tsp = ts.pager = {
 			tsp.fixHeight(table, c);
 			// apply widgets after table has rendered
 			$t.trigger('applyWidgets');
-			$t.trigger('updateRow', [false, function(){
+			$t.trigger('updateRows', [false, function(){
 				if (p.initialized) {
 					$t.trigger('updateComplete');
 					$t.trigger('pagerChange', c);
@@ -762,7 +766,7 @@ tsp = ts.pager = {
 		p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 		c.$table.removeClass('pagerDisabled');
 		if ( triggered ) {
-			c.$table.trigger('updateRow');
+			c.$table.trigger('updateRows');
 			tsp.setPageSize(table, p.size, c);
 			tsp.hideRowsSetup(table, c);
 			tsp.fixHeight(table, c);

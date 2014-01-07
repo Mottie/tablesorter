@@ -296,7 +296,11 @@
 							tds += '</tr>';
 						}
 						// add rows to first tbody
-						p.processAjaxOnInit ? c.$tbodies.eq(0).html( tds ) : p.processAjaxOnInit = true;
+						if (p.processAjaxOnInit) {
+							c.$tbodies.eq(0).html( tds );
+						} else {
+							p.processAjaxOnInit = true;
+						}
 					}
 					// only add new header text if the length matches
 					if ( th && th.length === hl ) {
@@ -336,7 +340,7 @@
 				fixHeight(table, p);
 				// apply widgets after table has rendered
 				$t.trigger('applyWidgets');
-				$t.trigger('updateRow', [false, function(){
+				$t.trigger('updateRows', [false, function(){
 					if (p.initialized) {
 						$t.trigger('updateComplete');
 						$t.trigger('pagerChange', p);
@@ -559,19 +563,26 @@
 		},
 
 		enablePager = function(table, p, triggered){
-			var pg = p.$size.removeClass(p.cssDisabled).removeAttr('disabled');
-			p.$goto.removeClass(p.cssDisabled).removeAttr('disabled');
+			var info,
+				c = table.config;
+			p.$size.add(p.$goto).removeClass(p.cssDisabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.isDisabled = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			p.size = $.data(table, 'pagerLastSize') || parseInt(pg.find('option[selected]').val(), 10) || p.size || 10;
-			pg.val(p.size); // set page size
+			p.$size.val(p.size); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
+			// if table id exists, include page display with aria info
+			if ( table.id ) {
+				info = table.id + '_pager_info';
+				p.$container.find(p.cssPageDisplay).attr('id', info);
+				c.$table.attr('aria-describedby', info);
+			}
 			if ( triggered ) {
-				$(table).trigger('updateRow');
+				c.$table.trigger('updateRows');
 				setPageSize(table, p.size, p);
 				hideRowsSetup(table, p);
 				fixHeight(table, p);
-				if (table.config.debug) {
+				if (c.debug) {
 					ts.log('pager enabled');
 				}
 			}
