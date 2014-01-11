@@ -115,10 +115,12 @@
 			r = 'removeClass',
 			d = p.cssDisabled,
 			dis = !!disable,
+			first = ( dis || p.page === 0 ),
+			last = ( dis || p.page === tp - 1 || p.totalPages === 0 ),
 			tp = Math.min( p.totalPages, p.filteredPages );
 			if ( p.updateArrows ) {
-				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ ( dis || p.page === 0 ) ? a : r ](d);
-				p.$container.find(p.cssNext + ',' + p.cssLast)[ ( dis || p.page === tp - 1 || p.totalPages === 0 ) ? a : r ](d);
+				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ first ? a : r ](d).attr('aria-disabled', first);
+				p.$container.find(p.cssNext + ',' + p.cssLast)[ last ? a : r ](d).attr('aria-disabled', last);
 			}
 		},
 
@@ -251,7 +253,8 @@
 					if (c.debug) {
 						ts.log('Ajax Error', xhr, exception);
 					}
-					$err = $('<tr class="' + p.cssErrorRow + '"><td style="text-align:center;" colspan="' + hl + '">' + (
+					$err = $('<tr class="' + p.cssErrorRow + '" role="alert" aria-live="assertive">' +
+						'<td style="text-align:center;" colspan="' + hl + '">' + (
 						xhr.status === 0 ? 'Not connected, verify Network' :
 						xhr.status === 404 ? 'Requested page not found [404]' :
 						xhr.status === 500 ? 'Internal Server Error [500]' :
@@ -470,7 +473,10 @@
 				p.page = 0;
 				p.size = p.totalRows;
 				p.totalPages = 1;
-				$(table).addClass('pagerDisabled').find('tr.pagerSavedHeightSpacer').remove();
+				$(table)
+					.addClass('pagerDisabled')
+					.removeAttr('aria-describedby')
+					.find('tr.pagerSavedHeightSpacer').remove();
 				renderTable(table, table.config.rowsCopy, p);
 				if (table.config.debug) {
 					ts.log('pager disabled');
@@ -478,7 +484,7 @@
 			}
 			// disable size selector
 			p.$size.add(p.$goto).each(function(){
-				$(this).addClass(p.cssDisabled)[0].disabled = true;
+				$(this).attr('aria-disabled', 'true').addClass(p.cssDisabled)[0].disabled = true;
 			});
 		},
 
@@ -568,7 +574,7 @@
 			p.$size.add(p.$goto).removeClass(p.cssDisabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.isDisabled = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
-			p.size = $.data(table, 'pagerLastSize') || parseInt(pg.find('option[selected]').val(), 10) || p.size || 10;
+			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || 10;
 			p.$size.val(p.size); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			// if table id exists, include page display with aria info
@@ -678,6 +684,7 @@
 				ctrls = [ p.cssFirst, p.cssPrev, p.cssNext, p.cssLast ];
 				fxn = [ moveToFirstPage, moveToPrevPage, moveToNextPage, moveToLastPage ];
 				pager.find(ctrls.join(','))
+					.attr("tabindex", 0)
 					.unbind('click.pager')
 					.bind('click.pager', function(e){
 						e.stopPropagation();

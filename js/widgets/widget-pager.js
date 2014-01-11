@@ -251,6 +251,7 @@ tsp = ts.pager = {
 		ctrls = [ s.first, s.prev, s.next, s.last ];
 		fxn = [ 'moveToFirstPage', 'moveToPrevPage', 'moveToNextPage', 'moveToLastPage' ];
 		p.$container.find(ctrls.join(','))
+			.attr("tabindex", 0)
 			.unbind('click.pager')
 			.bind('click.pager', function(e){
 				e.stopPropagation();
@@ -296,12 +297,14 @@ tsp = ts.pager = {
 	pagerArrows: function(c, disable) {
 		var p = c.pager,
 			dis = !!disable,
+			first = dis || p.page === 0,
+			last = dis || p.page === tp - 1 || p.totalPages === 0,
 			wo = c.widgetOptions,
 			s = wo.pager_selectors,
 			tp = Math.min( p.totalPages, p.filteredPages );
 		if ( wo.pager_updateArrows ) {
-			p.$container.find(s.first + ',' + s.prev).toggleClass(wo.pager_css.disabled, dis || p.page === 0);
-			p.$container.find(s.next + ',' + s.last).toggleClass(wo.pager_css.disabled, dis || p.page === tp - 1 || p.totalPages === 0);
+			p.$container.find(s.first + ',' + s.prev).toggleClass(wo.pager_css.disabled, first).attr('aria-disabled', first);
+			p.$container.find(s.next + ',' + s.last).toggleClass(wo.pager_css.disabled, last).attr('aria-disabled', last);
 		}
 	},
 
@@ -313,7 +316,7 @@ tsp = ts.pager = {
 			t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove +
 				(wo.pager_countChildRows ? '' : ',.' + c.cssChildRow),
 			sz = p.size || 10; // don't allow dividing by zero
-		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled');
+		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 		p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr').not('.' + t).length : p.totalRows;
 		p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
@@ -440,7 +443,8 @@ tsp = ts.pager = {
 				if (c.debug) {
 					ts.log('Ajax Error', xhr, exception);
 				}
-				$err = $('<tr class="' + wo.pager_css.errorRow + '"><td style="text-align:center;" colspan="' +
+				$err = $('<tr class="' + wo.pager_css.errorRow + '" role="alert" aria-live="assertive">' +
+					'<td style="text-align:center;" colspan="' +
 					hl + '">' + exception.message + ' (' + xhr.status + ')</td></tr>')
 				.click(function(){
 					$(this).remove();
@@ -662,7 +666,10 @@ tsp = ts.pager = {
 			p.page = 0;
 			p.size = p.totalRows;
 			p.totalPages = 1;
-			c.$table.addClass('pagerDisabled').find('tr.pagerSavedHeightSpacer').remove();
+			c.$table
+				.addClass('pagerDisabled')
+				.removeAttr('aria-describedby')
+				.find('tr.pagerSavedHeightSpacer').remove();
 			tsp.renderTable(table, c.rowsCopy);
 			if (c.debug) {
 				ts.log('pager disabled');
@@ -670,7 +677,7 @@ tsp = ts.pager = {
 		}
 		// disable size selector
 		p.$size.add(p.$goto).each(function(){
-			$(this).addClass(wo.pager_css.disabled)[0].disabled = true;
+			$(this).attr('aria-disabled', 'true').addClass(wo.pager_css.disabled)[0].disabled = true;
 		});
 		c.$table.trigger('applyWidgets');
 	},
@@ -758,13 +765,19 @@ tsp = ts.pager = {
 	},
 
 	enablePager: function(table, c, triggered){
-		var p = c.pager;
+		var info, p = c.pager;
 		p.isDisabled = false;
 		p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 		p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || 10;
 		p.$size.val(p.size); // set page size
 		p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 		c.$table.removeClass('pagerDisabled');
+		// if table id exists, include page display with aria info
+		if ( table.id ) {
+			info = table.id + '_pager_info';
+			p.$container.find(wo.pager_selectors.pageDisplay).attr('id', info);
+			c.$table.attr('aria-describedby', info);
+		}
 		if ( triggered ) {
 			c.$table.trigger('updateRows');
 			tsp.setPageSize(table, p.size, c);

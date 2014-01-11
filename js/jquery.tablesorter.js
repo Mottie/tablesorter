@@ -82,6 +82,7 @@
 				tableClass       : '',
 				cssAsc           : '',
 				cssDesc          : '',
+				cssNone          : '',
 				cssHeader        : '',
 				cssHeaderRow     : '',
 				cssProcessing    : '', // processing icon applied to header during sort/filter
@@ -120,7 +121,18 @@
 				info       : 'tablesorter-infoOnly',
 				processing : 'tablesorter-processing',
 				sortAsc    : 'tablesorter-headerAsc',
-				sortDesc   : 'tablesorter-headerDesc'
+				sortDesc   : 'tablesorter-headerDesc',
+				sortNone   : 'tablesorter-headerUnSorted'
+			};
+
+			// labels applied to sortable headers for accessibility (aria) support
+			ts.language = {
+				sortAsc  : 'Ascending sort applied, ',
+				sortDesc : 'Descending sort applied, ',
+				sortNone : 'No sort applied, ',
+				nextAsc  : 'activate to apply an ascending sort',
+				nextDesc : 'activate to apply a descending sort',
+				nextNone : 'activate to remove the sort'
 			};
 
 			/* debuging utils */
@@ -443,9 +455,12 @@
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
-					$t.parent().addClass(ts.css.headerRow + ' ' + c.cssHeaderRow);
+					$t.parent().addClass(ts.css.headerRow + ' ' + c.cssHeaderRow).attr('role', 'row');
 					// allow keyboard cursor to focus on element
 					if (c.tabIndex) { $t.attr("tabindex", 0); }
+				}).attr({
+					scope: 'col',
+					role : 'columnheader'
 				});
 				// enable/disable sorting
 				updateHeader(table);
@@ -467,11 +482,20 @@
 			}
 
 			function updateHeader(table) {
-				var s, c = table.config;
+				var s, $th, c = table.config;
 				c.$headers.each(function(index, th){
+					$th = $(th);
 					s = ts.getData( th, c.headers[index], 'sorter' ) === 'false';
 					th.sortDisabled = s;
-					$(th)[ s ? 'addClass' : 'removeClass' ]('sorter-false');
+					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
+					// aria-controls - requires table ID
+					if (table.id) {
+						if (s) {
+							$th.removeAttr('aria-controls');
+						} else {
+							$th.attr('aria-controls', table.id);
+						}
+					}
 				});
 			}
 
@@ -479,11 +503,15 @@
 				var f, i, j, l,
 					c = table.config,
 					list = c.sortList,
+					none = ts.css.sortNone + ' ' + c.cssNone,
 					css = [ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc],
+					aria = ['ascending', 'descending'],
 					// find the footer
 					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
 				// remove all header information
-				c.$headers.removeClass(css.join(' '));
+				c.$headers
+					.removeClass(css.join(' '))
+					.addClass(none).attr('aria-sort', 'none');
 				l = list.length;
 				for (i = 0; i < l; i++) {
 					// direction = 2 means reset!
@@ -493,7 +521,7 @@
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
-									f.eq(j).addClass(css[list[i][1]]);
+									f.eq(j).removeClass(none).addClass(css[list[i][1]]).attr('aria-sort', aria[list[i][1]]);
 									// add sorted class to footer, if it exists
 									if ($t.length) {
 										$t.filter('[data-column="' + list[i][0] + '"]').eq(j).addClass(css[list[i][1]]);
@@ -503,6 +531,15 @@
 						}
 					}
 				}
+				// add verbose aria labels
+				c.$headers.not('.sorter-false').each(function(){
+					var $this = $(this),
+						nextSort = this.order[(this.count + 1) % (c.sortReset ? 3 : 2)],
+						txt = $this.text() + ': ' +
+							ts.language[ $this.hasClass(ts.css.sortAsc) ? 'sortAsc' : $this.hasClass(ts.css.sortDesc) ? 'sortDesc' : 'sortNone' ] +
+							ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
+					$this.attr('aria-label', txt );
+				});
 			}
 
 			// automatically add col group, and column sizes if set
@@ -901,8 +938,17 @@
 				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
 				}
-				c.$table = $table.addClass(ts.css.table + ' ' + c.tableClass + k);
-				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				c.$table = $table
+					.addClass(ts.css.table + ' ' + c.tableClass + k)
+					.attr({ role : 'grid'});
+				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')').attr({
+					'aria-live' : 'polite',
+					'aria-relevant' : 'all'
+				});
+				//
+				if (c.$table.find('caption').length) {
+					c.$table.attr('aria-labelledby', 'theCaption');
+				}
 				c.widgetInit = {}; // keep a list of initialized widgets
 				// build headers
 				buildHeaders(table);
@@ -929,9 +975,12 @@
 				// if user has supplied a sort list to constructor
 				if (c.sortList.length > 0) {
 					$table.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
-				} else if (c.initWidgets) {
-					// apply widget format
-					ts.applyWidget(table);
+				} else {
+					setHeadersCss(table);
+					if (c.initWidgets) {
+						// apply widget format
+						ts.applyWidget(table);
+					}
 				}
 
 				// show processesing icon
