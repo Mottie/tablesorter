@@ -25,6 +25,9 @@ ts.addWidget({
 		// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 		pager_savePages: true,
 
+		//defines custom storage key
+		pager_storageKey: 'tablesorter-pager',
+
 		// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 		// table row set to a height to compensate; default is false
 		pager_fixedHeight: false,
@@ -153,7 +156,7 @@ tsp = ts.pager = {
 			ts.setFilters(table, p.currentFilters, false);
 		}
 		if (wo.pager_savePages && ts.storage) {
-			t = ts.storage(table, 'tablesorter-pager') || {}; // fixes #387
+			t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
 			p.page = isNaN(t.page) ? p.page : t.page;
 			p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 			$.data(table, 'pagerLastSize', p.size);
@@ -358,7 +361,7 @@ tsp = ts.pager = {
 			c.$table.trigger('pagerComplete', c);
 			// save pager info to storage
 			if (wo.pager_savePages && ts.storage) {
-				ts.storage(table, 'tablesorter-pager', {
+				ts.storage(table, wo.pager_storageKey, {
 					page : p.page,
 					size : p.size
 				});
@@ -760,7 +763,7 @@ tsp = ts.pager = {
 		p.initialized = false;
 		c.$table.unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 		if (ts.storage) {
-			ts.storage(table, 'tablesorter-pager', '');
+			ts.storage(table, wo.pager_storageKey, '');
 		}
 	},
 
