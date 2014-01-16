@@ -170,7 +170,7 @@
 				c.$table.trigger('pagerComplete', p);
 				// save pager info to storage
 				if (p.savePages && ts.storage) {
-					ts.storage(table, storageKey, {
+					ts.storage(table, p.storageKey, {
 						page : p.page,
 						size : p.size
 					});
@@ -554,7 +554,7 @@
 			p.initialized = false;
 			$(table).unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 			if (ts.storage) {
-				ts.storage(table, storageKey, '');
+				ts.storage(table, p.storageKey, '');
 			}
 		},
 
@@ -612,7 +612,7 @@
 					ts.setFilters(table, p.currentFilters, false);
 				}
 				if (p.savePages && ts.storage) {
-					t = ts.storage(table, storageKey) || {}; // fixes #387
+					t = ts.storage(table, p.storageKey) || {}; // fixes #387
 					p.page = isNaN(t.page) ? p.page : t.page;
 					p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 					$.data(table, 'pagerLastSize', p.size);
