@@ -1111,8 +1111,8 @@ ts.addWidget({
 					spacing = parseInt($header.eq(0).css('border-left-width'), 10) * 2;
 				}
 				$stickyTable.css({
-					left : $attach.length ? parseInt($attach.css('padding-left'), 10) +
-						parseInt($attach.css('margin-left'), 10) + parseInt($table.css('border-left-width'), 10) :
+					left : $attach.length ? (parseInt($attach.css('padding-left'), 10) || 0) + parseInt(c.$table.css('padding-left'), 10) +
+						parseInt(c.$table.css('margin-left'), 10) + parseInt($table.css('border-left-width'), 10) :
 						$thead.offset().left - $win.scrollLeft() - spacing,
 					width: $table.width()
 				});
