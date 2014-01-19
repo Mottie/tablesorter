@@ -1010,7 +1010,8 @@
 					// default to all headers
 					$h = $ths || table.find('.' + ts.css.header);
 				if (toggle) {
-					if (c.sortList.length > 0) {
+					// don't use sortList if custom $ths used
+					if (typeof $ths !== 'undefined' && c.sortList.length > 0) {
 						// get headers from the sortList
 						$h = $h.filter(function(){
 							// get data-column from attr to keep  compatibility with jQuery 1.2.6
@@ -1026,6 +1027,7 @@
 			// detach tbody but save the position
 			// don't use tbody because there are portions that look for a tbody index (updateCell)
 			ts.processTbody = function(table, $tb, getIt){
+				table = $(table)[0];
 				var holdr;
 				if (getIt) {
 					table.isProcessing = true;
@@ -1044,6 +1046,7 @@
 			};
 
 			ts.bindEvents = function(table, $headers){
+				table = $(table)[0];
 				var downTime,
 				c = table.config;
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
@@ -1085,7 +1088,7 @@
 
 			// restore headers
 			ts.restoreHeaders = function(table){
-				var c = table.config;
+				var c = $(table)[0].config;
 				// don't use c.$headers here in case header cells were swapped
 				c.$table.find(c.selectorHeaders).each(function(i){
 					// only restore header cells if it is wrapped
@@ -1145,7 +1148,6 @@
 					if ( xD < yD ) { return -1; }
 					if ( xD > yD ) { return 1; }
 				}
-
 				// chunk/tokenize
 				xN = a.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
 				yN = b.replace(r.chunk, '\\0$1\\0').replace(/\\0$/, '').replace(/^\\0/, '').split('\\0');
@@ -1373,7 +1375,7 @@
 				// remove previous widgets
 				for (i = 0; i < l; i++){
 					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
-						if (c.debug) { log( 'Refeshing widgets: Removing ' + w[i].id  ); }
+						if (c.debug) { log( 'Refeshing widgets: Removing "' + w[i].id + '"' ); }
 						// only remove widgets that have been initialized - fixes #442
 						if (w[i].hasOwnProperty('remove') && c.widgetInit[w[i].id]) {
 							w[i].remove(table, c, c.widgetOptions);
