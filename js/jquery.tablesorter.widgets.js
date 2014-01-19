@@ -1354,8 +1354,10 @@ ts.addWidget({
 	}
 });
 ts.resizableReset = function(table) {
-	table.config.$headers.not('.resizable-false').css('width','');
-	if (ts.storage) { ts.storage(table, 'tablesorter-resizable', {}); }
+	$(table).each(function(){
+		this.config.$headers.not('.resizable-false').css('width','');
+		if (ts.storage) { ts.storage(this, 'tablesorter-resizable', {}); }
+	});
 };
 
 // Save table sort widget
