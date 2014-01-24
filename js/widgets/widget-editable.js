@@ -77,6 +77,7 @@
 								.data('contentFocused', false)
 								.trigger('updateCell', [ $this.closest('td'), wo.editable_autoResort, function(table){
 									$this.trigger( wo.editable_editComplete );
+									c.$table.trigger('applyWidgets');
 								} ]);
 							$this.trigger('blur.tseditable');
 						}
