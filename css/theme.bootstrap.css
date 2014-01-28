@@ -82,8 +82,14 @@
 	transition: height 0.1s ease;
 }
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter.disabled {
-	background: #eee;
+	background-color: #eee;
+	color: #555;
 	cursor: not-allowed;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+	box-sizing: border-box;
+	transition: height 0.1s ease;
 }
 .tablesorter-bootstrap .tablesorter-filter-row td {
 	background: #efefef;
