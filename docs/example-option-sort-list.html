@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Set an initial sort order</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Set an initial table sort</title>
 
 	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -19,12 +19,16 @@
 
 	<script id="js">$(function() {
 
-	// call the tablesorter plugin
-	$("table").tablesorter({
+	// initial sort set using sortList option
+	$(".table1").tablesorter({
 		theme : 'blue',
+		// sort on the first column and second column in ascending order
+		sortList: [[0,0],[1,0]]
+	});
 
-		// sort on the first column and third column in ascending order
-		sortList: [[0,0],[2,0]]
+	// initial sort set using data-sortlist attribute (see HTML below)
+	$(".table2").tablesorter({
+		theme : 'blue'
 	});
 
 });</script>
@@ -38,7 +42,65 @@
 </div>
 <div id="main">
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+<h4>Set initial sort using the sortList option</h4>
+<table class="table1 tablesorter">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>$9.99</td>
+			<td>20%</td>
+			<td>Jul 6, 2006 8:14 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
+			<td>$19.99</td>
+			<td>25%</td>
+			<td>Dec 10, 2002 5:14 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 12, 2003 11:14 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>$153.19</td>
+			<td>44%</td>
+			<td>Jan 18, 2001 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
+			<td>$13.19</td>
+			<td>11%</td>
+			<td>Jan 18, 2007 9:12 AM</td>
+		</tr>
+	</tbody>
+</table>
+
+<h4>Set initial sort using a data attribute</h4>
+	<div id="demo"><!-- this data-sortlist method requires jQuery v1.4+ -->
+<table class="table2" data-sortlist="[[0,0],[2,0]]">
 	<thead>
 		<tr>
 			<th>First Name</th>

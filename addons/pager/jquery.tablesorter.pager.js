@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 12/16/2013 (v2.14.5)
+ * updated 1/21/2014 (v2.15.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -64,8 +64,8 @@
 			// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 			savePages: true,
 			
-			//defines custom storage key
-			storageKey:'tablesorter-pager',
+			// defines custom storage key
+			storageKey: 'tablesorter-pager',
 
 			// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 			// table row set to a height to compensate; default is false

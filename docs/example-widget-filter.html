@@ -344,11 +344,10 @@ $(".search").bind('search keyup', function (e) {
 	<button type="button" class="toggle ffm">Toggle</button> filter-match (if class name added to the "First Name" column, all "or" searches will only match the content; Search <button data-filter-column="1">alex|br*|c</button> in the First Name column (<span class="version">2.10.1</span>).
 	<hr>
 
-	<div id="demo">
-	Search <button type="button" data-filter-column="5" data-filter-text="2?%">2?%</button> in the Discount column<br>
-	<button type="button" class="reset">Reset</button> <!-- targeted by the "filter_reset" option -->
+	<div id="demo">Search <button type="button" data-filter-column="5" data-filter-text="2?%">2?%</button> in the Discount column<br>
+<button type="button" class="reset">Reset</button> <!-- targeted by the "filter_reset" option -->
 
-	<table class="tablesorter">
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<!-- you can also add a placeholder using script; $('.tablesorter th:eq(0)').data('placeholder', 'hello') -->
@@ -396,7 +395,8 @@ $(".search").bind('search keyup', function (e) {
 
 	<h1>CSS</h1>
 	<div>
-		<pre class="prettyprint lang-css">/* filter row */
+		<pre class="prettyprint lang-css">/* This css is already contained within each theme file */
+/* filter row */
 .tablesorter-filter-row td {
   background: #eee;
   line-height: normal;

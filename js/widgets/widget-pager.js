@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 12/14/2013 (v2.14.4) */
+/* Pager widget (beta) for TableSorter 1/16/2014 (v2.15.0) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";

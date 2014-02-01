@@ -59,6 +59,7 @@ $(function(){
 	$('.permalink').dblclick(function(){
 		clicked = true;
 		window.location.hash = '#' + $(this).closest('tr')[0].id;
+		showProperty();
 		setTimeout(function(){ clicked = false; }, 500);
 		return false;
 	});
@@ -89,10 +90,39 @@ $(function(){
 		}
 	});
 
+	$t = $('.accordion');
+	if ($t.length) {
+		var hashId = 0;
+		if (window.location.hash) {
+			$t.children('h3').each(function(i){
+				var txt = $(this).text().toLowerCase().replace(/\s+/g,'_');
+				this.id = txt;
+				if (txt === window.location.hash.slice(1)) {
+					hashId = i;
+				}
+			});
+		}
+		$t.accordion({
+			active: hashId,
+			animate: false,
+			heightStyle: 'content',
+			collapsible: true,
+			create: function( event, ui ) {
+				$t.children('h3').each(function(i){
+					this.id = $(this).text().toLowerCase().replace(/\s+/g,'_')
+					$(this).before('<a class="accordion-link link" data-index="' + i + '" href="#' + this.id + '"></a>');
+				});
+				$t.find('.accordion-link').click(function(){
+					$t.accordion( "option", "active", $(this).data('index') );
+				});
+			}
+		});
+	}
+
 });
 
 function showProperty(){
-	var prop, h = window.location.hash;
+	var prop, $t, h = window.location.hash;
 	if (h) {
 		prop = $(h);
 		if (prop.length && prop[0].tagName !== "TABLE") {
@@ -102,8 +132,10 @@ function showProperty(){
 			}
 			// move below sticky header; added delay as there could be some lag
 			setTimeout(function(){
-				if (/options/.test(prop.closest('table').attr('id') || '')) {
-					$('body').scrollTop( prop.position().top - 28 );
+				$t = prop.closest('table');
+				h = $t[0].config.widgetOptions.$sticky.height() || 27;
+				if ($t.hasClass('options') || $t.hasClass('api')) {
+					$('body').scrollTop( prop.position().top - h );
 				}
 			}, 200);
 		}
@@ -111,14 +143,12 @@ function showProperty(){
 }
 
 $(window).load(function(){
-
 	if ($('#root').length) {
 		$(window).bind('hashchange', function(){
 			showProperty();
 		});
 		showProperty();
 	}
-
 });
 
 // append hidden parsed value to cell

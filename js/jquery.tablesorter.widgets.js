@@ -630,7 +630,7 @@ ts.filter = {
 			ts.filter.checkFilters(table, filters);
 		});
 		// filter widget initialized
-		wo.filter_Initialized = true;
+		wo.filter_initialized = true;
 		c.$table.trigger('filterInit');
 	},
 	setDefaults: function(table, c, wo) {
