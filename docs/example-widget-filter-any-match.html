@@ -2,14 +2,14 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget Any Match</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget External Search</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js"></script>
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -26,27 +26,16 @@
 		theme: 'blue',
 		widgets: ["zebra", "filter"],
 		widgetOptions : {
-			// if true overrides default find rows behaviours and if any column matches query it returns that row
-			filter_anyMatch : true,
-			filter_columnFilters: false,
+			// filter_anyMatch replaced! Instead use the filter_external option
+			// Set to use a jQuery selector (or jQuery object) pointing to the
+			// external filter (column specific or any match)
+			filter_external : '.search',
+			// include column filters
+			filter_columnFilters: true,
+			filter_saveFilters : true,
 			filter_reset: '.reset'
 		}
 	});
-
-	// Target the $('.search') input using built in functioning
-	// this binds to the search using "search" and "keyup"
-	// Allows using filter_liveSearch or delayed search &
-	// pressing escape to cancel the search
-	$.tablesorter.filter.bindSearch( $table, $('.search') );
-
-	// Basic search binding, alternate to the above
-	// bind to search - pressing enter and clicking on "x" to clear (Webkit)
-	// keyup allows dynamic searching
-	/*
-	$(".search").bind('search keyup', function (e) {
-		$('table').trigger('search', [ [this.value] ]);
-	});
-	*/
 
 });</script>
 
@@ -54,24 +43,43 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Filter Widget Any Match</h2>
+	<h2>Filter Widget External Search</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
+	<p></p>
+	<br>
+	<div class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
 		<ul>
-			<li>This is a demo of the <code>filter_anyMatch</code> option (<span class="version">v2.13.3</span>).</li>
-			<li>This method has limitations in that it does not support all of the per column search features! So, at this time, the following types of queries are not allowed as the results will cause confusion:
+			<li>This is a demo of the <a href="index.html#widget-filter-external"><code>filter_external</code></a> option (added <span class="version">v2.15</span>).</li>
+			<li>In <span class="version">v2.15</span>
+				<ul>
+					<li>The <a class="alert" href="index.html#widget-filter-any-match"><code>filter_anyMatch</code></a> has been <span class="label alert">removed</span> (added <span class="version">v2.13.3</span>; removed in v2.15)</li>
+					<li>A new option <code>filter_external</code> has been added. It is set to a jQuery selector string (<code>'.search'</code>) or jQuery object (<code>$('.search')</code>) targetting an external input.</li>
+					<li>So now a table can include <em>both</em> a filter row (<code>filter_columnFilters</code> is <code>true</code>, i.e. the internal table filters) and any number of external search inputs (as set by the <code>filter_external</code> option).</li>
+					<li>The external search results must have a <code>data-column="#"</code> attribute set, where <code>#</code> is the index of the column (zero-based) that the input targets, to have an input search all table content, set the data column attribute to <code>"all"</code> to match any column.</li>
+					<li>The <a href="index.html#function-bindsearch"><code>$.tablesorter.bindSearch</code> function</a> (<a href="example-widget-filter-external-inputs.html">see demo</a>) does exactly the same thing as the <code>filter_external</code> option. The major difference is seen when using ajax to populate the table, the initial filter values can be set before tablesorter initialization when using teh <code>filter_external</code> option; whereas, the bind search function can not set initial filter values and is usually executed after tablesorter initialization.</li>
+				</ul>
+			</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Limitations</a></h3>
+		<div>
+		<ul>
+			<li>The any-match search method has limitations applied. It does not support all of the per column search features! So, at this time, the following types of queries are not allowed as the results will cause confusion:
 				<ul>
 					<li>Search operators - A search for values equal, greater or less than values (<code>&gt &gt= &lt;= &lt;</code>) is not allowed because tables that contain both numbers and text (in separate columns). For example:
 						<pre class="prettyprint lang-javascript">&quot;Fred&quot; > &quot;1&quot;  // true*
-&quot;Fred&quot; < &quot;10&quot; // false
-&quot;Fred&quot; > 1    // false (numeric comparisons occur with parsed table data)
-&quot;Fred&quot; > 1    // false
-&quot;Fred&quot; < 10   // false</pre>* For comparisons, letters have a greater <a href="http://en.wikipedia.org/wiki/Ascii#ASCII_printable_characters">ASCII value</a> than numbers.
+&quot;Fred&quot; &lt; &quot;10&quot; // false
+&quot;Fred&quot; &gt; 1    // false (numeric comparisons occur with parsed table data)
+&quot;Fred&quot; &gt; 1    // false
+&quot;Fred&quot; &lt; 10   // false</pre>* For comparisons, letters have a greater <a href="http://en.wikipedia.org/wiki/Ascii#ASCII_printable_characters">ASCII value</a> than numbers.
 					</li>
 					<li>Range query - A search for any number range (<code>1 - 10</code>) is not allowed because, if any columns contain text, then no rows will result. The examples are the same as the search operators examples above.</li>
 					<li>Not Match query - A search for not matches (<code>!a</code>) is not allowed because tables that contain both numbers and text (in separate columns) will always show all rows. For example:
@@ -91,15 +99,19 @@ columns[5] = '2?%';
 $('table').trigger('search', [ columns ]);</pre></li>
 			</li>
 		</ul>
-	</p>
+		</div>
+	</div>
+	<br>
 
 	<h1>Demo</h1>
 
-	<div id="demo">
-	<input class="search" type="search">
-	<button type="button" class="reset">Reset Search</button> <!-- targeted by the "filter_reset" option -->
+	<div id="demo"><input class="search" type="search" data-column="all"> (Match any column)<br>
+<input class="search" type="search" data-column="1"> (First Name)<br>
 
-	<table class="tablesorter">
+<!-- targeted by the "filter_reset" option -->
+<button type="button" class="reset">Reset Search</button>
+
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Rank</th>
