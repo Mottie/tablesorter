@@ -1292,6 +1292,7 @@ ts.addWidget({
 
 		// look for filter widget
 		if ($table.hasClass('hasFilters')) {
+			// scroll table into view after filtering, if sticky header is active - #482
 			$table.bind('filterEnd', function() {
 				// $(':focus') needs jQuery 1.6+
 				var $td = $(document.activeElement).closest('td'),
@@ -1304,7 +1305,6 @@ ts.addWidget({
 					c.$filters.eq(column).find('a, select, input').filter(':visible').focus();
 				}
 			});
-
 			ts.filter.bindSearch( $table, $stickyCells.find('.' + ts.css.filter) );
 		}
 
