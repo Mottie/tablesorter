@@ -301,10 +301,10 @@ tsp = ts.pager = {
 		var p = c.pager,
 			dis = !!disable,
 			first = dis || p.page === 0,
+			tp = Math.min( p.totalPages, p.filteredPages ),
 			last = dis || p.page === tp - 1 || p.totalPages === 0,
 			wo = c.widgetOptions,
-			s = wo.pager_selectors,
-			tp = Math.min( p.totalPages, p.filteredPages );
+			s = wo.pager_selectors;
 		if ( wo.pager_updateArrows ) {
 			p.$container.find(s.first + ',' + s.prev).toggleClass(wo.pager_css.disabled, first).attr('aria-disabled', first);
 			p.$container.find(s.next + ',' + s.last).toggleClass(wo.pager_css.disabled, last).attr('aria-disabled', last);
@@ -695,7 +695,10 @@ tsp = ts.pager = {
 		// don't allow rendering multiple times on the same page/size/totalpages/filters/sorts
 		if ( l.page === p.page && l.size === p.size && l.totalPages === p.totalPages &&
 			(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
-			l.sortList === (c.sortList || []).join(',') ) { return; }
+			l.sortList === (c.sortList || []).join(',') ) {
+				// make sure widgets are applied - fixes #450
+				return flag === true ? c.$table.trigger('applyWidgets') : '';
+			}
 		if (c.debug) {
 			ts.log('Pager changing to page ' + p.page);
 		}
@@ -801,7 +804,9 @@ tsp = ts.pager = {
 			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size || wo.pager_size || 10;
 			p.totalPages = Math.ceil( p.totalRows / p.size );
-			tsp.moveToPage(table, p);
+			tsp.moveToPage(table, p, true);
+			// update display here in case all rows are removed
+			tsp.updatePageDisplay(table, c, false);
 		}
 	}
 

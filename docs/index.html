@@ -1508,6 +1508,8 @@ $(function(){
       filter_formatter     : null,
       // add custom filter functions using this option.
       filter_functions     : null,
+      // hide filter row when table is empty
+      filter_hideEmpty     : true,
       // if true, the filter row is hidden initially until hovered/focused.
       filter_hideFilters   : false,
       // if true, make all searches case-insensitive.
@@ -2081,6 +2083,29 @@ $(function(){
 					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
+			</tr>
+
+     : true,  // hide filter row when table is empty
+
+			<tr id="widget-filter-hideempty">
+				<td><a href="#" class="permalink">filter_hideEmpty</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: Set this option to <code>false</code> to always show the filter row; by default, the filter row is completely hidden when no rows exist within the tbody (<span class="version">v2.15</span>).
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-hideempty"><code>filter_hideEmpty</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_hideEmpty : false
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-hidefilters">

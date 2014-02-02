@@ -116,8 +116,8 @@
 			d = p.cssDisabled,
 			dis = !!disable,
 			first = ( dis || p.page === 0 ),
-			last = ( dis || p.page === tp - 1 || p.totalPages === 0 ),
-			tp = Math.min( p.totalPages, p.filteredPages );
+			tp = Math.min( p.totalPages, p.filteredPages ),
+			last = ( dis || (p.page === tp - 1) || p.totalPages === 0 );
 			if ( p.updateArrows ) {
 				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ first ? a : r ](d).attr('aria-disabled', first);
 				p.$container.find(p.cssNext + ',' + p.cssLast)[ last ? a : r ](d).attr('aria-disabled', last);
@@ -603,6 +603,8 @@
 				p.size = $.data(table, 'pagerLastSize') || p.size || 10;
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				renderTable(table, rows, p);
+				// update display here in case all rows are removed
+				updatePageDisplay(table, p, false);
 			}
 		};
 

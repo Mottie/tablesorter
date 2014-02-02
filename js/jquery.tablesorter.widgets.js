@@ -355,6 +355,7 @@ ts.addWidget({
 		filter_filteredRow   : 'filtered', // class added to filtered rows; needed by pager plugin
 		filter_formatter     : null,  // add custom filter elements to the filter row
 		filter_functions     : null,  // add custom filter functions using this option
+		filter_hideEmpty     : true,  // hide filter row when table is empty
 		filter_hideFilters   : false, // collapse filter row when mouse leaves the area
 		filter_ignoreCase    : true,  // if true, make all searches case-insensitive
 		filter_liveSearch    : true,  // if true, search column content while the user types (with a delay)
@@ -369,9 +370,7 @@ ts.addWidget({
 	},
 	format: function(table, c, wo) {
 		if (!c.$table.hasClass('hasFilters')) {
-			if (c.parsers || !c.parsers && wo.filter_serversideFiltering) {
-				ts.filter.init(table, c, wo);
-			}
+			ts.filter.init(table, c, wo);
 		}
 	},
 	remove: function(table, c, wo) {
@@ -560,7 +559,8 @@ ts.filter = {
 		}
 
 		c.$table.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join('.tsfilter '), function(event, filter) {
-			if ( !/(search|filterReset|filterEnd)/.test(event.type) ) {
+			c.$table.find('.' + ts.css.filterRow).toggle( !(wo.filter_hideEmpty && $.isEmptyObject(c.cache)) ); // fixes #450
+			if ( !/(search|filter)/.test(event.type) ) {
 				event.stopPropagation();
 				ts.filter.buildDefault(table, true);
 			}
@@ -571,6 +571,10 @@ ts.filter = {
 			} else {
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
 				filter = event.type === 'search' ? filter : event.type === 'updateComplete' ? c.$table.data('lastSearch') : '';
+				if (/(update|add)/.test(event.type)) {
+					// force a new search since content has changed
+					c.lastCombinedFilter = null;
+				}
 				// pass true (dontSkip) to prevent the tablesorter.setFilters function from skipping the first input
 				// ensures all inputs are updated when a search is triggered on the table $('table').trigger('search', [...]);
 				ts.filter.searching(table, filter, true);

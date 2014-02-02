@@ -327,7 +327,11 @@
 					c2 = c.cache,
 					r, n, totalRows, checkCell, $bk, $tb,
 					i, j, k, l, pos, appendTime;
-				if (isEmptyObject(c2)) { return; } // empty table - fixes #206/#346
+				// empty table - fixes #206/#346
+				if (isEmptyObject(c2)) {
+					// run pager appender in case the table was just emptied
+					return c.appender ? c.appender(table, rows) : '';
+				}
 				if (c.debug) {
 					appendTime = new Date();
 				}
