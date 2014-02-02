@@ -117,6 +117,7 @@
 				childRow   : 'tablesorter-childRow',
 				header     : 'tablesorter-header',
 				headerRow  : 'tablesorter-headerRow',
+				headerIn   : 'tablesorter-header-inner',
 				icon       : 'tablesorter-icon',
 				info       : 'tablesorter-infoOnly',
 				processing : 'tablesorter-processing',
@@ -439,7 +440,7 @@
 						h = c.onRenderTemplate.apply($t, [index, t]);
 						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
 					}
-					$(this).html('<div class="tablesorter-header-inner">' + t + '</div>'); // faster than wrapInner
+					$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 
@@ -1093,7 +1094,7 @@
 				c.$table.find(c.selectorHeaders).each(function(i){
 					// only restore header cells if it is wrapped
 					// because this is also used by the updateAll method
-					if ($(this).find('.tablesorter-header-inner').length){
+					if ($(this).find('.' + ts.css.headerIn).length){
 						$(this).html( c.headerContent[i] );
 					}
 				});
