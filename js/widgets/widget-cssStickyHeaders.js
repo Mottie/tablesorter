@@ -43,6 +43,11 @@
 					"-webkit-transform" : finalY === 0 ? "" : "translate(0px," + finalY + "px)"
 				});
 			});
+			c.$table.bind('filterEnd', function() {
+				// scroll top of table into view
+				window.scrollTo(0, c.$table.position().top);
+			});
+
 		},
 		remove: function(table, c, wo){
 			var namespace = '.cssstickyheader';
