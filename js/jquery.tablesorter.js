@@ -46,6 +46,7 @@
 				sortMultiSortKey : 'shiftKey', // key used to select additional columns
 				sortResetKey     : 'ctrlKey',  // key used to remove sorting on a column
 				usNumberFormat   : true,       // false for German "1.234.567,89" or French "1 234 567,89"
+				treatDashAsZero  : false,      // true will treat dashes as digit "0"
 				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 				serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
 
@@ -1369,6 +1370,10 @@
 				if(/^\s*\([.\d]+\)/.test(s)) {
 					// make (#) into a negative number -> (10) = -10
 					s = s.replace(/^\s*\(([.\d]+)\)/, '-$1');
+				}
+				var dash = table && table.config ? table.config.treatDashAsZero : false;
+				if(dash && s === "-"){
+					s = "0";
 				}
 				i = parseFloat(s);
 				// return the text instead of zero
