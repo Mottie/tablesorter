@@ -440,20 +440,14 @@ tsp = ts.pager = {
 				result = wo.pager_ajaxProcessing(data, table) || [ 0, [] ],
 				hl = $t.find('thead th').length;
 
-			$t.find('thead tr.' + wo.pager_css.errorRow).remove(); // Clean up any previous error.
+			// Clean up any previous error.
+			ts.showError(table);
 
 			if ( exception ) {
 				if (c.debug) {
 					ts.log('Ajax Error', xhr, exception);
 				}
-				$err = $('<tr class="' + wo.pager_css.errorRow + '" role="alert" aria-live="assertive">' +
-					'<td style="text-align:center;" colspan="' +
-					hl + '">' + exception.message + ' (' + xhr.status + ')</td></tr>')
-				.click(function(){
-					$(this).remove();
-				})
-				// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-				.appendTo( $t.find('thead:first') );
+				ts.showError(table, exception.message + ' (' + xhr.status + ')');
 				c.$tbodies.eq(0).empty();
 			} else {
 				// process ajax object
@@ -810,6 +804,32 @@ tsp = ts.pager = {
 		}
 	}
 
+};
+
+// see #486
+ts.showError = function(table, message){
+	$(table).each(function(){
+		var $row,
+			c = this.config,
+			errorRow = c.pager && c.pager.cssErrorRow || c.widgetOptions.pager_css && c.widgetOptions.pager_css.errorRow || 'tablesorter-errorRow';
+		if (c) {
+			if (typeof message === 'undefined') {
+				c.$table.find('thead').find(c.selectorRemove).remove();
+			} else {
+				$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
+					.click(function(){
+						$(this).remove();
+					})
+					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+					.appendTo( c.$table.find('thead:first') )
+					.addClass( errorRow + ' ' + c.selectorRemove.replace(/^[.#]/, '') )
+					.attr({
+						role : 'alert',
+						'aria-live' : 'assertive'
+					});
+			}
+		}
+	});
 };
 
 })(jQuery);

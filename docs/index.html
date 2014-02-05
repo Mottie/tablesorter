@@ -2085,8 +2085,6 @@ $(function(){
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
 			</tr>
 
-     : true,  // hide filter row when table is empty
-
 			<tr id="widget-filter-hideempty">
 				<td><a href="#" class="permalink">filter_hideEmpty</a></td>
 				<td>Boolean</td>
@@ -4761,6 +4759,30 @@ $.tablesorter.formatFloat( &quot;(2,345.67)&quot;, table );</pre>
 						Use this function as follows:
 						<pre class="prettyprint lang-js">// boolean value of true returned
 $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-showError">
+				<td><a href="#" class="permalink">showError</a></td>
+				<td>This function allows adding/removing a row to the thead, to display any errors <span class="version">v2.15</span>
+					<div class="collapsible"><br>
+						This function is ONLY included within the <code>widget-pager.js</code> and <code>jquery.tablesorter.pager.js</code> files; in version 3+, I plan to add it as a selectable option in a build.<br>
+						<br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.showError( table, message );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table (or tables).</li>
+							<li><code>message</code> - a plain string, or string of an HTML row.</li>
+						</ul>
+						This function will add a table row to the thead, with a class name from either the pager plugin <code>cssErrorRow</code> option setting, or the pager widget <code>pager_css.errorRow</code> option (the default class name is `&quot;tablesorter-errorRow&quot;`; and styled within each theme css file).<br>
+						<br>
+						When passing this function a message, there are three possibilities:
+						<ol>
+							<li>Plain string - <code>&quot;table refuses to cooperate&quot;</code></li>
+							<li>HTML row string - <code>'&lt;tr&gt;&lt;td colspan=&quot;' + table.config.columns + '&quot;&gt;yeah, instead of showing your data... I am taking a nap&lt;/td&gt;&lt;/tr&gt;'</code> (the <a href="#variable-columns"><code>table.config.columns</code> variable</a> contains the number of table columns; use as needed)</li>
+						<li>undefined - completely leave out a message parameter <code>$.tablesorter.showError( table );</code> to remove all error rows from the table thead.</li>
+					</ul>
 					</div>
 				</td>
 			</tr>

@@ -247,26 +247,21 @@
 					result = p.ajaxProcessing(data, table) || [ 0, [] ],
 					hl = $t.find('thead th').length;
 
-				$t.find('thead tr.' + p.cssErrorRow).remove(); // Clean up any previous error.
+				// Clean up any previous error.
+				ts.showError(table);
 
 				if ( exception ) {
 					if (c.debug) {
 						ts.log('Ajax Error', xhr, exception);
 					}
-					$err = $('<tr class="' + p.cssErrorRow + '" role="alert" aria-live="assertive">' +
-						'<td style="text-align:center;" colspan="' + hl + '">' + (
+					ts.showError(table,
 						xhr.status === 0 ? 'Not connected, verify Network' :
 						xhr.status === 404 ? 'Requested page not found [404]' :
 						xhr.status === 500 ? 'Internal Server Error [500]' :
 						exception === 'parsererror' ? 'Requested JSON parse failed' :
 						exception === 'timeout' ? 'Time out error' :
 						exception === 'abort' ? 'Ajax Request aborted' :
-						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' ) + '</td></tr>')
-					.click(function(){
-						$(this).remove();
-					})
-					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-					.appendTo( $t.find('thead:first') );
+						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
 					c.$tbodies.eq(0).empty();
 				} else {
 					// process ajax object
@@ -757,8 +752,34 @@
 			});
 		};
 
-	}()
-});
+	}() });
+
+	// see #486
+	ts.showError = function(table, message){
+		$(table).each(function(){
+			var $row,
+				c = this.config,
+				errorRow = c.pager && c.pager.cssErrorRow || c.widgetOptions.pager_css && c.widgetOptions.pager_css.errorRow || 'tablesorter-errorRow';
+			if (c) {
+				if (typeof message === 'undefined') {
+					c.$table.find('thead').find(c.selectorRemove).remove();
+				} else {
+					$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
+						.click(function(){
+							$(this).remove();
+						})
+						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+						.appendTo( c.$table.find('thead:first') )
+						.addClass( errorRow + ' ' + c.selectorRemove.replace(/^[.#]/, '') )
+						.attr({
+							role : 'alert',
+							'aria-live' : 'assertive'
+						});
+				}
+			}
+		});
+	};
+
 // extend plugin scope
 $.fn.extend({
 	tablesorterPager: $.tablesorterPager.construct
