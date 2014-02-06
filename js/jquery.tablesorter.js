@@ -138,9 +138,10 @@
 
 			/* debuging utils */
 			function log() {
-				var s = arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0];
+				var a = arguments[0],
+					s = arguments.length > 1 ? Array.prototype.slice.call(arguments) : a;
 				if (typeof console !== "undefined" && typeof console.log !== "undefined") {
-					console.log(s);
+					console[ /error/i.test(a) ? 'error' : /warn/i.test(a) ? 'warn' : 'log' ](s);
 				} else {
 					alert(s);
 				}
@@ -219,7 +220,7 @@
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
 					rows, list, l, i, h, ch, p, time, parsersDebug = "";
 				if ( tb.length === 0) {
-					return c.debug ? log('*Empty table!* Not building a parser cache') : '';
+					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
 					time = new Date();
 					log('Detecting parsers for each column');
@@ -268,7 +269,7 @@
 				tc.cache = {};
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
-					return tc.debug ? log('*Empty table!* Not building a cache') : '';
+					return tc.debug ? log('Warning: *Empty table!* Not building a cache') : '';
 				}
 				if (tc.debug) {
 					cacheTime = new Date();
@@ -914,7 +915,7 @@
 			ts.setup = function(table, c) {
 				// if no thead or tbody, or tablesorter is already present, quit
 				if (!table || !table.tHead || table.tBodies.length === 0 || table.hasInitialized === true) {
-					return c.debug ? log('stopping initialization! No table, thead, tbody or tablesorter has already been initialized') : '';
+					return c.debug ? log('ERROR: stopping initialization! No table, thead, tbody or tablesorter has already been initialized') : '';
 				}
 
 				var k = '',
