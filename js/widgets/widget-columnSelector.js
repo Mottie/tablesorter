@@ -15,14 +15,23 @@ tsColSel = ts.columnSelector = {
 	queryBreak : '@media screen and (min-width: [size]) { [columns] { display: table-cell; } }',
 
 	init: function(table, c, wo) {
-		var colSel;
+		var $t, colSel;
+
+		// abort if no input is contained within the layout
+		$t = $(wo.columnSelector_layout);
+		if (!$t.find('input').add( $t.filter('input') ).length) {
+			if (c.debug) {
+				ts.log('*** ERROR: Column Selector aborting, no input found in the layout! ***');
+			}
+			return;
+		}
 
 		// unique table class name
 		c.tableId = 'tablesorter' + new Date().getTime();
 		c.$table.addClass( c.tableId );
 
 		// build column selector/state array
-		colSel = c.selector = { $container : $(wo.columnSelector_container) };
+		colSel = c.selector = { $container : $(wo.columnSelector_container || '<div>') };
 		tsColSel.setupSelector(table, c, wo);
 
 		if (wo.columnSelector_mediaquery) {
@@ -73,7 +82,8 @@ tsColSel = ts.columnSelector = {
 			if ($container.length) {
 				colSel.$wrapper[colId] = $(wo.columnSelector_layout.replace(/\{name\}/g, name)).appendTo($container);
 				colSel.$checkbox[colId] = colSel.$wrapper[colId]
-					.find('input')
+					// input may not be wrapped within the layout template
+					.find('input').add( colSel.$wrapper[colId].filter('input') )
 					.attr('data-column', colId)
 					.prop('checked', colSel.states[colId])
 					.bind('change', function(){
@@ -86,7 +96,7 @@ tsColSel = ts.columnSelector = {
 	},
 
 	setupBreakpoints: function(c, wo){
-		var colSel = c.selector;
+		var $auto, colSel = c.selector;
 
 		// add responsive breakpoints
 		if (wo.columnSelector_mediaquery) {
@@ -104,9 +114,11 @@ tsColSel = ts.columnSelector = {
 		if (colSel.$container.length) {
 			// Add media queries toggle
 			if (wo.columnSelector_mediaquery && wo.columnSelector_mediaquery) {
-				$( wo.columnSelector_layout.replace(/\{name\}/g, wo.columnSelector_mediaqueryName) )
-					.prependTo(colSel.$container)
-					.find('input')
+				$auto = $( wo.columnSelector_layout.replace(/\{name\}/g, wo.columnSelector_mediaqueryName) ).prependTo(colSel.$container);
+				$auto
+					// needed in case the input in the layout is not wrapped
+					.find('input').add( $auto.filter('input') )
+					.attr('data-column', 'auto')
 					.prop('checked', wo.columnSelector_mediaqueryState)
 					.bind('change', function(){
 						wo.columnSelector_mediaqueryState = this.checked;
@@ -118,6 +130,15 @@ tsColSel = ts.columnSelector = {
 						});
 						tsColSel.updateBreakpoints(c, wo);
 						tsColSel.updateCols(c, wo);
+						// copy the column selector to a popup/tooltip
+						if (c.selector.$popup) {
+							c.selector.$popup.find('.tablesorter-column-selector')
+								.html( colSel.$container.html() )
+								.find('input').each(function(){
+									var indx = $(this).attr('data-column')
+									$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] )
+								});
+						}
 					}).change();
 			}
 			// Add a bind on update to re-run col setup
@@ -127,8 +148,7 @@ tsColSel = ts.columnSelector = {
 		}
 	},
 
-
-	updateBreakpoints: function(c, wo){
+	updateBreakpoints: function(c, wo) {
 		var priority, column, breaks,
 			colSel = c.selector,
 			prefix = '.' + c.tableId,
@@ -169,7 +189,7 @@ tsColSel = ts.columnSelector = {
 		var column,
 			styles = [],
 			prefix = '.' + c.tableId;
-		c.selector.$container.find('input[data-column]').each(function(){
+		c.selector.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
 			if (!this.checked) {
 				column = parseInt( $(this).attr('data-column'), 10 ) + 1;
 				styles.push(prefix + ' tr th:nth-child(' + column + ')');
@@ -184,6 +204,35 @@ tsColSel = ts.columnSelector = {
 		}
 		if (wo.columnSelector_saveColumns && ts.storage) {
 			ts.storage( c.$table[0], 'tablesorter-columnSelector', c.selector.states );
+		}
+	},
+
+	attachTo : function(table, elm) {
+		var colSel, wo, indx,
+			table = $(table)[0],
+			c = table.config,
+			$popup = $(elm);
+		if ($popup.length && c) {
+			if (!$popup.find('.tablesorter-column-selector').length) {
+				// add a wrapper to add the selector into, in case the popup has other content
+				$popup.append('<span class="tablesorter-column-selector"></span>');
+			}
+			colSel = c.selector;
+			wo = c.widgetOptions;
+			$popup.find('.tablesorter-column-selector')
+				.html( colSel.$container.html() )
+				.find('input').each(function(){
+					var indx = $(this).attr('data-column');
+					$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] )
+				});
+			colSel.$popup = $popup.on('change', 'input', function(){
+				// data input
+				indx = $(this).attr('data-column');
+				// update original popup
+				colSel.$container.find('input[data-column="' + indx + '"]')
+					.prop('checked', this.checked)
+					.trigger('change');
+			});
 		}
 	}
 
@@ -229,6 +278,7 @@ ts.addWidget({
 	remove: function(table, c){
 		var csel = c.selector;
 		csel.$container.empty();
+		csel.$popup.empty();
 		csel.$style.remove();
 		csel.$breakpoints.remove();
 		c.$table.unbind('updateAll' + namespace + ',update' + namespace);
