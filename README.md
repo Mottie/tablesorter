@@ -22,7 +22,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
 * Extensibility via [widget system](http://mottie.github.io/tablesorter/docs/example-widgets.html).
-* Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+.
+* Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+, Chrome 5.0+.
 * Small code size.
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
 * Works with jQuery 1.9+ ($.browser.msie was removed; needed in the original version).
