@@ -16,15 +16,16 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 ### Features
 
-* Multi-column alphanumeric sorting.
+* Multi-column alphanumeric sorting and filtering.
 * Multi-tbody sorting - see the [options](http://mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
+* Supports [Bootstrap v2 and 3](http://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html)
 * Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](http://mottie.github.io/tablesorter/docs/example-parsers.html).
 * Inline editing - see [demo](http://mottie.github.io/tablesorter/docs/example-widget-editable.html)
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
 * Extensibility via [widget system](http://mottie.github.io/tablesorter/docs/example-widgets.html).
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+, Chrome 5.0+.
-* Small code size.
+* Small code size, starting at 25K minified
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
 * Works with jQuery 1.9+ ($.browser.msie was removed; needed in the original version).
 
