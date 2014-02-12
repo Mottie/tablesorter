@@ -19,6 +19,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Multi-column alphanumeric sorting.
 * Multi-tbody sorting - see the [options](http://mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
 * Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](http://mottie.github.io/tablesorter/docs/example-parsers.html).
+* Inline editing - see [demo](http://mottie.github.io/tablesorter/docs/example-widget-editable.html)
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
 * Extensibility via [widget system](http://mottie.github.io/tablesorter/docs/example-widgets.html).
