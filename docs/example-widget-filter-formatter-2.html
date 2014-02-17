@@ -22,6 +22,9 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/jquery.tablesorter.widgets-filter-formatter.js"></script>
 
+	<style id="css">/* css needed to get compare selector & slider in-line */
+.compare-select-wrapper { width: 60%; float: right; }</style>
+
 	<script id="js">$(function() {
 
 	$("table").tablesorter({
@@ -31,10 +34,13 @@
 		// initialize zebra striping and filter widgets
 		widgets: ["zebra", "filter", "stickyHeaders"],
 		widgetOptions : {
+			// Use the $.tablesorter.storage utility to save the most recent filters
+			filter_saveFilters : true,
 			// jQuery selector string of an element used to reset the filters
 			filter_reset : 'button.reset',
 			// add custom selector elements to the filter row
 			filter_formatter : {
+
 				// Rank
 				0 : function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
@@ -43,9 +49,11 @@
 						max: 100,
 						delayed: true,
 						valueToHeader: true,
-						exactMatch: true
+						compare : [ '=', '>=', '<=' ],
+						selected: 1
 					});
 				},
+
 				// Color
 				1 : function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Color( $cell, indx, {
@@ -55,6 +63,7 @@
 						valueToHeader: false
 					});
 				},
+
 				// Age
 				3: function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
@@ -64,19 +73,35 @@
 						delayed: true,
 						addToggle: true,
 						exactMatch: true,
-						compare : ''
+						compare: ''
 					});
 				},
-				5 : function($cell, indx){
+
+				// Total
+				4 : function($cell, indx){
 					return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
 						value: 0,
 						min: 0,
-						max: 44,
+						max: 150,
 						delayed: true,
 						valueToHeader: true,
 						compare : '>='
 					});
+				},
+
+				// Discount
+				5: function($cell, indx){
+					return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
+						value: 1,
+						min: 1,
+						max: 44,
+						delayed: true,
+						addToggle: false,
+						compare: [ '<=', '=', '>=' ],
+						selected: 2
+					});
 				}
+
 			}
 		}
 	});
@@ -109,9 +134,10 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>HTML Range</strong> ("Rank" column)</a></h3>
+		<h3><a href="#"><strong>HTML Range</strong></a> <span class="xsmall">("Rank" and "Total" columns)</span></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.15.0</span> the <code>compare</code> option was updated to allow adding a selector along with the input. The <code>selected</code> option allows choosing the default setting.</li>
 				<li>This example shows how you can add an HTML5 range input slider to filter column content.</li>
 				<li>The <code>filter_formatter</code> function provided in the extra "jquery.tablesorter.widgets-filter-formatter.js" file is used to add this custom control within the filter row.</li>
 				<li>Make sure to include all values within the selected range, otherwise rows outside of this range will be forever hidden.</li>
@@ -126,6 +152,8 @@
       filter_reset : 'button.reset',
       // add custom selector elements to the filter row
       filter_formatter : {
+
+        // Rank
         0 : function($cell, indx){
           return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
             value: 0,
@@ -133,11 +161,23 @@
             max: 100,
             delayed: true,
             valueToHeader: true,
-            exactMatch: true,
-            compare : '',
-            allText: 'all'
+            compare : [ '=', '>=', '<=' ],
+            selected: 1
+          });
+        },
+
+        // Total
+        4 : function($cell, indx){
+          return $.tablesorter.filterFormatter.html5Range( $cell, indx, {
+            value: 0,
+            min: 0,
+            max: 150,
+            delayed: true,
+            valueToHeader: true,
+            compare : '>='
           });
         }
+
       }
     }
   });
@@ -151,7 +191,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>HTML5 color input</strong> ("Color" column)</a></h3>
+		<h3><a href="#"><strong>HTML5 color input</strong></a> <span class="xsmall">("Color" column)</span></h3>
 		<div>
 			<ul>
 				<li>This example shows how you can add an HTML5 color input to filter column content.</li>
@@ -169,6 +209,8 @@
       filter_reset : 'button.reset',
       // add custom selector elements to the filter row
       filter_formatter : {
+
+        // Color
         1 : function($cell, indx){
           return $.tablesorter.filterFormatter.html5Color( $cell, indx, {
             value: '#000000',
@@ -177,6 +219,7 @@
             valueToHeader: false
           });
         }
+
       }
     }
   });
@@ -189,9 +232,10 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>HTML5 Number Selector</strong> ("Age" column)</a></h3>
+		<h3><a href="#"><strong>HTML5 Number Selector</strong></a> <span class="xsmall">("Age" and "Discount" columns)</span></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.15.0</span> the <code>compare</code> option was updated to allow adding a selector along with the input. The <code>selected</code> option allows choosing the default setting.</li>
 				<li>This example shows how you can add an HTML5 number spinner to the filter column content.</li>
 				<li>The <code>filter_formatter</code> function provided in the extra "jquery.tablesorter.widgets-filter-formatter.js" file is used to add this custom control within the filter row.</li>
 				<li>Add the following code to apply an HTML spinner to filter a column:<pre class="prettyprint lang-javascript">$(function() {
@@ -207,6 +251,8 @@
       filter_reset : 'button.reset',
       // add custom selector elements to the filter row
       filter_formatter : {
+
+        // Age
         3: function($cell, indx){
           return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
             value: 1,
@@ -214,9 +260,24 @@
             max: 65,
             delayed: true,
             addToggle: true,
-            exactMatch: true
+            exactMatch: true,
+            compare: ''
+          });
+        },
+
+        // Discount
+        5: function($cell, indx){
+          return $.tablesorter.filterFormatter.html5Number( $cell, indx, {
+            value: 1,
+            min: 1,
+            max: 44,
+            delayed: true,
+            addToggle: false,
+            compare: [ '<=', '=', '>=' ],
+            selected: 2
           });
         }
+
       }
     }
   });

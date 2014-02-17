@@ -588,7 +588,9 @@ ts.filter = {
 
 		// reset button/link
 		if (wo.filter_reset) {
-			$(document).delegate(wo.filter_reset, 'click.tsfilter', function() {
+			$(document)
+			.undelegate(wo.filter_reset, 'click.tsfilter')
+			.delegate(wo.filter_reset, 'click.tsfilter', function() {
 				// trigger a reset event, so other functions (filterFormatter) know when to reset
 				c.$table.trigger('filterReset');
 			});
@@ -647,6 +649,7 @@ ts.filter = {
 			if (filters.length) {
 				ts.setFilters(table, filters, true);
 			}
+			c.$table.trigger('filterFomatterUpdate');
 			ts.filter.checkFilters(table, filters);
 		});
 		// filter widget initialized
@@ -1136,10 +1139,10 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 ts.setFilters = function(table, filter, apply, skipFirst) {
 	var c = table ? $(table)[0].config : '',
 		valid = ts.getFilters(table, true, filter, skipFirst);
-	if (apply) {
+	if (c && apply) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
-		$(table).trigger('search', [filter, false]);
+		c.$table.trigger('search', [filter, false]).trigger('filterFomatterUpdate');
 	}
 	return !!valid;
 };
@@ -1298,11 +1301,13 @@ ts.addWidget({
 				var $td = $(document.activeElement).closest('td'),
 					column = $td.parent().children().index($td);
 				// only scroll if sticky header is active
-				if (column >= 0 && $td.closest('table').hasClass(ts.css.stickyVis)) {
+				if ($stickyTable.hasClass(ts.css.stickyVis)) {
 					// scroll to original table (not sticky clone)
 					window.scrollTo(0, $table.position().top);
 					// give same input/select focus
-					c.$filters.eq(column).find('a, select, input').filter(':visible').focus();
+					if (column >= 0) {
+						c.$filters.eq(column).find('a, select, input').filter(':visible').focus();
+					}
 				}
 			});
 			ts.filter.bindSearch( $table, $stickyCells.find('.' + ts.css.filter) );
