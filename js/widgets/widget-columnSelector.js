@@ -176,10 +176,12 @@ tsColSel = ts.columnSelector = {
 					.replace(/\[columns\]/g, breaks.join(','));
 			}
 		}
-		if (colSel.$style) { colSel.$style.prop('disabled', true); }
-		colSel.$breakpoints.prop('disabled', false)
+		if (colSel.$style) {
+			colSel.$style.prop('disabled', true);
+		}
+		colSel.$breakpoints
+			.prop('disabled', false)
 			.html( tsColSel.queryAll.replace(/\[columns\]/g, mediaAll.join(',')) + breakpts );
-
 	},
 
 	updateCols: function(c, wo) {
@@ -200,7 +202,7 @@ tsColSel = ts.columnSelector = {
 			c.selector.$breakpoints.prop('disabled', true);
 		}
 		if (c.selector.$style) {
-			c.selector.$style.prop('disabled', false).html( styles.join(',') + ' { display: none; }' );
+			c.selector.$style.prop('disabled', false).html( styles.length ? styles.join(',') + ' { display: none; }' : '' );
 		}
 		if (wo.columnSelector_saveColumns && ts.storage) {
 			ts.storage( c.$table[0], 'tablesorter-columnSelector', c.selector.states );
