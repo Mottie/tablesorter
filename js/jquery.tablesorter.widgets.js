@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 12/16/2013 (v2.15.0)
+/*! tableSorter 2.8+ widgets - updated 2/19/2014 (v2.15.0)
  *
  * Column Styles
  * Column Filters
@@ -1177,7 +1177,6 @@ ts.addWidget({
 			$header = $thead.children('tr').not('.sticky-false').children(),
 			innerHeader = '.' + ts.css.headerIn,
 			$tfoot = $table.find('tfoot'),
-			filterInputs = '.' + ts.css.filter,
 			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
 			stickyOffset = $attach.length ? 0 : $stickyOffset.length ?
 				$stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,

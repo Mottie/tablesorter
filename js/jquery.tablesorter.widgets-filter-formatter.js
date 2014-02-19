@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/16/2014 (v2.15)
+/*! Filter widget formatter functions - updated 2/19/2014 (v2.15)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -87,7 +87,7 @@ tsff = ts.filterFormatter = {
 				v = ui && ui.value && ts.formatFloat((ui.value + '').replace(/[><=]/g,'')) ||
 					$cell.find('.spinner').val() || o.value,
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
@@ -507,7 +507,7 @@ tsff = ts.filterFormatter = {
 					o.onClose(v);
 				}
 			}),
-		t, l, $shcell = [],
+		t, $shcell = [],
 		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input
@@ -712,8 +712,8 @@ tsff = ts.filterFormatter = {
 
 			// date range
 			if (/\s+-\s+/.test(val)){
-				val = val.split(/\s+-\s+/) || [],
-				from = val[0] || '',
+				val = val.split(/\s+-\s+/) || [];
+				from = val[0] || '';
 				to = val[1] || '';
 			} else if (/>=/.test(val)) {
 				// greater than date (to date empty)
@@ -774,7 +774,7 @@ tsff = ts.filterFormatter = {
 		$number = $('<input type="number" style="visibility:hidden;" value="test">').appendTo($cell),
 		// test if HTML5 number is supported - from Modernizr
 		numberSupported = o.skipTest || $number.attr('type') === 'number' && $number.val() !== 'test',
-		l, $shcell = [],
+		$shcell = [],
 		c = $cell.closest('table')[0].config,
 
 		updateNumber = function(delayed, notrigger){
@@ -1074,7 +1074,7 @@ tsff = ts.filterFormatter = {
 				(o.addToggle ? '<div class="button"><input id="colorbutton' + t + '" type="checkbox" class="toggle" /><label for="colorbutton' +
 				t + '"></label></div>' : '') +
 				'<input type="hidden"><input class="colorpicker" type="color" />' +
-				(o.valueToHeader ? '' : '<span class="currentColor">(#000000)</span>') + '</div>'
+				(o.valueToHeader ? '' : '<span class="currentColor">(#000000)</span>') + '</div>';
 			$cell.html(t);
 			// add span to header for the current color value - only works if the line in the updateColor() function is also un-commented out
 			if (o.valueToHeader) {

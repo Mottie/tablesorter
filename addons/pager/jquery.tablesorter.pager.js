@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 1/21/2014 (v2.15.0)
+ * updated 2/19/2014 (v2.15.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -240,7 +240,7 @@
 			// process data
 			if ( typeof(p.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh, t, th, d, l, $err, rr_count,
+				var i, j, hsh, $f, $sh, t, th, d, l, rr_count,
 					c = table.config,
 					$t = c.$table,
 					tds = '',

@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 1/16/2014 (v2.15.0) */
+/* Pager widget (beta) for TableSorter 2/19/2014 (v2.15.0) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -434,7 +434,7 @@ tsp = ts.pager = {
 		// process data
 		if ( $.isFunction(wo.pager_ajaxProcessing) ) {
 			// ajaxProcessing result: [ total, rows, headers ]
-			var i, j, t, hsh, $f, $sh, th, d, l, $err, rr_count,
+			var i, j, t, hsh, $f, $sh, th, d, l, rr_count,
 				$t = c.$table,
 				tds = '',
 				result = wo.pager_ajaxProcessing(data, table) || [ 0, [] ],
