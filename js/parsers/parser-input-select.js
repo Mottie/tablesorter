@@ -33,11 +33,15 @@
 		is: function(){
 			return false;
 		},
-		format: function(s, table, cell) {
-			// using plain language here because this is what is shown in the group headers
-			// change it as desired
-			var $c = $(cell).find('input');
-			return $c.length ? $c.is(':checked') ? 'checked' : 'unchecked' : s;
+		format: function(s, table, cell, cellIndex) {
+			var $c = $(cell).find('input'),
+				isChecked = $c[0].checked;
+			// adding class to row, indicating that a checkbox is checked; includes
+			// a column index in case more than one checkbox happens to be in a row
+			$c.closest('tr').toggleClass('checked-' + cellIndex, isChecked);
+			// returning plain language here because this is what is shown in the
+			// group headers - change it as desired
+			return $c.length ? isChecked ? 'checked' : 'unchecked' : s;
 		},
 		type: "text"
 	});
