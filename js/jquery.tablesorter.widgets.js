@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 2/19/2014 (v2.15.0)
+/*! tableSorter 2.8+ widgets - updated 2/19/2014 (v2.15.1)
  *
  * Column Styles
  * Column Filters
@@ -581,10 +581,6 @@ ts.filter = {
 			}
 			return false;
 		});
-		ts.filter.bindSearch( table, c.$table.find('input.' + ts.css.filter), true );
-		if (wo.filter_external) {
-			ts.filter.bindSearch( table, wo.filter_external );
-		}
 
 		// reset button/link
 		if (wo.filter_reset) {
@@ -621,9 +617,10 @@ ts.filter = {
 		// it would append the same options twice.
 		ts.filter.buildDefault(table, true);
 
-		c.$table.find('select.' + ts.css.filter).bind('change search', function(event, filter) {
-			ts.filter.checkFilters(table, filter, true);
-		});
+		ts.filter.bindSearch( table, c.$table.find('.' + ts.css.filter), true );
+		if (wo.filter_external) {
+			ts.filter.bindSearch( table, wo.filter_external );
+		}
 
 		if (wo.filter_hideFilters) {
 			ts.filter.hideFilters(table, c);
@@ -746,11 +743,12 @@ ts.filter = {
 			ts.setFilters(table, c.$table.data('lastSearch') || [], internal === false);
 		}
 		$el
-		.data('lastSearchTime', new Date().getTime())
+		// use data attribute instead of jQuery data since the head is cloned without including the data/binding
+		.attr('data-lastSearchTime', new Date().getTime())
 		.unbind('keyup search change')
 		// include change for select - fixes #473
 		.bind('keyup search change', function(event, filters) {
-			$(this).data('lastSearchTime', new Date().getTime());
+			$(this).attr('data-lastSearchTime', new Date().getTime());
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {
 				this.value = '';
@@ -1112,7 +1110,7 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 				if ($column.length) {
 					// move the latest search to the first slot in the array
 					$column = $column.sort(function(a, b){
-						return $(a).data('lastSearchTime') <= $(b).data('lastSearchTime');
+						return $(a).attr('data-lastSearchTime') <= $(b).attr('data-lastSearchTime');
 					});
 					if ($.isArray(setFilters)) {
 						// skip first (latest input) to maintain cursor position while typing
