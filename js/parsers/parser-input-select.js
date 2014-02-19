@@ -23,6 +23,7 @@
 		format: function(s, table, cell) {
 			return $(cell).find('input').val() || s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
@@ -43,6 +44,7 @@
 			// group headers - change it as desired
 			return $c.length ? isChecked ? 'checked' : 'unchecked' : s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
@@ -56,6 +58,7 @@
 		format: function(s, table, cell) {
 			return $(cell).find('select').val() || s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
