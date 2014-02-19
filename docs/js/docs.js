@@ -95,7 +95,7 @@ $(function(){
 		var hashId = 0;
 		if (window.location.hash) {
 			$t.children('h3').each(function(i){
-				var txt = $(this).find('a').text().toLowerCase().replace(/\s+/g,'_').replace(/[()\"]/g,'');
+				var txt = $(this).find('a').text().toLowerCase().replace(/[()\"]/g,'').replace(/[\s+\/]/g,'_');
 				this.id = txt;
 				if (txt === window.location.hash.slice(1)) {
 					hashId = i;
@@ -109,7 +109,7 @@ $(function(){
 			collapsible: true,
 			create: function( event, ui ) {
 				$t.children('h3').each(function(i){
-					this.id = $(this).find('a').text().toLowerCase().replace(/\s+/g,'_').replace(/[()\"]/g,'');
+					this.id = $(this).find('a').text().toLowerCase().replace(/[-()\"]/g,'').replace(/[\s+\/]/g,'_');
 					$(this).before('<a class="accordion-link link" data-index="' + i + '" href="#' + this.id + '"></a>');
 				});
 				$t.find('.accordion-link').click(function(){
