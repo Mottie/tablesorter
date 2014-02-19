@@ -47,7 +47,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
-#### <a name="v2.15">Version 2.15.0</a> (1/25/2014)
+#### <a name="v2.15">Version 2.15.0</a> (2/19/2014)
 
 * Core
   * Add accessibility attributes to tablesorter (aria).
