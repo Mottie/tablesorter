@@ -9,19 +9,24 @@ kbd {margin:0px 0.1em; padding:0.1em 0.6em;border-radius: 3px;border: 1px solid 
 .demo h1,.demo h1 a {font-size:120%;text-align:center;text-decoration:none;color:#000;}
 .demo p,.center {text-align:center;}
 .demo table.tablesorter {font-size:14px;}
+table th {vertical-align:top;}
+#config th {text-shadow:none;}
 table td.info { background: #eee; }
 table.info {border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
 table.tablesorter table.info tbody th,table.tablesorter table.info td {border:#000 1px solid;}
 table.tablesorter table.info tbody th {background:#eee;}
 table.options {width:100%;}
 table.options pre {width:95%;}
-table.options .property {width:115px;}
+table.options .property, .setWidth {width:115px;}
 table.options .type {width:80px; }
-table.options .defaults {width:200px;}
+table.options .defaults {width:160px;}
 table.options .examples {width:60px;}
 table.compatibility { width: 50%; float: right; font-size: .8em; margin-left: 20px; }
 table.compatibility th,table.compatibility td { text-align: center; padding: 2px; }
 pre,#display {overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
+pre.lang-js, pre.lang-javascript {border-left-color: #f1bf26;}
+pre.lang-html {border-left-color: #ef6328;}
+pre.lang-css {border-left-color: #27aae2;}
 pre,#display {background-color:#eee;font-size:small;list-style:none;}
 pre.prettyprint {padding:5px;}
 code {background-color: #e6e6e6; padding: 1px 5px;}
@@ -34,7 +39,7 @@ pre.normal {background-color:transparent;border:none;border-left-width:0;overflo
 #start,#case,.bright {color:#007baa;}
 #demo strong {color:#a00;}
 hr {height:1px;}
-ul {list-style:square;}
+ul {list-style:square;padding-left:20px;}
 #banner {margin:20px 20px 5px 20px;padding:0;text-align:left;}
 #banner *,.demo h1,.demo h1 em {color:#232121;font-family:Georgia, Palatino, Times New Roman;font-size:30px;font-style:normal;font-weight:400;margin:0;padding:0;}
 #banner h1 {display:block;float:left;}
@@ -45,17 +50,20 @@ ul {list-style:square;}
 #banner a {display:block;font-size:14px;margin:5px 0 0;padding:10px 0 0;float:right;}
 .github-btn {border:0;overflow:hidden;vertical-align: middle;}
 a.external {background-image:url(../img/external.png);background-position:center right;background-repeat:no-repeat;padding-right:12px;}
+a.link {background-image:url(../img/link.png);background-position:center right;background-repeat:no-repeat;padding-right:12px;}
 form {font-size:10pt;margin-bottom:20px;width:auto;}
 form fieldset {padding:10px;text-align:left;width:140px;}
 div#main h1 {border-bottom:1px solid #cdcdcd;display:block;padding:4px 0 2px;}
 table#tablesorter-demo {margin: 10px 0 0 0;}
 table, p.small,.smallcode code {font-size:small;}
 p.small {padding-left: 25px;}
+.xsmall {font-size:11px;}
 p.tip em, div.tip em,.label-info {padding: 2px; background-color: #5bc0de; color: #fff; border-radius: .25em;}
 .label { padding: 0.1em 0.6em 0.1em; font-size: 75%; color: #fff; border-radius: .25em; }
 span.tip em, .label-success { background-color: #5cb85c; }
 span.tip.old em, .label-default { background-color: #999; }
-span.warn em { background-color: #ce5300; }
+span.warn em, .label.alert { background-color: #d9534f; }
+.label.warning { background-color: #f0ad4e; }
 tr td.lookhere, span.lookhere { background-color: rgba(230,191,153,0.5); }
 .ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
 div.digg {float: right;}
@@ -66,15 +74,19 @@ div.digg {float: right;}
 #pager-demo th.remove { width: 20px; } /* pager demo */
 #pager-demo button.remove { width: 20px; height: 20px; font-size: 10px; color: #800; }
 .box { width: 48%; min-width: 300px; float: left; padding: 0 1%; }
-td a.alert { color: #a00; padding: 0; }
+a.alert { color: #a00; padding: 0; }
 span.alert { padding: 1px 3px; }
 .hidden { display: none; }
 .results { color: red; }
 .clear { clear: both; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }
-#main .ui-accordion-header a { font-size: 14px; margin-left: 24px; }
+#main .ui-accordion-header a { font-size: 14px; }
 #main .ui-accordion-content { font-size: 14px; }
+.accordion { position: relative; }
+.accordion .accordion-link { position: absolute; right: 1%; margin-top: 16px; z-index: 1; width: 12px; height: 12px;}
 .remark, .error { font-weight: bold; color: red; font-size: 18px; }
+table th.nobold { font-weight: normal; }
+table th a { text-decoration: underline; color: #000; }
 #group #slider0,#group #slider1,#group #slider2 { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
 #group .demo-label { display: inline-block; min-width: 120px; }
 @media all and (max-width: 650px) {

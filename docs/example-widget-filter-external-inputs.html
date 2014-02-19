@@ -8,8 +8,8 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js"></script>
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -26,9 +26,12 @@
 		theme: 'blue',
 		widgets: ["zebra", "filter"],
 		widgetOptions : {
-			// if true overrides default find rows behaviours and if any column matches query it returns that row
-			// filter_anyMatch : true,
+			// use the filter_external option OR use bindSearch function (below)
+			// to bind external filters.
+			// filter_external : '.search',
+
 			filter_columnFilters: false,
+			filter_saveFilters : true,
 			filter_reset: '.reset'
 		}
 	});
@@ -48,6 +51,14 @@
 	});
 	*/
 
+	// Allow changing an input from one column (any column) to another
+	$('select').change(function(){
+		// modify the search input data-column value (swap "0" or "all in this demo)
+		$('.selectable').attr( 'data-column', $(this).val() );
+		// update external search inputs
+		$.tablesorter.filter.bindSearch( $table, $('.search'), false );
+	});
+
 });</script>
 
 </head>
@@ -60,29 +71,52 @@
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
+	<p></p>
+	<br>
+	<div class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
 		<ul>
-			<li>This demo shows how to use multiple external search filters to filter the table.</li>
-			<li>The <code>$.tablesorter.filter.bindSearch()</code> function now allows binding multiple external search filters (<span class="version updated">v2.14</span>):
+			<li>As of <span class="version">v2.15</span>,
+				<ul>
+					<li>A new filter widget <a href="index.html#widget-filter-external"><code>filter_external</code> option</a> has been added that essentially does the same thing as the <a href="index.html#function-bindsearch"><code>$.tablesorter.bindSearch</code></a> function.</li>
+					</li>Use either to bind external search inputs.</li> 
+					<li>To change an input from searching one column (or all columns) to search any other column, call the <code>$.tablesorter.bindSearch</code> function to update the external inputs, even if the inputs are set using the <code>filter_external</code> option. Pass an additional <code>false</code> flag as the last parameter to force the inputs to update.
+					<pre class="prettyprint lang-js">$.tablesorter.bindSearch( $('table'), $('.search'), false );</pre>
+					</li>
+					<li>This demo shows how to use multiple external search filters to filter the table, and how to make one input dynamically change to filter any or all columns.</li>
+				</ul>
+			</li>
+			<li>The <code>$.tablesorter.filter.bindSearch</code> function allows binding multiple external search filters</li>
 			<li>The advantage of using this function over your own is:
 				<ul>
 					<li>Inputs behave the same as internal filters; searches adhere to the <code>filter_liveSearch</code> and <code>filter_searchDelay</code> options.</li>
 					<li>When pressing the <kbd>Esc</kbd> key, the filter resets.</li>
 				</ul>
 			</li>
-			<li>Include a <code>data-column="#"</code> attribute to specify to which column the search should apply.</li>
+			<li>Include a <code>data-column="#"</code> attribute to specify to which column the search should apply; or <code>data-column="all"</code> to search all columns.</li>
 		</ul>
-	</p>
+		</div>
+	</div>
 
 	<h1>Demo</h1>
 
-	<div id="demo">
-	<input class="search" type="search" placeholder="first name" data-column="1">
-	<input class="search" type="search" placeholder="last name" data-column="2">
-	<button type="button" class="reset">Reset Search</button> <!-- targeted by the "filter_reset" option -->
+	<div id="demo"><input class="search selectable" type="search" placeholder="Search" data-column="all">
+<!-- select to change data-column attribute of the above input -->
+<select class="change-input">
+	<option value="all">all</option>
+	<option value="0">Rank</option>
+	<option value="1">First Name</option>
+	<option value="2">Last Name</option>
+</select>
+<br>
+<input class="search" type="search" placeholder="First Name" data-column="1"><br>
+<input class="search" type="search" placeholder="Last Name" data-column="2"><br>
+<!-- targeted by the "filter_reset" option -->
+<button type="button" class="reset">Reset Search</button>
 
-	<table class="tablesorter">
+<table class="tablesorter">
 	<thead>
 		<tr>
 			<th>Rank</th>

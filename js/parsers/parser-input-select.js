@@ -1,4 +1,5 @@
 /*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
+ * Updated 2/19/2014 (v2.15.0)
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
@@ -23,6 +24,7 @@
 		format: function(s, table, cell) {
 			return $(cell).find('input').val() || s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
@@ -33,12 +35,17 @@
 		is: function(){
 			return false;
 		},
-		format: function(s, table, cell) {
-			// using plain language here because this is what is shown in the group headers
-			// change it as desired
-			var $c = $(cell).find('input');
-			return $c.length ? $c.is(':checked') ? 'checked' : 'unchecked' : s;
+		format: function(s, table, cell, cellIndex) {
+			var $c = $(cell).find('input'),
+				isChecked = $c[0].checked;
+			// adding class to row, indicating that a checkbox is checked; includes
+			// a column index in case more than one checkbox happens to be in a row
+			$c.closest('tr').toggleClass('checked-' + cellIndex, isChecked);
+			// returning plain language here because this is what is shown in the
+			// group headers - change it as desired
+			return $c.length ? isChecked ? 'checked' : 'unchecked' : s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
@@ -52,6 +59,7 @@
 		format: function(s, table, cell) {
 			return $(cell).find('select').val() || s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 

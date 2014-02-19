@@ -59,7 +59,7 @@ $(function() {
 <div id="main">
 
 	<div class="tip">
-		Notes about the <code>addWidget</code> template:
+		Notes about the <code>addParser</code> template:
 		<ul>
 			<li>The <code>id</code> block is required and must be unique.</li>
 			<li>The <code>is</code> block will allow the parser to be used for autodetecting the parser
@@ -75,6 +75,14 @@ $(function() {
 					<li>Within this function, modify the given text from the cell (<code>s</code>) or obtain parameters and/or other data from the cell (<code>cell</code>) then return this data to the plugin.</li>
 					<li>As an example, the date parser takes the date string (e.g. <code>"12/25/2013"</code>) and converts it into a numeric value (<code>1387951200000</code>; <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date/getTime">ref</a>) to make sorting and comparing dates easier.</li>
 					<li>Use the <code>cellIndex</code> if the cells within columns contain different data - see this demo for an example.</li>
+				</ul>
+			</li>
+			<li>The <code>parsed</code> block (added <span class="version">v2.15.0</span>)
+				<ul>
+					<li>This parameter is a flag used by the filter widget.</li>
+					<li>When <code>true</code>, the filter widget will only search through parsed data for matches.</li>
+					<li>If <code>false</code> (default value), the filter widget will search through the cell text for matches.</li>
+					<li>Currently, only the parsers for inputs, checkboxes and selects have this parameter set to <code>true</code>.</li>
 				</ul>
 			</li>
 			<li>The <code>type</code> block sets the type of sort to use:
@@ -107,6 +115,8 @@ $(function() {
     // (i.e. do something to get and/or modify your data, then return it)
     return s;
   },
+  // flag for filter widget (true = ALWAYS search parsed values; false = search cell text)
+  parsed: false,
   // set the type to either numeric or text (text uses a natural sort function
   // so it will work for everything, but numeric is faster for numbers
   type: 'numeric'

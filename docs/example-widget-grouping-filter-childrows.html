@@ -8,71 +8,69 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
-	<style id="css">
-	/* extra css needed because there are 5 child rows */
-	/* no zebra striping */
-	.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	/* with zebra striping */
-	.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td
-	.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td
-	.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-		background: #d9d9d9;
-	}
-	.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-	.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-		background: #bfbfbf;
-	}
+	<style id="css">/* extra css needed because there are 5 child rows */
+/* no zebra striping */
+.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+/* with zebra striping */
+.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td
+.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td
+.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+	background: #d9d9d9;
+}
+.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
+	background: #bfbfbf;
+}
 
-	/* Grouping widget css */
-	tr.group-header td {
-		background: #eee;
-	}
-	.group-name {
-		text-transform: uppercase;
-		font-weight: bold;
-	}
-	.group-count {
-		color: #999;
-	}
-	.group-hidden {
-		display: none !important;
-	}
-	.group-header, .group-header td {
-		user-select: none;
-		-moz-user-select: none;
-	}
-	/* collapsed arrow */
-	tr.group-header td i {
-		display: inline-block;
-		width: 0;
-		height: 0;
-		border-top: 4px solid transparent;
-		border-bottom: 4px solid #888;
-		border-right: 4px solid #888;
-		border-left: 4px solid transparent;
-		margin-right: 7px;
-		user-select: none;
-		-moz-user-select: none;
-	}
-	tr.group-header.collapsed td i {
-		border-top: 5px solid transparent;
-		border-bottom: 5px solid transparent;
-		border-left: 5px solid #888;
-		border-right: 0;
-		margin-right: 10px;
-	}
-	</style>
+/* Grouping widget css */
+tr.group-header td {
+	background: #eee;
+}
+.group-name {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.group-count {
+	color: #999;
+}
+.group-hidden {
+	display: none !important;
+}
+.group-header, .group-header td {
+	user-select: none;
+	-moz-user-select: none;
+}
+/* collapsed arrow */
+tr.group-header td i {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid #888;
+	border-right: 4px solid #888;
+	border-left: 4px solid transparent;
+	margin-right: 7px;
+	user-select: none;
+	-moz-user-select: none;
+}
+tr.group-header.collapsed td i {
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid #888;
+	border-right: 0;
+	margin-right: 10px;
+}</style>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
@@ -82,15 +80,6 @@
 	<!-- grouping widget -->
 	<script src="../js/parsers/parser-input-select.js"></script>
 	<script src="../js/widgets/widget-grouping.js"></script>
-
-	<script>
-	$(function(){
-		$('.accordion').accordion({
-			heightStyle: 'content',
-			collapsible : true
-		});
-	});
-	</script>
 
 	<script id="js">$(function(){
 

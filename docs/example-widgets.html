@@ -36,12 +36,15 @@
 			var h = '', i, $tr, l, skip;
 			// cache and collect all TH headers
 			if (!wo.repeatHeaders) {
-				h = '<tr class="repeated-header remove-me">';
-				$.each(c.headerContent, function(i,t) {
-					h += '<th>' + t + '</th>';
-				});
 				// "remove-me" class was added in case the table needs to be updated, the "remove-me" rows will be
 				// removed prior to the update to prevent including the rows in the update - see "selectorRemove" option
+				h = '<tr class="repeated-header remove-me">';
+				$.each(c.headerContent, function(i,t) {
+					// table.config.headerContent stores the original table HTML (as text), but it is the HTML before
+					// the headerTemplate option is applied to each header cell; and before the `onRender` callbacks are
+					// executed
+					h += '<th>' + t + '</th>';
+				});
 				wo.repeatHeaders = h + '</tr>';
 			}
 
@@ -71,7 +74,10 @@
 		theme: 'blue',
 
 		// apply both widgets
-		widgets: ['zebra', 'repeatHeaders']
+		widgets: ['zebra', 'repeatHeaders'],
+		widgetOptions : {
+			rowsToSkip : 4
+		}
 	});
 
 });</script>
@@ -90,44 +96,52 @@
 	<div class="tip">
 		Notes about the <code>addWidget</code> template:
 		<ul>
-			<li>The <code>id</code> block is required and must be unique.</li>
-			<li>The <code>priority</code> block is optional (<span class="version">v2.9</span>):
+			<li>The <code>id</code> block:
+				<ul>
+					<li>The widget id, or name, must be unique!</li>
+					<li>The id, or name, can contain special characters and/or spaces.</li>
+					<li>This setting is required.</li>
+				</ul>
+			</li>
+			<li>The <code>priority</code> block (added <span class="version">v2.9</span>):
 				<ul>
 					<li>Set the widget priority using any number; think of it like setting the css z-index.</li>
 					<li>This tells the plugin the order in which to run the widgets, lowest number priority first.</li>
 					<li>The default widgets have priorities set in intervals of 10 (see the <a href="index.html#Widget-options"> widget priority table</a>), so to run your custom widget before a specific widget, set your widget priority to less than that number.</li>
-					<li>If no priority is specified, it defaults to <code>10</code>.</li>
+					<li>This block is <strong>not supported in older versions</strong>!</li>
+					<li>This setting is optional, but if no priority is specified, it defaults to <code>10</code>.</li>
 				</ul>
 			</li>
-			<li>The <code>options</code> block (<span class="version">v2.8</span>):
+			<li>The <code>options</code> block (added <span class="version">v2.8</span>):
 				<ul>
 					<li>Include any widget options to be automatically be extended with any set widgetOptions (from <code>table.config.widgetOptions</code>).</li>
-					<li>This block was added in tablesorter v2.8 and is not supported in older versions!</li>
 					<li>As of v2.8, no included widgets will be using this to maintain backwards compatibility with older versions. This changed when v2.9 was released.</li>
+					<li>This block is <strong>not supported in older versions</strong>!</li>
 					<li>This block is optional.</li>
 				</ul>
 			</li>
-			<li>The <code>init</code> block:
+			<li>The <code>init</code> block (added v2.0.28):
 				<ul>
-					<li>This code is called only after tablesorter has initialized, but before initial sort and before any of the widgets are applied; it is only run once.</li>
-					<li>This block was added in v2.0.28 and it not supported in older versions.</li>
-					<li>Since, v2.0.28, only the saveSort widget uses this block to ensure that the stored sort is applied before .</li>
+					<li>This code is called only after tablesorter has initialized, but before initial sort and before <strong>any</strong> of the widgets are applied (via the <code>format</code> block); it is only run once.</li>
+					<li>Since, v2.0.28, only the saveSort widget uses this block to ensure that the stored sort is applied before; but some of the newer widgets (post v2.9) are using this code block.</li>
+					<li>This block is <strong>not supported in older versions</strong>.</li>
 					<li>This block is optional.</li>
 				</ul>
 			</li>
-			<li>The <code>format</code> block:
+			<li>The <code>format</code> block (modified v2.0.23):
 				<ul>
 					<li>This block is part of the original <code>addWidget</code> template and is required.</li>
 					<li>In the original template, only the <code>table</code> parameter is provided. After v2.0.28, <code>config</code> and <code>widgetOptions</code> were provided as additional parameters (sorry the previous docs were incorrect).</li>
 					<li>The <code>initFlag</code> is correctly set in v2.8+.</li>
 				</ul>
 			</li>
-			<li>The <code>remove</code> block:
+			<li>The <code>remove</code> block (added v2.4):
 				<ul>
 					<li>This code is called when either the <a href="index.html#refreshwidgets"><code>refreshWidgets</code></a> or <a href="index.html#destroy"><code>destroy</code></a> methods are called.</li>
 					<li>The code contained within this block must remove all additional content/elements added by the widget. Also, any rows or content that is hidden must be restored.</li>
 					<li>If additional rows are added to the table, make sure to include the class name within the <a href="index.html#selectorremove"><code>selectorRemove</code></a> option.</li>
-					<li>This block was added in v2.4 and is optional.</li>
+					<li>This block was added in v2.4, and <strong>not supported in older versions</strong>.</li>
+					<li>This block is optional.</li>
 				</ul>
 			</li>
 		</ul>
@@ -160,7 +174,7 @@ $.tablesorter.addWidget({
   },
   format: function(table, config, widgetOptions, initFlag) {
     // widget code to apply to the table *AFTER EACH SORT*
-    // the initFlag is true when this format is called from the init
+    // set the initFlag to true when this format is called from the init
     // function above otherwise initFlag is undefined
     // * see the saveSort widget for a full example *
   },

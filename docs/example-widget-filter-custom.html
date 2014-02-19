@@ -5,11 +5,11 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Functions</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js"></script>
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -22,11 +22,6 @@
 
 	<script>
 	$(function(){
-
-		$('.accordion').accordion({
-			autoHeight: false,
-			collapsible : true
-		});
 
 		// External search
 		// buttons set up like this:
@@ -85,6 +80,9 @@
 
 			// jQuery selector string of an element used to reset the filters
 			filter_reset : '.reset',
+
+			// Use the $.tablesorter.storage utility to save the most recent filters
+			filter_saveFilters : true,
 
 			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
 			// every character while typing and should make searching large tables faster.
@@ -160,6 +158,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.14</span>, the <code>filter_saveFilters</code> option was added (default set to <code>false</code>); this demo has it set to <code>true</code> to provide an example.</li> 
 				<li>In <span class="version">v2.11</span>, the filter functions provide an additional parameter <code>$r</code> providing a jQuery object of the current row being searched by the filter.</li> 
 				<li>For <span class="version">v2.10.8</span>, the Age column includes the new <code>data-value</code> set to <code>&lt;30</code> which sets the default (starting) filter value (see <a href="index.html#widget-filter-defaultattrib">filter_defaultAttrib</a> for more details).</li>
 				<li>As of tablesorter <span class="version">v2.9</span>, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
@@ -168,7 +167,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Default Select</strong> (&quot;First Name&quot; column)</a></h3>
+		<h3><a href="#"><strong>Default Select</strong></a> <span class="xsmall">(&quot;First Name&quot; column)</span></h3>
 		<div>
 			<ul>
 				<li>To enable this type of select, set the <code>filter_functions</code> option for the column to <code>true</code>,<pre class="prettyprint lang-javascript">filter_functions : {
@@ -186,7 +185,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Custom Filter Function</strong> (&quot;Last Name&quot; column)</a></h3>
+		<h3><a href="#"><strong>Custom Filter Function</strong></a> <span class="xsmall">(&quot;Last Name&quot; column)</span></h3>
 		<div>
 			<ul>
 				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre class="prettyprint lang-javascript">filter_functions : {
@@ -203,7 +202,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Custom Select</strong> (&quot;City&quot; or &quot;Total&quot; column)</a></h3>
+		<h3><a href="#"><strong>Custom Select</strong></a> <span class="xsmall">(&quot;City&quot; or &quot;Total&quot; column)</span></h3>
 		<div>
 			<ul>
 				<li>To enable this type of select, add your custom options within the <code>filter_functions</code> option.</li>
@@ -236,7 +235,7 @@
 			</ul>
 		</div>
 
-		<h3><a href="#"><strong>Default Select showing only available options (&quot;Discount&quot; column)</strong></a></h3>
+		<h3><a href="#"><strong>Default Select with only available options</strong></a> <span class="xsmall">(&quot;Discount&quot; column)</span></h3>
 		<div>
 			<ul>
 				<li>This column uses the same method as the &quot;First Name&quot; column with one exception, it also includes the &quot;filter-onlyAvail&quot; class name in the header
