@@ -74,7 +74,7 @@
 		<ul>
 			<li>The any-match search method has limitations applied. It does not support all of the per column search features! So, at this time, the following types of queries are not allowed as the results will cause confusion:
 				<ul>
-					<li>Search operators - A search for values equal, greater or less than values (<code>&gt &gt= &lt;= &lt;</code>) is not allowed because tables that contain both numbers and text (in separate columns). For example:
+					<li>Search operators - A search for values equal, greater or less than values (<code>&gt; &gt;= &lt;= &lt;</code>) is not allowed because tables that contain both numbers and text (in separate columns). For example:
 						<pre class="prettyprint lang-javascript">&quot;Fred&quot; > &quot;1&quot;  // true*
 &quot;Fred&quot; &lt; &quot;10&quot; // false
 &quot;Fred&quot; &gt; 1    // false (numeric comparisons occur with parsed table data)
@@ -90,14 +90,15 @@
 					</li>
 					<li>Allowed filters include plain text matching, fuzzy search (<code>~</code>), exact match (<code>&quot;</code>), wild card matches( <code>?</code> or <code>*</code>), regex (<code>/\d/g</code>), and logical and (<code>a &amp;&amp; b</code>)/or (<code>a|b</code>) matches.</li>
 				</ul>
+				</li>
 				<li>Setting this option should work properly with or without the column filters. The only issue you would have is if you triggered a search on the table using an array with undefined or null array values, like this:
 					<pre class="prettyprint lang-javascript">// apply "2?%" filter to the fifth column (zero-based index)
 var columns = [];
 columns[5] = '2?%';
 // anyMatch will kick in on undefined column filters,
 // unless the array looks like this: columns = [ '', '', '', '', '', '2?%' ]
-$('table').trigger('search', [ columns ]);</pre></li>
-			</li>
+$('table').trigger('search', [ columns ]);</pre>
+				</li>
 		</ul>
 		</div>
 	</div>
@@ -152,7 +153,7 @@ $('table').trigger('search', [ columns ]);</pre></li>
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-filter-custom.html">jQuery custom filter widget &rsaquo;&rsaquo;</a>
+	Next up: <a href="example-widget-filter-external-inputs.html">jQuery custom filter widget external inputs &rsaquo;&rsaquo;</a>
 </div>
 
 </div>
