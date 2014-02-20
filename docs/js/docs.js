@@ -21,7 +21,7 @@ $(function(){
 	if ($("#css").length) {
 		$("pre.lang-css").addClass('mod').html( cleanupCode( $("#css").html() ) );
 	}
-	if ($("#demo").length) {
+	if ($("#demo").length && $("#html pre").length) {
 		$("#html pre").addClass('mod').html( cleanupCode( $("#demo").html() ) );
 	}
 
