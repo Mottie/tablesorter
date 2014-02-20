@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.15.1";
+			ts.version = "2.15.2";
 
 			ts.parsers = [];
 			ts.widgets = [];
