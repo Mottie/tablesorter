@@ -575,7 +575,7 @@ ts.filter = {
 					// force a new search since content has changed
 					c.lastCombinedFilter = null;
 				}
-				// pass true (dontSkip) to prevent the tablesorter.setFilters function from skipping the first input
+				// pass true (skipFirst) to prevent the tablesorter.setFilters function from skipping the first input
 				// ensures all inputs are updated when a search is triggered on the table $('table').trigger('search', [...]);
 				ts.filter.searching(table, filter, true);
 			}
@@ -758,22 +758,22 @@ ts.filter = {
 				( event.which >= 37 && event.which <= 40 ) || (event.which !== 13 && wo.filter_liveSearch === false) ) ) ) {
 					return;
 			}
-			// true flag in getFilters forces obtaining the latest values
-			ts.filter.searching( table, filters || ts.getFilters( table, true ), true );
+			// true flag tells getFilters to skip newest timed input
+			ts.filter.searching( table, '', true );
 		});
 		c.$table.bind('filterReset', function(){
 			$el.val('');
 		});
 	},
-	checkFilters: function(table, filter, dontSkip) {
+	checkFilters: function(table, filter, skipFirst) {
 		var c = table.config,
 			wo = c.widgetOptions,
 			filterArray = $.isArray(filter),
-			filters = (filterArray) ? filter : ts.getFilters(table),
+			filters = (filterArray) ? filter : ts.getFilters(table, true),
 			combinedFilters = (filters || []).join(''); // combined filter values
 		// add filter array back into inputs
 		if (filterArray) {
-			ts.setFilters( table, filters, false, dontSkip !== true );
+			ts.setFilters( table, filters, false, skipFirst !== true );
 		}
 		if (wo.filter_hideFilters) {
 			// show/hide filter row as needed
@@ -817,7 +817,7 @@ ts.filter = {
 						// $(':focus') needs jQuery 1.6+
 						if ( $(document.activeElement).closest('tr')[0] !== $filterRow[0] ) {
 							// don't hide row if any filter has a value
-							if (ts.getFilters(table).join('') === '') {
+							if (c.lastCombinedFilter === '') {
 								$filterRow.addClass('hideme');
 							}
 						}
@@ -1078,17 +1078,17 @@ ts.filter = {
 			}
 		}
 	},
-	searching: function(table, filter, dontSkip) {
+	searching: function(table, filter, skipFirst) {
 		if (typeof filter === 'undefined' || filter === true) {
 			var wo = table.config.widgetOptions;
 			// delay filtering
 			clearTimeout(wo.searchTimer);
 			wo.searchTimer = setTimeout(function() {
-				ts.filter.checkFilters(table, filter, dontSkip );
+				ts.filter.checkFilters(table, filter, skipFirst );
 			}, wo.filter_liveSearch ? wo.filter_searchDelay : 10);
 		} else {
 			// skip delay
-			ts.filter.checkFilters(table, filter, dontSkip);
+			ts.filter.checkFilters(table, filter, skipFirst);
 		}
 	}
 };
@@ -1115,7 +1115,7 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 				if ($column.length) {
 					// move the latest search to the first slot in the array
 					$column = $column.sort(function(a, b){
-						return $(a).attr('data-lastSearchTime') <= $(b).attr('data-lastSearchTime');
+						return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
 					});
 					if ($.isArray(setFilters)) {
 						// skip first (latest input) to maintain cursor position while typing
