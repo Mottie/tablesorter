@@ -1011,7 +1011,7 @@ ts.filter = {
 	},
 	buildSelect: function(table, column, updating, onlyavail) {
 		column = parseInt(column, 10);
-		var indx, rowIndex, tbodyIndex, len, currentValue, txt,
+		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters,
 			c = table.config,
 			wo = c.widgetOptions,
 			$tbodies = c.$tbodies,
@@ -1054,7 +1054,12 @@ ts.filter = {
 			options += arry[indx] !== '' ? '<option value="' + txt + '"' + (currentValue === txt ? ' selected="selected"' : '') +
 				'>' + arry[indx] + '</option>' : '';
 		}
-		c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]')[ updating ? 'html' : 'append' ](options);
+		// update all selects in the same column (clone thead in sticky headers & any external selects) - fixes 473
+		$filters = ( c.$filters ? c.$filters : c.$table.children('thead') ).find('.' + ts.css.filter);
+		if (wo.filter_$externalFilters) {
+			$filters = $filters && $filters.length ? $filters.add(wo.filter_$externalFilters) : wo.filter_$externalFilters;
+		}
+		$filters.filter('select[data-column="' + column + '"]')[ updating ? 'html' : 'append' ](options);
 	},
 	buildDefault: function(table, updating) {
 		var columnIndex, $header,
