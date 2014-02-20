@@ -850,7 +850,7 @@ ts.filter = {
 			anyMatchNotAllowedTypes = [ 'range', 'notMatch',  'operators' ],
 			// parse columns after formatter, in case the class is added at that point
 			parsed = c.$headers.map(function(columnIndex) {
-				return c.parsers[columnIndex].parsed || ( ts.getData ?
+				return c.parsers && c.parsers[columnIndex].parsed || ( ts.getData ?
 					ts.getData(c.$headers.filter('[data-column="' + columnIndex + '"]:last'), c.headers[columnIndex], 'filter') === 'parsed' :
 					$(this).hasClass('filter-parsed') );
 			}).get();
