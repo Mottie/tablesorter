@@ -47,6 +47,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.2">Version 2.15.2</a> (2/20/2014)
+
+* Filter widget
+  * Fix js error on empty tables & multiple rows in thead while managing `c.parsers`. Fixes [issue #507](https://github.com/Mottie/tablesorter/issues/507).
+  * `filter-onlyAvail` now updates all selects properly. Fixes [issue #473](https://github.com/Mottie/tablesorter/issues/473).
+  * Fix annoying filter search caret jumping to end while typing
+* Doc updates
+  * Added `delayInit` demo ([pull #504](https://github.com/Mottie/tablesorter/issues/473)) - thanks [Infeligo](https://github.com/Infeligo)!
+  * Fixed some markup issues &amp; rearranged some links
+  * Updated minified widget file date. Fixes [issue #505](https://github.com/Mottie/tablesorter/issues/505)
+
 #### <a name="v2.15.1">Version 2.15.1</a> (2/19/2014)
 
 * Filter widget
