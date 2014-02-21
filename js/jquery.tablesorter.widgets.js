@@ -571,7 +571,7 @@ ts.filter = {
 			} else {
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
 				filter = event.type === 'search' ? filter : event.type === 'updateComplete' ? c.$table.data('lastSearch') : '';
-				if (/(update|add)/.test(event.type)) {
+				if (/(update|add)/.test(event.type) && event.type !== "updateComplete") {
 					// force a new search since content has changed
 					c.lastCombinedFilter = null;
 				}
@@ -1229,8 +1229,8 @@ ts.addWidget({
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
-		// include caption & filter row (fixes #126 & #249)
-		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').remove();
+		// include caption & filter row (fixes #126 & #249) - don't remove cells to get correct cell indexing
+		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').hide();
 		if (!wo.stickyHeaders_includeCaption) {
 			$stickyTable.find('caption').remove();
 		} else {

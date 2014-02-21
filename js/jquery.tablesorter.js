@@ -1076,6 +1076,8 @@
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
 					cell = /TH|TD/.test(this.tagName) ? this : $(this).parents('th, td')[0];
+					// reference original table headers and find the same cell
+					cell = c.$headers[ $headers.index( cell ) ];
 					if (!cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
