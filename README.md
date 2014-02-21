@@ -47,6 +47,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.3">Version 2.15.3</a> (2/21/2014)
+
+* Stickyheaders
+  * Sorting works again. Fixes [issue #508](https://github.com/Mottie/tablesorter/issues/508).
+  * Table no longer scrolls to the top after initializing a sort from the sticky header.
+
 #### <a name="v2.15.2">Version 2.15.2</a> (2/20/2014)
 
 * Filter widget
