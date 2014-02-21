@@ -571,7 +571,7 @@ ts.filter = {
 			} else {
 				// send false argument to force a new search; otherwise if the filter hasn't changed, it will return
 				filter = event.type === 'search' ? filter : event.type === 'updateComplete' ? c.$table.data('lastSearch') : '';
-				if (/(update|add)/.test(event.type)) {
+				if (/(update|add)/.test(event.type) && event.type !== "updateComplete") {
 					// force a new search since content has changed
 					c.lastCombinedFilter = null;
 				}
