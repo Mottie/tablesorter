@@ -3416,17 +3416,35 @@ $("table").trigger("updateAll", [ resort, callback ]);</pre></div>
 				<td><a href="example-update-all.html">Example</a></td>
 			</tr>
 
+			<tr id="updatecache">
+				<td><a href="#" class="permalink">updateCache</a></td>
+				<td>Update the parsers, only if not defined, then update the internal cache (<span class="version">v2.15.4</span>).
+					<div class="collapsible">
+					<br>
+					This method is used by the pager (addon &amp; widget) to update the data stored within the cache after the content has been updated using ajax.
+					<pre class="prettyprint lang-js">$("table").trigger("updateCache");</pre></div>
+				</td>
+				<td><a href="example-update-all.html">Example</a></td>
+			</tr>
+
 			<tr id="appendcache">
 				<td><a href="#" class="permalink">appendCache</a></td>
-				<td>Update a table that has had its data dynamically changed; used in conjunction with &quot;update&quot;.<br>
-					<div class="collapsible">
-					Use this method when more than just one cell like in the &quot;updateCell&quot; method, but you may possibly have to trigger two events: both &quot;update&quot; and &quot;appendCache&quot;.<br>
-					<br>
-					Note: This is the only method the pager widget uses - the entire table is stored in the cache, but only the visible portion is actually exists in the table.
-						<pre class="prettyprint lang-js">// Table data was just dynamically changed (more than one cell)
+				<td>Adds all of the cached table rows back into the table.<br>
+					<div class="collapsible"><br>
+					This method was originally designed to be used with the pager. It should be used under these conditions:
+					<ul>
+						<li>When the pager <code>removeRows</code> option is <code>true</code>.</li>
+						<li>When not using the &quot;updateCell&quot; or &quot;addRows&quot; methods.</li>
+						<li>Before manually adding or removing table rows.</li>
+						<li>And, before triggering an &quot;update&quot;.</li>
+					</ul>
+					Note: The entire table is stored in the cache, but when using the pager with the <a href="#pager-removerows"><code>removeRows</code> option</a> set to <code>true</code>, only the visible portion is actually exists within the table. So, use this option to add all stored rows back into the table before manually changing the contents. Otherwise, if any update method is triggered, only the visible rows will be added back to the cache.
+						<pre class="prettyprint lang-js">// how to update the table contents
 $("table")
-  .trigger("update")
-  .trigger("appendCache");</pre></div>
+  .trigger("appendCache")
+  .append('&lt;tr&gt;...&lt;/tr&gt;') // add new row(s), or delete rows
+  .trigger("update"); // update the cache</pre>
+  				</div>
 				</td>
 				<td></td>
 			</tr>

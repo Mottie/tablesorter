@@ -777,7 +777,7 @@
 					$table = c.$table;
 				// apply easy methods that trigger bound events
 				$table
-				.unbind('sortReset update updateRows updateCell updateAll addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
+				.unbind('sortReset update updateRows updateCell updateAll addRows sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
 				.bind("sortReset.tablesorter", function(e){
 					e.stopPropagation();
 					c.sortList = [];
@@ -874,6 +874,17 @@
 				.bind("appendCache.tablesorter", function(e, callback, init) {
 					e.stopPropagation();
 					appendToTable(table, init);
+					if (typeof callback === "function") {
+						callback(table);
+					}
+				})
+				.bind("updateCache.tablesorter", function(e, callback){
+					// rebuild parsers
+					if (!c.parsers) {
+						buildParserCache(table);
+					}
+					// rebuild the cache map
+					buildCache(table);
 					if (typeof callback === "function") {
 						callback(table);
 					}
