@@ -47,6 +47,16 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.4">Version 2.15.4</a> (2/22/2014)
+
+* Add "updateCache" method
+  * This method updates the parsers, if undefined, then updates the internal cache.
+  * Used by the pager (addon &amp; widget) to update the internal cache after an ajax update.
+* Pager (addon &amp; widget)
+  * Fixed several undefined variable javascript errors. Fixes [issue #509](https://github.com/Mottie/tablesorter/issues/509).
+  * Fixed an issue with recursion in the pager widget - removed several unnecessary "applyWidget" methods.
+  * Now uses the "updateCache" method after the table is rendered using ajax.
+
 #### <a name="v2.15.3">Version 2.15.3</a> (2/21/2014)
 
 * Stickyheaders
