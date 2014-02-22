@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 2/19/2014 (v2.15.0) */
+/* Pager widget (beta) for TableSorter 2/22/2014 (v2.15.4) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -135,6 +135,10 @@ tsp = ts.pager = {
 				last: {}
 			}, c.pager);
 
+		// pager initializes multiple times before table has completed initialization
+		if (p.isInitializing) { return; }
+
+		p.isInitializing = true;
 		if (c.debug) {
 			ts.log('Pager initializing');
 		}
@@ -187,12 +191,12 @@ tsp = ts.pager = {
 	initComplete: function(table, c){
 		var p = c.pager;
 		tsp.changeHeight(table, c);
-
 		tsp.bindEvents(table, c);
 
 		// pager initialized
 		if (!p.ajax) {
 			p.initialized = true;
+			p.isInitializing = false;
 			tsp.setPageSize(table, 0, c); // page size 0 is ignored
 			c.$table.trigger('pagerInitialized', c);
 		}
@@ -234,6 +238,8 @@ tsp = ts.pager = {
 			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 				e.stopPropagation();
 				tsp.hideRows(table, c);
+				// make sure widgets are applied - fixes #450
+				c.$table.trigger('applyWidgets');
 			})
 			.on('pageSize.pager', function(e,v){
 				e.stopPropagation();
@@ -522,18 +528,16 @@ tsp = ts.pager = {
 			p.last.sortList = (c.sortList || []).join(',');
 			tsp.updatePageDisplay(table, c);
 			tsp.fixHeight(table, c);
-			// apply widgets after table has rendered
-			$t.trigger('applyWidgets');
-			$t.trigger('updateRows', [false, function(){
+			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
-					$t.trigger('updateComplete');
-					$t.trigger('pagerChange', c);
+					// apply widgets after table has rendered
+					$t.trigger('applyWidgets');
+					$t.trigger('pagerChange', p);
 				}
 			}]);
 		}
 		if (!p.initialized) {
-			p.initialized = true;
-			c.$table.trigger('pagerInitialized', c);
+			c.$table.trigger('applyWidgets');
 		}
 	},
 
@@ -676,7 +680,6 @@ tsp = ts.pager = {
 		p.$size.add(p.$goto).each(function(){
 			$(this).attr('aria-disabled', 'true').addClass(wo.pager_css.disabled)[0].disabled = true;
 		});
-		c.$table.trigger('applyWidgets');
 	},
 
 	moveToPage: function(table, p, flag) {
@@ -690,8 +693,7 @@ tsp = ts.pager = {
 		if ( l.page === p.page && l.size === p.size && l.totalPages === p.totalPages &&
 			(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
 			l.sortList === (c.sortList || []).join(',') ) {
-				// make sure widgets are applied - fixes #450
-				return flag === true ? c.$table.trigger('applyWidgets') : '';
+				return;
 			}
 		if (c.debug) {
 			ts.log('Pager changing to page ' + p.page);
@@ -712,7 +714,6 @@ tsp = ts.pager = {
 		$.data(table, 'pagerLastPage', p.page);
 		if (p.initialized && flag !== false) {
 			c.$table.trigger('pageMoved', c);
-			c.$table.trigger('applyWidgets');
 		}
 	},
 
@@ -760,7 +761,7 @@ tsp = ts.pager = {
 		p.initialized = false;
 		c.$table.unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 		if (ts.storage) {
-			ts.storage(table, wo.pager_storageKey, '');
+			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}
 	},
 
@@ -775,7 +776,7 @@ tsp = ts.pager = {
 		// if table id exists, include page display with aria info
 		if ( table.id ) {
 			info = table.id + '_pager_info';
-			p.$container.find(wo.pager_selectors.pageDisplay).attr('id', info);
+			p.$container.find(c.widgetOptions.pager_selectors.pageDisplay).attr('id', info);
 			c.$table.attr('aria-describedby', info);
 		}
 		if ( triggered ) {

@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 2/19/2014 (v2.15.0)
+ * updated 2/22/2014 (v2.15.4)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -336,18 +336,19 @@
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p);
 				fixHeight(table, p);
-				// apply widgets after table has rendered
-				$t.trigger('applyWidgets');
-				$t.trigger('updateRows', [false, function(){
+				$t.trigger('updateCache', [function(){
 					if (p.initialized) {
-						$t.trigger('updateComplete');
+						// apply widgets after table has rendered
+						$t.trigger('applyWidgets');
 						$t.trigger('pagerChange', p);
 					}
 				}]);
 			}
 			if (!p.initialized) {
 				p.initialized = true;
-				$(table).trigger('pagerInitialized', p);
+				$(table)
+					.trigger('applyWidgets')
+					.trigger('pagerInitialized', p);
 			}
 		},
 
