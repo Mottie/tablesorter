@@ -194,12 +194,10 @@ tsp = ts.pager = {
 		tsp.bindEvents(table, c);
 
 		// pager initialized
-		if (!p.ajax) {
-			p.initialized = true;
-			p.isInitializing = false;
-			tsp.setPageSize(table, 0, c); // page size 0 is ignored
-			c.$table.trigger('pagerInitialized', c);
-		}
+		p.initialized = true;
+		p.isInitializing = false;
+		tsp.setPageSize(table, 0, c); // page size 0 is ignored
+		c.$table.trigger('pagerInitialized', c);
 
 	},
 
