@@ -47,6 +47,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.5">Version 2.15.5</a> (2/23/2014)
+
+* Pager widget now initializes properly when using ajax. Fixes [issue #510](https://github.com/Mottie/tablesorter/issues/510).
+
 #### <a name="v2.15.4">Version 2.15.4</a> (2/22/2014)
 
 * Add "updateCache" method
@@ -213,78 +217,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Update all demo pages that use jQuery UI accordion with the newest version. Also added a clickable anchor to each accordion header.
   * Consolidate default class names within `$.tablesorter.css` for the filter, resizer and stickyHeaders widgets.
   * Renamed component.json to bower.json
-
-#### <a name="v2.14.5">Version 2.14.5</a> (12/16/2013)
-
-* Pager
-  * Fix pager update when ajax returns no rows. Fixes [issue #456](https://github.com/Mottie/tablesorter/issues/456).
-  * Add pager `processAjaxOnInit` option. Fixes [issue #424](https://github.com/Mottie/tablesorter/issues/424).
-  * Fix &amp; document inconsistentcies in pager triggered event parameters.
-  * Disable pager arrows &amp; show zero in display when `totalPages` is zero. Fixes [issue #460](https://github.com/Mottie/tablesorter/issues/460).
-  * Filter row is now included in sticky header while using the pager. Fixes [issue #449](https://github.com/Mottie/tablesorter/issues/449).
-  * Lots of thanks to [Lynesth](https://github.com/Lynesth) for sharing code fixes :)
-* Fix `stickyHeaders_attachTo` no positioning correctly. See [issue #295](https://github.com/Mottie/tablesorter/issues/295).
-
-#### <a name="v2.14.4">Version 2.14.4</a> (12/14/2013)
-
-* Add Bootstrap 2 theme. Thanks to [themilkman](https://github.com/themilkman).
-* The `addRows` method now works with an empty table. Fixes [issue #450](https://github.com/Mottie/tablesorter/issues/450).
-* Sticky headers widget
-  * Add `stickyHeaders_attachTo` option. Fixes issues [#295](https://github.com/Mottie/tablesorter/issues/295) &amp; [#314](https://github.com/Mottie/tablesorter/issues/314).
-  * Add `cssStickyHeaders_attachTo` option. Fixes [issue #453](https://github.com/Mottie/tablesorter/issues/453).
-  * Added padding to wrapper in demo so Chrome doesn't add a horizontal scroll bar
-* Filter widget
-  * Fix forced search to work again (i.e. `$('table').trigger('search', false);`)
-  * Fix child row filtering - see [this Stackoverflow question](http://stackoverflow.com/q/20342203/145346)
-* Pager
-  * The pager will update properly when ajax returns no rows. Fixes [issue #456](https://github.com/Mottie/tablesorter/issues/456)
-  * Filter searches will now reset pager to the first page. Fixes [issue #456](https://github.com/Mottie/tablesorter/issues/456)
-  * The pager will now properly count filtered rows when including/excluding child rows. Fixes [this Stackoverflow question](http://stackoverflow.com/q/20342203/145346).
-  * The table cache will once again update after an ajax call. Fixes issues [#436](https://github.com/Mottie/tablesorter/issues/436) &amp; [#437](https://github.com/Mottie/tablesorter/issues/437).
-
-#### <a name="v2.14.3">Version 2.14.3</a> (12/2/2013)
-
-* Core
-  * Refreshing widgets now only applies to previously installed widgets. Fixes [issue #442](https://github.com/Mottie/tablesorter/issues/442).
-* Pager
-  * Ajax arrays now accept html instead of cell contents, e.g. `<td class="red">- 10</td>`. Thanks [@christhomas](https://github.com/christhomas); fixes [issue #434](https://github.com/Mottie/tablesorter/pull/434).
-  * Add ajax counter to only allow the most recent request to process. Thanks [@christhomas](https://github.com/christhomas); fixes [issue #443](https://github.com/Mottie/tablesorter/pull/443).
-  * When filtering rows, the output will now show zeros for row &amp; page counts instead of empty strings.
-  * No more `fixedHeight` pager errors. Thanks [@hempel](https://github.com/hempel); fixes [issue #448](https://github.com/Mottie/tablesorter/issues/448).
-* Filter widget
-  * Exact filter matches now properly override other queries. Fixes [issue #441](https://github.com/Mottie/tablesorter/issues/441).
-  * Reverse range `20 - 10` work properly, again. See [issue #441](https://github.com/Mottie/tablesorter/issues/441).
-  * Updated docs to show the filter precendence. See [footnote (2) under Notes](http://mottie.github.io/tablesorter/docs/example-widget-filter.html).
-* Sticky Headers widget
-  * Now uses the filter widget `bindSearch` function allowing live search, delayed searching and escape to cancel on sticky header filters.
-  * Thanks to [@haraldkrischner](https://github.com/haraldkrischner) for his help!
-  * Fixes issues [#439](https://github.com/Mottie/tablesorter/issues/439) &amp; [#440](https://github.com/Mottie/tablesorter/pull/440).
-* CSS Sticky Headers widget (beta)
-  * Now works properly in IE9+.
-  * Thanks [@gakreol](https://github.com/gakreol)
-  * Fixes [issue #447](https://github.com/Mottie/tablesorter/issues/447).
-* Added Semantic version sorting demo
-  * See the [demo here](http://mottie.github.io/tablesorter/docs/example-option-textsorter-semver.html).
-  * This demo does not use a custom parser nor widget, it requires a modified [`semver.js` for node](https://github.com/isaacs/node-semver) file to sort the column using the `textSorter` option.
-  * The modified `semver-mod.js` file is contained within the new "extras" folder (tablesorter/js/extras) along with the original unmodified `semver.js` file.
-  * Extra code is also included to highlight invalid semantic versions within the table.
-  * Fixes [issue #395](https://github.com/Mottie/tablesorter/issues/395).
-* Sorry I didn't get around to finding solutions for some of the other issues that I promised to have done this patch :(
-
-#### <a name="v2.14.2">Version 2.14.2</a> (11/25/2013)
-
-* Removed Bootstrap filter cell background color. Fixes [issue #425](https://github.com/Mottie/tablesorter/issues/425).
-* Added css sticky header widget (beta)
-  * This widget uses [css3 transforms](http://caniuse.com/#search=transform) to make the table header sticky. It's a bit jumpy in Chrome, but works well in other tested browsers.
-  * This widget doesn't appear to work in IE10, but it should... it will not work in IE8 and older.
-  * See [issue #429](https://github.com/Mottie/tablesorter/issues/429) for more information.
-* Stop repeat filter widget searches. Fixes [issue #431](https://github.com/Mottie/tablesorter/issues/431).
-* Prevent filter error. Fixes [issue #432](https://github.com/Mottie/tablesorter/issues/432).
-* Merged in and reverted [issue #433](https://github.com/Mottie/tablesorter/issues/433).
-* Editable widget
-  * Updated docs with missing `editable_editComplete` callback event name option.
-  * Modified the `editable_columns` option to allow setting a column range string, e.g. `"2-4"` instead of creating an array (`[2,3,4]`).
-  * Fixes [issue #435](https://github.com/Mottie/tablesorter/issues/435).
-* Grouping widget
-  * Invalid group class now fails silently.
-  * Fixes [issue #438](https://github.com/Mottie/tablesorter/issues/438).
