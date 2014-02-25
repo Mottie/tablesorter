@@ -70,9 +70,6 @@ ts.grouping = {
 				cache = c.cache[tbodyIndex].normalized;
 				group = ''; // clear grouping across tbodies
 				$rows = c.$tbodies.eq(tbodyIndex).children('tr').not('.' + c.cssChildRow);
-				if (wo.group_collapsed && wo.group_collapsible) {
-					$rows.addClass('group-hidden');
-				}
 				for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
 					if ( $rows.eq(rowIndex).is(':visible') ) {
 						// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
@@ -103,14 +100,15 @@ ts.grouping = {
 					}
 				}
 			}
-			$rows = c.$table.find('tr.group-header').bind('selectstart', false);
-			if (wo.group_count || $.isFunction(wo.group_callback)) {
-				$rows.each(function(){
-					var $rows,
-						$row = $(this),
-						$label = $row.find('.group-count');
+			c.$table.find('tr.group-header')
+			.bind('selectstart', false)
+			.each(function(){
+				var $label,
+					$row = $(this),
+					$rows = $row.nextUntil('tr.group-header').filter(':visible');
+				if (wo.group_count || $.isFunction(wo.group_callback)) {
+					$label = $row.find('.group-count');
 					if ($label.length) {
-						$rows = $row.nextUntil('tr.group-header').filter(':visible');
 						if (wo.group_count) {
 							$label.html( wo.group_count.replace(/\{num\}/g, $rows.length) );
 						}
@@ -118,8 +116,11 @@ ts.grouping = {
 							wo.group_callback($row.find('td'), $rows, column, table);
 						}
 					}
-				});
-			}
+				}
+				if (wo.group_collapsed && wo.group_collapsible) {
+					$rows.addClass('group-hidden');
+				}
+			});
 			c.$table.trigger(wo.group_complete);
 			if (c.debug) {
 				$.tablesorter.benchmark("Applying groups widget: ", time);

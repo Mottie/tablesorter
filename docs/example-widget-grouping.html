@@ -108,7 +108,7 @@ tr.group-header.collapsed td i {
 				if (column === 2) {
 					var subtotal = 0;
 					$rows.each(function(){
-						subtotal += parseInt( $(this).find("td").eq(column).text() );
+						subtotal += parseFloat( $(this).find("td").eq(column).text() );
 					});
 					$cell.find(".group-count").append("; subtotal: " + subtotal );
 				}
