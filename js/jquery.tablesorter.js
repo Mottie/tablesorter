@@ -1132,7 +1132,7 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
+					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
 					.removeAttr('data-column');
