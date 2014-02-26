@@ -60,6 +60,9 @@
 			updateIndx = 0,
 			updateCallback = 0,
 			events = ['sortStart', 'sortBegin', 'sortEnd' ],
+			returnTime = function(string){
+				return new Date(string).getTime();
+			},
 			undef, c1, c2, c3, e, i, l, t;
 
 		$table1
@@ -218,22 +221,22 @@
 			'currency'  : { '£1': 1, '($2.23)': -2.23, '5€': 5, '(11¤)': -11, '500¥': 500, '25¢': 25, '$1,000.50': 1000.5 },
 			'ipAddress' : { '255.255.255.255': 255255255255, '32.32.32.32': 32032032032, '1.1.1.1': 1001001001 },
 			'url'       : { 'http://google.com': 'google.com', 'ftp://fred.com': 'fred.com', 'https://github.com': 'github.com' },
-			'isoDate'   : { '2012/12/12': 1355292000000, '2012-12/12': 1355292000000, '2013-1-1': 1357020000000, '2013/1/1 12:34:56 AM': 1357022096000 },
+			'isoDate'   : { '2012/12/12': returnTime('2012/12/12'), '2012-12/12': returnTime('2012/12/12'), '2013-1-1': returnTime('2013/1/1'), '2013/1/1 12:34:56 AM': returnTime('2013/1/1 12:34:56 AM') },
 			'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4, '1,234.56    %': 1234.56 },
-			'usLongDate': { 'Feb 23, 1999': 919749600000, 'Feb 23, 1999 12:34': 919794840000, 'Feb 23, 1999 12:34 AM': 919751640000, 'Feb 23, 1999 12:34:56 PM': 919794896000, '01 Jan 2013': 1357020000000 },
-			'shortDate' : { '1/2/2001': 978415200000, '1 2 2001': 978415200000, '1.2.2001': 978415200000, '1-2-2001': 978415200000, '1/2/2001 12:34 PM' : 978460440000, '1.2.2001 13:34' : 978464040000 },
-			'time'      : { '12:34 AM': 946708440000, '1:00 pm': 946753200000 },
+			'usLongDate': { 'Feb 23, 1999': returnTime('Feb 23, 1999'), 'Feb 23, 1999 12:34': returnTime('Feb 23, 1999 12:34'), 'Feb 23, 1999 12:34 AM': returnTime('Feb 23, 1999 12:34 AM'), 'Feb 23, 1999 12:34:56 PM': returnTime('Feb 23, 1999 12:34:56 PM'), '01 Jan 2013': returnTime('01 Jan 2013') },
+			'shortDate' : { '1/2/2001': returnTime('1/2/2001'), '1 2 2001': returnTime('1/2/2001'), '1.2.2001': returnTime('1/2/2001'), '1-2-2001': returnTime('1/2/2001'), '1/2/2001 12:34 PM' : returnTime('1/2/2001 12:34 PM'), '1.2.2001 13:34' : returnTime('1/2/2001 13:34') },
+			'time'      : { '12:34 AM': returnTime('2000/01/01 12:34 AM'), '1:00 pm': returnTime('2000/01/01 1:00 pm') },
 			'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
 		},
 		// switch ignoreCase, sortLocalCompare & shortDate "ddmmyyyy"
 		sample2 = {
 			'text'      : { 'TesT': 'TesT', '\u00e1 test': 'a test' },
 			'currency'  : { '€ 123 456,78': 123456.78, '€ 123.456,78': 123456.78 },
-			'shortDate' : { '2/1/2001': 978415200000, '2-1-2001': 978415200000, '2 1,2001': 978415200000 }
+			'shortDate' : { '2/1/2001': returnTime('1/2/2001'), '2-1-2001': returnTime('1/2/2001'), '2 1,2001': returnTime('1/2/2001') }
 		},
 		// shortdate to "yyyymmdd"
 		sample3 = {
-			'shortDate' : { '2001/1/2': 978415200000, '2001-1/2': 978415200000, '2001,1.2': 978415200000 }
+			'shortDate' : { '2001/1/2': returnTime('1/2/2001'), '2001-1/2': returnTime('1/2/2001'), '2001,1.2': returnTime('1/2/2001') }
 		},
 		report = function(s) {
 			for (i = 0; i < p.length; i++) {
@@ -448,6 +451,7 @@
 			expect(7);
 			t = $table2.find('th:first');
 			e = jQuery._data(table2, 'events'); // get a list of all bound events
+console.log(e);
 			equal( $.isEmptyObject(e), true, 'no events applied' );
 			equal( $table2.data().hasOwnProperty('tablesorter'), false, 'Data removed' );
 			equal( $table2.attr('class'), 'tester', 'All table classes removed' );
