@@ -43,20 +43,22 @@ $.tablesorter.customPagerControls = function(settings) {
 			for (indx = start; indx < end; indx++) {
 				if (cur + indx >= 1 && cur + indx < c.totalPages) { pageArray.push( cur + indx ); }
 			}
-			// include first and last pages (ends) in the pagination
-			for (indx = 0; indx < options.ends; indx++){
-				if ($.inArray(indx + 1, pageArray) === -1) { pageArray.push(indx + 1); }
-				if ($.inArray(c.totalPages - indx, pageArray) === -1) { pageArray.push(c.totalPages - indx); }
+			if (pageArray.length) {
+				// include first and last pages (ends) in the pagination
+				for (indx = 0; indx < options.ends; indx++){
+					if ($.inArray(indx + 1, pageArray) === -1) { pageArray.push(indx + 1); }
+					if ($.inArray(c.totalPages - indx, pageArray) === -1) { pageArray.push(c.totalPages - indx); }
+				}
+				// sort the list
+				pageArray = pageArray.sort(function(a, b){ return a - b; });
+				// make links and spacers
+				$.each(pageArray, function(indx, value){
+					pages
+						.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
+						.append( '<span>' + (indx < pageArray.length - 1 && ( pageArray[ indx + 1 ] - 1 !== value ) ? options.distanceSpacer :
+							( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
+				});
 			}
-			// sort the list
-			pageArray = pageArray.sort(function(a, b){ return a - b; });
-			// make links and spacers
-			$.each(pageArray, function(indx, value){
-				pages
-					.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
-					.append( '<span>' + (indx < pageArray.length - 1 && ( pageArray[ indx + 1 ] - 1 !== value ) ? options.distanceSpacer :
-						( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
-			});
 			$('.pagecount').html(pages.html());
 		});
 
