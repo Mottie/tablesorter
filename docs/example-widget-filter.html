@@ -270,6 +270,14 @@ $(function(){
 
 		<h3><a href="#">Methods</a></h3>
 		<div>
+			<h3>Set Filter Placeholder Text</h3>
+			<blockquote>
+			Set a <code>data-placeholder</code> attribute on the associated table header with your desired placeholder text
+			<pre class="prettyprint lang-html">&lt;th data-placeholder=&quot;Enter Something&quot;&gt;Name&lt;/th&gt;</pre>
+			or, set the header cell's jQuery data
+			<pre class="prettyprint lang-javascript">$('.tablesorter th:eq(0)').data('placeholder', 'Search for...')</pre>
+			</blockquote>
+
 			<h3>filterReset</h3>
 			<blockquote>
 			Use the <code>filterReset</code> method to reset (clear) all of the current filters using this method

@@ -487,7 +487,7 @@ tsff = ts.filterFormatter = {
 			endOfDay : true,
 			// include ANY jQuery UI spinner options below
 
-			defaultDate : '', // ******************************** FIX THIS *******************************************
+			defaultDate : '',
 
 			changeMonth : true,
 			changeYear : true,
