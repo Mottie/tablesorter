@@ -62,18 +62,21 @@ tsColSel = ts.columnSelector = {
 			var $this = $(this),
 				// if no data-priority is assigned, default to 1, but don't remove it from the selector list
 				priority = $this.attr(wo.columnSelector_priority) || 1,
-				colId = $this.attr('data-column');
+				colId = $this.attr('data-column'),
+				state = ts.getData(this, c.headers[colId], 'columnSelector');
+
 
 			// if this column not hidable at all
 			// include getData check (includes "columnSelector-false" class, data attribute, etc)
-			if ( isNaN(priority) && priority.length > 0 || ts.getData(this, c.headers[colId], 'columnSelector') == 'false' ||
+			if ( isNaN(priority) && priority.length > 0 || state === 'disable' ||
 				( wo.columnSelector_columns[colId] && wo.columnSelector_columns[colId] === 'disable') ) {
 				return true; // goto next
 			}
 
-			// set default state
+			// set default state; storage takes priority
 			colSel.states[colId] = saved && typeof(saved[colId]) !== 'undefined' ?
-				saved[colId] : typeof(wo.columnSelector_columns[colId]) !== 'undefined' ? wo.columnSelector_columns[colId] : true;
+				saved[colId] : typeof(wo.columnSelector_columns[colId]) !== 'undefined' ?
+				wo.columnSelector_columns[colId] : state === 'true' || !(state === 'false');
 			colSel.$column[colId] = $(this);
 
 			// set default col title

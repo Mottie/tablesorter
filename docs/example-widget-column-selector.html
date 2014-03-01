@@ -79,9 +79,13 @@
 /*** Bootstrap popover ***/
 #popover-target label {
   margin: 0 5px;
+  display: block;
 }
 #popover-target input {
   margin-right: 5px;
+}
+.popover {
+	margin-top: -65px; /* adjust popover position */
 }
 </style>
 
@@ -222,7 +226,20 @@
     2 : true,      /* start with column visible; default for undefined columns */
   }
 }</pre></li>
+								<li>
+									<span class="label label-warning">*NOTE*</span> Prior to v2.15.6, using these extra methods and setting a column to "false" would remove it from the selector. Now, it is more consistent with this columns option - set the appropriate method to "disable" to remove a column, "false" to initially hide a column and "true" to keep the column in an initially visible state.<br>
+									<br>
+									In <span class="version">v2.15.6</span>, the following methods in order of priority are now available (set to true, false or disable):
+									<ul>
+										<li>jQuery data <code>data-columnSelector="true"</code> or <code>data-columnSelector="false"</code>.</li>
+										<li>metadata <code>class=&quot;{ columnSelector : true }&quot;</code> or <code>class=&quot;{ columnSelector : false }&quot;</code>.</li>
+										<li>headers option <code>headers : { 0 : { columnSelector: true } }</code> or <code>headers : { 0 : { columnSelector: false } }</code>.</li>
+										<li>header class name <code>class=&quot;columnSelector-true&quot;</code> or <code>class=&quot;columnSelector-false&quot;</code>.</li>
+									</ul>
+								</li>
 							</ul>
+							<span class="label label-warning">*NOTE*</span> Setting a column to initially be visible (<code>true</code>) or invisible (<code>false</code>) will be overridden by the users saved selections if the <code>columnSelector_saveColumns</code> option is <code>true</code>.<br>
+							<br>
 							Default value: <code>{}</code>; empty object
 						</td>
 					</tr>
@@ -297,7 +314,7 @@
 					<tr>
 						<td><code>columnSelector_priority</code></td>
 						<td>
-							This is the assigned data-attribute which contains the defined data priority for a table column.
+							This is the assigned data-attribute which contains the defined data priority for a table column
 							<ul>
 								<li>Values of 1 through 6 set the breakpoints of that particular column.</li>
 								<li>A value of 1 has the highest priority, meaning it is the last column(s) to be hidden when the browser width goes below &quot;20em&quot; (320px).</li>
@@ -316,19 +333,20 @@
 
 		<h3><a href="#">Removing a column from the selector</a></h3>
 		<div>
-			This is probably overkill, but there are numerous ways to remove a column from the selection popup:
+			This is probably overkill, but there are numerous ways to remove a column from the selection popup (<span class="version updated">v2.15.6</span>):
 			<ul>
 				<li>Setting the <code>data-priority</code> to any non-numerical name (e.g. "critical" or "persistent").</li>
 				<li>Setting the column selector widget columns option <code>columnSelector_columns : { 0 : 'disable' }</code>.</li>
 				<li>The following methods in order of priority:
 					<ul>
-						<li>jQuery data <code>data-columnSelector="false"</code>.</li>
-						<li>metadata <code>class=&quot;{ columnSelector : false }&quot;</code>.</li>
-						<li>headers option <code>headers : { 0 : { columnSelector: false } }</code>.</li>
-						<li>header class name <code>class=&quot;columnSelector-false&quot;</code>.</li>
+						<li>jQuery data <code>data-columnSelector="disable"</code>.</li>
+						<li>metadata <code>class=&quot;{ columnSelector : disable }&quot;</code>.</li>
+						<li>headers option <code>headers : { 0 : { columnSelector: disable } }</code>.</li>
+						<li>header class name <code>class=&quot;columnSelector-disable&quot;</code>.</li>
 					</ul>
 				</li>
 			</ul>
+			*  Prior to v2.15.6, setting these methods to "false" would remove it from the selector. Now, they must be set to "disable" to remove the column from the selector, this was done to make it more consistent with the <code>columnSelector_columns</code> setting.
 		</div>
 	</div>
 
@@ -352,9 +370,10 @@
 		<tr>
 			<th data-priority="critical">Name</th>
 			<!-- Remove column from selection popup by including -->
-			<!-- data-priority="Anything other than 1-6" OR data-column-selector="false" OR class="columnSelector-false" -->
-			<th class="columnSelector-false">Major</th>
-			<th data-priority="6" data-selector-name="Gender">Sex</th>
+			<!-- data-priority="Anything other than 1-6" OR data-column-selector="disable" OR class="columnSelector-disable" -->
+			<th class="columnSelector-disable">Major</th>
+			<!-- columnSelector-false will initially hide the column -->
+			<th class="columnSelector-false" data-priority="6" data-selector-name="Gender">Sex</th>
 			<th data-priority="4">English</th>
 			<th data-priority="5">Japanese</th>
 			<th data-priority="3">Calculus</th>
@@ -445,9 +464,10 @@
 		&lt;tr&gt;
 			&lt;th data-priority=&quot;critical&quot;&gt;Name&lt;/th&gt;
 			&lt;!-- Remove column from selection popup by including --&gt;
-			&lt;!-- data-priority=&quot;Anything other than 1-6&quot; OR data-column-selector=&quot;false&quot; OR  class=&quot;columnSelector-false&quot; --&gt;
-			&lt;th class=&quot;columnSelector-false&quot;&gt;Major&lt;/th&gt;
-			&lt;th data-priority=&quot;6&quot; data-selector-name=&quot;Gender&quot;&gt;Sex&lt;/th&gt;
+			&lt;!-- data-priority=&quot;Anything other than 1-6&quot; OR data-column-selector=&quot;disable&quot; OR  class=&quot;columnSelector-disable&quot; --&gt;
+			&lt;th class=&quot;columnSelector-disable&quot;&gt;Major&lt;/th&gt;
+			&lt;!-- columnSelector-false will initially hide the column --&gt;
+			&lt;th class=&quot;columnSelector-false&quot; data-priority=&quot;6&quot; data-selector-name=&quot;Gender&quot;&gt;Sex&lt;/th&gt;
 			&lt;th data-priority=&quot;4&quot;&gt;English&lt;/th&gt;
 			&lt;th data-priority=&quot;5&quot;&gt;Japanese&lt;/th&gt;
 			&lt;th data-priority=&quot;3&quot;&gt;Calculus&lt;/th&gt;
