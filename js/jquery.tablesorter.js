@@ -582,92 +582,95 @@
 				return (parsers && parsers[i]) ? parsers[i].type || '' : '';
 			}
 
-			function initSort(table, cell, e){
-				var a, i, j, o, s,
+			function initSort(table, cell, event){
+				var arry, indx, col, order, s,
 					c = table.config,
-					k = !e[c.sortMultiSortKey],
-					$table = $(table);
+					key = !event[c.sortMultiSortKey],
+					$table = c.$table;
 				// Only call sortStart if sorting is enabled
 				$table.trigger("sortStart", table);
 				// get current column sort order
-				cell.count = e[c.sortResetKey] ? 2 : (cell.count + 1) % (c.sortReset ? 3 : 2);
+				cell.count = event[c.sortResetKey] ? 2 : (cell.count + 1) % (c.sortReset ? 3 : 2);
 				// reset all sorts on non-current column - issue #30
 				if (c.sortRestart) {
-					i = cell;
+					indx = cell;
 					c.$headers.each(function() {
 						// only reset counts on columns that weren't just clicked on and if not included in a multisort
-						if (this !== i && (k || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
+						if (this !== indx && (key || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
 							this.count = -1;
 						}
 					});
 				}
 				// get current column index
-				i = cell.column;
+				indx = cell.column;
 				// user only wants to sort on one column
-				if (k) {
+				if (key) {
 					// flush the sort list
 					c.sortList = [];
 					if (c.sortForce !== null) {
-						a = c.sortForce;
-						for (j = 0; j < a.length; j++) {
-							if (a[j][0] !== i) {
-								c.sortList.push(a[j]);
+						arry = c.sortForce;
+						for (col = 0; col < arry.length; col++) {
+							if (arry[col][0] !== indx) {
+								c.sortList.push(arry[col]);
 							}
 						}
 					}
 					// add column to sort list
-					o = cell.order[cell.count];
-					if (o < 2) {
-						c.sortList.push([i, o]);
+					order = cell.order[cell.count];
+					if (order < 2) {
+						c.sortList.push([indx, order]);
 						// add other columns if header spans across multiple
 						if (cell.colSpan > 1) {
-							for (j = 1; j < cell.colSpan; j++) {
-								c.sortList.push([i + j, o]);
+							for (col = 1; col < cell.colSpan; col++) {
+								c.sortList.push([indx + col, order]);
 							}
 						}
 					}
 					// multi column sorting
 				} else {
-					// get rid of the sortAppend before adding more - fixes issue #115
+					// get rid of the sortAppend before adding more - fixes issue #115 & #523
 					if (c.sortAppend && c.sortList.length > 1) {
-						if (ts.isValueInArray(c.sortAppend[0][0], c.sortList)) {
-							c.sortList.pop();
+						for (col = 0; col < c.sortAppend.length; col++) {
+							s = ts.isValueInArray(c.sortAppend[col][0], c.sortList);
+							if (s >= 0) {
+								c.sortList.splice(s,1);
+							}
 						}
 					}
 					// the user has clicked on an already sorted column
-					if (ts.isValueInArray(i, c.sortList)) {
+					if (ts.isValueInArray(indx, c.sortList) >= 0) {
 						// reverse the sorting direction
-						for (j = 0; j < c.sortList.length; j++) {
-							s = c.sortList[j];
-							o = c.$headers[s[0]];
-							if (s[0] === i) {
-								// o.count seems to be incorrect when compared to cell.count
-								s[1] = o.order[cell.count];
+						for (col = 0; col < c.sortList.length; col++) {
+							s = c.sortList[col];
+							order = c.$headers[s[0]];
+							if (s[0] === indx) {
+								// order.count seems to be incorrect when compared to cell.count
+								s[1] = order.order[cell.count];
 								if (s[1] === 2) {
-									c.sortList.splice(j,1);
-									o.count = -1;
+									c.sortList.splice(col,1);
+									order.count = -1;
 								}
 							}
 						}
 					} else {
 						// add column to sort list array
-						o = cell.order[cell.count];
-						if (o < 2) {
-							c.sortList.push([i, o]);
+						order = cell.order[cell.count];
+						if (order < 2) {
+							c.sortList.push([indx, order]);
 							// add other columns if header spans across multiple
 							if (cell.colSpan > 1) {
-								for (j = 1; j < cell.colSpan; j++) {
-									c.sortList.push([i + j, o]);
+								for (col = 1; col < cell.colSpan; col++) {
+									c.sortList.push([indx + col, order]);
 								}
 							}
 						}
 					}
 				}
 				if (c.sortAppend !== null) {
-					a = c.sortAppend;
-					for (j = 0; j < a.length; j++) {
-						if (a[j][0] !== i) {
-							c.sortList.push(a[j]);
+					arry = c.sortAppend;
+					for (col = 0; col < arry.length; col++) {
+						if (arry[col][0] !== indx) {
+							c.sortList.push(arry[col]);
 						}
 					}
 				}
@@ -1032,7 +1035,7 @@
 						// get headers from the sortList
 						$h = $h.filter(function(){
 							// get data-column from attr to keep  compatibility with jQuery 1.2.6
-							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList);
+							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList) >= 0;
 						});
 					}
 					$h.addClass(ts.css.processing + ' ' + c.cssProcessing);
@@ -1291,14 +1294,14 @@
 			};
 
 			// *** utilities ***
-			ts.isValueInArray = function(v, a) {
-				var i, l = a.length;
-				for (i = 0; i < l; i++) {
-					if (a[i][0] === v) {
-						return true;
+			ts.isValueInArray = function(column, arry) {
+				var indx, len = arry.length;
+				for (indx = 0; indx < len; indx++) {
+					if (arry[indx][0] === column) {
+						return indx;
 					}
 				}
-				return false;
+				return -1;
 			};
 
 			ts.addParser = function(parser) {

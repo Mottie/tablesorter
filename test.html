@@ -22,7 +22,7 @@
 	OPTIONS:
 		cssAsc, cssChildRow, cssDesc, cssHeader, cssHeaderRow, cssInfoBlock, dateFormat, emptyTo, headerList,
 		headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, stringTo, tableClass,
-		usNumberFormat, widgets (just zebra)
+		usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey
 
 	METHODS:
 		addRows, applyWidgets, destroy, sorton, sortReset, update/updateRow, updateAll, updateCell
@@ -35,7 +35,7 @@
 	OPTIONS:
 		cancelSelection, cssIcon, cssProcessing, debug, delayInit, headerTemplate, initWidgets, onRenderHeader,
 		onRenderTemplate, selectorHeaders, selectorRemove, selectorSort, serverSideSorting, showProcessing,
-		sortAppend, sortForce, sortInitialOrder, sortMultiSortKey, sortResetKey, sortRestart, strings,
+		sortInitialOrder, sortRestart, strings,
 		textExtraction, textSorter, theme, widthFixed, widgets (also need priority testing)
 
 	METHODS:
@@ -51,9 +51,11 @@
 			$table1 = $('.tester:eq(0)'),
 			$table2 = $('.tester:eq(1)'),
 			$table3 = $('.tester:eq(2)'),
+			$table4 = $('.tester:eq(3)'),
 			table1 = $table1[0],
 			table2 = $table2[0],
 			table3 = $table3[0],
+			table4 = $table4[0],
 			th0 = $table1.find('th')[0], // first table header cell
 			init = false,
 			sortIndx = 0,
@@ -63,7 +65,7 @@
 			returnTime = function(string){
 				return new Date(string).getTime();
 			},
-			undef, c1, c2, c3, e, i, l, t;
+			undef, c1, c2, c3, c4, e, i, l, t;
 
 		$table1
 			.bind('tablesorter-initialized', function(){
@@ -97,6 +99,21 @@
 			}
 		});
 
+		$table4.tablesorter({
+			sortAppend : [[2,0],[3,0]],
+			sortForce : [[0,0],[1,0]],
+			initialized: function(table){
+				var e, c = table.config;
+				// trigger sort on 5th column
+				// this method is used because triggering a "sorton" would ignore sortForce/sortAppend
+				c.$headers.eq(4).trigger('sort');
+				e = $.Event('sort');
+				e.which = 1;
+				e.shiftKey = true;
+				c.$headers.eq(5).trigger(e);
+			}
+		});
+
 		/************************************************
 			JSHint testing
 		************************************************/
@@ -120,6 +137,7 @@
 		c1 = table1.config;
 		c2 = table2.config;
 		c3 = table3.config;
+		c4 = table4.config;
 
 		/************************************************
 			check isDigit function
@@ -346,7 +364,7 @@
 		test( "sort Events", function(){
 			expect(1);
 			// table1 sorted twice in the above test; sortIndx = 6 (3 events x 2)
-			equal( sortIndx, 6, 'sortStart, sortBegin & sortComplet fired in order' );
+			equal( sortIndx, 6, 'sortStart, sortBegin & sortComplete fired in order x2' );
 		});
 
 		/************************************************
@@ -404,6 +422,34 @@
 			equal( updateIndx, updateCallback, 'updatedComplete and update callback functions working properly' );
 		});
 
+		/************************************************
+			test sortForce, sortAppend, sortMultiSortKey and sortResetKey options
+		************************************************/
+		asyncTest( "sortForce, sortAppend, sortMultiSortKey & sortResetKey", function(){
+			expect(3);
+			var count = 0;
+			tester.cacheCompare( table4, 3, [ 2, 1, 7, 6, 5, 3, 4, 8, 9, 10 ], 'force x2 + sorted x2 + append x2, ascending' );
+			$table4.on('sortEnd', function(){
+				count++;
+				if (count === 1) {
+					tester.cacheCompare( table4, 3, [ 2, 1, 6, 7, 5, 4, 3, 8, 10, 9 ], 'force x2 + sorted x2 + append x2, descending' );
+					c4.sortResetKey = 'shiftKey';
+					var e = $.Event('sort');
+					e.which = 1;
+					e.shiftKey = true; // testing sortResetKey
+					c4.$headers.eq(0).trigger(e);
+				} else {
+					tester.cacheCompare( table4, 3, [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 'sortResetKey' );
+					$table4.off('sortEnd');
+					start();
+				}
+			});
+			var e = $.Event('sort');
+			c4.sortMultiSortKey = 'altKey';
+			e.which = 1;
+			e.altKey = true; // testing sortMultiSortKey
+			c4.$headers.eq(5).trigger(e);
+		});
 
 		/************************************************
 			check header css
@@ -451,7 +497,6 @@
 			expect(7);
 			t = $table2.find('th:first');
 			e = jQuery._data(table2, 'events'); // get a list of all bound events
-console.log(e);
 			equal( $.isEmptyObject(e), true, 'no events applied' );
 			equal( $table2.data().hasOwnProperty('tablesorter'), false, 'Data removed' );
 			equal( $table2.attr('class'), 'tester', 'All table classes removed' );
@@ -549,6 +594,24 @@ console.log(e);
 				<tr><td>A55</td><td>44</td><td></td><td>11.4</td></tr>
 				<tr><td>A87</td><td>04</td><td>NR</td><td>5.2</td></tr>
 				<tr><td></td><td></td><td>NR</td><td></td></tr>
+			</tbody>
+		</table>
+
+		<table class="tester">
+			<thead>
+				<tr><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>F01</td><td>F11</td><td>A21</td><td>01</td><td>ZZS</td><td>WA</td></tr>
+				<tr><td>F01</td><td>F11</td><td>A21</td><td>02</td><td>ZY</td><td>WB</td></tr>
+				<tr><td>F02</td><td>F12</td><td>A22</td><td>03</td><td>ZZ</td><td>WA</td></tr>
+				<tr><td>F02</td><td>F12</td><td>A22</td><td>04</td><td>ZZ</td><td>WB</td></tr>
+				<tr><td>F02</td><td>F12</td><td>A23</td><td>05</td><td>ZY</td><td>WA</td></tr>
+				<tr><td>F02</td><td>F12</td><td>A23</td><td>06</td><td>ZX</td><td>WB</td></tr>
+				<tr><td>F02</td><td>F12</td><td>A23</td><td>07</td><td>ZX</td><td>WA</td></tr>
+				<tr><td>F02</td><td>F13</td><td>A23</td><td>08</td><td>ZZ</td><td>WB</td></tr>
+				<tr><td>F03</td><td>F13</td><td>A24</td><td>09</td><td>ZZ</td><td>WA</td></tr>
+				<tr><td>F03</td><td>F13</td><td>A24</td><td>10</td><td>ZZ</td><td>WB</td></tr>
 			</tbody>
 		</table>
 

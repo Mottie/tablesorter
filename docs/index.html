@@ -1905,10 +1905,8 @@ $(function(){
 });</pre>
 					These external inputs have one requirement, they must have a <code>data-column="#"</code>, where the <code>#</code> targets the column (zero-based index), pointing to a specific column to search.<br>
 					<pre class="prettyprint lang-html">&lt;input class=&quot;search&quot; type=&quot;search&quot; data-column=&quot;0&quot; placeholder=&quot;Search first column&quot;&gt;</pre>
-					<br>
 					If you want to search all columns, using the updated "any match" method, set the data column value to "all":<br>
 					<pre class="prettyprint lang-html">&lt;input class=&quot;search&quot; type=&quot;search&quot; data-column=&quot;any&quot; placeholder=&quot;Search entire table&quot;&gt;</pre>
-					<br>
 					The updated any matching code will now automatically update all associated inputs with the latest search.
 					<br>
 					This option replaces <a href="#widget-filter-anymatch"><code>filter_anyMatch</code></a>.
@@ -3075,7 +3073,7 @@ $.extend($.tablesorter.themes.jui, {
 					If <code>true</code>, child rows will be counted towards the pager set size (<span class="version">v2.13</span>).
 					<div class="collapsible">
 					<br>
-					Caution: when <code>true</code>, child row(s) may not appear to be attached to its parent row, may be split across pages or
+					<span class="label label-warning">*CAUTION*</span> When <code>true</code>, child row(s) may not appear to be attached to its parent row, may be split across pages or
 					may distort the table if rowspan or cellspans are included within the child row.<br>
 					<br>
 					If this option is <code>false</code>, child row(s) will always appear on the same page as its parent.
@@ -3345,7 +3343,9 @@ var sort = [[0,0],[2,0]],
     };
 // Note that the sort value below is inside of another array (inside another set of square brackets)
 // A callback method was added in 2.3.9.
-$("table").trigger("sorton", [sort, callback]);</pre></div>
+$("table").trigger("sorton", [sort, callback]);</pre>
+				<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.
+					</div>
 				</td>
 				<td><a href="example-trigger-sort.html">Example</a></td>
 			</tr>
@@ -3354,9 +3354,12 @@ $("table").trigger("sorton", [sort, callback]);</pre></div>
 				<td><a href="#" class="permalink">sortReset</a></td>
 				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7).
 					<div class="collapsible">
-						Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. This method immediately resets the entire table sort, while the option only resets the column sort after a third click.
+						<br>
+						This method immediately resets the entire table sort, while the option only resets the column sort after a third click.
 						<pre class="prettyprint lang-js">// Reset the table (make it unsorted)
-$("table").trigger("sortReset");</pre></div>
+$("table").trigger("sortReset");</pre>
+					<span class="label label-warning">*NOTE*</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>.
+					</div>
 				</td>
 				<td><a href="example-method-sortreset.html">Example</a></td>
 			</tr>
@@ -3386,7 +3389,7 @@ var sorting = [[2,1],[0,0]];
 $("table")
 	.trigger("update", [ false ])
 	.trigger("sorton", [sorting]);</pre>
-	Note: <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
+	<span class="label label-info">NOTE</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
 	</div>
 				</td>
 				<td><a href="example-ajax.html">Example</a></td>
@@ -4602,7 +4605,7 @@ myArray.sort(function(a,b) { return $.tablesorter.sortText(a, b); });</pre>
 
 			<tr id="function-isvalueinarray">
 				<td><a href="#" class="permalink">isValueInArray</a></td>
-				<td>This function returns a boolean value if the value is contained within an array.
+				<td>This function returns a zero-based index value of the position of the value within the array, otherwise it returns -1 (Modified <span class="version updated">v2.15.6</span>).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.isValueInArray(value, array);</pre>
@@ -4611,9 +4614,10 @@ myArray.sort(function(a,b) { return $.tablesorter.sortText(a, b); });</pre>
 							<li><code>array</code> - array (sortList) to search for the value.</li>
 						</ul>
 						Sadly, this function has limited usefulness outside of tablesorter. It is only meant to search a <code>sortList</code> array and determine if a column (value) is already contained within it. Here is a basic example of how this function is used:
-						<pre class="prettyprint lang-js">var sortList = [ [0,0], [1,0] ];
-// result: true
-$.tablesorter.isValueInArray(1, sortList);</pre>
+						<pre class="prettyprint lang-js">var sortList = [ [1,0], [2,0], [0,0] ];
+// result: 1
+$.tablesorter.isValueInArray(2, sortList);</pre>
+						After <span class="version">v2.15.6</span>, this function returns a zero-based index of the position of the value within the array parameter, or -1 if the value is not in the array. Previously, this function returned a boolean value of <code>true</code> if the value was contained within the array, or <code>false</code> if not.
 					</div>
 				</td>
 			</tr>
