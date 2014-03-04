@@ -1016,6 +1016,7 @@ ts.filter = {
 		c.$table.trigger('filterEnd');
 	},
 	buildSelect: function(table, column, updating, onlyavail) {
+		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
 		column = parseInt(column, 10);
 		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters,
 			c = table.config,
