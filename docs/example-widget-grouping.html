@@ -64,7 +64,7 @@ tr.group-header.collapsed td i {
 
 	<script id="js">$(function(){
 
-	$("table").tablesorter({
+	$(".tablesorter").tablesorter({
 		theme : "blue",
 		headers: {
 			0: { sorter: "checkbox" },
@@ -75,6 +75,8 @@ tr.group-header.collapsed td i {
 		widgetOptions: {
 			group_collapsible : true,  // make the group header clickable and collapse the rows below it.
 			group_collapsed   : false, // start with all groups collapsed (if true)
+			group_saveGroups  : true,  // remember collapsed groups
+			group_saveReset   : '.group_reset', // element to clear saved collapsed groups
 			group_count       : " ({num})", // if not false, the "{num}" string is replaced with the number of rows in the group
 
 			// change these default date names based on your language preferences
@@ -139,14 +141,8 @@ tr.group-header.collapsed td i {
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.</li>
-			<li>In <span class="version">v2.14</span>, added
-				<ul>
-					<li><code>group_dateString</code> option which is a function that allows you to format the date string when using the <code>group-date</code> header class name. This is the default function:
-						<pre class="prettyprint lang-js">group_dateString  : function(date) { return date.toLocaleString(); }</pre>
-					Other functions that can be used are <code>date</code> (alone), <code>date.toLocaleString()</code>, <code>date.toLocaleDateString()</code> or <code>d.toLocaleTimeString()</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter">this reference</a> for more details.</li>
-				</ul>
-			</li>
-
+			<li>In <span class="version">v2.15.6</span>, added <code>group_saveGroups</code> &amp; <code>group_saveReset</code> options. More details are included in the "Options" section.</li>
+			<li>In <span class="version">v2.14</span>, added <code>group_dateString</code> option. More details are included in the "Options" section.</li>
 			<li>In <span class="version">v2.13</span>, added <code>group_separator</code> option &amp; <code>group-separator-#</code> header class name. To see this in action, check out the <a href="example-parsers-file-type.html">file type parser demo</a>.</li>
 			<li>In <span class="version">v2.12</span>, added <code>group_callback</code> &amp; <code>group_complete</code> options. See options section below for details.</li>
 			<li>In <span class="version">v2.11</span>:
@@ -165,37 +161,137 @@ tr.group-header.collapsed td i {
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h3>Group widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
-			<ul>
-				<li><code>group_collapsible</code> (<code>true</code>) - when <code>true</code>, the group headers become clickable and collapse the rows below it.</li>
-				<li><code>group_collapsed</code> (<code>false</code>) - when <code>true</code> and <code>group_collapsible</code> is also <code>true</code>, all groups will start collapsed (<span class="version">v2.11</span>).</li>
-				<li><code>group_count</code> (<code>&quot; ({num})&quot;</code>) - allows you to add custom formatting, or remove, the group count within the group header. Set it to <code>false</code> or an empty string to remove the count.</li>
-				<li><code>group_callback</code> (<code>null</code>) - use this function to further modify the group header to include more information (i.e. group totals). Parameters include (<code>$cell, $rows, column, table</code>). See the example below for more details <span class="version">v2.12</span>.
-					<ul>
-						<li><code>$cell</code> - current group header table cell (jQuery object).</li>
-						<li><code>$rows</code> - current group rows (jQuery object).</li>
-						<li><code>column</code> - current table column being grouped (zero-based index).</li>
-						<li><code>table</code> - current table (DOM).</li>
-					</ul>
-				</li>
-				<li><code>group_complete</code> (<code>&quot;groupingComplete&quot;</code>) - event triggered on the table when the grouping widget has finished work <span class="version">v2.12</span>.</li>
-				<li><code>group_formatter</code> (<code>null</code>) - use this function to modify the group header text before it gets applied. It provides various parameters (<code>txt, col, table, c, wo</code>) to make it work for any of the table columns and data. See the comments in the example below for more details.
-					<ul>
-						<li><code>txt</code> - current text of the group header.</li>
-						<li><code>col</code> - current table column being grouped (zero-based index).</li>
-						<li><code>table</code> - current table (DOM).</li>
-						<li><code>c</code> - table data from <code>table.config</code>.</li>
-						<li><code>wo</code> - table widget options from <code>table.config.widgetOptions</code>.</li>
-					</ul>
-				</li>
-				<li><code>group_separator</code> (<code>&quot;-&quot;</code>) - when the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.</li>
-				<li>group date/time options - Name arrays included so that the language of the date groups can be modified easily. Defaults (English):
-					<ul>
-						<li><code>group_months</code> (<code>[ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</code>) - Month names.</li>
-						<li><code>group_week</code> (<code>[ &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot; ]</code>) - Named days of the week.</li>
-						<li><code>group_time</code> (<code>[ &quot;AM&quot;, &quot;PM&quot; ]</code>) - Time of day.</li>
-					</ul>
-				</li>
-			</ul>
+			<table class="tablesorter-blue">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th>Description</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>group_collapsible</td>
+						<td><code>true</code></td>
+						<td>
+							when <code>true</code>, the group headers become clickable and collapse the rows below it.
+						</td>
+					</tr>
+					<tr>
+						<td>group_collapsed</td>
+						<td><code>false</code></td>
+						<td>
+							when <code>true</code> and <code>group_collapsible</code> is also <code>true</code>, all groups will start collapsed (<span class="version">v2.11</span>)
+						</td>
+					</tr>
+					<tr>
+						<td>group_saveGroups</td>
+						<td><code>true</code></td>
+						<td>Remember collapsed groups (<span class="version">v2.15.6</span>)
+							<ul>
+								<li>This option saves the currently collapsed groups, using the group name.</li>
+								<li>Collapsed groups are saved by column and group class name, so that the groups can be dynamically changed and still remember the correct collapsed groups. Try changing the group names (using the sliders) in the demo below &amp; then collapsing some groups several times; go back to previous groups and it will remember which groups were collapsed.</li>
+								<li>Because the group name is saved, groups with a number range (e.g. "group-number-10"; see the "Numeric" column below) will show a different range depending on sort direction; in this situation, each sort direction is saved independently.</li>
+								<li>This option requires the <code>$.tablesorter.storage</code> utility contained within the <code>jquery.tablesorter.widgets.js</code> file.</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>group_saveReset</td>
+						<td><code>null</code></td>
+						<td>Element used to clear saved collapsed groups (<span class="version">v2.15.6</span>)
+							<ul>
+								<li>This option should contain a jQuery selector string or jQuery object pointing to an element to be used to reset (clear) the list of collapsed groups.</li>
+								<li>You can also clear the saved collapsed groups by calling this function: <code>$.tablesorter.grouping.clearSavedGroups(table);</code> (table would be either the table DOM or table jQuery object).</li>
+								<li>This option requires the <code>$.tablesorter.storage</code> utility contained within the <code>jquery.tablesorter.widgets.js</code> file.</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>group_count</td>
+						<td><code>&quot; ({num})&quot;</code></td>
+						<td>
+							Allows you to add custom formatting, or remove, the group count within the group header. Set it to <code>false</code> or an empty string to remove the count.
+						</td>
+					</tr>
+					<tr>
+						<td>group_separator</td>
+						<td><code>&quot;-&quot;</code></td>
+						<td>
+							When the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.
+						</td>
+					</tr>
+					<tr>
+						<td>group_formatter</td>
+						<td><code>null</code></td>
+						<td>
+							Use this function to modify the group header text before it gets applied. It provides various parameters (<code>txt, col, table, c, wo</code>) to make it work for any of the table columns and data. See the comments in the example below for more details.
+							<ul>
+								<li><code>txt</code> - current text of the group header.</li>
+								<li><code>col</code> - current table column being grouped (zero-based index).</li>
+								<li><code>table</code> - current table (DOM).</li>
+								<li><code>c</code> - table data from <code>table.config</code>.</li>
+								<li><code>wo</code> - table widget options from <code>table.config.widgetOptions</code>.</li>
+							</ul>
+							<pre class="prettyprint lang-js">group_formatter : function(txt, col, table, c, wo) {
+  // If there are empty cells, name the group "Empty"
+  return txt === "" ? "Empty" : txt;
+}</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>group_callback</td>
+						<td><code>null</code></td>
+						<td>
+							Use this function to further modify the group header to include more information (i.e. group totals). Parameters include (<code>$cell, $rows, column, table</code>). See the example below for more details <span class="version">v2.12</span>.
+							<ul>
+								<li><code>$cell</code> - current group header table cell (jQuery object).</li>
+								<li><code>$rows</code> - current group rows (jQuery object).</li>
+								<li><code>column</code> - current table column being grouped (zero-based index).</li>
+								<li><code>table</code> - current table (DOM).</li>
+							</ul>
+							<pre class="prettyprint lang-js">group_callback : function($cell, $rows, column, table){
+  $cell.find('.group-name').append(' group'); // adds "group" to the end of the group name
+}</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>group_complete</td>
+						<td><code>&quot;groupingComplete&quot;</code></td>
+						<td>
+							Event triggered on the table when the grouping widget has finished work <span class="version">v2.12</span>.
+							<pre class="prettyprint lang-js">$('table').on('groupingComplete', function(){
+  // always hide empty groups ("Empty" can be added by the group_formatter function)
+  $(this).find('.group-header:contains("Empty")').trigger('toggleGroup');
+});</pre>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							group_months<br>
+							group_week<br>
+							group_time
+						</td>
+						<td>(see description)</td>
+						<td>
+							Name arrays included so that the language of the date groups can be modified easily. Defaults (English):
+							<ul>
+								<li>group_months: (<code>[ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</code>) - Month names.</li>
+								<li>group_week: (<code>[ &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot; ]</code>) - Named days of the week.</li>
+								<li>group_time: (<code>[ &quot;AM&quot;, &quot;PM&quot; ]</code>) - Time of day.</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>group_dateString</td>
+						<td>(see description)</td>
+						<td>
+						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string. This is the default function:
+						<pre class="prettyprint lang-js">// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
+group_dateString : function(date) {
+  return date.toLocaleString();
+}</pre>
+							Other functions that can be used are <code>date</code> (alone), <code>date.toLocaleString()</code>, <code>date.toLocaleDateString()</code> or <code>d.toLocaleTimeString()</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter">this reference</a> for more details.
+						</td>
+				</tbody>
+			</table>
 		</div>
 
 		<h3><a href="#">Header Class Names</a></h3>
@@ -229,7 +325,8 @@ tr.group-header.collapsed td i {
 <span class="demo-label">Numeric column:</span> <div id="slider0"></div> <span class="numberclass"></span> (includes subtotals)<br>
 <span class="demo-label">Animals column:</span> <div id="slider1"></div> <span class="animalclass"></span><br>
 <span class="demo-label">Date column:</span> <div id="slider2"></div> <span class="dateclass"></span>
-
+<br><br>
+<button class="group_reset">Reset Saved Collapsed Groups</button>
 <div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
@@ -321,7 +418,7 @@ tr.group-header.collapsed td i {
 				$('.tablesorter-header-inner:eq(' + numcol + ')').find('span').html(startBlock);
 			},
 			slide: function( event, ui ) {
-				$('table')[0].config.$headers.eq(numcol)
+				$('.tablesorter')[0].config.$headers.eq(numcol)
 					.attr('class', function(i,v){
 						return v.replace(/group-number-\d+/, 'group-number-' + ui.value);
 					})
@@ -341,7 +438,7 @@ tr.group-header.collapsed td i {
 				$('.tablesorter-header-inner:eq(' + letcol + ')').find('span').html(startVal === 1 ? 'letter' : startVal + ' letters');
 			},
 			slide: function( event, ui ) {
-				$('table')[0].config.$headers.eq(letcol)
+				$('.tablesorter')[0].config.$headers.eq(letcol)
 					.attr('class', function(i,v){
 						return v.replace(/group-letter-\d+/, 'group-letter-' + ui.value);
 					})
@@ -361,7 +458,7 @@ tr.group-header.collapsed td i {
 				$('.tablesorter-header-inner:eq(' + datecol + ')').find('span').html(curGroup === 0 ? 'full' : dateGroups[curGroup]);
 			},
 			slide: function( event, ui ) {
-				$('table')[0].config.$headers.eq(datecol)
+				$('.tablesorter')[0].config.$headers.eq(datecol)
 					.attr('class', function(i,v){
 						return v.replace(/group-date(-\w+)?/, 'group-date' + (ui.value > 0 ? '-' + dateGroups[ui.value] : ''));
 					})

@@ -53,9 +53,10 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, time, cache,
+		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, time, cache, saveName, direction,
 			lang = wo.grouping_language,
 			group = '',
+			savedGroup = false,
 			column = c.sortList[0] ? c.sortList[0][0] : -1;
 		c.$table
 			.find('tr.group-hidden').removeClass('group-hidden').end()
@@ -66,16 +67,33 @@ ts.grouping = {
 		}
 		if (column >= 0 && !c.$headers.filter('[data-column="' + column + '"]:last').hasClass('group-false')) {
 			if (c.debug){ time = new Date(); }
+			wo.group_currentGroup = ''; // save current groups
+			wo.group_currentGroups = {};
+
+			// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
+			groupClass = (c.$headers.filter('[data-column="' + column + '"]:last').attr('class') || '').match(/(group-\w+(-\w+)?)/g);
+			// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
+			grouping = groupClass ? groupClass[0].split('-') : ['group','letter',1]; // default to letter 1
+
+			// save current grouping
+			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
+				wo.group_currentGroups = ts.storage( table, 'tablesorter-groups' ) || {};
+				// include direction when grouping numbers > 1 (reversed direction shows different range values)
+				direction = (grouping[1] === 'number' && grouping[2] > 1) ? 'dir' + c.sortList[0][1] : '';
+				// combine column, sort direction & grouping as save key
+				saveName = wo.group_currentGroup = '' + column + direction + grouping.join('');
+				if (!wo.group_currentGroups[saveName]) {
+					wo.group_currentGroups[saveName] = [];
+				} else {
+					savedGroup = true;
+				}
+			}
 			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 				cache = c.cache[tbodyIndex].normalized;
 				group = ''; // clear grouping across tbodies
 				$rows = c.$tbodies.eq(tbodyIndex).children('tr').not('.' + c.cssChildRow);
 				for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
 					if ( $rows.eq(rowIndex).is(':visible') ) {
-						// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
-						groupClass = (c.$headers.filter('[data-column="' + column + '"]:last').attr('class') || '').match(/(group-\w+(-\w+)?)/g);
-						// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
-						grouping = groupClass ? groupClass[0].split('-') : ['','letter',1]; // default to letter 1
 						// fixes #438
 						if (ts.grouping.types[grouping[1]]) {
 							currentGroup = cache[rowIndex] ? 
@@ -92,9 +110,14 @@ ts.grouping = {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 								}
 								$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
-									(wo.group_collapsed && wo.group_collapsible ? ' collapsed' : '') + '" unselectable="on"><td colspan="' +
+									// (wo.group_collapsed && wo.group_collapsible ? ' collapsed' : '') +
+									'" unselectable="on"><td colspan="' +
 									c.columns + '">' + (wo.group_collapsible ? '<i/>' : '') + '<span class="group-name">' +
 									currentGroup + '</span><span class="group-count"></span></td></tr>');
+								if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
+									// all groups start collapsed
+									wo.group_currentGroups[wo.group_currentGroup].push(currentGroup);
+								}
 							}
 						}
 					}
@@ -103,8 +126,9 @@ ts.grouping = {
 			c.$table.find('tr.group-header')
 			.bind('selectstart', false)
 			.each(function(){
-				var $label,
+				var isHidden, $label,
 					$row = $(this),
+					name = $row.text().toLowerCase(),
 					$rows = $row.nextUntil('tr.group-header').filter(':visible');
 				if (wo.group_count || $.isFunction(wo.group_callback)) {
 					$label = $row.find('.group-count');
@@ -117,7 +141,12 @@ ts.grouping = {
 						}
 					}
 				}
-				if (wo.group_collapsed && wo.group_collapsible) {
+				if (wo.group_saveGroups && wo.group_currentGroups[wo.group_currentGroup].length) {
+					isHidden = $.inArray( $row.find('.group-name').text(), wo.group_currentGroups[wo.group_currentGroup] ) > -1;
+					$row.toggleClass('collapsed', isHidden);
+					$rows.toggleClass('group-hidden', isHidden);
+				} else if (wo.group_collapsed && wo.group_collapsible) {
+					$row.addClass('collapsed');
 					$rows.addClass('group-hidden');
 				}
 			});
@@ -125,6 +154,56 @@ ts.grouping = {
 			if (c.debug) {
 				$.tablesorter.benchmark("Applying groups widget: ", time);
 			}
+		}
+	},
+
+	bindEvents : function(table, c, wo){
+		if (wo.group_collapsible) {
+			wo.group_currentGroups = [];
+			// .on() requires jQuery 1.7+
+			c.$table.on('click toggleGroup', 'tr.group-header', function(event){
+				event.stopPropagation();
+				var isCollapsed, $groups, indx,
+					$this = $(this),
+					name = $this.find('.group-name').text();
+				// use shift-click to toggle ALL groups
+				if (event.type === 'click' && event.shiftKey) {
+					$this.siblings('.group-header').trigger('toggleGroup');
+				}
+				$this.toggleClass('collapsed');
+				// nextUntil requires jQuery 1.4+
+				$this.nextUntil('tr.group-header').toggleClass('group-hidden', $this.hasClass('collapsed') );
+				// save collapsed groups
+				if (wo.group_saveGroups && ts.storage) {
+					$groups = c.$table.find('.group-header');
+					isCollapsed = $this.hasClass('collapsed');
+					if (!wo.group_currentGroups[wo.group_currentGroup]) {
+						wo.group_currentGroups[wo.group_currentGroup] = [];
+					}
+					if (isCollapsed && wo.group_currentGroup) {
+						wo.group_currentGroups[wo.group_currentGroup].push( name );
+					} else if (wo.group_currentGroup) {
+						indx = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup]  );
+						if (indx > -1) {
+							wo.group_currentGroups[wo.group_currentGroup].splice( indx, 1 );
+						}
+					}
+					ts.storage( table, 'tablesorter-groups', wo.group_currentGroups );
+				}
+			});
+		}
+		$(wo.group_saveReset).on('click', function(){
+			ts.grouping.clearSavedGroups(table);
+		});
+		c.$table.on('pagerChange.tsgrouping', function(){
+			ts.grouping.update(table, c, wo);
+		});
+	},
+
+	clearSavedGroups: function(table){
+		if (table && ts.storage) {
+			ts.storage(table, 'tablesorter-groups', '');
+			ts.grouping.update(table, table.config, table.config.widgetOptions);
 		}
 	}
 
@@ -136,6 +215,8 @@ ts.addWidget({
 	options: {
 		group_collapsible : true, // make the group header clickable and collapse the rows below it.
 		group_collapsed   : false, // start with all groups collapsed
+		group_saveGroups  : true, // remember collapsed groups
+		group_saveReset   : null, // element to clear saved collapsed groups
 		group_count       : ' ({num})', // if not false, the "{num}" string is replaced with the number of rows in the group
 		group_separator   : '-',  // group name separator; used when group-separator-# class is used.
 		group_formatter   : null, // function(txt, column, table, c, wo) { return txt; }
@@ -152,23 +233,7 @@ ts.addWidget({
 		group_dateString  : function(date) { return date.toLocaleString(); }
 	},
 	init: function(table, thisWidget, c, wo){
-		if (wo.group_collapsible) {
-			// .on() requires jQuery 1.7+
-			c.$table.on('click toggleGroup', 'tr.group-header', function(event){
-				event.stopPropagation();
-				var $this = $(this);
-				// use shift-click to toggle ALL groups
-				if (event.type === 'click' && event.shiftKey) {
-					$this.siblings('.group-header').trigger('toggleGroup');
-				}
-				$this.toggleClass('collapsed');
-				// nextUntil requires jQuery 1.4+
-				$this.nextUntil('tr.group-header').toggleClass('group-hidden', $this.hasClass('collapsed') );
-			});
-		}
-		c.$table.on('pagerChange', function(){
-			ts.grouping.update(table, c, wo);
-		});
+		ts.grouping.bindEvents(table, c, wo);
 	},
 	format: function(table, c, wo) {
 		ts.grouping.update(table, c, wo);
@@ -176,6 +241,7 @@ ts.addWidget({
 	remove : function(table, c, wo){
 		c.$table
 			.off('click', 'tr.group-header')
+			.off('pagerChange.tsgrouping')
 			.find('.group-hidden').removeClass('group-hidden').end()
 			.find('tr.group-header').remove();
 	}
