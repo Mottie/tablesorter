@@ -654,14 +654,20 @@ ts.filter = {
 		c.$table.trigger('filterInit');
 	},
 	setDefaults: function(table, c, wo) {
-		var isArray, saved,
+		var isArray, saved, indx,
 			// get current (default) filters
-			filters = ts.getFilters(table);
+			filters = ts.getFilters(table) || [];
 		if (wo.filter_saveFilters && ts.storage) {
 			saved = ts.storage( table, 'tablesorter-filters' ) || [];
 			isArray = $.isArray(saved);
 			// make sure we're not just getting an empty array
 			if ( !(isArray && saved.join('') === '' || !isArray) ) { filters = saved; }
+		}
+		// if no filters saved, then check default settings
+		if (filters.join('') === '') {
+			for (indx = 0; indx < c.columns; indx++) {
+				filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+			}
 		}
 		c.$table.data('lastSearch', filters);
 		return filters;
