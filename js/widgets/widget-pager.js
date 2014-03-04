@@ -691,8 +691,8 @@ tsp = ts.pager = {
 		// making the next if comparison think the filters as different. Fixes #202.
 		l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
 		p.currentFilters = (p.currentFilters || []).join('') === '' ? [] : p.currentFilters;
-		// don't allow rendering multiple times on the same page/size/totalpages/filters/sorts
-		if ( l.page === p.page && l.size === p.size && l.totalPages === p.totalPages &&
+		// don't allow rendering multiple times on the same page/size/totalRows/filters/sorts
+		if ( l.page === p.page && l.size === p.size && l.totalRows === p.totalRows &&
 			(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
 			l.sortList === (c.sortList || []).join(',') ) {
 				return;
@@ -705,7 +705,7 @@ tsp = ts.pager = {
 			size : p.size,
 			// fixes #408; modify sortList otherwise it auto-updates
 			sortList : (c.sortList || []).join(','),
-			totalPages : p.totalPages,
+			totalRows : p.totalRows,
 			currentFilters : p.currentFilters || []
 		};
 		if (p.ajax) {
