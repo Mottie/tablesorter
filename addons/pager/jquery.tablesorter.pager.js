@@ -491,6 +491,10 @@
 				pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
+			// fixes issue where one currentFilter is [] and the other is ['','',''],
+			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
+			l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
+			p.currentFilters = (p.currentFilters || []).join('') === '' ? [] : p.currentFilters;
 			// don't allow rendering multiple times on the same page/size/totalpages/filters/sorts
 			if ( l.page === p.page && l.size === p.size && l.totalPages === p.totalPages &&
 				(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
