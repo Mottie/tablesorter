@@ -4090,6 +4090,53 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td></td>
 			</tr>
 
+			<tr id="variable-language">
+				<td><a href="#" class="permalink">$.tablesorter.language</a></td>
+				<td>Object</td>
+				<td>This object contains the phrases (in English by default) added to the <code>aria-label</code> on each header column.<br>
+					<div class="collapsible">
+						<br>
+						This is how the object is set up:
+						<pre class="prettyprint lang-js">$.tablesorter.language = {
+  sortAsc  : 'Ascending sort applied, ',
+  sortDesc : 'Descending sort applied, ',
+  sortNone : 'No sort applied, ',
+  nextAsc  : 'activate to apply an ascending sort',
+  nextDesc : 'activate to apply a descending sort',
+  nextNone : 'activate to remove the sort'
+};</pre>
+					So, as an example, in the following situation:
+					<ul>
+						<li>A table header is named "Account #"</li>
+						<li>This column has an ascending sort applied</li>
+						<li>The next click on the header will be a descending sort, which means:
+							<ul>
+								<li><code>sortInitialOrder</code> option has its default setting; so the sort order will switch from ascending to descending on the second click.</li>
+								<li>No <code>lockedOrder</code> is set within the <code>headers</code> option</li>
+							</ul>
+						</li>
+					</ul>
+					Then the label will be built as follows:
+					<pre class="prettyprint lang-js">// "Header Name" + $.tablesorter.language.sortAsc + $.tablesorter.language.nextDesc
+"Account #: Ascending sort applied, activate to apply a descending sort"</pre>
+					If the next click were to reset the sort (<code>sortReset</code> applied), then the message would use <code>$.tablesorter.language.nextNone</code>.<br>
+					<br>
+					Use this variable to change the language as follows:
+					<pre class="prettyprint lang-js">$(function(){
+
+  $.tablesorter.language = {
+    sortAsc  : "sorting from a to z, ",
+    sortDesc : "sorting from z to a, ",
+    sortNone : "not sorted, but ",
+    nextAsc  : "click to sort from a to z",
+    nextDesc : "click to sort from z to a",
+    nextNone : "click to clear the sort"
+  }
+  $("table").tablesorter();
+});</pre>
+					</div>
+				</td>
+			</tr>
 		</tbody>
 
 		<!-- non-sorting tbody -->
