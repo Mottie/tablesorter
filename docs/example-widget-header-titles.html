@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - headerTitles widget</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- Tablesorter: optional -->
+	<script src="../js/widgets/widget-headerTitles.js"></script>
+
+	<script id="js">$(function() {
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		theme : 'blue',
+		sortList: [[0,0]],
+		widgets: ['zebra', 'headerTitles'],
+		widgetOptions: {
+			headerTitle_prefix  : 'Sort: ',
+			headerTitle_text    : [ 'A - Z', 'Z - A' ],
+			headerTitle_numeric : [ '0 - 9', '9 - 0' ]
+		}
+	});
+});</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>headerTitles Widget</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+			<ul>
+				<li>This widget adds a title to the table headers when they are sorted.</li>
+				<li>Click on any header. You may have to move the mouse off, then back on the header to see the title appear.</li>
+				<li>This widget will not work with the original tablesorter plugin (v2.0.5).</li>
+			</ul>
+	</p>
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Peter</td>
+			<td>Parker</td>
+			<td>28</td>
+			<td>$9.99</td>
+			<td>20%</td>
+			<td>Jan 18, 2001 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>John</td>
+			<td>Evans</td>
+			<td>33</td>
+			<td>$9.99</td>
+			<td>25%</td>
+			<td>Dec 10, 2002 5:14 AM</td>
+		</tr>
+		<tr>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>22</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 12, 2003 11:14 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
+			<td>$15.89</td>
+			<td>44%</td>
+			<td>Jan 18, 2001 9:12 AM</td>
+		</tr>
+		<tr>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
+			<td>$13.19</td>
+			<td>11%</td>
+			<td>Jul 6, 2006 8:14 AM</td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
+
