@@ -458,6 +458,14 @@
 						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
 					$t.addClass(ts.css.header + ' ' + c.cssHeader);
+					
+					if(!this.sortDisabled){
+						if($t.hasClass('number'))
+							$t.attr('title', 'Sort: 1-9');
+						else
+							$t.attr('title', 'Sort: A-Z');					
+					}					
+					
 					// add cell to headerList
 					c.headerList[index] = this;
 					// add to parent in case there are multiple rows
@@ -506,7 +514,7 @@
 			}
 
 			function setHeadersCss(table) {
-				var f, i, j, l,
+				var f, h = [], i, j, l,
 					c = table.config,
 					list = c.sortList,
 					none = ts.css.sortNone + ' ' + c.cssNone,
@@ -517,11 +525,37 @@
 				// remove all header information
 				c.$headers
 					.removeClass(css.join(' '))
-					.addClass(none).attr('aria-sort', 'none');
+					.addClass(none).attr('aria-sort', 'none')
+					.each(function(){
+						if(!this.sortDisabled)
+							h[this.column] = $(this);
+					})					
+				;
 				l = list.length;
 				for (i = 0; i < l; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
+						if(h[list[i][0]]){
+							$('th.header').each(function(){
+								if($(this).hasClass('number'))
+									$(this).attr('title', 'Sort: 1-9');
+								else 
+									$(this).attr('title', 'Sort: A-Z');
+							});
+															
+							if(h[list[i][0]].hasClass('number')){
+								if(css[list[i][1]] == css[0])
+									h[list[i][0]].addClass(css[list[i][1]]).attr('title', h[list[i][0]].text() + ' (1-9)');
+								else if(css[list[i][1]] == css[1])
+									h[list[i][0]].addClass(css[list[i][1]]).attr('title', h[list[i][0]].text() + ' (9-1)');
+							} else {
+								if(css[list[i][1]] == css[0])
+									h[list[i][0]].addClass(css[list[i][1]]).attr('title', h[list[i][0]].text() + ' (A-Z)');
+								else if(css[list[i][1]] == css[1])
+									h[list[i][0]].addClass(css[list[i][1]]).attr('title', h[list[i][0]].text() + ' (Z-A)');
+							}						
+						}					
+					
 						// multicolumn sorting updating - choose the :last in case there are nested columns
 						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
 						if (f.length) {
@@ -599,6 +633,11 @@
 						if (this !== i && (k || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
 							this.count = -1;
 						}
+						
+						if($(this).hasClass('number'))
+							$(this).attr('title', 'Sort: 1-9');
+						else
+							$(this).attr('title', 'Sort: A-Z');
 					});
 				}
 				// get current column index
