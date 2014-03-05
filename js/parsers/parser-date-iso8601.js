@@ -26,7 +26,7 @@
 				if (result[12]) { date.setMilliseconds(Number('0.' + result[12]) * 1000); }
 				return date;
 			}
-			return 0;
+			return s;
 		},
 		type : 'numeric'
 	});

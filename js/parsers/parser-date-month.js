@@ -18,10 +18,10 @@
 			return false;
 		},
 		format: function(s, table) {
-			var j = -1, c = table.config;
-			s = c.ignoreCase ? s.toLocaleLowerCase() : s;
+			var j = -1, c = table.config,
+			n = c.ignoreCase ? s.toLocaleLowerCase() : s;
 			$.each(ts.dates[ 'month' + (c.ignoreCase ? 'Lower' : 'Cased') ], function(i,v){
-				if (j < 0 && s.match(v)) { j = i; }
+				if (j < 0 && n.match(v)) { j = i; }
 			});
 			// return s (original string) if there isn't a match
 			// (non-weekdays will sort separately and empty cells will sort as expected)

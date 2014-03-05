@@ -18,12 +18,12 @@
 	});
 
 	ts.formatDate = function(s, regex, format, table){
-		s = s
-			// replace separators
-			.replace(/\s+/g," ").replace(/[-.,]/g, "/")
-			// reformat xx/xx/xx to mm/dd/19yy;
-			.replace(regex, format);
-		var d = new Date(s),
+		var n = s
+				// replace separators
+				.replace(/\s+/g," ").replace(/[-.,]/g, "/")
+				// reformat xx/xx/xx to mm/dd/19yy;
+				.replace(regex, format);
+			d = new Date(n),
 			y = d.getFullYear(),
 			rng = table && table.config.dateRange || range,
 			now = new Date().getFullYear();
@@ -32,7 +32,7 @@
 		while (now - y > rng) {
 			y += 100;
 		}
-		return d.setFullYear(y);
+		return d.setFullYear(y) || s;
 	};
 
 	$.tablesorter.addParser({
