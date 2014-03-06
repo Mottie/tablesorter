@@ -214,7 +214,11 @@ tr.group-header.collapsed td i {
 						<td>group_separator</td>
 						<td><code>&quot;-&quot;</code></td>
 						<td>
-							When the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.
+							When the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.<br>
+							<br>
+							If your content has mixed separators (e.g. <code>images/cats/burger-time.jpg</code>), you can set this option to use a regular expression:
+							<pre class="prettyprint lang-js">// the above example becomes: ["images", "cats", "burger-time", "jpg"]
+group_separator : /[/.]/</pre>
 						</td>
 					</tr>
 					<tr>
