@@ -1,4 +1,4 @@
-/*! tablesorter Grouping widget - updated 12/18/2013 (core v2.15.0)
+/*! tablesorter Grouping widget - updated 3/7/2014 (core v2.15.6)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -128,7 +128,7 @@ ts.grouping = {
 			.each(function(){
 				var isHidden, $label,
 					$row = $(this),
-					name = $row.text().toLowerCase(),
+					name = $row.find('.group-name').text().toLowerCase(),
 					$rows = $row.nextUntil('tr.group-header').filter(':visible');
 				if (wo.group_count || $.isFunction(wo.group_callback)) {
 					$label = $row.find('.group-count');
@@ -142,7 +142,7 @@ ts.grouping = {
 					}
 				}
 				if (wo.group_saveGroups && wo.group_currentGroups[wo.group_currentGroup].length) {
-					isHidden = $.inArray( $row.find('.group-name').text(), wo.group_currentGroups[wo.group_currentGroup] ) > -1;
+					isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
 					$row.toggleClass('collapsed', isHidden);
 					$rows.toggleClass('group-hidden', isHidden);
 				} else if (wo.group_collapsed && wo.group_collapsible) {

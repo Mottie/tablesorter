@@ -138,8 +138,8 @@ tsColSel = ts.columnSelector = {
 							c.selector.$popup.find('.tablesorter-column-selector')
 								.html( colSel.$container.html() )
 								.find('input').each(function(){
-									var indx = $(this).attr('data-column')
-									$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] )
+									var indx = $(this).attr('data-column');
+									$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] );
 								});
 						}
 					}).change();
@@ -213,8 +213,8 @@ tsColSel = ts.columnSelector = {
 	},
 
 	attachTo : function(table, elm) {
+		table = $(table)[0];
 		var colSel, wo, indx,
-			table = $(table)[0],
 			c = table.config,
 			$popup = $(elm);
 		if ($popup.length && c) {
@@ -228,7 +228,7 @@ tsColSel = ts.columnSelector = {
 				.html( colSel.$container.html() )
 				.find('input').each(function(){
 					var indx = $(this).attr('data-column');
-					$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] )
+					$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] );
 				});
 			colSel.$popup = $popup.on('change', 'input', function(){
 				// data input

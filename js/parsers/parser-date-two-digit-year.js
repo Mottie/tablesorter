@@ -22,7 +22,7 @@
 				// replace separators
 				.replace(/\s+/g," ").replace(/[-.,]/g, "/")
 				// reformat xx/xx/xx to mm/dd/19yy;
-				.replace(regex, format);
+				.replace(regex, format),
 			d = new Date(n),
 			y = d.getFullYear(),
 			rng = table && table.config.dateRange || range,

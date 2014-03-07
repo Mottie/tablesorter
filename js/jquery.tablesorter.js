@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.15.5 - Client-side table sorting with ease!
+* TableSorter 2.15.6 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.15.5";
+			ts.version = "2.15.6";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -756,8 +756,7 @@
 			}
 
 			function resortComplete($table, callback){
-				var table = $table[0],
-					c = table.config;
+				var table = $table[0];
 				if (table.isUpdating) {
 					$table.trigger('updateComplete');
 				}
