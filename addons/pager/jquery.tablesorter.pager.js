@@ -263,6 +263,7 @@
 						exception === 'abort' ? 'Ajax Request aborted' :
 						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
 					c.$tbodies.eq(0).empty();
+					p.totalRows = 0;
 				} else {
 					// process ajax object
 					if (!$.isArray(result)) {
@@ -273,7 +274,7 @@
 					} else {
 						// allow [ total, rows, headers ]  or [ rows, total, headers ]
 						t = isNaN(result[0]) && !isNaN(result[1]);
-						//ensure a zero returned row count doesn't fail the logical ||
+						// ensure a zero returned row count doesn't fail the logical ||
 						rr_count = result[t ? 1 : 0];
 						p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
 						d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
@@ -345,6 +346,7 @@
 							.trigger('pagerChange', p);
 					}
 				}]);
+
 			}
 			if (!p.initialized) {
 				p.initialized = true;

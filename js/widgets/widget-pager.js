@@ -150,7 +150,6 @@ tsp = ts.pager = {
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
 		p.totalRows = c.$tbodies.eq(0).children().length;
-
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
@@ -453,6 +452,7 @@ tsp = ts.pager = {
 				}
 				ts.showError(table, exception.message + ' (' + xhr.status + ')');
 				c.$tbodies.eq(0).empty();
+				p.totalRows = 0;
 			} else {
 				// process ajax object
 				if (!$.isArray(result)) {
@@ -463,7 +463,7 @@ tsp = ts.pager = {
 				} else {
 					// allow [ total, rows, headers ]  or [ rows, total, headers ]
 					t = isNaN(result[0]) && !isNaN(result[1]);
-					//ensure a zero returned row count doesn't fail the logical ||
+					// ensure a zero returned row count doesn't fail the logical ||
 					rr_count = result[t ? 1 : 0];
 					p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
 					d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
