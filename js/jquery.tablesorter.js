@@ -331,7 +331,8 @@
 				// empty table - fixes #206/#346
 				if (isEmptyObject(c2)) {
 					// run pager appender in case the table was just emptied
-					return c.appender ? c.appender(table, rows) : '';
+					return c.appender ? c.appender(table, rows) :
+						table.isUpdating ? c.$table.trigger("updateComplete", table) : ''; // Fixes #532
 				}
 				if (c.debug) {
 					appendTime = new Date();
@@ -368,9 +369,9 @@
 				}
 				// apply table widgets; but not before ajax completes
 				if (!init && !c.appender) { ts.applyWidget(table); }
-				// trigger sortend
-				$(table).trigger("sortEnd", table);
-				$(table).trigger("updateComplete", table);
+				if (table.isUpdating) {
+					c.$table.trigger("updateComplete", table);
+				}
 			}
 
 			// computeTableHeaderCellIndexes from:
@@ -682,6 +683,7 @@
 					setHeadersCss(table);
 					multisort(table);
 					appendToTable(table);
+					$table.trigger("sortEnd", table);
 				}, 1);
 			}
 
@@ -754,8 +756,9 @@
 			}
 
 			function resortComplete($table, callback){
-				var c = $table[0].config;
-				if (c.pager && !c.pager.ajax) {
+				var table = $table[0],
+					c = table.config;
+				if (table.isUpdating) {
 					$table.trigger('updateComplete');
 				}
 				if (typeof callback === "function") {
@@ -764,12 +767,13 @@
 			}
 
 			function checkResort($table, flag, callback) {
+				var sl = $table[0].config.sortList;
 				// don't try to resort if the table is still processing
 				// this will catch spamming of the updateCell method
-				if (flag !== false && !$table[0].isProcessing) {
-					$table.trigger("sorton", [$table[0].config.sortList, function(){
+				if (flag !== false && !$table[0].isProcessing && sl.length) {
+					$table.trigger("sorton", [sl, function(){
 						resortComplete($table, callback);
-					}]);
+					}, true]);
 				} else {
 					resortComplete($table, callback);
 				}
@@ -780,7 +784,7 @@
 					$table = c.$table;
 				// apply easy methods that trigger bound events
 				$table
-				.unbind('sortReset update updateRows updateCell updateAll addRows sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
+				.unbind('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
 				.bind("sortReset.tablesorter", function(e){
 					e.stopPropagation();
 					c.sortList = [];
@@ -790,6 +794,7 @@
 				})
 				.bind("updateAll.tablesorter", function(e, resort, callback){
 					e.stopPropagation();
+					table.isUpdating = true;
 					ts.refreshWidgets(table, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
@@ -799,12 +804,14 @@
 				})
 				.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
 					e.stopPropagation();
+					table.isUpdating = true;
 					// update sorting (if enabled/disabled)
 					updateHeader(table);
 					commonUpdate(table, resort, callback);
 				})
 				.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
 					e.stopPropagation();
+					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
 					var l, row, icell,
@@ -826,6 +833,7 @@
 				})
 				.bind("addRows.tablesorter", function(e, $row, resort, callback) {
 					e.stopPropagation();
+					table.isUpdating = true;
 					if (isEmptyObject(c.cache)) {
 						// empty table, do an update instead - fixes #450
 						updateHeader(table);
@@ -856,6 +864,9 @@
 						checkResort($table, resort, callback);
 					}
 				})
+				.bind("updateComplete.tablesorter", function(){
+					table.isUpdating = false;
+				})
 				.bind("sorton.tablesorter", function(e, list, callback, init) {
 					var c = table.config;
 					e.stopPropagation();
@@ -870,6 +881,7 @@
 					// sort the table and append it to the dom
 					multisort(table);
 					appendToTable(table, init);
+					$table.trigger("sortEnd", this);
 					if (typeof callback === "function") {
 						callback(table);
 					}
@@ -994,7 +1006,7 @@
 				ts.applyWidget(table, true);
 				// if user has supplied a sort list to constructor
 				if (c.sortList.length > 0) {
-					$table.trigger("sorton", [c.sortList, {}, !c.initWidgets]);
+					$table.trigger("sorton", [c.sortList, {}, !c.initWidgets, true]);
 				} else {
 					setHeadersCss(table);
 					if (c.initWidgets) {
@@ -1135,7 +1147,7 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateAll updateRows updateCell addRows sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
+					.unbind('sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
 					.removeAttr('data-column');

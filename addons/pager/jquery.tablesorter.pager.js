@@ -124,7 +124,7 @@
 			}
 		},
 
-		updatePageDisplay = function(table, p, flag) {
+		updatePageDisplay = function(table, p, completed) {
 			var i, pg, s, out,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
@@ -168,7 +168,7 @@
 				}
 			}
 			pagerArrows(p);
-			if (p.initialized && flag !== false) {
+			if (p.initialized && completed !== false) {
 				c.$table.trigger('pagerComplete', p);
 				// save pager info to storage
 				if (p.savePages && ts.storage) {
@@ -331,7 +331,8 @@
 				}
 				// make sure last pager settings are saved, prevents multiple server side calls with
 				// the same parameters
-				p.last.totalPages =  p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
+				p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
+				p.last.totalRows = p.totalRows;
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p);
@@ -339,8 +340,9 @@
 				$t.trigger('updateCache', [function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered
-						$t.trigger('applyWidgets');
-						$t.trigger('pagerChange', p);
+						$t
+							.trigger('applyWidgets')
+							.trigger('pagerChange', p);
 					}
 				}]);
 			}
@@ -429,6 +431,8 @@
 
 		renderTable = function(table, rows, p) {
 			var i, $tb,
+				$t = $(table),
+				c = table.config,
 				l = rows && rows.length || 0, // rows may be undefined
 				s = ( p.page * p.size ),
 				e = ( s + p.size );
@@ -438,7 +442,7 @@
 				moveToLastPage(table, p);
 			}
 			p.isDisabled = false; // needed because sorting will change the page and re-enable the pager
-			if (p.initialized) { $(table).trigger('pagerChange', p); }
+			if (p.initialized) { $t.trigger('pagerChange', p); }
 
 			if ( !p.removeRows ) {
 				hideRows(table, p);
@@ -447,7 +451,7 @@
 					e = rows.length;
 				}
 				ts.clearTableBody(table);
-				$tb = ts.processTbody(table, table.config.$tbodies.eq(0), true);
+				$tb = ts.processTbody(table, c.$tbodies.eq(0), true);
 				for ( i = s; i < e; i++ ) {
 					$tb.append(rows[i]);
 				}
@@ -456,7 +460,10 @@
 
 			updatePageDisplay(table, p);
 			if ( !p.isDisabled ) { fixHeight(table, p); }
-			$(table).trigger('applyWidgets');
+			$t.trigger('applyWidgets');
+			if (table.isUpdating) {
+				$t.trigger("updateComplete", table);
+			}
 		},
 
 		showAllRows = function(table, p){
@@ -484,9 +491,10 @@
 			});
 		},
 
-		moveToPage = function(table, p, flag) {
+		moveToPage = function(table, p, pageMoved) {
 			if ( p.isDisabled ) { return; }
 			var c = table.config,
+				$t = $(table),
 				l = p.last,
 				pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
@@ -513,12 +521,16 @@
 			if (p.ajax) {
 				getAjax(table, p);
 			} else if (!p.ajax) {
-				renderTable(table, table.config.rowsCopy, p);
+				renderTable(table, c.rowsCopy, p);
 			}
 			$.data(table, 'pagerLastPage', p.page);
-			if (p.initialized && flag !== false) {
-				c.$table.trigger('pageMoved', p);
-				c.$table.trigger('applyWidgets');
+			if (p.initialized && pageMoved !== false) {
+				$t
+					.trigger('pageMoved', p)
+					.trigger('applyWidgets');
+				if (table.isUpdating) {
+					$t.trigger('updateComplete');
+				}
 			}
 		},
 

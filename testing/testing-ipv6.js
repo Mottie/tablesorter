@@ -1,4 +1,5 @@
-﻿var ipv6parser = $.tablesorter.getParserById('ipv6Address').format,
+var ipv6parser = $.tablesorter.getParserById('ipv6Address').format,
+ipv6regex = $.tablesorter.regex.ipv6Validate,
 ipv6test = function(result, str, expect){
 	if (result) {
 		// ok( $.tablesorter.regex.ipv6Validate.test(str), "valid: " + str );
@@ -6,7 +7,7 @@ ipv6test = function(result, str, expect){
 		var t = ipv6parser(str, true);
 		equal( t, expect, 'valid: ' + t + ' \u2190 "' + str + '"' );
 	} else {
-		ok( !$.tablesorter.regex.ipv6Validate.test(str), 'invalid: "' + str + '"' );
+		ok( !ipv6regex.test(str), 'invalid: "' + str + '"' );
 	}
 },
 ipv6tests = function(){

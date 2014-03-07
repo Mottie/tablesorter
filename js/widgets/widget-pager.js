@@ -315,7 +315,7 @@ tsp = ts.pager = {
 		}
 	},
 
-	updatePageDisplay: function(table, c, flag) {
+	updatePageDisplay: function(table, c, completed) {
 		var i, pg, s, out,
 			wo = c.widgetOptions,
 			p = c.pager,
@@ -361,7 +361,7 @@ tsp = ts.pager = {
 			}
 		}
 		tsp.pagerArrows(c);
-		if (p.initialized && flag !== false) {
+		if (p.initialized && completed !== false) {
 			c.$table.trigger('pagerComplete', c);
 			// save pager info to storage
 			if (wo.pager_savePages && ts.storage) {
@@ -521,7 +521,8 @@ tsp = ts.pager = {
 			}
 			// make sure last pager settings are saved, prevents multiple server side calls with
 			// the same parameters
-			p.last.totalPages =  p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
+			p.totalPages = Math.ceil( p.totalRows / ( p.size || 10 ) );
+			p.last.totalRows = p.totalRows;
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
 			tsp.updatePageDisplay(table, c);
@@ -650,6 +651,9 @@ tsp = ts.pager = {
 		wo.pager_startPage = p.page;
 		wo.pager_size = p.size;
 		c.$table.trigger('applyWidgets');
+		if (table.isUpdating) {
+			c.$table.trigger('updateComplete');
+		}
 
 	},
 
@@ -680,7 +684,7 @@ tsp = ts.pager = {
 		});
 	},
 
-	moveToPage: function(table, p, flag) {
+	moveToPage: function(table, p, pageMoved) {
 		if ( p.isDisabled ) { return; }
 		var c = table.config,
 			l = p.last,
@@ -714,8 +718,11 @@ tsp = ts.pager = {
 			tsp.renderTable(table, c.rowsCopy);
 		}
 		$.data(table, 'pagerLastPage', p.page);
-		if (p.initialized && flag !== false) {
+		if (p.initialized && pageMoved !== false) {
 			c.$table.trigger('pageMoved', c);
+			if (!p.ajax && table.isUpdating) {
+				c.$table.trigger('updateComplete');
+			}
 		}
 	},
 
@@ -804,6 +811,8 @@ tsp = ts.pager = {
 			tsp.moveToPage(table, p, true);
 			// update display here in case all rows are removed
 			tsp.updatePageDisplay(table, c, false);
+		} else {
+			tsp.moveToPage(table, p, true);
 		}
 	}
 
