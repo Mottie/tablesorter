@@ -89,7 +89,7 @@
 					</tr>
 
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_type</code></a></td>
+						<td><a href="#" class="permalink"><code>build_type</code></a></td>
 						<td>String</td>
 						<td><code>""</code></td>
 						<td>
@@ -101,7 +101,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_source</code></a></td>
+						<td><a href="#" class="permalink"><code>build_source</code></a></td>
 						<td>String</td>
 						<td><code>""</code></td>
 						<td>
@@ -112,7 +112,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_processing</code></a></td>
+						<td><a href="#" class="permalink"><code>build_processing</code></a></td>
 						<td>Function</td>
 						<td><code>null</code></td>
 						<td>
@@ -147,7 +147,7 @@
 						<td>Array of header class names to add while building the table header.</td>
 					</tr>
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_headers.text</code></a></td>
+						<td><a href="#" class="permalink"><code>build_headers.text</code></a></td>
 						<td>Array</td>
 						<td><code>[]</code></td>
 						<td>Array of header cell names to add while building the table header.
@@ -175,7 +175,7 @@
 						<td>Array of footer class names to add while building the table footer.</td>
 					</tr>
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_footers.text</code></a></td>
+						<td><a href="#" class="permalink"><code>build_footers.text</code></a></td>
 						<td>Array</td>
 						<td><code>[]</code></td>
 						<td>Array of footer cell names to add while building the table footer.
@@ -186,7 +186,7 @@
 					</tr>
 
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_numbers.addColumn</code></a></td>
+						<td><a href="#" class="permalink"><code>build_numbers.addColumn</code></a></td>
 						<td>Boolean</td>
 						<td><code>false</code></td>
 						<td>Include a row numbering column.
@@ -196,7 +196,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td><a href="#" class="toggle2"><code>build_numbers.sortable</code></a></td>
+						<td><a href="#" class="permalink"><code>build_numbers.sortable</code></a></td>
 						<td>Boolean</td>
 						<td><code>false</code></td>
 						<td>Make the included row number column sortable.
@@ -256,6 +256,20 @@
 			</table>
 
 		</div> <!-- end options -->
+
+		<h3><a href="#">Setup - Common (document head)</a></h3>
+		<div>
+			Add the following required scripts and css files into the document <code>&lt;head&gt;</code>
+			<pre class="prettyprint lang-html">&lt;!-- jQuery --&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: required --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt; &lt;!-- choose any theme --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- build table widget --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;../js/widgets/widget-build-table.js&quot;&gt;&lt;/script&gt;</pre>
+		</div>
 
 		<h3><a href="#">Setup - Array (javascript variable)</a></h3>
 		<div>
