@@ -10,8 +10,12 @@
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
+	<link href="css/tipsy.css" rel="stylesheet">
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
+	<script src="js/jquery.tipsy.min.js"></script>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
@@ -21,17 +25,94 @@
 	<script src="../js/widgets/widget-headerTitles.js"></script>
 
 	<script id="js">$(function() {
-	// call the tablesorter plugin
-	$("table").tablesorter({
+
+	var updateTooltips = function($cell, txt) {
+		// dynamically update tipsy
+		if ($cell.is(':hover')) {
+			$cell
+				.attr({ title : txt, 'original-title': txt })
+				// hide, then show the tooltip to force updating & realignment
+				.tipsy('hide')
+				.tipsy('show');
+		}
+		return txt;
+	};
+
+	$("#table1").tablesorter({
 		theme : 'blue',
 		sortList: [[0,0]],
+		headers : { 4: { sorter: false } },
 		widgets: ['zebra', 'headerTitles'],
 		widgetOptions: {
-			headerTitle_prefix  : 'Sort: ',
-			headerTitle_text    : [ 'A - Z', 'Z - A' ],
-			headerTitle_numeric : [ '0 - 9', '9 - 0' ]
+			headerTitle_useAria  : true,
+			// add tooltip class
+			headerTitle_tooltip  : 'tooltip',
+			// manipulate the title as desired
+			headerTitle_callback : updateTooltips
 		}
 	});
+
+	// This table is showing all of the headerTitle widget options
+	$("#table2").tablesorter({
+		theme : 'blue',
+		sortList: [[0,0]],
+		// third click resets the sort
+		sortReset: true,
+		headers : { 4: { sorter: false } },
+		widgets: ['zebra', 'headerTitles'],
+		widgetOptions: {
+			// headerTitle_prefix : 'Sort: ', // option has been deprecated
+			// use aria-label text
+			// e.g. "First Name: Ascending sort applied, activate to apply a descending sort"
+			headerTitle_useAria : false,
+			// add tooltip class
+			headerTitle_tooltip  : 'tooltip',
+			// custom titles [ "ascending", "descending", "unsorted" ]
+			headerTitle_cur_text     : [ 'Ascending text sort applied', 'Descending text sort applied', 'Currently unsorted' ],
+			headerTitle_cur_numeric  : [ 'Ascending numeric sort applied', 'Descending numeric sort applied', 'Currently unsorted' ],
+			headerTitle_nxt_text     : [ ' apply ascending text sort', ' apply descending text sort', 'remove sort' ],
+			headerTitle_nxt_numeric  : [ ' apply ascending numeric sort', ' apply descending numeric sort', 'remove sort' ],
+
+			// title display; {prefix} adds above prefix
+			// {type} adds the current sort order from above (text or numeric)
+			// {next} adds the next sort direction using the sort order above
+			headerTitle_output_sorted   : '{current}; activate to {next}',
+			headerTitle_output_unsorted : '{current}; activate to {next}',
+			headerTitle_output_nosort   : 'No sort available',
+			// use this type to override the parser detection result
+			// e.g. use for numerically parsed columns (e.g. dates), but you
+			// want the user to see a text sort, e.g. [ 'text', '', 'numeric' ]
+			// use '' (empty string) to use the default
+			headerTitle_type : ['', '', '', '', '', 'text'],
+			// manipulate the title as desired
+			headerTitle_callback : updateTooltips
+		}
+	});
+
+	// using defaults, no tooltips
+	$("#table3").tablesorter({
+		theme : 'blue',
+		sortList: [[0,0]],
+		headers : { 4: { sorter: false } },
+		widgets: ['zebra', 'headerTitles']
+	});
+
+	// add tooltip
+	$('.tooltip').tipsy({ gravity: 's' });
+
+	// switch aria mode
+	var $state = $('#usearia'),
+		$table1 = $('#table1'),
+		// first table only
+		wo = $table1[0].config.widgetOptions;
+	$('button').on('click', function(){
+		wo.headerTitle_useAria = !wo.headerTitle_useAria;
+		// show current state in demo
+		$state.text( wo.headerTitle_useAria );
+		// force headerTitles widget to update
+		$table1.trigger('refreshHeaderTitle');
+	});
+
 });</script>
 </head>
 <body>
@@ -45,70 +126,187 @@
 
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
+	<p></p>
+	<br>
+
+	<div class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
 			<ul>
+				<li>In <span class="version">2.15.7</span>,
+					<ul>
+						<li>Sorry for all of these breaking changes, I should have left this widget in beta.</li>
+						<li>The <code>headerTitle_prefix</code>, <code>headerTitle_text</code>, <code>headerTitle_numeric</code> options has been replaced, in lieu of the new ouput options; sorry for no deprecation notice.</li>
+						<li>Added <code>headerTitle_useAria</code>, <code>headerTitle_tooltip</code>, <code>headerTitle_output_sorted</code>, <code>headerTitle_output_unsorted</code>, <code>headerTitle_output_nosort</code>, <code>headerTitle_cur_text</code>, <code>headerTitle_cur_numeric</code>, <code>headerTitle_nxt_text</code>, <code>headerTitle_nxt_numeric</code>, <code>headerTitle_type</code> &amp; <code>headerTitle_callback</code> options. See the options section below for more details.</li>
+						<li>Added <code>"refreshHeaderTitle"</code> method to force the widget to update.</li>
+					</ul>
+				</li>
 				<li>This widget adds a title to the table headers when they are sorted.</li>
 				<li>Click on any header. You may have to move the mouse off, then back on the header to see the title appear.</li>
 				<li>This widget will not work with the original tablesorter plugin (v2.0.5).</li>
 			</ul>
-	</p>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<table class="tablesorter-blue">
+				<colgroup>
+					<col style="width:50px;">
+					<col style="width:120px;">
+					<col>
+				</colgroup>
+				<thead>
+					<tr><th>Option</th><th>Default</th><th>Description</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>headerTitle_useAria</td>
+						<td><code>false</code></td>
+						<td>
+						When <code>true</code>, the headers titles are extracted from the <code>aria-label</code>. The text in that label is built from the <a href="http://mottie.github.io/tablesorter/docs/#variable-language"><code>$.tablesorter.language</code> option</a>.
+						</td>
+					</tr>
+					<tr>
+						<td>headerTitle_tooltip</td>
+						<td><code>&quot;&quot;</code></td>
+						<td>
+							Add a (tooltip) class name to the header, yeah you could have used the <a href="http://mottie.github.io/tablesorter/docs/#cssheader"><code>cssHeader</code> option</a> to do the same thing, but this option allows adding classes using an array.
+							<pre class="prettyprint lang-js">headerTitle_tooltip : [ 'tooltip-text', 'tooltip-text', 'tooltip-numeric', 'tooltip-numeric', '', 'tooltip-text']</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							headerTitle_cur_text<br>
+							headerTitle_cur_numeric
+						</td>
+						<td>(see description)</td>
+						<td>
+							When any of the header title output options use the <code>{current}</code> tag, it is replaced by values from either the current ("cur") text or numeric option array as determined by the column unsorted state or sort direction.<br>
+							<br>
+							The array must contain text for ascending, descending and unsorted state (in that order). Defaults:
+							<pre class="prettyprint lang-js">headerTitle_cur_text     : [ ' sort: A - Z', ' sort: Z - A', 'ly unsorted' ],
+headerTitle_cur_numeric  : [ ' sort: 0 - 9', ' sort: 9 - 0', 'ly unsorted' ]</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							headerTitle_nxt_text<br>
+							headerTitle_nxt_numeric
+						</td>
+						<td>(see description)</td>
+						<td>
+							When any of the header title output options use the <code>{next}</code> tag, it is replaced by values from either the next ("nxt") text or numeric option array as determined by the column unsorted state or sort direction.<br>
+							<br>
+							The array must contain text for when the next state is ascending, descending and unsorted (in that order). Defaults:
+							<pre class="prettyprint lang-js">headerTitle_nxt_text     : [ ' sort: A - Z', ' sort: Z - A', 'remove sort' ],
+headerTitle_nxt_numeric  : [ ' sort: 0 - 9', ' sort: 9 - 0', 'remove sort' ]</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							headerTitle_output_sorted<br>
+							headerTitle_output_unsorted<br>
+							headerTitle_output_nosort
+						</td>
+						<td>(see description)</td>
+						<td>
+							Set the output string for each sort condition: sorted, unsorted or sorting disabled.<br>
+							<br>
+							Each of these option strings can include a <code>{name}</code>, <code>{current}</code> and <code>{next}</code> tag.
+							<ul>
+								<li>The <code>{name}</code> tag is replaced by the header text.</li>
+								<li>The <code>{current}</code> tag is replaced by the type-appropriate text from either the <code>headerTitle_cur_text</code> or <code>headerTitle_cur_numeric</code> option.</li>
+								<li>The <code>{next}</code> tag is replaced by the type-appropriate text from either the <code>headerTitle_nxt_text</code> or <code>headerTitle_nxt_numeric</code> option.</li>
+							</ul>
+							Defaults:
+							<pre class="prettyprint lang-js">headerTitle_output_sorted   : 'current{current}; activate to {next}',
+headerTitle_output_unsorted : 'current{current}; activate to {next} ',
+headerTitle_output_nosort   : 'No sort available'</pre>
+							Note: the reason "activate" is used instead of "click" is because the user can also <kbd>Tab</kbd> to the header cell and press <kbd>Enter</kbd> to initiate a sort.
+						</td>
+					</tr>
+					<tr>
+						<td>headerTitle_type</td>
+						<td><code>[]</code></td>
+						<td>Each column type is determined by the parser <code>type</code> value. So, if you want to override a column default type, set this option with an array with the specified column changed to either "text" or "numeric". This is useful when a date column shows as a numeric sort, but you want your users to see it as a text sort.<br>
+						<br>
+						As seen in the second table initialization code below, if an array element is undefined or an empty string, it will not override the default type.
+						<pre class="prettyprint lang-js">headerTitle_type : ['', '', '', '', '', 'text']</pre>
+						</td>
+					</tr>
+					<tr>
+						<td>headerTitle_callback</td>
+						<td><code>null</code></td>
+						<td>
+							This callback function is executed after the title text string has completed processing. Any additional changes, or modifications can be done within this function. This function has two parameters <code>$cell</code> (the header cell as a jQuery object), and the processed text (<code>txt</code>). The function <strong>must</strong> return the text!
+							<pre class="prettyprint lang-js">headerTitle_callback : function($cell, txt) {
+    return txt;
+}</pre>In this demo, you will notice that this function is used to dynamically update the tooltip.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h3><a href="#">Method</a></h3>
+		<div>
+			<h3>Force headerTitle widget update</h3>
+			If you need to programmically force the header title to update, trigger a <code>refreshHeaderTitle</code> event on the table:
+			<pre class="prettyprint lang-js">$('table').trigger('refreshHeaderTitle');</pre>
+			In this demo, this method is used when switching between the default header title and aria-label text.
+		</div>
+
+	</div>
 
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
-	<thead>
-		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Age</th>
-			<th>Total</th>
-			<th>Discount</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Peter</td>
-			<td>Parker</td>
-			<td>28</td>
-			<td>$9.99</td>
-			<td>20%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>John</td>
-			<td>Evans</td>
-			<td>33</td>
-			<td>$9.99</td>
-			<td>25%</td>
-			<td>Dec 10, 2002 5:14 AM</td>
-		</tr>
-		<tr>
-			<td>Clark</td>
-			<td>Kent</td>
-			<td>22</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 12, 2003 11:14 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Almighty</td>
-			<td>45</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Evans</td>
-			<td>22</td>
-			<td>$13.19</td>
-			<td>11%</td>
-			<td>Jul 6, 2006 8:14 AM</td>
-		</tr>
-	</tbody>
-</table></div>
+	<div id="demo">
+
+	<h3>Tooltip plugin using togglable aria-label text</h3>
+	<button>use aria-label</button>: <span id="usearia" class="bright">true</span>
+
+	<table id="table1">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>John</td><td>Evans</td><td>33</td><td>$9.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>22</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+			<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$15.89</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		</tbody>
+	</table>
+
+	<h3>Tooltip plugin with alternative titles</h3>
+	<table id="table2">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>John</td><td>Evans</td><td>33</td><td>$9.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>22</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+			<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$15.89</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		</tbody>
+	</table>
+
+	<h3>No Tooltip Plugin</h3>
+	<table id="table3">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>John</td><td>Evans</td><td>33</td><td>$9.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>22</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+			<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$15.89</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+			<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		</tbody>
+	</table>
+
+	</div>
 
 	<h1>Javascript</h1>
 	<div id="javascript">
