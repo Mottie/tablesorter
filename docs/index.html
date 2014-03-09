@@ -1340,6 +1340,31 @@ $(function(){
 				<td><a href="example-option-text-extraction.html">Example</a></td>
 			</tr>
 
+			<tr id="namespace">
+				<td><a href="#" class="permalink">namespace</a></td>
+				<td>String</td>
+				<td>Undefined</td>
+				<td>
+					This option should contain a unique namespace for each table; it is used when binding to event listeners. <span class="version">v2.15.7</span>.
+					<div class="collapsible">
+					<br>
+					Notes about this namespace option:
+					<ul>
+						<li>If a namesspace is not defined, a (hopefully) unique random namespace will be generated.</li>
+						<li>If defined, any "non-word" characters (anything not "a-z", "0-9" or "_") within the namespace will be removed.</li>
+						<li>Added or not, the namespace will be saved with a leading period (e.g. ".myuniquetableid")</li>
+					</ul>
+					<pre class="prettyprint lang-js">$(function(){
+  $("#mytable").tablesorter({
+    // if table id = "mytable", this namespace is saved as ".mytable"
+    namespace : $('#mytable')[0];
+  });
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="numbersorter">
 				<td><a href="#" class="permalink">numberSorter</a></td>
 				<td>Function</td>

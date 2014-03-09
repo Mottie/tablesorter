@@ -783,15 +783,15 @@
 					$table = c.$table;
 				// apply easy methods that trigger bound events
 				$table
-				.unbind('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join('.tablesorter '))
-				.bind("sortReset.tablesorter", function(e){
+				.unbind('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join(c.namespace + ' '))
+				.bind("sortReset" + c.namespace, function(e){
 					e.stopPropagation();
 					c.sortList = [];
 					setHeadersCss(table);
 					multisort(table);
 					appendToTable(table);
 				})
-				.bind("updateAll.tablesorter", function(e, resort, callback){
+				.bind("updateAll" + c.namespace, function(e, resort, callback){
 					e.stopPropagation();
 					table.isUpdating = true;
 					ts.refreshWidgets(table, true, true);
@@ -801,14 +801,14 @@
 					bindMethods(table);
 					commonUpdate(table, resort, callback);
 				})
-				.bind("update.tablesorter updateRows.tablesorter", function(e, resort, callback) {
+				.bind("update" + c.namespace + " updateRows" + c.namespace, function(e, resort, callback) {
 					e.stopPropagation();
 					table.isUpdating = true;
 					// update sorting (if enabled/disabled)
 					updateHeader(table);
 					commonUpdate(table, resort, callback);
 				})
-				.bind("updateCell.tablesorter", function(e, cell, resort, callback) {
+				.bind("updateCell" + c.namespace, function(e, cell, resort, callback) {
 					e.stopPropagation();
 					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
@@ -830,7 +830,7 @@
 						checkResort($table, resort, callback);
 					}
 				})
-				.bind("addRows.tablesorter", function(e, $row, resort, callback) {
+				.bind("addRows" + c.namespace, function(e, $row, resort, callback) {
 					e.stopPropagation();
 					table.isUpdating = true;
 					if (isEmptyObject(c.cache)) {
@@ -863,10 +863,10 @@
 						checkResort($table, resort, callback);
 					}
 				})
-				.bind("updateComplete.tablesorter", function(){
+				.bind("updateComplete" + c.namespace, function(){
 					table.isUpdating = false;
 				})
-				.bind("sorton.tablesorter", function(e, list, callback, init) {
+				.bind("sorton" + c.namespace, function(e, list, callback, init) {
 					var c = table.config;
 					e.stopPropagation();
 					$table.trigger("sortStart", this);
@@ -885,14 +885,14 @@
 						callback(table);
 					}
 				})
-				.bind("appendCache.tablesorter", function(e, callback, init) {
+				.bind("appendCache" + c.namespace, function(e, callback, init) {
 					e.stopPropagation();
 					appendToTable(table, init);
 					if (typeof callback === "function") {
 						callback(table);
 					}
 				})
-				.bind("updateCache.tablesorter", function(e, callback){
+				.bind("updateCache" + c.namespace, function(e, callback){
 					// rebuild parsers
 					if (!c.parsers) {
 						buildParserCache(table);
@@ -903,20 +903,20 @@
 						callback(table);
 					}
 				})
-				.bind("applyWidgetId.tablesorter", function(e, id) {
+				.bind("applyWidgetId" + c.namespace, function(e, id) {
 					e.stopPropagation();
 					ts.getWidgetById(id).format(table, c, c.widgetOptions);
 				})
-				.bind("applyWidgets.tablesorter", function(e, init) {
+				.bind("applyWidgets" + c.namespace, function(e, init) {
 					e.stopPropagation();
 					// apply widgets
 					ts.applyWidget(table, init);
 				})
-				.bind("refreshWidgets.tablesorter", function(e, all, dontapply){
+				.bind("refreshWidgets" + c.namespace, function(e, all, dontapply){
 					e.stopPropagation();
 					ts.refreshWidgets(table, all, dontapply);
 				})
-				.bind("destroy.tablesorter", function(e, c, cb){
+				.bind("destroy" + c.namespace, function(e, c, cb){
 					e.stopPropagation();
 					ts.destroy(table, c, cb);
 				});
@@ -973,6 +973,15 @@
 				c.$table = $table
 					.addClass(ts.css.table + ' ' + c.tableClass + k)
 					.attr({ role : 'grid'});
+
+				// give the table a unique id, which will be used in namespace binding
+				if (!c.namespace) {
+					c.namespace = '.tablesorter' + Math.random().toString(16).slice(2);
+				} else {
+					// make sure namespace starts with a period & doesn't have weird characters
+					c.namespace = '.' + c.namespace.replace(/\W/g,'');
+				}
+
 				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')').attr({
 					'aria-live' : 'polite',
 					'aria-relevant' : 'all'
@@ -1017,8 +1026,8 @@
 				// show processesing icon
 				if (c.showProcessing) {
 					$table
-					.unbind('sortBegin.tablesorter sortEnd.tablesorter')
-					.bind('sortBegin.tablesorter sortEnd.tablesorter', function(e) {
+					.unbind('sortBegin' + c.namespace + ' sortEnd' + c.namespace)
+					.bind('sortBegin' + c.namespace + ' sortEnd' + c.namespace, function(e) {
 						ts.isProcessing(table, e.type === 'sortBegin');
 					});
 				}
@@ -1084,8 +1093,8 @@
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keyup.tablesorter')
-				.bind('mousedown.tablesorter mouseup.tablesorter sort.tablesorter keyup.tablesorter', function(e, external) {
+				.unbind('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '))
+				.bind('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
 					var cell, type = e.type;
 					// only recognize left clicks or enter
 					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
@@ -1146,11 +1155,11 @@
 				// disable tablesorter
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join('.tablesorter '));
+					.unbind('sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join(c.namespace + ' '));
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
 					.removeAttr('data-column');
-				$r.find(c.selectorSort).unbind('mousedown.tablesorter mouseup.tablesorter keypress.tablesorter');
+				$r.find(c.selectorSort).unbind('mousedown mouseup keypress '.split(' ').join(c.namespace + ' '));
 				ts.restoreHeaders(table);
 				if (removeClasses !== false) {
 					$t.removeClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme);

@@ -1,4 +1,4 @@
-/*! tableSorter 2.8+ widgets - updated 3/7/2014 (v2.15.6)
+/*! tableSorter 2.8+ widgets - updated 3/9/2014 (v2.15.7)
  *
  * Column Styles
  * Column Filters
@@ -380,7 +380,7 @@ ts.addWidget({
 		$table
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
-			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join('.tsfilter '))
+			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '))
 			.find('.' + ts.css.filterRow).remove();
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // remove tbody
@@ -558,7 +558,7 @@ ts.filter = {
 			ts.filter.buildRow(table, c, wo);
 		}
 
-		c.$table.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join('.tsfilter '), function(event, filter) {
+		c.$table.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '), function(event, filter) {
 			c.$table.find('.' + ts.css.filterRow).toggle( !(wo.filter_hideEmpty && $.isEmptyObject(c.cache)) ); // fixes #450
 			if ( !/(search|filter)/.test(event.type) ) {
 				event.stopPropagation();
@@ -628,7 +628,7 @@ ts.filter = {
 
 		// show processing icon
 		if (c.showProcessing) {
-			c.$table.bind('filterStart.tsfilter filterEnd.tsfilter', function(event, columns) {
+			c.$table.bind('filterStart' + c.namespace + 'filter filterEnd' + c.namespace + 'filter', function(event, columns) {
 				// only add processing to certain columns to all columns
 				$header = (columns) ? c.$table.find('.' + ts.css.header).filter('[data-column]').filter(function() {
 					return columns[$(this).data('column')] !== '';
@@ -751,9 +751,9 @@ ts.filter = {
 		$el
 		// use data attribute instead of jQuery data since the head is cloned without including the data/binding
 		.attr('data-lastSearchTime', new Date().getTime())
-		.unbind('keyup search change')
+		.unbind('keyup search change '.split(' ').join(c.namespace + 'filter '))
 		// include change for select - fixes #473
-		.bind('keyup search change', function(event, filters) {
+		.bind('keyup search change '.split(' ').join(c.namespace + 'filter '), function(event, filters) {
 			$(this).attr('data-lastSearchTime', new Date().getTime());
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {

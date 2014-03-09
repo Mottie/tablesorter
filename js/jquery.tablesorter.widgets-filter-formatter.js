@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 2/19/2014 (v2.15)
+/*! Filter widget formatter functions - updated 3/9/2014 (v2.15.7)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -73,8 +73,8 @@ tsff = ts.filterFormatter = {
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				updateSpinner({ value: this.value, delayed: false });
 			}),
 		$shcell = [],
@@ -230,8 +230,8 @@ tsff = ts.filterFormatter = {
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				updateSlider({ value: this.value });
 			}),
 		$shcell = [],
@@ -368,8 +368,8 @@ tsff = ts.filterFormatter = {
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				getRange();
 			}),
 		$shcell = [],
@@ -500,8 +500,8 @@ tsff = ts.filterFormatter = {
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateCompare" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				var v = this.value;
 				if (v) {
 					o.onClose(v);
@@ -632,8 +632,8 @@ tsff = ts.filterFormatter = {
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">')
 			.appendTo($cell)
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			.bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			.bind('change' + c.namespace + 'filter', function(){
 				var v = this.value;
 				if (v.match(' - ')) {
 					v = v.split(' - ');
@@ -940,8 +940,8 @@ tsff = ts.filterFormatter = {
 				.addClass('filter-parsed') // get exact numbers from column
 				// add span to header for the current slider value
 				.find('.tablesorter-header-inner').append('<span class="curvalue" />');
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			$input = $cell.find('input[type=hidden]').bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
 				/*jshint eqeqeq:false */
 				var v = this.value,
 					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '';
@@ -1085,8 +1085,8 @@ tsff = ts.filterFormatter = {
 				updateColor( $cell.find('.colorpicker').val() );
 			});
 
-			// hidden filter update (.tsfilter) namespace trigger by filter widget
-			$input = $cell.find('input[type=hidden]').bind('change.tsfilter', function(){
+			// hidden filter update namespace trigger by filter widget
+			$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
 				updateColor( this.value );
 			});
 
