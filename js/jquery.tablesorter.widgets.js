@@ -125,7 +125,7 @@ ts.storage = function(table, key, value, options) {
 			document.cookie = key + '=' + (JSON.stringify(values)).replace(/\"/g,'\"') + '; expires=' + date.toGMTString() + '; path=/';
 		}
 	} else {
-		return values && values[url] ? values[url][id] : {};
+		return values && values[url] ? values[url][id] : '';
 	}
 };
 
