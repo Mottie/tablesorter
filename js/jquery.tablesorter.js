@@ -932,8 +932,9 @@
 					if (!table.hasInitialized && ts.buildTable && this.tagName !== 'TABLE') {
 						// return the table (in case the original target is the table's container)
 						ts.buildTable(table, c);
+					} else {
+						ts.setup(table, c);
 					}
-					ts.setup(table, c);
 				});
 			};
 
