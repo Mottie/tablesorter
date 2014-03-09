@@ -977,7 +977,6 @@
 					'aria-live' : 'polite',
 					'aria-relevant' : 'all'
 				});
-				//
 				if (c.$table.find('caption').length) {
 					c.$table.attr('aria-labelledby', 'theCaption');
 				}
@@ -1167,8 +1166,7 @@
 			// regex used in natural sort
 			ts.regex = {
 				chunk : /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi, // chunk/tokenize numbers & letters
-				schunk: /^\\0/, // start chunk
-				echunk: /\\0$/, // end chunk
+				chunks: /(^\\0|\\0$)/, // replace chunks @ ends
 				hex: /^0x[0-9a-f]+$/i // hex
 			};
 
@@ -1185,8 +1183,8 @@
 					if ( xD > yD ) { return 1; }
 				}
 				// chunk/tokenize
-				xN = a.replace(r.chunk, '\\0$1\\0').replace(r.echunk, '').replace(r.schunk, '').split('\\0');
-				yN = b.replace(r.chunk, '\\0$1\\0').replace(r.echunk, '').replace(r.schunk, '').split('\\0');
+				xN = a.replace(r.chunk, '\\0$1\\0').replace(r.chunks, '').split('\\0');
+				yN = b.replace(r.chunk, '\\0$1\\0').replace(r.chunks, '').split('\\0');
 				mx = Math.max(xN.length, yN.length);
 				// natural sorting through split numeric strings and default strings
 				for (i = 0; i < mx; i++) {
