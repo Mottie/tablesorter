@@ -47,6 +47,29 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.7">Version 2.15.7</a> (1/25/2014)
+
+* Core
+  * Minor natural sort algorithm optimization
+  * Added `namespace` which should contain a unique namespace for each table; it is used when binding to event listeners.
+
+* Build table widget
+  * Removed inappropriate empty table console message when initializing.
+  * [build table widget](http://mottie.github.io/tablesorter/docs/example-widget-build-table.html) documentation update (includes `<head>` scripts &amp; css)
+  * Fixed nested accordions
+
+* Column selector widget
+  * Setting the `columnSelector_saveColumns` option to `true` now saves the "auto" state. Fixes [issue #517](https://github.com/Mottie/tablesorter/issues/517).
+
+* Filter widget
+  * Use the new `namespace` option to use with event listeners. Fixes [issue #535](https://github.com/Mottie/tablesorter/issues/535).
+
+* headerTitles widget
+  * Sorry for all of these breaking changes, I should have left this widget in beta.
+  * The `headerTitle_prefix`, `headerTitle_text`, `headerTitle_numeric` options has been replaced, in lieu of the new ouput options; sorry for no deprecation notice.
+  * Added `headerTitle_useAria`, `headerTitle_tooltip`, `headerTitle_output_sorted`, `headerTitle_output_unsorted`, `headerTitle_output_nosort`, `headerTitle_cur_text`, `headerTitle_cur_numeric`, `headerTitle_nxt_text`, `headerTitle_nxt_numeric`, `headerTitle_type` &amp; `headerTitle_callback` options. See the [headerTitles widget demo](http://mottie.github.io/tablesorter/docs/example-widget-header-titles.html) for more details.
+  * Added `"refreshHeaderTitle"` method to force the widget to update.
+
 #### <a name="v2.15.6">Version 2.15.6</a> (3/7/2014)
 
 * Doc
@@ -122,14 +145,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Stickyheaders
   * Sorting works again. Fixes [issue #508](https://github.com/Mottie/tablesorter/issues/508).
   * Table no longer scrolls to the top after initializing a sort from the sticky header.
-
-#### <a name="v2.15.2">Version 2.15.2</a> (2/20/2014)
-
-* Filter widget
-  * Fix js error on empty tables & multiple rows in thead while managing `c.parsers`. Fixes [issue #507](https://github.com/Mottie/tablesorter/issues/507).
-  * `filter-onlyAvail` now updates all selects properly. Fixes [issue #473](https://github.com/Mottie/tablesorter/issues/473).
-  * Fix annoying filter search caret jumping to end while typing
-* Doc updates
-  * Added `delayInit` demo ([pull #504](https://github.com/Mottie/tablesorter/issues/473)) - thanks [Infeligo](https://github.com/Infeligo)!
-  * Fixed some markup issues &amp; rearranged some links
-  * Updated minified widget file date. Fixes [issue #505](https://github.com/Mottie/tablesorter/issues/505)
