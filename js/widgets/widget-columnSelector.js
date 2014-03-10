@@ -32,14 +32,18 @@ tsColSel = ts.columnSelector = {
 
 		// build column selector/state array
 		colSel = c.selector = { $container : $(wo.columnSelector_container || '<div>') };
+		colSel.$style = $('<style></style>').prop('disabled', true).appendTo('head');
+		colSel.$breakpoints = $('<style></style>').prop('disabled', true).appendTo('head');
+
+		colSel.isInitializing = true;
 		tsColSel.setupSelector(table, c, wo);
 
 		if (wo.columnSelector_mediaquery) {
 			tsColSel.setupBreakpoints(c, wo);
 		}
 
+		colSel.isInitializing = false;
 		if (colSel.$container.length) {
-			colSel.$style = $('<style></style>').prop('disabled', true).appendTo('head');
 			tsColSel.updateCols(c, wo);
 		}
 
@@ -49,10 +53,13 @@ tsColSel = ts.columnSelector = {
 		var name,
 			colSel = c.selector,
 			$container = colSel.$container,
+			useStorage = wo.columnSelector_saveColumns && ts.storage,
 			// get stored column states
-			saved = wo.columnSelector_saveColumns && ts.storage ? ts.storage( table, 'tablesorter-columnSelector' ) : [];
+			saved = useStorage ? ts.storage( table, 'tablesorter-columnSelector' ) : [],
+			state = useStorage ? ts.storage( table, 'tablesorter-columnSelector-auto') : {};
 
 		// initial states
+		colSel.auto = $.isEmptyObject(state) || $.type(state.auto) !== "boolean" ? wo.columnSelector_mediaqueryState : state.auto;
 		colSel.states = [];
 		colSel.$column = [];
 		colSel.$wrapper = [];
@@ -99,14 +106,13 @@ tsColSel = ts.columnSelector = {
 	},
 
 	setupBreakpoints: function(c, wo){
-		var $auto, colSel = c.selector;
+		var colSel = c.selector;
 
 		// add responsive breakpoints
 		if (wo.columnSelector_mediaquery) {
 			// used by window resize function
 			colSel.lastIndex = -1;
 			wo.columnSelector_breakpoints.sort();
-			colSel.$breakpoints = $('<style></style>').prop('disabled', true).appendTo('head');
 			tsColSel.updateBreakpoints(c, wo);
 			c.$table.unbind('updateAll' + namespace).bind('updateAll' + namespace, function(){
 				tsColSel.updateBreakpoints(c, wo);
@@ -116,22 +122,24 @@ tsColSel = ts.columnSelector = {
 
 		if (colSel.$container.length) {
 			// Add media queries toggle
-			if (wo.columnSelector_mediaquery && wo.columnSelector_mediaquery) {
-				$auto = $( wo.columnSelector_layout.replace(/\{name\}/g, wo.columnSelector_mediaqueryName) ).prependTo(colSel.$container);
-				$auto
+			if (wo.columnSelector_mediaquery) {
+				colSel.$auto = $( wo.columnSelector_layout.replace(/\{name\}/g, wo.columnSelector_mediaqueryName) ).prependTo(colSel.$container);
+				colSel.$auto
 					// needed in case the input in the layout is not wrapped
-					.find('input').add( $auto.filter('input') )
+					.find('input').add( colSel.$auto.filter('input') )
 					.attr('data-column', 'auto')
-					.prop('checked', wo.columnSelector_mediaqueryState)
+					.prop('checked', colSel.auto)
 					.bind('change', function(){
-						wo.columnSelector_mediaqueryState = this.checked;
+						colSel.auto = this.checked;
 						$.each( colSel.$checkbox, function(i, $cb){
 							if ($cb) {
-								$cb[0].disabled = wo.columnSelector_mediaqueryState;
-								colSel.$wrapper[i].toggleClass('disabled', wo.columnSelector_mediaqueryState);
+								$cb[0].disabled = colSel.auto;
+								colSel.$wrapper[i].toggleClass('disabled', colSel.auto);
 							}
 						});
-						tsColSel.updateBreakpoints(c, wo);
+						if (wo.columnSelector_mediaquery) {
+							tsColSel.updateBreakpoints(c, wo);
+						}
 						tsColSel.updateCols(c, wo);
 						// copy the column selector to a popup/tooltip
 						if (c.selector.$popup) {
@@ -139,8 +147,11 @@ tsColSel = ts.columnSelector = {
 								.html( colSel.$container.html() )
 								.find('input').each(function(){
 									var indx = $(this).attr('data-column');
-									$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] );
+									$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
 								});
+						}
+						if (wo.columnSelector_saveColumns && ts.storage) {
+							ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
 						}
 					}).change();
 			}
@@ -157,7 +168,7 @@ tsColSel = ts.columnSelector = {
 			prefix = '.' + c.tableId,
 			mediaAll = [],
 			breakpts = '';
-		if (wo.columnSelector_mediaquery && !wo.columnSelector_mediaqueryState) {
+		if (wo.columnSelector_mediaquery && !colSel.auto) {
 			colSel.$breakpoints.prop('disabled', true);
 			colSel.$style.prop('disabled', false);
 			return;
@@ -188,13 +199,14 @@ tsColSel = ts.columnSelector = {
 	},
 
 	updateCols: function(c, wo) {
-		if (wo.columnSelector_mediaquery && wo.columnSelector_mediaqueryState) {
+		if (wo.columnSelector_mediaquery && c.selector.auto || c.selector.isInitializing) {
 			return;
 		}
 		var column,
+			colSel = c.selector,
 			styles = [],
 			prefix = '.' + c.tableId;
-		c.selector.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
+		colSel.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
 			if (!this.checked) {
 				column = parseInt( $(this).attr('data-column'), 10 ) + 1;
 				styles.push(prefix + ' tr th:nth-child(' + column + ')');
@@ -202,13 +214,13 @@ tsColSel = ts.columnSelector = {
 			}
 		});
 		if (wo.columnSelector_mediaquery){
-			c.selector.$breakpoints.prop('disabled', true);
+			colSel.$breakpoints.prop('disabled', true);
 		}
-		if (c.selector.$style) {
-			c.selector.$style.prop('disabled', false).html( styles.length ? styles.join(',') + ' { display: none; }' : '' );
+		if (colSel.$style) {
+			colSel.$style.prop('disabled', false).html( styles.length ? styles.join(',') + ' { display: none; }' : '' );
 		}
 		if (wo.columnSelector_saveColumns && ts.storage) {
-			ts.storage( c.$table[0], 'tablesorter-columnSelector', c.selector.states );
+			ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 		}
 	},
 
@@ -228,7 +240,7 @@ tsColSel = ts.columnSelector = {
 				.html( colSel.$container.html() )
 				.find('input').each(function(){
 					var indx = $(this).attr('data-column');
-					$(this).prop( 'checked', indx === 'auto' ? wo.columnSelector_mediaqueryState : colSel.states[indx] );
+					$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
 				});
 			colSel.$popup = $popup.on('change', 'input', function(){
 				// data input
