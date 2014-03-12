@@ -110,7 +110,6 @@ ts.grouping = {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 								}
 								$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
-									// (wo.group_collapsed && wo.group_collapsible ? ' collapsed' : '') +
 									'" unselectable="on"><td colspan="' +
 									c.columns + '">' + (wo.group_collapsible ? '<i/>' : '') + '<span class="group-name">' +
 									currentGroup + '</span><span class="group-count"></span></td></tr>');
@@ -126,9 +125,8 @@ ts.grouping = {
 			c.$table.find('tr.group-header')
 			.bind('selectstart', false)
 			.each(function(){
-				var isHidden, $label,
+				var isHidden, $label, name,
 					$row = $(this),
-					name = $row.find('.group-name').text().toLowerCase(),
 					$rows = $row.nextUntil('tr.group-header').filter(':visible');
 				if (wo.group_count || $.isFunction(wo.group_callback)) {
 					$label = $row.find('.group-count');
@@ -142,6 +140,7 @@ ts.grouping = {
 					}
 				}
 				if (wo.group_saveGroups && wo.group_currentGroups[wo.group_currentGroup].length) {
+					name = $row.find('.group-name').text().toLowerCase();
 					isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
 					$row.toggleClass('collapsed', isHidden);
 					$rows.toggleClass('group-hidden', isHidden);
@@ -165,7 +164,7 @@ ts.grouping = {
 				event.stopPropagation();
 				var isCollapsed, $groups, indx,
 					$this = $(this),
-					name = $this.find('.group-name').text();
+					name = $this.find('.group-name').text().toLowerCase();
 				// use shift-click to toggle ALL groups
 				if (event.type === 'click' && event.shiftKey) {
 					$this.siblings('.group-header').trigger('toggleGroup');
