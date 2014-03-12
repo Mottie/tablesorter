@@ -59,7 +59,7 @@
 			}, 200);
 			return false;
 		});
-		$('.permalink').dblclick(function(){
+		$('#root .permalink').dblclick(function(){
 			clicked = true;
 			window.location.hash = '#' + $(this).closest('tr')[0].id;
 			showProperty();

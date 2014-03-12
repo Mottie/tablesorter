@@ -65,7 +65,7 @@ span.tip.old em, .label-default { background-color: #999; }
 span.warn em, .label.alert { background-color: #d9534f; }
 .label.warning { background-color: #f0ad4e; }
 tr td.lookhere, span.lookhere { background-color: rgba(230,191,153,0.5); }
-.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
+div.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
 div.digg {float: right;}
 .next-up { padding-top: 10px; font-size: 90%; }
 .narrow-block { width: 50%; margin: 50px auto; }
@@ -88,8 +88,9 @@ span.alert { padding: 1px 3px; }
 .remark, .error { font-weight: bold; color: red; font-size: 18px; }
 table th.nobold { font-weight: normal; }
 table th a { text-decoration: underline; color: #000; }
-#group #slider0,#group #slider1,#group #slider2 { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
-#group .demo-label { display: inline-block; min-width: 120px; }
+#group .ui-slider,#align .ui-slider { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
+#group .demo-label,#align .demo-label { display: inline-block; min-width: 120px; }
+#align .demo-label { display: inline-block; min-width: 150px; }
 @media all and (max-width: 650px) {
  table.compatibility { float: none; }
 }
