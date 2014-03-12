@@ -765,7 +765,7 @@ ts.filter = {
 					return;
 			}
 			// true flag tells getFilters to skip newest timed input
-			ts.filter.searching( table, '', true );
+			ts.filter.searching( table, true, true );
 		});
 		c.$table.bind('filterReset', function(){
 			$el.val('');
