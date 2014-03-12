@@ -261,72 +261,86 @@
 
 			/* utils */
 			function buildCache(table) {
-				var b = table.tBodies,
-				tc = table.config,
-				totalRows,
-				totalCells,
-				parsers = tc.parsers,
-				t, v, i, j, k, c, cols, cacheTime, colMax = [];
-				tc.cache = {};
+				var cc, t, v, i, j, k, $row, rows, cols, cacheTime,
+					totalRows, rowData, colMax,
+					c = table.config,
+					$tb = c.$table.children('tbody'),
+				parsers = c.parsers;
+				c.cache = {};
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
-					return tc.debug ? log('Warning: *Empty table!* Not building a cache') : '';
+					return c.debug ? log('Warning: *Empty table!* Not building a cache') : '';
 				}
-				if (tc.debug) {
+				if (c.debug) {
 					cacheTime = new Date();
 				}
 				// processing icon
-				if (tc.showProcessing) {
+				if (c.showProcessing) {
 					ts.isProcessing(table, true);
 				}
-				for (k = 0; k < b.length; k++) {
-					tc.cache[k] = { row: [], normalized: [] };
+				for (k = 0; k < $tb.length; k++) {
+					colMax = []; // column max value per tbody
+					cc = c.cache[k] = {
+						normalized: [] // array of normalized row data; last entry contains "rowData" above
+						// colMax: #   // added at the end
+					};
+
 					// ignore tbodies with class name from c.cssInfoBlock
-					if (!$(b[k]).hasClass(tc.cssInfoBlock)) {
-						totalRows = (b[k] && b[k].rows.length) || 0;
-						totalCells = (b[k].rows[0] && b[k].rows[0].cells.length) || 0;
+					if (!$tb.eq(k).hasClass(c.cssInfoBlock)) {
+						totalRows = ($tb[k] && $tb[k].rows.length) || 0;
 						for (i = 0; i < totalRows; ++i) {
+							rowData = {
+								// order: original row order #
+								// $row : jQuery Object[]
+								child: [] // child row text (filter widget)
+							};
 							/** Add the table data to main data array */
-							c = $(b[k].rows[i]);
+							$row = $($tb[k].rows[i]);
+							rows = [ new Array(c.columns) ];
 							cols = [];
 							// if this is a child row, add it to the last row's children and continue to the next row
 							// ignore child row class, if it is the first row
-							if (c.hasClass(tc.cssChildRow) && i !== 0) {
-								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
+							if ($row.hasClass(c.cssChildRow) && i !== 0) {
+								t = cc.normalized.length - 1;
+								cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
 								// add "hasChild" class name to parent row
-								if (!c.prev().hasClass(tc.cssChildRow)) {
-									c.prev().addClass(ts.css.cssHasChild);
+								if (!$row.prev().hasClass(c.cssChildRow)) {
+									$row.prev().addClass(ts.css.cssHasChild);
 								}
+								// save child row content (un-parsed!)
+								rowData.child[t] = $.trim( $row[0].textContent || $row[0].innerText || $row.text() || "" );
 								// go to the next for loop
 								continue;
 							}
-							tc.cache[k].row.push(c);
-							for (j = 0; j < totalCells; ++j) {
+							rowData.$row = $row;
+							rowData.order = i; // add original row position to rowCache
+							for (j = 0; j < c.columns; ++j) {
 								if (typeof parsers[j] === 'undefined') {
-									if (tc.debug) {
-										log('No parser found for cell:', c[0].cells[j], 'does it have a header?');
+									if (c.debug) {
+										log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
 									}
 									continue;
 								}
-								t = getElementText(table, c[0].cells[j], j);
+								t = getElementText(table, $row[0].cells[j], j);
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].format(t, table, c[0].cells[j], j);
+								v = parsers[j].format(t, table, $row[0].cells[j], j);
 								cols.push(v);
 								if ((parsers[j].type || '').toLowerCase() === "numeric") {
-									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0); // determine column max value (ignore sign)
+									// determine column max value (ignore sign)
+									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
 								}
 							}
-							cols.push(tc.cache[k].normalized.length); // add position for rowCache
-							tc.cache[k].normalized.push(cols);
+							cols.push(rowData);
+							cc.normalized.push(cols);
 						}
-						tc.cache[k].colMax = colMax;
+						cc.colMax = colMax;
 					}
 				}
-				if (tc.showProcessing) {
+				if (c.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
 				}
-				if (tc.debug) {
+				if (c.debug) {
 					benchmark("Building cache for " + totalRows + " rows", cacheTime);
 				}
 			}
@@ -337,11 +351,11 @@
 					wo = c.widgetOptions,
 					b = table.tBodies,
 					rows = [],
-					c2 = c.cache,
-					r, n, totalRows, checkCell, $bk, $tb,
-					i, j, k, l, pos, appendTime;
+					cc = c.cache,
+					n, totalRows, $bk, $tb,
+					i, k, appendTime;
 				// empty table - fixes #206/#346
-				if (isEmptyObject(c2)) {
+				if (isEmptyObject(cc)) {
 					// run pager appender in case the table was just emptied
 					return c.appender ? c.appender(table, rows) :
 						table.isUpdating ? c.$table.trigger("updateComplete", table) : ''; // Fixes #532
@@ -354,19 +368,13 @@
 					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
-						r = c2[k].row;
-						n = c2[k].normalized;
+						n = cc[k].normalized;
 						totalRows = n.length;
-						checkCell = totalRows ? (n[0].length - 1) : 0;
 						for (i = 0; i < totalRows; i++) {
-							pos = n[i][checkCell];
-							rows.push(r[pos]);
+							rows.push(n[i][c.columns].$row);
 							// removeRows used by the pager plugin; don't render if using ajax - fixes #411
 							if (!c.appender || (c.pager && (!c.pager.removeRows || !wo.pager_removeRows) && !c.pager.ajax)) {
-								l = r[pos].length;
-								for (j = 0; j < l; j++) {
-									$tb.append(r[pos][j]);
-								}
+								$tb.append(n[i][c.columns].$row);
 							}
 						}
 						// restore tbody
@@ -656,8 +664,8 @@
 
 			// sort multiple columns
 			function multisort(table) { /*jshint loopfunc:true */
-				var i, k, num, col, colMax, cache, lc,
-					order, orgOrderCol, sortTime, sort, x, y,
+				var i, k, num, col, sortTime, colMax,
+					cache, order, sort, x, y,
 					dir = 0,
 					c = table.config,
 					cts = c.textSorter || '',
@@ -671,8 +679,7 @@
 				for (k = 0; k < bl; k++) {
 					colMax = c.cache[k].colMax;
 					cache = c.cache[k].normalized;
-					lc = cache.length;
-					orgOrderCol = (cache && cache[0]) ? cache[0].length - 1 : 0;
+
 					cache.sort(function(a, b) {
 						// cache is undefined here in IE, so don't use it!
 						for (i = 0; i < l; i++) {
@@ -682,7 +689,7 @@
 							dir = order === 0;
 
 							if (c.sortStable && a[col] === b[col] && l === 1) {
-								return a[orgOrderCol] - b[orgOrderCol];
+								return a[c.columns].order - b[c.columns].order;
 							}
 
 							// fallback to natural sort since it is more robust
@@ -716,7 +723,7 @@
 							}
 							if (sort) { return sort; }
 						}
-						return a[orgOrderCol] - b[orgOrderCol];
+						return a[c.columns].order - b[c.columns].order;
 					});
 				}
 				if (c.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
@@ -784,7 +791,7 @@
 					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
-					var l, row, icell,
+					var l, v, row, icell,
 					$tb = $table.find('tbody'),
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
@@ -796,9 +803,12 @@
 					if ($tb.length && tbdy >= 0) {
 						row = $tb.eq(tbdy).find('tr').index( $row );
 						icell = $cell.index();
-						l = c.cache[tbdy].normalized[row].length - 1;
-						c.cache[tbdy].row[ c.cache[tbdy].normalized[row][l] ] = $row;
-						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						c.cache[tbdy].normalized[row][c.columns].$row = $row;
+						v = c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						if ((c.parsers[icell].type || '').toLowerCase() === "numeric") {
+							// update column max value (ignore sign)
+							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
+						}
 						checkResort($table, resort, callback);
 					}
 				})
@@ -810,9 +820,8 @@
 						updateHeader(table);
 						commonUpdate(table, resort, callback);
 					} else {
-						var i, j,
+						var i, j, l, rowData, cells,
 						rows = $row.filter('tr').length,
-						dat = [], l = $row[0].cells.length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!c.parsers) {
@@ -820,16 +829,25 @@
 						}
 						// add each row
 						for (i = 0; i < rows; i++) {
+							l = $row[i].cells.length;
+							cells = [];
+							rowData = {
+								child: [],
+								$row : $row.eq(i),
+								order: c.cache[tbdy].normalized.length
+							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								dat[j] = c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								cells[j] = c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								if ((c.parsers[j].type || '').toLowerCase() === "numeric") {
+									// update column max value (ignore sign)
+									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
+								}
 							}
-							// add the row index to the end
-							dat.push(c.cache[tbdy].row.length);
+							// add the row data to the end
+							cells.push(rowData);
 							// update cache
-							c.cache[tbdy].row.push([$row[i]]);
-							c.cache[tbdy].normalized.push(dat);
-							dat = [];
+							c.cache[tbdy].normalized.push(cells);
 						}
 						// resort using current settings
 						checkResort($table, resort, callback);

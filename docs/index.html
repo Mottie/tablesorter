@@ -4334,7 +4334,7 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (added <span class="version">v2.0.18</span>)
+				<td>Internal list of table contents (added <span class="version">v2.0.18</span>; <span class="version updated">v2.16.0</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
@@ -4343,33 +4343,46 @@ var config = $('#mytable').data('tablesorter');
 								<ul>
 									<li><code>colMax</code>
 										<ul>
-											<li>This contains an array of the maximum numerical value for each "numerically" parsed column.</li>
-											<li>Text columns will not have a defined value in this array.</li>
+											<li>This contains an array of the absolute value maximum numerical value for each "numerically" parsed column per tbody.</li>
+											<li>Text columns will have an undefined value in this array.</li>
 											<li>Used when determining how to sort text within a numeric column.</li>
+											<li>Access it as follows: <pre class="prettyprint lang-js">// $('table')[0].config.cache[tbodyIndex].colMax[column];
+// try this in the console for this page:
+$('.tablesorter')[0].config.cache[0].colMax;
+// result: [undefined &#x00d7; 3, 45, 153.19, 44.7, 100.9, 1169133120000]</pre></li>
 										</ul>
 									</li>
 									<li><code>normalized</code>
 										<ul>
 											<li>This contains an array of indexed table rows.</li>
 											<li>Within each row is an array of extracted, then parsed table contents for each column (plus one extra value; see the next comment).</li>
-											<li>It is important to note that the last value in the column array is actually the original row index value. This is used when resetting a column sort to its original unsorted order.</li>
+											<li>It is important to note that the last value in the column array is <del>the original row index value</del>. This is used when resetting a column sort to its original unsorted order.</li>
+											<li>In <span class="version updated">v2.16.0</span>, the last value in the column array is now an object which contains a jquery object of the row, index of the original unsorted order and a child array which contains raw html from any associated child row
+												<pre class="prettyprint lang-js">// $('table')[0].config.cache[tbodyIndex].normalized[row][column]
+// try this in the console for this page:
+$('.tablesorter')[0].config.cache[0].normalized[0];
+/* result: ["a1", "bruce", "almighty", 45, 153.19, 44.7, 77, 979830720000, {
+    $row  : jQuery.fn.jQuery.init[1], // row (jQuery object)
+    child : [], // child row raw html, if any
+    order : 3   // original row index (unsorted)
+}]
+*/</pre>
+												to specifically target the extra row data, use this method:
+												<pre class="prettyprint lang-js">var config = $('.tablesorter')[0].config,
+    dataIndex = config.columns, // number of columns within the table
+    rowData = config.cache[tbodyIndex].normalized[row][ dataIndex ];</pre>
+											</li>
 											<li>Note that all text values will be in lower case if the <a href="#ignorecase"><code>ignoreCase</code></a> option is <code>true</code>.</li>
 											<li>This internal normalized content is what is actually sorted for maximum performance.</li>
 										</ul>
 									</li>
-									<li><code>row</code>
+									<li><code>row</code> (<span class="label label-danger">removed</span> in v2.16.0)
 										<ul>
-											<li>This contains an array of jQuery row objects.</li>
-											<li>These rows are never in sort order, and are used when updating the table after sorting the normalized content. The indexing of these rows is cross-referenced within the normalized values - the extra column value within the row array. Hopefully that makes sense.</li>
+											<li>Well not removed, but moved into the row data, within the normalized section of the cache as described above.</li>
+											<li><del>This contains an array of jQuery row objects</del>.</li>
+											<li><del>These rows are never in sort order, and are used when updating the table after sorting the normalized content. The indexing of these rows is cross-referenced within the normalized values - the extra column value within the row array. Hopefully that makes sense</del>.</li>
 										</ul>
 									</li>
-								</ul>
-							</li>
-							<li>In version 3, I plan to:
-								<ul>
-									<li>Make the "one extra value" within the normalized row array to be an object.</li>
-									<li>Within this object will be the original row index, and a jQuery object of that row. Therefore removing the actual <code>row</code> section from the cache.</li>
-									<li>I have an array of normalized column content also stored in the cache to optimize the filter widget, but this may change in time.</li>
 								</ul>
 							</li>
 						</ul>
