@@ -47,6 +47,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.8">Version 2.15.8</a> (3/12/2014)
+
+* Filter widget
+  * Search delay is no longer ignored.
+  * Fixes issues [#544](https://github.com/Mottie/tablesorter/issues/544) &amp; [#545](https://github.com/Mottie/tablesorter/pull/545)
+  * Thanks to [@dturkenk](https://github.com/dturkenk) for this contribution!
+
+* Align Character widget (beta)
+  * Added this widget to help align cell content on a character (space, decimal, etc).
+  * Check out [the demo](http://mottie.github.io/tablesorter/docs/example-widget-align-character.html)!
+
 #### <a name="v2.15.7">Version 2.15.7</a> (1/25/2014)
 
 * Core
@@ -139,9 +150,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Fixed several undefined variable javascript errors. Fixes [issue #509](https://github.com/Mottie/tablesorter/issues/509).
   * Fixed an issue with recursion in the pager widget - removed several unnecessary "applyWidget" methods.
   * Now uses the "updateCache" method after the table is rendered using ajax.
-
-#### <a name="v2.15.3">Version 2.15.3</a> (2/21/2014)
-
-* Stickyheaders
-  * Sorting works again. Fixes [issue #508](https://github.com/Mottie/tablesorter/issues/508).
-  * Table no longer scrolls to the top after initializing a sort from the sticky header.
