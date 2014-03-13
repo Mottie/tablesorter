@@ -47,6 +47,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.10">Version 2.15.10</a> (3/13/2014)
+
+* Fix `numberSorter` option causing a javascript error &amp; added test.
+
 #### <a name="v2.15.9">Version 2.15.9</a> (3/12/2014)
 
 * jQuery UI Filter formatter scripts work again (broken since adding unique namespaces in v2.15.7).
@@ -144,13 +148,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### <a name="v2.15.5">Version 2.15.5</a> (2/23/2014)
 
 * Pager widget now initializes properly when using ajax. Fixes [issue #510](https://github.com/Mottie/tablesorter/issues/510).
-
-#### <a name="v2.15.4">Version 2.15.4</a> (2/22/2014)
-
-* Add "updateCache" method
-  * This method updates the parsers, if undefined, then updates the internal cache.
-  * Used by the pager (addon &amp; widget) to update the internal cache after an ajax update.
-* Pager (addon &amp; widget)
-  * Fixed several undefined variable javascript errors. Fixes [issue #509](https://github.com/Mottie/tablesorter/issues/509).
-  * Fixed an issue with recursion in the pager widget - removed several unnecessary "applyWidget" methods.
-  * Now uses the "updateCache" method after the table is rendered using ajax.
