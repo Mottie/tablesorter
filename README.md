@@ -47,6 +47,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.9">Version 2.15.9</a> (3/12/2014)
+
+* jQuery UI Filter formatter scripts work again (broken since adding unique namespaces in v2.15.7).
+
 #### <a name="v2.15.8">Version 2.15.8</a> (3/12/2014)
 
 * Filter widget
@@ -58,7 +62,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Added this widget to help align cell content on a character (space, decimal, etc).
   * Check out [the demo](http://mottie.github.io/tablesorter/docs/example-widget-align-character.html)!
 
-#### <a name="v2.15.7">Version 2.15.7</a> (1/25/2014)
+#### <a name="v2.15.7">Version 2.15.7</a> (3/9/2014)
 
 * Core
   * Minor natural sort algorithm optimization

@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 3/9/2014 (v2.15.7)
+/*! Filter widget formatter functions - updated 3/12/2014 (v2.15.9)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -70,6 +70,7 @@ tsff = ts.filterFormatter = {
 			disabled : false
 
 		}, spinnerDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
@@ -78,7 +79,6 @@ tsff = ts.filterFormatter = {
 				updateSpinner({ value: this.value, delayed: false });
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSpinner = function(ui, notrigger) {
@@ -227,6 +227,7 @@ tsff = ts.filterFormatter = {
 			step : 1,
 			range : "min"
 		}, sliderDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
@@ -235,7 +236,6 @@ tsff = ts.filterFormatter = {
 				updateSlider({ value: this.value });
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSlider = function(ui, notrigger) {
@@ -365,6 +365,7 @@ tsff = ts.filterFormatter = {
 			max : 100,
 			range : true
 		}, rangeDef ),
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
@@ -373,7 +374,6 @@ tsff = ts.filterFormatter = {
 				getRange();
 			}),
 		$shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		getRange = function(){
 			var val = $input.val(),
@@ -495,6 +495,7 @@ tsff = ts.filterFormatter = {
 		}, defDate),
 
 		$date,
+		c = $cell.closest('table')[0].config,
 		// make sure we're using parsed dates in the search
 		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed'),
 		// Add a hidden input to hold the range values
@@ -508,7 +509,6 @@ tsff = ts.filterFormatter = {
 				}
 			}),
 		t, $shcell = [],
-		c = $cell.closest('table')[0].config,
 
 		// this function updates the hidden input
 		date1Compare = function(v, notrigger) {
@@ -629,6 +629,7 @@ tsff = ts.filterFormatter = {
 			numberOfMonths : 1
 		}, defDate),
 		t, closeTo, closeFrom, $shcell = [],
+		c = $cell.closest('table')[0].config,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">')
 			.appendTo($cell)
@@ -644,8 +645,7 @@ tsff = ts.filterFormatter = {
 				} else if (v.match('<=')) {
 					closeTo( v.replace('<=', '') );
 				}
-			}),
-		c = $cell.closest('table')[0].config;
+			});
 
 		// make sure we're using parsed dates in the search
 		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
