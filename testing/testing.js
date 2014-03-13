@@ -94,7 +94,7 @@ Core plugin tested
 OPTIONS:
 	cssAsc, cssChildRow, cssDesc, cssHeader, cssHeaderRow, cssInfoBlock, dateFormat, emptyTo, headerList,
 	headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, stringTo, tableClass,
-	usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey
+	usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey, numberSorter
 
 METHODS:
 	addRows, applyWidgets, destroy, sorton, sortReset, update/updateRow, updateAll, updateCell
@@ -186,6 +186,9 @@ $(function(){
 			e.which = 1;
 			e.shiftKey = true;
 			c.$headers.eq(5).trigger(e);
+		},
+		numberSorter: function(a, b, dir){
+			return dir ? a-b : b-a;
 		}
 	});
 
@@ -520,7 +523,7 @@ $(function(){
 	/************************************************
 		test sortForce, sortAppend, sortMultiSortKey and sortResetKey options
 	************************************************/
-	asyncTest( "sortForce, sortAppend, sortMultiSortKey & sortResetKey", function(){
+	asyncTest( "sortForce, sortAppend, sortMultiSortKey & sortResetKey; and numberSorter option", function(){
 		expect(3);
 		var count = 0;
 		tester.cacheCompare( table4, 3, [ 2, 1, 7, 6, 5, 3, 4, 8, 9, 10 ], 'force x2 + sorted x2 + append x2, ascending' );
