@@ -1027,7 +1027,7 @@ ts.filter = {
 	buildSelect: function(table, column, updating, onlyavail) {
 		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
 		column = parseInt(column, 10);
-		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters,
+		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters, row, cache,
 			c = table.config,
 			wo = c.widgetOptions,
 			$tbodies = c.$table.children('tbody'),
@@ -1037,16 +1037,19 @@ ts.filter = {
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>';
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if (!$tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock)) {
-				len = c.cache[tbodyIndex].row.length;
+				cache = c.cache[tbodyIndex];
+				len = c.cache[tbodyIndex].normalized.length;
 				// loop through the rows
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
+					// get cached row from cache.row (old) or row data object (new; last item in normalized array)
+					row = cache.row ? cache.row[rowIndex] : cache.normalized[rowIndex][c.columns].$row[0];
 					// check if has class filtered
-					if (onlyavail && c.cache[tbodyIndex].row[rowIndex][0].className.match(wo.filter_filteredRow)) { continue; }
+					if (onlyavail && row.className.match(wo.filter_filteredRow)) { continue; }
 					// get non-normalized cell content
 					if (wo.filter_useParsedData) {
-						arry.push( '' + c.cache[tbodyIndex].normalized[rowIndex][column] );
+						arry.push( '' + cache.normalized[rowIndex][column] );
 					} else {
-						node = c.cache[tbodyIndex].row[rowIndex][0].cells[column];
+						node = row.cells[column];
 						if (node) {
 							arry.push( $.trim( node.textContent || node.innerText || $(node).text() ) );
 						}
