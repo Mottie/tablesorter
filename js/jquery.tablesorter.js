@@ -296,6 +296,12 @@
 							}
 							tc.cache[k].row.push(c);
 							for (j = 0; j < totalCells; ++j) {
+								if (typeof parsers[j] === 'undefined') {
+									if (tc.debug) {
+										log('No parser found for cell:', c[0].cells[j], 'does it have a header?');
+									}
+									continue;
+								}
 								t = getElementText(table, c[0].cells[j], j);
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
