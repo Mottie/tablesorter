@@ -680,7 +680,7 @@ ts.filter = {
 		for (column = 0; column < columns; column++) {
 			buildFilter += '<td></td>';
 		}
-		c.$filters = $(buildFilter += '</tr>').appendTo( c.$table.find('thead').eq(0) ).find('td');
+		c.$filters = $(buildFilter += '</tr>').appendTo( c.$table.children('thead').eq(0) ).find('td');
 		// build each filter input
 		for (column = 0; column < columns; column++) {
 			disabled = false;
