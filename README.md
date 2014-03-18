@@ -47,6 +47,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.11">Version 2.15.11</a> (3/18/2014)
+
+* Updated Bootstrap to v3.1.1
+* Check if cell has parser to catch undefined error. Fixes [issue #546](https://github.com/Mottie/tablesorter/pull/546). Thanks [antila](https://github.com/antila)!
+* Column count is now correct with nested tables (with tfoot). Fixes [issue #547](https://github.com/Mottie/tablesorter/issues/547).
+* Fix table reset on pagination change. Fixes [issue #548](https://github.com/Mottie/tablesorter/pull/548). Thanks [evanboho](https://github.com/evanboho)!
+
 #### <a name="v2.15.10">Version 2.15.10</a> (3/13/2014)
 
 * Fix `numberSorter` option causing a javascript error &amp; added test.
