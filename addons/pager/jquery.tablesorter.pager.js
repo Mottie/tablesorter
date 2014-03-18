@@ -542,6 +542,7 @@
 			$.data(table, 'pagerLastPage', p.page);
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
+			p.filteredPages = Math.ceil( p.filteredRows / p.size );
 			moveToPage(table, p);
 		},
 
