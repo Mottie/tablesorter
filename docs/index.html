@@ -5,10 +5,10 @@
 <title>jQuery plugin: Tablesorter 2.0</title>
 
 <!-- jQuery -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
 <!-- Demo stuff -->
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
@@ -557,7 +557,7 @@
 				<td><a href="#" class="permalink">cssAsc</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the header with a ascending sort - <span class="version updated">v2.11</span>.
+				<td>Additional CSS class applied to style the header with a ascending sort (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string (<code>&quot;&quot;</code>) in v2.11, as the <code>&quot;tablesorter-headerAsc&quot;</code> class will always be added to a header cell with an ascending sort; this option now contains any additional class names to add.
 
@@ -575,7 +575,7 @@
 				<td><a class="toggle" href="#">cssChildRow</a></td>
 				<td>String</td>
 				<td>&quot;tablesorter-childRow&quot;</td>
-				<td>Add this css class to a child row that should always be attached to its parent. Click on the &quot;cssChildRow&quot; link to toggle the view on the attached child row. Previous default was <code>&quot;expand-child&quot;</code> (Changed in v2.4).</td>
+				<td>Add this css class to a child row that should always be attached to its parent. Click on the &quot;cssChildRow&quot; link to toggle the view on the attached child row. Previous default was <code>&quot;expand-child&quot;</code> (Modified v2.4).</td>
 				<td>
 					<a href="example-child-rows.html">1</a>
 					<a href="example-child-rows-filtered.html">2</a>
@@ -633,7 +633,7 @@
 				<td><a href="#" class="permalink">cssDesc</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the header with a descending sort - <span class="version updated">v2.11</span>.
+				<td>Additional CSS class applied to style the header with a descending sort (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerDesc&quot;</code> class will always be added to a header cell with a descending sort; this option now contains any additional class names to add.
 						<p>Example from the blue theme:</p>
@@ -650,7 +650,7 @@
 				<td><a href="#" class="permalink">cssHeader</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the headers - <span class="version updated">v2.11</span>
+				<td>Additional CSS class applied to style the headers (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-header&quot;</code> class will always be added to the table headers; this option now contains any additional class names to add.
 						<p>Example from the blue theme:</p>
@@ -671,7 +671,7 @@
 				<td><a href="#" class="permalink">cssHeaderRow</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the header row - <span class="version updated">v2.11</span>
+				<td>Additional CSS class applied to style the header row (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-headerRow&quot;</code> class will always be added to a table header row; this option now contains any additional class names to add.<br>
 						<p>This CSS style was added in v2.4, prior to that the row would get the same class as the header cells. This class was added to make it easier to determine what element was being targeted in the plugin.</p>
@@ -710,10 +710,10 @@
 				<td><a href="#" class="permalink">cssProcessing</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the header cell while it is being sorted or filtered - <span class="version updated">v2.11</span>
+				<td>Additional CSS class applied to style the header cell while it is being sorted or filtered (v2.4; <span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-processing&quot;</code> class will always be added to a table cells during processing; this option now contains any additional class names to add.<br>
-						<p>This class name is added to the header cell that is currently being sorted or filted. To prevent this class name from being added, set the <a href="#showprocessing"><code>showProcessing</code></a> option to <code>false</code> (v2.4).</p>
+						<p>This class name is added to the header cell that is currently being sorted or filted. To prevent this class name from being added, set the <a href="#showprocessing"><code>showProcessing</code></a> option to <code>false</code>.</p>
 					</div>
 				</td>
 				<td></td>
@@ -1273,7 +1273,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><span class="permalink">tabIndex</span></td>
 				<td>Boolean</td>
 				<td>true</td>
-				<td>Add a tabindex to the headers for keyboard accessibility; this was previously always applied <span class="version">v2.14</span></td>
+				<td>Add a tabindex to the headers for keyboard accessibility; this was previously always applied (<span class="version">v2.14</span>).</td>
 				<td></td>
 			</tr>
 
@@ -1281,7 +1281,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><a href="#" class="permalink">tableClass</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to style the table - <span class="version updated">v2.11</span>
+				<td>Additional CSS class applied to style the table (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter&quot;</code> class will always be added to the table; this option now contains any additional class names to add.
 						<p>This class was required in the default markup in version 2.0.5. But in version 2.0.6, it was added as an option.</p>
@@ -1346,7 +1346,7 @@ $(function(){
 				<td>String</td>
 				<td>Undefined</td>
 				<td>
-					This option should contain a unique namespace for each table; it is used when binding to event listeners. <span class="version">v2.15.7</span>.
+					This option should contain a unique namespace for each table; it is used when binding to event listeners (<span class="version">v2.15.7</span>).
 					<div class="collapsible">
 					<br>
 					Notes about this namespace option:
@@ -1371,7 +1371,7 @@ $(function(){
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Replace the default number sorting algorithm with a custom one using this option <span class="version">v2.12</span>.
+					Replace the default number sorting algorithm with a custom one using this option (<span class="version">v2.12</span>).
 					<div class="collapsible">
 					<br>
 					Here is an example:
@@ -1625,7 +1625,7 @@ $(function(){
 				<td>Numeric</td>
 				<td>50</td>
 				<td>
-					Used by the two digit year parser to set the date range <span class="version">v2.14</span>.</td>
+					Used by the two digit year parser to set the date range (<span class="version">v2.14</span>).</td>
 				<td><a href="example-parsers-dates.html">Example</a></td>
 			</tr>
 
@@ -1634,7 +1634,7 @@ $(function(){
 				<td>String</td>
 				<td>Undefined</td>
 				<td>
-					This option was added to set a specific page when storing data using the <a href="#function-storage"><code>$.tablesorter.storage</code></a> code. <span class="version">v2.12</span>.
+					This option was added to set a specific page when storing data using the <a href="#function-storage"><code>$.tablesorter.storage</code></a> code (<span class="version">v2.12</span>).
 					<div class="collapsible"><br>
 						More specifically, when the storage function is used, it attempts to give every table a unique identifier using both the page <strong>url</strong> and table <strong>ID</strong> (or index on the page if no id exists). This option allows you to override the current page url (<em>it doesn't need to be a url, just some constant value</em>) and save data for multiple tables across a domain.<br>
 						<br>
@@ -1892,7 +1892,7 @@ $(function(){
 				<td><a href="#" class="permalink">filter_cssFilter</a></td>
 				<td>String or Array</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to each filter - <span class="version updated">v2.15</span>
+				<td>Additional CSS class applied to each filter (<span class="version updated">v2.15</span>).
 					<div class="collapsible"><br>
 						As of v2.15, this option can also contain an array of class names that are to be applied to input filters.<br>
 						<br>
@@ -2388,7 +2388,7 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="#" class="permalink">stickyHeaders</a></td>
 				<td>String</td>
 				<td>&quot;&quot;</td>
-				<td>Sticky Headers widget: This additional CSS class applied to the sticky header row - <span class="version updated">v2.11</span>
+				<td>Sticky Headers widget: This additional CSS class applied to the sticky header row (<span class="version updated">v2.11</span>).
 					<div class="collapsible"><br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-stickyHeader&quot;</code> class will always be added to the sticky header row; this option now contains any additional class names to add.
 						<p>Previously, this option contained the class name to be applied to the sticky header row (tr) (v2.1).<p>
@@ -3386,7 +3386,7 @@ This ajaxProcessing function must return an object with "total", "headers" and "
 
 			<tr id="addrows">
 				<td><a href="#" class="permalink">addRows</a></td>
-				<td>Use this method to add table rows. (v2.0.16).
+				<td>Use this method to add table rows (v2.0.16).
 					<div class="collapsible">
 						It does not work the same as &quot;update&quot; in that it only adds rows, it does not remove them.<br>
 						Also, use this method to add table rows while using the pager plugin. If the &quot;update&quot; method is used, only the visible table rows continue to exist.
@@ -3617,7 +3617,7 @@ $('table').trigger('applyWidgets');
 
 			<tr id="destroy">
 				<td><a href="#" class="permalink">destroy</a></td>
-				<td>Use this method to remove tablesorter from the table.
+				<td>Use this method to remove tablesorter from the table (v2.3.2).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">// Remove tablesorter and all classes
 $("table").trigger("destroy");
@@ -4319,7 +4319,7 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-headercontent">
 				<td><a href="#" class="permalink">config.headerContent</a></td>
 				<td>Array</td>
-				<td>Internal list of each header's starting HTML (as text)
+				<td>Internal list of each header's starting HTML (as text) (v2.8)
 					<div class="collapsible"><br>
 						This HTML snapshot is taken using the <a href="#variable-headers"><code>$headers</code></a> jQuery object, and done before the <a href="#headertemplate"><code>headerTemplate</code></a> is applied and before the <a href="#onrendertemplate"><code>onRenderTemplate</code></a> and <a href="#onrenderheader"><code>onRenderHeader</code></a> callbacks are executed.<br>
 						<br>
@@ -4557,7 +4557,7 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 			<tr id="function-processtbody">
 				<td><a href="#" class="permalink">processTbody</a></td>
 				<td>
-					This function detaches the targeted tbody from the DOM to allow faster manipulation of the tbody contents.
+					This function detaches the targeted tbody from the DOM to allow faster manipulation of the tbody contents (v2.4).
 					<div class="collapsible">
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.processTbody( table, $(tbody), getIt );</pre>
@@ -4587,7 +4587,7 @@ for (tbodyIndex = 0; tbodyIndex < tbodies.length; tbodyIndex++) {
 
 			<tr id="function-isprocessing">
 				<td><a href="#" class="permalink">isProcessing</a></td>
-				<td>This function adds the processing (indeterminant loading icon) to specific or all header cells while processing table elements.
+				<td>This function adds the processing (indeterminant loading icon) to specific or all header cells while processing table elements (v2.4).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.isProcessing( table, toggle, $ths );</pre>
@@ -4626,7 +4626,7 @@ for (tbodyIndex = 0; tbodyIndex < tbodies.length; tbodyIndex++) {
 
 			<tr id="function-bindevents">
 				<td><a href="#" class="permalink">bindEvents</a></td>
-				<td>This function adds header event listeners to the targeted cells (<span class="version">v2.15</span>).
+				<td>This function adds header event listeners to the targeted cells (v2.8; <span class="version">v2.15</span>).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.bindEvents( table, $headers );</pre>
@@ -4652,7 +4652,7 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 
 			<tr id="function-restoreheaders">
 				<td><a href="#" class="permalink">restoreHeaders</a></td>
-				<td>This function restores the table headers cells with their original content.
+				<td>This function restores the table headers cells with their original content (v2.8).
 					<div class="collapsible"><br>
 						The original header cell content is saved, within the <a href="#variable-headercontent"><code>headerContent</code></a> variable array, before the <a href="#headertemplate"><code>headerTemplate</code></a> is applied and before the <a href="#onrendertemplate"><code>onRenderTemplate</code></a> and <a href="#onrenderheader"><code>onRenderHeader</code></a> callbacks are executed.<br>
 						<br>
@@ -4668,7 +4668,7 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 
 			<tr id="function-destroy">
 				<td><a href="#" class="permalink">destroy</a></td>
-				<td>This function completely removes tablesorter, including all widgets, associated data &amp; event handlers from the table.
+				<td>This function completely removes tablesorter, including all widgets, associated data &amp; event handlers from the table (v2.3.2).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.destroy( table, removeClasses, callback );</pre>
@@ -4690,7 +4690,7 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 
 			<tr id="function-sortnatural">
 				<td><a href="#" class="permalink">sortNatural</a></td>
-				<td>This function sorts the a &amp; b parameter using a natural sort.
+				<td>This function sorts the a &amp; b parameter using a natural sort (v2.12).
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.sortNatural(a, b);</pre>
@@ -4702,14 +4702,14 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 						<pre class="prettyprint lang-js">var myArray = [ '1a', '10a', '2a', '2b' ];
 // result: ["1a", "2a", "2b", "10a"]
 myArray.sort(function(a,b) { return $.tablesorter.sortNatural(a, b); });</pre>
-						Please note that this natural sort function only accepts strings.
+						Please note that this natural sort function only accepts strings (added v2.0.6; renamed v2.12).
 					</div>
 				</td>
 			</tr>
 
 			<tr id="function-sorttext">
 				<td><a href="#" class="permalink">sortText</a></td>
-				<td>This function sorts the a &amp; b parameter using a basic sort.
+				<td>This function sorts the a &amp; b parameter using a basic sort (renamed v2.12).
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.sortText(a, b);</pre>
@@ -4727,7 +4727,7 @@ myArray.sort(function(a,b) { return $.tablesorter.sortText(a, b); });</pre>
 
 			<tr id="function-replaceaccents">
 				<td><a href="#" class="permalink">replaceAccents</a></td>
-				<td>This function replaces basic accented characters to better sorting &amp; filtering of table contents.
+				<td>This function replaces basic accented characters to better sorting &amp; filtering of table contents (v2.2).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.replaceAccents(string);</pre>
@@ -4842,7 +4842,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 
 			<tr id="function-refreshwidgets">
 				<td><a href="#" class="permalink">refreshWidgets</a></td>
-				<td>This function removes, then reapplies all currently selected widgets on a table.
+				<td>This function removes, then reapplies all currently selected widgets on a table (v2.4).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.refreshWidgets( table, doAll, dontapply );</pre>
@@ -4860,7 +4860,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 
 			<tr id="function-getdata">
 				<td><a href="#" class="permalink">getData</a></td>
-				<td>This functions gets the sorter, string, empty, etc options for each column from jQuery data, metadata, header option or header class name ("sorter-false").
+				<td>This functions gets the sorter, string, empty, etc options for each column from jQuery data, metadata, header option or header class name ("sorter-false") (v2.1.16).
 					<div class="collapsible"><br>
 						priority = jQuery data > meta > headers option > header class name<br>
 						<br>
@@ -4948,7 +4948,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 
 			<tr id="function-showError">
 				<td><a href="#" class="permalink">showError</a></td>
-				<td>This function allows adding/removing a row to the thead, to display any errors <span class="version">v2.15</span>
+				<td>This function allows adding/removing a row to the thead, to display any errors (<span class="version">v2.15</span>).
 					<div class="collapsible"><br>
 						This function is ONLY included within the <code>widget-pager.js</code> and <code>jquery.tablesorter.pager.js</code> files; in version 3+, I plan to add it as a selectable option in a build.<br>
 						<br>
@@ -5103,7 +5103,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 
 			<tr id="function-storage">
 				<td><a href="#" class="permalink">storage</a></td>
-				<td>This function allows saving specific table data (especially widgets) to local storage (cookie fallback for no browser support)
+				<td>This function allows saving specific table data (especially widgets) to local storage (cookie fallback for no browser support) (v2.1)
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.storage(table, key, value, options);</pre>
