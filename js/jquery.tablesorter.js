@@ -394,7 +394,7 @@
 					for (j = 0; j < cells.length; j++) {
 						c = cells[j];
 						rowIndex = c.parentNode.rowIndex;
-						cellId = rowIndex + "-" + c.cellIndex;
+						cellId = rowIndex + "-" + $(c).cellIndex;
 						rowSpan = c.rowSpan || 1;
 						colSpan = c.colSpan || 1;
 						if (typeof(matrix[rowIndex]) === "undefined") {
@@ -456,7 +456,7 @@
 
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 
-					this.column = header_index[this.parentNode.rowIndex + "-" + this.cellIndex];
+					this.column = header_index[this.parentNode.rowIndex + "-" + $(this).cellIndex];
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one
 					this.lockedOrder = false;
@@ -829,7 +829,7 @@
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
 						row = $tb.eq(tbdy).find('tr').index( $row );
-						icell = cell.cellIndex;
+						icell = $(cell).cellIndex;
 						l = c.cache[tbdy].normalized[row].length - 1;
 						c.cache[tbdy].row[table.config.cache[tbdy].normalized[row][l]] = $row;
 						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
