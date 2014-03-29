@@ -95,17 +95,20 @@
 
 		$t = $('.accordion');
 		if ($t.length) {
-			var hashId = 0;
-			if (window.location.hash) {
-				$t.children('h3').each(function(i){
-					var txt = $(this).find('a').text().toLowerCase().replace(/[()\"]/g,'').replace(/[\s+\/]/g,'_');
+			var id, hashId,
+				hash = window.location.hash;
+			// add accodion ids
+			$t.each(function(i){
+				$(this).children('h3').each(function(i){
+					var txt = $(this).find('a').text().toLowerCase().replace(/[-:()\"]/g,'').replace(/[\s+\/]/g,'_');
 					this.id = txt;
-					if (txt === window.location.hash.slice(1)) {
+					if (hash && txt === hash.slice(1)) {
 						hashId = i;
 					}
 				});
-			}
-			$t.each(function(){
+			});
+			// set up accordions
+			$t.each(function(i){
 				var $this = $(this);
 				$this.accordion({
 					active: hashId,
@@ -114,7 +117,7 @@
 					collapsible: true,
 					create: function() {
 						$this.children('h3').each(function(i){
-							this.id = $(this).find('a').text().toLowerCase().replace(/[-()\"]/g,'').replace(/[\s+\/]/g,'_');
+							this.id = $(this).find('a').text().toLowerCase().replace(/[-:()\"]/g,'').replace(/[\s+\/]/g,'_');
 							$(this).before('<a class="accordion-link link" data-index="' + i + '" href="#' + this.id + '"></a>');
 						});
 						$this.find('.accordion-link').click(function(){
@@ -122,6 +125,14 @@
 						});
 					}
 				});
+				// open parent of nested accordion
+				if ( $this.find(hash).length && !$this.children(hash).length ) {
+					// div should have an id of ui-accordion-#-panel-#
+					id = $(hash).closest('.ui-accordion-content').attr('id').match(/(?:panel-)(\d+)/);
+					if (id && id.length) {
+						$this.accordion('option', 'active', Number(id[1]));
+					}
+				}
 			});
 		}
 
