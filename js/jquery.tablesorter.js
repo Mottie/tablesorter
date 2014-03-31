@@ -290,7 +290,8 @@
 							c = $(b[k].rows[i]);
 							cols = [];
 							// if this is a child row, add it to the last row's children and continue to the next row
-							if (c.hasClass(tc.cssChildRow)) {
+							// ignore child row class, if it is the first row
+							if (c.hasClass(tc.cssChildRow) && i !== 0) {
 								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
 								// add "hasChild" class name to parent row
 								if (!c.prev().hasClass(tc.cssChildRow)) {
