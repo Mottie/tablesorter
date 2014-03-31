@@ -96,7 +96,7 @@ tsColSel = ts.columnSelector = {
 					.find('input').add( colSel.$wrapper[colId].filter('input') )
 					.attr('data-column', colId)
 					.prop('checked', colSel.states[colId])
-					.bind('change', function(){
+					.on('change', function(){
 						colSel.states[colId] = this.checked;
 						tsColSel.updateCols(c, wo);
 					}).change();
@@ -114,7 +114,7 @@ tsColSel = ts.columnSelector = {
 			colSel.lastIndex = -1;
 			wo.columnSelector_breakpoints.sort();
 			tsColSel.updateBreakpoints(c, wo);
-			c.$table.unbind('updateAll' + namespace).bind('updateAll' + namespace, function(){
+			c.$table.off('updateAll' + namespace).on('updateAll' + namespace, function(){
 				tsColSel.updateBreakpoints(c, wo);
 				tsColSel.updateCols(c, wo);
 			});
@@ -129,7 +129,7 @@ tsColSel = ts.columnSelector = {
 					.find('input').add( colSel.$auto.filter('input') )
 					.attr('data-column', 'auto')
 					.prop('checked', colSel.auto)
-					.bind('change', function(){
+					.on('change', function(){
 						colSel.auto = this.checked;
 						$.each( colSel.$checkbox, function(i, $cb){
 							if ($cb) {
@@ -156,7 +156,7 @@ tsColSel = ts.columnSelector = {
 					}).change();
 			}
 			// Add a bind on update to re-run col setup
-			c.$table.unbind('update' + namespace).bind('update' + namespace, function() {
+			c.$table.off('update' + namespace).on('update' + namespace, function() {
 				tsColSel.updateCols(c, wo);
 			});
 		}
@@ -298,7 +298,7 @@ ts.addWidget({
 		csel.$popup.empty();
 		csel.$style.remove();
 		csel.$breakpoints.remove();
-		c.$table.unbind('updateAll' + namespace + ',update' + namespace);
+		c.$table.off('updateAll' + namespace + ' update' + namespace);
 	}
 
 });
