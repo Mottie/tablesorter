@@ -1,4 +1,4 @@
-/* Column Selector/Responsive table widget (beta) for TableSorter 12/17/2013 (v2.15.0)
+/* Column Selector/Responsive table widget (beta) for TableSorter 3/31/2014 (v2.15.12)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -83,7 +83,7 @@ tsColSel = ts.columnSelector = {
 			// set default state; storage takes priority
 			colSel.states[colId] = saved && typeof(saved[colId]) !== 'undefined' ?
 				saved[colId] : typeof(wo.columnSelector_columns[colId]) !== 'undefined' ?
-				wo.columnSelector_columns[colId] : state === 'true' || !(state === 'false');
+				wo.columnSelector_columns[colId] : (state === 'true' || !(state === 'false'));
 			colSel.$column[colId] = $(this);
 
 			// set default col title

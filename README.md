@@ -47,6 +47,25 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.12">Version 2.15.12</a> (3/31/2014)
+
+* Replaced references to `cell.cellIndex` with `$(cell).index()`
+  * Prevents an error in IE8
+  * Thanks [sylvain-hamel](https://github.com/sylvain-hamel)!
+  * Fixed merge issues, then modified code to minize use of this indexing
+  * Cell column property has correct value again.
+  * Fixes [issue #554](https://github.com/Mottie/tablesorter/pull/554)
+* Fix docs so nested accordions open with hash.
+* Child row updates
+  * Added <code>tablesorter-hasChildRow</code> class name to all parents of child rows.
+  * Added `.tablesorter .filtered { display: none; }` to every included theme; needed to properly hide child rows
+  * Fixed pager so that if the last pager row has any child rows, they are now included. Fixes part of [issue #396](https://github.com/Mottie/tablesorter/issues/396).
+  * Fixes [issue #556](https://github.com/Mottie/tablesorter/issues/556).
+* Add `resizable_widths` option
+  * Set the default & reset header widths using this option
+  * Fixes [issue #555](https://github.com/Mottie/tablesorter/issues/555).
+* I apologize for the last version error... it is set to 2.5.11 instead of 2.15.11 in the git repo tag. It is correct everywhere else.
+
 #### <a name="v2.15.11">Version 2.15.11</a> (3/18/2014)
 
 * Updated Bootstrap to v3.1.1
