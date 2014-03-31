@@ -39,7 +39,14 @@
 	$("table:last").tablesorter({
 		theme : 'blue',
 		// initialize zebra striping and resizable widgets on the table
-		widgets: [ "zebra", "resizable" ]
+		widgets: [ "zebra", "resizable" ],
+		widgetOptions: {
+			resizable: true,
+			// These are the default column widths which are used when the table is
+			// initialized or resizing is reset; note that the "Age" column is not
+			// resizable, but the width can still be set to 40px here
+			resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]
+		}
 	});
 
 });</script>
@@ -56,6 +63,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
 			<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
 			<li>Column width saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>

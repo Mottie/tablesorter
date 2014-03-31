@@ -1346,11 +1346,13 @@ ts.addWidget({
 	priority: 40,
 	options: {
 		resizable : true,
-		resizable_addLastColumn : false
+		resizable_addLastColumn : false,
+		resizable_widths : []
 	},
 	format: function(table, c, wo) {
 		if (c.$table.hasClass('hasResizable')) { return; }
 		c.$table.addClass('hasResizable');
+		ts.resizableReset(table, true); // set default widths
 		var $rows, $columns, $column, column,
 			storedSizes = {},
 			$table = c.$table,
@@ -1366,7 +1368,8 @@ ts.addWidget({
 					$target.width( storedSizes[$target.index()] );
 					$next.width( storedSizes[$next.index()] );
 					if (wo.resizable !== false) {
-						ts.storage(table, 'tablesorter-resizable', storedSizes);
+						// save all column widths
+						ts.storage(table, 'tablesorter-resizable', c.$headers.map(function(){ return $(this).width(); }).get() );
 					}
 				}
 				mouseXPosition = 0;
@@ -1461,10 +1464,23 @@ ts.addWidget({
 		ts.resizableReset(table);
 	}
 });
-ts.resizableReset = function(table) {
+ts.resizableReset = function(table, nosave) {
 	$(table).each(function(){
-		this.config.$headers.not('.resizable-false').css('width','');
-		if (ts.storage) { ts.storage(this, 'tablesorter-resizable', {}); }
+		var $t,
+			c = this.config,
+			wo = c && c.widgetOptions;
+		if (table && c) {
+			c.$headers.each(function(i){
+				$t = $(this);
+				if (wo.resizable_widths[i]) {
+					$t.css('width', wo.resizable_widths[i]);
+				} else if (!$t.hasClass('resizable-false')) {
+					// don't clear the width of any column that is not resizable
+					$t.css('width','');
+				}
+			});
+			if (ts.storage && !nosave) { ts.storage(this, 'tablesorter-resizable', {}); }
+		}
 	});
 };
 

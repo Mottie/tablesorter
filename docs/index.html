@@ -1580,6 +1580,8 @@ $(function(){
       resizable : true,
       // if true, the last column will be resizable (use in non-full width tables)
       resizable_addLastColumn: false,
+      // Add the starting & reset header widths
+      resizable_widths : [],
 
       // *** savesort widget ***
       // if false, the sort will not be saved for next page reload
@@ -2577,6 +2579,29 @@ $('table').trigger('search', false);</pre></div>
     widgetOptions : {
       // css class name applied to the sticky header
       resizable_addlastcolumn : true
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-resizable.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-resizable-widths">
+				<td><a href="#" class="permalink">resizable_widths</a></td>
+				<td>Array</td>
+				<td>[]</td>
+				<td>
+					Resizable widget: Set this option to the starting &amp; reset header widths (<span class="version">v2.15.12</span>).
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-resizable-widths"><code>&quot;resizable_widths&quot;</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["resizable"],
+    widgetOptions : {
+      // headers widths applied at initialization & resizable reset
+      // this setting includes any non-resizable cells (resizable-false)
+      resizable_widths : [ '10%', '10%', '50px' ]
     }
   });
 });</pre></div>
