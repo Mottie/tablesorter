@@ -123,6 +123,10 @@ caption {
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
+/* rows hidden by filtering (needed for child rows) */
+.tablesorter .filtered {
+	display: none;
+}
 
 /* pager plugin */
 .tablesorter-bootstrap .tablesorter-pager select {

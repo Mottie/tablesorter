@@ -34,11 +34,13 @@
 		.tablesorterPager({
 			container: $("#pager"),
 			positionFixed: false
-		})
+		});
+		/* no longer needed!
 		.bind('pagerChange', function(){
 			// hide child rows after pager update
 			$('.tablesorter-childRow td').hide();
 		});
+		*/
 
 	// Toggle child row content (td), not hiding the row since we are using rowspan
 	// Using delegate because the pager plugin rebuilds the table after each page change
@@ -48,6 +50,9 @@
 		// use "nextUntil" to toggle multiple child rows
 		// toggle table cells instead of the row
 		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
+		// in v2.5.12, the parent row now has the class tablesorter-hasChildRow
+		// so you can use this code as well
+		// $(this).closest('tr').nextUntil('tr.tablesorter-hasChildRow').find('td').toggle();
 
 		return false;
 	});
@@ -72,6 +77,14 @@
 		(<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>).</li>
 			<li>This option is available in the original plugin.</li>
 			<li>This demo had the default child row class name changed from "expand-child" to "tablesorter-childRow" in v2.4.</li>
+			<li>As of <span class="version updated">v2.15.12</span>,
+				<ul>
+					<li>Parents of child rows now have a <code>tablesorter-hasChildRow</code> class name added.</li>
+					<li>The last row of each page now includes any child rows. For example, on page 1, click on the "SO71783" row link and the associated child row will now show, as it should</li>
+					<li><span class="label label-info">NOTE!</span> A new css definition was added to every default theme; the "filtered" class name (set by the <code>filter_filteredRow</code> widgetOption) has been added to properly hide/show child rows when filtered. Please see the <a href="example-child-rows-filtered.html">Child Rows with Filter Widget</a> demo.</li>
+					<li>The additional code to always hide child row cells on <code>pagerChange</code> is no longer needed.</li>
+				</ul>
+			</li>
 		</ul>
 	</p>
 
@@ -335,7 +348,7 @@
 	<form>
 		<input type="button" value="&lt;&lt;" class="first" />
 		<input type="button" value="&lt;" class="prev" />
-		<input type="text" class="pagedisplay"/>
+		<input type="text" class="pagedisplay" readonly/>
 		<input type="button" value="&gt;" class="next" />
 		<input type="button" value="&gt;&gt;" class="last" />
 		<select class="pagesize">

@@ -868,7 +868,7 @@ ts.filter = {
 			$rows = $tbody.children('tr').not(c.selectorRemove);
 			len = $rows.length;
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$tbody.children().not('.' + c.cssChildRow).show().removeClass(wo.filter_filteredRow);
+				$tbody.children().removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
 			} else {
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
@@ -990,13 +990,11 @@ ts.filter = {
 							showRow = (result) ? showRow : false;
 						}
 					}
-					$rows[rowIndex].style.display = (showRow ? '' : 'none');
-					$rows.eq(rowIndex)[showRow ? 'removeClass' : 'addClass'](wo.filter_filteredRow);
+					$rows.eq(rowIndex)
+						.toggle(showRow)
+						.toggleClass(wo.filter_filteredRow, !showRow);
 					if (childRow.length) {
-						if (c.pager && c.pager.countChildRows || wo.pager_countChildRows || wo.filter_childRows) {
-							childRow[showRow ? 'removeClass' : 'addClass'](wo.filter_filteredRow); // see issue #396
-						}
-						childRow.toggle(showRow);
+						childRow.toggleClass(wo.filter_filteredRow, !showRow);
 					}
 					cacheIndex++;
 				}

@@ -91,7 +91,7 @@ tr.group-header.collapsed td i {
 			group_collapsible : true,
 			group_collapsed   : false,
 			group_count       : false,
-			filter_childRows  : false,
+			filter_childRows  : true,
 		}
 	});
 
@@ -112,6 +112,18 @@ tr.group-header.collapsed td i {
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>As of <span class="version updated">v2.15.12</span>,
+				<ul>
+					<li>Parents of child rows now have a <code>tablesorter-hasChildRow</code> class name added.</li>
+					<li><span class="label label-info">NOTE!</span> A new css definition was added to every default theme; the "filtered" class name (set by the <code>filter_filteredRow</code> widgetOption) has been added to properly hide/show child rows when filtered.</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
 
 <h1>Demo</h1>
 

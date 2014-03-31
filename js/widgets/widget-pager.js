@@ -181,7 +181,7 @@ tsp = ts.pager = {
 		} else {
 			p.ajax = false;
 			// Regular pager; all rows stored in memory
-			c.$table.trigger("appendCache", true);
+			c.$table.trigger("appendCache", [{}, true]);
 			tsp.hideRowsSetup(table, c);
 		}
 
@@ -400,6 +400,7 @@ tsp = ts.pager = {
 	hideRows: function(table, c){
 		if (!c.widgetOptions.pager_ajaxUrl) {
 			var i,
+				lastIndex = 0,
 				p = c.pager,
 				wo = c.widgetOptions,
 				rows = c.$tbodies.eq(0).children(),
@@ -410,9 +411,23 @@ tsp = ts.pager = {
 				j = 0; // size counter
 			for ( i = 0; i < l; i++ ){
 				if ( !rows[i].className.match(f) ) {
-					rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
-					// don't count child rows
-					j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !wo.pager_countChildRows ? 0 : 1;
+					if (j === s && rows[i].className.match(c.cssChildRow)) {
+						// hide child rows @ start of pager (if already visible)
+						rows[i].style.display = 'none';
+					} else {
+						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
+						// don't count child rows
+						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !wo.pager_countChildRows ? 0 : 1;
+						if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
+							lastIndex = i;
+						}
+					}
+				}
+			}
+			// add any attached child rows to last row of pager. Fixes part of issue #396
+			if ( lastIndex > 0 && rows[lastIndex].className.match(ts.css.cssHasChild) ) {
+				while ( ++lastIndex < l && rows[lastIndex].className.match(c.cssChildRow) ) {
+					rows[lastIndex].style.display = '';
 				}
 			}
 		}

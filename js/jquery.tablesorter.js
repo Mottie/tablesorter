@@ -114,6 +114,7 @@
 			// the table and MUST only contain one class name - fixes #381
 			ts.css = {
 				table      : 'tablesorter',
+				cssHasChild: 'tablesorter-hasChildRow',
 				childRow   : 'tablesorter-childRow',
 				header     : 'tablesorter-header',
 				headerRow  : 'tablesorter-headerRow',
@@ -291,6 +292,10 @@
 							// if this is a child row, add it to the last row's children and continue to the next row
 							if (c.hasClass(tc.cssChildRow)) {
 								tc.cache[k].row[tc.cache[k].row.length - 1] = tc.cache[k].row[tc.cache[k].row.length - 1].add(c);
+								// add "hasChild" class name to parent row
+								if (!c.prev().hasClass(tc.cssChildRow)) {
+									c.prev().addClass(ts.css.cssHasChild);
+								}
 								// go to the next for loop
 								continue;
 							}

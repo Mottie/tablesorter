@@ -18,6 +18,10 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
+	<!-- Tablesorter: pager -->
+	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
+	<script src="../js/widgets/widget-pager.js"></script>
+
 	<script id="js">$(function() {
 
 	$(".tablesorter")
@@ -27,9 +31,15 @@
 			cssChildRow: "tablesorter-childRow",
 
 			// initialize zebra and filter widgets
-			widgets: ["zebra", "filter"],
+			widgets: ["zebra", "filter", "pager"],
 
 			widgetOptions: {
+				// output default: '{page}/{totalPages}'
+				// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+				pager_output: '{startRow} - {endRow} / {filteredRows} ({totalRows})', // '{page}/{totalPages}'
+				pager_removeRows: false,
+
+
 				// include child row content while filtering, if true
 				filter_childRows  : true,
 				// class name applied to filter row and each input
@@ -52,7 +62,7 @@
 
 		// use "nextUntil" to toggle multiple child rows
 		// toggle table cells instead of the row
-		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
+		$(this).closest('tr').nextUntil('tr.tablesorter-hasChildRow').find('td').toggle();
 
 		return false;
 	});
@@ -86,7 +96,17 @@
 		<ul>
 			<li>Click the link in the Order # column to reveal the hidden child row cells (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>). This option is available in the original plugin.</li>
 			<li>The filter widget will work with the original tablesorter plugin, just include the jquery.tablesorter.widget.js file and initialize the widget as seen below.</li>
-			<li>Combining the filter widget and pager plugin will not work as expected.</li>
+			<li><del>Combining the filter widget and pager plugin will not work as expected</del>.</li>
+			<li>As of <span class="version updated">v2.15.12</span>,
+				<ul>
+					<li>This demo includes the pager widget.</li>
+					<li>For now, when combining the filter widget with pager, ensure the <code>removeRows</code> option is set to <code>false</code>.</li>
+					<li>Parents of child rows now have a <code>tablesorter-hasChildRow</code> class name added.</li>
+					<li>The last row of each page now includes any child rows. For example, on page 1, click on the "SO71783" row link and the associated child row will now show, as it should</li>
+					<li><span class="label label-info">NOTE!</span> A new css definition was added to every default theme; the "filtered" class name (set by the <code>filter_filteredRow</code> widgetOption) has been added to properly hide/show child rows when filtered.</li>
+					<li>The additional code to always hide child row cells on <code>pagerChange</code> is no longer needed.</li>
+				</ul>
+			</li>
 		</ul>
 	</p>
 
@@ -98,6 +118,21 @@
 		<li>If true, the child row content is included in ALL filters. Enter "cal" (california) in any column filter and the same rows show up.</li>
 		<li>When false, child row content is ignored. Enter "cal" and no rows will be found.</li>
 	</ul>
+
+	<div class="pager">
+		<img src="../addons/pager/icons/first.png" class="first" alt="First" />
+		<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />
+		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+		<img src="../addons/pager/icons/next.png" class="next" alt="Next" />
+		<img src="../addons/pager/icons/last.png" class="last" alt="Last" />
+		<select class="pagesize" title="Select page size">
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+		</select>
+		<select class="gotoPage" title="Select page number"></select>
+	</div>
 
 	<table class="tablesorter">
 	<colgroup>
