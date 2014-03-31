@@ -572,18 +572,23 @@ $(function(){
 	************************************************/
 	var zebra = function(){
 		t = true;
-		$table2.find('tbody tr').each(function(){
-			t = t ? $(this).hasClass('odd') || $(this).hasClass('even') : false;
+		var classes = ['odd','even'];
+		$table2.find('tbody tr').each(function(i){
+			t = t ? $(this).hasClass( classes[i%2] ) : false;
 		});
 		return t;
 	};
 
 	test( "apply zebra widget", function(){
-		expect(2);
+		expect(3);
 		equal( zebra(), false, 'zebra not applied' );
 		c2.widgets = [ 'zebra' ];
 		$table2.trigger('applyWidgets');
 		equal( zebra(), true, 'zebra is applied' );
+		$table2
+			.append('<tr><td>s</td><td>t</td><td>u</td><td>v</td></tr>')
+			.trigger('update');
+		equal( zebra(), true, 'zebra is applied after update' );
 	});
 
 	/************************************************

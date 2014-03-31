@@ -785,6 +785,7 @@
 						resortComplete($table, callback);
 					}, true]);
 				} else {
+					$table.trigger('applyWidgets');
 					resortComplete($table, callback);
 				}
 			}
@@ -891,7 +892,9 @@
 					// sort the table and append it to the dom
 					multisort(table);
 					appendToTable(table, init);
-					$table.trigger("sortEnd", this);
+					$table
+						.trigger("sortEnd", this)
+						.trigger('applyWidgets');
 					if (typeof callback === "function") {
 						callback(table);
 					}
