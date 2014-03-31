@@ -122,11 +122,11 @@ $(function(){
 	QUnit.config.reorder = false;
 
 	var ts = $.tablesorter,
-		$table1 = $('.tester:eq(0)'),
-		$table2 = $('.tester:eq(1)'),
-		$table3 = $('.tester:eq(2)'),
-		$table4 = $('.tester:eq(3)'),
-		$table5 = $('.tester:eq(4)'), // empty table
+		$table1 = $('#table1'),
+		$table2 = $('#table2'),
+		$table3 = $('#table3'),
+		$table4 = $('#table4'),
+		$table5 = $('#table5'), // empty table
 		table1 = $table1[0],
 		table2 = $table2[0],
 		table3 = $table3[0],
@@ -230,6 +230,23 @@ $(function(){
 	c2 = table2.config;
 	c3 = table3.config;
 	c4 = table4.config;
+
+	/************************************************
+		Test column numbering
+	************************************************/
+	// later: include a table header with colspan & rowspan
+	test( "column numbering", function() {
+		expect(2);
+		var internalColumn = true,
+			dataColumn = true;
+		$table4.find('thead th').each(function(i){
+			var $this = $(this);
+			internalColumn = internalColumn && this.column === i;
+			dataColumn = dataColumn && $(this).attr('data-column') == i;
+		});
+		equal( internalColumn, true, "Correct internal column numbering" );
+		equal( dataColumn, true, "Correct data-column attribute numbering" );
+	});
 
 	/************************************************
 		check isDigit function
