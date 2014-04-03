@@ -851,7 +851,7 @@ ts.filter = {
 			c = table.config,
 			wo = c.widgetOptions,
 			columns = c.columns,
-			$tbodies = c.$tbodies,
+			$tbodies = c.$table.children('tbody'), // target all tbodies #568
 			// anyMatch really screws up with these types of filters
 			anyMatchNotAllowedTypes = [ 'range', 'notMatch',  'operators' ],
 			// parse columns after formatter, in case the class is added at that point
@@ -862,7 +862,7 @@ ts.filter = {
 			}).get();
 		if (c.debug) { time = new Date(); }
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
-			if ($tbodies.eq(tbodyIndex).hasClass(ts.css.info)) { continue; } // ignore info blocks, issue #264
+			if ($tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock || ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
 			// skip child rows & widget added (removable) rows - fixes #448 thanks to @hempel!
 			$rows = $tbody.children('tr').not(c.selectorRemove);

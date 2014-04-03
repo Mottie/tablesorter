@@ -4383,10 +4383,12 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-tbodies">
 				<td><a href="#" class="permalink">config.$tbodies</a></td>
 				<td>jQuery Object</td>
-				<td>Internally stored jQuery object of the table tbodies (added <span class="version">v2.7.1</span>)
+				<td>Internally stored jQuery object of table non-info block tbodies (added <span class="version">v2.7.1</span>)
 					<div class="collapsible">
 					<br>
-					jQuery object of sortable tbodies; the ones without the class name in the <a href="#cssinfoblock"><code>cssInfoBlock</code></a> option.<br>
+					jQuery object of sortable tbodies.<br>
+					<br>
+					<span class="label label-warning">Caution!</span> These tbodies are the ones without a class name from the <a href="#cssinfoblock"><code>cssInfoBlock</code></a> option, so the indexing of this jQuery object does not match the actual table tbody indexes.<br>
 					<br>
 					The <code>table.config.$tbodies</code> variable is useful within callback functions or when writing widgets that target the table.
 					</div>
