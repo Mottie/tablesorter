@@ -1,4 +1,4 @@
-/*! tableSorter 2.15+ widgets - updated 3/31/2014 (v2.15.12)
+/*! tableSorter 2.15+ widgets - updated 4/3/2014 (v2.15.13)
  *
  * Column Styles
  * Column Filters

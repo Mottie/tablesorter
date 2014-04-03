@@ -47,6 +47,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.13">Version 2.15.13</a> (4/3/2014)
+
+* Core:
+  * Fix widgets not being applied after an update.
+  * Ignore child row class name if it is the first table row
+* Filter widget ignores info tbodies again. Fixes [issue #568](https://github.com/Mottie/tablesorter/issues/568)
+* Docs: show resizable widget update
+* Bootstrap theme:
+  * Fix zebra highlighting for child rows
+  * Thanks to [ilyai](https://github.com/ilyai) - [PR #567](https://github.com/Mottie/tablesorter/pull/567)
+
 #### <a name="v2.15.12">Version 2.15.12</a> (3/31/2014)
 
 * Replaced references to `cell.cellIndex` with `$(cell).index()`
@@ -80,97 +91,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### <a name="v2.15.9">Version 2.15.9</a> (3/12/2014)
 
 * jQuery UI Filter formatter scripts work again (broken since adding unique namespaces in v2.15.7).
-
-#### <a name="v2.15.8">Version 2.15.8</a> (3/12/2014)
-
-* Filter widget
-  * Search delay is no longer ignored.
-  * Fixes issues [#544](https://github.com/Mottie/tablesorter/issues/544) &amp; [#545](https://github.com/Mottie/tablesorter/pull/545)
-  * Thanks to [@dturkenk](https://github.com/dturkenk) for this contribution!
-
-* Align Character widget (beta)
-  * Added this widget to help align cell content on a character (space, decimal, etc).
-  * Check out [the demo](http://mottie.github.io/tablesorter/docs/example-widget-align-character.html)!
-
-#### <a name="v2.15.7">Version 2.15.7</a> (3/9/2014)
-
-* Core
-  * Minor natural sort algorithm optimization
-  * Added `namespace` which should contain a unique namespace for each table; it is used when binding to event listeners.
-
-* Build table widget
-  * Removed inappropriate empty table console message when initializing.
-  * [build table widget](http://mottie.github.io/tablesorter/docs/example-widget-build-table.html) documentation update (includes `<head>` scripts &amp; css)
-  * Fixed nested accordions
-
-* Column selector widget
-  * Setting the `columnSelector_saveColumns` option to `true` now saves the "auto" state. Fixes [issue #517](https://github.com/Mottie/tablesorter/issues/517).
-
-* Filter widget
-  * Use the new `namespace` option to use with event listeners. Fixes [issue #535](https://github.com/Mottie/tablesorter/issues/535).
-
-* headerTitles widget
-  * Sorry for all of these breaking changes, I should have left this widget in beta.
-  * The `headerTitle_prefix`, `headerTitle_text`, `headerTitle_numeric` options has been replaced, in lieu of the new ouput options; sorry for no deprecation notice.
-  * Added `headerTitle_useAria`, `headerTitle_tooltip`, `headerTitle_output_sorted`, `headerTitle_output_unsorted`, `headerTitle_output_nosort`, `headerTitle_cur_text`, `headerTitle_cur_numeric`, `headerTitle_nxt_text`, `headerTitle_nxt_numeric`, `headerTitle_type` &amp; `headerTitle_callback` options. See the [headerTitles widget demo](http://mottie.github.io/tablesorter/docs/example-widget-header-titles.html) for more details.
-  * Added `"refreshHeaderTitle"` method to force the widget to update.
-
-#### <a name="v2.15.6">Version 2.15.6</a> (3/7/2014)
-
-* Doc
-  * Added docs for `$.tablesorter.language` which contains the text used in the `aria-label` for the header
-  * Update `isValueInArray` &amp; `sortAppend` docs.
-
-* Core
-  * Destroy now unbinds the `updateCache` method properly
-  * Update `$.tablesorter.isValueInArray` function &amp; `sortAppend` option. Fixes [issue #523](https://github.com/Mottie/tablesorter/issues/523).
-  * All test dates are now time zone & DST independent. Fixes [issue #516](https://github.com/Mottie/tablesorter/issues/516).
-  * Added tests for `sortForce`, `sortAppend`, `sortMultiSortKey` and `sortResetKey`.
-  * Cache natural sort regex.
-  * Date parsers now return the original cell text instead of an empty string when encountering invalid dates. Sort of fixes [issue #531](https://github.com/Mottie/tablesorter/issues/531).
-  * Event fixes:
-      * Sort events will now only show when the table is being sorted; previously when updating an unsorted table, sort events would fire.
-      * The `updateComplete` event now fires after every triggered update (`update`, `updateRows`, `updateAll`, `updateCell` &amp; `addRows`)
-      * Updated pager to correctly trigger the `updateComplete` event when using ajax.
-      * Added unit tests to ensure these events fire on an empty table.
-      * Fixes [issue #532](https://github.com/Mottie/tablesorter/issues/532)
-
-* ColumnSelector widget
-  * Make column disable, visible &amp; invisible methods consistent. Fixes [issue #519](https://github.com/Mottie/tablesorter/issues/519)
-
-* Filter widget
-  * Preset filter searches (set by `data-value` on the header) work again. Fixes issues [#511](https://github.com/Mottie/tablesorter/issues/511) &amp; [#525](https://github.com/Mottie/tablesorter/issues/525).
-  * Add note to docs about adding a placeholder. Fixes [issue #522](https://github.com/Mottie/tablesorter/issues/522).
-  * Filter build select function no longer causes a javascript error on empty tables. Fixes [issue #528](https://github.com/Mottie/tablesorter/issues/528).
-
-* Grouping widget
-  * The `collapsed` option once again shows the group headers. Fixes issues [#514](https://github.com/Mottie/tablesorter/issues/514) & [533](https://github.com/Mottie/tablesorter/issues/533)
-  * Add `group_saveGroups` &amp; `group_saveReset` options:
-    * The `group_saveGroups` option (`true` by default) saves the group name of any collapsed groups (requires `group_collapsible` to be `true`)
-    * The `group_saveReset` option (`null` by default) contains a jQuery selector string or jQuery object pointing to an element to be used to clear the saved groups.
-    * Both of these options require the storage utility script contained within the `jquery.tablesorter.widgets.js` file.
-    * Fullfils feature request of [issue #514](https://github.com/Mottie/tablesorter/issues/514).
-  * Added details about using regular expressions within the `group_separator` option.
-
-* Header Titles widget (headerTitles)
-  * New widget which adds the current sort to the header title attribute.
-  * It distinguishes between a text and numeric sort and includes the current sort direction
-  * A prefix can be included.
-  * By default, an ascending sort shows either "A - Z" or "0 - 9", or "Z - A" or "9 - 0" for descending sorts.
-  * Note that date columns will show as numeric
-  * Fixes [issue #529](https://github.com/Mottie/tablesorter/issues/529).
-
-* Pager (addon & widget)
-  * Ensure empty array `[]` and array of empty strings `['', '', '']` evaluate as the same when checking if the filters have changed. Fixes [issue #202](https://github.com/Mottie/tablesorter/issues/202) (again).
-  * Compare `totalRows` vs. `totalPages` when preventing an ajax call.
-  * Changes to make the `updateComplete` event fire, but because of the asynchronous nature of ajax, it fires before any `sortEnd` events. It may take some more work to resolve this, if it becomes a concern.
-  * Attempted to fix pager row count issue. See [issue #455](https://github.com/Mottie/tablesorter/issues/455).
-
-* Miscellaneous
-  * Pager custom controls (beta) now shows no pages on a single page. Fixes [issue #518](https://github.com/Mottie/tablesorter/issues/518)
-  * Increase Bootstrap 3 theme css specificity. See [issue #515](https://github.com/Mottie/tablesorter/issues/515)
-  * Checkbox parser no longer causes a js error when a checkbox doesn't exist.
-
-#### <a name="v2.15.5">Version 2.15.5</a> (2/23/2014)
-
-* Pager widget now initializes properly when using ajax. Fixes [issue #510](https://github.com/Mottie/tablesorter/issues/510).
