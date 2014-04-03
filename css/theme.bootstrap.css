@@ -41,14 +41,18 @@
 }
 
 /* since bootstrap (table-striped) uses nth-child(), we just use this to add a zebra stripe color */
-.tablesorter-bootstrap > tbody > tr.odd > td {
+.tablesorter-bootstrap > tbody > tr.odd > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
 	background-color: #f9f9f9;
 }
 .tablesorter-bootstrap > tbody > tr.odd:hover > td,
-.tablesorter-bootstrap > tbody > tr.even:hover > td {
+.tablesorter-bootstrap > tbody > tr.even:hover > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.even:hover ~ .tablesorter-childRow.even > td {
 	background-color: #f5f5f5;
 }
-.tablesorter-bootstrap > tbody > tr.even > td {
+.tablesorter-bootstrap > tbody > tr.even > td,
+.tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.even:hover ~ tr.tablesorter-hasChildRow.even ~ .tablesorter-childRow.even > td {
 	background-color: #fff;
 }
 
