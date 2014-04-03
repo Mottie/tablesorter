@@ -584,12 +584,20 @@ ts.filter = {
 
 		// reset button/link
 		if (wo.filter_reset) {
-			$(document)
-			.undelegate(wo.filter_reset, 'click.tsfilter')
-			.delegate(wo.filter_reset, 'click.tsfilter', function() {
-				// trigger a reset event, so other functions (filterFormatter) know when to reset
-				c.$table.trigger('filterReset');
-			});
+			if (wo.filter_reset instanceof $) {
+				// reset contains a jQuery object, bind to it
+				wo.filter_reset.click(function(){
+					c.$table.trigger('filterReset');
+				});
+			} else if ($(wo.filter_reset).length) {
+				// reset is a jQuery selector, use event delegation
+				$(document)
+				.undelegate(wo.filter_reset, 'click.tsfilter')
+				.delegate(wo.filter_reset, 'click.tsfilter', function() {
+					// trigger a reset event, so other functions (filterFormatter) know when to reset
+					c.$table.trigger('filterReset');
+				});
+			}
 		}
 		if (wo.filter_functions) {
 			// column = column # (string)

@@ -2210,13 +2210,15 @@ $(function(){
 
 			<tr id="widget-filter-reset">
 				<td><a href="#" class="permalink">filter_reset</a></td>
-				<td>String</td>
+				<td>String, jQuery object</td>
 				<td>null</td>
 				<td>
-					Filter widget: jQuery selector string of an element used to reset the filters (v2.4).
+					Filter widget: jQuery selector string of an element used to reset the filters (v2.4; <span class="version updated">v2.16</span>).
 					<div class="collapsible">
 					<p>
-					To use this option, point to a reset button or link using a jQuery selector. For example, add this button (<code>&lt;button class="reset"&gt;Reset&lt;/button&gt;</code>) to the table header, or anywhere else on the page. That element will be used as a reset for all column and quick search filters (clears all fields):
+					When this option points to a reset element using a jQuery selector string, it is bound using <a href="http://api.jquery.com/on/#direct-and-delegated-events">event delegation</a>. So if any additional reset elements, with the same class name, are added to the page dynamically, they will be associated with the same table.<br>
+					<br>
+					For example, add this button (<code>&lt;button class="reset"&gt;Reset&lt;/button&gt;</code>) to the table header, or anywhere else on the page. That element will be used as a reset for all column and quick search filters (clears all fields):
 					</p>
 					Use the <a href="#widget-filter-reset"><code>filter_reset</code></a> option as follows:
 					<pre class="prettyprint lang-js">$(function(){
@@ -2226,7 +2228,11 @@ $(function(){
       filter_reset : '.reset'
     }
   });
-});</pre></div>
+});</pre>
+					If this option contains a jQuery object (<span class="version">v2.16</span>), clicking on any of the elements within that jQuery object will trigger a filter reset. If any additional elements with the same selector are added to the page, they will not be dynamically functional.<br>
+					<br>
+					If either of these methods do not work as desired, simply trigger a <a href="#filterreset"><code>filterReset</code> event</a> on the table.
+					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
 			</tr>
@@ -3678,11 +3684,13 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 					<div class="collapsible"><br>
 						If you are using the <code>filter_formatter</code> option to add custom input elements, this function may not work on those columns. Please refer to the <code>filter_formatter</code> section for more details.
 						<pre class="prettyprint lang-js">$(function(){
-  // this is the same code that the <code>filter_reset</code> element runs to clear out the filters.
+  // this is the same code that the "filter_reset" element runs to clear out the filters.
   $('button').click(function(){
     $('table').trigger('filterReset');
     return false;
-});</pre></div>
+});</pre>
+					This method is used by the <a href="#widget-filter-reset"><code>filter_reset</code> option</a> when defined.
+					</div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
