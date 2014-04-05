@@ -62,9 +62,17 @@ tr.group-header.collapsed td i {
 	<script src="../js/parsers/parser-input-select.js"></script>
 	<script src="../js/widgets/widget-grouping.js"></script>
 
+	<script>
+	$(function(){
+		$('.options').tablesorter({
+			widgets: [ "stickyHeaders" ]
+		});
+	});
+	</script>
+
 	<script id="js">$(function(){
 
-	$(".tablesorter").tablesorter({
+	$("#groups").tablesorter({
 		theme : "blue",
 		headers: {
 			0: { sorter: "checkbox" },
@@ -134,7 +142,7 @@ tr.group-header.collapsed td i {
 	<p></p>
 	<br>
 
-	<div class="accordion">
+	<div id="root" class="accordion">
 
 		<h3><a href="#">Notes</a></h3>
 		<div>
@@ -161,89 +169,103 @@ tr.group-header.collapsed td i {
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h3>Group widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
-			<table class="tablesorter-blue">
+			<div class="tip">
+				<span class="label label-info">TIP!</span> Click on the link in the option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="tablesorter-blue options">
 				<thead>
 					<tr><th>Option</th><th>Default</th><th>Description</th></tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>group_collapsible</td>
+					<tr id="group_collapsible">
+						<td><span class="permalink">group_collapsible</span></td>
 						<td><code>true</code></td>
 						<td>
 							when <code>true</code>, the group headers become clickable and collapse the rows below it.
 						</td>
 					</tr>
-					<tr>
-						<td>group_collapsed</td>
+					<tr id="group_collapsed">
+						<td><span class="permalink">group_collapsed</span></td>
 						<td><code>false</code></td>
 						<td>
 							when <code>true</code> and <code>group_collapsible</code> is also <code>true</code>, all groups will start collapsed (<span class="version">v2.11</span>)
 						</td>
 					</tr>
-					<tr>
-						<td>group_saveGroups</td>
+					<tr id="group_savegroups">
+						<td><a href="#" class="permalink">group_saveGroups</a></td>
 						<td><code>true</code></td>
 						<td>Remember collapsed groups (<span class="version">v2.15.6</span>)
+							<div class="collapsible">
 							<ul>
 								<li>This option saves the currently collapsed groups, using the group name.</li>
 								<li>Collapsed groups are saved by column and group class name, so that the groups can be dynamically changed and still remember the correct collapsed groups. Try changing the group names (using the sliders) in the demo below &amp; then collapsing some groups several times; go back to previous groups and it will remember which groups were collapsed.</li>
 								<li>Because the group name is saved, groups with a number range (e.g. "group-number-10"; see the "Numeric" column below) will show a different range depending on sort direction; in this situation, each sort direction is saved independently.</li>
 								<li>This option requires the <code>$.tablesorter.storage</code> utility contained within the <code>jquery.tablesorter.widgets.js</code> file.</li>
 							</ul>
+							</div>
 						</td>
 					</tr>
-					<tr>
-						<td>group_saveReset</td>
+					<tr id="group_savereset">
+						<td><a href="#" class="permalink">group_saveReset</a></td>
 						<td><code>null</code></td>
 						<td>Element used to clear saved collapsed groups (<span class="version">v2.15.6</span>)
+							<div class="collapsible">
 							<ul>
 								<li>This option should contain a jQuery selector string or jQuery object pointing to an element to be used to reset (clear) the list of collapsed groups.</li>
 								<li>You can also clear the saved collapsed groups by calling this function: <code>$.tablesorter.grouping.clearSavedGroups(table);</code> (table would be either the table DOM or table jQuery object).</li>
 								<li>This option requires the <code>$.tablesorter.storage</code> utility contained within the <code>jquery.tablesorter.widgets.js</code> file.</li>
 							</ul>
+							</div>
 						</td>
 					</tr>
-					<tr>
-						<td>group_count</td>
+					<tr id="group_count">
+						<td><span class="permalink">group_count</span></td>
 						<td><code>&quot; ({num})&quot;</code></td>
 						<td>
 							Allows you to add custom formatting, or remove, the group count within the group header. Set it to <code>false</code> or an empty string to remove the count.
 						</td>
 					</tr>
-					<tr>
-						<td>group_separator</td>
+					<tr id="group_separator">
+						<td><a href="#" class="permalink">group_separator</a></td>
 						<td><code>&quot;-&quot;</code></td>
 						<td>
 							When the <code>group-separator</code> class name is added, it uses the setting from this option to split the table cell content for grouping <span class="version">v2.13</span>.<br>
+							<div class="collapsible">
 							<br>
 							If your content has mixed separators (e.g. <code>images/cats/burger-time.jpg</code>), you can set this option to use a regular expression:
 							<pre class="prettyprint lang-js">// the above example becomes: ["images", "cats", "burger-time", "jpg"]
 group_separator : /[/.]/</pre>
+							</div>
 						</td>
 					</tr>
-					<tr>
-						<td>group_formatter</td>
+					<tr id="group_formatter">
+						<td><a href="#" class="permalink">group_formatter</a></td>
 						<td><code>null</code></td>
 						<td>
-							Use this function to modify the group header text before it gets applied. It provides various parameters (<code>txt, col, table, c, wo</code>) to make it work for any of the table columns and data. See the comments in the example below for more details.
+							Use this function to modify the group header text before it gets applied.
+							<div class="collapsible">
+								<br>
+								It provides various parameters (<code>txt, col, table, c, wo</code>) to make it work for any of the table columns and data. See the comments in the example below for more details.
 							<ul>
 								<li><code>txt</code> - current text of the group header.</li>
 								<li><code>col</code> - current table column being grouped (zero-based index).</li>
 								<li><code>table</code> - current table (DOM).</li>
-								<li><code>c</code> - table data from <code>table.config</code>.</li>
+								<li><code>c</code> - table configuration data from <code>table.config</code>.</li>
 								<li><code>wo</code> - table widget options from <code>table.config.widgetOptions</code>.</li>
 							</ul>
 							<pre class="prettyprint lang-js">group_formatter : function(txt, col, table, c, wo) {
   // If there are empty cells, name the group "Empty"
   return txt === "" ? "Empty" : txt;
 }</pre>
+							</div>
 						</td>
 					</tr>
-					<tr>
-						<td>group_callback</td>
+					<tr id="group_callback">
+						<td><a href="#" class="permalink">group_callback</a></td>
 						<td><code>null</code></td>
 						<td>
 							Use this function to further modify the group header to include more information (i.e. group totals). Parameters include (<code>$cell, $rows, column, table</code>). See the example below for more details <span class="version">v2.12</span>.
+							<div class="collapsible">
 							<ul>
 								<li><code>$cell</code> - current group header table cell (jQuery object).</li>
 								<li><code>$rows</code> - current group rows (jQuery object).</li>
@@ -253,23 +275,26 @@ group_separator : /[/.]/</pre>
 							<pre class="prettyprint lang-js">group_callback : function($cell, $rows, column, table){
   $cell.find('.group-name').append(' group'); // adds "group" to the end of the group name
 }</pre>
+							</div>
 						</td>
 					</tr>
-					<tr>
-						<td>group_complete</td>
+					<tr id="group_complete">
+						<td><a href="#" class="permalink">group_complete</a></td>
 						<td><code>&quot;groupingComplete&quot;</code></td>
 						<td>
 							Event triggered on the table when the grouping widget has finished work <span class="version">v2.12</span>.
+							<div class="collapsible">
 							<pre class="prettyprint lang-js">$('table').on('groupingComplete', function(){
   // always hide empty groups ("Empty" can be added by the group_formatter function)
   $(this).find('.group-header:contains("Empty")').trigger('toggleGroup');
 });</pre>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
+					<tr id="group_months">
 						<td>
-							group_months<br>
+							<a href="#" class="permalink">group_months</a><br>
 							group_week<br>
 							group_time
 						</td>
@@ -283,16 +308,18 @@ group_separator : /[/.]/</pre>
 							</ul>
 						</td>
 					</tr>
-					<tr>
-						<td>group_dateString</td>
+					<tr id="group_datestring">
+						<td><a href="#" class="permalink">group_dateString</a></td>
 						<td>(see description)</td>
 						<td>
 						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string. This is the default function:
+						<div class="collapsible">
 						<pre class="prettyprint lang-js">// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
 group_dateString : function(date) {
   return date.toLocaleString();
 }</pre>
 							Other functions that can be used are <code>date</code> (alone), <code>date.toLocaleString()</code>, <code>date.toLocaleDateString()</code> or <code>d.toLocaleTimeString()</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter">this reference</a> for more details.
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -332,7 +359,7 @@ group_dateString : function(date) {
 <span class="demo-label">Date column:</span> <div id="slider2"></div> <span class="dateclass"></span>
 <br><br>
 <button class="group_reset">Reset Saved Collapsed Groups</button>
-<div id="demo"><table class="tablesorter">
+<div id="demo"><table id="groups">
 	<thead>
 		<tr>
 			<th class="group-word"></th> <!-- checkbox status -->
@@ -420,16 +447,16 @@ group_dateString : function(date) {
 			step: 10,
 			create: function(){
 				$('.numberclass').html(' "group-number-' + startBlock + '"');
-				$('.tablesorter-header-inner:eq(' + numcol + ')').find('span').html(startBlock);
+				$('#groups .tablesorter-header-inner:eq(' + numcol + ')').find('span').html(startBlock);
 			},
 			slide: function( event, ui ) {
-				$('.tablesorter')[0].config.$headers.eq(numcol)
+				$('#groups')[0].config.$headers.eq(numcol)
 					.attr('class', function(i,v){
 						return v.replace(/group-number-\d+/, 'group-number-' + ui.value);
 					})
 					.trigger('sorton', [ [[numcol,0]] ]);
 				$('.numberclass').html(' "group-number-' + ui.value + '"');
-				$('.tablesorter-header-inner:eq(' + numcol + ')').find('span').html(ui.value);
+				$('#groups .tablesorter-header-inner:eq(' + numcol + ')').find('span').html(ui.value);
 			}
 		});
 		// animal (letter) column slider
@@ -440,16 +467,16 @@ group_dateString : function(date) {
 			step: 1,
 			create: function(){
 				$('.animalclass').html(' "group-letter-' + startVal + '"');
-				$('.tablesorter-header-inner:eq(' + letcol + ')').find('span').html(startVal === 1 ? 'letter' : startVal + ' letters');
+				$('#groups .tablesorter-header-inner:eq(' + letcol + ')').find('span').html(startVal === 1 ? 'letter' : startVal + ' letters');
 			},
 			slide: function( event, ui ) {
-				$('.tablesorter')[0].config.$headers.eq(letcol)
+				$('#groups')[0].config.$headers.eq(letcol)
 					.attr('class', function(i,v){
 						return v.replace(/group-letter-\d+/, 'group-letter-' + ui.value);
 					})
 					.trigger('sorton', [ [[letcol,0]] ]);
 				$('.animalclass').html(' "group-letter-' + ui.value + '"');
-				$('.tablesorter-header-inner:eq(' + letcol + ')').find('span').html(ui.value === 1 ? 'letter' : ui.value + ' letters');
+				$('#groups .tablesorter-header-inner:eq(' + letcol + ')').find('span').html(ui.value === 1 ? 'letter' : ui.value + ' letters');
 			}
 		});
 		// date column slider
@@ -460,16 +487,16 @@ group_dateString : function(date) {
 			step: 1,
 			create: function(){
 				$('.dateclass').html(' "group-date' + (curGroup > 0 ? '-' + dateGroups[curGroup] : '') + '"');
-				$('.tablesorter-header-inner:eq(' + datecol + ')').find('span').html(curGroup === 0 ? 'full' : dateGroups[curGroup]);
+				$('#groups .tablesorter-header-inner:eq(' + datecol + ')').find('span').html(curGroup === 0 ? 'full' : dateGroups[curGroup]);
 			},
 			slide: function( event, ui ) {
-				$('.tablesorter')[0].config.$headers.eq(datecol)
+				$('#groups')[0].config.$headers.eq(datecol)
 					.attr('class', function(i,v){
 						return v.replace(/group-date(-\w+)?/, 'group-date' + (ui.value > 0 ? '-' + dateGroups[ui.value] : ''));
 					})
 					.trigger('sorton', [ [[datecol,0]] ]);
 				$('.dateclass').html(' "group-date' + (ui.value > 0 ? '-' + dateGroups[ui.value] : '') + '"');
-				$('.tablesorter-header-inner:eq(' + datecol + ')').find('span').html(ui.value === 0 ? 'full' : dateGroups[ui.value]);
+				$('#groups .tablesorter-header-inner:eq(' + datecol + ')').find('span').html(ui.value === 0 ? 'full' : dateGroups[ui.value]);
 			}
 		});
 

@@ -139,10 +139,10 @@
 	});
 
 	function showProperty(){
-		var prop, $t, h = window.location.hash;
+		var prop, $t, wo, h = window.location.hash;
 		if (h) {
 			prop = $(h);
-			if (prop.length && !/a|table/i.test(prop[0].tagName)) {
+			if (prop.length && !/h3|a|table/i.test(prop[0].tagName)) {
 				prop.find('.collapsible').show();
 				if (h === '#csschildrow') {
 					$('#root .tablesorter-childRow').show();
@@ -150,9 +150,12 @@
 				// move below sticky header; added delay as there could be some lag
 				setTimeout(function(){
 					$t = prop.closest('table');
-					h = $t[0].config.widgetOptions.$sticky.height() || 27;
-					if ($t.hasClass('options') || $t.hasClass('api')) {
-						$('body').scrollTop( prop.position().top - h );
+					if ($t.length) {
+						wo = $t[0].config.widgetOptions;
+						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || 27;
+						if ($t.hasClass('options') || $t.hasClass('api')) {
+							$('body').scrollTop( prop.offset().top - h );
+						}
 					}
 				}, 200);
 			}
