@@ -486,8 +486,10 @@ tsp = ts.pager = {
 				}
 				l = d.length;
 				if (d instanceof jQuery) {
-					// append jQuery object
-					c.$tbodies.eq(0).empty().append(d);
+					if (wo.pager_processAjaxOnInit) {
+						// append jQuery object
+						c.$tbodies.eq(0).empty().append(d);
+					}
 				} else if (l) {
 					// build table from array
 					for ( i = 0; i < l; i++ ) {
@@ -501,10 +503,9 @@ tsp = ts.pager = {
 					// add rows to first tbody
 					if (wo.pager_processAjaxOnInit) {
 						c.$tbodies.eq(0).html( tds );
-					} else {
-						wo.pager_processAjaxOnInit = true;
 					}
 				}
+				wo.pager_processAjaxOnInit = true;
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
 					hsh = $t.hasClass('hasStickyHeaders');
