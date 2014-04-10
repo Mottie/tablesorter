@@ -1165,6 +1165,11 @@
 				$h = $t.find('thead:first'),
 				$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
 				$f = $t.find('tfoot:first > tr').children('th, td');
+				if (removeClasses === false && $.inArray('uitheme', c.widgets) >= 0) {
+					// reapply uitheme classes, in case we want to maintain appearance
+					$t.trigger('applyWidgetId', ['uitheme']);
+					$t.trigger('applyWidgetId', ['zebra']);
+				}
 				// remove widget added rows, just in case
 				$h.find('tr').not($r).remove();
 				// disable tablesorter
@@ -1173,12 +1178,12 @@
 					.unbind('sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd '.split(' ').join(c.namespace + ' '));
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
-					.removeAttr('data-column');
+					.removeAttr('data-column')
+					.removeAttr('aria-label')
+					.attr('aria-disabled', 'true');
 				$r.find(c.selectorSort).unbind('mousedown mouseup keypress '.split(' ').join(c.namespace + ' '));
 				ts.restoreHeaders(table);
-				if (removeClasses !== false) {
-					$t.removeClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme);
-				}
+				$t.toggleClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false);
 				// clear flag in case the plugin is initialized again
 				table.hasInitialized = false;
 				if (typeof callback === 'function') {

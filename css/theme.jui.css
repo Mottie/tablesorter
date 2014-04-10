@@ -12,8 +12,10 @@
 }
 
 /* header */
-.tablesorter-jui th,
-.tablesorter-jui thead td {
+.tablesorter-jui thead th,
+.tablesorter-jui thead td,
+.tablesorter-jui tfoot th,
+.tablesorter-jui tfoot td {
 	position: relative;
 	background-repeat: no-repeat;
 	background-position: right center;
@@ -21,12 +23,12 @@
 	font-weight: bold !important;
 	border-width: 1px !important;
 	text-align: left;
+	padding: 8px; /* wider than the icon */
 }
 .tablesorter-jui .header,
 .tablesorter-jui .tablesorter-header {
 	cursor: pointer;
 	white-space: normal;
-	padding: 8px; /* wider than the icon */
 }
 .tablesorter-jui .tablesorter-header-inner {
 	padding-right: 20px;

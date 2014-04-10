@@ -5,7 +5,8 @@
 .tablesorter-bootstrap {
 	width: 100%;
 }
-.tablesorter-bootstrap .tablesorter-header,
+.tablesorter-bootstrap thead th,
+.tablesorter-bootstrap thead td,
 .tablesorter-bootstrap tfoot th,
 .tablesorter-bootstrap tfoot td {
 	font: bold 14px/20px Arial, Sans-serif;
