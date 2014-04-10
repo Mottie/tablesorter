@@ -47,6 +47,26 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.15.14">Version 2.15.14</a> (4/10/2014)
+
+* Modified `bower.json` to allow "read-components" compatibility. See [PR #573](https://github.com/Mottie/tablesorter/pull/573)
+* Corrected docs:
+  * Filter-external doc error. Fixes [issue #571](https://github.com/Mottie/tablesorter/issues/571)
+  * Added pager `ajaxProcessing` documentation about extra values available for the output. Fixes [issue #576](https://github.com/Mottie/tablesorter/issues/576).
+  * Grouping widget demo update (now uses collapsible table for options)
+* Core: Destroy method update
+  * When including a `false` parameter with the destroy method, class names will be left intact as before. But this now includes the reapplying of the uitheme and zebra widgets.
+
+      ```js
+      $("table").trigger("destroy", [false]);
+      ```
+
+  * This change will maintain the table's appearance.
+  * See this [Stackoverflow question](http://stackoverflow.com/q/22969340/145346) for why this change was made.
+* Grouping widget: group name now saves after callback. Fixes [issue #514](https://github.com/Mottie/tablesorter/issues/514).
+* Pager `processAjaxOnInit` now works with jQuery objects. Fixes [issue #572](https://github.com/Mottie/tablesorter/issues/572).
+* Filter widget: `getFilters` will not cause a js error when it targets a non-tablesorter table.
+
 #### <a name="v2.15.13">Version 2.15.13</a> (4/3/2014)
 
 * Core:
@@ -87,7 +107,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 #### <a name="v2.15.10">Version 2.15.10</a> (3/13/2014)
 
 * Fix `numberSorter` option causing a javascript error &amp; added test.
-
-#### <a name="v2.15.9">Version 2.15.9</a> (3/12/2014)
-
-* jQuery UI Filter formatter scripts work again (broken since adding unique namespaces in v2.15.7).
