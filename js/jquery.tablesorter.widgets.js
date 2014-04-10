@@ -1102,7 +1102,7 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 	var i, $filters, $column,
 		filters = false,
 		c = table ? $(table)[0].config : '',
-		wo = table ? c.widgetOptions : '';
+		wo = c ? c.widgetOptions : '';
 	if (getRaw !== true && wo && !wo.filter_columnFilters) {
 		return $(table).data('lastSearch');
 	}
