@@ -1235,7 +1235,8 @@ ts.addWidget({
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
 		// include caption & filter row (fixes #126 & #249) - don't remove cells to get correct cell indexing
-		$stickyTable.find('thead:gt(0), tr.sticky-false, tbody, tfoot').hide();
+		$stickyTable.find('thead:gt(0), tr.sticky-false').hide();
+		$stickyTable.find('tbody, tfoot').remove();
 		if (!wo.stickyHeaders_includeCaption) {
 			$stickyTable.find('caption').remove();
 		} else {
