@@ -594,6 +594,7 @@
 			p.$container.hide(); // hide pager
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
+			delete table.config.rowsCopy;
 			$(table).unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');

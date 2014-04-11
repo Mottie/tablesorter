@@ -785,6 +785,7 @@ tsp = ts.pager = {
 		p.$container.hide(); // hide pager
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
+		delete table.config.rowsCopy;
 		c.$table.unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');

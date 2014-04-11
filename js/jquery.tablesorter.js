@@ -1186,6 +1186,7 @@
 				$t.toggleClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false);
 				// clear flag in case the plugin is initialized again
 				table.hasInitialized = false;
+				delete table.config.cache;
 				if (typeof callback === 'function') {
 					callback(table);
 				}
