@@ -902,7 +902,7 @@ ts.filter = {
 					// checked here so the option can be changed dynamically
 					childRowText = (childRow.length && wo.filter_childRows) ? childRow.text() : '';
 					childRowText = wo.filter_ignoreCase ? childRowText.toLocaleLowerCase() : childRowText;
-					$cells = $rows.eq(rowIndex).children('td');
+					$cells = $rows.eq(rowIndex).children();
 
 					if (anyMatch) {
 						rowArray = $cells.map(function(i){
