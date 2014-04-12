@@ -1019,24 +1019,26 @@ ts.filter = {
 		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters,
 			c = table.config,
 			wo = c.widgetOptions,
-			$tbodies = c.$tbodies,
+			$tbodies = c.$table.children('tbody'),
 			arry = [],
 			node = c.$headers.filter('[data-column="' + column + '"]:last'),
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || '' ) + '</option>';
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
-			len = c.cache[tbodyIndex].row.length;
-			// loop through the rows
-			for (rowIndex = 0; rowIndex < len; rowIndex++) {
-				// check if has class filtered
-				if (onlyavail && c.cache[tbodyIndex].row[rowIndex][0].className.match(wo.filter_filteredRow)) { continue; }
-				// get non-normalized cell content
-				if (wo.filter_useParsedData) {
-					arry.push( '' + c.cache[tbodyIndex].normalized[rowIndex][column] );
-				} else {
-					node = c.cache[tbodyIndex].row[rowIndex][0].cells[column];
-					if (node) {
-						arry.push( $.trim( node.textContent || node.innerText || $(node).text() ) );
+			if (!$tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock)) {
+				len = c.cache[tbodyIndex].row.length;
+				// loop through the rows
+				for (rowIndex = 0; rowIndex < len; rowIndex++) {
+					// check if has class filtered
+					if (onlyavail && c.cache[tbodyIndex].row[rowIndex][0].className.match(wo.filter_filteredRow)) { continue; }
+					// get non-normalized cell content
+					if (wo.filter_useParsedData) {
+						arry.push( '' + c.cache[tbodyIndex].normalized[rowIndex][column] );
+					} else {
+						node = c.cache[tbodyIndex].row[rowIndex][0].cells[column];
+						if (node) {
+							arry.push( $.trim( node.textContent || node.innerText || $(node).text() ) );
+						}
 					}
 				}
 			}
