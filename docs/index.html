@@ -4916,6 +4916,28 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 				</td>
 			</tr>
 
+			<tr id="function-computecolumnindex">
+				<td><a href="#" class="permalink">computeColumnIndex</a></td>
+				<td>Adds the correct <code>data-column</code> indexing to all rows passed to this function (<span class="version">v2.16</span>).
+					<div class="collapsible"><br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.computeColumnIndex($rows);</pre>
+						<ul>
+							<li><code>$rows</code> - jQuery object of rows in which to add data-column indexes</li>
+						</ul>
+						Example result:<pre class="prettyprint lang-html">&lt;tr&gt;
+	&lt;td colspan=&quot;2&quot; data-column=&quot;0&quot;&gt;r0c0&lt;/td&gt;
+	&lt;td data-column=&quot;2&quot;&gt;r0c2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+	&lt;td data-column=&quot;0&quot;&gt;r1c0&lt;/td&gt;
+	&lt;td data-column=&quot;1&quot;&gt;r1c1&lt;/td&gt;
+	&lt;td data-column=&quot;2&quot;&gt;r1c2&lt;/td&gt;
+&lt;/tr&gt;</pre>
+					</div>
+				</td>
+			</tr>
+
 			<tr id="function-showError">
 				<td><a href="#" class="permalink">showError</a></td>
 				<td>This function allows adding/removing a row to the thead, to display any errors <span class="version">v2.15</span>

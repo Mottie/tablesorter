@@ -386,52 +386,6 @@
 				}
 			}
 
-			// computeTableHeaderCellIndexes from:
-			// http://www.javascripttoolbox.com/lib/table/examples.php
-			// http://www.javascripttoolbox.com/temp/table_cellindex.html
-			function computeThIndexes(t) {
-				var matrix = [],
-				lookup = {},
-				cols = 0, // determine the number of columns
-				trs = $(t).children('thead, tfoot').children('tr'), // children tr in tfoot - see issue #196 & #547
-				i, j, k, l, c, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
-				for (i = 0; i < trs.length; i++) {
-					cells = trs[i].cells;
-					for (j = 0; j < cells.length; j++) {
-						c = cells[j];
-						rowIndex = c.parentNode.rowIndex;
-						cellId = rowIndex + "-" + $(c).index();
-						rowSpan = c.rowSpan || 1;
-						colSpan = c.colSpan || 1;
-						if (typeof(matrix[rowIndex]) === "undefined") {
-							matrix[rowIndex] = [];
-						}
-						// Find first available column in the first row
-						for (k = 0; k < matrix[rowIndex].length + 1; k++) {
-							if (typeof(matrix[rowIndex][k]) === "undefined") {
-								firstAvailCol = k;
-								break;
-							}
-						}
-						lookup[cellId] = firstAvailCol;
-						cols = Math.max(firstAvailCol, cols);
-						// add data-column
-						$(c).attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
-						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
-							if (typeof(matrix[k]) === "undefined") {
-								matrix[k] = [];
-							}
-							matrixrow = matrix[k];
-							for (l = firstAvailCol; l < firstAvailCol + colSpan; l++) {
-								matrixrow[l] = "x";
-							}
-						}
-					}
-				}
-				// may not be accurate if # header columns !== # tbody columns
-				t.config.columns = cols + 1; // add one because it's a zero-based index
-			}
-
 			function formatSortingOrder(v) {
 				// look for "d" in "desc" order; return true
 				return (/^d/i.test(v) || v === 1);
@@ -446,7 +400,8 @@
 				if (c.debug) {
 					time = new Date();
 				}
-				computeThIndexes(table);
+				// children tr in tfoot - see issue #196 & #547
+				c.columns = ts.computeColumnIndex( c.$table.children('thead, tfoot').children('tr') );
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
 				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
@@ -828,15 +783,16 @@
 					// get position from the dom
 					var l, row, icell,
 					$tb = $table.find('tbody'),
+					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
-					tbdy = $tb.index( $(cell).parents('tbody').filter(':first') ),
-					$row = $(cell).parents('tr').filter(':first');
-					cell = $(cell)[0]; // in case cell is a jQuery object
+					tbdy = $tb.index( $cell.parents('tbody').filter(':first') ),
+					$row = $cell.parents('tr').filter(':first');
+					cell = $cell[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
 						row = $tb.eq(tbdy).find('tr').index( $row );
-						icell = $(cell).index();
+						icell = $cell.index();
 						l = c.cache[tbdy].normalized[row].length - 1;
 						c.cache[tbdy].row[ c.cache[tbdy].normalized[row][l] ] = $row;
 						c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
@@ -1055,6 +1011,53 @@
 				}
 				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
+			};
+
+
+			// computeTableHeaderCellIndexes from:
+			// http://www.javascripttoolbox.com/lib/table/examples.php
+			// http://www.javascripttoolbox.com/temp/table_cellindex.html
+			ts.computeColumnIndex = function(trs) {
+				var matrix = [],
+				lookup = {},
+				cols = 0, // determine the number of columns
+				i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
+				for (i = 0; i < trs.length; i++) {
+					cells = trs[i].cells;
+					for (j = 0; j < cells.length; j++) {
+						cell = cells[j];
+						$cell = $(cell);
+						rowIndex = cell.parentNode.rowIndex;
+						cellId = rowIndex + "-" + $cell.index();
+						rowSpan = cell.rowSpan || 1;
+						colSpan = cell.colSpan || 1;
+						if (typeof(matrix[rowIndex]) === "undefined") {
+							matrix[rowIndex] = [];
+						}
+						// Find first available column in the first row
+						for (k = 0; k < matrix[rowIndex].length + 1; k++) {
+							if (typeof(matrix[rowIndex][k]) === "undefined") {
+								firstAvailCol = k;
+								break;
+							}
+						}
+						lookup[cellId] = firstAvailCol;
+						cols = Math.max(firstAvailCol, cols);
+						// add data-column
+						$cell.attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
+						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
+							if (typeof(matrix[k]) === "undefined") {
+								matrix[k] = [];
+							}
+							matrixrow = matrix[k];
+							for (l = firstAvailCol; l < firstAvailCol + colSpan; l++) {
+								matrixrow[l] = "x";
+							}
+						}
+					}
+				}
+				// may not be accurate if # header columns !== # tbody columns
+				return cols + 1; // add one because it's a zero-based index
 			};
 
 			// *** Process table ***
