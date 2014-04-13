@@ -173,7 +173,7 @@
 
 	// append hidden parsed value to cell
 	// used by feet-inch-fraction & metric parser demos
-	var addParsedValues = function($t, cols, format){
+	window.addParsedValues = function($t, cols, format){
 		var r,
 			$r = $t.find('tbody tr'),
 			c = $t[0].config.cache[0].normalized;
