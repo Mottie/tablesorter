@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Table Reflow Widget (beta)</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<style>
+	/* override bootstrap link colors */
+	.ui-widget-content a {
+		color: #428BCA;
+	}
+	.ui-widget-content a:hover {
+		text-decoration: underline;
+	}
+	/*** column selector custom css only popup ***/
+	.columnSelectorWrapper {
+		position: relative;
+		margin: 10px 0;
+		display: inline-block;
+	}
+	.columnSelector, .hidden {
+		display: none;
+	}
+	.columnSelectorButton {
+		background: #99bfe6;
+		border: #888 1px solid;
+		color: #111;
+		border-radius: 5px;
+		padding: 5px;
+	}
+	#colSelect1:checked + label {
+		background: #5797d7;
+		border-color: #555;
+	}
+	#colSelect1:checked ~ #columnSelector {
+		display: block;
+	}
+	.columnSelector {
+		width: 120px;
+		position: absolute;
+		top: 30px;
+		padding: 10px;
+		background: #fff;
+		border: #99bfe6 1px solid;
+		border-radius: 5px;
+	}
+	.columnSelector label {
+		display: block;
+	}
+	.columnSelector label:nth-child(1) {
+		border-bottom: #99bfe6 solid 1px;
+		margin-bottom: 5px;
+	}
+	.columnSelector input {
+		margin-right: 5px;
+	}
+	.columnSelector .disabled {
+		color: #ddd;
+	}
+	</style>
+	<script src="../js/widgets/widget-columnSelector.js"></script>
+
+	<style>
+	/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+	@media ( max-width: 35em ) {
+		.ui-table-reflow td,
+		.ui-table-reflow th {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			float: right;
+			/* if not using the stickyHeaders widget (not the css3 version)
+			 * the "!important" flag, and "height: auto" can be removed */
+			width: 100% !important;
+			height: auto !important;
+		}
+		/* reflow widget */
+		.ui-table-reflow tbody td[data-title]:before {
+			color: #469;
+			font-size: .9em;
+			content: attr(data-title);
+			float: left;
+			width: 50%;
+			white-space: pre-wrap;
+			text-align: bottom;
+			display: inline-block;
+		}
+		/* reflow2 widget */
+		table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+			display: block;
+			padding: .4em 0;
+			margin: .4em 0;
+			text-transform: uppercase;
+			font-size: .9em;
+			font-weight: 400;
+		}
+		table.ui-table-reflow .ui-table-cell-label {
+			padding: .4em;
+			min-width: 30%;
+			display: inline-block;
+			margin: -.4em 1em -.4em -.4em;
+		}
+	}
+	.ui-table-reflow .ui-table-cell-label {
+		display: none;
+	}
+	</style>
+	<script src="../js/widgets/widget-reflow.js"></script>
+	<script id="js">$(function() {
+
+	// simple reflow widget (table with 1 header row)
+	$("#table1").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow'],
+		widgetOptions : {
+			// class name added to make it responsive (class name within media query)
+			reflow_className    : 'ui-table-reflow',
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name',
+			// data attribute added to each tbody cell
+			// it contains the header cell text, visible upon reflow
+			reflow_dataAttrib   : 'data-title'
+		}
+	});
+
+	// simple reflow widget + columnSelector & stickyHeaders widgets
+	$("#table2").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow', 'columnSelector', 'stickyHeaders'],
+		widgetOptions : {
+			// target the column selector markup
+			columnSelector_container : $('#columnSelector'),
+			// data attribute containing column name to use in the selector container
+			// make it use the same as reflow_headerAttrib
+			columnSelector_name : 'data-name',
+
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name'
+		}
+	});
+
+	// reflow2 widget (table with multiple header rows)
+	$("#table3").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow2'],
+		widgetOptions: {
+			// class name added to make it responsive (class name within media query)
+			reflow2_className    : 'ui-table-reflow',
+			// ignore header cell content with this class name
+			reflow2_classIgnore  : 'ui-table-reflow-ignore',
+			// header attribute containing modified header name
+			reflow2_headerAttrib : 'data-name',
+			// class name applied to thead labels
+			reflow2_labelClass   : 'ui-table-cell-label',
+			// class name applied to first row thead label
+			reflow2_labelTop     : 'ui-table-cell-label-top'
+		}
+	});
+
+});</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Table Reflow Widget (beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+		<ul>
+			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
+			<li>The <strong>required css</strong>, shown below, is needed to make this widget work, but is completely customizable.</li>
+			<li>This demo sets the reflow breakpoint to 35em; so you'll need to resize your browser window to see this widget in action.</li>
+			<li>This widget is compatible with the column selector widget; but please note:
+				<ul>
+					<li>When a column is hidden, it will not show up when the table reflow occurs</li>
+					<li>For an example, see the second demo "Reflow + columnSelector widget" below.</li>
+					<li>The column selector widget, by default, has an additional breakpoint at "30em". So if the column selector is set to "Auto" and you continue to reduce the browser width after the table reflows, you'll see "Geometry" row disappear.</li>
+				</ul>
+			</li>
+			<li>It may not have been necessary to create two versions of this widget, but it was done because:
+				<ul>
+					<li>The first "reflow" widget does not add additional content to the tbody table cells, but it did not work well when attempting to add multiple content rows within the data-attribute. It would work if the css explicitly has the content set with a break like this (<a href="http://www.w3.org/TR/CSS2/generate.html#x18">ref</a>):
+						<pre class="prettyprint lang-css">content: "row1 \A row2";</pre>
+						But sadly, this method does not work when a data-attribute with the same content is used:
+						<pre class="prettyprint lang-css">content: attr(data-title);</pre>
+						The second method ignores the backslash and shows <code>"row1 \A row2"</code>
+					</li>
+					<li><span class="label label-info">Update</span>: After some discussion in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=988694">bugzilla</a>, I discovered that it is possible to add multiple lines of content usigin a data-attribute by setting a <code>white-space: pre;</code> css definition and using <code>&amp;#10</code> instead of <code>\A</code> (<a href="http://jsfiddle.net/96pwE/5/">demo</a>), but I think I'll keep the second reflow version because it actually allows styling.</li>
+					<li>Adding bold elements to every table tbody cell is the method used by jQuery Mobile; so, a second reflow widget "reflow2" was created to do the same, and work properly with a thead containing multiple rows.</li>
+				</ul>
+			</li>
+			<li>
+				If you do not want the sortable headers to show when the table reflows, include this css within the media query:<br>
+				<br>
+				<pre class="prettyprint lang-css">table.ui-table-reflow thead { display: none; }</pre>
+			</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Reflow Widget</a></h3>
+		<div>
+			<ul>
+				<li>This version adds a <code>data-title</code> attribute (modifiable by the <code>reflow_dataAttrib</code> option), to every table body cell.</li>
+				<li>The required css shows the contents of this data-attribute when the browser width reaches the set break point.</li>
+				<li>So, this widget does not add any additional content to the table cells; which might be preferred if the table content should not be changed.</li>
+				<li>Do not use this version of the widget for a table with more than one header row.</li>
+			</ul>
+
+			<h4>Reflow widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<table class="tablesorter-blue">
+				<thead>
+					<tr><th>Option</th><th>Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr class="odd">
+						<td>reflow_className</td>
+						<td>
+							This class name is added to the table to make it responsive. The class name is the same as that used by <a href="http://demos.jquerymobile.com/1.4.2/table-reflow/">jQuery Mobile</a>.<br>
+							<br>
+							<pre class="prettyprint lang-html">&lt;table class=&quot;tablesorter tablesorter-blue ui-table-reflow&quot;&gt;...&lt;/table&gt;</pre>
+							<br>
+							Default value: <code>&quot;ui-table-reflow&quot;</code>
+						</td>
+					</tr>
+					<tr>
+						<td>reflow_headerAttrib</td>
+						<td>
+							Set this option to use your desired data-attribute. The set data-attribute contains the alternative header title added to every table body cell when the table reflows.<br>
+							<br>
+							For example, the "Sex" column below is renamed to "Gender" within the reflow cells:
+							<pre class="prettyprint lang-html">&lt;th data-name=&quot;Gender&quot;&gt;Sex&lt;/th&gt;</pre>
+							<br>
+							Default value: <code>&quot;data-name&quot;</code>
+						</td>
+					</tr>
+					<tr class="odd">
+						<td>reflow_dataAttrib</td>
+						<td>
+							Set this option to use your desired data-attribute which is added to every table body cell. It will contain the header name which is shown once the table reflows.<br>
+							<br>
+							For example, all of table body cells will show the contents from the set data-attribute when the table reflows:
+							<pre class="prettyprint lang-html">&lt;td data-title=&quot;Gender&quot;&gt;female&lt;/td&gt;</pre>
+							<br>
+							Default value: <code>&quot;data-title&quot;</code>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<h3><a href="#">Reflow2 Widget</a></h3>
+		<div>
+			<ul>
+				<li>This version of the reflow widget adds a bold element (<code>&lt;b&gt;</code>), containing the header cell name, to every table body cell.</li>
+				<li>The required css shows these elements when the browser width reaches the set break point.</li>
+				<li>Use this version of the widget for a table with <strong>more than one</strong> header row.</li>
+				<li>So, this widget does add additional content to the table tbody cells; this might not be preferred if the table content should not be changed.</li>
+				<li>If an update occurs, this widget will remove all cell elements, and replace them, even if the headers have changed.</li>
+				<li>In very large tables, initialization of the table may be slightly delayed.</li>
+			</ul>
+
+			<h4>Reflow2 widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<table class="tablesorter-blue">
+				<thead>
+					<tr><th>Option</th><th>Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr class="odd">
+						<td>reflow2_className</td>
+						<td>
+							This class name is added to the table to make it responsive. The class name is the same as that used by <a href="http://demos.jquerymobile.com/1.4.2/table-reflow/">jQuery Mobile</a>.<br>
+							<br>
+							<pre class="prettyprint lang-html">&lt;table class=&quot;tablesorter tablesorter-blue ui-table-reflow&quot;&gt;...&lt;/table&gt;</pre>
+							<br>
+							Default value: <code>&quot;ui-table-reflow&quot;</code>
+						</td>
+					</tr>
+					<tr>
+						<td>reflow2_classIgnore</td>
+						<td>
+							Set this option to use your desired class name. Any header cell with this class name will have it's contents ignored.<br>
+							<br>
+							For example, this is the "Paris" header cell in table3 below:
+							<pre class="prettyprint lang-html">&lt;th class="ui-table-reflow-ignore sorter-false"&gt;Paris&lt;/th&gt;</pre>
+							<br>
+							Default value: <code>&quot;ui-table-reflow-ignore&quot;</code>
+						</td>
+					</tr>
+					<tr class="odd">
+						<td>reflow2_headerAttrib</td>
+						<td>
+							Set this option to use your desired data-attribute. The set data-attribute contains the alternative header title added to every table body cell when the table reflows.<br>
+							<br>
+							For example, the "Sex" column below is renamed to "Gender" within the reflow cells:
+							<pre class="prettyprint lang-html">&lt;th data-name=&quot;Gender&quot;&gt;Sex&lt;/th&gt;</pre>
+							<br>
+							Default value: <code>&quot;data-name&quot;</code>
+						</td>
+					</tr>
+					<tr>
+						<td>reflow2_labelClass</td>
+						<td>
+							Set this option to use your desired class name.<br>
+							<br>
+							When the table reflows, the bold element (<code>&lt;b&gt;</code>) with this class name will be revealed; it must also be defined within the media query to display this element as an "inline-block", so it shares the row with the cell content
+							<h4>CSS</h4>
+							<pre class="prettyprint lang-css">/* additional selectors needed to increase css specificity */
+table.ui-table-reflow .ui-table-cell-label {
+  padding: .4em;
+  min-width: 30%;
+  display: inline-block;
+  margin: -.4em 1em -.4em -.4em;
+}</pre>
+							<h4>HTML</h4>
+							<pre class="prettyprint lang-html">&lt;th&gt;
+	&lt;b class="remove-me ui-table-cell-label"&gt;Month&lt;/b&gt;
+	Jaunuary
+&lt;/th&gt;</pre>
+							<br>
+							Default value: <code>&quot;ui-table-cell-label&quot;</code>
+						</td>
+					</tr>
+					<tr class="odd">
+						<td>reflow2_labelTop</td>
+						<td>
+							Set this option to use your desired class name.<br>
+							<br>
+							When the table reflows, the all upper header cell content is also included in every corresponding column table cell within a bold element (<code>&lt;b&gt;</code>); it must also be defined within the media query to display this element as a "block"
+							<h4>CSS</h4>
+							<pre class="prettyprint lang-css">/* additional selectors needed to increase css specificity */
+table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+  display: block;
+  padding: .4em 0;
+  margin: .4em 0;
+  text-transform: uppercase;
+  font-size: .9em;
+  font-weight: 400;
+}</pre>
+							<h4>HTML</h4>
+							<pre class="prettyprint lang-html">&lt;td&gt;
+	&lt;b class="remove-me ui-table-cell-label ui-table-cell-label-top"&gt;Average Temperatures (C)&lt;/b&gt;
+	&lt;b class="remove-me ui-table-cell-label">Minimum Temp&lt;/b&gt;
+	3
+&lt;/td&gt;
+</pre>
+							<br>
+							Default value: <code>&quot;ui-table-cell-label-top&quot;</code>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+
+		<h3><a href="#">Required CSS</a></h3>
+		<div>
+			The reflow widgets require the following css to hide/show header cell content within each table cell. Remove the css for whichever reflow widget that is not being used, as desired.<br>
+			<br>
+			<pre class="prettyprint lang-css">/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+@media ( max-width: 35em ) {
+
+	/* uncomment out the line below if you don't want the sortable headers to show */
+	/* table.ui-table-reflow thead { display: none; } */
+
+	/* css for reflow & reflow2 widgets */
+	.ui-table-reflow td,
+	.ui-table-reflow th {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		float: right;
+		/* if not using the stickyHeaders widget (not the css3 version)
+		 * the "!important" flag, and "height: auto" can be removed */
+		width: 100% !important;
+		height: auto !important;
+	}
+
+	/* reflow widget only */
+	.ui-table-reflow tbody td[data-title]:before {
+		color: #469;
+		font-size: .9em;
+		content: attr(data-title);
+		float: left;
+		width: 50%;
+		white-space: pre-wrap;
+		text-align: bottom;
+		display: inline-block;
+	}
+
+	/* reflow2 widget only */
+	table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+		display: block;
+		padding: .4em 0;
+		margin: .4em 0;
+		text-transform: uppercase;
+		font-size: .9em;
+		font-weight: 400;
+	}
+	table.ui-table-reflow .ui-table-cell-label {
+		padding: .4em;
+		min-width: 30%;
+		display: inline-block;
+		margin: -.4em 1em -.4em -.4em;
+	}
+
+} /* end media query */
+
+/* reflow2 widget */
+.ui-table-reflow .ui-table-cell-label {
+	display: none;
+}</pre>
+		</div>
+
+	</div>
+
+	</p>
+
+<h1>Demo <small>(Resize the browser window)</small></h1>
+
+<div id="demo"><h3>Reflow widget only</h3>
+
+<table id="table1">
+	<thead>
+		<tr>
+			<th>Rank</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>1</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2013 7:22 AM</td></tr>
+		<tr><td>11</td><td>12</td><td>$82.99</td><td>5%</td><td>Aug 21, 2013 12:21 PM</td></tr>
+		<tr><td>12</td><td>51</td><td>$99.29</td><td>18%</td><td>Oct 13, 2013 1:15 PM</td></tr>
+		<tr><td>51</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2013 8:14 AM</td></tr>
+		<tr><td>21</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2012 5:14 AM</td></tr>
+		<tr><td>013</td><td>18</td><td>$65.89</td><td>45%</td><td>Jan 12, 2013 11:14 AM</td></tr>
+		<tr><td>005</td><td>45</td><td>$153.19</td><td>45%</td><td>Jan 18, 2014 9:12 AM</td></tr>
+		<tr><td>10</td><td>3</td><td>$5.29</td><td>4%</td><td>Jan 8, 2013 5:11 PM</td></tr>
+		<tr><td>16</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2014 11:23 AM</td></tr>
+		<tr><td>66</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2013 9:12 AM</td></tr>
+		<tr><td>100</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2013 7:23 PM</td></tr>
+		<tr><td>55</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2014 1:12 PM</td></tr>
+		<tr><td>9</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2013 10:55 AM</td></tr>
+		<tr><td>13</td><td>12</td><td>$19.99</td><td>18%</td><td>Jan 20, 2014 7:45 PM</td></tr>
+		<tr><td>73</td><td>58</td><td>$129.19</td><td>39%</td><td>Jan 20, 2014 10:11 AM</td></tr>
+	</tbody>
+</table>
+
+<h3>Reflow + columnSelector widget</h3>
+<!-- This selector markup is completely customizable -->
+<div class="columnSelectorWrapper">
+	<input id="colSelect1" type="checkbox" class="hidden">
+	<label class="columnSelectorButton" for="colSelect1">Column</label>
+	<div id="columnSelector" class="columnSelector">
+		<!-- this div is where the column selector is added -->
+	</div>
+</div> (When "Auto" is set, the table becomes responsive; resize the browser window to see it work)
+
+<table id="table2">
+	<thead>
+		<tr>
+			<th data-priority="critical">Name</th>
+			<th data-priority="critical">Major</th>
+			<th data-priority="6" data-name="Gender">Sex</th>
+			<th data-priority="4">English</th>
+			<th data-priority="5">Japanese</th>
+			<th data-priority="3">Calculus</th>
+			<th data-priority="2">Geometry</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
+	</tfoot>
+	<tbody>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td></tr>
+		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td></tr>
+		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td></tr>
+		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td></tr>
+		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td></tr>
+		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td></tr>
+		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td></tr>
+		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td></tr>
+		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td></tr>
+		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td></tr>
+		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td></tr>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td></tr>
+		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td></tr>
+		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td></tr>
+		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td></tr>
+	</tbody>
+</table>
+
+<h3>Reflow2 widget (multiple thead rows)</h3>
+<table id="table3">
+	<thead>
+		<tr>
+			<th class="ui-table-reflow-ignore sorter-false">Paris</th>
+			<th colspan="2">Average Temperatures (C)</th>
+			<th colspan="2">Average Rainfall</th>
+		</tr>
+		<tr>
+			<th>Month</th>
+			<th>Minimum Temp</th>
+			<th>Maximum Temp</th>
+			<th>Precipitaion (mm)</th>
+			<th>Rainfall Days</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><th>Jaunuary</th><td>3</td><td>8</td><td>17.8</td><td>10</td></tr>
+		<tr><th>February</th><td>2</td><td>9</td><td>21.7</td><td>9</td></tr>
+		<tr><th>March</th><td>4</td><td>13</td><td>24.2</td><td>10</td></tr>
+		<tr><th>April</th><td>6</td><td>15</td><td>24.6</td><td>11</td></tr>
+		<tr><th>May</th><td>10</td><td>20</td><td>26.2</td><td>10</td></tr>
+		<tr><th>June</th><td>13</td><td>23</td><td>25.1</td><td>9</td></tr>
+		<tr><th>July</th><td>15</td><td>25</td><td>21.7</td><td>7</td></tr>
+		<tr><th>August</th><td>15</td><td>25</td><td>21.4</td><td>7</td></tr>
+		<tr><th>September</th><td>11</td><td>21</td><td>15.6</td><td>8</td></tr>
+		<tr><th>October</th><td>9</td><td>17</td><td>25.3</td><td>11</td></tr>
+		<tr><th>November</th><td>5</td><td>11</td><td>22.4</td><td>12</td></tr>
+		<tr><th>December</th><td>3</td><td>8</td><td>26.6</td><td>12</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-js"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
