@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Math Widget (beta)</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<script src="../js/widgets/widget-math.js"></script>
+
+	<style>
+	#table2 th:nth-child(1) { width: 300px; }
+	.align-decimal { width: 85px; display:inline-block; text-align: right; }
+	.tablesorter-blue tbody th, .tablesorter-blue tfoot th {
+		font-family: 'trebuchet ms', verdana, arial;
+		font-size: 13px;
+		font-weight: normal;
+		background-color: #ddd;
+		text-shadow: none;
+	}
+	</style>
+	<script>
+	$(function(){
+		$('.options').tablesorter({
+			widthFixed: true,
+			widgets: [ "stickyHeaders" ]
+		});
+	});
+	</script>
+
+	<script id="js">$(function() {
+
+	// * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	// Demo #1 - Basic Functionality
+	// * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	// call the tablesorter plugin and assign widgets with id "zebra" (Default widget in the core) and the newly created "repeatHeaders"
+	$('#table1').tablesorter({
+		theme: 'blue',
+		delayInit: true,
+		widgets: ['zebra', 'filter', 'math'],
+		widgetOptions: {
+			math_data     : 'math', // data-math attribute
+			math_ignore   : [0, 1],
+			math_mask     : '#,##0.00',
+			math_complete : function($cell, wo, result, value, arry) {
+				var txt = '<span class="align-decimal">$ ' + result + '</span>';
+				if ($cell.attr('data-math') === 'all-sum') {
+					// when the "all-sum" is processed, add a count to the end
+					return txt + ' (' + arry.length + ')';
+				}
+				return txt;
+			}
+		}
+	});
+
+	// * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	// Demo #2 - Default & Custom equations
+	// * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	// adding a custom equation... named "custom"
+	// access from data-math="row-custom" (or "above-custom", or "col-custom")
+	$.tablesorter.equations['custom'] = function(arry) {
+		// (a+b+c)*d - (e/f)*100
+		return (arry[0] + arry[1] + arry[2]) * arry[3] - (arry[4]/arry[5]) * 100;
+	};
+
+	// adding a custom equation... named "product"
+	// access from data-math="row-product" (or "above-product", or "col-product")
+	$.tablesorter.equations['product'] = function(arry) {
+		// multiple all array values together
+		var product = 1;
+		$.each(arry, function(i,v){
+			// oops, we shouldn't have any zero values in the array
+			if (v !== 0) {
+				product *= v;
+			}
+		});
+		return product;
+	};
+
+	// Add expected results to the cell
+	var resultIndex = 0,
+		expectedResults = [ 6, 100, 60, 5, 20, 4, 2, "1 & 2", 8, 2.25, 1.5, 2.7, 1.64, 150, 1200 ],
+		resultLen = expectedResults.length;
+
+	$('#table2').tablesorter({
+		theme: 'blue',
+		delayInit: true,
+		widgets: ['zebra', 'math'],
+		widgetOptions: {
+			math_data     : 'math', // data-math attribute
+			math_ignore   : [0],
+			math_mask     : '#,##0.##',
+			math_complete : function($cell, wo, result) {
+				var txt = result + ' (<span class="results">' + expectedResults[resultIndex++ % resultLen] + '</span>)';
+				// mode will return an array if there is a tie
+				return $.isArray(result) ? 'Tie: ' + txt : txt;
+			}
+		}
+	});
+
+});</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Math Widget (beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+		<ul>
+			<li>This widget will <strong>only work</strong> in tablesorter version 2.16+ and jQuery version 1.7+.</li>
+			<li>It adds basic math capabilities. A full list of default formulas is listed in the "Attribute Settings" section.</li>
+			<li>Add your own custom formulas which manipulating an array of values gathered from the table by row, column or a column block (above).</li>
+			<li>This is by no means a comprehensive widget that performs like a spreadsheet, but you can customize the data gathering "type" and available "formula", as desired.</li>
+			<li>The widget will update the calculations based on filtered rows, and will update if any data within the table changes (using update events).</li>
+			<li>This widget is not optimized for very large tables, for two reasons:
+				<ul>
+					<li>On initialization, it cycles through every table row, calculates the column index, and adds a <code>data-column</code> attribute.</li>
+					<li>It uses the update method whenever it recalculates values to make the results sortable. This occurs when any of the update methods are used and after the table is filtered.</li>
+				</ul>
+			</li>
+			<li>When setting tablesorter's <code>debug</code> option to <code>true</code>, this widget will output each <code>{type}-{formula}</code> value found, the array of numbers used and the result.</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h3>Math widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
+			<div class="tip">
+				<span class="label label-info">TIP!</span> Click on the link in the option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="tablesorter-blue options">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th>Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="math_data">
+						<td><span class="permalink">math_data</span></td>
+						<td><code>'math'</code></td>
+						<td>
+							Set this option to point to the named data-attribute. For example, when set to <code>'math'</code>, the widget looks for settings within the <code>data-math</code> attribute.
+						</td>
+					</tr>
+
+					<tr id="math_ignore">
+						<td><a href="#" class="permalink">math_ignore</a></td>
+						<td><code>[ ]</code></td>
+						<td>
+							Set this option the column index of columns of data to ignore.
+							<div class="collapsible">
+							<br>
+							To ignore the first and second columns in a table, set this option using zero-based column indexs as follows:
+							<pre class="prettyprint lang-js">// column index(es) to ignore
+math_ignore : [0,1]</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_mask">
+						<td><a href="#" class="permalink">math_mask</a></td>
+						<td><code>'#,##0.00'</code></td>
+						<td>
+							Set this option with an output formatting mask to use <sup class="remark">*</sup>
+							<div class="collapsible">
+							<h3>Features</h3>
+							<ul>
+								<li>Short, fast, flexible yet standalone. Only 75 lines including MIT license info, blank lines & comments.</li>
+								<li>Accept standard number formatting like <code>#,##0.00</code> or with negation <code>-000.####</code>.</li>
+								<li>Accept any country format like <code># ##0,00</code>, <code>#,###.##</code>, <code>#'###.##</code> or any type of non-numbering symbol.</li>
+								<li>Accept any numbers of digit grouping. <code>#,##,#0.000</code> or <code>#,###0.##</code> are all valid.</li>
+								<li>Accept any redundant/fool-proof formatting. <code>##,###,##.#</code> or <code>0#,#00#.###0#</code> are all OK.</li>
+								<li>Auto number rounding.</li>
+								<li>Simple interface, just supply mask & value like this: <code>$.tablesorter.formatMask( "0.0000", 3.141592 )</code></li>
+							</ul>
+							<h3>Limitation</h3>
+							<ul>
+								<li>No prefix or suffix is allowed except leading negation symbol. So <code>$#,##0.00</code> or <code>#,###.##USD</code> will not yield expected outcome. Use <code>'$'+ $.tablesorter.formatMask('#,##0.00', 123.45)</code> or <code>$.tablesorter.formatMask('#,##0.00', 456.789) + 'USD'</code></li>
+								<li>No scientific/engineering formatting.</li>
+								<li>Not for date or phone formation.</li>
+								<li>No color control.</li>
+							</ul>
+							<h3>Note</h3>
+							<ul>
+								<li>When there's only one symbol is supplied, system will always treat the single symbol as Decimal. For instance, <code>$.tablesorter.formatMask( '#,###', 1234567.890)</code> will output <code>1234567,890</code>.</li>
+								<li>To force a single symbol as Separator, add a trailing dot to the end like this: <code>$.tablesorter.formatMask( '#,###.', 1234567.890)</code> which will then output <code>1,234,567</code>.</li>
+								<li><a href="http://www.integraxor.com/developer/codes/js-formatter/format-sample.htm">Original plugin demo</a></li>
+							</ul>
+							<span class="remark">*</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>).
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_complete">
+						<td><a href="#" class="permalink">math_complete</a></td>
+						<td><code>null</code></td>
+						<td>
+							This function is called after each calculation is made to allow re-formatting, adding prefixes, suffixes, etc to the result.
+							<div class="collapsible">
+							<br>
+							Use this option as follows:
+							<pre class="prettyprint lang-js">// complete executed after each function
+math_complete : function($cell, wo, result, value, arry){
+    return '$ ' + result + $cell.attr('data-suffix');
+}</pre>
+							<ul>
+								<li><code>$cell</code> - the target cell (jQuery object)</li>
+								<li><code>wo</code> - tablesorter's widget options (from <code>table.config.widgetOptions</code>).</li>
+								<li><code>result</code> - the formatted result of the calculation.</li>
+								<li><code>value</code> - an unformatted result of the calculation.</li>
+								<li><code>arry</code> - the array of values gathered by the widget.</li>
+							</ul>
+							In this function, if a anything is returned, it will be automatically added to the <code>$cell</code> as html. Or, return <code>false</code> and no change is made to the cell contents; use this method if you manipulate the <code>$cell</code> contents and don't want the widget to do it.<br>
+							<br>
+							If you need to format the data output after manipulating the <code>value</code>, you can use <code>wo.math_mask</code>, or a different mask, by using the <code>$.tablesorter.formatMask( mask, value );</code> function. For example:
+							<pre class="prettyprint lang-js">math_complete : function($cell, wo, result, value, arry){
+    var percent = Math.round( value * 1e4 ) / 100; // percent with two decimal places
+    return $.tablesorter.formatMask( wo.math_mask, percent ) + ' %';
+}</pre>
+							More details can be found in the <code>math_mask</code> description.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_priority">
+						<td><a href="#" class="permalink">math_priority</a></td>
+						<td><code>[ 'row', 'above', 'col' ]'</code></td>
+						<td>
+							This is the order of calculations.
+							<div class="collapsible">
+							<ul>
+								<li>By default, the widget cycles through the calculated cells as follows:
+									<ul>
+										<li>Search all non-informational tbodies for <code>data-math</code> table cells (data-attribute set by <code>math_data</code> option).</li>
+										<li>Cycle through these cells by priority: row, above, col (set by this option).</li>
+										<li>Search all informational tbodies, and <code>tfoot</code> for <code>data-math</code> table cells.</li>
+										<li>Cycle through these cells by priority: row, above, col (set by this option).</li>
+										<li>Search the entire table for <code>data-math</code> cells of the "all" type.</li>
+									</ul>
+								</li>
+								<li>So, all row calculations are made first, followed by "above" calculations then "col" (column) calculations.</li>
+								<li>The "all" type calculations are always performed last, and therefore the type is not included in this list.</li>
+								<li>Change this order if the order of calculations needs to be made column first, followed by rows.</li>
+								<li>For more details about the differences between "col" and "above" types, see the next section.</li>
+							</ul>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<h3><a href="#">Attribute Settings</a></h3>
+		<div>
+			The math widget data-attibute setting requires two parts: type &amp; formula
+			<pre class="prettyprint lang-html">&lt;td data-math="{type}-{formula}"&gt;&lt;/td&gt;</pre>
+			When set, the data is gathered based on the math type ("row", "column", "above" or "all") and passed to the formula as an array.
+			<h3><code>{type}</code> (data gathering)</h3>
+			<ul>
+				<li><code>row</code> - gather the table cell values from the same row as the <code>data-math</code> attribute.</li>
+				<li><code>above</code> - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the first table cell is reached, or when another cell with a data-attribute with an "above" type is reached; see the first table demo below to see why this is useful.</li>
+				<li><code>col</code> - gather the table cell values from the same column as the <code>data-math</code> attribute.</li>
+				<li><code>all</code> - gather all table cell values with a data-math attribute that start with "all".</li>
+			</ul>
+			<h3><code>{formula}</code> (defaults)</h3>
+			<ul>
+				<li><code>count</code> - returns the count (length) of the data set.</li>
+				<li><code>sum</code> - returns the sum of all values in the data set.</li>
+				<li><code>max</code> - returns the maximum value in the data set.</li>
+				<li><code>min</code> - returns the minimum values in the data set.</li>
+				<li><code>mean</code> - returns the mean (average) of all values in the data set; it uses the <code>sum</code> formula in part of the calculation.</li>
+				<li><code>median</code> - returns the median (middle value) of the data set.</li>
+				<li><code>mode</code> - returns an array of the mode(s) (most frequent value or values) in the data set; an array is always returned, even if only one mode exists (see the second demo below).</li>
+				<li><code>range</code> - returns the range (highest minus lowest value) of the data set.</li>
+				<li><code>varp</code> - returns the variance of the data set (population).</li>
+				<li><code>vars</code> - returns the variance of the data set (sample).</li>
+				<li><code>stdevp</code> - returns the standard deviation of the data set (population).</li>
+				<li><code>stdevs</code> - returns the standard deviation of the data set (sample).</li>
+				<li><code>custom</code> (not a default)
+					<ul>
+						<li>Custom formulas can have any name</li>
+						<li>Return your result after making whatever calculation from the array of data passed to the formula</li>
+						<li>For example:
+							<pre class="prettyprint lang-js">// adding a custom equation... named "product"
+// access from data-math="row-product" (or "above-product", or "col-product")
+$.tablesorter.equations['product'] = function(arry) {
+    // multiple all array values together
+    var product = 1;
+    $.each(arry, function(i,v){
+        // oops, we shouldn't have any zero values in the array
+        if (v !== 0) {
+            product *= v;
+        }
+    });
+    return product;
+};</pre>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<h4>Ignoring cells</h4>
+			<ul>
+				<li>Entire row: if the <code>&lt;tr&gt;</code> math data-attribute contains the keyword <code>"ignore"</code> then that entire row of cells will be skipped when building the array of data to be used for calculations.
+				<pre class="prettyprint lang-html">&lt;tr data-math=&quot;ignore&quot;&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;</pre>
+				</li>
+				<li>Cell: if the table cell math data-attribute contains the keyword <code>"ignore"</code> then that cell will be skipped when building the array of data to be used for calculations.
+				<pre class="prettyprint lang-html">&lt;td data-math=&quot;ignore&quot;&gt;1&lt;/td&gt;</pre>
+				</li>
+				<li>Column: set the widget <code>math_ignore</code> option with an array of zero-based column indexes of columns to ignore or skip when building the array of data for calculations.
+				<pre class="prettyprint lang-js">math_ignore : [0,1]</pre>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<p></p>
+
+	<h1>Demo</h1>
+
+<div id="demo"><h3>Row &amp; Column Sums</h3>
+<table id="table1" class="tablesorter">
+	<thead>
+		<tr>
+			<th class="sorter-false filter-select" data-placeholder="Select region">Region</th>
+			<th>Salesman</th>
+			<th>FastCar</th>
+			<th>RapidZoo</th>
+			<th>SuperGlue</th>
+			<th class="filter-false">Grand Total</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th colspan="2">Column Totals</th>
+			<th data-math="col-sum">col-sum</th>
+			<th data-math="col-sum">col-sum</th>
+			<th data-math="col-sum">col-sum</th>
+			<th data-math="col-sum">col-sum</th>
+		</tr>
+		<tr>
+			<th colspan="5">Grand Total</th>
+			<th data-math="all-sum">all-sum</th>
+		</tr>
+	</tfoot>
+
+	<tbody>
+		<tr><th>Middle</th><td>Joseph</td><td>$ 423</td><td>$ 182</td><td>$ 255</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>Middle</th><td>Lawrence</td><td>$ 5,908</td><td>$ 4,642</td><td>$ 4,593</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>Middle</th><td>Maria</td><td>$ 6,502</td><td>$ 3,969</td><td>$ 5,408</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>Middle</th><td>Matt</td><td>$ 4,170</td><td>$ 6,093</td><td>$ 5,039</td><td data-math="row-sum">row-sum</td></tr>
+	</tbody>
+
+	<tbody class="tablesorter-infoOnly">
+		<tr>
+			<th colspan="2">Middle Total</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+		</tr>
+	</tbody>
+
+	<tbody>
+		<tr><th>North</th><td>Joseph</td><td>$ 3,643</td><td>$ 5,846</td><td>$ 6,574</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>North</th><td>Lawrence</td><td>$ 4,456</td><td>$ 6,658</td><td>$ 7,685</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>North</th><td>Maria</td><td>$ 6,235</td><td>$ 4,616.99</td><td>$ 3,612.33</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>North</th><td>Matt</td><td>$ 3,868</td><td>$ 3,926</td><td>$ 3,254</td><td data-math="row-sum">row-sum</td></tr>
+	</tbody>
+
+	<tbody class="tablesorter-infoOnly">
+		<tr>
+			<th colspan="2">North Total</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+		</tr>
+	</tbody>
+
+	<tbody>
+		<tr><th>West</th><td>Joseph</td><td>$ 5,507</td><td>$ 5,186</td><td>$ 4,882</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>West</th><td>Lawrence</td><td>$ 4,082</td><td>$ 5,272</td><td>$ 6,124</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>West</th><td>Maria</td><td>$ 5,520</td><td>$ 5,461</td><td>$ 4,872</td><td data-math="row-sum">row-sum</td></tr>
+		<tr><th>West</th><td>Matt</td><td>$ 6,737</td><td>$ 4,598</td><td>$ 4,233</td><td data-math="row-sum">row-sum</td></tr>
+	</tbody>
+
+	<tbody class="tablesorter-infoOnly">
+		<tr>
+			<th colspan="2">West Total</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+			<th data-math="above-sum">above-sum</th>
+		</tr>
+	</tbody>
+
+</table>
+
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<h3>Math Formulas</h3>
+<table id="table2" class="tablesorter">
+	<thead>
+		<tr><th>Formula</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>Result (expected result)</th></tr>
+	</thead>
+	<tbody class="tablesorter-infoOnly">
+		<tr><th colspan="8">Default Formulas</th></tr>
+	</tbody>
+	<tbody>
+		<tr><td>Count (row-count)</td><td>10</td><td>10</td><td>10</td><td>10</td><td>20</td><td>20</td><td data-math="row-count"></td></tr>
+		<tr><td>Sum (row-sum)</td><td>10</td><td>20</td><td>10</td><td>10</td><td>30</td><td>20</td><td data-math="row-sum"></td></tr>
+		<tr><td>Max (row-max)</td><td>20</td><td>60</td><td>30</td><td>15</td><td>30</td><td>5</td><td data-math="row-max"></td></tr>
+		<tr><td>Min (row-min)</td><td>20</td><td>60</td><td>30</td><td>15</td><td>30</td><td>5</td><td data-math="row-min"></td></tr>
+		<tr><td>Mean (row-mean)</td><td>10</td><td>20</td><td>30</td><td>10</td><td>30</td><td>20</td><td data-math="row-mean"></td></tr>
+		<tr><td>Median (row-median)</td><td>10</td><td>5</td><td>3</td><td>4</td><td>4</td><td>3</td><td data-math="row-median"></td></tr>
+		<tr><td>Mode (row-mode)</td><td>1</td><td>2</td><td>2</td><td>2</td><td>3</td><td>2</td><td data-math="row-mode"></td></tr>
+		<tr><td>Mode (row-mode)</td><td>1</td><td>2</td><td>2</td><td>1</td><td>3</td><td>4</td><td data-math="row-mode"></td></tr>
+		<tr><td>Range (row-range)</td><td>1</td><td>-2</td><td>2</td><td>4</td><td>6</td><td>0</td><td data-math="row-range"></td></tr>
+		<tr><td>Variance [population] (row-varp)</td><td>2</td><td>7</td><td>4</td><td>5</td><td>5</td><td>4</td><td data-math="row-varp"></td></tr>
+		<tr><td>Standard Deviation [population] (row-stdevp)</td><td>2</td><td>7</td><td>4</td><td>5</td><td>5</td><td>4</td><td data-math="row-stdevp"></td></tr>
+		<tr><td>Variance [sample] (row-vars)</td><td>2</td><td>7</td><td>4</td><td>5</td><td>5</td><td>4</td><td data-math="row-vars"></td></tr>
+		<tr><td>Standard Deviation [sample] (row-stdevs)</td><td>2</td><td>7</td><td>4</td><td>5</td><td>5</td><td>4</td><td data-math="row-stdevs"></td></tr>
+	</tbody>
+	<tbody class="tablesorter-infoOnly">
+		<tr><th colspan="8">Custom Formulas</th></tr>
+	</tbody>
+	<tbody>
+		<tr><td>Custom ( (A+B+C)*D - (E/F)*100 )</td><td>5</td><td>2</td><td>3</td><td>20</td><td>1</td><td>2</td><td data-math="row-custom"></td></tr>
+		<tr><td>Product ( A*B*C*D*E*F )</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>10</td><td data-math="row-product"></td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
+
