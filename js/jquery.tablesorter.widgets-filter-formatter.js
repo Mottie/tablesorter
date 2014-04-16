@@ -645,12 +645,13 @@ tsff = ts.filterFormatter = {
 				} else if (v.match('<=')) {
 					closeTo( v.replace('<=', '') );
 				}
-			});
+			}),
 
 		// make sure we're using parsed dates in the search
-		$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
+		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// Add date range picker
-		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" /><label>' + o.textTo + '</label><input type="text" class="dateTo" />';
+		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" placeholder="' + ($hdr.attr('data-placeholder-from') || '') + '" />' +
+			'<label>' + o.textTo + '</label><input type="text" class="dateTo" placeholder="' + ($hdr.attr('data-placeholder-to') || '') + '" />';
 		$(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
