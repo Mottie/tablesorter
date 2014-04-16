@@ -360,6 +360,7 @@ ts.addWidget({
 		filter_ignoreCase    : true,  // if true, make all searches case-insensitive
 		filter_liveSearch    : true,  // if true, search column content while the user types (with a delay)
 		filter_onlyAvail     : 'filter-onlyAvail', // a header with a select dropdown & this class name will only show available (visible) options within the drop down
+		filter_placeholder   : { search : '', select : '' }, // default placeholder text (overridden by any header "data-placeholder" setting)
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
 		filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
@@ -612,7 +613,7 @@ ts.filter = {
 						for (string in wo.filter_functions[column]) {
 							if (typeof string === 'string') {
 								options += options === '' ?
-									'<option value="">' + ($header.data('placeholder') || $header.attr('data-placeholder') ||  '') + '</option>' : '';
+									'<option value="">' + ($header.data('placeholder') || $header.attr('data-placeholder') || wo.filter_placeholder.select || '') + '</option>' : '';
 								options += '<option value="' + string + '">' + string + '</option>';
 							}
 						}
@@ -723,7 +724,7 @@ ts.filter = {
 					buildFilter = $('<input type="search">').appendTo( c.$filters.eq(column) );
 				}
 				if (buildFilter) {
-					buildFilter.attr('placeholder', $header.data('placeholder') || $header.attr('data-placeholder') || '');
+					buildFilter.attr('placeholder', $header.data('placeholder') || $header.attr('data-placeholder') || wo.filter_placeholder.search || '');
 				}
 			}
 			if (buildFilter) {
@@ -733,7 +734,7 @@ ts.filter = {
 					wo.filter_cssFilter ) || '';
 				buildFilter.addClass( ts.css.filter + ' ' + name ).attr('data-column', column);
 				if (disabled) {
-					buildFilter.addClass('disabled')[0].disabled = true; // disabled!
+					buildFilter.attr('placeholder', '').addClass('disabled')[0].disabled = true; // disabled!
 				}
 			}
 		}
@@ -1031,7 +1032,7 @@ ts.filter = {
 			arry = [],
 			node = c.$headers.filter('[data-column="' + column + '"]:last'),
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
-			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || '' ) + '</option>';
+			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>';
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if (!$tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock)) {
 				len = c.cache[tbodyIndex].row.length;

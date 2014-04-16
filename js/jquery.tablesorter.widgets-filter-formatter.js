@@ -20,6 +20,7 @@ var ts = $.tablesorter || {},
 // compare option selector class name (jQuery selector)
 compareSelect = '.compare-select',
 
+
 tsff = ts.filterFormatter = {
 
 	addCompare: function($cell, indx, options){
@@ -539,7 +540,7 @@ tsff = ts.filterFormatter = {
 
 		// Add date range picker
 		t = '<input type="text" class="date date' + indx + '" placeholder="' +
-			($hdr.data('placeholder') || $hdr.attr('data-placeholder') || '') + '" />';
+			($hdr.data('placeholder') || $hdr.attr('data-placeholder') || c.widgetOptions.filter_placeholder.search || '') + '" />';
 		$date = $(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks
@@ -650,8 +651,10 @@ tsff = ts.filterFormatter = {
 		// make sure we're using parsed dates in the search
 		$hdr = $cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');
 		// Add date range picker
-		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" placeholder="' + ($hdr.attr('data-placeholder-from') || '') + '" />' +
-			'<label>' + o.textTo + '</label><input type="text" class="dateTo" placeholder="' + ($hdr.attr('data-placeholder-to') || '') + '" />';
+		t = '<label>' + o.textFrom + '</label><input type="text" class="dateFrom" placeholder="' +
+			($hdr.data('placeholderFrom') || $hdr.attr('data-placeholder-from') || c.widgetOptions.filter_placeholder.from || '') + '" />' +
+			'<label>' + o.textTo + '</label><input type="text" class="dateTo" placeholder="' +
+			($hdr.data('placeholderTo') || $hdr.attr('data-placeholder-to') || c.widgetOptions.filter_placeholder.to || '') + '" />';
 		$(t).appendTo($cell);
 
 		// add callbacks; preserve added callbacks

@@ -1555,6 +1555,8 @@ $(function(){
       filter_liveSearch    : true,
       // a selector in a header with this class name will only show selected options in the drop down
       filter_onlyAvail     : 'filter-onlyAvail',
+      // default placeholder text (overridden by any header "data-placeholder" setting)
+      filter_placeholder   : { search : '', select : '' }, 
       // jQuery selector string of an element used to reset the filters.
       filter_reset         : null,
       // Use the $.tablesorter.storage utility to save the most recent filters
@@ -2215,6 +2217,36 @@ $(function(){
 					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-placeholder">
+				<td><a href="#" class="permalink">filter_placeholder</a></td>
+				<td>object</td>
+				<td>{ search : '', select : '' }</td>
+				<td>
+					Filter widget: Set global filter input placeholder text for search inputs and selects (<span class="version">v2.16</span>).
+					<div class="collapsible">
+					<br>
+					Any search type input added to the filter row will automatically get a placeholder attribute added, the source of this placeholder text is from the following sources, in order of priority:
+					<ul>
+						<li>Header cell data (<code>table.config.$headers.eq(0).data('placeholder', 'search for...');</code></li>
+						<li>Header cell data-attribute (<code>&lt;th data-placeholder="Find Rank..."&gt;Rank&lt;/th&gt;</code>)</li>
+						<li>Global <code>filter_placeholder.search</code> setting.</li>
+					</ul>
+					The <code>filter_placeholder.select</code> setting adds the text to the first select option (default option to show all rows).<br>
+					<br>
+					<span class="label label-info">Note:</span> The <code>jquery.tablesorter.widgets-filter-formatter.js</code> jQuery UI Datepicker Range Selector creates two inputs, so this option then includes two additional settings:<br>
+					<br>
+					<pre class="prettyprint lang-js">filter_placeholder : {
+	search : '',
+	select : '',
+	from   : '', // datepicker range "from" placeholder
+	to     : ''  // datepicker range "to" placeholder
+}
+</pre><span class="label label-info">Note:</span> The browser must support the <a href="http://caniuse.com/#feat=input-placeholder">placeholder attribute</a> before it will be visible.
+					</div>
+				</td>
+				<td><a href="example-widget-filter-formatter-1.html">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-reset">

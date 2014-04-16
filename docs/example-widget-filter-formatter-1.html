@@ -155,6 +155,12 @@
 						changeYear : true
 					});
 				}
+			},
+
+			// added v2.16
+			filter_placeholder : {
+				from : 'From...',
+				to   : 'To...'
 			}
 		}
 	});
@@ -178,7 +184,8 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In version <span class="version">v2.15.0</span> the following changes were made:
+				<li>In version <span class="version">v2.16.0</span>, the <code>filter_placeholder</code> option was added. See the jQuery UI Datepicker Range Selector section for more details.</li>
+				<li>In version <span class="version">v2.15.0</span>, the following changes were made:
 					<ul>
 						<li>These updated filter widget functions are not completely backward compatible with older versions of the filter widget. Please update both!</li>
 						<li>Added <code>compare</code> &amp; <code>selected</code> options:
@@ -450,6 +457,19 @@
 		<h3><a href="#"><strong>jQuery UI Datepicker Range Selector</strong></a> <span class="xsmall">("Date (two inputs)" column)</span></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.16.0</span>, a <code>filter_placeholder</code> option was added:
+					<ul>
+						<li>The option adds a search input placeholder and select (first option) text, but it also includes placeholder text for both the "from" and "to" inputs</li>
+						<li>Set it as follows:
+							<pre class="prettyprint lang-js">filter_placeholder : {
+	search : '', // any default search inputs including the datepicker comparison
+	from   : 'Date from...', // datepicker range "from" placeholder
+	to     : 'Date to...'  // datepicker range "to" placeholder
+}
+</pre></li>
+						<li><span class="label label-info">Note</span> The browser must support the <a href="http://caniuse.com/#feat=input-placeholder">placeholder attribute</a> before this text will be visible.</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.15.0</span>, an <code>endOfDay</code> option was added, which when <code>true</code> and searching within one day, all times within that selected day will be included - try searching for <button data-column="5" data-value="1/20/2014 - 1/20/2014">1/20/2014 - 1/20/2014</button> to note that the day include various times.<br></li>
 				<li>This example shows how you can add a jQuery UI Datepicker range to filter column content.</li>
 				<li>The <code>filter_formatter</code> function provided in the extra "jquery.tablesorter.widgets-filter-formatter.js" file is used to add this custom control within the filter row.</li>
@@ -470,7 +490,7 @@
       filter_formatter : {
 
         // Date (two inputs)
-        6 : function($cell, indx){
+        5 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
             // add any of the jQuery UI Datepicker options here (http://api.jqueryui.com/datepicker/)
             // from : '8/1/2013', // starting date
@@ -549,7 +569,7 @@
 			<th>Total (range)</th>
 			<th>Discount</th>
 			<th data-placeholder="Try 1/18/2013">Date (one input)</th>
-			<th data-placeholder-from="start date" data-placeholder-to="end date">Date (two inputs; range)</th>
+			<th>Date (two inputs; range)</th>
 		</tr>
 	</thead>
 	<tbody>
