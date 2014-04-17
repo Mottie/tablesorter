@@ -396,9 +396,6 @@
 					}
 					renderAjax(data, table, p);
 					$doc.unbind('ajaxError.pager');
-					if (typeof p.oldAjaxSuccess === 'function') {
-						p.oldAjaxSuccess(data);
-					}
 				};
 				if (c.debug) {
 					ts.log('ajax initialized', p.ajaxObject);
@@ -655,7 +652,6 @@
 				if (c.debug) {
 					ts.log('Pager initializing');
 				}
-				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
 				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 					// get any default filter settings (data-value attribute) fixes #388
