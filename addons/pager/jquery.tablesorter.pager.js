@@ -129,15 +129,23 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			var i, pg, s, out,
+			var i, pg, s, out, t, regex,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
-				t = (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered') + ',' + c.selectorRemove +
-					(p.countChildRows ? '' : ',.' + c.cssChildRow),
+				t = [],
 				sz = p.size || 10; // don't allow dividing by zero
+			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove ];
+			if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
+			regex = new RegExp( '(' + t.join('|') + ')' );
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-			p.filteredRows = (f) ? c.$tbodies.eq(0).children('tr').not('.' + t ).length : p.totalRows;
-			p.filteredPages = (f) ? Math.ceil( p.filteredRows / sz ) || 1 : p.totalPages;
+			p.filteredRows = (f) ? 0 : p.totalRows;
+			p.filteredPages = p.totalPages;
+			if (f) {
+				$.each(c.cache[0].normalized, function(i, el) {
+					p.filteredRows += /(filtered|removeme|tablesorter-childRow)/.test(el[c.columns].$row[0].className) ? 0 : 1;
+				});
+				p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
+			}
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows);
 				p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -452,12 +460,13 @@
 		},
 
 		renderTable = function(table, rows, p) {
-			var i, $tb,
+			var i, $tb, index, count, added, f,
 				$t = $(table),
 				c = table.config,
+				f = c.$table.hasClass('hasFilters'),
 				l = rows && rows.length || 0, // rows may be undefined
 				s = ( p.page * p.size ),
-				e = ( s + p.size );
+				e = p.size;
 			if ( l < 1 ) { return; } // empty table, abort!
 			if ( p.page >= p.totalPages ) {
 				// lets not render the table more than once
@@ -469,15 +478,23 @@
 			if ( !p.removeRows ) {
 				hideRows(table, p);
 			} else {
-				if ( e > rows.length ) {
-					e = rows.length;
-				}
 				ts.clearTableBody(table);
 				$tb = ts.processTbody(table, c.$tbodies.eq(0), true);
-				for ( i = s; i < e; i++ ) {
-					$tb.append(rows[i]);
+				// not filtered, start from the calculated starting point (s)
+				// if filtered, start from zero
+				index = f ? 0 : s;
+				count = f ? 0 : s;
+				added = 0; 
+				while (added < e && index < rows.length) {
+					if (!f || !/filtered/.test(rows[index][0].className)){
+						count++;
+						if (count > s && added <= e) {
+							added++;
+							$tb.append(rows[index]);
+						}
+					}
+					index++;
 				}
-				
 				ts.processTbody(table, $tb, false);
 			}
 

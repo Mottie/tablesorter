@@ -1,4 +1,4 @@
-/*! tableSorter 2.15+ widgets - updated 4/3/2014 (v2.15.13)
+/*! tableSorter 2.16+ widgets - updated 3/12/2014 (v2.16.0)
  *
  * Column Styles
  * Column Filters
@@ -874,10 +874,13 @@ ts.filter = {
 			if ($tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock || ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
 			// skip child rows & widget added (removable) rows - fixes #448 thanks to @hempel!
-			$rows = $tbody.children('tr').not(c.selectorRemove);
+			// $rows = $tbody.children('tr').not(c.selectorRemove);
+			columnIndex = c.columns;
+			// convert stored rows into a jQuery object
+			$rows = true ? $( $.map(c.cache[tbodyIndex].normalized, function(el, i){ return el[columnIndex].$row.get(); }) ) : $tbody.children('tr').not(c.selectorRemove);
 			len = $rows.length;
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$tbody.children().removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
+				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show()
 			} else {
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
@@ -886,8 +889,9 @@ ts.filter = {
 					// check for changes from beginning of filter; but ignore if there is a logical "or" in the string
 					searchFiltered = (val || '').indexOf(lastSearch[indx] || '') === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
 				});
+
 				// can't search when all rows are hidden - this happens when looking for exact matches
-				if (searchFiltered && $rows.filter(':visible').length === 0) { searchFiltered = false; }
+				if (searchFiltered && $rows.filter('.' + wo.filter_filteredRow).length === 0) { searchFiltered = false; }
 				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
 					anyMatch = wo.filter_$anyMatch && wo.filter_$anyMatch.val() || filters[c.columns] || '';
 					if (c.sortLocaleCompare) {
@@ -896,7 +900,6 @@ ts.filter = {
 					}
 					iAnyMatch = anyMatch.toLowerCase();
 				}
-
 				// loop through the rows
 				cacheIndex = 0;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
@@ -928,7 +931,7 @@ ts.filter = {
 						}).get();
 						rowText = rowArray.join(' ');
 						iRowText = rowText.toLowerCase();
-						rowCache = c.cache[tbodyIndex].normalized[cacheIndex].join(' ');
+						rowCache = c.cache[tbodyIndex].normalized[cacheIndex].slice(0,-1).join(' ');
 						filterMatched = null;
 						$.each(ts.filter.types, function(type, typeFunction) {
 							if ($.inArray(type, anyMatchNotAllowedTypes) < 0) {
@@ -1166,7 +1169,8 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 	if (c && apply) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
-		c.$table.trigger('search', [filter, false]).trigger('filterFomatterUpdate');
+		ts.filter.findRows( table, filter, (filter || []).join('') );
+		c.$table.trigger('filterFomatterUpdate'); // .trigger('search', filter)
 	}
 	return !!valid;
 };
