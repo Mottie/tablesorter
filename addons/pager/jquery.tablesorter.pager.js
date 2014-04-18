@@ -396,6 +396,9 @@
 					}
 					renderAjax(data, table, p);
 					$doc.unbind('ajaxError.pager');
+					if (typeof p.oldAjaxSuccess === 'function') {
+						p.oldAjaxSuccess(data);
+					}
 				};
 				if (c.debug) {
 					ts.log('ajax initialized', p.ajaxObject);
@@ -645,13 +648,14 @@
 				var t, ctrls, fxn,
 					table = this,
 					c = table.config,
-					p = c.pager = $.extend( {}, $.tablesorterPager.defaults, settings ),
+					p = c.pager = $.extend( true, {}, $.tablesorterPager.defaults, settings ),
 					$t = c.$table,
 					// added in case the pager is reinitialized after being destroyed.
 					pager = p.$container = $(p.container).addClass('tablesorter-pager').show();
 				if (c.debug) {
 					ts.log('Pager initializing');
 				}
+				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
 				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 					// get any default filter settings (data-value attribute) fixes #388

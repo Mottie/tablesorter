@@ -150,6 +150,7 @@ tsp = ts.pager = {
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
 		p.totalRows = c.$tbodies.eq(0).children().length;
+		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 			// get any default filter settings (data-value attribute) fixes #388
@@ -578,6 +579,9 @@ tsp = ts.pager = {
 				}
 				tsp.renderAjax(data, table, c);
 				$doc.unbind('ajaxError.pager');
+					if (typeof p.oldAjaxSuccess === 'function') {
+						p.oldAjaxSuccess(data);
+					}
 			};
 			if (c.debug) {
 				ts.log('ajax initialized', wo.pager_ajaxObject);
