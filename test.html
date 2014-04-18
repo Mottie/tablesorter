@@ -36,7 +36,7 @@
 			<li>Include <a href="https://github.com/overset/javascript-natural-sort">natural sort</a> unit tests?</li>
 		</ul>
 
-		<table id="table1" class="tester">
+		<table id="table1" class="tester" data-text-extraction="basic">
 			<thead>
 				<tr><th class="{sortValue:'zzz', poe:'nevermore'}">test-head</th><th>num</th></tr>
 			</thead>
@@ -44,9 +44,9 @@
 				<tr><th>test-foot</th><th>txt</th></tr>
 			</tfoot>
 			<tbody>
-				<tr><td>test2</td><td>x2</td></tr>
-				<tr><td>test1</td><td>x3</td></tr>
-				<tr><td>test3</td><td>x1</td></tr>
+				<tr><td data-text="test2">ignored</td><td>x2</td></tr>
+				<tr><td data-text="test1">ignored</td><td>x3</td></tr>
+				<tr><td data-text="test3">ignored</td><td>x1</td></tr>
 			</tbody>
 			<tbody class="tablesorter-infoOnly">
 				<tr><td colspan="3">Info</td></tr>
@@ -73,7 +73,7 @@
 			</tbody>
 		</table>
 
-		<table id="table3" class="tester">
+		<table id="table3" class="tester" data-text-extraction="x">
 			<thead>
 				<tr>
 					<th>1</th>
@@ -83,7 +83,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td>A43</td><td>-35</td><td>01</td><td>-.1</td></tr>
+				<tr><td data-text="x43">A43</td><td>-35</td><td>01</td><td>-.1</td></tr>
 				<tr><td>A255</td><td>33</td><td>02</td><td>N/A #1</td></tr>
 				<tr><td>A33</td><td>2</td><td>03</td><td>N/A #2</td></tr>
 				<tr><td>A1</td><td>-5</td><td>04</td><td>-8.4</td></tr>

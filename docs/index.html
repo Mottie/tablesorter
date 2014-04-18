@@ -1314,14 +1314,34 @@ From the example function above, you'll end up with something similar to this HT
 				<td><a href="themes.html">Example</a></td>
 			</tr>
 
+			<tr id="textattribute">
+				<td><a href="#" class="permalink">textAttribute</a></td>
+				<td>String</td>
+				<td>&quot;data-text&quot;</td>
+				<td>This data-attribute can be added to any tbody cell and can contains alternate cell text (<span class="version">v2.16.0</span>).
+					<div class="collapsible">
+						<br>
+						This option contains the name of the data-attribute used by the <a href="#textextraction"><code>textExtraction</code></a> function. Add it to the cell(s) as follows:
+						<pre class="prettyprint lang-html">&lt;td data-text="1"&gt;First repository&lt;/td&gt;</pre>
+						<span class="label label-info">Note</span> This option only works when the <a href="#textextraction"><code>textExtraction</code></a> option is set to "basic".
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="textextraction">
 				<td><a href="#" class="permalink">textExtraction</a></td>
 				<td>String Or Function</td>
-				<td>&quot;simple&quot;</td>
-				<td>Defines which method is used to extract data from a table cell for sorting.
-					The built-in option is <code>&quot;simple&quot;</code> which is the equivalent of doing this inside of the textExtraction function: <code>$(node).text();</code>.
+				<td>&quot;basic&quot;</td>
+				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.16.0</span>)
 					<div class="collapsible">
 					<br>
+					As of version 2.16.0,
+					<ul>
+						<li>The default text extraction method has been renamed and updated to get data from a data-attribute (set by the <a href="#textattribute"><code>textAttribute</code></a> option).</li>
+						<li>If you need to support older versions of IE, this may add a significant delay to the table initialization especially for large tables; in this case, set the <code>textExtraction</code> option to any name other than "basic".</li>
+						<li>Also, this option can now be set using a data-attribute named "data-text-extraction" on the table.</li>
+					</ul>
 					You can customize the text extraction by writing your own text extraction function "myTextExtraction" which you define like:
 					<pre class="prettyprint lang-js">var myTextExtraction = function(node, table, cellIndex){
   // extract data from markup and return it
@@ -1331,9 +1351,9 @@ From the example function above, you'll end up with something similar to this HT
 $(function(){
   $("#myTable").tablesorter( { textExtraction: myTextExtraction } );
 });</pre>
-					tablesorter will pass the current table cell object for you to parse and return.  Thanks to Josh Nathanson for the examples. Updated to a jQuery example by Rob G (Mottie).
+					tablesorter will pass the current table cell object for you to parse and return.  Thanks to Josh Nathanson for the examples; updated to a jQuery example by Rob G (Mottie).
 					<p>Now if the text you are finding in the script above is say a number, then just include the <a href="#headers"><code>headers</code></a> sorter option to specify how to sort it. Also in this example, we will specify that the special textExtraction code is only needed for the second column (<code>1</code> because we are using a zero-based index). All other columns will ignore this textExtraction function.</p>
-					<p>Added <code>table</code> and <code>cellIndex</code> variables to the <code>textExtraction</code> function in version 2.1.2.</p>
+					<p>Added <code>table</code> and <code>cellIndex</code> variables to the <code>textExtraction</code> function in version 2.1.2 (this is not part of the original plugin).</p>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     textExtraction: {
@@ -1345,7 +1365,9 @@ $(function(){
       1: { sorter : "digit" }
     }
   });
-});</pre></div>
+});</pre>
+					The built-in option is <code>&quot;basic&quot;</code> (modified v2.16.0) which is the equivalent of doing this inside of the textExtraction function: <code>$(node).text();</code>.
+					</div>
 				</td>
 				<td><a href="example-option-text-extraction.html">Example</a></td>
 			</tr>

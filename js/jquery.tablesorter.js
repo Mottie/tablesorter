@@ -64,7 +64,8 @@
 
 				emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero
 				stringTo         : 'max',      // sort strings in numerical column as max, min, top, bottom, zero
-				textExtraction   : 'simple',   // text extraction method/function - function(node, table, cellIndex){}
+				textExtraction   : 'basic',    // text extraction method/function - function(node, table, cellIndex){}
+				textAttribute    : 'data-text',// data-attribute that contains alternate cell text (used in textExtraction function)
 				textSorter       : null,       // choose overall or specific column sorter function(a, b, direction, table, columnIndex) [alt: ts.sortText]
 				numberSorter     : null,       // choose overall numeric sorter function(a, b, direction, maxColumnValue)
 
@@ -167,20 +168,19 @@
 			function getElementText(table, node, cellIndex) {
 				if (!node) { return ""; }
 				var c = table.config,
-					t = c.textExtraction, text = "";
-				if (t === "simple") {
-					if (c.supportsTextContent) {
-						text = node.textContent; // newer browsers support this
-					} else {
-						text = $(node).text();
-					}
+					t = c.textExtraction || '',
+					text = "";
+				if (t === "basic") {
+					// check data-attribute first
+					text = $(node).attr(c.textAttribute) || node.textContent || node.innerText || $(node).text() || "";
 				} else {
-					if (typeof t === "function") {
+					if (typeof(t) === "function") {
 						text = t(node, table, cellIndex);
-					} else if (typeof t === "object" && t.hasOwnProperty(cellIndex)) {
+					} else if (typeof(t) === "object" && t.hasOwnProperty(cellIndex)) {
 						text = t[cellIndex](node, table, cellIndex);
 					} else {
-						text = c.supportsTextContent ? node.textContent : $(node).text();
+						// previous "simple" method
+						text = node.textContent || node.innerText || $(node).text() || "";
 					}
 				}
 				return $.trim(text);
@@ -928,8 +928,6 @@
 				$.data(table, "tablesorter", c);
 				if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
 
-				// constants
-				c.supportsTextContent = $('<span>x</span>')[0].textContent === 'x';
 				// removing this in version 3 (only supports jQuery 1.7+)
 				c.supportsDataObject = (function(version) {
 					version[0] = parseInt(version[0], 10);
@@ -961,6 +959,8 @@
 					c.$table.attr('aria-labelledby', 'theCaption');
 				}
 				c.widgetInit = {}; // keep a list of initialized widgets
+				// change textExtraction via data-attribute
+				c.textExtraction = c.$table.attr('data-text-extraction') || c.textExtraction || 'basic';
 				// build headers
 				buildHeaders(table);
 				// fixate columns if the users supplies the fixedWidth option

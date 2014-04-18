@@ -118,8 +118,6 @@ EVENTS:
 */
 
 $(function(){
-	// keep stuff in order; yeah I know every test needs to be atomic - bleh
-	QUnit.config.reorder = false;
 
 	var ts = $.tablesorter,
 		$table1 = $('#table1'),
@@ -136,7 +134,7 @@ $(function(){
 		sortIndx = 0,
 		updateIndx = 0,
 		updateCallback = 0,
-		events = ['sortStart', 'sortBegin', 'sortEnd' ],
+		events = ['sortStart', 'sortBegin', 'sortEnd', ' '],
 		returnTime = function(string){
 			return new Date(string).getTime();
 		},
@@ -145,14 +143,6 @@ $(function(){
 	$table1
 		.bind('tablesorter-initialized', function(){
 			init = true;
-		})
-		.bind( events.join(' '), function(e){
-			if (e.type === events[sortIndx%3]) {
-				sortIndx++;
-			}
-		})
-		.bind('updateComplete', function(){
-			updateIndx++;
 		})
 		.tablesorter();
 
@@ -192,19 +182,7 @@ $(function(){
 		}
 	});
 
-	$table5
-		.bind( events.join(' '), function(e){
-			if (e.type === events[sortIndx%3]) {
-				sortIndx++;
-			}
-		})
-		.bind('updateComplete', function(){
-			updateIndx++;
-		})
-		.tablesorter();
-
-	// ensure all sort events fire on an empty table
-	$table5.trigger('sorton', [ [[0,0]] ]);
+	$table5.tablesorter();
 
 	/************************************************
 		JSHint testing
@@ -405,6 +383,17 @@ $(function(){
 
 	});
 
+	test( "textExtraction Method", function() {
+		expect(2);
+
+		$table1.trigger('sorton', [[[ 0,0 ]]]);
+		tester.cacheCompare( table1, 0, [ 'test1', 'test2', 'test3', '', 'testa', 'testb', 'testc' ], 'from data-attribute' );
+
+		$table3.trigger('sorton', [[[ 0,1 ]]]);
+		tester.cacheCompare( table3, 0, [ '', 'a255', 'a102', 'a87', 'a55', 'a43', 'a33', 'a10', 'a02', 'a1' ], 'ignore data-attribute' );
+
+	});
+
 	/************************************************
 		test parser cache
 	************************************************/
@@ -472,24 +461,41 @@ $(function(){
 
 	test( "sort Events", function(){
 		expect(1);
+
+		$table1.add($table5).bind( events.join('.testing '), function(e){
+			if (e.type === events[sortIndx%3]) {
+				sortIndx++;
+			}
+		});
+
+		$table1.trigger('sorton', [[[ 0,0 ]]]);
+		$table1.trigger('sorton', [[[ 1,0 ]]]);
+
+		// ensure all sort events fire on an empty table
+		$table5.trigger('sorton', [ [[0,0]] ]);
+
+		$table1.add($table5).unbind( events.join('.testing ') );
+
 		// table1 sorted twice in the above test; sortIndx = 9 then empty table5 x1 (total = 3 events x 3)
-		equal( sortIndx, 9, 'sortStart, sortBegin & sortEnd fired in order x3; including empty table' );
+		equal( sortIndx, 9, 'sortStart, sortBegin & sortEnd fired in order x2; including empty table' );
 	});
 
 	/************************************************
 		test update methods
 	************************************************/
 	test( "parser cache; update methods & callbacks", function() {
-		expect(5);
+		expect(7);
 		c1.ignoreCase = true;
-
 		// updateAll
 		$table1
+			.trigger('sorton', [ [[0,1]] ])
+			.bind('updateComplete.testing', function(){ updateIndx++; })
 			.find('th:eq(1)').removeAttr('class').html('num').end()
 			.find('td:nth-child(2)').html(function(i,h){
 				return h.substring(1);
 			});
-		$table1.trigger('updateAll', [false, function(){
+		$table1
+		.trigger('updateAll', [false, function(){
 			updateCallback++;
 			var nw = $table1.find('th:eq(1)')[0],
 				hc = c1.headerContent[1] === 'num',
@@ -502,7 +508,8 @@ $(function(){
 
 		// addRows
 		t = $('<tr class="temp"><td>testd</td><td>7</td></tr>');
-		$table1.find('tbody:last').append(t);
+		$table1
+			.find('tbody:last').prepend(t);
 		$table1.trigger('addRows', [t, true, function(){
 			updateCallback++;
 			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
@@ -523,18 +530,19 @@ $(function(){
 			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
 		}]);
 
-		// update empty table
-		$table5.trigger('update', [false, function(){
-			updateCallback++;
-		}]);
+		$table5
+			.bind('updateComplete.testing', function(){ updateIndx++; })
+			.trigger('update', [true, function(){
+				updateCallback++;
+				tester.cacheCompare( table5, 'all', [], 'update method on empty table' );
+			}]);
 
-	});
+		$table1.add($table5).unbind('updateComplete.testing');
 
-	test( "UpdateComplete Event", function(){
-		expect(1);
 		// table1 updated 4x in the above test
 		// table5 updated 1x
 		equal( updateIndx, updateCallback, 'updatedComplete and update callback functions working properly' );
+
 	});
 
 	/************************************************
