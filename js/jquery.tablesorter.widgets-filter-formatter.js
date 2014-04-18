@@ -88,7 +88,7 @@ tsff = ts.filterFormatter = {
 				v = ui && ui.value && ts.formatFloat((ui.value + '').replace(/[><=]/g,'')) ||
 					$cell.find('.spinner').val() || o.value,
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 			if (o.addToggle) {
 				chkd = $cell.find('.toggle').is(':checked');
 			}
@@ -245,7 +245,7 @@ tsff = ts.filterFormatter = {
 				val = o.compare ? v : v === o.min ? o.allText : v,
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				result = compare + val,
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above!
 				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.curvalue').html(' (' + result + ')');
@@ -392,7 +392,7 @@ tsff = ts.filterFormatter = {
 				result = val[0] + ' - ' + val[1],
 				// make range an empty string if entire range is covered so the filter row will hide (if set)
 				range = val[0] === o.min && val[1] === o.max ? '' : result,
-				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '': true;
 			if (o.valueToHeader) {
 				// add range indication to the header cell above (if not using the css method)!
 				$cell.closest('thead').find('th[data-column=' + indx + ']').find('.currange').html(' (' + result + ')');
@@ -516,7 +516,7 @@ tsff = ts.filterFormatter = {
 			var date, query,
 				getdate = v || $date.datepicker('getDate') || '',
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = c.$table[0].hasInitialized ? o.delayed : true;
+				searchType = c.$table[0].hasInitialized ? o.delayed || '': true;
 			$date.datepicker('setDate', getdate === '' ? o.defaultDate || '' : getdate);
 			if (getdate === '') { notrigger = false; }
 			date = $date.datepicker('getDate');
@@ -629,8 +629,11 @@ tsff = ts.filterFormatter = {
 			changeYear : true,
 			numberOfMonths : 1
 		}, defDate),
-		t, closeTo, closeFrom, $shcell = [],
+		t, closeDate, $shcell = [],
 		c = $cell.closest('table')[0].config,
+		validDate = function(d){
+			return d instanceof Date && isFinite(d);
+		},
 		// Add a hidden input to hold the range values
 		$input = $('<input class="dateRange" type="hidden">')
 			.appendTo($cell)
@@ -640,11 +643,11 @@ tsff = ts.filterFormatter = {
 				if (v.match(' - ')) {
 					v = v.split(' - ');
 					$cell.find('.dateTo').val(v[1]);
-					closeFrom(v[0]);
+					closeDate(v[0]);
 				} else if (v.match('>=')) {
-					closeFrom( v.replace('>=', '') );
+					closeDate( v.replace('>=', '') );
 				} else if (v.match('<=')) {
-					closeTo( v.replace('<=', '') );
+					closeDate( v.replace('<=', '') );
 				}
 			}),
 
@@ -660,52 +663,41 @@ tsff = ts.filterFormatter = {
 		// add callbacks; preserve added callbacks
 		o.oldonClose = o.onClose;
 
-		var localfrom = o.defaultDate = o.from || o.defaultDate;
-
-		closeFrom = o.onClose = function( selectedDate, ui ) {
+		closeDate = o.onClose = function( selectedDate, ui ) {
 			var range,
-				from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = $cell.find('.dateTo').datepicker('getDate') || '';
-			to = to ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
-			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
-			$cell
-				.find('.dateRange').val(range)
-				.trigger('search').end()
-				.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
-				.find('.dateFrom').val(selectedDate);
+				from = $cell.find('.dateFrom').datepicker('getDate'),
+				to = $cell.find('.dateTo').datepicker('getDate');
 
-			// update sticky header cell
-			if ($shcell.length) {
-				$shcell
-					.find('.dateTo').datepicker('option', 'minDate', selectedDate ).end()
-					.find('.dateFrom').val(selectedDate);
+			from = validDate(from) ? from.getTime() : '';
+			to = validDate(to) ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
+			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
+			$cell.add( $shcell )
+				.find('.dateRange').val(range)
+				.trigger('search');
+
+			// date picker needs date objects
+			from = from ? new Date(from) : '';
+			to = to ? new Date(to) : '';
+			if (/<=/.test(range)) {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', to ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to);
+			} else if (/>=/.test(range)) {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from).end()
+					.find('.dateTo').datepicker('option', 'minDate', from );
+			} else {
+				$cell.add( $shcell )
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to);
 			}
+
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
 		};
 
+		o.defaultDate = o.from || '';
 		$cell.find('.dateFrom').datepicker(o);
-
 		o.defaultDate = o.to || '+7d'; // set to date +7 days from today (if not defined)
-		closeTo = o.onClose = function( selectedDate, ui ) {
-			var range,
-				from = new Date( $cell.find('.dateFrom').datepicker('getDate') ).getTime() || '',
-				to = $cell.find('.dateTo').datepicker('getDate') || '';
-			to = to ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
-			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
-			$cell
-				.find('.dateRange').val(range)
-				.trigger('search').end()
-				.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
-				.find('.dateTo').val(selectedDate);
-
-			// update sticky header cell
-			if ($shcell.length) {
-				$shcell
-					.find('.dateFrom').datepicker('option', 'maxDate', selectedDate ).end()
-					.find('.dateTo').val(selectedDate);
-			}
-			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
-		};
 		$cell.find('.dateTo').datepicker(o);
 
 		// update date compare from hidden input, in case of saved filters
@@ -713,12 +705,11 @@ tsff = ts.filterFormatter = {
 			var val = $input.val() || '',
 				from = '',
 				to = '';
-
 			// date range
 			if (/\s+-\s+/.test(val)){
 				val = val.split(/\s+-\s+/) || [];
-				from = val[0] || '';
-				to = val[1] || '';
+				from = new Date(Number( val[0] )) || '';
+				to = new Date(Number( val[1] )) || '';
 			} else if (/>=/.test(val)) {
 				// greater than date (to date empty)
 				from = new Date(Number( val.replace(/>=/, '') )) || '';
@@ -728,7 +719,7 @@ tsff = ts.filterFormatter = {
 			}
 			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from);
 			$cell.add($shcell).find('.dateTo').datepicker('setDate', to);
-			closeTo(to);
+			closeDate();
 		});
 
 		// has sticky headers?
@@ -737,12 +728,12 @@ tsff = ts.filterFormatter = {
 			$shcell.append(t);
 
 			// add a jQuery datepicker!
-			o.onClose = closeTo;
+			o.defaultDate = o.from || '';
+			$shcell.find('.dateFrom').datepicker(o);
+
+			o.defaultDate = o.to || '+7d';
 			$shcell.find('.dateTo').datepicker(o);
 
-			o.defaultDate = localfrom;
-			o.onClose = closeFrom;
-			$shcell.find('.dateFrom').datepicker(o);
 		});
 
 		// on reset
@@ -785,7 +776,7 @@ tsff = ts.filterFormatter = {
 			var chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true,
 				v = $cell.find('.number').val(),
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
-				searchType = c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) : true;
+				searchType = c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) || '' : true;
 			$input
 				// add equal to the beginning, so we filter exact numbers
 				.val( !o.addToggle || chkd ? (compare ? compare : o.exactMatch ? '=' : '') + v : '' )
@@ -917,7 +908,7 @@ tsff = ts.filterFormatter = {
 			v = ( typeof v === "undefined" ? $input.val() : v ).toString().replace(/[<>=]/g,'') || o.value;
 			var compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				t = ' (' + (compare ? compare + v : v == o.min ? o.allText : v) + ')',
-				searchType =  c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) : true;
+				searchType =  c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) || '' : true;
 			$cell.find('input[type=hidden]')
 				// add equal to the beginning, so we filter exact numbers
 				.val( ( compare ? compare + v : ( v == o.min ? '' : ( o.exactMatch ? '=' : '' ) + v ) ) )
