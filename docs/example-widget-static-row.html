@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Static Row Widget (beta)</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-staticRow.js"></script>
+	<style>
+	.options th:not(.sorter-false) {
+		width: 10%;
+	}
+	#alphimals * {
+		font-size: 12px;
+		line-height: 12px;
+	}
+	</style>
+	<script>
+	$(function() {
+		$('.options').tablesorter({
+			widthFixed: true
+		});
+	});
+	</script>
+
+	<style id="css">#alphimals td {
+	text-align: center;
+}
+.tablesorter tbody tr.static td {
+	background-color: #999;
+	color: #fff;
+}</style>
+
+	<script id="js">$(function() {
+
+	$('#alphimals, #table2').tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'staticRow']
+	});
+
+	$('.addrow').click(function(){
+		$('#alphimals tbody')
+			.append('<tr><td>AA</td><td>0</td><td>Aardvark</td></tr>')
+			.trigger('update');
+	});
+
+	// move row up or down
+	$('.move').click(function(){
+		var direction = $(this).hasClass('up'),
+			$rows = $('#alphimals tr'),
+			$ig = $rows.filter('.static:contains(Iguana)'),
+			len = $rows.length - 1,
+			v = $ig.data('row-index');
+		v = direction ? --v : ++v;
+		v = v > len ? len : v <= 0 ? 0 : v;
+		$ig.data('row-index', v);
+		$rows.trigger('staticRowsRefresh');
+	});
+
+});</script>
+</head>
+<body>
+	<div id="banner">
+		<h1>table<em>sorter</em></h1>
+		<h2>Static Row Widget (beta)</h2>
+		<h3>Flexible client-side table sorting</h3>
+		<a href="index.html">Back to documentation</a>
+	</div>
+	<div id="main">
+
+	<p></p>
+	<br>
+	<div class="accordion">
+
+		<h3 id="notes"><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>This widget will only work in tablesorter version 2.8+.</li>
+				<li>The widget was modified from <a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin">Tablesorter-Static-Row-Plugin</a> by <a href="https://github.com/ascii-soup">ascii-soup</a> (<a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin/blob/master/LICENSE">MIT license</a>).</li>
+				<li>It has been updated to work in tables with multiple tbodies, but not within information-only tbodies.</li>
+				<li>This widget was not tested, nor was it meant to be used with the pager.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h3>Group widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
+			<div class="tip">
+				<span class="label label-info">TIP!</span> Click on the link in the option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="tablesorter-blue options">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+					<tr id="staticrow_class">
+						<td><span class="permalink">staticRow_class</span></td>
+						<td><code>&quot;.static&quot;</code></td>
+						<td>
+							Set a class name to use to lock a row in place, include a period.
+						</td>
+					</tr>
+					<tr id="staticrow_data">
+						<td><span class="permalink">staticRow_data</span></td>
+						<td><code>&quot;static-index&quot;</code></td>
+						<td>
+							Set the jQuery data name to use with the row element. This data name saves the row index, and is only available as an option to avoid conflicts.
+						</td>
+					</tr>
+
+					<tr id="staticrow_index">
+						<td><a href="#" class="permalink">staticRow_index</a></td>
+						<td><code>&quot;row-index&quot;</code></td>
+						<td>
+							Use this data-attribute to set the desired static row location
+							<div class="collapsible">
+								<br>
+								Set the desired location using either of these two methods:
+								<ul>
+									<li>
+										Use a zero-based index of the row
+										<pre class="prettyprint lang-html">&lt;tr data-row-index=&quot;5&quot;&gt;...&lt;/tr&gt;</pre>
+										<span class="label label-info">Note</span> setting this index to much more than the number of table rows ensures that it will stay at the bottom when adding new rows.<br>
+										<br>
+									</li>
+									<li>
+										Use a percentage if total rows within it's tbody
+										<pre class="prettyprint lang-html">&lt;tr data-row-index=&quot;50%&quot;&gt;...&lt;/tr&gt;</pre>
+									</li>
+								</ul>
+								These values take priority over the actual row index, so as shown in the "Single tbody" demo below, the header row is set to 50%, but initially, it is located at the top of the table.<br>
+								<br>
+								If these values are changed dynamically, the static row location can be updated 
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<h3><a href="#">Methods / Events</a></h3>
+		<div>
+			<h3>Method</h3>
+			If adding or removing rows from the table, using any of the update methods will automatically refresh the static row indexes. Use the "Add Row" button below to test this.<br>
+			<br>
+			To modify or refresh the static row indexing without updating, trigger a <code>staticRowsRefresh</code> event on the table:
+			<pre class="prettyprint lang-js">var $row = $("tr:contains('Iguana')");
+// move Iguana row down one (remember, this only works on static rows)
+$row.data('row-index', $row.data('row-index') + 1);
+$(table).trigger('staticRowsRefresh');</pre>
+			this allows moving a static row dynamically; try the Move "Ignuana" row buttons above the "Single tbody" demo.
+			<h3>Event</h3>
+			A <code>staticRowsComplete</code> event is triggered after the static rows widget has completed moving the static rows back into place. Use it as follows:
+			<pre class="prettyprint lang-js">$(table).bind('staticRowsComplete', function(table){
+	console.log('static rows applied to ' + table.id);
+});</pre>
+		</div>
+
+	</div>
+
+	<h1>Demo</h1>
+	<div id="demo"><h3>Single tbody</h3>
+<p><button class="addrow">Add Row</button> Move "Iguana" row: <button class="move up">up</button> <button class="move">down</button></p>
+<table id="alphimals" class="tablesorter">
+	<thead>
+		<tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr>
+	</thead>
+	<tbody>
+		<tr class="static" data-row-index="50%"><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr>
+		<tr><td>D</td><td>4</td><td>Dog</td></tr>
+		<tr><td>E</td><td>5</td><td>Emu</td></tr>
+		<tr><td>F</td><td>6</td><td>Frog</td></tr>
+		<tr><td>G</td><td>7</td><td>Goat</td></tr>
+		<tr><td>A</td><td>1</td><td>Anteater</td></tr>
+		<tr><td>B</td><td>2</td><td>Bear</td></tr>
+		<tr><td>C</td><td>3</td><td>Cat</td></tr>
+		<tr><td>H</td><td>8</td><td>Horse</td></tr>
+		<!-- index of next row set to one less because of static row above set to 50% -->
+		<tr class="static" data-row-index="8"><td>I</td><td>9</td><td>Iguana</td></tr>
+		<tr><td>J</td><td>10</td><td>Jellyfish</td></tr>
+		<tr><td>V</td><td>22</td><td>Vole</td></tr>
+		<tr><td>W</td><td>23</td><td>Walrus</td></tr>
+		<tr><td>X</td><td>24</td><td>Xantis</td></tr>
+		<tr><td>K</td><td>11</td><td>Koala</td></tr>
+		<tr><td>L</td><td>12</td><td>Lemur</td></tr>
+		<tr><td>Q</td><td>17</td><td>Quail</td></tr>
+		<tr><td>R</td><td>18</td><td>Rhino</td></tr>
+		<tr><td>S</td><td>19</td><td>Seal</td></tr>
+		<tr><td>M</td><td>13</td><td>Mink</td></tr>
+		<tr><td>N</td><td>14</td><td>Nightingale</td></tr>
+		<tr><td>O</td><td>15</td><td>Octopus</td></tr>
+		<tr><td>P</td><td>16</td><td>Pig</td></tr>
+		<tr><td>T</td><td>20</td><td>Tiger</td></tr>
+		<tr><td>U</td><td>21</td><td>Urchin</td></tr>
+		<tr><td>Y</td><td>25</td><td>Yak</td></tr>
+		<tr><td>Z</td><td>26</td><td>Zebra</td></tr>
+		<tr class="static" data-row-index="50"><td>Total Count</td><td>Lots!</td><td>&nbsp;</td></tr>
+	</tbody>
+</table>
+
+<h4>Multiple tbody</h4>
+<table id="table2" class="tablesorter">
+	<thead>
+		<tr>
+			<th>Rank</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
+		<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
+		<tr class="static"><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
+		<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>21</td><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>013</td><td>Clark</td><td>Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+	</tbody>
+	<tbody class="tablesorter-infoOnly">
+		<tr><th colspan="7">Second tbody</th></tr>
+	</tbody>
+	<tbody>
+		<tr><td>005</td><td>Bruce</td><td>Almighty Esq</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>
+		<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
+		<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td></tr>
+		<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+		<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
+		<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
+		<tr class="static"><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td></tr>
+	</tbody>
+</table>
+
+</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</body>
+</html>
