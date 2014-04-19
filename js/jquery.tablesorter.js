@@ -741,8 +741,8 @@
 						resortComplete($table, callback);
 					}, true]);
 				} else {
-					$table.trigger('applyWidgets');
 					resortComplete($table, callback);
+					ts.applyWidget($table[0], false);
 				}
 			}
 
@@ -852,9 +852,8 @@
 					// sort the table and append it to the dom
 					multisort(table);
 					appendToTable(table, init);
-					$table
-						.trigger("sortEnd", this)
-						.trigger('applyWidgets');
+					$table.trigger("sortEnd", this);
+					ts.applyWidget(table);
 					if ($.isFunction(callback)) {
 						callback(table);
 					}
@@ -993,7 +992,7 @@
 					setHeadersCss(table);
 					if (c.initWidgets) {
 						// apply widget format
-						ts.applyWidget(table);
+						ts.applyWidget(table, false);
 					}
 				}
 
@@ -1394,8 +1393,11 @@
 					wo = c.widgetOptions,
 					widgets = [],
 					time, w, wd;
+				// prevent numerous consecutive widget applications
+				if (init !== false && table.hasInitialized && (table.isApplyingWidgets || table.isUpdating)) { return; }
 				if (c.debug) { time = new Date(); }
 				if (c.widgets.length) {
+					table.isApplyingWidgets = true;
 					// ensure unique widget ids
 					c.widgets = $.grep(c.widgets, function(v, k){
 						return $.inArray(v, c.widgets) === k;
@@ -1431,6 +1433,9 @@
 						}
 					});
 				}
+				setTimeout(function(){
+					table.isApplyingWidgets = false;
+				}, 0);
 				if (c.debug) {
 					w = c.widgets.length;
 					benchmark("Completed " + (init === true ? "initializing " : "applying ") + w + " widget" + (w !== 1 ? "s" : ""), time);

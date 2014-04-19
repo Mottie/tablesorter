@@ -1019,8 +1019,10 @@ ts.filter = {
 		if (c.debug) {
 			ts.benchmark("Completed filter widget search", time);
 		}
-		c.$table.trigger('applyWidgets'); // make sure zebra widget is applied
 		c.$table.trigger('filterEnd');
+		setTimeout(function(){
+			c.$table.trigger('applyWidgets'); // make sure zebra widget is applied
+		}, 0);
 	},
 	buildSelect: function(table, column, updating, onlyavail) {
 		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
