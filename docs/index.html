@@ -3502,12 +3502,18 @@ $("table").trigger("sorton", [sort, callback]);</pre>
 
 			<tr id="sortreset-method">
 				<td><a href="#" class="permalink">sortReset</a></td>
-				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7).
+				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7; <span class="version updated">v2.16.0</span>).
 					<div class="collapsible">
 						<br>
-						This method immediately resets the entire table sort, while the option only resets the column sort after a third click.
+						This method immediately resets the entire table sort, while the option only resets the column sort after a third click.<br>
+						<br>
+						In <span class="version updated">v2.16.0</span>, a callback function was added to this method.<br>
+						<br>
 						<pre class="prettyprint lang-js">// Reset the table (make it unsorted)
-$("table").trigger("sortReset");</pre>
+var callback = function(table) {
+	console.log('sort has been reset');
+};
+$("table").trigger("sortReset", [callback]);</pre>
 					<span class="label label-warning">*NOTE*</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>.
 					</div>
 				</td>

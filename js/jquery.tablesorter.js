@@ -727,7 +727,7 @@
 				if (table.isUpdating) {
 					$table.trigger('updateComplete');
 				}
-				if (typeof callback === "function") {
+				if ($.isFunction(callback)) {
 					callback($table[0]);
 				}
 			}
@@ -752,12 +752,15 @@
 				// apply easy methods that trigger bound events
 				$table
 				.unbind('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ').join(c.namespace + ' '))
-				.bind("sortReset" + c.namespace, function(e){
+				.bind("sortReset" + c.namespace, function(e, callback){
 					e.stopPropagation();
 					c.sortList = [];
 					setHeadersCss(table);
 					multisort(table);
 					appendToTable(table);
+					if ($.isFunction(callback)) {
+						callback(table);
+					}
 				})
 				.bind("updateAll" + c.namespace, function(e, resort, callback){
 					e.stopPropagation();
@@ -852,14 +855,14 @@
 					$table
 						.trigger("sortEnd", this)
 						.trigger('applyWidgets');
-					if (typeof callback === "function") {
+					if ($.isFunction(callback)) {
 						callback(table);
 					}
 				})
 				.bind("appendCache" + c.namespace, function(e, callback, init) {
 					e.stopPropagation();
 					appendToTable(table, init);
-					if (typeof callback === "function") {
+					if ($.isFunction(callback)) {
 						callback(table);
 					}
 				})
@@ -870,7 +873,7 @@
 					}
 					// rebuild the cache map
 					buildCache(table);
-					if (typeof callback === "function") {
+					if ($.isFunction(callback)) {
 						callback(table);
 					}
 				})
