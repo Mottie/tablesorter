@@ -58,6 +58,10 @@
 			// starting page of the pager (zero based index)
 			page: 0,
 
+		// reset pager after filtering; set to desired page #
+		// set to false to not change page at filter start
+			pageReset: 0,
+
 			// Number of visible rows
 			size: 10,
 
@@ -674,7 +678,9 @@
 					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
-						p.page = 0; // fixes #456
+						if (p.pageReset !== false) {
+							p.page = p.pageReset; // fixes #456 & #565
+						}
 					})
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function() {

@@ -19,6 +19,10 @@ ts.addWidget({
 		// starting page of the pager (zero based index)
 		pager_startPage: 0,
 
+		// reset pager after filtering; set to desired page #
+		// set to false to not change page at filter start
+		pager_pageReset: 0,
+
 		// Number of visible rows
 		pager_size: 10,
 
@@ -210,7 +214,9 @@ tsp = ts.pager = {
 			.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 			.bind('filterStart.pager', function(e, filters) {
 				p.currentFilters = filters;
-				p.page = 0; // fixes #456
+				if (wo.pager_pageReset !== false) {
+					p.page = wo.pager_pageReset; // fixes #456 & #565
+				}
 			})
 			// update pager after filter widget completes
 			.bind('filterEnd.pager sortEnd.pager', function() {
