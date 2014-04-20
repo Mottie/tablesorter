@@ -1375,7 +1375,7 @@ $(function(){
 			<tr id="namespace">
 				<td><a href="#" class="permalink">namespace</a></td>
 				<td>String</td>
-				<td>Undefined</td>
+				<td>undefined</td>
 				<td>
 					This option should contain a unique namespace for each table; it is used when binding to event listeners (<span class="version">v2.15.7</span>).
 					<div class="collapsible">
@@ -1389,7 +1389,7 @@ $(function(){
 					<pre class="prettyprint lang-js">$(function(){
   $("#mytable").tablesorter({
     // if table id = "mytable", this namespace is saved as ".mytable"
-    namespace : $('#mytable')[0];
+    namespace : $('#mytable')[0].id;
   });
 });</pre>
 					</div>
@@ -1665,7 +1665,7 @@ $(function(){
 			<tr id="fixedurl">
 				<td><a href="#" class="permalink">fixedUrl</a></td>
 				<td>String</td>
-				<td>Undefined</td>
+				<td>undefined</td>
 				<td>
 					This option was added to set a specific page when storing data using the <a href="#function-storage"><code>$.tablesorter.storage</code></a> code (<span class="version">v2.12</span>).
 					<div class="collapsible"><br>
@@ -1690,7 +1690,7 @@ $(function(){
 			<tr id="widgetcolumns">
 				<td><a href="#" class="permalink alert">widgetColumns</a></td>
 				<td>Object with Array</td>
-				<td>{ css:[ "primary", "secondary", "tertiary" ] }</td>
+				<td>{ css: [ "primary", "secondary", "tertiary" ] }</td>
 				<td>
 					This option is being <span class="label label-danger">deprecated</span>!
 					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
