@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Filter Formatter: select2 (beta)</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="../docs/css/jq.css">
+	<link href="../docs/css/prettify.css" rel="stylesheet">
+	<script src="../docs/js/prettify.js"></script>
+	<script src="../docs/js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link href="../css/theme.blue.css" rel="stylesheet">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<!-- Select2 code -->
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2.min.css" rel="stylesheet">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2.min.js"></script>
+	<script src="../js/jquery.tablesorter.widgets-filter-formatter-select2.js"></script>
+
+<script id="js">$(function(){
+
+	$('table').tablesorter({
+		theme: 'blue',
+		widthFixed: true,
+		widgets: ['zebra', 'stickyHeaders', 'filter'],
+		widgetOptions : {
+			// Use the $.tablesorter.storage utility to save the most recent filters
+			filter_saveFilters : true,
+			// jQuery selector string of an element used to reset the filters
+			filter_reset : 'button.reset',
+			// add custom selector elements to the filter row
+			filter_formatter : {
+				// Alphanumeric (match)
+				0 : function($cell, indx){
+					return $.tablesorter.filterFormatter.select2( $cell, indx, {
+						match : true, // adds "filter-match" to header
+						cellText : 'Match: ',
+						width: '85%'
+					});
+				},
+				// Alphanumeric (exact)
+				1 : function($cell, indx){
+					return $.tablesorter.filterFormatter.select2( $cell, indx, {
+						match : false  // adds "filter-match" to header
+					});
+				}
+			},
+			// option added in v2.16.0
+			filter_selectSource : {
+				// Alphanumeric match (prefix only)
+				0 : function(table, column) {
+					return ['abc', 'def', 'zyx'];
+				}
+			}
+		}
+
+	});
+
+	});
+</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Filter Formatter: select2 (beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This is a demo of the select2 filter formatter code.</li>
+			<li>It requires jQuery 1.7.2+, tablesorter <span class="version">2.16</span>+, the filter widget 2.16+ and <a href="http://ivaynberg.github.io/select2/">Select2</a> v3.4.6+ (not tested on older select2 versions)</li>
+			<li>There are only two filter formatter options, the rest are all select2 options (defaults shown below):
+				<pre class="prettyprint lang-js">// select2 filter formatter options
+cellText : '',    // Text (wrapped in a label element)
+match    : true,  // adds "filter-match" to header & modifys search
+
+// ANY select2 options can be include below (showing default settings for this formatter code)
+multiple : true,  // allow multiple selections
+width    : '100%' // reduce this width if you add cellText</pre>
+			</li>
+			<li>This demo uses the new <a href="index.html#widget-filter-selectsource"><code>filter_selectSource</code></a> option which is only available in tablesorter <span class="version">v2.16</span>+
+		</ul>
+	</p>
+
+	<h1>Demo</h1>
+<div id="demo"><button class="reset">Reset Search</button>
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<!-- filter-match is automatically added by select2 "match" option -->
+			<th>AlphaNumeric (match)</th>
+			<th class="filter-onlyAvail">AlphaNumeric (exact; only available)</th>
+			<th>Numeric</th>
+			<th>Animals</th>
+			<th>Sites</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>abc 123</td><td>abc 123</td><td>10</td><td>Koala</td><td>http://www.google.com</td></tr>
+		<tr><td>abc 1</td><td>abc 1</td><td>34</td><td>Ox</td><td>http://www.yahoo.com</td></tr>
+		<tr><td>abc 9</td><td>abc 9</td><td>10</td><td>Girafee</td><td>http://www.facebook.com</td></tr>
+		<tr><td>zyx 24</td><td>zyx 24</td><td>67</td><td>Bison</td><td>http://www.whitehouse.gov/</td></tr>
+		<tr><td>abc 11</td><td>abc 11</td><td>3</td><td>Chimp</td><td>http://www.ucla.edu/</td></tr>
+		<tr><td>def 2</td><td>def 2</td><td>56</td><td>Elephant</td><td>http://www.wikipedia.org/</td></tr>
+		<tr><td>abc 9</td><td>abc 9</td><td>75</td><td>Lion</td><td>http://www.nytimes.com/</td></tr>
+		<tr><td>def 10</td><td>def 10</td><td>87</td><td>Zebra</td><td>http://www.google.com</td></tr>
+		<tr><td>zyx 1</td><td>zyx 1</td><td>99</td><td>Koala</td><td>http://www.mit.edu/</td></tr>
+		<tr><td>zyx 12</td><td>zyx 12</td><td>0</td><td>Llama</td><td>http://www.nasa.gov/</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- jQuery --&gt;
+&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: required --&gt;
+&lt;link href=&quot;../css/theme.blue.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Select2 code --&gt;
+&lt;link href=&quot;http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets-filter-formatter-select2.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
