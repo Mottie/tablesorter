@@ -1585,6 +1585,8 @@ $(function(){
       filter_saveFilters   : false,  
       // typing delay in milliseconds before starting a search.
       filter_searchDelay   : 300,
+      // include a function to return an array of values to be added to the column filter select
+      filter_selectSource  : null,
       // if true, filter start from the beginning of the cell contents.
       filter_startsWith    : false,
       // filter all data using parsed content.
@@ -2350,6 +2352,66 @@ $('table').trigger('search', false);</pre></div>
 				</td>
 				<td></td>
 			</tr>
+
+			<tr id="widget-filter-selectsource">
+				<td><a href="#" class="permalink">filter_selectSource</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>
+					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>).
+					<div class="collapsible">
+					<br>
+					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
+					<br>
+					This option allows using an alternate source, or customizing options of the filter select dropdown. This option can be set as follows:
+					<ul>
+						<li><code>null</code> - this value will set the default behavior and return all table cell values from the current column.</li>
+						<li>An overall function - when this option is a function, it will be used for all filter selects in the table.
+							<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_selectSource : function(table, column, onlyAvail){
+        // get an array of all table cell contents for a table column
+        var array = $.tablesorter.filter.getOptions(table, column, onlyAvail);
+        // manipulate the array as desired, then return it
+        return array;
+      }
+    }
+  });
+});</pre>
+						</li>
+						<li>An object containing column keys set with a function - when the option is set in this manner, a function can be applied to a specific column
+							<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_selectSource : {
+        0 : function(table, column, onlyAvail){
+          return $.getJSON('ajax/options.json', function(data) {
+            // return false if there is a problem and the select
+            // will display the original defaults
+            return data.hasOwnProperty('options') ? data.options : false;
+        }
+      }
+    }
+  });
+});</pre>
+						</li>
+					</ul>
+					The function uses the following parameters:
+					<ul>
+						<li><code>table</code> - table DOM element</li>
+						<li><code>column</code> - zero-based index of the column with a filter select</li>
+						<li><code>onlyAvail</code> - boolean indicating if the returned options should only be from available (non-filtered) rows.</li>
+					</ul>
+					<span class="label label-info">Important</span> Return an array of values which will be added to the filter select dropdown. This array will automatically be stripped of any duplicate values and sorted alphanumerically before being added to the select. If for some reason the custom <code>filter_selectSource</code> function does not obtain the desired array of values, return <code>false</code> and the original method of obtaining column cell content will be used.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+
 
 			<tr id="widget-filter-serversidefiltering">
 				<td><a href="#" class="permalink">filter_serversideFiltering</a></td>

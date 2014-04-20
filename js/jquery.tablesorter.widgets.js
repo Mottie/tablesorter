@@ -364,6 +364,7 @@ ts.addWidget({
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
 		filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
+		filter_selectSource  : null,  // include a function to return an array of values to be added to the column filter select
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
 		filter_serversideFiltering : false, // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
@@ -762,7 +763,7 @@ ts.filter = {
 		.attr('data-lastSearchTime', new Date().getTime())
 		.unbind('keyup search change '.split(' ').join(c.namespace + 'filter '))
 		// include change for select - fixes #473
-		.bind('keyup search change '.split(' ').join(c.namespace + 'filter '), function(event, filters) {
+		.bind('keyup search change '.split(' ').join(c.namespace + 'filter '), function(event) {
 			$(this).attr('data-lastSearchTime', new Date().getTime());
 			// emulate what webkit does.... escape clears the filter
 			if (event.which === 27) {
@@ -877,10 +878,10 @@ ts.filter = {
 			// $rows = $tbody.children('tr').not(c.selectorRemove);
 			columnIndex = c.columns;
 			// convert stored rows into a jQuery object
-			$rows = true ? $( $.map(c.cache[tbodyIndex].normalized, function(el, i){ return el[columnIndex].$row.get(); }) ) : $tbody.children('tr').not(c.selectorRemove);
+			$rows = true ? $( $.map(c.cache[tbodyIndex].normalized, function(el){ return el[columnIndex].$row.get(); }) ) : $tbody.children('tr').not(c.selectorRemove);
 			len = $rows.length;
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show()
+				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
 			} else {
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
@@ -1027,17 +1028,39 @@ ts.filter = {
 			c.$table.trigger('applyWidgets'); // make sure zebra widget is applied
 		}, 0);
 	},
-	buildSelect: function(table, column, updating, onlyavail) {
-		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
-		column = parseInt(column, 10);
-		var indx, rowIndex, tbodyIndex, len, currentValue, txt, $filters, row, cache,
+	getOptionSource: function(table, column, onlyAvail) {
+		var c = table.config,
+			wo = c.widgetOptions,
+			arry = false,
+			source = wo.filter_selectSource;
+
+		// filter select source option
+		if ($.isFunction(source)) {
+			// OVERALL source
+			arry = source(table, column, onlyAvail);
+		} else if ($.type(source) === 'object' && source.hasOwnProperty(column)) {
+			// custom select source function for a SPECIFIC COLUMN
+			arry = source[column](table, column, onlyAvail);
+		}
+		if (arry === false) {
+			// fall back to original method
+			arry = ts.filter.getOptions(table, column, onlyAvail);
+		}
+
+		// get unique elements and sort the list
+		// if $.tablesorter.sortText exists (not in the original tablesorter),
+		// then natural sort the list otherwise use a basic sort
+		arry = $.grep(arry, function(value, indx) {
+			return $.inArray(value, arry) === indx;
+		});
+		return (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b); }) : arry.sort(true);
+	},
+	getOptions: function(table, column, onlyAvail) {
+		var rowIndex, tbodyIndex, len, row, cache, cell,
 			c = table.config,
 			wo = c.widgetOptions,
 			$tbodies = c.$table.children('tbody'),
-			arry = [],
-			node = c.$headers.filter('[data-column="' + column + '"]:last'),
-			// t.data('placeholder') won't work in jQuery older than 1.4.3
-			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>';
+			arry = [];
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if (!$tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock)) {
 				cache = c.cache[tbodyIndex];
@@ -1047,29 +1070,33 @@ ts.filter = {
 					// get cached row from cache.row (old) or row data object (new; last item in normalized array)
 					row = cache.row ? cache.row[rowIndex] : cache.normalized[rowIndex][c.columns].$row[0];
 					// check if has class filtered
-					if (onlyavail && row.className.match(wo.filter_filteredRow)) { continue; }
+					if (onlyAvail && row.className.match(wo.filter_filteredRow)) { continue; }
 					// get non-normalized cell content
 					if (wo.filter_useParsedData) {
 						arry.push( '' + cache.normalized[rowIndex][column] );
 					} else {
-						node = row.cells[column];
-						if (node) {
-							arry.push( $.trim( node.textContent || node.innerText || $(node).text() ) );
+						cell = row.cells[column];
+						if (cell) {
+							arry.push( $.trim( cell.textContent || cell.innerText || $(cell).text() ) );
 						}
 					}
 				}
 			}
 		}
-		// get unique elements and sort the list
-		// if $.tablesorter.sortText exists (not in the original tablesorter),
-		// then natural sort the list otherwise use a basic sort
-		arry = $.grep(arry, function(value, indx) {
-			return $.inArray(value, arry) === indx;
-		});
-		arry = (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b); }) : arry.sort(true);
-
-		// Get curent filter value
-		currentValue = c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').val();
+		return arry;
+	},
+	buildSelect: function(table, column, updating, onlyAvail) {
+		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
+		column = parseInt(column, 10);
+		var indx, txt, $filters,
+			c = table.config,
+			wo = c.widgetOptions,
+			node = c.$headers.filter('[data-column="' + column + '"]:last'),
+			// t.data('placeholder') won't work in jQuery older than 1.4.3
+			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>',
+			arry = ts.filter.getOptionSource(table, column, onlyAvail),
+			// Get curent filter value
+			currentValue = c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').val();
 
 		// build option list
 		for (indx = 0; indx < arry.length; indx++) {
@@ -1170,7 +1197,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
 		ts.filter.findRows( table, filter, (filter || []).join('') );
-		c.$table.trigger('filterFomatterUpdate'); // .trigger('search', filter)
+		c.$table.trigger('filterFomatterUpdate');
 	}
 	return !!valid;
 };
