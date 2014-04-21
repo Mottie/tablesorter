@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 4/10/2014 (v2.15.14)
+ * updated 4/20/2014 (v2.16.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -129,13 +129,13 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			var i, pg, s, out, t, regex,
+			var i, pg, s, out, regex,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
 				t = [],
 				sz = p.size || 10; // don't allow dividing by zero
 			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove ];
-			if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
+			if (p.countChildRows) { t.push(c.cssChildRow); }
 			regex = new RegExp( '(' + t.join('|') + ')' );
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			p.filteredRows = (f) ? 0 : p.totalRows;
@@ -460,7 +460,7 @@
 		},
 
 		renderTable = function(table, rows, p) {
-			var i, $tb, index, count, added, f,
+			var $tb, index, count, added,
 				$t = $(table),
 				c = table.config,
 				f = c.$table.hasClass('hasFilters'),

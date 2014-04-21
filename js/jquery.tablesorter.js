@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.15.14 - Client-side table sorting with ease!
+* TableSorter 2.16.0 beta - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.15.14";
+			ts.version = "2.16.0-beta";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -791,7 +791,7 @@
 					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
-					var l, v, row, icell,
+					var v, row, icell,
 					$tb = $table.find('tbody'),
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)

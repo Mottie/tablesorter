@@ -1,7 +1,7 @@
 /*! tablesorter CSS Sticky Headers widget - updated 12/17/2013 (v2.15.0)
 * Requires a modern browser, tablesorter v2.8+
 */
-/*global jQuery: false, unused:false */
+/*jshint jquery:true, unused:false */
 ;(function($){
 	"use strict";
 

@@ -10,7 +10,7 @@
 
 	Resizable scroller widget for the jQuery tablesorter plugin
 
-	Version 2.0 - modified by Rob Garrison (4/12/2013; updated 4/18/2014 for tablesorter v2.16.0)
+	Version 2.0 - modified by Rob Garrison (4/12/2013; updated 4/20/2014 for tablesorter v2.16.0)
 	Requires jQuery v1.7+
 	Requires the tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
 
@@ -76,7 +76,7 @@ ts.addWidget({
 		//Setup window.resizeEnd event
 		$win
 			.bind('resize', ts.window_resize)
-			.bind('resizeEnd', function(e) {
+			.bind('resizeEnd', function() {
 				// init is run before format, so scroller_resizeWidth
 				// won't be defined within the "c" or "wo" parameters
 				if (typeof table.config.widgetOptions.scroller_resizeWidth === 'function') {
@@ -91,9 +91,7 @@ ts.addWidget({
 	format: function(table, c, wo) {
 		var h, $hdr, id, t, resize, $cells,
 			$win = $(window),
-			$tbl = c.$table,
-			flag = false,
-			filterInputs = 'input, select';
+			$tbl = c.$table;
 
 		if (!c.isScrolling) {
 			h = wo.scroller_height || 300;

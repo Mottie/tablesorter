@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 4/10/2014 (v2.15.14) */
+/* Pager widget (beta) for TableSorter 4/20/2014 (v2.16.0) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -321,7 +321,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
-		var i, pg, s, out, t, regex,
+		var i, pg, s, out, regex,
 			wo = c.widgetOptions,
 			p = c.pager,
 			f = c.$table.hasClass('hasFilters') && !wo.pager_ajaxUrl,
@@ -646,7 +646,7 @@ tsp = ts.pager = {
 	},
 
 	renderTable: function(table, rows) {
-		var i, $tb, index, count, added, f,
+		var $tb, index, count, added,
 			c = table.config,
 			p = c.pager,
 			wo = c.widgetOptions,
