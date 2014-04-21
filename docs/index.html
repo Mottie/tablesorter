@@ -2886,7 +2886,8 @@ $.extend($.tablesorter.themes.jui, {
     &lt;/select&gt;
     &lt;select class="gotoPage" title="Select page number"&gt;&lt;/select&gt;
   &lt;/form&gt;
-&lt;/div&gt;</pre>Add this option as follows:<pre class="prettyprint lang-js">$(function(){
+&lt;/div&gt;</pre><span class="label label-warning">Caution</span> If you use buttons in your pager container, make sure the buttons include a button type (<code>&lt;button type=&quot;button&quot;&gt;Next&lt;/button&gt;</code>) to prevent form submission and page reloading every time the button is clicked.<br>
+						<br>Use this option as follows:<pre class="prettyprint lang-js">$(function(){
   $("table")
     .tablesorter()
     .tablesorterPager({
