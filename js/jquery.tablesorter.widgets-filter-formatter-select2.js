@@ -53,6 +53,8 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 			.find('.select2').select2('val', v);
 		}
 	},
+
+	// get options from table cell content or filter_selectSource (v2.16)
 	updateOptions = function(){
 		data = [];
 		arry = ts.filter.getOptionSource(c.$table[0], indx, onlyAvail) || [];
@@ -69,6 +71,8 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		$cell.prepend('<label>' + o.cellText + '</label>');
 	}
 
+	// don't add default in table options if either ajax or
+	// data options are already defined
 	if (!(o.ajax && !$.isEmptyObject(o.ajax)) && !o.data) {
 		updateOptions();
 		if (onlyAvail) {
@@ -79,7 +83,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		}
 	}
 
-	// add a select2!
+	// add a select2 hidden input!
 	$('<input class="select2 select2-' + indx + '" type="hidden" />')
 	.val(o.value)
 	.appendTo($cell)
@@ -88,7 +92,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		updateSelect2();
 	});
 
-	// update spinner from hidden input, in case of saved filters
+	// update select2 from filter hidden input, in case of saved filters
 	c.$table.bind('filterFomatterUpdate', function(){
 		// value = '/(x$|y$)/' => 'x,y'
 		var val = c.$table.data('lastSearch')[indx] || '';
