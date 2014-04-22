@@ -1196,7 +1196,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 	if (c && apply) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
-		ts.filter.findRows( table, filter, (filter || []).join('') );
+		ts.filter.findRows( c.$table[0], filter, (filter || []).join('') );
 		c.$table.trigger('filterFomatterUpdate');
 	}
 	return !!valid;
