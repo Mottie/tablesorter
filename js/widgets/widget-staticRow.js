@@ -78,7 +78,8 @@ ts.addWidget({
 			hasShuffled = true;
 			indx = 0;
 			$rows = $tbody.children(wo.staticRow_class);
-			max = $rows.length - 1;
+			numRows = $tbody.children('tr').length - 1;
+			max = $rows.length;
 
 			// don't allow the while loop to cycle more times than the set number of static rows
 			while (hasShuffled && indx < max) {
@@ -92,7 +93,6 @@ ts.addWidget({
 					if (targetIndex !== $(this).index()) {
 						hasShuffled = true;
 						$thisRow = $(this).detach();
-						numRows = $tbody.find('tr').length - 1;
 
 						if (targetIndex >= numRows) {
 							// Are we trying to be the last row?
