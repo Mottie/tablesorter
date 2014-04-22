@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 4/20/2014 (v2.16)
+/*! Filter widget formatter functions - updated 4/22/2014 (v2.16.1-beta)
  * requires: jQuery 1.7.2+, tableSorter 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
  */
 /*jshint browser:true, jquery:true, unused:false */

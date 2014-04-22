@@ -47,6 +47,16 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.16.1">Version 2.16.1-beta</a> (4/22/2014)
+
+* Docs:
+  * Add note about using buttons in forms (include `type="button"`). Fixes [issue #543](https://github.com/Mottie/tablesorter/issues/543).
+  * Add example link to select2 demo for the `filter_selectSource` entry.
+* Filter widget: setFilters now supports passing it a jQuery table object
+* Static Row widget
+  * Add more inline comments
+  * Fix issue with not repositioning static row properly within mutliple tbodies.
+
 #### <a name="v2.16.0">Version 2.16.0-beta</a> (4/20/2014)
 
 * Doc & testing updates
