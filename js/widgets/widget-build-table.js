@@ -1,4 +1,6 @@
-/*! Build Table widget * by Rob Garrison */
+/*! Build Table widget for tableSorter v2.16.2-beta (4/23/2014)
+ * by Rob Garrison
+ */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
@@ -163,8 +165,12 @@ var ts = $.tablesorter = $.tablesorter || {},
 				t = '<tr>' + (wo.build_numbers.addColumn ? '<th' + (wo.build_numbers.sortable ? '' :
 					' class="sorter-false"') + '>' + wo.build_numbers.addColumn + '</th>' : '');
 			$.each(h1, function(i, h) {
-				t += '<th' + (cls && cls[i] ? ' class="' + cls[i] + '"' : '') + '>' +
-					(h2 && h2[i] ? h2[i] : h) + '</th>';
+				if (/<\s*\/t(d|h)\s*>/.test(h)) {
+					t += h;
+				} else {
+					t += '<th' + (cls && cls[i] ? ' class="' + cls[i] + '"' : '') + '>' +
+						(h2 && h2[i] ? h2[i] : h) + '</th>';
+				}
 			});
 			return t + '</tr>';
 		},
@@ -172,8 +178,13 @@ var ts = $.tablesorter = $.tablesorter || {},
 			var h = (ftr ? 'th' : 'td'),
 				t = '<tr>' + (wo.build_numbers.addColumn ? '<' + h + '>' + (ftr ? '' : num) + '</' + h + '>' : '');
 			$.each(items, function(i, item) {
-				t += '<' + (ftr ? h + (c && c[i] ? ' class="' + c[i] + '"' : '') : h) + '>' +
-					(ftr && txt && txt.length && txt[i] ? txt[i] : item) + '</' + h + '>';
+				// test if HTML is already included; look for closing </td>
+				if (/<\s*\/t(d|h)\s*>/.test(item)) {
+					t += item;
+				} else {
+					t += '<' + (ftr ? h + (c && c[i] ? ' class="' + c[i] + '"' : '') : h) + '>' +
+						(ftr && txt && txt.length && txt[i] ? txt[i] : item) + '</' + h + '>';
+				}
 			});
 			return t + '</tr>';
 		}
