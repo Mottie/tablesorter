@@ -123,6 +123,10 @@
 						$this.find('.accordion-link').click(function(){
 							$this.accordion( "option", "active", $(this).data('index') );
 						});
+					},
+					activate: function(e, ui) {
+						// refresh zebra widget when rows are visible
+						ui.newPanel.find('table').trigger('applyWidgets');
 					}
 				});
 				// open parent of nested accordion
