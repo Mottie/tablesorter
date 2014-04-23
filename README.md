@@ -1,6 +1,10 @@
 tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
+### Notice!
+
+* Because of the change to the internal cache, the tablesorter v2.16+ core, filter widget and pager (both plugin &amp; widget) will only work with the same version or newer files.
+
 ### [Documentation](http://mottie.github.io/tablesorter/docs/)
 
 * See the [full documentation](http://mottie.github.io/tablesorter/docs/).
@@ -42,6 +46,14 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Big thanks to [ThsSin-](https://github.com/TheSin-) for taking over for a while and also providing valuable feedback.
 * Also extra thanks to [christhomas](https://github.com/christhomas) and [Lynesth](https://github.com/Lynesth) for help with code.
 * And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
+
+### Questions?
+
+* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
+* Search the [main documentation](http://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
+* If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
+* Ask your question at [Stackoverflow](http://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
+* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
 ### Change Log
 
