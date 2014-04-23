@@ -168,6 +168,10 @@ tsp = ts.pager = {
 			p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 			$.data(table, 'pagerLastSize', p.size);
 		}
+
+		// skipped rows
+		p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.substring(1) + '|' + c.cssChildRow + ')');
+
 		// clear initialized flag
 		p.initialized = false;
 		// before initialization event
@@ -329,7 +333,7 @@ tsp = ts.pager = {
 			f = c.$table.hasClass('hasFilters') && !wo.pager_ajaxUrl,
 			t = [],
 			sz = p.size || 10; // don't allow dividing by zero
-		t = [ c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered', c.selectorRemove ];
+		t = [ wo && wo.filter_filteredRow || 'filtered', c.selectorRemove ];
 		if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
 		regex = new RegExp( '(' + t.join('|') + ')' );
 		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
@@ -338,7 +342,7 @@ tsp = ts.pager = {
 		p.filteredPages = p.totalPages;
 		if (f) {
 			$.each(c.cache[0].normalized, function(i, el) {
-				p.filteredRows += /(filtered|removeme|tablesorter-childRow)/.test(el[c.columns].$row[0].className) ? 0 : 1;
+				p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 			});
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		}

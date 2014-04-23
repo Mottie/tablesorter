@@ -142,7 +142,7 @@
 			p.filteredPages = p.totalPages;
 			if (f) {
 				$.each(c.cache[0].normalized, function(i, el) {
-					p.filteredRows += /(filtered|removeme|tablesorter-childRow)/.test(el[c.columns].$row[0].className) ? 0 : 1;
+					p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 				});
 				p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			}
@@ -668,6 +668,7 @@
 				var t, ctrls, fxn,
 					table = this,
 					c = table.config,
+					wo = c.widgetOptions,
 					p = c.pager = $.extend( true, {}, $.tablesorterPager.defaults, settings ),
 					$t = c.$table,
 					// added in case the pager is reinitialized after being destroyed.
@@ -689,6 +690,9 @@
 					p.size = ( isNaN(t.size) ? p.size : t.size ) || 10;
 					$.data(table, 'pagerLastSize', p.size);
 				}
+
+				// skipped rows
+				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.substring(1) + '|' + c.cssChildRow + ')');
 
 				$t
 					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
