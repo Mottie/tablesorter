@@ -512,12 +512,12 @@ tsff = ts.filterFormatter = {
 		t, $shcell = [],
 
 		// this function updates the hidden input
-		date1Compare = function(v, notrigger) {
+		date1Compare = function(notrigger) {
 			var date, query,
-				getdate = v || $date.datepicker('getDate') || '',
+				getdate = $date.datepicker('getDate') || '',
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				searchType = c.$table[0].hasInitialized ? o.delayed || '': true;
-			$date.datepicker('setDate', getdate === '' ? o.defaultDate || '' : getdate);
+			$date.datepicker('setDate', getdate === '' ? '' : getdate);
 			if (getdate === '') { notrigger = false; }
 			date = $date.datepicker('getDate');
 			query = date ? ( o.endOfDay && /<=/.test(compare) ? date.setHours(23, 59, 59) : date.getTime() ) || '' : '';
@@ -557,7 +557,7 @@ tsff = ts.filterFormatter = {
 			if ($.isArray(o.compare)) {
 				$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 			}
-			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', '');
+			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate);
 			setTimeout(function(){
 				date1Compare();
 			}, 0);
@@ -569,15 +569,17 @@ tsff = ts.filterFormatter = {
 			if (/\s+-\s+/.test(v)) {
 				// date range found; assume an exact match on one day
 				$cell.find(compareSelect).val('=');
-				num = new Date ( Number( v.split(/\s+-\s+/)[0] ) );
+				num = v.split(/\s+-\s+/)[0];
 				$date.datepicker( 'setDate', num );
 			} else {
 				num = (tsff.updateCompare($cell, $input, o)[1]).toString() || '';
 				// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
-				num = num !== '' ? new Date( /\d{5}/g.test(num) ? Number(num) : num ) || '' : '';
+				num = num !== '' ? /\d{5}/g.test(num) ? Number(num) : num || '' : '';
 			}
 			$cell.add($shcell).find('.date').datepicker( 'setDate', num );
-			date1Compare(num, true);
+			setTimeout(function(){
+				date1Compare(true);
+			}, 0);
 		});
 
 		if (o.compare) {
@@ -667,17 +669,16 @@ tsff = ts.filterFormatter = {
 			var range,
 				from = $cell.find('.dateFrom').datepicker('getDate'),
 				to = $cell.find('.dateTo').datepicker('getDate');
-
 			from = validDate(from) ? from.getTime() : '';
 			to = validDate(to) ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
 			range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 			$cell.add( $shcell )
 				.find('.dateRange').val(range)
 				.trigger('search');
-
 			// date picker needs date objects
 			from = from ? new Date(from) : '';
 			to = to ? new Date(to) : '';
+
 			if (/<=/.test(range)) {
 				$cell.add( $shcell )
 					.find('.dateFrom').datepicker('option', 'maxDate', to ).end()
@@ -708,18 +709,21 @@ tsff = ts.filterFormatter = {
 			// date range
 			if (/\s+-\s+/.test(val)){
 				val = val.split(/\s+-\s+/) || [];
-				from = new Date(Number( val[0] )) || '';
-				to = new Date(Number( val[1] )) || '';
+				from = val[0] || '';
+				to = val[1] || '';
 			} else if (/>=/.test(val)) {
 				// greater than date (to date empty)
-				from = new Date(Number( val.replace(/>=/, '') )) || '';
+				from = val.replace(/>=/, '') || '';
 			} else if (/<=/.test(val)) {
 				// less than date (from date empty)
-				to = new Date(Number( val.replace(/<=/, '') )) || '';
+				to = val.replace(/<=/, '') || '';
 			}
 			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from);
 			$cell.add($shcell).find('.dateTo').datepicker('setDate', to);
-			closeDate();
+			// give datepicker time to process
+			setTimeout(function(){
+				closeDate();
+			}, 0);
 		});
 
 		// has sticky headers?
@@ -740,6 +744,9 @@ tsff = ts.filterFormatter = {
 		$cell.closest('table').bind('filterReset', function(){
 			$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from );
 			$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to );
+			setTimeout(function(){
+				closeDate();
+			}, 0);
 		});
 
 		// return the hidden input so the filter widget has a reference to it
