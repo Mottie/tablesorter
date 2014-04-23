@@ -214,15 +214,17 @@ tsp = ts.pager = {
 			.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 			.bind('filterStart.pager', function(e, filters) {
 				p.currentFilters = filters;
-				if (wo.pager_pageReset !== false) {
+				// don't change page is filters are the same (pager updating, etc)
+				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
 					p.page = wo.pager_pageReset; // fixes #456 & #565
 				}
 			})
 			// update pager after filter widget completes
 			.bind('filterEnd.pager sortEnd.pager', function() {
 				if (p.initialized) {
-					tsp.moveToPage(table, p, false);
+					// update page display first, so we update p.filteredPages
 					tsp.updatePageDisplay(table, c, false);
+					tsp.moveToPage(table, p, false);
 					tsp.fixHeight(table, c);
 				}
 			})

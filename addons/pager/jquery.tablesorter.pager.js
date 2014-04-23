@@ -497,7 +497,6 @@
 				}
 				ts.processTbody(table, $tb, false);
 			}
-
 			updatePageDisplay(table, p);
 			if ( !p.isDisabled ) { fixHeight(table, p); }
 			$t.trigger('applyWidgets');
@@ -695,15 +694,17 @@
 					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
-						if (p.pageReset !== false) {
+						// don't change page is filters are the same (pager updating, etc)
+						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
 						}
 					})
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function() {
 						if (p.initialized) {
-							moveToPage(table, p, false);
+							// update page display first, so we update p.filteredPages
 							updatePageDisplay(table, p, false);
+							moveToPage(table, p, false);
 							fixHeight(table, p);
 						}
 					})
