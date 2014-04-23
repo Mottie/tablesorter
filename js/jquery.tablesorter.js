@@ -219,38 +219,44 @@
 				var c = table.config,
 					// update table bodies in case we start with an empty table
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, p, time, parsersDebug = "";
-				if ( tb.length === 0) {
+					rows, list, l, i, h, ch, p, time,
+					j = 0,
+					parsersDebug = "",
+					len = tb.length;
+				if ( len === 0) {
 					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
 					time = new Date();
 					log('Detecting parsers for each column');
 				}
-				rows = tb[0].rows;
-				if (rows[0]) {
-					list = [];
-					l = rows[0].cells.length;
-					for (i = 0; i < l; i++) {
-						// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
-						// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
-						h = c.$headers.filter(':not([colspan])');
-						h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
-							.filter('[data-column="' + i + '"]:last');
-						ch = c.headers[i];
-						// get column parser
-						p = ts.getParserById( ts.getData(h, ch, 'sorter') );
-						// empty cells behaviour - keeping emptyToBottom for backwards compatibility
-						c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
-						// text strings behaviour in numerical sorts
-						c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
-						if (!p) {
-							p = detectParserForColumn(table, rows, -1, i);
+				list = [];
+				while (j < len) {
+					rows = tb[j].rows;
+					if (rows[j]) {
+						l = rows[j].cells.length;
+						for (i = 0; i < l; i++) {
+							// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
+							// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
+							h = c.$headers.filter(':not([colspan])');
+							h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
+								.filter('[data-column="' + i + '"]:last');
+							ch = c.headers[i];
+							// get column parser
+							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
+							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
+							c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+							// text strings behaviour in numerical sorts
+							c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
+							if (!p) {
+								p = detectParserForColumn(table, rows, -1, i);
+							}
+							if (c.debug) {
+								parsersDebug += "column:" + i + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
+							}
+							list.push(p);
 						}
-						if (c.debug) {
-							parsersDebug += "column:" + i + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
-						}
-						list.push(p);
 					}
+					j += (list.length) ? len : 1;
 				}
 				if (c.debug) {
 					log(parsersDebug);
