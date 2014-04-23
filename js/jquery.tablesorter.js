@@ -1016,7 +1016,9 @@
 					setHeadersCss(table);
 					if (c.initWidgets) {
 						// apply widget format
-						ts.applyWidget(table, false);
+						setTimeout(function(){
+							ts.applyWidget(table, false);
+						}, 0);
 					}
 				}
 
