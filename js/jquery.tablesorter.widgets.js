@@ -888,11 +888,10 @@ ts.filter = {
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
 				$.each(filters, function(indx, val) {
 					// check for changes from beginning of filter; but ignore if there is a logical "or" in the string
-					searchFiltered = (val || '').indexOf(lastSearch[indx] || '') === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
+					searchFiltered = (val || '').indexOf(lastSearch[indx]) === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
 				});
-
 				// can't search when all rows are hidden - this happens when looking for exact matches
-				if (searchFiltered && $rows.filter('.' + wo.filter_filteredRow).length === 0) { searchFiltered = false; }
+				if (searchFiltered && $rows.not('.' + wo.filter_filteredRow).length === 0) { searchFiltered = false; }
 				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
 					anyMatch = wo.filter_$anyMatch && wo.filter_$anyMatch.val() || filters[c.columns] || '';
 					if (c.sortLocaleCompare) {
