@@ -827,6 +827,7 @@
 						updateHeader(table);
 						commonUpdate(table, resort, callback);
 					} else {
+						$row = $($row); // make sure we're using a jQuery object
 						var i, j, l, rowData, cells,
 						rows = $row.filter('tr').length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
