@@ -259,7 +259,7 @@
 					j += (list.length) ? len : 1;
 				}
 				if (c.debug) {
-					log(parsersDebug);
+					log(parsersDebug ? parsersDebug : "No parsers detected");
 					benchmark("Completed detecting parsers", time);
 				}
 				c.parsers = list;
@@ -337,7 +337,8 @@
 									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
 								}
 							}
-							cols.push(rowData);
+							// ensure rowData is always in the same location (after the last column)
+							cols[c.columns] = rowData;
 							cc.normalized.push(cols);
 						}
 						cc.colMax = colMax;
@@ -830,7 +831,7 @@
 						rows = $row.filter('tr').length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
-						if (!c.parsers) {
+						if (!(c.parsers && c.parsers.length)) {
 							buildParserCache(table);
 						}
 						// add each row
@@ -891,7 +892,7 @@
 				})
 				.bind("updateCache" + c.namespace, function(e, callback){
 					// rebuild parsers
-					if (!c.parsers) {
+					if (!(c.parsers && c.parsers.length)) {
 						buildParserCache(table);
 					}
 					// rebuild the cache map
