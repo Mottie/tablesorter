@@ -59,7 +59,31 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
-#### <a name="v2.16.1">Version 2.16.1-beta</a> (4/22/2014)
+#### <a name="v2.16.0">Version 2.16.0</a> (4/23/2014)
+
+* Docs
+  * Add notice to readme about upgrading to v2.16.
+  * Add question section to readme about where to ask questions, including the new IRC channel.
+  * Update jQuery UI accordion code to reapply widgets to tables within the section, when open.
+
+* Build widget
+  * Now works with HTML in the data
+  * Add zebra widget to demos.
+
+* Core
+  * Check more than the first tbody when detecting parsers. Fixes [issue #589](https://github.com/Mottie/tablesorter/issues/589).
+  * Apply widgets on table initialization after a short delay.
+
+* Filter widget:
+  * Fix search already filtered rows
+  * Fix `filteredRows` count &amp; cleanup.
+  * SetFilters now behaves more like a triggered search. Fixes [issue #588](https://github.com/Mottie/tablesorter/issues/588).
+  * Filterformatter - Fix both datepicker scripts to work properly with non-U.S. formats. Fixes [issue #587](https://github.com/Mottie/tablesorter/issues/587).
+
+* Pager: Now stays on the same page after updating. Fixes [issue #590](https://github.com/Mottie/tablesorter/issues/590).
+* Testing: Add some preliminary tests for the filter widget.
+
+#### <a name="v2.16.1-beta">Version 2.16.1-beta</a> (4/22/2014)
 
 * Docs:
   * Add note about using buttons in forms (include `type="button"`). Fixes [issue #543](https://github.com/Mottie/tablesorter/issues/543).
@@ -69,7 +93,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Add more inline comments
   * Fix issue with not repositioning static row properly within mutliple tbodies.
 
-#### <a name="v2.16.0">Version 2.16.0-beta</a> (4/20/2014)
+#### <a name="v2.16.0-beta">Version 2.16.0-beta</a> (4/20/2014)
 
 * Doc & testing updates
   * More version numbers added - when certain variable & functions were added or last updated.
@@ -192,29 +216,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Bootstrap theme:
   * Fix zebra highlighting for child rows
   * Thanks to [ilyai](https://github.com/ilyai) - [PR #567](https://github.com/Mottie/tablesorter/pull/567)
-
-#### <a name="v2.15.12">Version 2.15.12</a> (3/31/2014)
-
-* Replaced references to `cell.cellIndex` with `$(cell).index()`
-  * Prevents an error in IE8
-  * Thanks [sylvain-hamel](https://github.com/sylvain-hamel)!
-  * Fixed merge issues, then modified code to minize use of this indexing
-  * Cell column property has correct value again.
-  * Fixes [issue #554](https://github.com/Mottie/tablesorter/pull/554)
-* Fix docs so nested accordions open with hash.
-* Child row updates
-  * Added <code>tablesorter-hasChildRow</code> class name to all parents of child rows.
-  * Added `.tablesorter .filtered { display: none; }` to every included theme; needed to properly hide child rows
-  * Fixed pager so that if the last pager row has any child rows, they are now included. Fixes part of [issue #396](https://github.com/Mottie/tablesorter/issues/396).
-  * Fixes [issue #556](https://github.com/Mottie/tablesorter/issues/556).
-* Add `resizable_widths` option
-  * Set the default & reset header widths using this option
-  * Fixes [issue #555](https://github.com/Mottie/tablesorter/issues/555).
-* I apologize for the last version error... it is set to 2.5.11 instead of 2.15.11 in the git repo tag. It is correct everywhere else.
-
-#### <a name="v2.15.11">Version 2.15.11</a> (3/18/2014)
-
-* Updated Bootstrap to v3.1.1
-* Check if cell has parser to catch undefined error. Fixes [issue #546](https://github.com/Mottie/tablesorter/pull/546). Thanks [antila](https://github.com/antila)!
-* Column count is now correct with nested tables (with tfoot). Fixes [issue #547](https://github.com/Mottie/tablesorter/issues/547).
-* Fix table reset on pagination change. Fixes [issue #548](https://github.com/Mottie/tablesorter/pull/548). Thanks [evanboho](https://github.com/evanboho)!

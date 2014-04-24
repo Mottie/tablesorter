@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 4/20/2014 (v2.16.0)
+ * updated 4/23/2014 (v2.16.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {

@@ -1,4 +1,4 @@
-/*! Build Table widget for tableSorter v2.16.2-beta (4/23/2014)
+/*! Build Table widget for tableSorter v2.16.0 (4/23/2014)
  * by Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -383,6 +383,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		$tb = $('<tbody>');
 		// Build tbody
 		$.each(r, function(i, d){
+			var j;
 			t = $.type(d) === 'object';
 			// add new tbody
 			if (t && d.newTbody) {
