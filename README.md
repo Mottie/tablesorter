@@ -59,6 +59,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.16.1">Version 2.16.1</a> (4/24/2014)
+
+* Core: 
+  * Fixed an issue where ajax loaded data would cause a javascript error because of improper ignoring of data.
+  * Ajax loaded data will now be parsed and cached - so stuff like the grouping widget will work properly.
+
 #### <a name="v2.16.0">Version 2.16.0</a> (4/23/2014)
 
 * Docs
