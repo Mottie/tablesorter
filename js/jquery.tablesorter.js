@@ -544,7 +544,7 @@
 				}
 			}
 
-			function updateHeaderSortCount(table, list) {
+			function updateHeaderSortCount(table, list, triggered) {
 				var s, t, o, c = table.config,
 					sl = list || c.sortList;
 				c.sortList = [];
@@ -552,10 +552,11 @@
 					// ensure all sortList values are numeric - fixes #127
 					s = [ parseInt(v[0], 10), parseInt(v[1], 10) ];
 					// make sure header exists
-					o = c.$headers[s[0]];
+					o = c.$headers.filter('[data-column="' + s[0] + '"]:last')[0];
 					if (o) { // prevents error if sorton array is wrong
 						c.sortList.push(s);
 						t = $.inArray(s[1], o.order); // fixes issue #167
+						if (triggered) { o.count = o.count + 1; }
 						o.count = t >= 0 ? t : s[1] % (c.sortReset ? 3 : 2);
 					}
 				});
@@ -625,7 +626,7 @@
 						// reverse the sorting direction
 						for (col = 0; col < c.sortList.length; col++) {
 							s = c.sortList[col];
-							order = c.$headers[s[0]];
+							order = c.$headers.filter('[data-column="' + s[0] + '"]:last')[0];
 							if (s[0] === indx) {
 								// order.count seems to be incorrect when compared to cell.count
 								s[1] = order.order[cell.count];
@@ -869,7 +870,7 @@
 					e.stopPropagation();
 					$table.trigger("sortStart", this);
 					// update header count index
-					updateHeaderSortCount(table, list);
+					updateHeaderSortCount(table, list, true);
 					// set css for headers
 					setHeadersCss(table);
 					// fixes #346
