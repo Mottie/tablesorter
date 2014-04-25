@@ -188,6 +188,10 @@ math_ignore : [0,1]</pre>
 						<td>
 							Set this option with an output formatting mask to use <sup class="remark">*</sup>
 							<div class="collapsible">
+							As of <span class="version">v2.16.2</span>, you can set a mask for each math cell by adding a <code>data-math-mask</code> data-attribute (the <code>math</code> part of the data-attribute is obtained from the <code>math_data</code> setting).
+							<pre class="prettyprint lang-html">&lt;th data-math=&quot;all-sum&quot; data-math-mask=&quot;##0.00&quot;&gt;all-sum&lt;/th&gt;</pre>
+							<hr>
+							<h3>Javascript-number-formatter details</h3>
 							<h3>Features</h3>
 							<ul>
 								<li>Short, fast, flexible yet standalone. Only 75 lines including MIT license info, blank lines & comments.</li>
@@ -365,7 +369,7 @@ $.tablesorter.equations['product'] = function(arry) {
 		</tr>
 		<tr>
 			<th colspan="5">Grand Total</th>
-			<th data-math="all-sum">all-sum</th>
+			<th data-math="all-sum" data-math-mask="##0.00">all-sum</th>
 		</tr>
 	</tfoot>
 
