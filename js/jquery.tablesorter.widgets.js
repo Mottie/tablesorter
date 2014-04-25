@@ -856,7 +856,7 @@ ts.filter = {
 		if (table.config.lastCombinedFilter === combinedFilters) { return; }
 		var cached, len, $rows, cacheIndex, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
-			searchFiltered, filterMatched, showRow, time,
+			notFiltered, searchFiltered, filterMatched, showRow, time,
 			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -887,11 +887,23 @@ ts.filter = {
 				searchFiltered = true;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
 				$.each(filters, function(indx, val) {
-					// check for changes from beginning of filter; but ignore if there is a logical "or" in the string
-					searchFiltered = (val || '').indexOf(lastSearch[indx]) === 0 && searchFiltered && !/(\s+or\s+|\|)/g.test(val || '');
+					// search already filtered rows if...
+					searchFiltered = searchFiltered &&
+						// there are changes from beginning of filter
+						(val || '').indexOf(lastSearch[indx]) === 0 &&
+						// if there is not a logical "or" in the string
+						!/(\s+or\s+|\|)/g.test(val || '') &&
+						// if we are not doing exact matches
+						!/[=\"]/.test(lastSearch[indx]) &&
+						// if filtering using a select without a "filter-match" class (exact match) - fixes #593
+						!( val !== '' && wo.filter_functions[indx] === true && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
 				});
+				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
 				// can't search when all rows are hidden - this happens when looking for exact matches
-				if (searchFiltered && $rows.not('.' + wo.filter_filteredRow).length === 0) { searchFiltered = false; }
+				if (searchFiltered && notFiltered === 0) { searchFiltered = false; }
+				if (c.debug) {
+					ts.log( "Searching through " + ( searchFiltered && notFiltered < len ? notFiltered : "all" ) + " rows" );
+				}
 				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
 					anyMatch = wo.filter_$anyMatch && wo.filter_$anyMatch.val() || filters[c.columns] || '';
 					if (c.sortLocaleCompare) {
