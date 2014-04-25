@@ -1370,8 +1370,8 @@ ts.addWidget({
 				if ($stickyTable.hasClass(ts.css.stickyVis)) {
 					// scroll to original table (not sticky clone)
 					window.scrollTo(0, $table.position().top);
-					// give same input/select focus
-					if (column >= 0) {
+					// give same input/select focus; check if c.$filters exists; fixes #594
+					if (column >= 0 && c.$filters) {
 						c.$filters.eq(column).find('a, select, input').filter(':visible').focus();
 					}
 				}
