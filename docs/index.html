@@ -827,12 +827,14 @@
 				<td>String</td>
 				<td>&quot;bottom&quot;</td>
 				<td>
-					Boolean flag indicating how tablesorter should deal with empty table cells. (Modified v2.1.16).
+					Boolean flag indicating how tablesorter should deal with empty table cells. (Modified v2.1.16, <span class="version updated">v2.16.2</span>).
 					<div class="collapsible">
 					<ul>
 						<li><code>bottom</code> - sort empty table cells to the bottom.</li>
 						<li><code>top</code> - sort empty table cells to the top.</li>
 						<li><code>none</code> or <code>zero</code> - sort empty table cells as if the cell has the value equal to zero.</li>
+						<li><code>emptyMax</code> - sort empty table cells as having a value greater than the <em>max</em> (more positive) value (added <span class="version">v2.16.2</span>).</li>
+						<li><code>emptyMin</code> - sort empty table cells as having a value greater than the <em>min</em> (more negative) value (added <span class="version">v2.16.2</span>).</li>
 					</ul>
 					Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
 					<ul>
@@ -3525,7 +3527,9 @@ This ajaxProcessing function must return an object with "total", "headers" and "
 				<td><a href="#" class="permalink">addRows</a></td>
 				<td>Use this method to add table rows (v2.0.16; <span class="version updated">v2.16.1</span>).
 					<div class="collapsible">
+						<br>
 						It does not work the same as &quot;update&quot; in that it only adds rows, it does not remove them.<br>
+						<br>
 						Also, use this method to add table rows while using the pager plugin. If the &quot;update&quot; method is used, only the visible table rows continue to exist.
 						<pre class="prettyprint lang-js">// Add multiple rows to the table
   var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
@@ -3540,7 +3544,9 @@ This ajaxProcessing function must return an object with "total", "headers" and "
     };
   $('table')
     .find('tbody').append($row)
-    .trigger('addRows', [$row, resort, callback]);</pre></div>
+    .trigger('addRows', [$row, resort, callback]);</pre>
+					In <span class="version">v2.16.1</span>, the <code>$row</code> parameter can be an HTML string, row DOM element or jQuery object.
+					</div>
 				</td>
 				<td><a href="example-add-rows.html">Example</a></td>
 			</tr>

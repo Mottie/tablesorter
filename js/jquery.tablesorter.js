@@ -963,7 +963,7 @@
 					return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
 				})($.fn.jquery.split("."));
 				// digit sort text location; keeping max+/- for backwards compatibility
-				c.string = { 'max': 1, 'min': -1, 'max+': 1, 'max-': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				c.string = { 'max': 1, 'min': -1, 'emptyMin': 1, 'emptyMax': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
 				// add table theme class only if there isn't already one there
 				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
