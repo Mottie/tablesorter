@@ -1608,6 +1608,8 @@ $(function(){
       stickyHeaders_attachTo : null
       // number or jquery selector targeting the position:fixed element
       stickyHeaders_offset : 0,
+      // scroll table top into view after filtering
+      stickyHeaders_filteredToTop: true,
       // added to table ID, if it exists
       stickyHeaders_cloneId : '-sticky',
       // trigger "resize" event on headers
@@ -2624,6 +2626,22 @@ $('table').trigger('search', false);</pre></div>
 });</pre>or
 					<pre class="prettyprint lang-js">stickyHeaders_offset : '.navbar-fixed-top' // jQuery selector string</pre>or
 					<pre class="prettyprint lang-js">stickyHeaders_offset : $('.navbar-fixed-top') // jQuery object</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-filtered-to-top">
+				<td><a href="#" class="permalink">stickyHeaders_filteredToTop</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Sticky Headers widget: Scroll table top into view after filtering (<span class="version">v2.16.2</span>).
+					<div class="collapsible">
+					<br>
+					When a user searches the table using the sticky header filter row the results may reduce the number of rows so that the table would scroll up out of the viewport. So, this option scrolls the table top into view and moves the filter focus to the same input in the original header, instead of the sticky header input.<br>
+					<br>
+					Set this option to <code>false</code> to prevent the page scroll after filtering the table.
+					</div>
 				</td>
 				<td></td>
 			</tr>
