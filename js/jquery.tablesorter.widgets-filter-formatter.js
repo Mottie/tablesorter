@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 4/23/2014 (v2.16.0)
+/*! Filter widget formatter functions - updated 4/26/2014 (v2.16.0)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -517,7 +517,7 @@ tsff = ts.filterFormatter = {
 				getdate = $date.datepicker('getDate') || '',
 				compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 				searchType = c.$table[0].hasInitialized ? o.delayed || '': true;
-			$date.datepicker('setDate', getdate === '' ? '' : getdate);
+			$date.datepicker('setDate', (getdate === '' ? '' : getdate) || null);
 			if (getdate === '') { notrigger = false; }
 			date = $date.datepicker('getDate');
 			query = date ? ( o.endOfDay && /<=/.test(compare) ? date.setHours(23, 59, 59) : date.getTime() ) || '' : '';
@@ -557,7 +557,7 @@ tsff = ts.filterFormatter = {
 			if ($.isArray(o.compare)) {
 				$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 			}
-			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate);
+			$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate || null);
 			setTimeout(function(){
 				date1Compare();
 			}, 0);
@@ -570,13 +570,13 @@ tsff = ts.filterFormatter = {
 				// date range found; assume an exact match on one day
 				$cell.find(compareSelect).val('=');
 				num = v.split(/\s+-\s+/)[0];
-				$date.datepicker( 'setDate', num );
+				$date.datepicker( 'setDate', num || null );
 			} else {
 				num = (tsff.updateCompare($cell, $input, o)[1]).toString() || '';
 				// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
 				num = num !== '' ? /\d{5}/g.test(num) ? Number(num) : num || '' : '';
 			}
-			$cell.add($shcell).find('.date').datepicker( 'setDate', num );
+			$cell.add($shcell).find('.date').datepicker( 'setDate', num || null );
 			setTimeout(function(){
 				date1Compare(true);
 			}, 0);
@@ -681,16 +681,16 @@ tsff = ts.filterFormatter = {
 
 			if (/<=/.test(range)) {
 				$cell.add( $shcell )
-					.find('.dateFrom').datepicker('option', 'maxDate', to ).end()
-					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to);
+					.find('.dateFrom').datepicker('option', 'maxDate', to || null ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to || null);
 			} else if (/>=/.test(range)) {
 				$cell.add( $shcell )
-					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from).end()
-					.find('.dateTo').datepicker('option', 'minDate', from );
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from || null).end()
+					.find('.dateTo').datepicker('option', 'minDate', from || null );
 			} else {
 				$cell.add( $shcell )
-					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from ).end()
-					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to);
+					.find('.dateFrom').datepicker('option', 'maxDate', null).datepicker('setDate', from || null ).end()
+					.find('.dateTo').datepicker('option', 'minDate', null).datepicker('setDate', to || null);
 			}
 
 			if (typeof o.oldonClose === 'function') { o.oldonClose(selectedDate, ui); }
@@ -718,8 +718,8 @@ tsff = ts.filterFormatter = {
 				// less than date (from date empty)
 				to = val.replace(/<=/, '') || '';
 			}
-			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from);
-			$cell.add($shcell).find('.dateTo').datepicker('setDate', to);
+			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from || null);
+			$cell.add($shcell).find('.dateTo').datepicker('setDate', to || null);
 			// give datepicker time to process
 			setTimeout(function(){
 				closeDate();
@@ -742,8 +742,8 @@ tsff = ts.filterFormatter = {
 
 		// on reset
 		$cell.closest('table').bind('filterReset', function(){
-			$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from );
-			$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to );
+			$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from || null );
+			$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to || null );
 			setTimeout(function(){
 				closeDate();
 			}, 0);
