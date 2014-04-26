@@ -896,7 +896,7 @@ ts.filter = {
 						// if we are not doing exact matches
 						!/[=\"]/.test(lastSearch[indx]) &&
 						// if filtering using a select without a "filter-match" class (exact match) - fixes #593
-						!( val !== '' && wo.filter_functions[indx] === true && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
+						!( val !== '' && wo.filter_functions && wo.filter_functions[indx] === true && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
 				});
 				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
 				// can't search when all rows are hidden - this happens when looking for exact matches
