@@ -235,6 +235,38 @@
 			</ul>
 		</div>
 
+		<h3><a href="#">Basic Setup</a></h3>
+		<div>
+			Using the default settings of this widget will:
+			<ul>
+				<li>Output csv to a popup window.</li>
+				<li>Only include the last header row (if there are more than one rows).</li>
+				<li>Only include filtered rows (all rows will be included, even if the filter widget isn't being used).</li>
+				<li>Will only output the table cell text (ignoring any HTML).</li>
+			</ul>
+			Of course, all of the above behavior can be modified using the options.<br>
+			This is an example of how to setup a table using only the default settings:
+			<h4>HTML</h4>
+			<pre class="prettyprint lang-html">&lt;button class=&quot;download&quot;&gt;Get CSV&lt;/button&gt;
+&lt;table class=&quot;tablesorter&quot;&gt;
+    &lt;!-- .... --&gt;
+&lt;/table&gt;</pre>
+			<h4>Script</h4>
+			<pre class="prettyprint lang-js">$(function () {
+    var $table = $('table');
+
+    $('.download').click(function(){
+        // tell the output widget do it's thing
+        $table.trigger('outputTable');
+    });
+
+    $table.tablesorter({
+        theme: 'blue',
+        widgets: ['zebra', 'output']
+    });
+});</pre>
+		</div>
+
 		<h3><a href="#">Rowspan and colspan</a></h3>
 		<div>
 			<ul>
@@ -246,7 +278,8 @@
 							will produce an output like this:
 							<pre class="prettyprint lang-js">data, values, values</pre>
 						</li>
-						<li><span class="label label-info">Important</span> But, if a JSON output is chosen, the resulting object for a row cannot contain duplicate keys.
+						<li><span class="label label-info">Important</span> But, if a JSON output is chosen, the resulting object for a row cannot contain duplicate keys.<br>
+							<br>
 							<pre class="prettyprint lang-js">[{ "data" : "0", "values" : "1", "values" : "2" }]
 // becomes [{ "data" : "0", "values" : "2" }]</pre>
 							So, in order to fix this, any key (header name) with a colspan will have the column index added to the end (see the <code>output_callbackJSON</code> option). So the same HTML above will produce the following output:
@@ -267,13 +300,15 @@
   &lt;th&gt;value2&lt;/th&gt;
   &lt;th&gt;value3&lt;/th&gt;
 &lt;/tr&gt;</pre>
-							And the <code>output_headerRows</code> is <code>true</code>, the output will appear look like this:
+							And the <code>output_headerRows</code> is <code>true</code>, the output will look like this:
 							<pre class="prettyprint lang-js">line,values,values,values
 line,value1,value2,value3
 1,1.1,1.2,1.3
 1,1.4,1.5,1.5</pre>
 						</li>
-						<li><span class="label label-info">Important</span> But, if a JSON output is chosen, and <code>output_headerRows</code> is set to <code>false</code>, only header names from the last row will be applied to the output. The HTML above will produce this output:
+						<li>
+						<span class="label label-info">Important</span> But, if a JSON output is chosen, and <code>output_headerRows</code> is set to <code>false</code>, only header names from the last row will be applied to the output. The HTML above will produce this output:<br>
+						<br>
 						<pre class="prettyprint lang-js">[
   { "line" : "1", "value1" : "1.1", "value2" : "1.2", "value3" : "1.3" },
   { "line" : "1", "value1" : "1.4", "value2" : "1.5", "value3" : "1.5" }
@@ -292,10 +327,11 @@ line,value1,value2,value3
 
 		<h3><a href="#">Options</a></h3>
 		<div>
-			<h3>Output widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
+			<h4>Output widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
 			<div class="tip">
 				<span class="label label-info">TIP!</span> Click on the link in the option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
+			<br>
 			<table id="output-options" class="tablesorter-bootstrap options">
 				<colgroup><col style="width:135px"><col style="width:100px"></colgroup>
 				<thead>
@@ -321,7 +357,7 @@ line,value1,value2,value3
     [ "Rank", "First", "Last", "Age", "Total", "Discount", "Date" ],
     [ "111", "Peter", "Parker", "28", "$9.99", "20%", "Jul 6, 2006 8:14 AM" ],
     [ "166", "Bruce Lee", "Evans", "22", "$13.19", "11%", "Jan 18, 2007 9:12 AM" ],
-]</pre><span class="label label-info">Note</span> this requires <code>JSON.stringify</code>, or the result will be a flattened array.<br>
+]</pre><span class="label label-info">Note</span> this requires <a href="http://caniuse.com/#feat=json"><code>JSON.stringify</code></a>, or the result will be a flattened array.<br>
 							<br>
 							And when this option is set to <code>&quot;json&quot;</code>, the resulting output will be a valid JSON format:<br>
 							<pre class="prettyprint lang-js">[
@@ -342,7 +378,7 @@ line,value1,value2,value3
         "Discount": "11%",
         "Date": "Jan 18, 2007 9:12 AM"
     }
-]</pre><span class="label label-info">Note</span> this also requires <code>JSON.stringify</code>, or the result will show <code>[ [object Object], ... ]</code> in the output.
+]</pre><span class="label label-info">Note</span> this also requires <a href="http://caniuse.com/#feat=json"><code>JSON.stringify</code></a>, or the result will show <code>[ [object Object], ... ]</code> in the output.
 							</div>
 						</td>
 					</tr>
