@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 4/26/2014 (v2.16.0)
+/*! Filter widget formatter functions - updated 4/27/2014 (v2.16.2)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)

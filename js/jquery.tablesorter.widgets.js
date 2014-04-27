@@ -1,4 +1,4 @@
-/*! tableSorter 2.16+ widgets - updated 4/23/2014 (v2.16.0)
+/*! tableSorter 2.16+ widgets - updated 4/27/2014 (v2.16.2)
  *
  * Column Styles
  * Column Filters
@@ -1236,8 +1236,7 @@ ts.addWidget({
 		if ( c.$table.hasClass('hasStickyHeaders') || ($.inArray('filter', c.widgets) >= 0 && !c.$table.hasClass('hasFilters')) ) {
 			return;
 		}
-		var $cell,
-			$table = c.$table,
+		var $table = c.$table,
 			$attach = $(wo.stickyHeaders_attachTo),
 			$thead = $table.children('thead:first'),
 			$win = $attach.length ? $attach : $(window),

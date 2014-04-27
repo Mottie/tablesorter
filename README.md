@@ -60,6 +60,27 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.16.2">Version 2.16.2</a> (4/27/2014)
+
+* Docs:
+  * Added basic setup for output widget.
+  * Show various updates.
+  * Update readme with more resources.
+* Core:
+  * update `addRows` method will now accept a string or jQuery object.
+  * Sort direction is now counted correctly.
+  * Add "emptyMin" &amp; "emptyMax" setting to `emptyTo` option. Fixes [issue #577](https://github.com/Mottie/tablesorter/issues/577).
+  * Add internal `config.$extraHeaders` variable.
+* Filter widget:
+  * Search already filtered rows when not exactly matching content. Fixes [issue #593](https://github.com/Mottie/tablesorter/issues/593).
+  * Ensure `filter_functions` option is not `null`. Fixes [issue #593](https://github.com/Mottie/tablesorter/issues/593).
+  * Filter formatter: set datepicker to `null`. Fixes [issue #512](https://github.com/Mottie/tablesorter/issues/512).
+* Math widget: add `data-math-mask` for each cell.
+* StickyHeaders
+  * Check for filters before trying to set focus. Fixes [issue #594](https://github.com/Mottie/tablesorter/issues/594).
+  * Add `stickyHeaders_filteredToTop` option. Fixes [issue #570](https://github.com/Mottie/tablesorter/issues/570).
+* Input select parser: don't update columns with both sorter &amp; filter disabled. See [issue #570](https://github.com/Mottie/tablesorter/issues/570).
+
 #### <a name="v2.16.1">Version 2.16.1</a> (4/24/2014)
 
 * Core: 
