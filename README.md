@@ -51,6 +51,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 * Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
 * Search the [main documentation](http://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
+* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
 * If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
 * Ask your question at [Stackoverflow](http://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
 * Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
