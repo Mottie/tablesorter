@@ -1030,7 +1030,13 @@
 					$table
 					.unbind('sortBegin' + c.namespace + ' sortEnd' + c.namespace)
 					.bind('sortBegin' + c.namespace + ' sortEnd' + c.namespace, function(e) {
-						ts.isProcessing(table, e.type === 'sortBegin');
+						clearTimeout(c.processTimer);
+						ts.isProcessing(table);
+						if (e.type === 'sortBegin') {
+							c.processTimer = setTimeout(function(){
+								ts.isProcessing(table, true);
+							}, 500);
+						}
 					});
 				}
 
