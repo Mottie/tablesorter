@@ -495,13 +495,13 @@
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.9</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.15.12</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
-		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.16</span>).</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.16.2</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.16.2</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.16</span>).</li>
-		<li><span class="results">&dagger;</span> UITheme widget:
+		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.16.2</span>):
 			<ul>
-				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9; <span class="version updated">v2.13.3</span>)</li>
+				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
 				<li><a href="example-widget-bootstrap-theme.html">Bootstrap</a> (v2.4)</li>
 			</ul>
 		</li>
@@ -833,8 +833,8 @@
 						<li><code>bottom</code> - sort empty table cells to the bottom.</li>
 						<li><code>top</code> - sort empty table cells to the top.</li>
 						<li><code>none</code> or <code>zero</code> - sort empty table cells as if the cell has the value equal to zero.</li>
-						<li><code>emptyMax</code> - sort empty table cells as having a value greater than the <em>max</em> (more positive) value (added <span class="version">v2.16.2</span>).</li>
-						<li><code>emptyMin</code> - sort empty table cells as having a value greater than the <em>min</em> (more negative) value (added <span class="version">v2.16.2</span>).</li>
+						<li><code>emptyMax</code> - sort empty table cells as having a value greater than the <em>max</em> (more positive) value (<span class="version">v2.16.2</span>).</li>
+						<li><code>emptyMin</code> - sort empty table cells as having a value greater than the <em>min</em> (more negative) value (<span class="version">v2.16.2</span>).</li>
 					</ul>
 					Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
 					<ul>
@@ -1147,9 +1147,9 @@ From the example function above, you'll end up with something similar to this HT
 					This sets the direction a column will sort when clicking on the header for the first time. Valid arguments are <code>&quot;asc&quot;</code> for Ascending or <code>&quot;desc&quot;</code> for Descending.<br>
 					<div class="collapsible">
 					<br>
-					This order can also be set by desired column using the <a href="#headers"><code>headers</code></a> option (Added in v2.0.8).<br>
+					This order can also be set by desired column using the <a href="#headers"><code>headers</code></a> option (v2.0.8).<br>
 					<br>
-					Individual columns can be modified by adding the following (they all do the same thing), set in order of priority (Modified v2.3.1):
+					Individual columns can be modified by adding the following (they all do the same thing), set in order of priority (modified v2.3.1):
 					<ul>
 						<li>jQuery data <code>data-sortInitialOrder=&quot;asc&quot;</code>.</li>
 						<li>metadata <code>class=&quot;{ sortInitialOrder: 'asc'}&quot;</code>. This requires the metadata plugin.</li>
@@ -2922,7 +2922,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>String</td>
 				<td>null</td>
 				<td>
-					Set this option to include a url template to use so that the pager plugin can interact with your database (Added v2.1; <span class="version updated">v2.9</span>).
+					Set this option to include a url template to use so that the pager plugin can interact with your database (v2.1; <span class="version updated">v2.9</span>).
 					<div class="collapsible">
 					<br>
 					Here is an example of how to include the option, it should <em>always</em> be paired with an <code>ajaxProcessing</code> function:
@@ -4425,7 +4425,7 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (added <span class="version">v2.0.18</span>; <span class="version updated">v2.16.0</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.16.0</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
@@ -4486,7 +4486,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 			<tr id="variable-columns">
 				<td><a href="#" class="permalink">config.columns</a></td>
 				<td>Number</td>
-				<td>Internal count of the number of table columns in the header (added <span class="version">v2.12</span>)
+				<td>Internal count of the number of table columns in the header (<span class="version">v2.12</span>)
 					<div class="collapsible">
 						<br>
 						This number is stored as a length (one-based), and takes into account any <code>colspan</code> and <code>rowspan</code> within the table head.<br>
@@ -4554,10 +4554,24 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				</td>
 			</tr>
 
+			<tr id="variable-extra-headers">
+				<td><a href="#" class="permalink">config.$extraHeaders</a></td>
+				<td>jQuery Object</td>
+				<td>Internal list of <strong>all</strong> extra table header cells (<span class="version">v2.16.2</span>)
+					<div class="collapsible">
+						<br>
+						When the <a href="#function-bindevents"><code>bindEvents</code></a> function is used, the extra (external) header cells are added to this variable, and automatically updated with the table headers (<a href="#variable-headers"><code>config.$headers</code></a>).<br>
+						<br>
+						So, when writing a custom widget that clones the table header, there is no longer a need to update the header class names, it's all done automatically.
+					</div>
+					</td>
+				<td></td>
+			</tr>
+
 			<tr id="variable-headers">
 				<td><a href="#" class="permalink">config.$headers</a></td>
 				<td>jQuery Object</td>
-				<td>Internal list of <strong>all</strong> table header cells (added <span class="version">v2.8</span>)
+				<td>Internal list of <strong>all</strong> table header cells (<span class="version">v2.8</span>)
 					<div class="collapsible">
 					<br>
 					The header cells are targeted using the jQuery selector from the <a href="#selectorheaders"><code>selectorHeaders</code></a> option.<br>
@@ -4589,7 +4603,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 			<tr id="variable-table">
 				<td><a href="#" class="permalink">config.$table</a></td>
 				<td>jQuery Object</td>
-				<td>Internally stored jQuery object of the table (added <span class="version">v2.7.1</span>)
+				<td>Internally stored jQuery object of the table (<span class="version">v2.7.1</span>)
 					<div class="collapsible">
 					<br>
 					The <code>table.config.$table</code> variable is useful within callback functions or when writing widgets that target the table.
@@ -4601,7 +4615,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 			<tr id="variable-tbodies">
 				<td><a href="#" class="permalink">config.$tbodies</a></td>
 				<td>jQuery Object</td>
-				<td>Internally stored jQuery object of table non-info block tbodies (added <span class="version">v2.7.1</span>)
+				<td>Internally stored jQuery object of table non-info block tbodies (<span class="version">v2.7.1</span>)
 					<div class="collapsible">
 					<br>
 					jQuery object of sortable tbodies.<br>
@@ -4807,7 +4821,7 @@ for (tbodyIndex = 0; tbodyIndex < tbodies.length; tbodyIndex++) {
 
 			<tr id="function-bindevents">
 				<td><a href="#" class="permalink">bindEvents</a></td>
-				<td>This function adds header event listeners to the targeted cells (v2.8; <span class="version">v2.15</span>).
+				<td>This function adds header event listeners to the targeted cells (v2.8; <span class="version updated">v2.16.2</span>).
 					<div class="collapsible"><br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.bindEvents( table, $headers );</pre>
@@ -4827,6 +4841,7 @@ for (tbodyIndex = 0; tbodyIndex < tbodies.length; tbodyIndex++) {
 $clonedTable.find('tfoot,tbody').remove();
 // bind events to the cloned headers
 $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
+						In <span class="version">v2.16.2</span>, this function now saves all extra (external) headers to the <a href="#variable-extra-headers"><code>config.$extraHeaders</code></a> variable which allows the plugin to automatically update the sort status.
 					</div>
 				</td>
 			</tr>
@@ -5351,15 +5366,15 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 	<strong id="Download-Required">Required:</strong>
 	<ul>
 		<li><a class="external" href="http://jquery.com/download/">jQuery</a> (1.2.6 or higher; some demos & <a class="external" href="http://api.jquery.com/data/#data-html5">HTML5 data-attributes</a> need jQuery 1.4.3+)</li>
-		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (19kb, minified for production - please put the file on your server)</li>
+		<li><a href="../js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (minified for production - please put the file on your server)</li>
 	</ul>
 
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
 		<li><a class="external" href="https://github.com/jquery-orphans/jquery-metadata">jQuery Metadata 2.1</a> (4kb, required for setting <a href="#metadata">inline options</a>)</li>
-		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (47kb/<a href="../js/jquery.tablesorter.min.js">23kb min</a>)</li>
-		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (16kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">8kb min</a>, <a href="example-pager.html">demo</a>)</li>
-		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (36kb/<a href="../js/jquery.tablesorter.widgets.min.js">17kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets.</li>
+		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (~65kb/<a href="../js/jquery.tablesorter.min.js">~30kb minified</a>)</li>
+		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (~30kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">~15kb minified</a>, <a href="example-pager.html">demo</a>)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (~68kb/<a href="../js/jquery.tablesorter.widgets.min.js">~30kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets).</li>
 	</ul>
 
 	<strong id="Download-Themes">Themes:</strong>

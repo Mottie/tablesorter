@@ -489,33 +489,33 @@
 			}
 
 			function setHeadersCss(table) {
-				var f, i, j, l,
+				var f, i, j,
 					c = table.config,
 					list = c.sortList,
+					len = list.length,
 					none = ts.css.sortNone + ' ' + c.cssNone,
 					css = [ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc],
 					aria = ['ascending', 'descending'],
 					// find the footer
-					$t = $(table).find('tfoot tr').children().removeClass(css.join(' '));
+					$t = $(table).find('tfoot tr').children().add(c.$extraHeaders).removeClass(css.join(' '));
 				// remove all header information
 				c.$headers
 					.removeClass(css.join(' '))
 					.addClass(none).attr('aria-sort', 'none');
-				l = list.length;
-				for (i = 0; i < l; i++) {
+				for (i = 0; i < len; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
 						// multicolumn sorting updating - choose the :last in case there are nested columns
-						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (l === 1 ? ':last' : '') );
+						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (len === 1 ? ':last' : '') );
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
 									f.eq(j).removeClass(none).addClass(css[list[i][1]]).attr('aria-sort', aria[list[i][1]]);
-									// add sorted class to footer, if it exists
-									if ($t.length) {
-										$t.filter('[data-column="' + list[i][0] + '"]').eq(j).addClass(css[list[i][1]]);
-									}
 								}
+							}
+							// add sorted class to footer & extra headers, if they exist
+							if ($t.length) {
+								$t.filter('[data-column="' + list[i][0] + '"]').removeClass(none).addClass(css[list[i][1]]);
 							}
 						}
 					}
@@ -783,7 +783,7 @@
 					ts.refreshWidgets(table, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
-					ts.bindEvents(table, c.$headers);
+					ts.bindEvents(table, c.$headers, true);
 					bindMethods(table);
 					commonUpdate(table, resort, callback);
 				})
@@ -1001,7 +1001,7 @@
 				// delayInit will delay building the cache until the user starts a sort
 				if (!c.delayInit) { buildCache(table); }
 				// bind all header events and methods
-				ts.bindEvents(table, c.$headers);
+				ts.bindEvents(table, c.$headers, true);
 				bindMethods(table);
 				// get sort list from jQuery data or metadata
 				// in jQuery < 1.4, an error occurs when calling $table.data()
@@ -1134,10 +1134,13 @@
 				$(table)[0].config.$tbodies.empty();
 			};
 
-			ts.bindEvents = function(table, $headers){
+			ts.bindEvents = function(table, $headers, core){
 				table = $(table)[0];
 				var downTime,
-				c = table.config;
+					c = table.config;
+				if (core !== true) {
+					c.$extraHeaders = c.$extraHeaders ? c.$extraHeaders.add($headers) : $headers;
+				}
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;

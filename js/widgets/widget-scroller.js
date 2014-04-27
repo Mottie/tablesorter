@@ -109,23 +109,7 @@ ts.addWidget({
 				.wrap('<div class="tablesorter-scroller-header" style="width:' + $tbl.width() + ';" />')
 				.find('.' + ts.css.header);
 
-			$tbl
-				.wrap('<div class="tablesorter-scroller-table" style="height:' + h + 'px;width:' + $tbl.width() + ';overflow-y:scroll;" />')
-				.unbind('sortEnd.tsScroller')
-				.bind('sortEnd.tsScroller', function(){
-					c.$headers.each(function(i){
-						var t = $cells.eq(i);
-						t
-							.attr('class', $(this).attr('class'))
-							// remove processing icon
-							.removeClass(ts.css.processing + ' ' + c.cssProcessing);
-						if (ts.css.icon){
-							t
-								.find('.' + ts.css.icon)
-								.attr('class', $(this).find('.' + ts.css.icon).attr('class'));
-						}
-					});
-				});
+			$tbl.wrap('<div class="tablesorter-scroller-table" style="height:' + h + 'px;width:' + $tbl.width() + ';overflow-y:scroll;" />')
 
 			// make scroller header sortable
 			ts.bindEvents(table, $cells);

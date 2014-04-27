@@ -176,7 +176,7 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var time, classes, $header, $icon, $tfoot,
+		var i, time, classes, $header, $icon, $tfoot,
 			themesAll = ts.themes,
 			$table = c.$table,
 			$headers = c.$headers,
@@ -222,10 +222,10 @@ ts.addWidget({
 				$headers.find('.' + ts.css.filterRow).addClass(themes.filterRow);
 			}
 		}
-		$.each($headers, function() {
-			$header = $(this);
+		for (i = 0; i < c.columns; i++) {
+			$header = c.$headers.add(c.$extraHeaders).filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $header;
-			if (this.sortDisabled) {
+			if (c.$headers.filter('[data-column="' + i + '"]:last')[0].sortDisabled) {
 				// no sort arrows for disabled columns!
 				$header.removeClass(remove);
 				$icon.removeClass(remove + ' ' + themes.icons);
@@ -237,7 +237,7 @@ ts.addWidget({
 				$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active);
 				$icon.removeClass(remove).addClass(classes);
 			}
-		});
+		}
 		if (c.debug) {
 			ts.benchmark("Applying " + theme + " theme", time);
 		}
@@ -1309,19 +1309,6 @@ ts.addWidget({
 		// update sticky header class names to match real header after sorting
 		$table
 			.addClass('hasStickyHeaders')
-			.bind('sortEnd.tsSticky', function() {
-				$header.filter(':visible').each(function(indx) {
-					$cell = $stickyCells.filter(':visible').eq(indx)
-						.attr('class', $(this).attr('class'))
-						// remove processing icon
-						.removeClass(ts.css.processing + ' ' + c.cssProcessing);
-					if (c.cssIcon) {
-						$cell
-							.find('.' + ts.css.icon)
-							.attr('class', $(this).find('.' + ts.css.icon).attr('class'));
-					}
-				});
-			})
 			.bind('pagerComplete.tsSticky', function() {
 				resizeHeader();
 			});
@@ -1386,7 +1373,7 @@ ts.addWidget({
 	remove: function(table, c, wo) {
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind('sortEnd.tsSticky pagerComplete.tsSticky')
+			.unbind('pagerComplete.tsSticky')
 			.find('.' + ts.css.sticky).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		// don't unbind if any table on the page still has stickyheaders applied
