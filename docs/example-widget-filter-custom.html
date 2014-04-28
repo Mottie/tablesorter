@@ -160,7 +160,7 @@
 			<ul>
 				<li>In <span class="version">v2.16.3</span>,
 					<ul>
-						<li>When a default filter select is added to a column, it is now sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort.</li>
+						<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort.</li>
 						<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted.</li>
 					</ul>
 				</li>
@@ -188,7 +188,7 @@
 				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three &quot;Aaron&quot;'s in the first column, but only one in the dropdown.</li>
 				<li>Select options are automatically <del>alphanumerically</del> (new in v2.4) sorted. Changed in <span class="version updated">v2.16.3</span>:
 					<ul>
-						<li>The select contents are now sorted using the <a href="index.html#textsorter"><code>textSorter</code></a> option</li>
+						<li>The select contents are now parsed from the assigned parser, then sorted using the <a href="index.html#textsorter"><code>textSorter</code></a> option</li>
 						<li>Add a class name of <code>"filter-select-nosort"</code> to prevent sorting the select options (<span class="version">v2.16.3</span>).</li>
 					</ul>
 				</li>

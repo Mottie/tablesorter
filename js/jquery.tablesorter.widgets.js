@@ -1044,6 +1044,7 @@ ts.filter = {
 		var cts,
 			c = table.config,
 			wo = c.widgetOptions,
+			parsed = [],
 			arry = false,
 			source = wo.filter_selectSource;
 
@@ -1066,24 +1067,41 @@ ts.filter = {
 		arry = $.grep(arry, function(value, indx) {
 			return $.inArray(value, arry) === indx;
 		});
+
 		if (c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-select-nosort')) {
+			// unsorted select options
 			return arry;
 		} else {
+			// parse select option values
+			$.each(arry, function(i, v){
+				// parse array data using set column parser; this DOES NOT pass the original
+				// table cell to the parser format function
+				parsed.push({ t : v, p : c.parsers && c.parsers[column].format( v, table, [], column ) || v });
+			});
+
+			// sort parsed select options
 			cts = c.textSorter || '';
-			return arry.sort(function(a, b){
+			parsed.sort(function(a, b){
+				var x = a.p, y = b.p;
 				if ($.isFunction(cts)) {
 					// custom OVERALL text sorter
-					return cts(a, b, true, column, table);
+					return cts(x, y, true, column, table);
 				} else if (typeof(cts) === 'object' && cts.hasOwnProperty(column)) {
 					// custom text sorter for a SPECIFIC COLUMN
-					return cts[column](a, b, true, column, table);
+					return cts[column](x, y, true, column, table);
 				} else if (ts.sortNatural) {
 					// fall back to natural sort
-					return ts.sortNatural(a, b);
+					return ts.sortNatural(x, y);
 				}
 				// using an older version! do a basic sort
 				return true;
 			});
+			// rebuild arry from sorted parsed data
+			arry = [];
+			$.each(parsed, function(i, v){
+				arry.push(v.t);
+			});
+			return arry;
 		}
 	},
 	getOptions: function(table, column, onlyAvail) {
