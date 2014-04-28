@@ -804,8 +804,8 @@
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
-					tbdy = $tb.index( $cell.parents('tbody').filter(':first') ),
-					$row = $cell.parents('tr').filter(':first');
+					tbdy = $tb.index( $.fn.closest ? $cell.closest('tbody') : $cell.parents('tbody').filter(':first') ),
+					$row = $.fn.closest ? $cell.closest('tr') : $cell.parents('tr').filter(':first');
 					cell = $cell[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
@@ -1167,7 +1167,7 @@
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
-					cell = /TH|TD/.test(this.tagName) ? this : $(this).parents('th, td')[0];
+					cell = $.fn.closest ? $(this).closest('th, td')[0] : /TH|TD/.test(this.tagName) ? this : $(this).parents('th, td')[0];
 					// reference original table headers and find the same cell
 					cell = c.$headers[ $headers.index( cell ) ];
 					if (!cell.sortDisabled) {

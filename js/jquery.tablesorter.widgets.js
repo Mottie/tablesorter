@@ -1478,7 +1478,7 @@ ts.addWidget({
 		})
 		.find('.' + ts.css.resizer + ',.' + ts.css.grip)
 		.bind('mousedown', function(event) {
-			// save header cell and mouse position; closest() not supported by jQuery v1.2.6
+			// save header cell and mouse position
 			$target = $(event.target).closest('th');
 			var $header = c.$headers.filter('[data-column="' + $target.attr('data-column') + '"]');
 			if ($header.length > 1) { $target = $target.add($header); }
