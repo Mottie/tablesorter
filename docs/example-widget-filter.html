@@ -18,6 +18,14 @@
 	/* override the vertical-align top in the blue theme */
 	.notes.tablesorter-blue tbody td { vertical-align: middle; }
 	</style>
+	<script>
+	$(function(){
+		$('.options').tablesorter({
+			widthFixed: true,
+			widgets: ['stickyHeaders']
+		});
+	});
+	</script>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
@@ -189,11 +197,20 @@ $(function(){
 
 	<p></p>
 	<br>
-	<div class="accordion">
+	<div id="root" class="accordion">
 
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version updated">v2.16+</span>,
+					<ul>
+						<li>When a default filter select is added to a column, it is now sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort (<span class="version updated">v2.16.3</span>).</li>
+						<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted (<span class="version">v2.16.3</span>).</li>
+						<li>Added <code>filter_placeholder</code> option (<span class="version">v2.16.0</span>).</li>
+						<li>Added <code>filter_selectSource</code> option (<span class="version">v2.16.3</span>).</li>
+						<li>updated <code>filter_reset</code> option (<span class="version updated">v2.16.3</span>).</li>
+					</ul>
+				</li>
 				<li>In <span class="version updated">v2.15</span>,
 					<ul>
 						<li>The <code>filter_anyMatch</code> widget option was completely <span class="label alert">removed</span>. Sorry for not deprecating this option, but the filter any match code was completely rewritten.</li>
@@ -231,29 +248,194 @@ $(function(){
 
 		<h3><a href="#">Options</a></h3>
 		<div>
-			<h3>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h3>
-			<ul>
-				<li><del><code>filter_anyMatch : null</code></del> - jQuery selector string (or jQuery object) of external anyMatch filter (<span class="label alert">removed</span> in v2.15; please see <a href="example-widget-filter-any-match.html">the demo</a> for more details).</li>
-				<li><code>filter_childRows : false</code> - if true, filter includes child row content in the search.</li>
-				<li><code>filter_columnFilters : true</code> - if true, a filter will be added to the top of each table column.</li>
-				<li><code>filter_cssFilter : ''</code> - extra css class name(s) applied to the table row containing the filters & the inputs within that row. This option can either be a string (class applied to all filters) or an array (class applied to indexed filter).</li>
-				<li><code>filter_defaultAttrib : 'data-value'</code> - this option contains the name of the data-attribute which contains the default (starting) filter value.</li>
-				<li><code>filter_external : ''</code> - jQuery selector (or object) pointing to an input to be used to match the contents of any column; please refer to the updated <a href="example-widget-filter-any-match.html">filter-any-match demo</a> for limitations (<span class="version">v2.15</span>).</li>
-				<li><code>filter_filteredRow : 'filtered'</code> - css class name added to filtered rows (rows that are not showing); needed by pager plugin.</li>
-				<li><code>filter_formatter : null</code> - add custom filter elements to the filter row.</li>
-				<li><code>filter_functions : null</code> - add custom filter functions using this option.</li>
-				<li><code>filter_hideFilters : false</code> - if true, filters are hidden initially, but can be revealed by clicking on the filter icon <span class="remark">*</span>.</li>
-				<li><code>filter_ignoreCase : true</code> - if true, make all searches case-insensitive.</li>
-				<li><code>filter_liveSearch : true</code> - if true, search column content while the user types (with a delay). If false, the user must press enter to start the search. If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
-				<li><code>filter_onlyAvail : 'filter-onlyAvail'</code> - a header with a select dropdown &amp; this class name will only show available (visible) options within that drop down.</li>
-				<li><code>filter_reset : null</code> - jQuery selector string of an element used to reset the filters.</li>
-				<li><code>filter_saveFilters : false</code> - Uses the <code>$.tablesorter.storage</code> utility to save the most recent filters.</li>
-				<li><code>filter_searchDelay : 300</code> - typing delay in milliseconds before starting a search.</li>
-				<li><code>filter_serversideFiltering : false</code> - if true, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used.</li>
-				<li><code>filter_startsWith : false</code> - if true, filter start from the beginning of the cell contents.</li>
-				<li><code>filter_useParsedData : false</code> - filter all data using parsed content.</li>
-			</ul>
-			<!-- <span class="alert">Caution</span>: In my testing, it appears that Chrome does not properly render a previously hidden search input text properly (<a href="http://jsfiddle.net/Mottie/Mjbab/1/">demo</a>), so for now, I'm changing this demo's <code>filter_hideFilters</code> option to <code>false</code> until the source of this problem is determined. -->
+			<h4>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<div>
+			<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="filter-child-rows">
+						<td><span class="permalink">filter_childRows</span></td>
+						<td>false</td>
+						<td>if <code>true</code>, filter includes child row content in the search.</td>
+					</tr>
+
+					<tr id="filter-column-filters">
+						<td><span class="permalink">filter_columnFilters</span></td>
+						<td>true</td>
+						<td>if <code>true</code>, a filter will be added to the top of each table column.</td>
+					</tr>
+
+					<tr id="filter-css-filter">
+						<td><a href="#" class="permalink">filter_cssFilter</a></td>
+						<td>''</td>
+						<td>
+							Extra css class name(s) applied to the table row containing the filters & the inputs within that row (<span class="version updated">v2.15</span>).
+							<div class="collapsible">
+							<br>
+							This option can either be a string (class applied to all filters) or an array (class applied to indexed filter).
+							</div>
+						</td>
+					</tr>
+
+					<tr id="filter-default-attrib">
+						<td><span class="permalink">filter_defaultAttrib</span></td>
+						<td>'data-value'</td>
+						<td>this option contains the name of the data-attribute which contains the default (starting) filter value.</td>
+					</tr>
+
+					<tr id="filter-external">
+						<td><span class="permalink">filter_external</span></td>
+						<td>''</td>
+						<td>
+							Set to a jQuery selector (or object) pointing to an input to be used to match the contents of any column (<span class="version">v2.15</span>).
+							<div class="collapsible">
+							<br>
+							Please refer to the updated <a href="example-widget-filter-any-match.html">filter-any-match demo</a> for the limitations of this setting.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="filter-filtered-row">
+						<td><span class="permalink">filter_filteredRow</span></td>
+						<td>'filtered'</td>
+						<td>Css class name added to filtered rows (rows that are not showing); needed by pager plugin.</td>
+					</tr>
+
+					<tr id="filter-formatter">
+						<td><a href="#" class="permalink">filter_formatter</a></td>
+						<td>null</td>
+						<td>
+							Add custom filter element(s) to the filter row
+							<div class="collapsible">
+							<br>
+							Custom filter elements include:
+							<ul>
+								<li><a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a>: slider, spinner &amp; datepicker</li>
+								<li><a href="example-widget-filter-formatter-2.html">HTML5 elements</a>: range, number input, color selector.</li>
+								<li><a href="example-widget-filter-formatter-select2.html">Select2 plugin</a>.</li>
+							</ul>
+							</div>
+							</td>
+					</tr>
+
+					<tr id="filter-functions">
+						<td><a href="#" class="permalink">filter_functions</a></td>
+						<td>null</td>
+						<td>
+							Add custom filter functions using this option.
+							<div class="collapsible">
+							<br>
+							See the <a href="example-widget-filter-custom.html">custom filter widget functions demo</a> for more details and numerous examples.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="filter-hide-empty">
+						<td><span class="permalink">filter_hideEmpty</span></td>
+						<td>true</td>
+						<td>Hide filter row when the table is empty (<span class="version">v2.15</span>).</td>
+					</tr>
+
+					<tr id="filter-hide-filters">
+						<td><span class="permalink">filter_hideFilters</span></td>
+						<td>false</td>
+						<td>If <code>true</code>, filters are hidden initially, but can be revealed by hovering over the filter row, or giving a filter input focus (tabbing down the page).</td>
+					</tr>
+
+					<tr id="filter-ignore-case">
+						<td><span class="permalink">filter_ignoreCase</span></td>
+						<td>true</td>
+						<td>If <code>true</code>, all searches are case-insensitive.</td>
+					</tr>
+
+					<tr id="filter-live-search">
+						<td><a href="#" class="permalink">filter_liveSearch</a></td>
+						<td>true</td>
+						<td>
+							If <code>true</code>, search column content while the user types (with a short delay).
+							<div class="collapsible">
+							<br>
+							<ul>
+								<li>If <code>false</code>, the user must press enter to start the search.</li>
+								<li>If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
+							</ul>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="filter-only-avail">
+						<td><span class="permalink">filter_onlyAvail</span></td>
+						<td>'filter-onlyAvail'</td>
+						<td>A header with a select dropdown &amp; this class name set, will only show available (visible) options within that drop down.</td>
+					</tr>
+
+					<tr id="filter-placeholder">
+						<td><span class="permalink">filter_placeholder</span></td>
+						<td>{ search : '', select : '' }</td>
+						<td>Default placeholder text (overridden by any header "data-placeholder" setting; <span class="version">v2.16</span>).</td>
+					</tr>
+
+					<tr id="filter-reset">
+						<td><span class="permalink">filter_reset</span></td>
+						<td>null</td>
+						<td>jQuery selector string of an element used to reset the filters (v2.4; <span class="version updated">v2.16.0</span>).</td>
+					</tr>
+
+					<tr id="filter-save-filters">
+						<td><span class="permalink">filter_saveFilters</span></td>
+						<td>false</td>
+						<td>Uses the <code>$.tablesorter.storage</code> utility to save the most recent filters.</td>
+					</tr>
+
+					<tr id="filter-search-delay">
+						<td><span class="permalink">filter_searchDelay</span></td>
+						<td>300</td>
+						<td>Typing delay in milliseconds before starting a search.</td>
+					</tr>
+
+					<tr id="filter-select-source">
+						<td><span class="permalink">filter_selectSource</span></td>
+						<td>null</td>
+						<td>Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>).</td>
+					</tr>
+
+					<tr id="filter-serverside-filtering">
+						<td><span class="permalink">filter_serversideFiltering</span></td>
+						<td>false</td>
+						<td>If <code>true</code>, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used.</td>
+					</tr>
+
+					<tr id="filter-starts-with">
+						<td><span class="permalink">filter_startsWith</span></td>
+						<td>false</td>
+						<td>If <code>true</code>, filter start from the beginning of the cell contents.</td>
+					</tr>
+
+					<tr id="filter-use-parsed-data">
+						<td><span class="permalink">filter_useParsedData</span></td>
+						<td>false</td>
+						<td>Filter all data using parsed content.</td>
+					</tr>
+
+				</tbody>
+				<tbody>
+					<tr><th colspan="3">Removed options</th><tr>
+				</tbody>
+				<tbody>
+
+					<tr id="filter-any-match">
+						<td><span class="permalink alert">filter_anyMatch</span></td>
+						<td>null</td>
+						<td>jQuery selector string (or jQuery object) of external anyMatch filter (<span class="label alert">removed</span> in v2.15; please see <a href="example-widget-filter-any-match.html">the demo</a> for more details)</td>
+					</tr>
+
+				</tbody>
+			</table>
 		</div>
 
 		<h3><a href="#">Classes</a></h3>
@@ -262,9 +444,16 @@ $(function(){
 			<ul>
 				<li><code>filter-false</code> - disable the filter for a specific header column.</li>
 				<li><code>filter-select</code> - build a default select box for a column (shows unique column content). See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo for an example.</li>
+				<li><code>filter-select-nosort</code> - when a default select box is built, this option prevents the sorting of select options leaving them in their original table order (<span class="version">v2.16.3</span>).</li>
 				<li><code>filter-match</code> - applies to &quot;filter-select&quot; columns and columns where the user can use the logical "or" search. Makes the filter/select match the column contents instead of exactly matching.</li>
 				<li><code>filter-parsed</code> - set a column to filter through parsed data instead of the actual table cell content.</li>
-				<li><code>filter-onlyAvail</code> - show only available (visible) options within a default select box. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example.</li>
+				<li><code>filter-onlyAvail</code>
+					<ul>
+						<li>Show only available (visible) options within a default select box.</li>
+						<li>This class name is set by the <code>filter_onlyAvail</code> option.</li>
+						<li>See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example.</li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 

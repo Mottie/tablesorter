@@ -158,6 +158,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.16.3</span>,
+					<ul>
+						<li>When a default filter select is added to a column, it is now sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort.</li>
+						<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted.</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.14</span>, the <code>filter_saveFilters</code> option was added (default set to <code>false</code>); this demo has it set to <code>true</code> to provide an example.</li> 
 				<li>In <span class="version">v2.11</span>, the filter functions provide an additional parameter <code>$r</code> providing a jQuery object of the current row being searched by the filter.</li> 
 				<li>For <span class="version">v2.10.8</span>, the Age column includes the new <code>data-value</code> set to <code>&lt;30</code> which sets the default (starting) filter value (see <a href="index.html#widget-filter-defaultattrib">filter_defaultAttrib</a> for more details).</li>
@@ -180,7 +186,12 @@
 				<li>The default option text, &quot;Select a name&quot;, is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
 				<li>Add a &quot;filter-match&quot; class to only match instead of exactly match the selected value. Click on the &quot;Match&quot; button below to see the difference.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select filter-match&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
 				<li>The select is populated by the column text contents with repeated content combined (i.e. There are three &quot;Aaron&quot;'s in the first column, but only one in the dropdown.</li>
-				<li>Select options are automatically alphanumerically (new in v2.4) sorted.</li>
+				<li>Select options are automatically <del>alphanumerically</del> (new in v2.4) sorted. Changed in <span class="version updated">v2.16.3</span>:
+					<ul>
+						<li>The select contents are now sorted using the <a href="index.html#textsorter"><code>textSorter</code></a> option</li>
+						<li>Add a class name of <code>"filter-select-nosort"</code> to prevent sorting the select options (<span class="version">v2.16.3</span>).</li>
+					</ul>
+				</li>
 				<li>Please check out what the &quot;filter-onlyAvail&quot; class name does by reviewing the details below (in the &quot;Discount&quot; column) (<span class="version">v2.10.1</span>).</li>
 			</ul>
 		</div>

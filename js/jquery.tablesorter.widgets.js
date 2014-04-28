@@ -1041,7 +1041,8 @@ ts.filter = {
 		}, 0);
 	},
 	getOptionSource: function(table, column, onlyAvail) {
-		var c = table.config,
+		var cts,
+			c = table.config,
 			wo = c.widgetOptions,
 			arry = false,
 			source = wo.filter_selectSource;
@@ -1065,7 +1066,25 @@ ts.filter = {
 		arry = $.grep(arry, function(value, indx) {
 			return $.inArray(value, arry) === indx;
 		});
-		return (ts.sortNatural) ? arry.sort(function(a, b) { return ts.sortNatural(a, b); }) : arry.sort(true);
+		if (c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-select-nosort')) {
+			return arry;
+		} else {
+			cts = c.textSorter || '';
+			return arry.sort(function(a, b){
+				if ($.isFunction(cts)) {
+					// custom OVERALL text sorter
+					return cts(a, b, true, column, table);
+				} else if (typeof(cts) === 'object' && cts.hasOwnProperty(column)) {
+					// custom text sorter for a SPECIFIC COLUMN
+					return cts[column](a, b, true, column, table);
+				} else if (ts.sortNatural) {
+					// fall back to natural sort
+					return ts.sortNatural(a, b);
+				}
+				// using an older version! do a basic sort
+				return true;
+			});
+		}
 	},
 	getOptions: function(table, column, onlyAvail) {
 		var rowIndex, tbodyIndex, len, row, cache, cell,
