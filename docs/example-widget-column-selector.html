@@ -28,7 +28,14 @@
 	.popover.right { text-align: left; }
 	.ui-widget-content a { color: #428bca; }
 	</style>
-
+	<script>
+	$(function(){
+		$('.options').tablesorter({
+			widthFixed: true,
+			widgets: ['stickyHeaders']
+		});
+	});
+	</script>
 
 <style id="css">/*** custom css only popup ***/
 .columnSelectorWrapper {
@@ -166,7 +173,7 @@
 	<p></p>
 	<br>
 
-	<div class="accordion">
+	<div id="root" class="accordion">
 
 		<h3><a href="#">Notes</a></h3>
 		<div>
@@ -189,16 +196,21 @@
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h4>Column selector widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
-			<table class="tablesorter-blue">
+			<div>
+			<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
 				<thead>
-					<tr><th>Option</th><th>Description</th></tr>
+					<tr><th>Option</th><th class="sorter-false">Description</th></tr>
 				</thead>
 				<tbody>
 
-					<tr>
-						<td><code>columnSelector_container</code></td>
+					<tr id="column-selector-container">
+						<td><a href="#" class="permalink">columnSelector_container</a></td>
 						<td>
 							Target an element within the current page where the column selector will be inserted.
+							<div class="collapsible">
+							<br>
 							<ul>
 								<li>This setting is optional. If not set, you can use the following function to attach it to another element - see the Bootstrap example below
 									<pre class="prettyprint lang-js">$.tablesorter.columnSelector.attachTo( $('table'), '.selector-target' );</pre>
@@ -207,13 +219,16 @@
 								<li>or, a jQuery object ( e.g. <code>$('#columnSelector')</code> ).</li>
 							</ul>
 							Default value: <code>null</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_columns</code></td>
+					<tr id="column-selector-columns">
+						<td><a href="#" class="permalink">columnSelector_columns</a></td>
 						<td>
-							Assigns a column status for each selector:
+							Assigns a column status for each selector
+							<div class="collapsible">
+							<br>
 							<ul>
 								<li>To disable, or remove a column from the column selector, include the key word <code>&quot;disable&quot;</code> - this is one of many ways to remove a column from the column selector popup</li>
 								<li>Set a column status to <code>true</code> to initially display a column. This is the default for undefined columns.</li>
@@ -241,82 +256,104 @@
 							<span class="label label-warning">*NOTE*</span> Setting a column to initially be visible (<code>true</code>) or invisible (<code>false</code>) will be overridden by the users saved selections if the <code>columnSelector_saveColumns</code> option is <code>true</code>.<br>
 							<br>
 							Default value: <code>{}</code>; empty object
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_saveColumns</code></td>
-						<td>Save the current manually set column status and the table's responsive ("auto") state (<span class="version updated">v2.15.7</span>).<br>
+					<tr id="column-selector-save-columns">
+						<td><a href="#" class="permalink">columnSelector_saveColumns</a></td>
+						<td>Save the current manually set column status and the table's responsive ("auto") state (<span class="version updated">v2.15.7</span>).
+							<div class="collapsible">
 							<br>
 							This option requires the storage utility contained within the tablesorter widgets file (<code>jquery.tablesorter.widgets.js</code>).<br>
 							<br>
 							Default value: <code>true</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_layout</code></td>
+					<tr id="column-selector-layout">
+						<td><a href="#" class="permalink">columnSelector_layout</a></td>
 						<td>
-							This option defines the markup used for each column selector within the popup. The only available parameter is the <code>{name}</code> string which will be replaced with the appropriate column name/title.<br>
+							This option defines the markup used for each column selector within the popup.
+							<div class="collapsible">
+							<br>
+							 The only available parameter is the <code>{name}</code> string which will be replaced with the appropriate column name/title.<br>
 							<br>
 							An <code>&lt;input type=&quot;checkbox&quot;&gt;</code> is required within this setting!<br>
 							<br>
 							Default value: <code>'&lt;label&gt;&lt;input type=&quot;checkbox&quot;&gt;{name}&lt;/label&gt;'</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_name</code></td>
+					<tr id="column-selector-name">
+						<td><a href="#" class="permalink">columnSelector_name</a></td>
 						<td>
 							The data-attribute within the table header cell which contains an alternate column selector name.
+							<div class="collapsible">
+							<br>
 							<ul>
 								<li>If the header cell does not have this attribute defined, the column selector name will be taken from the header cell internal text.</li>
 								<li>If defined, the text contained within this attribute will replace the <code>{name}</code> string within the layout option above.</li>
 							</ul>
 							Default value: <code>&quot;data-selector-name&quot;</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_mediaquery</code></td>
-						<td>Set this option to add (<code>true</code>) or not add (<code>false</code>) the media query functionality of this widget.<br>
+					<tr id="column-selector-mediaquery">
+						<td><a href="#" class="permalink">columnSelector_mediaquery</a></td>
+						<td>Set this option to add (<code>true</code>) or not add (<code>false</code>) the media query functionality of this widget.
+							<div class="collapsible">
 							<br>
 							Default value: <code>true</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_mediaqueryName</code></td>
-						<td>When the media query checkbox is added (it also uses the <code>columnSelector_layout</code> markup), this is the name that is added. Set as "Auto" to signify to the user that columns disappearing and/or reappearing is automatically done.<br>
+					<tr id="column-selector-mediaquery-name">
+						<td><a href="#" class="permalink">columnSelector_mediaqueryName</a></td>
+						<td>When the media query checkbox is added (it also uses the <code>columnSelector_layout</code> markup), this is the name that is added.
+							<div class="collapsible">
+							<br>
+							Set as "Auto" to signify to the user that columns disappearing and/or reappearing is automatically done.<br>
 							<br>
 							Default value: <code>&quot;Auto: &quot;</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_mediaqueryState</code></td>
-						<td>Set this option to <code>false</code> to start with the media query disabled (manual column selection mode).<br>
+					<tr id="column-selector-mediaquery-state">
+						<td><a href="#" class="permalink">columnSelector_mediaqueryState</a></td>
+						<td>Set this option to <code>false</code> to start with the media query disabled (manual column selection mode).
+							<div class="collapsible">
 							<br>
 							Default value: <code>true</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_breakpoints</code></td>
-						<td>
+					<tr id="column-selector-breakpoints">
+						<td><a href="#" class="permalink">columnSelector_breakpoints</a></td>
+						<td>This option defines the media query breakpoints with which to use when a column with the associated priority is hidden or revealed.
+							<div class="collapsible">
+							<br>
 							<ul>
-								<li>This option defines the media query breakpoints with which to use when a column with the associated priority is hidden or revealed.</li>
 								<li>For example, the last entry &quot;70em&quot; (1,120px) is assigned to data-priority 6. When the browser width is below this dimension, all columns with a 	data-priority of six will be hidden. Then when a browser width less than &quot;60em&quot; (960px) is reached, all columns of data-priority 5 and above will be hidden. At &quot;50em&quot; (800px), all columns of data-priority 4 and above are hidden, etc.</li>
 								<li>Adjust these values as desired, but a <em>maximum</em> of six data-priorities is set.</li>
 							</ul>
 							Default value: <code>[ &quot;20em&quot;, &quot;30em&quot;, &quot;40em&quot;, &quot;50em&quot;, &quot;60em&quot;, &quot;70em&quot; ]</code>
+							</div>
 						</td>
 					</tr>
 
-					<tr>
-						<td><code>columnSelector_priority</code></td>
+					<tr id="column-selector-priority">
+						<td><a href="#" class="permalink">columnSelector_priority</a></td>
 						<td>
 							This is the assigned data-attribute which contains the defined data priority for a table column
+							<div class="collapsible">
+							<br>
 							<ul>
 								<li>Values of 1 through 6 set the breakpoints of that particular column.</li>
 								<li>A value of 1 has the highest priority, meaning it is the last column(s) to be hidden when the browser width goes below &quot;20em&quot; (320px).</li>
@@ -325,6 +362,7 @@
 								<li>Undefined priorities will default to a priority value of 1.</li>
 							</ul>
 							Default value: <code>&quot;data-priority&quot;</code>
+							</div>
 						</td>
 					</tr>
 

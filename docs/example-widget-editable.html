@@ -8,6 +8,8 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -69,45 +71,112 @@ td.no-edit, span.no-edit {
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
 		<ul>
 			<li>This widget can not be applied to the original plugin and requires jQuery 1.7+ and a browser that supports <a href="http://caniuse.com/#feat=contenteditable"><code>contenteditable</code> attributes</a> (almost all modern browsers).</li>
-			<li><span class="alert">Note</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).</li>
+			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).</li>
 			<li>Updated <span class="version updated">v2.13.2</span>, because of the limitation in IE, if a table cell contains any DIV or SPAN immediately inside the cell, it will be targeted instead of the table cell itself and made content editable. So, if you don't care about IE support, there is no need to include the extra markup.</li>
 			<li>In some browsers, additional CSS is needed to highlight a focused editable table cell. See the CSS block below.</li>
-			<li>Editable widget options include (defaults in parenthesis):
-				<ul>
-					<li><code>editable_column</code> (<code>[]</code>)
-						<ul>
-							<li>In tablesorter core <span class="version">v2.14.2</span>, this widget was updated to allow passing a range string in this option, i.e. <code>"0-2"</code> instead of <code>[0,1,2]</code>.</li>
-							<li>Contains an array of columns numbers you want to have editable content (zero-based index). <code>contenteditable="true"</code> is added to cells within these columns.</li>
-						</ul>
-					</li>
-					<li><code>editable_enterToAccept</code> (<code>true</code>) - Makes the user press enter to accept the content within the editable table cell; if <code>false</code>, clicking outside the cell will accept the content.</li>
-					<li><code>editable_autoResort</code> (<code>false</code>) - If <code>true</code> the column will resort (only if already sorted) after the content has been changed.</li>
-					<li><code>editable_noEdit</code> (<code>'no-edit'</code>) - Class name on table cells to search for that are not to become editable. The search is only done within the columns set by the <code>editable_column</code> option.</li>
-					<li><code>editable_editComplete</code> (<code>'editComplete'</code>) - Event fired after the table content has been edited.</li>
-				</ul>
-			</li>
 			<li>Pressing escape while editing will cancel any changes.</li>
 			<li>In the demo below, click in any of the first three columns to edit the content, except for the cell containing <span class="no-edit">"Peter"</span>.</li>
-			<li>To prevent a table cell from becoming editable, add the class name <code>"no-edit"</code> to the cell.</li>
-			<li>Edited content will be accepted in the following circumstances:
+			<li>To prevent a table cell from becoming editable, add the class name <code>"no-edit"</code> to the cell. Set by the <code>editable_noEdit</code> option.</li>
+			<li>Edited content <em>will be accepted</em> in the following circumstances:
 				<ul>
 					<li>Pressing enter when the <code>editable_enterToAccept</code> option is <code>true</code>.</li>
 					<li>Clicking outside of the current editable content.</li>
 					<li>Moving the mouse outside of the current tbody. This is done because if the content editable is still active when the user clicks on the header to sort the column, all sorts of bad things happen.</li>
 				</ul>
 			</li>
-			<li>Edited content will not be accepted in the following circumstances:
+			<li>Edited content <em>will not be accepted</em> in the following circumstances:
 				<ul>
 					<li>Pressing Escape within the editable content.</li>
 				</ul>
 			</li>
 		</ul>
-	</p>
+		</div>
 
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h4>Editable widget widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<div>
+			<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
+				<thead>
+					<tr><th>Option</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="editable-column">
+						<td><a href="#" class="permalink">editable_column</a></td>
+						<td>Contains an array (or range string) of columns numbers you want to have editable content (zero-based index).
+							<div class="collapsible">
+							<ul>
+								<li>In tablesorter core <span class="version">v2.14.2</span>, this widget was updated to allow passing a range string in this option, i.e. <code>"0-2"</code> instead of <code>[0,1,2]</code>.</li>
+								<li><code>contenteditable="true"</code> is added to cells within these columns.</li>
+							</ul>
+							Default value: <code>[]</code> (empty array)
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-enter-to-accept">
+						<td><a href="#" class="permalink">editable_enterToAccept</a></td>
+						<td>Makes the user press enter to accept the content within the editable table cell
+							<div class="collapsible">
+							<br>
+							if <code>false</code>, clicking outside the cell will accept the content.<br>
+							<br>
+							Default value: <code>true</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-auto-resort">
+						<td><a href="#" class="permalink">editable_autoResort</a></td>
+						<td>If <code>true</code>, the column will resort (only if already sorted) after the content has been changed.
+							<div class="collapsible">
+							<br>
+							Default value: <code>false</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-no-edit">
+						<td><a href="#" class="permalink">editable_noEdit</a></td>
+						<td>Class name on table cells to search for that are not to become editable. .</li>
+							<div class="collapsible">
+							<br>
+							The search is only done within the columns set by the <code>editable_column</code> option.<br>
+							<br>
+							Default value: <code>'no-edit'</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-edit-complete">
+						<td><a href="#" class="permalink">editable_editComplete</a></td>
+						<td>Event fired after the table content has been edited
+							<div class="collapsible">
+							<br>
+							Default value: <code>'editComplete'</code>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+	</p>
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
 	<thead>

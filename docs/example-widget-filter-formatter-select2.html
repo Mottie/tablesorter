@@ -8,6 +8,8 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="../docs/css/jq.css">
 	<link href="../docs/css/prettify.css" rel="stylesheet">
 	<script src="../docs/js/prettify.js"></script>
@@ -25,7 +27,7 @@
 
 <script id="js">$(function(){
 
-	$('table').tablesorter({
+	$('.tablesorter').tablesorter({
 		theme: 'blue',
 		widthFixed: true,
 		widgets: ['zebra', 'stickyHeaders', 'filter'],
@@ -75,22 +77,85 @@
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li>This is a demo of the select2 filter formatter code.</li>
-			<li>It requires jQuery 1.7.2+, tablesorter <span class="version">2.16</span>+, the filter widget 2.16+ and <a href="http://ivaynberg.github.io/select2/">Select2</a> v3.4.6+ (not tested on older select2 versions)</li>
-			<li>There are only two filter formatter options, the rest are all select2 options (defaults shown below):
-				<pre class="prettyprint lang-js">// select2 filter formatter options
-cellText : '',    // Text (wrapped in a label element)
-match    : true,  // adds "filter-match" to header & modifies search
+	<p></p>
+	<br>
 
-// ANY select2 options can be include below (showing default settings for this formatter code)
-multiple : true,  // allow multiple selections
-width    : '100%' // reduce this width if you add cellText</pre>
-			</li>
-			<li>This demo uses the new <a href="index.html#widget-filter-selectsource"><code>filter_selectSource</code></a> option which is only available in tablesorter <span class="version">v2.16</span>+
-		</ul>
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>This is a demo of the select2 filter formatter code.</li>
+				<li>It requires jQuery 1.7.2+, tablesorter <span class="version">2.16</span>+, the filter widget 2.16+ and <a href="http://ivaynberg.github.io/select2/">Select2</a> v3.4.6+ (not tested on older select2 versions)</li>
+				<li>This demo uses the new <a href="index.html#widget-filter-selectsource"><code>filter_selectSource</code></a> option which is only available in tablesorter <span class="version">v2.16</span>+</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			There are only two filter formatter options, the rest are all <a href="http://ivaynberg.github.io/select2/#documentation">select2 plugin options</a> (defaults shown below):
+			<table class="tablesorter-blue">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+					<tr><th colspan="3">Select2 FilterFormatter options</th></tr>
+				</tbody>
+				<tbody>
+
+					<tr>
+						<td>cellText</td>
+						<td>''</td>
+						<td>Text added within a <code>&lt;label&gt;</code> before the input.</td>
+					</tr>
+
+					<tr>
+						<td>match</td>
+						<td>true</td>
+						<td>Adds a "filter-match" class name to the header &amp; modifies the search</td>
+					</tr>
+
+				</tbody>
+				<tbody>
+					<tr><th colspan="3">Select2 plugin (modified defaults)</th></tr>
+				</tbody>
+
+				<tbody>
+
+					<tr>
+						<td>multiple</td>
+						<td>true</td>
+						<td>Allow multiple selections. This option can be modified.</td>
+					</tr>
+
+					<tr>
+						<td>width</td>
+						<td>'100%'</td>
+						<td>Reduce this width if you add anything cellText, or the text and the input will be on separate lines.</td>
+					</tr>
+
+				</tbody>
+			</table>
+
+			This is an example of how to set this option:
+			<pre class="prettyprint lang-js">filter_formatter : {
+  // default settings on first column
+  0 : function($cell, indx){
+    return $.tablesorter.filterFormatter.select2( $cell, indx, {
+      // *** select2 filter formatter options ***
+      cellText : '',    // Text (wrapped in a label element)
+      match    : true,  // adds "filter-match" to header & modifies search
+
+      // *** ANY select2 options can be included below ***
+      // (showing default settings for this formatter code)
+      multiple : true,  // allow multiple selections
+      width    : '100%' // reduce this width if you add cellText
+    });
+  }
+}</pre>
+		</div>
+	</div>
+
 	</p>
 
 	<h1>Demo</h1>
