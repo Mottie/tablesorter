@@ -219,7 +219,7 @@
 				var c = table.config,
 					// update table bodies in case we start with an empty table
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, p, time,
+					rows, list, l, i, h, ch, p, time, indx,
 					j = 0,
 					parsersDebug = "",
 					len = tb.length;
@@ -240,7 +240,9 @@
 							h = c.$headers.filter(':not([colspan])');
 							h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
 								.filter('[data-column="' + i + '"]:last');
-							ch = c.headers[i];
+							// get headers option corrected index
+							indx = c.$headers.index(h);
+							ch = c.headers[indx];
 							// get column parser
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
