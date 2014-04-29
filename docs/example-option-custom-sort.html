@@ -24,6 +24,8 @@
 	// define sugar.js Icelandic sort order
 	Array.AlphanumericSortOrder = 'AaÁáBbCcDdÐðEeÉéĘęFfGgHhIiÍíJjKkLlMmNnOoÓóPpQqRrSsTtUuÚúVvWwXxYyÝýZzÞþÆæÖö';
 	Array.AlphanumericSortIgnoreCase = true;
+	// see https://github.com/andrewplummer/Sugar/issues/382#issuecomment-41526957
+	Array.AlphanumericSortEquivalents = {};
 	
 	$("table").tablesorter({
 		theme : 'blue',
@@ -60,7 +62,12 @@
 			<li>Modified the <code>textSorter</code> option to allow setting the sorter per column <span class="version">v2.12</span>:
 				<ul>
 					<li><span class="alert">*NOTE*</span> The <code>textSorter</code> function parameters have changed! It is now <code>function(a, b, direction, column, table)</code> (previously <code>function(a, b, table, column)</code>).</li>
-					<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="http://sugarjs.com/arrays#sorting">Sugar</a> library to sort - please note that at the time of this writing, there is an issue with it not sorting properly (<a href="https://github.com/andrewplummer/Sugar/issues/382">ref</a>) - you can tell when it starts working properly when you sort the Icelandic Alphabet column and the numeric column numbers are sequential (<span class="lookhere">see row #37</span>).</li>
+					<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="http://sugarjs.com/arrays#sorting">Sugar</a> library to sort:
+						<ul>
+							<li>Solved (4/28/2014)! <del>please note that at the time of this writing, there is an issue with it not sorting properly (<a href="https://github.com/andrewplummer/Sugar/issues/382">ref</a>)</del></li>
+							<li>You can tell it is working properly when you sort the Icelandic Alphabet column and the numeric column numbers are sequential (<span class="lookhere">see row #37</span>).</li>
+						</ul>
+					</li>
 					<li>The &quot;Plain Text Sort&quot; column is using a basic alphabetical sort (with localeCompare if set). Sort that column, then the last column to see how it differs from an alphanumeric sort.</li>
 					<li>The sorting of empty cells still occurs regardless of the custom <code>textSorter</code> setting.</li>
 				</ul>
