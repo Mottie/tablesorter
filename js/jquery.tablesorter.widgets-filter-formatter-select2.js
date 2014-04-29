@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 4/22/2014 (v2.16.1-beta)
+/*! Filter widget formatter functions - updated 4/29/2014 (v2.16.3)
  * requires: jQuery 1.7.2+, tableSorter 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -17,6 +17,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		// select2 filter formatter options
 		cellText : '', // Text (wrapped in a label element)
 		match : true, // adds "filter-match" to header
+		value : '',
 		// include ANY select2 options below
 		multiple : true,
 		width : '100%'
@@ -31,21 +32,23 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 	// hidden filter update namespace trigger by filter widget
 	.bind('change' + c.namespace + 'filter', function(){
 		var val = this.value;
-		val = val.replace(/[/()$]/g, '').split('|');
-		updateSelect2(val);
+		val = val.replace(/[/()$^]/g, '').split('|');
+		$cell.find('.select2').select2('val', val);
+		updateSelect2();
 	}),
 	$header = c.$headers.filter('[data-column="' + indx + '"]:last'),
 	onlyAvail = $header.hasClass(wo.filter_onlyAvail),
 	$shcell = [],
-	match = o.match ? '' : '$',
+	matchPrefix = o.match ? '' : '^',
+	matchSuffix = o.match ? '' : '$',
 
 	// this function updates the hidden input and adds the current values to the header cell text
-	updateSelect2 = function(v, notrigger) {
-		v = typeof v === "undefined" || v === '' ? $cell.find('.select2').select2('val') || o.value || '' : v || '';
+	updateSelect2 = function() {
+		var v = $cell.find('.select2').select2('val') || o.value || '';
 		$input
-		// add equal to the beginning, so we filter exact numbers
-		.val( $.isArray(v) && v.length ? '/(' + (v || []).join(match + '|') + match + ')/' : '' )
-		.trigger( notrigger ? '' : 'search' ).end()
+		// add regex, so we filter exact numbers
+		.val( $.isArray(v) && v.length && v.join('') !== '' ? '/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' : '' )
+		.trigger('search').end()
 		.find('.select2').select2('val', v);
 		// update sticky header cell
 		if ($shcell.length) {
@@ -94,11 +97,11 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 
 	// update select2 from filter hidden input, in case of saved filters
 	c.$table.bind('filterFomatterUpdate', function(){
-		// value = '/(x$|y$)/' => 'x,y'
+		// value = '/(^x$|^y$)/' => 'x,y'
 		var val = c.$table.data('lastSearch')[indx] || '';
-		val = val.replace(/[/()$]/g, '').split('|');
+		val = val.replace(/[/()$^]/g, '').split('|');
 		$cell.find('.select2').select2('val', val);
-		updateSelect2(val, true);
+		updateSelect2();
 	});
 
 	// has sticky headers?
