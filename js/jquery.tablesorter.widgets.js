@@ -1082,7 +1082,8 @@ ts.filter = {
 			// sort parsed select options
 			cts = c.textSorter || '';
 			parsed.sort(function(a, b){
-				var x = a.p, y = b.p;
+				// sortNatural breaks if you don't pass it strings
+				var x = a.p.toString(), y = b.p.toString();
 				if ($.isFunction(cts)) {
 					// custom OVERALL text sorter
 					return cts(x, y, true, column, table);

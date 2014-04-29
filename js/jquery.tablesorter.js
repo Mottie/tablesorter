@@ -1243,6 +1243,8 @@
 			};
 
 			// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
+			// this function will only accept strings, or you'll see "TypeError: undefined is not a function"
+			// I could add a = a.toString(); b = b.toString(); but it'll slow down the sort overall
 			ts.sortNatural = function(a, b) {
 				if (a === b) { return 0; }
 				var xN, xD, yN, yD, xF, yF, i, mx,
