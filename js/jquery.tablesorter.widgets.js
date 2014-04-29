@@ -817,7 +817,7 @@ ts.filter = {
 	},
 	hideFilters: function(table, c) {
 		var $filterRow, $filterRow2, timer;
-		c.$table
+		$(table)
 			.find('.' + ts.css.filterRow)
 			.addClass('hideme')
 			.bind('mouseenter mouseleave', function(e) {
@@ -846,7 +846,7 @@ ts.filter = {
 				var event = e;
 				timer = setTimeout(function() {
 					// don't hide row if any filter has a value
-					if (ts.getFilters(table).join('') === '') {
+					if (ts.getFilters(c.$table).join('') === '') {
 						$filterRow2[ event.type === 'focus' ? 'removeClass' : 'addClass']('hideme');
 					}
 				}, 200);
@@ -1321,10 +1321,7 @@ ts.addWidget({
 						// some wibbly-wobbly... timey-wimey... stuff, to make columns line up in Firefox
 						offset = nonwkie && $(this).attr('data-column') === ( '' + parseInt(c.columns/2, 10) ) ? 1 : 0;
 					$(this)
-						.css({
-							width: $cell.width() - spacing,
-							height: $cell.height()
-						})
+						.css({ width: $cell.width() - spacing })
 						.find(innerHeader).width( $cell.find(innerHeader).width() - offset );
 				});
 			};
@@ -1403,6 +1400,10 @@ ts.addWidget({
 				}
 			});
 			ts.filter.bindSearch( $table, $stickyCells.find('.' + ts.css.filter) );
+			// support hideFilters
+			if (wo.filter_hideFilters) {
+				ts.filter.hideFilters($stickyTable, c);
+			}
 		}
 
 		$table.trigger('stickyHeadersInit');
