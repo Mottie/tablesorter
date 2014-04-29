@@ -1021,9 +1021,7 @@
 					setHeadersCss(table);
 					if (c.initWidgets) {
 						// apply widget format
-						setTimeout(function(){
-							ts.applyWidget(table, false);
-						}, 0);
+						ts.applyWidget(table, false);
 					}
 				}
 
@@ -1051,7 +1049,6 @@
 				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
 			};
-
 
 			// computeTableHeaderCellIndexes from:
 			// http://www.javascripttoolbox.com/lib/table/examples.php
