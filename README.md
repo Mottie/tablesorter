@@ -60,6 +60,41 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.16.3">Version 2.16.3</a> (4/30/2014)
+
+* Docs:
+  * Clean up of docs for the following widgets:
+      * [Column selector widget](http://mottie.github.io/tablesorter/docs/example-widget-column-selector.html)
+      * [Editable widget](http://mottie.github.io/tablesorter/docs/example-widget-editable.html)
+      * [Grouping widget](http://mottie.github.io/tablesorter/docs/example-widget-grouping.html)
+      * [Math widget](http://mottie.github.io/tablesorter/docs/example-widget-math.html)
+      * [Select2 filterFormatter](http://mottie.github.io/tablesorter/docs/example-widget-filter-formatter-select2.html)
+  * Update [`textSorter` option demo](http://mottie.github.io/tablesorter/docs/example-option-custom-sort.html) - the sorting the Icelandic alphabet using sugar's array sort now works properly.
+
+* Core:
+  * Fix `headers` option indexing of cells in multiple header rows
+      * Setting an index in the multiple row header will now correctly set the column parser.
+      * See [this demo](http://jsfiddle.net/Mottie/abkNM/2645/) - the 10th cell (zero-based index) in the header has the sorter set to "month".
+  * Set processing icon to only show after 500ms, it will not show at all if the sort ends before then.
+  * Check for jQuery's `closest` function and use it, or fall back to equivalent code (maintaining support for jQuery 1.2.6+). Fixes [issue #597](https://github.com/Mottie/tablesorter/issues/597).
+  * Remove widget init delay added in v2.16.1-beta.
+
+* Filter:
+  * Remove old cached indexing:
+      * It was causing already filtered rows to return an incorrect cached row value.
+      * Fixes [issue #600](https://github.com/Mottie/tablesorter/issues/600) &amp; see this [Stackoverflow question](http://stackoverflow.com/q/23384787/145346).
+  * Update check for "filter-parsed" class, because the `getData` function will only return the first class name starting with "filter-".
+  * Filter select updates:
+      * Add `filter-select-nosort` header class name to prevent select option sorting.
+      * Filter select option sort now uses the assigned column parser to parse &amp; sort the options.
+      * Filter select options are now sorted using the `textSorter` function, if set, and if not set, it falls back to natural sorting.
+      * Fixes [issue #599](https://github.com/Mottie/tablesorter/issues/599).
+      * Add note to ensure textSorter receives strings, or a javascript error occurs.
+  * Select2 filterFormatter now allows setting of initial settings. Fixes [issue #598](https://github.com/Mottie/tablesorter/issues/598).
+
+* Sticky Headers
+  * Add support for `filter_hideFilters` set to `true`. See this [Stackoverflow question](http://stackoverflow.com/q/23342215/145346).
+
 #### <a name="v2.16.2">Version 2.16.2</a> (4/27/2014)
 
 * Docs:
