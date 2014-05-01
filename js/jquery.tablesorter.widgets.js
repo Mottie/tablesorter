@@ -854,7 +854,7 @@ ts.filter = {
 	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters) { return; }
-		var cached, len, $rows, cacheIndex, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
+		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
 			notFiltered, searchFiltered, filterMatched, showRow, time,
 			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache,
@@ -914,7 +914,6 @@ ts.filter = {
 					iAnyMatch = anyMatch.toLowerCase();
 				}
 				// loop through the rows
-				cacheIndex = 0;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 					childRow = $rows[rowIndex].className;
 					// skip child rows & already filtered rows
@@ -933,7 +932,7 @@ ts.filter = {
 						rowArray = $cells.map(function(i){
 							var txt;
 							if (parsed[i]) {
-								txt = c.cache[tbodyIndex].normalized[cacheIndex][i];
+								txt = c.cache[tbodyIndex].normalized[rowIndex][i];
 							} else {
 								txt = wo.filter_ignoreCase ? $(this).text().toLowerCase() : $(this).text();
 								if (c.sortLocaleCompare) {
@@ -944,7 +943,7 @@ ts.filter = {
 						}).get();
 						rowText = rowArray.join(' ');
 						iRowText = rowText.toLowerCase();
-						rowCache = c.cache[tbodyIndex].normalized[cacheIndex].slice(0,-1).join(' ');
+						rowCache = c.cache[tbodyIndex].normalized[rowIndex].slice(0,-1).join(' ');
 						filterMatched = null;
 						$.each(ts.filter.types, function(type, typeFunction) {
 							if ($.inArray(type, anyMatchNotAllowedTypes) < 0) {
@@ -965,7 +964,7 @@ ts.filter = {
 					for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 						// ignore if filter is empty or disabled
 						if (filters[columnIndex]) {
-							cached = c.cache[tbodyIndex].normalized[cacheIndex][columnIndex];
+							cached = c.cache[tbodyIndex].normalized[rowIndex][columnIndex];
 							// check if column data should be from the cell or from parsed data
 							if (wo.filter_useParsedData || parsed[columnIndex]) {
 								exact = cached;
@@ -1021,7 +1020,6 @@ ts.filter = {
 					if (childRow.length) {
 						childRow.toggleClass(wo.filter_filteredRow, !showRow);
 					}
-					cacheIndex++;
 				}
 			}
 			ts.processTbody(table, $tbody, false);
