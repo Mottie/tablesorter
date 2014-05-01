@@ -438,16 +438,18 @@ ts.filter = {
 					query = ts.formatFloat( iFilter.replace(ts.filter.regex.operators, ''), table ),
 					parser = c.parsers[index],
 					savedSearch = query;
-					// parse filter value in case we're comparing numbers (dates)
+				// parse filter value in case we're comparing numbers (dates)
 				if (parsed[index] || parser.type === 'numeric') {
-					cachedValue = parser.format( '' + iFilter.replace(ts.filter.regex.operators, ''), table, c.$headers.eq(index), index );
-					query = ( typeof query === "number" && cachedValue !== '' && !isNaN(cachedValue) ) ? cachedValue : query;
+					result = parser.format( $.trim('' + iFilter.replace(ts.filter.regex.operators, '')), table, [], index );
+					query = ( typeof result === "number" && result !== '' && !isNaN(result) ) ? result : query;
 				}
+
 				// iExact may be numeric - see issue #149;
 				// check if cached is defined, because sometimes j goes out of range? (numeric columns)
-				cachedValue = ( parsed[index] || parser.type === 'numeric' ) && !isNaN(query) && cached ? cached :
+				cachedValue = ( parsed[index] || parser.type === 'numeric' )&& !isNaN(query) && typeof cached !== 'undefined' ? cached :
 					isNaN(iExact) ? ts.formatFloat( iExact.replace(ts.filter.regex.nondigit, ''), table) :
 					ts.formatFloat( iExact, table );
+
 				if ( />/.test(iFilter) ) { result = />=/.test(iFilter) ? cachedValue >= query : cachedValue > query; }
 				if ( /</.test(iFilter) ) { result = /<=/.test(iFilter) ? cachedValue <= query : cachedValue < query; }
 				// keep showing all rows if nothing follows the operator
