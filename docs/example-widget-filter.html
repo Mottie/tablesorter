@@ -35,7 +35,7 @@
 	<script id="js">$(function() {
 
 	// call the tablesorter plugin
-	$("table.tablesorter").tablesorter({
+	$("#table").tablesorter({
 		theme: 'blue',
 
 		// hidden filter input/selects will resize the columns, so try to minimize the change
@@ -134,7 +134,7 @@
 
 		filters[col] = txt;
 		// using "table.hasFilters" here to make sure we aren't targetting a sticky header
-		$.tablesorter.setFilters( $('table.hasFilters'), filters, true ); // new v2.9
+		$.tablesorter.setFilters( $('#table'), filters, true ); // new v2.9
 
 		/** old method (prior to tablsorter v2.9 ***
 		var filters = $('table.tablesorter').find('input.tablesorter-filter');
@@ -162,7 +162,7 @@ $(function(){
 
 	// *** widgetfilter_startsWith toggle button ***
 	$('button.toggle').click(function(){
-		var c = $('table.tablesorter')[0].config,
+		var c = $('#table')[0].config,
 		$t = $(this),
 		// toggle the boolean
 		fsw = !c.widgetOptions.filter_startsWith,
@@ -178,7 +178,7 @@ $(function(){
 			$t.find('span').html( $t.hasClass('filter-match') ? '' : ' No' );
 		}
 		// update search after option change; add false to trigger to skip search delay
-		$('table.tablesorter').trigger('search', false);
+		c.$table.trigger('search', false);
 		return false;
 	});
 
@@ -557,6 +557,24 @@ $(".search").bind('search keyup', function (e) {
 		<div class="inner">
 			<p>Moved to the wiki pages - <a href="https://github.com/Mottie/tablesorter/wiki/Change3">filter change log</a>.
 		</div>
+
+		<h3><a href="#">Localization</a></h3>
+		<div class="inner">
+			<p>You can now change the language of the searches used within the filter widget. For example, to change the localization to French, do the following:
+			<pre class="prettyprint lang-js">// add French support
+$.extend($.tablesorter.language, {
+	to  : 'à',
+	or  : 'ou',
+	and : 'et'
+});</pre>If you want to support multiple languages, separate the language variables with a vertical bar (<code>|</code>, <kbd>Shift</kbd> + <kbd>&#92;</kbd>):
+			<pre class="prettyprint lang-js">// add French & Spanish support
+$.extend($.tablesorter.language, {
+	to  : 'à|a',
+	or  : 'ou|o',
+	and : 'et|y'
+});</pre><span class="label label-info">Note</span> These changes still require the user to enter spaces in the filter to perform the search, e.g. <code>1 à 10</code> (shows rows with numbers between 1 and 10).
+		</div>
+
 	</div>
 
 	<h1>Demo</h1>
@@ -568,7 +586,7 @@ $(".search").bind('search keyup', function (e) {
 	<div id="demo">Search <button type="button" data-filter-column="5" data-filter-text="2?%">2?%</button> in the Discount column<br>
 <button type="button" class="reset">Reset</button> <!-- targeted by the "filter_reset" option -->
 
-<table class="tablesorter">
+<table id="table" class="tablesorter">
 	<thead>
 		<tr>
 			<!-- you can also add a placeholder using script; $('.tablesorter th:eq(0)').data('placeholder', 'hello') -->

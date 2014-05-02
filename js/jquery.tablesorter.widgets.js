@@ -446,7 +446,7 @@ ts.filter = {
 
 				// iExact may be numeric - see issue #149;
 				// check if cached is defined, because sometimes j goes out of range? (numeric columns)
-				cachedValue = ( parsed[index] || parser.type === 'numeric' )&& !isNaN(query) && typeof cached !== 'undefined' ? cached :
+				cachedValue = ( parsed[index] || parser.type === 'numeric' ) && !isNaN(query) && typeof cached !== 'undefined' ? cached :
 					isNaN(iExact) ? ts.formatFloat( iExact.replace(ts.filter.regex.nondigit, ''), table) :
 					ts.formatFloat( iExact, table );
 
@@ -478,8 +478,8 @@ ts.filter = {
 		},
 		// Look for an AND or && operator (logical and)
 		and : function( filter, iFilter, exact, iExact ) {
-			if ( /\s+(AND|&&)\s+/g.test(filter) ) {
-				var query = iFilter.split( /(?:\s+(?:and|&&)\s+)/g ),
+			if ( ts.filter.regex.andTest.test(filter) ) {
+				var query = iFilter.split( ts.filter.regex.andSplit ),
 					result = iExact.search( $.trim(query[0]) ) >= 0,
 					indx = query.length - 1;
 				while (result && indx) {
@@ -492,10 +492,11 @@ ts.filter = {
 		},
 		// Look for a range (using " to " or " - ") - see issue #166; thanks matzhu!
 		range : function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
-			if ( /\s+(-|to)\s+/.test(iFilter) ) {
+			if ( ts.filter.regex.toTest.test(iFilter) ) {
 				var result, tmp,
 					c = table.config,
-					query = iFilter.split(/(?: - | to )/), // make sure the dash is for a range and not indicating a negative number
+					// make sure the dash is for a range and not indicating a negative number
+					query = iFilter.split( ts.filter.regex.toSplit ),
 					range1 = ts.formatFloat(query[0].replace(ts.filter.regex.nondigit, ''), table),
 					range2 = ts.formatFloat(query[1].replace(ts.filter.regex.nondigit, ''), table);
 					// parse filter value in case we're comparing numbers (dates)
@@ -515,9 +516,9 @@ ts.filter = {
 		},
 		// Look for wild card: ? = single, * = multiple, or | = logical OR
 		wild : function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed, rowArray ) {
-			if ( /[\?|\*]/.test(iFilter) || /\s+OR\s+/i.test(filter) ) {
+			if ( /[\?|\*]/.test(iFilter) || ts.filter.regex.orReplace.test(filter) ) {
 				var c = table.config,
-					query = iFilter.replace(/\s+OR\s+/gi,"|");
+					query = iFilter.replace(ts.filter.regex.orReplace, "|");
 				// look for an exact match with the "or" unless the "filter-match" class is found
 				if (!c.$headers.filter('[data-column="' + index + '"]:last').hasClass('filter-match') && /\|/.test(query)) {
 					query = $.isArray(rowArray) ? '(' + query + ')' : '^(' + query + ')$';
@@ -547,14 +548,30 @@ ts.filter = {
 		}
 	},
 	init: function(table, c, wo) {
-		var options, string, $header, column, filters, time;
+		// filter language options
+		ts.language = $.extend(true, {}, {
+			to  : 'to',
+			or  : 'or',
+			and : 'and'
+		}, ts.language);
+
+		var options, string, $header, column, filters, time,
+			regex = ts.filter.regex;
 		if (c.debug) {
 			time = new Date();
 		}
 		c.$table.addClass('hasFilters');
 
-		ts.filter.regex.child = new RegExp(c.cssChildRow);
-		ts.filter.regex.filtered = new RegExp(wo.filter_filteredRow);
+		$.extend( regex, {
+			child : new RegExp(c.cssChildRow),
+			filtered : new RegExp(wo.filter_filteredRow),
+			alreadyFiltered : new RegExp('(\\s+(' + ts.language.or + '|-|' + ts.language.to + ')\\s+)', 'i'),
+			toTest : new RegExp('\\s+(-|' + ts.language.to + ')\\s+', 'i'),
+			toSplit : new RegExp('(?:\\s+(?:-|' + ts.language.to + ')\\s+)' ,'gi'),
+			andTest : new RegExp('\\s+(' + ts.language.and + '|&&)\\s+', 'i'),
+			andSplit : new RegExp('(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi'),
+			orReplace : new RegExp('\\s+(' + ts.language.or + ')\\s+', 'gi')
+		});
 
 		// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
 		if (wo.filter_columnFilters !== false && c.$headers.filter('.filter-false').length !== c.$headers.length) {
@@ -578,6 +595,7 @@ ts.filter = {
 				if (/(update|add)/.test(event.type) && event.type !== "updateComplete") {
 					// force a new search since content has changed
 					c.lastCombinedFilter = null;
+					c.lastSearch = [];
 				}
 				// pass true (skipFirst) to prevent the tablesorter.setFilters function from skipping the first input
 				// ensures all inputs are updated when a search is triggered on the table $('table').trigger('search', [...]);
@@ -804,6 +822,7 @@ ts.filter = {
 		} else if (filter === false) {
 			// force filter refresh
 			c.lastCombinedFilter = null;
+			c.lastSearch = [];
 		}
 		c.$table.trigger('filterStart', [filters]);
 		if (c.showProcessing) {
@@ -858,8 +877,9 @@ ts.filter = {
 		if (table.config.lastCombinedFilter === combinedFilters) { return; }
 		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
-			notFiltered, searchFiltered, filterMatched, showRow, time,
+			notFiltered, searchFiltered, filterMatched, showRow, time, val, indx,
 			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache,
+			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
 			columns = c.columns,
@@ -889,18 +909,23 @@ ts.filter = {
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
-				$.each(filters, function(indx, val) {
+				for (indx = 0; indx < columnIndex; indx++) {
+					val = filters[indx] || '';
+					// break out of loop if we've already determined not to search filtered rows
+					if (!searchFiltered) { indx = columnIndex; }
 					// search already filtered rows if...
-					searchFiltered = searchFiltered &&
-						// there are changes from beginning of filter
-						(val || '').indexOf(lastSearch[indx]) === 0 &&
-						// if there is not a logical "or" in the string
-						!/(\s+or\s+|\|)/g.test(val || '') &&
-						// if we are not doing exact matches
-						!/[=\"]/.test(lastSearch[indx]) &&
+					searchFiltered = searchFiltered && lastSearch.length &&
+						// there are no changes from beginning of filter
+						val.indexOf(lastSearch[indx] || '') === 0 &&
+						// if there is NOT a logical "or", or range ("to" or "-") in the string
+						!regex.alreadyFiltered.test(val) &&
+						// if we are not doing exact matches, using "|" (logical or) or not "!"
+						!/[=\"\|!]/.test(val) &&
+						// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
+						!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) && 
 						// if filtering using a select without a "filter-match" class (exact match) - fixes #593
 						!( val !== '' && wo.filter_functions && wo.filter_functions[indx] === true && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
-				});
+				}
 				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
 				// can't search when all rows are hidden - this happens when looking for exact matches
 				if (searchFiltered && notFiltered === 0) { searchFiltered = false; }
@@ -919,7 +944,7 @@ ts.filter = {
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 					childRow = $rows[rowIndex].className;
 					// skip child rows & already filtered rows
-					if ( ts.filter.regex.child.test(childRow) || (searchFiltered && ts.filter.regex.filtered.test(childRow)) ) { continue; }
+					if ( regex.child.test(childRow) || (searchFiltered && regex.filtered.test(childRow)) ) { continue; }
 					showRow = true;
 					// *** nextAll/nextUntil not supported by Zepto! ***
 					childRow = $rows.eq(rowIndex).nextUntil('tr:not(.' + c.cssChildRow + ')');
@@ -975,7 +1000,7 @@ ts.filter = {
 								exact = $.trim($cells.eq(columnIndex).text());
 								exact = c.sortLocaleCompare ? ts.replaceAccents(exact) : exact; // issue #405
 							}
-							iExact = !ts.filter.regex.type.test(typeof exact) && wo.filter_ignoreCase ? exact.toLocaleLowerCase() : exact;
+							iExact = !regex.type.test(typeof exact) && wo.filter_ignoreCase ? exact.toLocaleLowerCase() : exact;
 							result = showRow; // if showRow is true, show that row
 
 							// replace accents - see #357
@@ -1246,6 +1271,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 	if (c && apply) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
+		c.lastSearch = [];
 		ts.filter.searching(c.$table[0], filter, skipFirst);
 		c.$table.trigger('filterFomatterUpdate');
 	}
