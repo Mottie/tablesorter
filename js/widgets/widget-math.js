@@ -150,7 +150,7 @@
 
 		output : function($cell, wo, value, arry) {
 			// get mask from cell data-attribute: data-math-mask="#,##0.00"
-			var result = ts.formatMask( $cell.attr('data-' + wo.math_data + '-mask') || wo.math_mask, value );
+			var result = ts.formatMask( $cell.attr('data-' + wo.math_data + '-mask') || wo.math_mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
 			if ($.isFunction(wo.math_complete)) {
 				result = wo.math_complete($cell, wo, result, value, arry);
 			}
@@ -169,20 +169,52 @@
 	* (c)2011 ecava
 	* Dual licensed under the MIT or GPL Version 2 licenses.
 	*/
-	ts.formatMask = function(m, v){
-		var isNegative, result, decimal, group, pos_lead_zero, pos_trail_zero, pos_separator, part, szSep,
-			integer, str, offset, i, l;
+	ts.formatMask = function(m, v, tmpPrefix, tmpSuffix){
 		if ( !m || isNaN(+v) ) {
 			return v; // return as it is.
 		}
+
+		var isNegative, result, decimal, group, posLeadZero, posTrailZero, posSeparator, part, szSep,
+			integer, str, offset, i, l, len, start, tmp, end, inv,
+			prefix = '',
+			suffix = '';
+
+		// find prefix/suffix
+		len = m.length;
+		start = m.search( /[0-9\-\+#]/ );
+		tmp = start > 0 ? m.substring(0, start) : '';
+		prefix = tmp;
+		if ( start > 0 && tmpPrefix ) {
+			if ( /\{content\}/.test(tmpPrefix || '') ) {
+				prefix = (tmpPrefix || '').replace(/\{content\}/g, tmp || '');
+			} else {
+				prefix = (tmpPrefix || '') + tmp;
+			}
+		}
+		// reverse string: not an ideal method if there are surrogate pairs
+		inv = m.split('').reverse().join('');
+		end = inv.search( /[0-9\-\+#]/ );
+		i = len - end;
+		i += (m.substring( i, i + 1 ) === '.') ? 1 : 0;
+		tmp = end > 0 ? m.substring( i, len) : '';
+		suffix = tmp;
+		if (tmp !== '' && tmpSuffix) {
+			if ( /\{content\}/.test(tmpSuffix || '') ) {
+				suffix = (tmpSuffix || '').replace(/\{content\}/g, tmp || '');
+			} else {
+				suffix = tmp + (tmpSuffix || '');
+			}
+		}
+		m = m.substring(start, i);
+
 		// convert any string to number according to formation sign.
-		v = m.charAt(0) == '-'? -v : +v;
+		v = m.charAt(0) == '-' ? -v : +v;
 		isNegative = v < 0 ? v = -v : 0; // process only abs(), and turn on flag.
 
 		// search for separator for grp & decimal, anything not digit, not +/- sign, not #.
-		result = m.match(/[^\d\-\+#]/g);
-		decimal = (result && result[result.length-1]) || '.'; // treat the right most symbol as decimal
-		group = (result && result[1] && result[0]) || ',';  // treat the left most symbol as group separator
+		result = m.match( /[^\d\-\+#]/g );
+		decimal = ( result && result[result.length-1] ) || '.'; // treat the right most symbol as decimal
+		group = ( result && result[1] && result[0] ) || ',';  // treat the left most symbol as group separator
 
 		// split the decimal for the format string if any.
 		m = m.split( decimal );
@@ -191,18 +223,18 @@
 		v = +(v) + ''; // convert number to string to trim off *all* trailing decimal zero(es)
 
 		// fill back any trailing zero according to format
-		pos_trail_zero = m[1] && m[1].lastIndexOf('0'); // look for last zero in format
+		posTrailZero = m[1] && m[1].lastIndexOf('0'); // look for last zero in format
 		part = v.split('.');
 		// integer will get !part[1]
-		if ( !part[1] || part[1] && part[1].length <= pos_trail_zero ) {
-			v = (+v).toFixed( pos_trail_zero + 1 );
+		if ( !part[1] || ( part[1] && part[1].length <= posTrailZero ) ) {
+			v = (+v).toFixed( posTrailZero + 1 );
 		}
 		szSep = m[0].split( group ); // look for separator
 		m[0] = szSep.join(''); // join back without separator for counting the pos of any leading 0.
 
-		pos_lead_zero = m[0] && m[0].indexOf('0');
-		if ( pos_lead_zero > -1 ) {
-			while ( part[0].length < ( m[0].length - pos_lead_zero ) ) {
+		posLeadZero = m[0] && m[0].indexOf('0');
+		if ( posLeadZero > -1 ) {
+			while ( part[0].length < ( m[0].length - posLeadZero ) ) {
 				part[0] = '0' + part[0];
 			}
 		} else if ( +part[0] === 0 ) {
@@ -214,16 +246,17 @@
 
 		// process the first group separator from decimal (.) only, the rest ignore.
 		// get the length of the last slice of split result.
-		pos_separator = ( szSep[1] && szSep[ szSep.length - 1 ].length );
-		if (pos_separator) {
+		posSeparator = ( szSep[1] && szSep[ szSep.length - 1 ].length );
+		if ( posSeparator ) {
 			integer = v[0];
 			str = '';
-			offset = integer.length % pos_separator;
+			offset = integer.length % posSeparator;
 			l = integer.length;
 			for ( i = 0; i < l; i++ ) {
 				str += integer.charAt(i); // ie6 only support charAt for sz.
-				// -pos_separator so that won't trail separator on full length
-				if ( !(( i - offset + 1 ) % pos_separator) && i < l - pos_separator ) {
+				// -posSeparator so that won't trail separator on full length
+				/*jshint -W018 */
+				if ( !( ( i - offset + 1 ) % posSeparator ) && i < l - posSeparator ) {
 					str += group;
 				}
 			}
@@ -231,7 +264,8 @@
 		}
 
 		v[1] = ( m[1] && v[1] ) ? decimal + v[1] : "";
-		return ( isNegative ? '-' : '' ) + v[0] + v[1]; // put back any negation and combine integer and fraction.
+		// put back any negation, combine integer and fraction, and add back prefix & suffix
+		return prefix + ( ( isNegative ? '-' : '' ) + v[0] + v[1] ) + suffix;
 	};
 
 	ts.equations = {
@@ -332,7 +366,11 @@
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
 			// order of calculation; "all" is last
-			math_priority : [ 'row', 'above', 'col' ]
+			math_priority : [ 'row', 'above', 'col' ],
+			// template for or just prepend the mask prefix & suffix with this HTML
+			// e.g. '<span class="red">{content}</span>'
+			math_prefix   : '',
+			math_suffix   : ''
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table

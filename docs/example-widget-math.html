@@ -24,6 +24,11 @@
 
 	<style>
 	#table2 th:nth-child(1) { width: 300px; }
+	.source { width: 550px; height: 250px; position: relative; float: left; margin-bottom: 5px; }
+	.resultz { width: 550px; height: 250px; position: relative; top: 0; float: left; margin: 0 0 0 10px; overflow-y: auto; padding: 5px 10px; font-size: 13px; }
+	.red { color: red; }
+	.blue { color: #0080ff; }
+	.prefix, .suffix { width: 300px; }
 	</style>
 	<style id="css">/* make all calculated values bold */
 .tablesorter tbody td[data-math] {
@@ -59,11 +64,29 @@
 </style>
 
 	<script>
+	var process = function () {
+		var results = [],
+			table = $('#table1')[0],
+			num = $('.value').val(),
+			prefix = $('.prefix').val(),
+			suffix = $('.suffix').val(),
+			vals = $('.source').val().split(/\n/g);
+		$.each(vals, function (i, v) {
+			results.push( v ? $.tablesorter.formatMask(v, num, prefix, suffix) : '' );
+		});
+		$('.resultz').html(results.join('<br>'));
+	};
+
 	$(function(){
 		$('.options').tablesorter({
 			widthFixed: true,
 			widgets: [ "stickyHeaders" ]
 		});
+
+		$('button').click(function () {
+			process();
+		});
+		process();
 	});
 	</script>
 
@@ -158,6 +181,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.16.4</span>, added:
+				<ul>
+					<li>Two new options: <code>math_prefix</code> and <code>math_suffix</code>, which will be added before or after the prefix or suffix, respectively.</li>
+					<li>Added "Mask Examples" section with examples, and how to use the <code>$.tablesorter.formatMask</code> function.</li>
+				</ul>
+			</li>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.16+ and jQuery version 1.7+.</li>
 			<li>It adds basic math capabilities. A full list of default formulas is listed in the "Attribute Settings" section.</li>
 			<li>Add your own custom formulas which manipulating an array of values gathered from the table by row, column or a column block (above).</li>
@@ -225,14 +254,19 @@ math_ignore : [0,1]</pre>
 								<li>Accept any numbers of digit grouping. <code>#,##,#0.000</code> or <code>#,###0.##</code> are all valid.</li>
 								<li>Accept any redundant/fool-proof formatting. <code>##,###,##.#</code> or <code>0#,#00#.###0#</code> are all OK.</li>
 								<li>Auto number rounding.</li>
-								<li>Simple interface, just supply mask & value like this: <code>$.tablesorter.formatMask( "0.0000", 3.141592 )</code></li>
+								<li>Include a prefix & suffix with the mask</li>
+								<li>Simple interface, just supply mask & value like this: <code>$.tablesorter.formatMask( "0.0000", 3.141592, "prefix ", " suffix" );</code>
+									<pre class="prettyprint lang-js">$.tablesorter.formatMask( "$ 0.0000 USD", 1234.567, "prefix ", " suffix" );
+// prefix $ 1234.5670 USD suffix</pre>
+								</li>
 							</ul>
 							<h3>Limitation</h3>
 							<ul>
-								<li>No prefix or suffix is allowed except leading negation symbol. So <code>$#,##0.00</code> or <code>#,###.##USD</code> will not yield expected outcome. Use <code>'$'+ $.tablesorter.formatMask('#,##0.00', 123.45)</code> or <code>$.tablesorter.formatMask('#,##0.00', 456.789) + 'USD'</code></li>
 								<li>No scientific/engineering formatting.</li>
 								<li>Not for date or phone formation.</li>
 								<li>No color control.</li>
+								<li><del>No prefix or suffix is allowed except leading negation symbol. So <code>$#,##0.00</code> or <code>#,###.##USD</code> will not yield expected outcome. Use <code>'$'+ $.tablesorter.formatMask('#,##0.00', 123.45)</code> or <code>$.tablesorter.formatMask('#,##0.00', 456.789) + 'USD'</code></del></li>
+								<li>The prefix or suffix can not include any numbers (<code>0-9</code>), hashes (<code>#</code>), dashes (<code>-</code>), or plus signs (<code>+</code>)</li>
 							</ul>
 							<h3>Note</h3>
 							<ul>
@@ -240,7 +274,7 @@ math_ignore : [0,1]</pre>
 								<li>To force a single symbol as Separator, add a trailing dot to the end like this: <code>$.tablesorter.formatMask( '#,###.', 1234567.890)</code> which will then output <code>1,234,567</code>.</li>
 								<li><a href="http://www.integraxor.com/developer/codes/js-formatter/format-sample.htm">Original plugin demo</a></li>
 							</ul>
-							<span class="remark">*</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>).
+							<span class="remark">*</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>) - now forked on <a href="https://github.com/Mottie/javascript-number-formatter">GitHub</a>.
 							</div>
 						</td>
 					</tr>
@@ -278,7 +312,7 @@ math_complete : function($cell, wo, result, value, arry){
 
 					<tr id="math_priority">
 						<td><a href="#" class="permalink">math_priority</a></td>
-						<td><code>[ 'row', 'above', 'col' ]'</code></td>
+						<td><code>[ 'row', 'above', 'col' ]</code></td>
 						<td>
 							This is the order of calculations.
 							<div class="collapsible">
@@ -296,6 +330,50 @@ math_complete : function($cell, wo, result, value, arry){
 								<li>The "all" type calculations are always performed last, and therefore the type is not included in this list.</li>
 								<li>Change this order if the order of calculations needs to be made column first, followed by rows.</li>
 								<li>For more details about the differences between "col" and "above" types, see the next section.</li>
+							</ul>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_prefix">
+						<td><a href="#" class="permalink">math_prefix</a></td>
+						<td><code>''</code></td>
+						<td>
+							Add content before the value formatted by the <code>math_mask</code> option (<span class="version">v2.16.4</span>).
+							<div class="collapsible">
+							<ul>
+								<li>This option adds content before the mask.</li>
+								<li>If the mask includes any content for the prefix, then this value is added before it.</li>
+								<li>If this option contains a <code>{content}</code> tag, the prefix within the mask will replace this tag.
+									<pre class="prettyprint lang-js">math_mask   : '$ #,##0.00',
+math_prefix : '<span class="blue">{content}</span>'
+
+// result of the value 12345.67
+// &lt;span class="blue"&gt;$ &lt;/span&gt;12,345.67</pre>
+									You can experiment with this option in the "Mask Examples" section.
+								</li>
+							</ul>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_suffix">
+						<td><a href="#" class="permalink">math_suffix</a></td>
+						<td><code>''</code></td>
+						<td>
+							Add content after the value formatted by the <code>math_mask</code> option (<span class="version">v2.16.4</span>).
+							<div class="collapsible">
+							<ul>
+								<li>This option adds content after the mask.</li>
+								<li>If the mask includes any content for the suffix, then this value is added after it.</li>
+								<li>If this option contains a <code>{content}</code> tag, the suffix within the mask will replace this tag.
+									<pre class="prettyprint lang-js">math_mask   : '#,##0.00 USD',
+math_suffix : '{content}<span class="red">!</span>'
+
+// result of the value 12345.67
+// 12,345.67 USD&lt;span class=&quot;red&quot;&gt;!&lt;/span&gt;</pre>
+									You can experiment with this option in the "Mask Examples" section.
+								</li>
 							</ul>
 							</div>
 						</td>
@@ -366,6 +444,47 @@ $.tablesorter.equations['product'] = function(arry) {
 				</li>
 			</ul>
 		</div>
+
+		<h3><a href="#">Mask Examples</a></h3>
+		<div>
+			The formatting function can be used separately from the math widget:
+			<pre class="prettyprint lang-js">// $.tablesorter.formatMask(mask, value, prefix, suffix);
+$.tablesorter.formatMask('$#,##0.00 USD', 12345.678, 'prefix ', ' suffix');
+// result: "prefix $12,345.68 USD suffix"</pre>
+			<ul>
+				<li>The <code>$.tablesorter.formatMask</code> function has the following parameters:
+					<ul>
+						<li><code>mask</code> - please refer to the <code>math_mask</code> option for more details.</li>
+						<li><code>value</code> - number to be formatted.</li>
+						<li><code>prefix</code> - please refer to the <code>math_prefix</code> option for more details (<span class="version updated">v2.16.4</span>).</li>
+						<li><code>suffix</code> - please refer to the <code>math_suffix</code> option for more details (<span class="version updated">v2.16.4</span>).</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Experiment with the mask:</h4>
+			<textarea class="source">$#,##0.00 USD
+##.000,00 ¥
+£-##¿000$00 xx
+test:### ###. ing
+prefix with a comma, ok? #.00 yep!
+prefix with a periods? ok?... #.00 yep!
+    prefix with spaces   ##^000*00 suffix, with comma
+prefix (#,###.00) suffix
+
+BAD => mask starts with a decimal .00 <= BAD
+BAD => mask starts with a comma ,##.00 <= BAD
+BAD => No hash (#) outside of mask $#,###.00 No # in suffix <= BAD
+BAD => No plus (+) here! #,###.00 ¢ or [+] here <= BAD
+BAD => No minus (-) here! $#,###.00 or [-] here either <= BAD</textarea>
+		<pre class="resultz"></pre>
+		<br class="clear">
+		Value to use: <input class="value" type="text" value="1234567.8955" /><br>
+		Prefix: <input class="prefix" type="text" value='<span class="red">{content}</span>' /> ( add <code>{content}</code> to include the mask prefix )<br>
+		Suffix: <input class="suffix" type="text" value='<span class="blue">{content}</span>' /> ( add <code>{content}</code> to include the mask suffix )<br>
+		<button>Process</button>
+		</div>
+
 	</div>
 
 	<p></p>
