@@ -188,6 +188,7 @@ $(function(){
 
 	$table5.tablesorter();
 
+	module('JSHint');
 	/************************************************
 		JSHint testing
 	************************************************/
@@ -198,6 +199,7 @@ $(function(){
 	tester.jsHintTest('JSHint group widget', 'js/widgets/widget-grouping.js');
 	tester.jsHintTest('JSHint scroller widget', 'js/widgets/widget-scroller.js');
 
+	module('core');
 	/************************************************
 		Initialization
 	************************************************/
