@@ -781,7 +781,7 @@ ts.filter = {
 		$el
 		// use data attribute instead of jQuery data since the head is cloned without including the data/binding
 		.attr('data-lastSearchTime', new Date().getTime())
-		.unbind('keyup search change '.split(' ').join(c.namespace + 'filter '))
+		.unbind('keypress keyup search change '.split(' ').join(c.namespace + 'filter '))
 		// include change for select - fixes #473
 		.bind('keyup search change '.split(' ').join(c.namespace + 'filter '), function(event) {
 			$(this).attr('data-lastSearchTime', new Date().getTime());
@@ -796,6 +796,12 @@ ts.filter = {
 			}
 			// true flag tells getFilters to skip newest timed input
 			ts.filter.searching( table, true, true );
+		})
+		.bind('keypress.' + c.namespace + 'filter', function(event){
+			if (event.which === 13) {
+				event.preventDefault();
+				$(this).blur();
+			}
 		});
 		c.$table.bind('filterReset', function(){
 			$el.val('');
