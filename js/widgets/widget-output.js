@@ -206,7 +206,7 @@ output = ts.output = {
 	// modified from https://github.com/PixelsCommander/Download-File-JS
 	download : function (wo, data){
 		var e, link,
-			processedData = 'data:text/csv;charset=utf8,' + encodeURIComponent(data);
+			processedData = wo.output_encoding + encodeURIComponent(data);
 
 		// iOS devices do not support downloading. We have to inform user about this.
 		if (/(iP)/g.test(navigator.userAgent)) {
@@ -258,7 +258,12 @@ ts.addWidget({
 		// return false to stop delivery & do something else with the data
 		output_callback     : function(data){ return true; },
 		// JSON callback executed when a colspan is encountered in the header
-		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex + col) + ')'; }
+		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex + col) + ')'; },
+		// output data type (with BOM or Windows-1252 is needed for excel)
+		// NO BOM   : 'data:text/csv;charset=utf8,'
+		// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
+		// WIN 1252 : 'data:text/csv;charset=windows-1252'
+		output_encoding     : 'data:text/csv;charset=utf8,'
 	},
 	init: function(table, thisWidget, c) {
 		output.init(c);
