@@ -158,7 +158,7 @@
 						wo = $t[0].config.widgetOptions;
 						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || 27;
 						if ($t.hasClass('options') || $t.hasClass('api')) {
-							$('body').scrollTop( prop.offset().top - h );
+							window.scrollTo( 0, prop.offset().top - h );
 						}
 					}
 				}, 200);
