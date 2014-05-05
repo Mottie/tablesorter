@@ -16,6 +16,7 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 	<!-- Tablesorter: optional -->
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
@@ -71,13 +72,13 @@
 	$table
 		.tablesorter({
 			theme: 'blue',
-			widgets: ['zebra', 'columns']
+			widgets: ['zebra', 'columns', 'filter']
 		})
 		.tablesorterPager({
 			// target the pager markup - see the HTML block below
 			container: $pager,
 			size: 10,
-			output: 'showing: {startRow} to {endRow} ({totalRows})'
+			output: 'showing: {startRow} to {endRow} ({filteredRows})'
 		});
 
 });
@@ -92,15 +93,14 @@
 	</div>
 
 	<div id="main">
-<!--
-		<p class="tip">
-			<em>NOTE!</em> Lorem Ipsum
-			<ul>
-				<li>text.</li>
-				<li>text.</li>
-			</ul>
-		</p>
--->
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>In <span class="version">v2.16.4</span>, code was updated to correctly count process pages.</li>
+		</ul>
+	</p>
+
 	<h1>Demo</h1>
 	<br>
 <!-- pager -->

@@ -38,16 +38,16 @@ $.tablesorter.customPagerControls = function(settings) {
 		.on('pagerInitialized pagerComplete', function (e, c) {
 			var indx, pages = $('<div/>'), pageArray = [],
 			cur = c.page + 1,
-			start = cur > 1 ? (c.totalPages - cur < options.aroundCurrent ? -(options.aroundCurrent + 1) + (c.totalPages - cur) : -options.aroundCurrent) : 0,
+			start = cur > 1 ? (c.filteredPages - cur < options.aroundCurrent ? -(options.aroundCurrent + 1) + (c.filteredPages - cur) : -options.aroundCurrent) : 0,
 			end = cur < options.aroundCurrent + 1 ? options.aroundCurrent + 3 - cur : options.aroundCurrent + 1;
 			for (indx = start; indx < end; indx++) {
-				if (cur + indx >= 1 && cur + indx < c.totalPages) { pageArray.push( cur + indx ); }
+				if (cur + indx >= 1 && cur + indx < c.filteredPages) { pageArray.push( cur + indx ); }
 			}
 			if (pageArray.length) {
 				// include first and last pages (ends) in the pagination
 				for (indx = 0; indx < options.ends; indx++){
 					if ($.inArray(indx + 1, pageArray) === -1) { pageArray.push(indx + 1); }
-					if ($.inArray(c.totalPages - indx, pageArray) === -1) { pageArray.push(c.totalPages - indx); }
+					if ($.inArray(c.filteredPages - indx, pageArray) === -1) { pageArray.push(c.filteredPages - indx); }
 				}
 				// sort the list
 				pageArray = pageArray.sort(function(a, b){ return a - b; });
