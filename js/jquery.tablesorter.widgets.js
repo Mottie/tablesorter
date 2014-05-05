@@ -813,6 +813,8 @@ ts.filter = {
 			filterArray = $.isArray(filter),
 			filters = (filterArray) ? filter : ts.getFilters(table, true),
 			combinedFilters = (filters || []).join(''); // combined filter values
+		// prevent errors if delay init is set
+		if ($.isEmptyObject(c.cache)) { return; }
 		// add filter array back into inputs
 		if (filterArray) {
 			ts.setFilters( table, filters, false, skipFirst !== true );
