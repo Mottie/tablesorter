@@ -1,4 +1,4 @@
-/*! tablesorter CSS Sticky Headers widget - updated 12/17/2013 (v2.15.0)
+/*! tablesorter CSS Sticky Headers widget - updated 5/5/2014 (v2.16.4)
 * Requires a modern browser, tablesorter v2.8+
 */
 /*jshint jquery:true, unused:false */
@@ -9,10 +9,11 @@
 		id: "cssStickyHeaders",
 		priority: 10,
 		options: {
-			cssStickyHeaders_offset     : 0,
-			cssStickyHeaders_addCaption : false,
-			cssStickyHeaders_attachTo   : null,
-			cssStickyHeaders_zIndex     : 10
+			cssStickyHeaders_offset        : 0,
+			cssStickyHeaders_addCaption    : false,
+			cssStickyHeaders_attachTo      : null,
+			cssStickyHeaders_filteredToTop : true,
+			cssStickyHeaders_zIndex        : 10
 		},
 		init : function(table, thisWidget, c, wo) {
 			var $attach = $(wo.cssStickyHeaders_attachTo),
@@ -44,8 +45,10 @@
 				});
 			});
 			c.$table.bind('filterEnd', function() {
-				// scroll top of table into view
-				window.scrollTo(0, c.$table.position().top);
+				if (wo.cssStickyHeaders_filteredToTop) {
+					// scroll top of table into view
+					window.scrollTo(0, c.$table.position().top);
+				}
 			});
 
 		},
