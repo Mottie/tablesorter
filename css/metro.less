@@ -1,37 +1,47 @@
-/* Tablesorter Custom LESS Theme by Rob Garrison
+/* Tablesorter Custom Metro LESS Theme by Rob Garrison
 
- To create your own theme, modify the code below and run it through
- a LESS compiler, like this one: http://leafo.net/lessphp/editor.html
- or download less.js from http://lesscss.org/
+To create your own theme, modify the code below and run it through
+a LESS compiler, like this one: http://leafo.net/lessphp/editor.html
+or download less.js from http://lesscss.org/
 
 Test out these custom less files live
  Basic Theme : http://codepen.io/Mottie/pen/eqBbn
  Bootstrap   : http://codepen.io/Mottie/pen/Ltzpi
  Metro Style : http://codepen.io/Mottie/pen/gCslk
 
- */
+*/
 
 /*** theme ***/
-@theme                 : tablesorter-custom;
+@theme                 : tablesorter-metro;
 
 /*** fonts ***/
-@tableHeaderFont       : 11px 'trebuchet ms', verdana, arial;
-@tableBodyFont         : 11px 'trebuchet ms', verdana, arial;
+@tableHeaderFont       : 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+@tableBodyFont         : 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
 
 /*** color definitions ***/
 /* for best results, only change the hue (120),
    leave the saturation (60%) and luminosity (75%) alone
-   pick the color from here: http://hslpicker.com/#99E699 */
-@headerBackground      : hsl(120, 60%, 75%);
+   pick the color from here: http://hslpicker.com/#825a2b
+
+  Inspired by http://www.jtable.org/ metro themes:
+    Blue:        hsl(212, 86%, 35%)
+    Brown        hsl(32, 50%, 30%)
+    Crimson      hsl(0, 100%, 38%)
+    Dark Grey    hsl(0, 0%, 27%)
+    Dark Orange  hsl(13, 70%, 51%)
+    Green        hsl(120, 100%, 32%)
+    Light Gray   hsl(0, 0%, 44%)
+    Pink         hsl(297, 100%, 33%)
+    Purple       hsl(257, 51%, 48%)
+    Red          hsl(5, 100%, 40%)
+
+ */
+@headerBackground      : hsl(32, 50%, 30%);
 @borderAndBackground   : #cdcdcd;
-@overallBorder         : @borderAndBackground 1px solid;
-@headerTextColor       : #000;
+@headerTextColor       : #eee;
 
 @bodyBackground        : #fff;
 @bodyTextColor         : #000;
-
-@headerAsc             : darken(spin(@headerBackground, 5), 10%); /* darken(@headerBackground, 10%); */
-@headerDesc            : lighten(spin(@headerBackground, -5), 10%); /* desaturate(@headerAsc, 5%); */
 
 @captionBackground     : #fff; /* it might be best to match the document body background color here */
 @errorBackground       : #e6bf99; /* ajax error message (added to thead) */
@@ -48,7 +58,7 @@ Test out these custom less files live
 @headerPadding         : 4px 20px 4px 4px;
 
 /* url(icons/loading.gif); */
-@processingIcon        : url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=');
+@processingIcon : url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///1VVVdbW1oCAgFVVVZaWlqurq7a2tiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');
 
 /* zebra striping */
 .allRows {
@@ -56,30 +66,30 @@ Test out these custom less files live
 	color: @bodyTextColor;
 }
 .evenRows {
-	background: lighten(@headerBackground, 40%);
+	background: lighten( desaturate(@headerBackground, 80%), 70%);
 	color: @bodyTextColor;
 }
 .oddRows {
-	background: lighten(@headerBackground, 20%);
+	background: lighten( desaturate(@headerBackground, 80%), 50%);
 }
 
 /* hovered rows */
 .oddHovered {
-	background: desaturate(@headerBackground, 60%);
+	background: lighten( desaturate(@headerBackground, 50%), 40%);
 	color: @bodyTextColor;
 }
 .evenHovered {
-	background: lighten( desaturate(@headerBackground, 60%), 10% );
+	background: lighten( desaturate(@headerBackground, 50%), 30%);
 	color: @bodyTextColor;
 }
 
 /* Columns widget */
-@primaryOdd    : spin(@headerBackground, 10); /* saturate( darken( desaturate(@headerBackground, 10%), 10% ), 30%); */
-@primaryEven   : lighten( @primaryOdd, 10% );
+@primaryOdd    : lighten( spin(@headerBackground, 10), 40%);
+@primaryEven   : lighten( @primaryOdd, 8% );
 @secondaryOdd  : @primaryEven;
-@secondaryEven : lighten( @primaryEven, 5% );
+@secondaryEven : lighten( @primaryEven, 8% );
 @tertiaryOdd   : @secondaryEven;
-@tertiaryEven  : lighten( @secondaryEven, 5% );
+@tertiaryEven  : lighten( @secondaryEven, 8% );
 
 /* Filter widget transition */
 .filterWidgetTransition {
@@ -90,17 +100,17 @@ Test out these custom less files live
 }
 
 /*** Arrows ***/
-@arrowPosition : 95% center;
+@arrowPosition : center right;
 
 /* black */
-@unsortedBlack : url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
-@sortAscBlack  : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-@sortDescBlack : url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+@unsortedBlack : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
+@sortAscBlack  : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
+@sortDescBlack : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAMiweCQITTvDctZZqaTlM310AAABcSURBVAjXY2BgYEtgAAFHERDJqigUAKSYBQUNgFSioKAYAwOLIBA4MASBKFUGQxAlzAAF+94BwWuGKBC1lIFl3rt3Lx0YGCzevWsGSjK9e6cAUlT3HKyW9wADAwDRrBiDy6bKzwAAAABJRU5ErkJggg==);
 
 /* white */
-@unsortedWhite : url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
-@sortAscWhite  : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-@sortDescWhite : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+@unsortedWhite : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAElBMVEUAAADu7u7u7u7u7u7u7u7u7u7yb344AAAABnRSTlMAMhIHKyAHBrhHAAAATElEQVQI12NgYGBSYAABQ2Ew5SgCIlkFBQOAlKKgoBADA7MgEBgwsIAoB4ZAECXKAAFQHkg9WIejoCBIv4mgoDOQYgZpAxkDNARqEQBTkAYuMZEHPgAAAABJRU5ErkJggg==);
+@sortAscWhite  : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAHlBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u4+jEeEAAAACXRSTlMAMwkqFV7roCD4hW+/AAAAWUlEQVQI1y3MrQ5AABSG4Xd+Rj0jiDabjKZxB6qqaarGNRh27tY5myd8b/uAeML1l2+wPqUlUd0ss+oNoZqG2rOwe15+p5iC1HNAK5IBlUjnZyIlZsxx0QAfzokSZgp96u4AAAAASUVORK5CYII=);
+@sortDescWhite : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAJ1BMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u4RJgHSAAAADHRSTlMAMiweCQITaU7olrlu2HdvAAAAXElEQVQI12NgYGBLYAABRxEQyaooFACkmAUFDYBUoqCgGAMDiyAQODAEgShVBkMQJcwABWvOAMEphmgQtZWBZc6ZMycdGBhszpw5DJRkOnNGAaSo5wRYLXsBAwMAi4YWQHRX4F0AAAAASUVORK5CYII=);
 
 /* automatically choose the correct arrow/text color */
 .headerText (@a) when (lightness(@a) >= 50%) {
@@ -130,7 +140,7 @@ Test out these custom less files live
 
 /* variable theme name - requires less.js 1.3+;
    or just replace (!".@{theme}") with the contents of @theme
- */
+*/
 .@{theme} {
 	font: @tableBodyFont;
 	background-color: @borderAndBackground;
@@ -138,12 +148,10 @@ Test out these custom less files live
 	width: 100%;
 	text-align: left;
 	border-spacing: 0;
-	border: @overallBorder;
-	border-width: 1px 0 0 1px;
+	border: 0;
 
 	th, td {
-		border: @overallBorder;
-		border-width: 0 1px 1px 0;
+		border: 0;
 	}
 
 	/* style th's outside of the thead */
@@ -151,11 +159,16 @@ Test out these custom less files live
 		font: @tableHeaderFont;
 		font-weight: bold;
 		background-color: @headerBackground;
+		color: @headerTextColor;
 		.headerText(@headerBackground);
 		border-collapse: collapse;
 		padding: @overallPadding;
 	}
 
+  .dark-row th, .dark-row td {
+    background-color: darken( @headerBackground, 10% );
+  }
+  
 	tbody td, tfoot th, tfoot td {
 		padding: @overallPadding;
 		vertical-align: top;
@@ -166,8 +179,12 @@ Test out these custom less files live
 		.unsorted(@headerBackground);
 		background-repeat: no-repeat;
 		background-position: @arrowPosition;
-		padding: @headerPadding;
 		cursor: pointer;
+		white-space: normal;
+	}
+
+	.tablesorter-header-inner {
+		padding: @headerPadding;
 	}
 
 	.tablesorter-header.sorter-false {
@@ -177,12 +194,10 @@ Test out these custom less files live
 	}
 
 	.tablesorter-headerAsc {
-		background-color: @headerAsc;
 		.sortAsc(@headerBackground);
 	}
 
 	.tablesorter-headerDesc {
-		background-color: @headerDesc;
 		.sortDesc(@headerBackground);
 	}
 
@@ -218,10 +233,10 @@ Test out these custom less files live
 		}
 
 	}
-
+  
 	/* hovered row colors
-	   you'll need to add additional lines for
-	   rows with more than 2 child rows
+	you'll need to add additional lines for
+	rows with more than 2 child rows
 	*/
 	tbody > tr:hover td,
 	tbody > tr:hover + tr.tablesorter-childRow > td,
@@ -242,6 +257,19 @@ Test out these custom less files live
 		background-image: @processingIcon;
 		background-position: center center;
 		background-repeat: no-repeat;
+	}
+
+	/* pager */
+	div.tablesorter-pager {
+		button {
+			background-color: lighten( @headerBackground, 7% );
+			color: @headerTextColor;
+			border: lighten( @headerBackground, 15% ) 1px solid;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: lighten( @headerBackground, 15% );
+		}
 	}
 
 	/* Column Widget - column sort colors */
