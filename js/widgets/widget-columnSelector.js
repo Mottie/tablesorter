@@ -12,7 +12,7 @@ namespace = '.tscolsel',
 tsColSel = ts.columnSelector = {
 
 	queryAll   : '@media only all { [columns] { display: none; } }',
-	queryBreak : '@media screen and (min-width: [size]) { [columns] { display: table-cell; } }',
+	queryBreak : '@media all and (min-width: [size]) { [columns] { display: table-cell; } }',
 
 	init: function(table, c, wo) {
 		var $t, colSel;
