@@ -56,7 +56,7 @@ printTable = ts.printTable = {
 		if (/s/i.test(wo.print_columns) && c.selector && c.widgets.indexOf('columnSelector') >= 0) {
 			// show selected (visible) columns; make a copy of the columnSelector widget css (not media queries)
 			printStyle += c.selector.auto ? '' : c.selector.$style.text();
-		} else if (/a/i/test(wo.print_columns)) {
+		} else if (/a/i.test(wo.print_columns)) {
 			// force show all cells
 			printStyle += 'td, th { display: table-cell !important; }';
 		}

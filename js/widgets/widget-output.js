@@ -1,4 +1,4 @@
-/* Output widget (beta) for TableSorter 4/14/2014 (v2.16.0)
+/* Output widget (beta) for TableSorter 5/5/2014 (v2.16.4)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -43,7 +43,6 @@ output = ts.output = {
 			wo = c.widgetOptions,
 			tmpRow = [],
 			addSpanIndex = isHeader && isJSON && wo.output_headerRows && $.isFunction(wo.output_callbackJSON),
-			rowIndex = 0,
 			cellIndex = 0;
 		$rows.each(function(rowIndex) {
 			if (!tmpRow[rowIndex]) { tmpRow[rowIndex] = []; }
@@ -258,7 +257,7 @@ ts.addWidget({
 		// return false to stop delivery & do something else with the data
 		output_callback     : function(data){ return true; },
 		// JSON callback executed when a colspan is encountered in the header
-		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex + col) + ')'; },
+		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 		// output data type (with BOM or Windows-1252 is needed for excel)
 		// NO BOM   : 'data:text/csv;charset=utf8,'
 		// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
