@@ -80,7 +80,14 @@
 			print_rows       : 'f',         // (a)ll, (v)isible or (f)iltered
 			print_columns    : 's',         // (a)ll, (s)elected (columnSelector widget), or empty string
 			print_extraCSS   : '',          // add any extra css definitions for the popup window here
-			print_styleSheet : '../css/theme.blue.css' // add the url of your print stylesheet
+			print_styleSheet : '../css/theme.blue.css', // add the url of your print stylesheet
+			// callback executed when processing completes - default setting is null
+			print_callback   : function(config, $table, printStyle){
+				// do something to the $table (jQuery object of table wrapped in a div)
+				// or add to the printStyle string, then...
+				// print the table using the following code
+				$.tablesorter.printTable.printOutput( config, $table.html(), printStyle );
+			}
 		}
 	});
 
@@ -108,6 +115,10 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>
+					In <span class="version">v2.16.5</span>, added the <code>print_callback</code> option.<br>
+					<br>
+				</li>
 				<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 				<li>The user can print all, visible or filtered rows. And, choose to print all or selected columns (using the columnSelector widget).</li>
 				<li>By default, the widget is set to only print filtered rows &amp; visible columns.</li>
@@ -207,6 +218,30 @@
 								<br>
 								Use this option as follows:
 								<pre class="prettyprint lang-js">print_styleSheet : "../css/theme.blue.css"</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="print_callback">
+						<td><a href="#" class="permalink">print_callback</a></td>
+						<td><code>null</code></td>
+						<td>
+							This callback allows further processing of the table & style (<span class="version">v2.16.5</span>)
+							<div class="collapsible">
+								<br>
+								When this callback is executed, three parameters are provided:
+								<ul>
+									<li><code>config</code> - The table config settings.</li>
+									<li><code>$table</code> - The table wrapped in a div, as a jQuery object. It contains all the rows &amp; cells of the original table, but the content of cells will be replaced by the contents of the associated <code>data-name</code> attribute.</li>
+									<li><code>printStyle</code> - This is the print style associated with the table. It contains styles to show or hide selected rows &amp; columns, including the columnSelector style to hide specific columns.</li>
+								</ul>
+								When any processing within this callback is complete, you must manually call the print function to continue printing as follows:
+								<pre class="prettyprint lang-js">// print callback example
+print_callback : function( config, $table, printStyle ) {
+  // do something to the table or printStyle string
+  // use the following code to continue printing
+  $.tablesorter.printTable.printOutput( config, $table.html(), printStyle );
+}</pre>
 							</div>
 						</td>
 					</tr>

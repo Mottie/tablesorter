@@ -63,12 +63,18 @@ printTable = ts.printTable = {
 
 		printStyle += wo.print_extraCSS;
 
-		printTable.printOutput(c, wo, printStyle, $table.html());
+		// callback function
+		if ( $.isFunction(wo.print_callback) ) {
+			wo.print_callback( c, $table, printStyle );
+		} else {
+			printTable.printOutput(c, $table.html(), printStyle);
+		}
 
 	}, // end process
 
-	printOutput : function(c, wo, style, data) {
-		var generator = window.open('', wo.print_title, 'width=500,height=300'),
+	printOutput : function(c, data, style) {
+		var wo = c.widgetOptions,
+			generator = window.open('', wo.print_title, 'width=500,height=300'),
 			t = wo.print_title || c.$table.find('caption').text() || c.$table[0].id || document.title || 'table';
 		generator.document.write(
 			'<html><head><title>' + t + '</title>' +
@@ -95,7 +101,14 @@ ts.addWidget({
 		print_rows       : 'filtered',  // (a)ll, (v)isible or (f)iltered
 		print_columns    : 'selected',  // (a)ll or (s)elected (if columnSelector widget is added)
 		print_extraCSS   : '',          // add any extra css definitions for the popup window here
-		print_styleSheet : ''           // add the url of your print stylesheet
+		print_styleSheet : '',          // add the url of your print stylesheet
+		// callback executed when processing completes
+		// to continue printing, use the following function:
+		// function( config, $table, printStyle ) {
+		//   // do something to the table or printStyle string
+		//   $.tablesorter.printTable.printOutput( config, $table.html(), printStyle );
+		// }
+		print_callback   : null
 	},
 	init: function(table, thisWidget, c) {
 		printTable.init(c);
