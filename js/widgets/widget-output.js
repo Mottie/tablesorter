@@ -91,6 +91,16 @@ output = ts.output = {
 		return tmpRow;
 	},
 
+	ignoreColumns : function(wo, data) {
+		// ignore columns -> remove data from built array (because we've already processed any rowspan/colspan)
+		$.each( data, function(indx, val){
+			data[indx] = $.grep(val, function(v, cellIndx){
+				return $.inArray(cellIndx, wo.output_ignoreColumns) < 0;
+			});
+		});
+		return data;
+	},
+
 	process : function(c, wo) {
 		var mydata, $this, $rows, headers, csvData, len,
 			hasStringify = window.JSON && JSON.hasOwnProperty('stringify'),
@@ -117,23 +127,30 @@ output = ts.output = {
 		csvData = output.processRow(c, $rows);
 		len = headers.length;
 
+		if (wo.output_ignoreColumns.length) {
+			headers = output.ignoreColumns(wo, headers);
+			csvData = output.ignoreColumns(wo, csvData);
+		}
+
 		if (outputJSON) {
 			tmpData = [];
 			$.each( csvData, function(indx, val){
 				// multiple header rows & output_headerRows = true, pick the last row...
 				tmpData.push( output.row2Hash( headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1], val ) );
 			});
+
 			// requires JSON stringify; if it doesn't exist, the output will show [object Object],... in the output window
 			mydata = hasStringify ? JSON.stringify(tmpData) : tmpData;
 		} else {
 			tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : [ headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1] ], outputArray)
 				.concat( output.row2CSV(wo, csvData, outputArray) );
+
 			// stringify the array; if stringify doesn't exist the array will be flattened
 			mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
 		}
 
 		// callback; if true returned, continue processing
-		if (!wo.output_callback(mydata)) { return; }
+		if ($.isFunction(wo.output_callback) && !wo.output_callback(mydata)) { return; }
 
 		if ( /p/.test( (wo.output_delivery || '').toLowerCase() ) ) {
 			output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);
@@ -242,6 +259,7 @@ ts.addWidget({
 	id: "output",
 	options: {
 		output_separator    : ',',         // set to "json", "array" or any separator
+		output_ignoreColumns: [],          // columns to ignore [0, 1,... ] (zero-based index)
 		output_dataAttrib   : 'data-name', // header attrib containing modified header name
 		output_headerRows   : false,       // if true, include multiple header rows (JSON only)
 		output_delivery     : 'popup',     // popup, download

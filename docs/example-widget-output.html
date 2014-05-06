@@ -119,6 +119,7 @@
 				filter_reset        : demos[groupIndex] + ' .reset',
 
 				output_separator    : ',',         // ',' 'json', 'array' or separator (e.g. ',')
+				output_ignoreColumns: [],          // columns to ignore [0, 1,... ] (zero-based index)
 				output_dataAttrib   : 'data-name', // data-attribute containing alternate cell text
 				output_headerRows   : true,        // output all header rows (multiple rows)
 				output_delivery     : 'p',         // (p)opup, (d)ownload
@@ -223,6 +224,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.16.5</span>, added the <code>output_ignoreColumns</code> option.</li>
 				<li>In <span class="version">v2.16.4</span>, added the <code>output_encoding</code> option.<br><br></li>
 				<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 				<li>This widget can output the table data to:
@@ -394,6 +396,20 @@ line,value1,value2,value3
         "Date": "Jan 18, 2007 9:12 AM"
     }
 ]</pre><span class="label label-info">Note</span> this also requires <a href="http://caniuse.com/#feat=json"><code>JSON.stringify</code></a>, or the result will show <code>[ [object Object], ... ]</code> in the output.
+							</div>
+						</td>
+					</tr>
+					<tr id="output_ignorecolumns">
+						<td><a href="#" class="permalink">output_ignoreColumns</a></td>
+						<td><code>[ ]</code></td>
+						<td>
+							Add the zero-based column index to this array to ignore specific columns (<span class="version">v2.16.5</span>)
+							<div class="collapsible">
+							<br>
+							For example, to use this option to hide the first column, set it as follows:
+							<pre class="prettyprint lang-js">output_ignoreColumns : [ 0 ]</pre>
+							<br>
+							<span class="label label-info">Note</span> This option will work properly with tables that contain rowspans &amp; colspans.
 							</div>
 						</td>
 					</tr>
