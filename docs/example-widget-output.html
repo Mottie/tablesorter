@@ -135,7 +135,7 @@
 				// callback executed when processing completes
 				// return true to continue download/output
 				// return false to stop delivery & do something else with the data
-				output_callback     : function(data) { return true; },
+				output_callback     : function(config, data) { return true; },
 				// output data type (with BOM or Windows-1252 is needed for excel)
 				// NO BOM   : 'data:text/csv;charset=utf8,'
 				// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
@@ -224,7 +224,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In <span class="version">v2.16.5</span>, added the <code>output_ignoreColumns</code> option.</li>
+				<li>In <span class="version">v2.16.5</span>, added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
 				<li>In <span class="version">v2.16.4</span>, added the <code>output_encoding</code> option.<br><br></li>
 				<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 				<li>This widget can output the table data to:
@@ -564,13 +564,18 @@ line,value1,value2,value3
 					<tr id="output_callback">
 						<td><a href="#" class="permalink">output_callback</a></td>
 						<td>{see description}</td>
-						<td>Return <code>true</code> in this callback to continue the download or open the popup.
+						<td>Return <code>true</code> in this callback to continue the download or open the popup (<span class="version updated">v2.16.5</span>).
 							<div class="collapsible">
 								<br>
+								As of v2.16.5, the callback function was modified to pass two parameters:
+								<ul>
+									<li><code>config</code> - the <code>table.config</code> settings.</li>
+									<li><code>data</code> - the output data as a string</li>
+								</ul>
 								Default setting:
-								<pre class="prettyprint lang-js">function(data){ return true; }</pre>
+								<pre class="prettyprint lang-js">function(config, data){ return true; }</pre>
 								After table processing has completed, this callback function is exectued. If <code>true</code> is not returned, the processed data will not open a popup, nor download the data.
-								<pre class="prettyprint lang-js">output_callback : function(data) {
+								<pre class="prettyprint lang-js">output_callback : function(config, data) {
     // send output to the console only
     console.log(data);
     return false;

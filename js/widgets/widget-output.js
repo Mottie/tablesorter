@@ -150,7 +150,7 @@ output = ts.output = {
 		}
 
 		// callback; if true returned, continue processing
-		if ($.isFunction(wo.output_callback) && !wo.output_callback(mydata)) { return; }
+		if ($.isFunction(wo.output_callback) && !wo.output_callback(c, mydata)) { return; }
 
 		if ( /p/.test( (wo.output_delivery || '').toLowerCase() ) ) {
 			output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);
@@ -273,7 +273,7 @@ ts.addWidget({
 		// callback executed when processing completes
 		// return true to continue download/output
 		// return false to stop delivery & do something else with the data
-		output_callback     : function(data){ return true; },
+		output_callback     : function(config, data){ return true; },
 		// JSON callback executed when a colspan is encountered in the header
 		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 		// output data type (with BOM or Windows-1252 is needed for excel)
