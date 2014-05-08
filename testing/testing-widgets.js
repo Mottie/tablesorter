@@ -2,7 +2,8 @@
 * TableSorter QUnit Testing
 */
 /*jshint unused: false */
-/*global QUnit: false, JSHINT: false, ok: false, start: false, deepEqual: false, asyncTest: false */
+/*global start: false, asyncTest: false, equal: false, $: false, expect: false, module: false,
+  tester: false, test: false, stop: false */
 
 /*
 Filter widget tested parts
@@ -76,7 +77,6 @@ $(function(){
 		Filter widget
 	************************************************/
 	init = false,
-	runOnce = false,
 
 	runFilterTests = function(){
 
@@ -100,210 +100,210 @@ $(function(){
 			expect(27);
 
 			callbackName = 'regular';
-			callback['regular'] = function(){
+			callback.regular = function(){
 				tester.cacheCompare( table, 1, ['Peter', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter', 'Dennis'], 'search regular', true );
-			}
+			};
 			ts.setFilters( table, ['', 'e'], true );
 			stop();
 
 			callbackName = 'fuzzy1';
-			callback['fuzzy1'] = function(){
+			callback.fuzzy1 = function(){
 				tester.cacheCompare( table, 1, ['Bruce Lee', 'Brenda Dexter'], 'search fuzzy', true );
-			}
+			};
 			ts.setFilters( table, ['', '~bee'], true );
 			stop();
 
 			callbackName = 'fuzzy2';
-			callback['fuzzy2'] = function(){
+			callback.fuzzy2 = function(){
 				tester.cacheCompare( table, 1, ['Philip Aaron Wong'], 'search fuzzy2', true );
-			}
+			};
 			ts.setFilters( table, ['', '~piano'], true );
 			stop();
 
 			callbackName = 'exact';
-			callback['exact'] = function(){
+			callback.exact = function(){
 				tester.cacheCompare( table, 1, ['John'], 'search exact', true );
-			}
+			};
 			ts.setFilters( table, ['', 'john='], true );
 			stop();
 
 			callbackName = 'wildcard1';
-			callback['wildcard1'] = function(){
+			callback.wildcard1 = function(){
 				tester.cacheCompare( table, 2, ['Dumass', 'Evans'], 'search wildcard, one character (?)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', 'a?s'], true );
 			stop();
 
 			callbackName = 'wildcard2';
-			callback['wildcard2'] = function(){
+			callback.wildcard2 = function(){
 				tester.cacheCompare( table, 2, ['Dumass', 'Evans', 'McMasters'], 'search wildcard, multiple characters (*)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', 'a*s'], true );
 			stop();
 
 			callbackName = 'regex';
-			callback['regex'] = function(){
+			callback.regex = function(){
 				tester.cacheCompare( table, 1, ['Peter', 'Brenda Dexter'], 'search regex', true );
-			}
+			};
 			ts.setFilters( table, ['', '/r$/'], true );
 			stop();
 
 			callbackName = 'operator';
-			callback['operator'] = function(){
+			callback.operator = function(){
 				tester.cacheCompare( table, 4, [42.29, 19.99, 15.89, 153.19, 14.19, 13.19, 55.2, 123, 22.09], 'search operator (>10)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '>10'], true );
 			stop();
 
 			callbackName = 'operator1';
-			callback['operator1'] = function(){
+			callback.operator1 = function(){
 				tester.cacheCompare( table, 4, [153.19, 123], 'search operator (>100); ensure search filtered gets cleared', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '>100'], true );
 			stop();
 
 			callbackName = 'operator2';
-			callback['operator2'] = function(){
+			callback.operator2 = function(){
 				tester.cacheCompare( table, 5, [22, 20, 25, 44, 44, 32], 'search operator (>=)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '', '>=20'], true );
 			stop();
 
 			callbackName = 'operator3';
-			callback['operator3'] = function(){
+			callback.operator3 = function(){
 				tester.cacheCompare( table, 5, [5, 4], 'search operator (<10)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '', '<10'], true );
 			stop();
 
 			callbackName = 'operator4';
-			callback['operator4'] = function(){
+			callback.operator4 = function(){
 				tester.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 32, 17], 'search operator (<100); ensure search filtered gets cleared', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '', '<100'], true );
 			stop();
 
 			callbackName = 'operator5';
-			callback['operator5'] = function(){
+			callback.operator5 = function(){
 				tester.cacheCompare( table, 5, [5, 18, 20, 4, 14, 11, 15, 17], 'search operator (<=)', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '', '<=20'], true );
 			stop();
 
-			callbackName = 'operator6';
-			callback['operator6'] = function(){
+			callbackName = 'notMatch';
+			callback.notMatch = function(){
 				tester.cacheCompare( table, 1, ['Peter', 'John', 'Bruce', 'Jim', 'Bruce Lee', 'Dennis'], 'search not match', true );
-			}
+			};
 			ts.setFilters( table, ['', '!a'], true );
 			stop();
 
-			callbackName = 'operator7';
-			callback['operator7'] = function(){
+			callbackName = 'notMatch2';
+			callback.notMatch2 = function(){
 				tester.cacheCompare( table, 1, ['Brandon Clark', 'Peter', 'John', 'Clark', 'Bruce', 'Alex', 'Jim', 'Bruce Lee', 'Brenda Dexter', 'Dennis', 'Martha'], 'search not match; ensure search filtered gets cleared', true );
-			}
+			};
 			ts.setFilters( table, ['', '!aa'], true );
 			stop();
 
-			callbackName = 'operator8';
-			callback['operator8'] = function(){
+			callbackName = 'operatorAnd';
+			callback.operatorAnd = function(){
 				tester.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Bruce Lee'], 'search and match', true );
-			}
+			};
 			ts.setFilters( table, ['', 'br && c'], true );
 			stop();
 
-			callbackName = 'operator9';
-			callback['operator9'] = function(){
+			callbackName = 'operatorAnd2';
+			callback.operatorAnd2 = function(){
 				tester.cacheCompare( table, 1, ['Brandon Clark'], 'search and match; ensure search filtered gets cleared', true );
-			}
+			};
 			ts.setFilters( table, ['', 'br && cl'], true );
 			stop();
 
-			callbackName = 'operator10';
-			callback['operator10'] = function(){
+			callbackName = 'operatorOr';
+			callback.operatorOr = function(){
 				tester.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search OR match', true );
-			}
+			};
 			ts.setFilters( table, ['', 'alex|br*'], true );
 			stop();
 
-			callbackName = 'operator11';
-			callback['operator11'] = function(){
+			callbackName = 'range';
+			callback.range = function(){
 				tester.cacheCompare( table, 4, [5.95, 9.99, 5.29], 'search range', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '5 - 10'], true );
 			stop();
 
-			callbackName = 'operator12';
-			callback['operator12'] = function(){
+			callbackName = 'range2';
+			callback.range2 = function(){
 				tester.cacheCompare( table, 4, [5.95, 42.29, 9.99, 19.99, 15.89, 5.29, 14.19, 13.19, 55.2, 22.09], 'search range; ensure search filtered gets cleared', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '5 - 100'], true );
 			stop();
 
 			// test filter_startsWith (false by default)
 			wo.filter_startsWith = false;
 			callbackName = 'startsWith';
-			callback['startsWith'] = function(){
+			callback.startsWith = function(){
 				tester.cacheCompare( table, 1, ['Philip Aaron Wong', 'Aaron'], 'search - filter_startsWith : false', true );
-			}
+			};
 			ts.setFilters( table, ['', 'aa'], true );
 			stop();
 
 			// test filter_startsWith (false by default)
 			wo.filter_startsWith = true;
 			callbackName = 'startsWith2';
-			callback['startsWith2'] = function(){
+			callback.startsWith2 = function(){
 				tester.cacheCompare( table, 1, ['Aaron'], 'search - filter_startsWith : true', true );
 				wo.filter_startsWith = false;
-			}
+			};
 			c.$table.trigger('search', false);
 			stop();
 
 			// test filter_ignoreCase (true by default)
 			wo.filter_ignoreCase = false;
-			callbackName = 'ignoreCase';
-			callback['ignoreCase'] = function(){
+			callbackName = 'ignoreCase1';
+			callback.ignoreCase1 = function(){
 				tester.cacheCompare( table, 1, [], 'search - filter_ignoreCase : false', true );
 				wo.filter_ignoreCase = true;
-			}
+			};
 			c.$table.trigger('search', false);
 			stop();
 
 			// test filter-match class (added in the example code)
 			callbackName = 'filterMatch';
-			callback['filterMatch'] = function(){
+			callback.filterMatch = function(){
 				tester.cacheCompare( table, 1, ['Brandon Clark', 'Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search - filter-match', true );
-			}
+			};
 			ts.setFilters( table, ['', 'alex|br*|c'], true );
 			stop();
 
 			// test filter-match class
 			c.$table.find('.tablesorter-header').eq(1).removeClass('filter-match');
 			callbackName = 'notFilterMatch';
-			callback['notFilterMatch'] = function(){
+			callback.notFilterMatch = function(){
 				tester.cacheCompare( table, 1, ['Bruce', 'Alex'], 'search - filter-match removed', true );
-			}
+			};
 			c.$table.trigger('search', false);
 			stop();
 
 			// filter reset
 			callbackName = 'filterReset';
-			callback['filterReset'] = function(){
+			callback.filterReset = function(){
 				tester.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 32, 17], 'filterReset', true );
-			}
+			};
 			c.$table.trigger('filterReset');
 			stop();
 
 			// filter parsed class
 			wo.filter_startsWith = false;
 			callbackName = 'filterParsed';
-			callback['filterParsed'] = function(){
+			callback.filterParsed = function(){
 				tester.cacheCompare( table, 6, [ new Date('Oct 13, 2000 1:15 PM').getTime() ], 'search - filter-parsed', true );
-			}
+			};
 			ts.setFilters( table, ['', '', '', '', '', '', '< 1/1/2001'], true );
 
 		});
 
-		$table.on('filterEnd', function(e){
+		$table.on('filterEnd', function(){
 			start();
 			if (callbackName !== '' && callback[callbackName]) {
 				callback[callbackName]();

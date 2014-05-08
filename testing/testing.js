@@ -2,7 +2,9 @@
 * TableSorter QUnit Testing
 */
 /*jshint unused: false */
-/*global QUnit: false, JSHINT: false, ok: false, start: false, deepEqual: false, asyncTest: false */
+/*global QUnit: false, JSHINT: false, ok: false, start: false, deepEqual: false, asyncTest: false,
+  strictEqual: false, jQuery: false, equal: false, $: false, expect: false, module: false,
+  test: false, stop: false, ipv6tests: false */
 
 /************************************************
 	QUnit skip testing
@@ -133,6 +135,7 @@ $(function(){
 		table2 = $table2[0],
 		table3 = $table3[0],
 		table4 = $table4[0],
+		table5 = $table5[0],
 		th0 = $table1.find('th')[0], // first table header cell
 		init = false,
 		sortIndx = 0,
@@ -142,7 +145,7 @@ $(function(){
 		returnTime = function(string){
 			return new Date(string).getTime();
 		},
-		undef, c1, c2, c3, c4, e, i, l, t;
+		undef, c1, c2, c3, c4, e, i, t;
 
 	$table1
 		.bind('tablesorter-initialized', function(){
@@ -224,7 +227,6 @@ $(function(){
 		var internalColumn = true,
 			dataColumn = true;
 		$table4.find('thead th').each(function(i){
-			var $this = $(this);
 			internalColumn = internalColumn && this.column === i;
 			dataColumn = dataColumn && $(this).attr('data-column') == i;
 		});
@@ -321,6 +323,75 @@ $(function(){
 	});
 
 	/************************************************
+		detect parsers
+	************************************************/
+	asyncTest( "detect parsers", function() {
+		expect(2);
+		$('#testblock2').html('<table class="tablesorter"><thead>' +
+			'<tr><th class="col-off" colspan="2">Info</th><th class="col-off" colspan="4">Details</th></tr>' +
+			'<tr>' +
+				'<th class="col-first">First Name</th>' +
+				'<th class="col-last">Last Name</th>' +
+				'<th class="col-age" id="age">Age</th>' +
+				'<th class="col-total">Total</th>' +
+				'<th class="col-discount">Discount</th>' +
+				'<th class="col-date">Date</th>' +
+			'</tr></thead>' +
+			'<tbody>' +
+				'<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>' +
+				'<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>' +
+				'<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>' +
+				'<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>' +
+				'<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>' +
+			'</tbody></table>')
+		.find('table')
+		.tablesorter({
+			headers : {
+				0 : { sorter: false },
+				1 : { sorter: false },
+				3 : { sorter: 'digit' } // 3 sets the 4th column, not the 3rd header cell now
+			},
+			initialized: function(table){
+				start();
+				var i,
+					result = true,
+					parsers = [ 'text', 'digit', 'digit', 'currency', 'percent', 'usLongDate' ],
+					c = table.config;
+				for (i = 0; i < c.columns; i++){
+					result = result && c.parsers[i].id === parsers[i];
+				}
+				equal( result, true, 'detect parsers by header index' );
+				stop();
+				// table inception!
+				$(table)
+					.trigger('destroy')
+					.tablesorter({
+						headers : {
+							'.col-first' : { sorter: 'url' },
+							'.col-off'  : { sorter: false },
+							'.col-total' : { sorter : 'percent' },
+							'#age, .col-last' : { sorter: 'currency' },
+							'.col-date' : { sorter : 'time' },
+							'.col-discount' : { sorter: 'digit' }
+						},
+						initialized: function(table){
+							var i,
+								result = true,
+								parsers = [ 'url', 'currency', 'currency', 'percent', 'digit', 'time' ],
+								c = table.config;
+							for (i = 0; i < c.columns; i++){
+								result = result && c.parsers[i].id === parsers[i];
+							}
+							equal( result, true, 'detect parsers by class/id' );
+							start();
+						}
+					});
+			}
+		});
+
+	});
+
+	/************************************************
 		check all default parsers
 	************************************************/
 	var p = ts.parsers,
@@ -353,6 +424,7 @@ $(function(){
 		for (i = 0; i < p.length; i++) {
 			t = p[i].id;
 			if (s.hasOwnProperty(t)) {
+				/*jshint loopfunc:true */
 				$.each(s[t], function(k,v){
 					// check "is" and "format" functions
 					if (p[i].is(k)) {

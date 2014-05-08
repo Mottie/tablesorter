@@ -718,10 +718,9 @@ ts.filter = {
 			$header = c.$headers.filter('[data-column="' + column + '"]:last');
 			buildSelect = (wo.filter_functions && wo.filter_functions[column] && typeof wo.filter_functions[column] !== 'function') ||
 				$header.hasClass('filter-select');
-			// get data from jQuery data, metadata, headers option or header class name
 			if (ts.getData) {
 				// get data from jQuery data, metadata, headers option or header class name
-				disabled = ts.getData($header[0], c.headers[column], 'filter') === 'false';
+				disabled = ts.getData($header[0], ts.getColumnData( table, column ), 'filter') === 'false';
 			} else {
 				// only class names and header options - keep this for compatibility with tablesorter v2.0.5
 				disabled = (c.headers[column] && c.headers[column].hasOwnProperty('filter') && c.headers[column].filter === false) ||
@@ -898,7 +897,7 @@ ts.filter = {
 			parsed = c.$headers.map(function(columnIndex) {
 				return c.parsers && c.parsers[columnIndex] && c.parsers[columnIndex].parsed ||
 					// getData won't return "parsed" if other "filter-" class names exist (e.g. <th class="filter-select filter-parsed">)
-					ts.getData && ts.getData(c.$headers.filter('[data-column="' + columnIndex + '"]:last'), c.headers[columnIndex], 'filter') === 'parsed' ||
+					ts.getData && ts.getData(c.$headers.filter('[data-column="' + columnIndex + '"]:last'), ts.getColumnData( table, c.headers, columnIndex ), 'filter') === 'parsed' ||
 					$(this).hasClass('filter-parsed');
 			}).get();
 		if (c.debug) { time = new Date(); }
@@ -1511,7 +1510,7 @@ ts.addWidget({
 			var canResize,
 				$column = $(this);
 			column = $column.attr('data-column');
-			canResize = ts.getData( $column, c.headers[column], 'resizable') === "false";
+			canResize = ts.getData( $column, ts.getColumnData( table, c.headers, column ), 'resizable') === "false";
 			$rows.children().filter('[data-column="' + column + '"]')[canResize ? 'addClass' : 'removeClass']('resizable-false');
 		});
 		// add wrapper inside each cell to allow for positioning of the resizable target block

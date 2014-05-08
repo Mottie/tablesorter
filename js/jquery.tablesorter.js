@@ -219,7 +219,7 @@
 				var c = table.config,
 					// update table bodies in case we start with an empty table
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, p, time, indx,
+					rows, list, l, i, h, ch, p, time,
 					j = 0,
 					parsersDebug = "",
 					len = tb.length;
@@ -233,16 +233,11 @@
 				while (j < len) {
 					rows = tb[j].rows;
 					if (rows[j]) {
-						l = rows[j].cells.length;
+						l = c.columns; // rows[j].cells.length;
 						for (i = 0; i < l; i++) {
-							// tons of thanks to AnthonyM1229 for working out the following selector (issue #74) to make this work in IE8!
-							// More fixes to this selector to work properly in iOS and jQuery 1.8+ (issue #132 & #174)
-							h = c.$headers.filter(':not([colspan])');
-							h = h.add( c.$headers.filter('[colspan="1"]') ) // ie8 fix
-								.filter('[data-column="' + i + '"]:last');
-							// get headers option corrected index
-							indx = c.$headers.index(h);
-							ch = c.headers[indx];
+							h = c.$headers.filter('[data-column="' + i + '"]:last');
+							// get column indexed table cell
+							ch = ts.getColumnData( table, c.headers, i );
 							// get column parser
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
@@ -421,10 +416,12 @@
 				c.columns = ts.computeColumnIndex( c.$table.children('thead, tfoot').children('tr') );
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
-				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
+				c.$headers.each(function(index) {
 					$t = $(this);
-					ch = c.headers[index];
-					c.headerContent[index] = $(this).html(); // save original header content
+					// make sure to get header cell & not column indexed cell
+					ch = ts.getColumnData( table, c.headers, index, true );
+					// save original header content
+					c.headerContent[index] = $(this).html();
 					// set up header template
 					t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
 					if (c.onRenderTemplate) {
@@ -473,10 +470,11 @@
 			}
 
 			function updateHeader(table) {
-				var s, $th, c = table.config;
+				var s, $th,
+					c = table.config;
 				c.$headers.each(function(index, th){
 					$th = $(th);
-					s = ts.getData( th, c.headers[index], 'sorter' ) === 'false';
+					s = ts.getData( th, ts.getColumnData( table, c.headers, index, true ), 'sorter' ) === 'false';
 					th.sortDisabled = s;
 					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
 					// aria-controls - requires table ID
@@ -1012,6 +1010,7 @@
 				c.$table = $table
 					.addClass(ts.css.table + ' ' + c.tableClass + k)
 					.attr({ role : 'grid'});
+				c.$headers = $(table).find(c.selectorHeaders);
 
 				// give the table a unique id, which will be used in namespace binding
 				if (!c.namespace) {
@@ -1087,6 +1086,31 @@
 				}
 				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
+			};
+
+			ts.getColumnData = function(table, obj, indx, getCell){
+				if (typeof obj === 'undefined' || obj === null) { return; }
+				table = $(table)[0];
+				var result, $h, k,
+					c = table.config;
+				if (obj[indx]) {
+					return getCell ? obj[indx] : obj[c.$headers.index( c.$headers.filter('[data-column="' + indx + '"]:last') )];
+				}
+				for (k in obj) {
+					if (typeof k === 'string') {
+						if (getCell) {
+							// get header cell
+							$h = c.$headers.eq(indx).filter(k);
+						} else {
+							// get column indexed cell
+							$h = c.$headers.filter('[data-column="' + indx + '"]:last').filter(k);
+						}
+						if ($h.length) {
+							return obj[k];
+						}
+					}
+				}
+				return result;
 			};
 
 			// computeTableHeaderCellIndexes from:
@@ -1442,6 +1466,8 @@
 			};
 
 			ts.getParserById = function(name) {
+				/*jshint eqeqeq:false */
+				if (name == 'false') { return false; }
 				var i, l = ts.parsers.length;
 				for (i = 0; i < l; i++) {
 					if (ts.parsers[i].id.toLowerCase() === (name.toString()).toLowerCase()) {
@@ -1717,7 +1743,7 @@
 			if (s) {
 				var c = table.config,
 					ci = c.$headers.filter('[data-column=' + cellIndex + ']:last'),
-					format = ci.length && ci[0].dateFormat || ts.getData( ci, c.headers[cellIndex], 'dateFormat') || c.dateFormat;
+					format = ci.length && ci[0].dateFormat || ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') || c.dateFormat;
 				s = s.replace(/\s+/g," ").replace(/[\-.,]/g, "/"); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === "mmddyyyy") {
 					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
