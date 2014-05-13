@@ -466,6 +466,28 @@ $(function(){
 
 	});
 
+	test( "sorton methods", function(){
+		expect(6);
+
+		$table3.trigger('sorton', [[[ 0,'d' ]]]);
+		equal( c3.sortList + '', '0,1', 'sorton desc [0,"d"]' );
+
+		$table3.trigger('sorton', [[[ 0,'a' ]]]);
+		equal( c3.sortList + '', '0,0', 'sorton asc [0,"a"]' );
+
+		$table3.trigger('sorton', [[[ 0,'n' ]]]);
+		equal( c3.sortList + '', '0,1', 'sorton next [0,"n"]' );
+		$table3.trigger('sorton', [[[ 0,'n' ]]]);
+		equal( c3.sortList + '', '0,0', 'sorton next [0,"n"]' );
+
+		$table3.trigger('sorton', [[ [ 0,'n'], [1,'o'], [2,'s'] ]]);
+		equal( c3.sortList + '', '0,1,1,0,2,1', 'sorton next/opposite/same [0,"n"],[1,"o"],[2,"s"]' );
+
+		$table3.trigger('sorton', [[ [ 0,'n'], [1,'o'], [2,'s'] ]]);
+		equal( c3.sortList + '', '0,0,1,1,2,0', 'sorton next/opposite/same [0,"n"],[1,"o"],[2,"s"]' );
+
+	});
+
 	test( "sort Events", function(){
 		expect(1);
 

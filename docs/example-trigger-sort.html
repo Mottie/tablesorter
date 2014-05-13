@@ -12,39 +12,78 @@
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
+	<style>
+	.block, .left, .right {
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		padding: 5px 10px;
+	}
+	.left {
+		background: #eee;
+		width: 50%;
+		float: left;
+		margin-top: 15px;
+		padding: 10px;
+	}
+	.right {
+		width: 50%;
+		float: right;
+	}
+	.block h3 {
+		margin: 2px;
+	}
+	.sort-reset {
+		float: right;
+	}
+	</style>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
 	<script id="js">$(function() {
 
-	$("table").tablesorter({ theme: 'blue' });
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra']
+	});
 
-	// ****************************************
-	// sort the "First Name" and "Age" columns
-	// ****************************************
-	$("#trigger-link").click(function() {
-		// set sorting column and direction, this will sort on the
-		// first and third column the column index starts at zero
-		var sorting = [[0,0],[2,0]];
-		// sort on the first column and third columns
-		$("table").trigger("sorton",[sorting]);
-		// return false to stop default link action
+	// sort using data-sort attribute value
+	$('button[data-sort]').click(function(){
+		var sort = $(this).data('sort');
+		$(this).closest('.block').find('table').trigger('sorton', [ sort ]);
 		return false;
 	});
 
-	// ****************************************
-	// toggle the sort on the 5th column
-	// (Discount) - New in v2.9!
-	// ****************************************
-	$("#toggle-link").click(function() {
-		$("table thead").find("th:eq(4)").trigger("sort");
+	$('.sortReset-toggle').click(function(){
+		var c = $(this).closest('.block').find('table')[0].config;
+		c.sortReset = !c.sortReset;
+		$(this).next().html('' + c.sortReset);
+	});
+
+	// toggle the sort on the Discount column v2.9!
+	$("#toggle-sort").click(function() {
+		$("#table2").find("th:contains(Discount)").trigger("sort");
 		return false;
 	});
 
 });</script>
+
+	<script>
+	// demo stuff (update pre with current sort)
+	$(function() {
+		$('button[data-sort]').click(function(){
+			var $this = $(this),
+				sort = $this.data('sort'),
+				$pre = $this.closest('.box').find('pre:last');
+			$pre.html('$("table").trigger("sorton", [ ' + JSON.stringify(sort) + ' ]);');
+			prettyPrint( null, $pre[0] );
+			return false;
+		});
+	});
+	</script>
+
 </head>
 <body>
 <div id="banner">
@@ -55,77 +94,122 @@
 </div>
 <div id="main">
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
-	<thead>
-		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Age</th>
-			<th>Total</th>
-			<th>Discount</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Peter</td>
-			<td>Parker</td>
-			<td>28</td>
-			<td>$9.99</td>
-			<td>20%</td>
-			<td>Jul 6, 2006 8:14 AM</td>
-		</tr>
-		<tr>
-			<td>John</td>
-			<td>Hood</td>
-			<td>33</td>
-			<td>$19.99</td>
-			<td>25%</td>
-			<td>Dec 10, 2002 5:14 AM</td>
-		</tr>
-		<tr>
-			<td>Clark</td>
-			<td>Kent</td>
-			<td>18</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 12, 2003 11:14 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Almighty</td>
-			<td>45</td>
-			<td>$153.19</td>
-			<td>44%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Evans</td>
-			<td>22</td>
-			<td>$13.19</td>
-			<td>11%</td>
-			<td>Jan 18, 2007 9:12 AM</td>
-		</tr>
-	</tbody>
-</table>
 
-<a href="#" id="trigger-link">Sort first and third columns</a> | 
-<a href="#" id="toggle-link">Toggle sort on the "Discount" column</a> (v2.9)
+<div id="demo">
+
+<!--
+********************
+Basic Asc/Desc sort
+********************
+-->
+<div class="block">
+	<div class="left box">
+
+		<button class="sort-reset" data-sort="[]">Reset</button>
+		<h3>Sort Ascending/Descending</h3>
+		Use <code>0</code> or <code>"a"</code> for ascending sorts, and <code>1</code> or <code>"d"</code> for descending sorts<super>*</super><br>
+		<br>
+		<button data-sort="[[0,0]]">Asc</button> (<code>[[0,0]]</code>) <button data-sort='[[0,"a"],[1,"d"]]'>Asc/Desc</button> (<code>[[0,"a"],[1,"d"]]</code>)<br>
+		<button data-sort="[[0,1]]">Desc</button> (<code>[[0,1]]</code>) <button data-sort='[[0,"d"],[1,"a"]]'>Desc/Asc</button> (<code>[[0,"d"],[1,"a"]]</code>)
+		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<small>* <code>"a"</code> &amp; <code>"d"</code> values added <span class="version">v2.18.5</span>.</small>
+	</div>
+	<div class="right box">
+		<table id="table1" class="tablesorter">
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+				<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+				<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+				<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+			</tbody>
+		</table>
+	</div>
 </div>
+<br class="clear">
 
-	<h1>Javascript</h1>
-	<div id="javascript">
-		<pre class="prettyprint lang-javascript"></pre>
-	</div>
-	<h1>HTML</h1>
-	<div id="html">
-		<pre class="prettyprint lang-html"></pre>
-	</div>
+<!--
+********************
+Toggle Sort (Next)
+********************
+-->
+<div class="block">
+	<div class="left box">
 
-<div class="next-up">
-	<hr />
-	Next up: <a href="example-option-sort-force.html">Force a default sorting order &rsaquo;&rsaquo;</a>
+		<button class="sort-reset" data-sort="[]">Reset</button>
+		<h3>Toggle sort (Next)</h3>
+		Either trigger a <code>"sort"</code> on the desired column, or <code>"sorton"</code> on the table using the <code>"n"</code> value<super>*</super>.<br>
+		Toggle the <button class="sortReset-toggle">sortReset</button> option (<code class="kwd">false</code>), then try these sorts (click a third time).<br>
+
+		<br>
+		Trigger "sort" event: <button id="toggle-sort">Discount</button> (v2.9)
+		<pre class="prettyprint lang-js">$("#table2").find("th:contains(Discount)").trigger("sort");</pre>
+
+		<button data-sort='[[0,"n"]]'>Asc/Desc</button> (<code>[[0,"n"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"n"]]'>Asc/Desc</button> (<code>[[0,"n"],[1,"n"]]</code>; columns are independent)
+		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<small>* <code>"n"</code> value added <span class="version">v2.18.5</span>.</small>
+	</div>
+	<div class="right box">
+		<table id="table2" class="tablesorter">
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+				<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+				<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+				<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br class="clear">
+
+<!--
+********************
+Sort Same/Opposite
+********************
+-->
+<div class="block">
+	<div class="left box">
+		<button class="sort-reset" data-sort="[]">Reset</button>
+		<h3>Sort Same/Opposite</h3>
+		The same (<code>"s"</code>) or opposite (<code>"o"</code>) sort values always set the column sort based on the primary column<super>*</super>.<br>
+		Toggle the <button class="sortReset-toggle">sortReset</button> option (<code class="kwd">false</code>), then try these sorts (click a third time).<br>
+		<br>
+		<button data-sort='[[0,"s"]]'>Same</button> (<code>[[0,"s"]]</code>; always defaults to Asc sort if set on primary column)<br>
+		<button data-sort='[[0,0],[1,"s"]]'>Asc/same</button> (<code>[[0,0],[1,"s"]]</code>)<br>
+		<button data-sort='[[0,1],[1,"s"]]'>Desc/same</button> (<code>[[0,1],[1,"s"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"s"]]'>Next/same</button> (<code>[[0,"n"],[1,"s"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"o"]]'>Next/opposite</button> (<code>[[0,"n"],[1,"o"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"o"],[2,"n"]]'>Next/opposite/next</button> (<code>[[0,"n"],[1,"o"],[2,"n"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"o"],[2,"s"]]'>Next/opposite/same</button> (<code>[[0,"n"],[1,"o"],[2,"s"]]</code>)<br>
+		<button data-sort='[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]'>Next/opposite/same/opposite</button> (<code>[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]</code>)
+		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<small>* <code>"s"</code> &amp; <code>"o"</code> values added <span class="version">v2.18.5</span>.</small>
+	</div>
+	<div class="right box">
+		<table id="table3" class="tablesorter">
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+				<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+				<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+				<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br class="clear">
+
 </div>
 
 </div>

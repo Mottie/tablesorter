@@ -93,7 +93,6 @@ table th a { text-decoration: underline; color: #000; }
 #group .ui-slider,#align .ui-slider { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
 #group .demo-label,#align .demo-label { display: inline-block; min-width: 120px; }
 #align .demo-label { display: inline-block; min-width: 150px; }
-@media all and (max-width: 650px) {
- table.compatibility { float: none; }
- .box { width: 100%; }
+@media all and (max-width: 700px) {
+ table.compatibility, div.box { float: none; width: 100%; margin: 0; }
 }

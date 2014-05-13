@@ -546,19 +546,46 @@
 				}
 			}
 
-			function updateHeaderSortCount(table, list, triggered) {
-				var s, t, o, c = table.config,
+			function updateHeaderSortCount(table, list) {
+				var s, t, o, col, primary,
+					c = table.config,
 					sl = list || c.sortList;
 				c.sortList = [];
 				$.each(sl, function(i,v){
 					// ensure all sortList values are numeric - fixes #127
-					s = [ parseInt(v[0], 10), parseInt(v[1], 10) ];
+					col = parseInt(v[0], 10);
 					// make sure header exists
-					o = c.$headers.filter('[data-column="' + s[0] + '"]:last')[0];
+					o = c.$headers.filter('[data-column="' + col + '"]:last')[0];
 					if (o) { // prevents error if sorton array is wrong
+						// o.count = o.count + 1;
+						t = ('' + v[1]).match(/^(1|d|s|o|n)/);
+						t = t ? t[0] : '';
+						// 0/(a)sc (default), 1/(d)esc, (s)ame, (o)pposite, (n)ext
+						switch(t) {
+							case '1': case 'd': // descending
+								t = 1;
+								break;
+							case 's': // same direction (as primary column)
+								// if primary sort is set to "s", make it ascending
+								t = primary || 0;
+								break;
+							case 'o':
+								s = o.order[(primary || 0) % (c.sortReset ? 3 : 2)];
+								// opposite of primary column; but resets if primary resets
+								t = s === 0 ? 1 : s === 1 ? 0 : 2;
+								break;
+							case 'n':
+								o.count = o.count + 1;
+								t = o.order[(o.count) % (c.sortReset ? 3 : 2)];
+								break;
+							default: // ascending
+								t = 0;
+								break;
+						}
+						primary = i === 0 ? t : primary;
+						s = [ col, parseInt(t, 10) || 0 ];
 						c.sortList.push(s);
 						t = $.inArray(s[1], o.order); // fixes issue #167
-						if (triggered) { o.count = o.count + 1; }
 						o.count = t >= 0 ? t : s[1] % (c.sortReset ? 3 : 2);
 					}
 				});
@@ -872,7 +899,7 @@
 					e.stopPropagation();
 					$table.trigger("sortStart", this);
 					// update header count index
-					updateHeaderSortCount(table, list, true);
+					updateHeaderSortCount(table, list);
 					// set css for headers
 					setHeadersCss(table);
 					// fixes #346
