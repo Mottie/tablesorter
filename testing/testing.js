@@ -174,6 +174,14 @@ $(function(){
 	$table4.tablesorter({
 		sortAppend : [[2,0],[3,0]],
 		sortForce : [[0,0],[1,0]],
+		textExtraction : {
+			'.te-test' : function(node){
+				return $(node).find('span').text();
+			},
+			2 : function(node){
+				return $(node).find('span').text();
+			}
+		},
 		initialized: function(table){
 			var e, c = table.config;
 			// trigger sort on 5th column
@@ -462,13 +470,17 @@ $(function(){
 	});
 
 	test( "textExtraction Method", function() {
-		expect(2);
+		expect(4);
 
 		$table1.trigger('sorton', [[[ 0,0 ]]]);
 		tester.cacheCompare( table1, 0, [ 'test1', 'test2', 'test3', '', 'testa', 'testb', 'testc' ], 'from data-attribute' );
 
 		$table3.trigger('sorton', [[[ 0,1 ]]]);
 		tester.cacheCompare( table3, 0, [ '', 'a255', 'a102', 'a87', 'a55', 'a43', 'a33', 'a10', 'a02', 'a1' ], 'ignore data-attribute' );
+
+		tester.cacheCompare( table4, 1, [ 'f11', 'f11', 'f12', 'f12', 'f12', 'f12', 'f12', 'f13', 'f13', 'f13' ], 'extract using class name' );
+
+		tester.cacheCompare( table4, 2, [ 'a21', 'a21', 'a23', 'a23', 'a23', 'a22', 'a22', 'a23', 'a24', 'a24' ], 'extract using column index' );
 
 	});
 

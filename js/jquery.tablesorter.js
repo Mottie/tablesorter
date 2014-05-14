@@ -167,7 +167,7 @@
 
 			function getElementText(table, node, cellIndex) {
 				if (!node) { return ""; }
-				var c = table.config,
+				var te, c = table.config,
 					t = c.textExtraction || '',
 					text = "";
 				if (t === "basic") {
@@ -176,8 +176,8 @@
 				} else {
 					if (typeof(t) === "function") {
 						text = t(node, table, cellIndex);
-					} else if (typeof(t) === "object" && t.hasOwnProperty(cellIndex)) {
-						text = t[cellIndex](node, table, cellIndex);
+					} else if (typeof (te = ts.getColumnData( table, t, cellIndex )) === 'function') {
+						text = te(node, table, cellIndex);
 					} else {
 						// previous "simple" method
 						text = node.textContent || node.innerText || $(node).text() || "";

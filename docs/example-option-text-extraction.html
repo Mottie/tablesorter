@@ -38,7 +38,7 @@
 			2: function(node, table, cellIndex){ return $(node).find("span").text(); },
 			3: function(node, table, cellIndex){ return $(node).find("em").text(); },
 			4: function(node, table, cellIndex){ return $(node).find("a").text(); },
-			5: function(node, table, cellIndex){ return $(node).find("u").text(); }
+			'.date' : function(node, table, cellIndex){ return $(node).find("u").text(); }
 		}
 
 	});
@@ -58,6 +58,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version updated">v2.16.5</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
 			<li>The textExtraction function setting for each column was added in version 2.0.12 (not part of the original plugin).</li>
 			<li>The "First Name" column is sorting by the contents of the &lt;strong&gt; tag (in red).</li>
 			<li>Added "table" and "cellIndex" variables to the textExtraction function (v2.1.2).</li>
@@ -73,7 +74,7 @@
 			<th>Age</th>
 			<th>Total</th>
 			<th>Discount</th>
-			<th>Date</th>
+			<th class="date">Date</th>
 		</tr>
 	</thead>
 	<tbody>
