@@ -107,7 +107,7 @@
 
 				// Add select menu to this column
 				// set the column value to true, and/or add "filter-select" class name to header
-				// 0 : true,
+				// '.first-name' : true,
 
 				// Exact match only
 				1 : function(e, n, f, i, $r) {
@@ -158,6 +158,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version updated">v2.16.5</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
 				<li>In <span class="version">v2.16.3</span>,
 					<ul>
 						<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort.</li>
@@ -180,7 +181,7 @@
 
   // Add select menu to this column
   // set the column value to true, and/or add &quot;filter-select&quot; class name to header
-  0 : true
+  '.first-name' : true
 
 }</pre>or add a &quot;filter-select&quot; class to the column header cell (see code below).</li>
 				<li>The default option text, &quot;Select a name&quot;, is obtained from the header <code>data-placeholder</code> attribute of the column header cell. And when active, it will show all table rows.<pre class="prettyprint lang-html">&lt;th class=&quot;filter-select&quot; data-placeholder=&quot;Select a name&quot;&gt;First Name&lt;/th&gt;</pre></li>
@@ -291,9 +292,9 @@
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<!-- add "filter-select" class or filter_functions : { 0: true } -->
+			<!-- add "filter-select" class or filter_functions : { '.first-name' : true } -->
 			<!-- add "filter-match" class to just match the content, so selecting "Denni" will also show "Dennis" -->
-			<th class="filter-select" data-placeholder="Select a name">First Name</th>
+			<th class="first-name filter-select" data-placeholder="Select a name">First Name</th>
 			<th data-placeholder="Exact matches only">Last Name</th>
 			<th data-placeholder="Choose a city">City</th>
 			<th data-value="<30">Age</th>

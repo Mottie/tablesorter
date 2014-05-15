@@ -73,8 +73,8 @@
 			// add custom selector elements to the filter row
 			filter_formatter : {
 
-				// Rank
-				0 : function($cell, indx){
+				// Rank (jQuery selector added v2.16.5)
+				'th:contains("Rank")' : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
 						delayed : true,
 						valueToHeader : false,
@@ -104,8 +104,8 @@
 					});
 				},
 
-				// Total
-				2 : function($cell, indx){
+				// Total (jQuery selector added v2.16.5)
+				'.total' : function($cell, indx){
 					return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
 						delayed : false,
 						valueToHeader : false,
@@ -184,8 +184,9 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In version <span class="version">v2.16.0</span>, the <code>filter_placeholder</code> option was added. See the jQuery UI Datepicker Range Selector section for more details.</li>
-				<li>In version <span class="version">v2.15.0</span>, the following changes were made:
+				<li>In <span class="version updated">v2.16.5</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
+				<li>In <span class="version">v2.16.0</span>, the <code>filter_placeholder</code> option was added. See the jQuery UI Datepicker Range Selector section for more details.</li>
+				<li>In <span class="version">v2.15.0</span>, the following changes were made:
 					<ul>
 						<li>These updated filter widget functions are not completely backward compatible with older versions of the filter widget. Please update both!</li>
 						<li>Added <code>compare</code> &amp; <code>selected</code> options:
@@ -259,8 +260,8 @@
       // add custom selector elements to the filter row
       filter_formatter : {
 
-        // Rank
-        0 : function($cell, indx){
+        // Rank (jQuery selector added v2.16.5)
+        'th:contains("Rank")' : function($cell, indx){
           return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
             // filterFormatter options
             cellText : 'Rank:',
@@ -327,8 +328,8 @@
       // add custom selector elements to the filter row
       filter_formatter : {
 
-        // Total column
-        2 : function($cell, indx){
+        // Total column (jQuery selector added v2.16.5)
+        '.total' : function($cell, indx){
           return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
             delayed: true,        // delay search (set by filter_searchDelay)
             valueToHeader: false, // add current slider value to the header cell
@@ -566,7 +567,7 @@
 		<tr>
 			<th>Rank</th>
 			<th>Age</th>
-			<th>Total (range)</th>
+			<th class="total">Total (range)</th>
 			<th>Discount</th>
 			<th data-placeholder="Try 1/18/2013">Date (one input)</th>
 			<th>Date (two inputs; range)</th>

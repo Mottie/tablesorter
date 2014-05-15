@@ -9,7 +9,8 @@
 Filter widget tested parts
 ========================
 OPTIONS:
-	filter_defaultAttrib, filter_ignoreCase, filter_startsWith
+	filter_defaultAttrib, filter_ignoreCase, filter_startsWith,
+	filter_selectSource, filter_functions (set, not functionality)
 
 CLASSES:
 	filter-false, filter-match, filter-parsed
@@ -24,9 +25,9 @@ Not yet tested
 =========================
 OPTIONS:
 	filter_childRows, filter_columnFilters, filter_cssFilter, filter_external,
-	filter_filteredRow, filter_formatter, filter_functions, filter_hideEmpty,
+	filter_filteredRow, filter_formatter, filter_hideEmpty,
 	filter_hideEmpty, filter_liveSearch, filter_onlyAvail, filter_placeholder,
-	filter_reset, filter_saveFilters, filter_searchDelay, filter_selectSource,
+	filter_reset, filter_saveFilters, filter_searchDelay,
 	filter_serversideFiltering, filter_useParsedData
 
 CLASSES:
@@ -49,27 +50,28 @@ $(function(){
 	// filter widget table
 	$table = $('#testblock').html('<table class="tablesorter">' +
 		'<thead><tr>' +
-			'<th class="filter-false">Rank</th>' +
-			'<th class="filter-match">First Name</th>' +
-			'<th>Last Name</th>' +
+			'<th class="rank">Rank</th>' +
+			'<th class="first filter-match">First Name</th>' +
+			'<th class="last">Last Name</th>' +
 			'<th data-value="<20">Age</th>' +
-			'<th>Total</th>' +
+			'<th class="total">Total</th>' +
 			'<th>Discount</th>' +
 			'<th>Date</th>' +
+			'<th class="last2">Last Name2</th>' +
 		'</tr></thead><tbody>' +
-			'<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>' +
-			'<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>' +
-			'<tr><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>' +
-			'<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>' +
-			'<tr><td>21</td><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>' +
-			'<tr><td>013</td><td>Clark</td><td>Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>' +
-			'<tr><td>005</td><td>Bruce</td><td>Almighty Esq</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>' +
-			'<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>' +
-			'<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td></tr>' +
-			'<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>' +
-			'<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>' +
-			'<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>' +
-			'<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td></tr>' +
+			'<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td><td>Johnson Sr Esq</td></tr>' +
+			'<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td><td>Hibert</td></tr>' +
+			'<tr><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td><td>Henry Jr</td></tr>' +
+			'<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td><td>Parker</td></tr>' +
+			'<tr><td>21</td><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td><td>Hood</td></tr>' +
+			'<tr><td>013</td><td>Clark</td><td>Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td><td>Kent Sr.</td></tr>' +
+			'<tr><td>005</td><td>Bruce</td><td>Almighty Esq</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td><td>Almighty Esq</td></tr>' +
+			'<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td><td>Dumass</td></tr>' +
+			'<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td><td>Franco</td></tr>' +
+			'<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td><td>Evans</td></tr>' +
+			'<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td><td>McMasters</td></tr>' +
+			'<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td><td>Bronson</td></tr>' +
+			'<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td><td>delFuego</td></tr>' +
 		'</tbody></table>').find('table'),
 	table = $table[0],
 
@@ -91,7 +93,8 @@ $(function(){
 
 			equal( ts.filter.regex.child.test( c.cssChildRow ), true, 'child row regex check' );
 			equal( ts.filter.regex.filtered.test( wo.filter_filteredRow ), true, 'filtered row regex check' );
-			equal ( c.$table.find('.tablesorter-filter').eq(0).hasClass('disabled'), true, 'filter disabled' );
+			// this includes check of headers option & referencing column by class
+			equal ( c.$table.find('.tablesorter-filter').eq(0).hasClass('disabled'), true, 'filter disabled & headers class name working' );
 
 			tester.cacheCompare( table, 3, [ 12, 18, 13, 18 ], 'starting filter value on age column', true );
 		});
@@ -303,6 +306,27 @@ $(function(){
 
 		});
 
+		test( 'Filter: function & selectSource', function() {
+			expect(3);
+
+			var $t, opts = [];
+			$t = c.$table.find('.tablesorter-filter-row select:last');
+			equal ( $t.length !== 0, true, 'filter_functions: true working' );
+
+			c.$table.find('.tablesorter-filter-row select:first option').each(function(){
+				opts.push( $.trim( $(this).text() ) );
+			});
+			equal ( opts.length === 3 && opts.join('') === '< 10> 10', true, 'filter_functions set' );
+
+			opts = [];
+			$t.find('option').each(function(){
+				opts.push( $.trim( $(this).text() ) );
+			});
+			equal ( opts.length === 4 && opts.join('') === 'abcdefzyx', true, 'filter_selectSource set' );
+
+		});
+
+
 		$table.on('filterEnd', function(){
 			start();
 			if (callbackName !== '' && callback[callbackName]) {
@@ -323,7 +347,26 @@ $(function(){
 		})
 		.tablesorter({
 			ignoreCase: false,
-			widgets: ['zebra', 'filter']
+			widgets: ['zebra', 'filter'],
+			headers: {
+				'.rank' : { filter: false }
+			},
+			widgetOptions: {
+				filter_functions : {
+					'.last2' : true,
+					'.rank' : {
+						"< 10" : function(e, n) { return n <= 10; },
+						"> 10" : function(e, n) { return n > 10; }
+					}
+				},
+				filter_selectSource : {
+					// Alphanumeric match (prefix only)
+					// added as select2 options (you could also use select2 data option)
+					'.last2' : function(table, column) {
+						return ['abc', 'def', 'zyx'];
+					}
+				}
+			}
 		});
 
 });
