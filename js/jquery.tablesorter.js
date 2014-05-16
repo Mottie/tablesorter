@@ -948,6 +948,14 @@
 				.bind("destroy" + c.namespace, function(e, c, cb){
 					e.stopPropagation();
 					ts.destroy(table, c, cb);
+				})
+				.bind("resetToLoadState" + c.namespace, function(e){
+					// restore original settings; this clears out current settings, but does not clear
+					// values saved to storage.
+					c = $.extend(true, ts.defaults, c.originalSettings);
+					table.hasInitialized = false;
+					// setup the entire table again
+					ts.setup( table, c );
 				});
 			}
 
@@ -957,6 +965,8 @@
 					var table = this,
 						// merge & extend config options
 						c = $.extend(true, {}, ts.defaults, settings);
+						// save initial settings
+						c.originalSettings = settings;
 					// create a table from data (build table widget)
 					if (!table.hasInitialized && ts.buildTable && this.tagName !== 'TABLE') {
 						// return the table (in case the original target is the table's container)

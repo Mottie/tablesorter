@@ -3576,6 +3576,18 @@ This ajaxProcessing function must return an object with "total", "headers" and "
 				<td><a href="example-add-rows.html">Example</a></td>
 			</tr>
 
+			<tr id="resettoloadstate">
+				<td><a href="#" class="permalink">resetToLoadState</a></td>
+				<td>Use this method reset the table to it's original settings. (<span class="version">v2.16.5</span>).
+					<div class="collapsible">
+						Using this method will clear out any settings that have changed since the table was initialized (refreshes the entire table); so any sorting or modified widget options will be cleared.<br>
+						However, it will not clear any values that were saved to storage. This method is basically like reloading the page.
+						<pre class="prettyprint lang-js">$('table').trigger('resetToLoadState');</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="sort">
 				<td><a href="#" class="permalink">sort</a></td>
 				<td>Use this method to initialize a sort while targeting a specific column header (<span class="version">v2.9</span>).
