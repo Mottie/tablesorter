@@ -950,6 +950,8 @@
 					ts.destroy(table, c, cb);
 				})
 				.bind("resetToLoadState" + c.namespace, function(e){
+					// remove all widgets
+					ts.refreshWidgets(table, true, true);
 					// restore original settings; this clears out current settings, but does not clear
 					// values saved to storage.
 					c = $.extend(true, ts.defaults, c.originalSettings);
