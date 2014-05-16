@@ -295,7 +295,7 @@ ts.addWidget({
 	remove: function(table, c){
 		var csel = c.selector;
 		csel.$container.empty();
-		csel.$popup.empty();
+		if (csel.$popup) { csel.$popup.empty(); }
 		csel.$style.remove();
 		csel.$breakpoints.remove();
 		c.$table.off('updateAll' + namespace + ' update' + namespace);
