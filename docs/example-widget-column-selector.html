@@ -178,6 +178,10 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>
+				In <span class="version">v2.16.5</span>, a method to refresh the column selector was added.<br>
+				<br>
+			</li>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>This widget may not work properly if the table header includes rows with row or column spans.</li>
 			<li>The responsive part of this widget
@@ -369,6 +373,13 @@
 				</tbody>
 			</table>
 
+		</div>
+
+		<h3><a href="#">Methods</a></h3>
+		<div>
+			Refresh the breakpoints and selected columns using this method (<span class="version">v2.16.5</span>):<br>
+			<br>
+			<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector');</pre>
 		</div>
 
 		<h3><a href="#">Removing a column from the selector</a></h3>

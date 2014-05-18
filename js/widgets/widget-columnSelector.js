@@ -114,10 +114,12 @@ tsColSel = ts.columnSelector = {
 			colSel.lastIndex = -1;
 			wo.columnSelector_breakpoints.sort();
 			tsColSel.updateBreakpoints(c, wo);
-			c.$table.off('updateAll' + namespace).on('updateAll' + namespace, function(){
-				tsColSel.updateBreakpoints(c, wo);
-				tsColSel.updateCols(c, wo);
-			});
+			c.$table
+				.off('updateAll refreshColumnSelector '.split(' ').join(namespace + ' '))
+				.on('updateAll refreshColumnSelector '.split(' ').join(namespace + ' '), function(){
+					tsColSel.updateBreakpoints(c, wo);
+					tsColSel.updateCols(c, wo);
+				});
 		}
 
 		if (colSel.$container.length) {
