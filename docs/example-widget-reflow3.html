@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Table Reflow Widget (beta)</title>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-reflow.js"></script>
+
+	<style>
+	/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+	@media ( max-width: 35em ) {
+		.ui-table-reflow td,
+		.ui-table-reflow th {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			float: right;
+			/* if not using the stickyHeaders widget (not the css3 version)
+			 * the "!important" flag, and "height: auto" can be removed */
+			width: 100% !important;
+			height: auto !important;
+		}
+		/* reflow widget */
+		.ui-table-reflow tbody td[data-title]:before {
+			color: #469;
+			font-size: .9em;
+			content: attr(data-title);
+			float: left;
+			width: 50%;
+			white-space: pre-wrap;
+			text-align: bottom;
+			display: inline-block;
+		}
+		/* reflow2 widget */
+		table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+			display: block;
+			padding: .4em 0;
+			margin: .4em 0;
+			text-transform: uppercase;
+			font-size: .9em;
+			font-weight: 400;
+		}
+		table.ui-table-reflow .ui-table-cell-label {
+			padding: .4em;
+			min-width: 30%;
+			display: inline-block;
+			margin: -.4em 1em -.4em -.4em;
+		}
+	}
+	.ui-table-reflow .ui-table-cell-label {
+		display: none;
+	}
+	</style>
+
+	<script>$(function() {
+
+	// reflow2 widget (table with multiple header rows)
+	$("#table3").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow2'],
+		widgetOptions: {
+			// class name added to make it responsive (class name within media query)
+			reflow2_className    : 'ui-table-reflow',
+			// ignore header cell content with this class name
+			reflow2_classIgnore  : 'ui-table-reflow-ignore',
+			// header attribute containing modified header name
+			reflow2_headerAttrib : 'data-name',
+			// class name applied to thead labels
+			reflow2_labelClass   : 'ui-table-cell-label',
+			// class name applied to first row thead label
+			reflow2_labelTop     : 'ui-table-cell-label-top'
+		}
+	});
+
+});</script>
+</head>
+<body>
+
+<table id="table3">
+	<thead>
+		<tr>
+			<th class="ui-table-reflow-ignore sorter-false">Paris</th>
+			<th colspan="2">Average Temperatures (C)</th>
+			<th colspan="2">Average Rainfall</th>
+		</tr>
+		<tr>
+			<th>Month</th>
+			<th>Minimum Temp</th>
+			<th>Maximum Temp</th>
+			<th>Precipitaion (mm)</th>
+			<th>Rainfall Days</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><th>Jaunuary</th><td>3</td><td>8</td><td>17.8</td><td>10</td></tr>
+		<tr><th>February</th><td>2</td><td>9</td><td>21.7</td><td>9</td></tr>
+		<tr><th>March</th><td>4</td><td>13</td><td>24.2</td><td>10</td></tr>
+		<tr><th>April</th><td>6</td><td>15</td><td>24.6</td><td>11</td></tr>
+		<tr><th>May</th><td>10</td><td>20</td><td>26.2</td><td>10</td></tr>
+		<tr><th>June</th><td>13</td><td>23</td><td>25.1</td><td>9</td></tr>
+		<tr><th>July</th><td>15</td><td>25</td><td>21.7</td><td>7</td></tr>
+		<tr><th>August</th><td>15</td><td>25</td><td>21.4</td><td>7</td></tr>
+		<tr><th>September</th><td>11</td><td>21</td><td>15.6</td><td>8</td></tr>
+		<tr><th>October</th><td>9</td><td>17</td><td>25.3</td><td>11</td></tr>
+		<tr><th>November</th><td>5</td><td>11</td><td>22.4</td><td>12</td></tr>
+		<tr><th>December</th><td>3</td><td>8</td><td>26.6</td><td>12</td></tr>
+	</tbody>
+</table>
+
+</body>
+</html>

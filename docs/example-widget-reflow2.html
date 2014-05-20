@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Table Reflow Widget (beta)</title>
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<style>
+	/* override bootstrap link colors */
+	.ui-widget-content a {
+		color: #428BCA;
+	}
+	.ui-widget-content a:hover {
+		text-decoration: underline;
+	}
+	/*** column selector custom css only popup ***/
+	.columnSelectorWrapper {
+		position: relative;
+		margin: 10px 0;
+		display: inline-block;
+	}
+	.columnSelector, .hidden {
+		display: none;
+	}
+	.columnSelectorButton {
+		background: #99bfe6;
+		border: #888 1px solid;
+		color: #111;
+		border-radius: 5px;
+		padding: 5px;
+	}
+	#colSelect1:checked + label {
+		background: #5797d7;
+		border-color: #555;
+	}
+	#colSelect1:checked ~ #columnSelector {
+		display: block;
+	}
+	.columnSelector {
+		width: 120px;
+		position: absolute;
+		top: 30px;
+		padding: 10px;
+		background: #fff;
+		border: #99bfe6 1px solid;
+		border-radius: 5px;
+	}
+	.columnSelector label {
+		display: block;
+	}
+	.columnSelector label:nth-child(1) {
+		border-bottom: #99bfe6 solid 1px;
+		margin-bottom: 5px;
+	}
+	.columnSelector input {
+		margin-right: 5px;
+	}
+	.columnSelector .disabled {
+		color: #ddd;
+	}
+	.frame-wrapper {
+		max-width: 98%;
+		height: 250px;
+	}
+	iframe {
+		width: 100%;
+		height: 100%;
+	}
+	</style>
+	<script src="../js/widgets/widget-columnSelector.js"></script>
+
+	<style>
+	/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+	@media ( max-width: 35em ) {
+		.ui-table-reflow td,
+		.ui-table-reflow th {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			float: right;
+			/* if not using the stickyHeaders widget (not the css3 version)
+			 * the "!important" flag, and "height: auto" can be removed */
+			width: 100% !important;
+			height: auto !important;
+		}
+		/* reflow widget */
+		.ui-table-reflow tbody td[data-title]:before {
+			color: #469;
+			font-size: .9em;
+			content: attr(data-title);
+			float: left;
+			width: 50%;
+			white-space: pre-wrap;
+			text-align: bottom;
+			display: inline-block;
+		}
+		/* reflow2 widget */
+		table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+			display: block;
+			padding: .4em 0;
+			margin: .4em 0;
+			text-transform: uppercase;
+			font-size: .9em;
+			font-weight: 400;
+		}
+		table.ui-table-reflow .ui-table-cell-label {
+			padding: .4em;
+			min-width: 30%;
+			display: inline-block;
+			margin: -.4em 1em -.4em -.4em;
+		}
+	}
+	.ui-table-reflow .ui-table-cell-label {
+		display: none;
+	}
+	</style>
+	<script src="../js/widgets/widget-reflow.js"></script>
+	<script>
+	$(function(){
+		$('#table1').resizable({
+			handles : 'e'
+		});
+	});
+	</script>
+	<script id="js">$(function() {
+
+	// simple reflow widget (table with 1 header row)
+	$("#table1").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow'],
+		widgetOptions : {
+			// class name added to make it responsive (class name within media query)
+			reflow_className    : 'ui-table-reflow',
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name',
+			// data attribute added to each tbody cell
+			// it contains the header cell text, visible upon reflow
+			reflow_dataAttrib   : 'data-title'
+		}
+	});
+
+	// simple reflow widget + columnSelector & stickyHeaders widgets
+	$("#table2").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow', 'columnSelector', 'stickyHeaders'],
+		widgetOptions : {
+			// target the column selector markup
+			columnSelector_container : $('#columnSelector'),
+			// data attribute containing column name to use in the selector container
+			// make it use the same as reflow_headerAttrib
+			columnSelector_name : 'data-name',
+
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name'
+		}
+	});
+
+	// reflow2 widget (table with multiple header rows)
+	$("#table3").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow2'],
+		widgetOptions: {
+			// class name added to make it responsive (class name within media query)
+			reflow2_className    : 'ui-table-reflow',
+			// ignore header cell content with this class name
+			reflow2_classIgnore  : 'ui-table-reflow-ignore',
+			// header attribute containing modified header name
+			reflow2_headerAttrib : 'data-name',
+			// class name applied to thead labels
+			reflow2_labelClass   : 'ui-table-cell-label',
+			// class name applied to first row thead label
+			reflow2_labelTop     : 'ui-table-cell-label-top'
+		}
+	});
+
+});</script>
+</head>
+<body>
+
+<!-- This selector markup is completely customizable -->
+<div class="columnSelectorWrapper">
+	<input id="colSelect1" type="checkbox" class="hidden">
+	<label class="columnSelectorButton" for="colSelect1">Column</label>
+	<div id="columnSelector" class="columnSelector">
+		<!-- this div is where the column selector is added -->
+	</div>
+</div> (When "Auto" is set, the table becomes responsive; resize the browser window to see it work)
+
+<table id="table2">
+	<thead>
+		<tr>
+			<th data-priority="critical">Name</th>
+			<th data-priority="critical">Major</th>
+			<th data-priority="6" data-name="Gender">Sex</th>
+			<th data-priority="4">English</th>
+			<th data-priority="5">Japanese</th>
+			<th data-priority="3">Calculus</th>
+			<th data-priority="2">Geometry</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
+	</tfoot>
+	<tbody>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td></tr>
+		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td></tr>
+		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td></tr>
+		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td></tr>
+		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td></tr>
+		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td></tr>
+		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td></tr>
+		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td></tr>
+		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td></tr>
+		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td></tr>
+		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td></tr>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td></tr>
+		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td></tr>
+		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td></tr>
+		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td></tr>
+	</tbody>
+</table>
+
+</body>
+</html>

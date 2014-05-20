@@ -75,6 +75,26 @@
 	.columnSelector .disabled {
 		color: #ddd;
 	}
+	#table1, #table2, #table3 {
+		max-width: 98%;
+		width: 1000px;
+		height: 410px;
+	}
+	iframe {
+		width: 99%;
+		height: 100%;
+		border: 0;
+	}
+	.ui-resizable-e {
+		background: #eee;
+	}
+	.ui-resizable-e:after {
+		content: '\2190 Resize';
+		font-size: 14px;
+		position: relative;
+		top: 50%;
+		left: 10px;
+	}
 	</style>
 	<script src="../js/widgets/widget-columnSelector.js"></script>
 
@@ -124,58 +144,13 @@
 	}
 	</style>
 	<script src="../js/widgets/widget-reflow.js"></script>
-	<script id="js">$(function() {
-
-	// simple reflow widget (table with 1 header row)
-	$("#table1").tablesorter({
-		theme: 'blue',
-		widgets: ['zebra', 'reflow'],
-		widgetOptions : {
-			// class name added to make it responsive (class name within media query)
-			reflow_className    : 'ui-table-reflow',
-			// header attribute containing modified header name
-			reflow_headerAttrib : 'data-name',
-			// data attribute added to each tbody cell
-			// it contains the header cell text, visible upon reflow
-			reflow_dataAttrib   : 'data-title'
-		}
+	<script>
+	$(function(){
+		$('#table1, #table2, #table3').resizable({
+			handles : 'e'
+		});
 	});
-
-	// simple reflow widget + columnSelector & stickyHeaders widgets
-	$("#table2").tablesorter({
-		theme: 'blue',
-		widgets: ['zebra', 'reflow', 'columnSelector', 'stickyHeaders'],
-		widgetOptions : {
-			// target the column selector markup
-			columnSelector_container : $('#columnSelector'),
-			// data attribute containing column name to use in the selector container
-			// make it use the same as reflow_headerAttrib
-			columnSelector_name : 'data-name',
-
-			// header attribute containing modified header name
-			reflow_headerAttrib : 'data-name'
-		}
-	});
-
-	// reflow2 widget (table with multiple header rows)
-	$("#table3").tablesorter({
-		theme: 'blue',
-		widgets: ['zebra', 'reflow2'],
-		widgetOptions: {
-			// class name added to make it responsive (class name within media query)
-			reflow2_className    : 'ui-table-reflow',
-			// ignore header cell content with this class name
-			reflow2_classIgnore  : 'ui-table-reflow-ignore',
-			// header attribute containing modified header name
-			reflow2_headerAttrib : 'data-name',
-			// class name applied to thead labels
-			reflow2_labelClass   : 'ui-table-cell-label',
-			// class name applied to first row thead label
-			reflow2_labelTop     : 'ui-table-cell-label-top'
-		}
-	});
-
-});</script>
+	</script>
 </head>
 <body>
 
@@ -448,128 +423,192 @@ table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
 
 	</p>
 
-<h1>Demo <small>(Resize the browser window)</small></h1>
-
-<div id="demo"><h3>Reflow widget only</h3>
-
-<table id="table1">
-	<thead>
-		<tr>
-			<th>Rank</th>
-			<th>Age</th>
-			<th>Total</th>
-			<th>Discount</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr><td>1</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2013 7:22 AM</td></tr>
-		<tr><td>11</td><td>12</td><td>$82.99</td><td>5%</td><td>Aug 21, 2013 12:21 PM</td></tr>
-		<tr><td>12</td><td>51</td><td>$99.29</td><td>18%</td><td>Oct 13, 2013 1:15 PM</td></tr>
-		<tr><td>51</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2013 8:14 AM</td></tr>
-		<tr><td>21</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2012 5:14 AM</td></tr>
-		<tr><td>013</td><td>18</td><td>$65.89</td><td>45%</td><td>Jan 12, 2013 11:14 AM</td></tr>
-		<tr><td>005</td><td>45</td><td>$153.19</td><td>45%</td><td>Jan 18, 2014 9:12 AM</td></tr>
-		<tr><td>10</td><td>3</td><td>$5.29</td><td>4%</td><td>Jan 8, 2013 5:11 PM</td></tr>
-		<tr><td>16</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2014 11:23 AM</td></tr>
-		<tr><td>66</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2013 9:12 AM</td></tr>
-		<tr><td>100</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2013 7:23 PM</td></tr>
-		<tr><td>55</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2014 1:12 PM</td></tr>
-		<tr><td>9</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2013 10:55 AM</td></tr>
-		<tr><td>13</td><td>12</td><td>$19.99</td><td>18%</td><td>Jan 20, 2014 7:45 PM</td></tr>
-		<tr><td>73</td><td>58</td><td>$129.19</td><td>39%</td><td>Jan 20, 2014 10:11 AM</td></tr>
-	</tbody>
-</table>
-
-<h3>Reflow + columnSelector widget</h3>
-<!-- This selector markup is completely customizable -->
-<div class="columnSelectorWrapper">
-	<input id="colSelect1" type="checkbox" class="hidden">
-	<label class="columnSelectorButton" for="colSelect1">Column</label>
-	<div id="columnSelector" class="columnSelector">
-		<!-- this div is where the column selector is added -->
+	<h1>Demo <small>(Resize the browser window)</small></h1>
+	<div id="demo"><h3>Reflow widget only</h3>
+	<div id="table1">
+		<iframe src="example-widget-reflow1.html"></iframe>
 	</div>
-</div> (When "Auto" is set, the table becomes responsive; resize the browser window to see it work)
 
-<table id="table2">
-	<thead>
-		<tr>
-			<th data-priority="critical">Name</th>
-			<th data-priority="critical">Major</th>
-			<th data-priority="6" data-name="Gender">Sex</th>
-			<th data-priority="4">English</th>
-			<th data-priority="5">Japanese</th>
-			<th data-priority="3">Calculus</th>
-			<th data-priority="2">Geometry</th>
-		</tr>
-	</thead>
-	<tfoot>
-		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
-	</tfoot>
-	<tbody>
-		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td></tr>
-		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td></tr>
-		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td></tr>
-		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td></tr>
-		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td></tr>
-		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td></tr>
-		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td></tr>
-		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td></tr>
-		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td></tr>
-		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td></tr>
-		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td></tr>
-		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td></tr>
-		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td></tr>
-		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td></tr>
-		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
-		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td></tr>
-		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td></tr>
-		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td></tr>
-		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td></tr>
-		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td></tr>
-	</tbody>
-</table>
+	<h3>Reflow + columnSelector widget</h3>
+	<div id="table2" class="frame-wrapper">
+		<iframe src="example-widget-reflow2.html"></iframe>
+	</div>
 
-<h3>Reflow2 widget (multiple thead rows)</h3>
-<table id="table3">
-	<thead>
-		<tr>
-			<th class="ui-table-reflow-ignore sorter-false">Paris</th>
-			<th colspan="2">Average Temperatures (C)</th>
-			<th colspan="2">Average Rainfall</th>
-		</tr>
-		<tr>
-			<th>Month</th>
-			<th>Minimum Temp</th>
-			<th>Maximum Temp</th>
-			<th>Precipitaion (mm)</th>
-			<th>Rainfall Days</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr><th>Jaunuary</th><td>3</td><td>8</td><td>17.8</td><td>10</td></tr>
-		<tr><th>February</th><td>2</td><td>9</td><td>21.7</td><td>9</td></tr>
-		<tr><th>March</th><td>4</td><td>13</td><td>24.2</td><td>10</td></tr>
-		<tr><th>April</th><td>6</td><td>15</td><td>24.6</td><td>11</td></tr>
-		<tr><th>May</th><td>10</td><td>20</td><td>26.2</td><td>10</td></tr>
-		<tr><th>June</th><td>13</td><td>23</td><td>25.1</td><td>9</td></tr>
-		<tr><th>July</th><td>15</td><td>25</td><td>21.7</td><td>7</td></tr>
-		<tr><th>August</th><td>15</td><td>25</td><td>21.4</td><td>7</td></tr>
-		<tr><th>September</th><td>11</td><td>21</td><td>15.6</td><td>8</td></tr>
-		<tr><th>October</th><td>9</td><td>17</td><td>25.3</td><td>11</td></tr>
-		<tr><th>November</th><td>5</td><td>11</td><td>22.4</td><td>12</td></tr>
-		<tr><th>December</th><td>3</td><td>8</td><td>26.6</td><td>12</td></tr>
-	</tbody>
-</table></div>
+	<h3>Reflow2 widget (multiple thead rows)</h3>
+	<div id="table3" class="frame-wrapper">
+		<iframe src="example-widget-reflow3.html"></iframe>
+	</div>
+
+</div>
 
 	<h1>HTML</h1>
-	<div id="html">
-		<pre class="prettyprint lang-html"></pre>
+	<div>
+		<pre class="prettyprint lang-html">&lt;h3&gt;Reflow widget only&lt;/h3&gt;
+&lt;table id=&quot;table1&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Rank&lt;/th&gt;
+      &lt;th&gt;Age&lt;/th&gt;
+      &lt;th&gt;Total&lt;/th&gt;
+      &lt;th&gt;Discount&lt;/th&gt;
+      &lt;th&gt;Date&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;$5.95&lt;/td&gt;&lt;td&gt;22%&lt;/td&gt;&lt;td&gt;Jun 26, 2013 7:22 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;11&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;td&gt;$82.99&lt;/td&gt;&lt;td&gt;5%&lt;/td&gt;&lt;td&gt;Aug 21, 2013 12:21 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;12&lt;/td&gt;&lt;td&gt;51&lt;/td&gt;&lt;td&gt;$99.29&lt;/td&gt;&lt;td&gt;18%&lt;/td&gt;&lt;td&gt;Oct 13, 2013 1:15 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;51&lt;/td&gt;&lt;td&gt;28&lt;/td&gt;&lt;td&gt;$9.99&lt;/td&gt;&lt;td&gt;20%&lt;/td&gt;&lt;td&gt;Jul 6, 2013 8:14 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;21&lt;/td&gt;&lt;td&gt;33&lt;/td&gt;&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;25%&lt;/td&gt;&lt;td&gt;Dec 10, 2012 5:14 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;013&lt;/td&gt;&lt;td&gt;18&lt;/td&gt;&lt;td&gt;$65.89&lt;/td&gt;&lt;td&gt;45%&lt;/td&gt;&lt;td&gt;Jan 12, 2013 11:14 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;005&lt;/td&gt;&lt;td&gt;45&lt;/td&gt;&lt;td&gt;$153.19&lt;/td&gt;&lt;td&gt;45%&lt;/td&gt;&lt;td&gt;Jan 18, 2014 9:12 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;$5.29&lt;/td&gt;&lt;td&gt;4%&lt;/td&gt;&lt;td&gt;Jan 8, 2013 5:11 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;16&lt;/td&gt;&lt;td&gt;24&lt;/td&gt;&lt;td&gt;$14.19&lt;/td&gt;&lt;td&gt;14%&lt;/td&gt;&lt;td&gt;Jan 14, 2014 11:23 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;66&lt;/td&gt;&lt;td&gt;22&lt;/td&gt;&lt;td&gt;$13.19&lt;/td&gt;&lt;td&gt;11%&lt;/td&gt;&lt;td&gt;Jan 18, 2013 9:12 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;18&lt;/td&gt;&lt;td&gt;$55.20&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Feb 12, 2013 7:23 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;55&lt;/td&gt;&lt;td&gt;65&lt;/td&gt;&lt;td&gt;$123.00&lt;/td&gt;&lt;td&gt;32%&lt;/td&gt;&lt;td&gt;Jan 20, 2014 1:12 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;$22.09&lt;/td&gt;&lt;td&gt;17%&lt;/td&gt;&lt;td&gt;Jun 11, 2013 10:55 AM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;13&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;18%&lt;/td&gt;&lt;td&gt;Jan 20, 2014 7:45 PM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;73&lt;/td&gt;&lt;td&gt;58&lt;/td&gt;&lt;td&gt;$129.19&lt;/td&gt;&lt;td&gt;39%&lt;/td&gt;&lt;td&gt;Jan 20, 2014 10:11 AM&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3&gt;Reflow   columnSelector widget&lt;/h3&gt;
+&lt;!-- This selector markup is completely customizable --&gt;
+&lt;div class=&quot;columnSelectorWrapper&quot;&gt;
+  &lt;input id=&quot;colSelect1&quot; type=&quot;checkbox&quot; class=&quot;hidden&quot;&gt;
+  &lt;label class=&quot;columnSelectorButton&quot; for=&quot;colSelect1&quot;&gt;Column&lt;/label&gt;
+  &lt;div id=&quot;columnSelector&quot; class=&quot;columnSelector&quot;&gt;
+    &lt;!-- this div is where the column selector is added --&gt;
+  &lt;/div&gt;
+&lt;/div&gt; (When &quot;Auto&quot; is set, the table becomes responsive; resize the browser window to see it work)
+
+&lt;table id=&quot;table2&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th data-priority=&quot;critical&quot;&gt;Name&lt;/th&gt;
+      &lt;th data-priority=&quot;critical&quot;&gt;Major&lt;/th&gt;
+      &lt;th data-priority=&quot;6&quot; data-name=&quot;Gender&quot;&gt;Sex&lt;/th&gt;
+      &lt;th data-priority=&quot;4&quot;&gt;English&lt;/th&gt;
+      &lt;th data-priority=&quot;5&quot;&gt;Japanese&lt;/th&gt;
+      &lt;th data-priority=&quot;3&quot;&gt;Calculus&lt;/th&gt;
+      &lt;th data-priority=&quot;2&quot;&gt;Geometry&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Major&lt;/th&gt;&lt;th&gt;Sex&lt;/th&gt;&lt;th&gt;English&lt;/th&gt;&lt;th&gt;Japanese&lt;/th&gt;&lt;th&gt;Calculus&lt;/th&gt;&lt;th&gt;Geometry&lt;/th&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Student03&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;td&gt;95&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student04&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;60&lt;/td&gt;&lt;td&gt;55&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student05&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;68&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;95&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student12&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;75&lt;/td&gt;&lt;td&gt;70&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student13&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student14&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;50&lt;/td&gt;&lt;td&gt;45&lt;/td&gt;&lt;td&gt;55&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student15&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;95&lt;/td&gt;&lt;td&gt;35&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student16&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;50&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;td&gt;70&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student17&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;female&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;55&lt;/td&gt;&lt;td&gt;65&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student18&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;td&gt;49&lt;/td&gt;&lt;td&gt;55&lt;/td&gt;&lt;td&gt;75&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student19&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;68&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;td&gt;88&lt;/td&gt;&lt;td&gt;70&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student20&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;40&lt;/td&gt;&lt;td&gt;45&lt;/td&gt;&lt;td&gt;40&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student01&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;70&lt;/td&gt;&lt;td&gt;75&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student02&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;td&gt;88&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student06&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;99&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student07&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;td&gt;68&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student08&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student09&lt;/td&gt;&lt;td&gt;Mathematics&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;50&lt;/td&gt;&lt;td&gt;65&lt;/td&gt;&lt;td&gt;75&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student10&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;90&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Student11&lt;/td&gt;&lt;td&gt;Languages&lt;/td&gt;&lt;td&gt;male&lt;/td&gt;&lt;td&gt;86&lt;/td&gt;&lt;td&gt;85&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;td&gt;100&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3&gt;Reflow2 widget (multiple thead rows)&lt;/h3&gt;
+&lt;table id=&quot;table3&quot;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th class=&quot;ui-table-reflow-ignore sorter-false&quot;&gt;Paris&lt;/th&gt;
+      &lt;th colspan=&quot;2&quot;&gt;Average Temperatures (C)&lt;/th&gt;
+      &lt;th colspan=&quot;2&quot;&gt;Average Rainfall&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Month&lt;/th&gt;
+      &lt;th&gt;Minimum Temp&lt;/th&gt;
+      &lt;th&gt;Maximum Temp&lt;/th&gt;
+      &lt;th&gt;Precipitaion (mm)&lt;/th&gt;
+      &lt;th&gt;Rainfall Days&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;th&gt;Jaunuary&lt;/th&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;17.8&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;February&lt;/th&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;21.7&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;March&lt;/th&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;13&lt;/td&gt;&lt;td&gt;24.2&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;April&lt;/th&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;15&lt;/td&gt;&lt;td&gt;24.6&lt;/td&gt;&lt;td&gt;11&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;May&lt;/th&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;20&lt;/td&gt;&lt;td&gt;26.2&lt;/td&gt;&lt;td&gt;10&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;June&lt;/th&gt;&lt;td&gt;13&lt;/td&gt;&lt;td&gt;23&lt;/td&gt;&lt;td&gt;25.1&lt;/td&gt;&lt;td&gt;9&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;July&lt;/th&gt;&lt;td&gt;15&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;21.7&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;August&lt;/th&gt;&lt;td&gt;15&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;21.4&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;September&lt;/th&gt;&lt;td&gt;11&lt;/td&gt;&lt;td&gt;21&lt;/td&gt;&lt;td&gt;15.6&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;October&lt;/th&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;17&lt;/td&gt;&lt;td&gt;25.3&lt;/td&gt;&lt;td&gt;11&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;November&lt;/th&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;11&lt;/td&gt;&lt;td&gt;22.4&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;December&lt;/th&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;26.6&lt;/td&gt;&lt;td&gt;12&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
 	</div>
 
 	<h1>Javascript</h1>
-	<div id="javascript">
-		<pre class="prettyprint lang-js"></pre>
+	<div>
+		<pre class="prettyprint lang-js">$(function() {
+
+	// simple reflow widget (table with 1 header row)
+	$("#table1").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow'],
+		widgetOptions : {
+			// class name added to make it responsive (class name within media query)
+			reflow_className    : 'ui-table-reflow',
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name',
+			// data attribute added to each tbody cell
+			// it contains the header cell text, visible upon reflow
+			reflow_dataAttrib   : 'data-title'
+		}
+	});
+
+	// simple reflow widget + columnSelector & stickyHeaders widgets
+	$("#table2").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow', 'columnSelector', 'stickyHeaders'],
+		widgetOptions : {
+			// target the column selector markup
+			columnSelector_container : $('#columnSelector'),
+			// data attribute containing column name to use in the selector container
+			// make it use the same as reflow_headerAttrib
+			columnSelector_name : 'data-name',
+
+			// header attribute containing modified header name
+			reflow_headerAttrib : 'data-name'
+		}
+	});
+
+	// reflow2 widget (table with multiple header rows)
+	$("#table3").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'reflow2'],
+		widgetOptions: {
+			// class name added to make it responsive (class name within media query)
+			reflow2_className    : 'ui-table-reflow',
+			// ignore header cell content with this class name
+			reflow2_classIgnore  : 'ui-table-reflow-ignore',
+			// header attribute containing modified header name
+			reflow2_headerAttrib : 'data-name',
+			// class name applied to thead labels
+			reflow2_labelClass   : 'ui-table-cell-label',
+			// class name applied to first row thead label
+			reflow2_labelTop     : 'ui-table-cell-label-top'
+		}
+	});
+
+});</pre>
 	</div>
 
 </div>
