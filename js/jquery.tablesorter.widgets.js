@@ -905,11 +905,14 @@ ts.filter = {
 			// $rows = $tbody.children('tr').not(c.selectorRemove);
 			columnIndex = c.columns;
 			// convert stored rows into a jQuery object
-			$rows = true ? $( $.map(c.cache[tbodyIndex].normalized, function(el){ return el[columnIndex].$row.get(); }) ) : $tbody.children('tr').not(c.selectorRemove);
-			len = $rows.length;
+			$rows = $( $.map(c.cache[tbodyIndex].normalized, function(el){ return el[columnIndex].$row.get(); }) );
+
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
 				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
 			} else {
+				// filter out child rows
+				$rows = $rows.not('.' + c.cssChildRow);
+				len = $rows.length;
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = true;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
@@ -928,7 +931,7 @@ ts.filter = {
 						// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
 						!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) && 
 						// if filtering using a select without a "filter-match" class (exact match) - fixes #593
-						!( val !== '' && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
+						!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
 				}
 				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
 				// can't search when all rows are hidden - this happens when looking for exact matches
