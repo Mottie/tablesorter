@@ -47,6 +47,15 @@ tsColSel = ts.columnSelector = {
 			tsColSel.updateCols(c, wo);
 		}
 
+		c.$table
+			.off('refreshColumnSelector' + namespace)
+			.on('refreshColumnSelector' + namespace, function(){
+				// make sure we're using current config settings
+				var c = this.config;
+				tsColSel.updateBreakpoints(c, c.widgetOptions);
+				tsColSel.updateCols(c, c.widgetOptions);
+			});
+
 	},
 
 	setupSelector: function(table, c, wo) {
@@ -115,8 +124,8 @@ tsColSel = ts.columnSelector = {
 			wo.columnSelector_breakpoints.sort();
 			tsColSel.updateBreakpoints(c, wo);
 			c.$table
-				.off('updateAll refreshColumnSelector '.split(' ').join(namespace + ' '))
-				.on('updateAll refreshColumnSelector '.split(' ').join(namespace + ' '), function(){
+				.off('updateAll' + namespace)
+				.on('updateAll' + namespace, function(){
 					tsColSel.updateBreakpoints(c, wo);
 					tsColSel.updateCols(c, wo);
 				});
