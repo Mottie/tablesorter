@@ -5,10 +5,11 @@
 <title>jQuery plugin: Tablesorter 2.0</title>
 
 <!-- jQuery -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="js/jquery-latest.min.js"></script>
 
 <!-- Demo stuff -->
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
@@ -360,7 +361,7 @@
 				<li><a href="example-option-sort-key.html">Change the default multi-sorting key</a> (<a href="#sortmultisortkey"><code>sortMultiSortKey</code></a>)</li>
 				<li><a href="example-option-custom-sort.html">Custom sort script</a> (<a href="#textsorter"><code>textSorter</code></a>; added v2.2; updated <span class="version updated">v2.12</span>)</li>
 				<li><a href="example-locale-sort.html">Sorting Accented Characters</a> (<a href="#sortlocalecompare"><code>sortLocaleCompare</code></a>; v2.24; <a href="https://github.com/Mottie/tablesorter/wiki/Language">languages</a>)</li>
-				<li><a href="example-trigger-sort.html">Sort table using a link outside the table</a> (external link; <span class="updated version">v2.16.5</span>)</li>
+				<li><a href="example-trigger-sort.html">Sort table using a link outside the table</a> (external link; <span class="updated version">v2.17.0</span>)</li>
 				<li><a href="example-child-rows.html">Attach child rows (rows that sort with their parent row)</a> (<span class="updated version">v2.15.12</span>)</li>
 				<li><a href="example-child-rows-filtered.html">Use child rows + filter widget</a> (<span class="updated version">v2.15.12</span>)</li>
 				<li><a href="example-multiple-tbodies.html">Sorting with Multiple Tbodies</a> (v2.2)</li>
@@ -488,7 +489,7 @@
 		<li><a href="example-widget-header-titles.html">Header titles widget</a> (v2.15.6; <span class="version updated">2.15.7</span>)</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.16.2</span>).</li>
 		<li>
-			<span class="label label-info">Beta</span> <a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.16.5</span>)
+			<span class="label label-info">Beta</span> <a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.0</span>)
 			<br><br>
 		</li>
 
@@ -498,7 +499,7 @@
 			<br>
 		</li>
 
-		<li><span class="label label-info">Beta</span> <a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.16.5</span>)</li>
+		<li><span class="label label-info">Beta</span> <a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.17.0</span>)</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>)</li>
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.9</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.15.12</span>)</li>
@@ -1348,10 +1349,10 @@ From the example function above, you'll end up with something similar to this HT
 				<td><a href="#" class="permalink">textExtraction</a></td>
 				<td>String Or Function</td>
 				<td>&quot;basic&quot;</td>
-				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.16.5</span>)
+				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.17.0</span>)
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.16.5</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
 					<br>
 					As of version 2.16.0,
 					<ul>
@@ -2012,10 +2013,10 @@ $(function(){
 				<td>Object</td>
 				<td>null</td>
 				<td>
-					Filter widget: This option allows you to add custom controls within the filter widget row (v2.7.7; <span class="version updated">v2.16.5</span>).<br>
+					Filter widget: This option allows you to add custom controls within the filter widget row (v2.7.7; <span class="version updated">v2.17.0</span>).<br>
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.16.5</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
 					<br>
 					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
@@ -2067,10 +2068,10 @@ $(function(){
 				<td>Object</td>
 				<td>null</td>
 				<td>
-					Filter widget: Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions (v2.3.6; <span class="version updated">v2.16.5</span>).
+					Filter widget: Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions (v2.3.6; <span class="version updated">v2.17.0</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.16.5</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
 					<br>
 					Use the <a href="#widget-filter-functions"><code>&quot;filter_functions&quot;</code></a> option in three different ways:
 					<br>
@@ -2382,10 +2383,10 @@ $('table').trigger('search', false);</pre></div>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.16.5</span>).
+					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.17.0</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.16.5</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
 					<br>
 					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
 					<br>
@@ -3588,7 +3589,7 @@ This ajaxProcessing function must return an object with "total", "headers" and "
 
 			<tr id="resettoloadstate">
 				<td><a href="#" class="permalink">resetToLoadState</a></td>
-				<td>Use this method reset the table to it's original settings. (<span class="version">v2.16.5</span>).
+				<td>Use this method reset the table to it's original settings. (<span class="version">v2.17.0</span>).
 					<div class="collapsible">
 						Using this method will clear out any settings that have changed since the table was initialized (refreshes the entire table); so any sorting or modified widget options will be cleared.<br>
 						However, it will not clear any values that were saved to storage. This method is basically like reloading the page.

@@ -5,13 +5,13 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Output Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><!--  -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/bootstrap.min.js"></script><!--  -->
 	<link href="css/jq.css" rel="stylesheet">
 	<link href="css/prettify.css" rel="stylesheet">
 	<link href="css/tipsy.css" rel="stylesheet">
@@ -224,7 +224,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In <span class="version">v2.16.5</span>,
+				<li>In <span class="version">v2.17.0</span>,
 					<ul>
 						<li>Added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
 						<li>Added <code>output_duplicateSpans</code> option to duplicate (when <code>true</code>) colspan &amp; rowspan content across cells.</li>
@@ -408,7 +408,7 @@ line,value1,value2,value3
 						<td><a href="#" class="permalink">output_ignoreColumns</a></td>
 						<td><code>[ ]</code></td>
 						<td>
-							Add the zero-based column index to this array to ignore specific columns (<span class="version">v2.16.5</span>)
+							Add the zero-based column index to this array to ignore specific columns (<span class="version">v2.17.0</span>)
 							<div class="collapsible">
 							<br>
 							For example, to use this option to hide the first column, set it as follows:
@@ -591,10 +591,10 @@ line,value1,value2,value3
 					<tr id="output_callback">
 						<td><a href="#" class="permalink">output_callback</a></td>
 						<td>{see description}</td>
-						<td>Return <code>true</code> in this callback to continue the download or open the popup (<span class="version updated">v2.16.5</span>).
+						<td>Return <code>true</code> in this callback to continue the download or open the popup (<span class="version updated">v2.17.0</span>).
 							<div class="collapsible">
 								<br>
-								As of v2.16.5, the callback function was modified to pass two parameters:
+								As of v2.17.0, the callback function was modified to pass two parameters:
 								<ul>
 									<li><code>config</code> - the <code>table.config</code> settings.</li>
 									<li><code>data</code> - the output data as a string</li>

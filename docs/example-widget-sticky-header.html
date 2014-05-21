@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Sticky Header Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+	<script src="js/jquery-1.4.4.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -14,16 +14,16 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: theme -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css">
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link class="ui-theme" rel="stylesheet" href="../css/theme.jui.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.default.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.blue.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.green.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.grey.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.ice.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.black-ice.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.dark.css">
-	<link class="theme" rel="stylesheet" href="../css/theme.dropbox.css">
+	<link class="theme default" rel="stylesheet" href="../css/theme.default.css">
+	<link class="theme blue" rel="stylesheet" href="../css/theme.blue.css">
+	<link class="theme green" rel="stylesheet" href="../css/theme.green.css">
+	<link class="theme grey" rel="stylesheet" href="../css/theme.grey.css">
+	<link class="theme ice" rel="stylesheet" href="../css/theme.ice.css">
+	<link class="theme black-ice" rel="stylesheet" href="../css/theme.black-ice.css">
+	<link class="theme dark" rel="stylesheet" href="../css/theme.dark.css">
+	<link class="theme dropbox" rel="stylesheet" href="../css/theme.dropbox.css">
 
 	<style id="css">/* wrapper of table 2 */
 .wrapper {
@@ -95,12 +95,12 @@ $(function() {
 		.append(o)
 		.change(function(){
 			var theme = $(this).val().toLowerCase(),
-				name = theme === 'jui' ? 'ui' : 'theme.' + theme,
+				name = theme === 'jui' ? 'ui-theme' : theme,
 				// ui-theme is added by the themeswitcher
 				files = $('link.theme, link.ui-theme').each(function(){
 					this.disabled = true;
 				})
-			files.filter('[href$="' + name + '.css"]').each(function(){
+			files.filter('.' + name).each(function(){
 				this.disabled = false;
 			});
 			$('table')

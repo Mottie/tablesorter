@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Sort table using a link outside the table</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -99,7 +99,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>In <span class="version">v2.16.5</span>, added sorton values (a)scending, (d)escending, (n)ext, (s)ame &amp; (o)pposite. Use the demo below help understand how to use these settings.</li>
+			<li>In <span class="version">v2.17.0</span>, added sorton values (a)scending, (d)escending, (n)ext, (s)ame &amp; (o)pposite. Use the demo below help understand how to use these settings.</li>
 			<li>In v2.9, a "sort" event can be triggered on the header cell to toggle the sort.</li>
 		</ul>
 	</p>
@@ -121,7 +121,7 @@ Basic Asc/Desc sort
 		<button data-sort="[[0,0]]">Asc</button> (<code>[[0,0]]</code>) <button data-sort='[[0,"a"],[1,"d"]]'>Asc/Desc</button> (<code>[[0,"a"],[1,"d"]]</code>)<br>
 		<button data-sort="[[0,1]]">Desc</button> (<code>[[0,1]]</code>) <button data-sort='[[0,"d"],[1,"a"]]'>Desc/Asc</button> (<code>[[0,"d"],[1,"a"]]</code>)
 		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
-		<small>* <code>"a"</code> &amp; <code>"d"</code> values added <span class="version">v2.16.5</span>.</small>
+		<small>* <code>"a"</code> &amp; <code>"d"</code> values added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">
 		<table id="table1" class="tablesorter">
@@ -160,7 +160,7 @@ Toggle Sort (Next)
 		<button data-sort='[[0,"n"]]'>Asc/Desc</button> (<code>[[0,"n"]]</code>)<br>
 		<button data-sort='[[0,"n"],[1,"n"]]'>Asc/Desc</button> (<code>[[0,"n"],[1,"n"]]</code>; columns are independent)
 		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
-		<small>* <code>"n"</code> value added <span class="version">v2.16.5</span>.</small>
+		<small>* <code>"n"</code> value added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">
 		<table id="table2" class="tablesorter">
@@ -200,7 +200,7 @@ Sort Same/Opposite
 		<button data-sort='[[0,"n"],[1,"o"],[2,"s"]]'>Next/opposite/same</button> (<code>[[0,"n"],[1,"o"],[2,"s"]]</code>)<br>
 		<button data-sort='[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]'>Next/opposite/same/opposite</button> (<code>[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]</code>)
 		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
-		<small>* <code>"s"</code> &amp; <code>"o"</code> values added <span class="version">v2.16.5</span>.</small>
+		<small>* <code>"s"</code> &amp; <code>"o"</code> values added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">
 		<table id="table3" class="tablesorter">

@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - showProcessing & Filter events</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script src="js/jquery-1.4.4.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link rel="stylesheet" href="css/jq.css">
@@ -38,8 +38,10 @@
 		if (e.type === 'filterStart') {
 			start = e.timeStamp;
 			t = '<li>Filter Started: [' + filter + ']</li>';
-		} else {
+		} else if (start) {
 			t = '<li>Filter Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>';
+		} else {
+			return;
 		}
 		$("#display").append(t).find('li:first').remove();
 	});
@@ -62,6 +64,14 @@
 </div>
 
 <div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>As of <span class="version">v2.16.3</span>, there is a built-in 500 millisecond delay before the processing icon will show. If the sort has completed within that time, the icon will not appear.</li>
+			<li>There is an issue with the processing icon not appearing at all, or the animation appears frozen when processing data in very large tables. This is due to javascript only being able to process one thread at-a-time; If you know of a solution or work-around please <a href="https://github.com/Mottie/tablesorter/issues/158">add a comment</a> or contribute a fix!</li>
+		</ul>
+	</p>
 
 	<h1>Javascript</h1>
 	<div id="javascript">

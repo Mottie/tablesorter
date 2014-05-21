@@ -5,11 +5,11 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Functions</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -40,7 +40,6 @@
 
 			filters.val(''); // clear all filters
 			filters.eq(col).val(txt).trigger('search', false);
-
 			return false;
 		});
 
@@ -158,7 +157,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In <span class="version updated">v2.16.5</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
+				<li>In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
 				<li>In <span class="version">v2.16.3</span>,
 					<ul>
 						<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort.</li>

@@ -5,19 +5,17 @@
 	<title>jQuery plugin: Tablesorter 2.0 - CSS Sticky Header Widget</title>
 
 	<!-- jQuery -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: theme -->
-	<link class="ui-theme" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.css">
-	<link class="ui-theme" rel="stylesheet" href="../css/theme.jui.css">
 	<link class="theme" rel="stylesheet" href="../css/theme.default.css">
 	<link class="theme" rel="stylesheet" href="../css/theme.blue.css">
 	<link class="theme" rel="stylesheet" href="../css/theme.green.css">
@@ -47,7 +45,7 @@
 		showProcessing: true,
 		headerTemplate: '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-		widgets: [ 'uitheme', 'zebra', 'cssStickyHeaders', 'filter' ],
+		widgets: [ 'zebra', 'cssStickyHeaders', 'filter' ],
 
 		widgetOptions: {
 			cssStickyHeaders_offset        : 0,
@@ -68,7 +66,7 @@
 });</script>
 <script>
 $(function() {
-	$('link.theme, link.ui-theme').each(function(){ this.disabled = true; });
+	$('link.theme').each(function(){ this.disabled = true; });
 
 	var themes = 'default blue green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
@@ -80,12 +78,10 @@ $(function() {
 		.append(o)
 		.change(function(){
 			var theme = $(this).val().toLowerCase(),
-				name = theme === 'jui' ? 'ui' : 'theme.' + theme,
-				// ui-theme is added by the themeswitcher
-				files = $('link.theme, link.ui-theme').each(function(){
+				files = $('link.theme').each(function(){
 					this.disabled = true;
 				})
-			files.filter('[href$="' + name + '.css"]').each(function(){
+			files.filter('[href$="theme.' + theme + '.css"]').each(function(){
 				this.disabled = false;
 			});
 			$('table')
@@ -149,9 +145,7 @@ $(function() {
 
 	<h1>Demo</h1>
 	Choose Theme:
-	<select>
-		<option value="jui">Jquery UI</option>
-	</select>
+	<select></select>
 	<br><br>
 	<h1>Attach sticky header to browser window</h1>
 	<table id="table1" class="tablesorter">
