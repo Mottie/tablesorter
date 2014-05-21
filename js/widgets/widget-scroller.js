@@ -116,7 +116,7 @@ ts.addWidget({
 
 			// look for filter widget
 			if ($tbl.hasClass('hasFilters')) {
-				ts.filter.bindSearch( $tbl, $cells.find('.' + ts.css.filter) );
+				ts.filter.bindSearch( $tbl, $hdr.find('.' + ts.css.filter) );
 			}
 
 			resize = function(){
