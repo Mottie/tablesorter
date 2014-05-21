@@ -96,7 +96,7 @@
 		},
 
 		recalculate : function(table, c, wo, init){
-			if (c && !wo.math_isUpdating) {
+			if (c && (!wo.math_isUpdating || init)) {
 
 				// add data-column attributes to all table cells
 				if (init) {
@@ -375,8 +375,9 @@
 		init : function(table, thisWidget, c, wo){
 			c.$table
 				.bind('tablesorter-initialized update updateRows addRows updateCell filterReset filterEnd '.split(' ').join('.tsmath '), function(e){
-					if (!wo.math_isUpdating) {
-						math.recalculate(table, c, wo, e.type === 'tablesorter-initialized');
+					var init = e.type === 'tablesorter-initialized';
+					if (!wo.math_isUpdating || init) {
+						math.recalculate( table, c, wo, init );
 					}
 				})
 				.bind('updateComplete.tsmath', function(){
