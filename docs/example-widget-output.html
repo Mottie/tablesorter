@@ -117,30 +117,30 @@
 			widgetOptions : {
 				filter_filteredRow  : 'filtered',
 				filter_reset        : demos[groupIndex] + ' .reset',
-
-				output_separator    : ',',         // ',' 'json', 'array' or separator (e.g. ',')
-				output_ignoreColumns: [],          // columns to ignore [0, 1,... ] (zero-based index)
-				output_dataAttrib   : 'data-name', // data-attribute containing alternate cell text
-				output_headerRows   : true,        // output all header rows (multiple rows)
-				output_delivery     : 'p',         // (p)opup, (d)ownload
-				output_saveRows     : 'f',         // (a)ll, (f)iltered or (v)isible
-				output_replaceQuote : '\u201c;',   // change quote to left double quote
-				output_includeHTML  : true,        // output includes all cell HTML (except the header cells)
-				output_trimSpaces   : false,       // remove extra white-space characters from beginning & end
-				output_wrapQuotes   : false,       // wrap every cell output in quotes
-				output_popupStyle   : 'width=580,height=310',
-				output_saveFileName : 'mytable.csv',
+				output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ',')
+				output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+				output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
+				output_headerRows    : true,        // output all header rows (multiple rows)
+				output_delivery      : 'p',         // (p)opup, (d)ownload
+				output_saveRows      : 'f',         // (a)ll, (f)iltered or (v)isible
+				output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
+				output_replaceQuote  : '\u201c;',   // change quote to left double quote
+				output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
+				output_trimSpaces    : false,       // remove extra white-space characters from beginning & end
+				output_wrapQuotes    : false,       // wrap every cell output in quotes
+				output_popupStyle    : 'width=580,height=310',
+				output_saveFileName  : 'mytable.csv',
 				// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
-				output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
+				output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
 				// callback executed when processing completes
 				// return true to continue download/output
 				// return false to stop delivery & do something else with the data
-				output_callback     : function(config, data) { return true; },
+				output_callback      : function(config, data) { return true; },
 				// output data type (with BOM or Windows-1252 is needed for excel)
 				// NO BOM   : 'data:text/csv;charset=utf8,'
 				// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
 				// WIN 1252 : 'data:text/csv;charset=windows-1252'
-				output_encoding     : 'data:text/csv;charset=utf8,'
+				output_encoding      : 'data:text/csv;charset=utf8,'
 
 			}
 		});
@@ -224,7 +224,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
-				<li>In <span class="version">v2.16.5</span>, added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
+				<li>In <span class="version">v2.16.5</span>,
+					<ul>
+						<li>Added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
+						<li>Added <code>output_duplicateSpans</code> option to duplicate (when <code>true</code>) colspan &amp; rowspan content across cells.</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.16.4</span>, added the <code>output_encoding</code> option.<br><br></li>
 				<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 				<li>This widget can output the table data to:
@@ -474,6 +479,28 @@ line,value1,value2,value3
 							When setting this option, only the first letter is required (<code>'f'</code>, <code>'v'</code> or <code>'a'</code>) :
 							<br>
 							<pre class="prettyprint lang-js">output_saveRows : 'f'</pre>
+							</div>
+						</td>
+					</tr>
+					<tr id="output_duplicatespans">
+						<td><a href="#" class="permalink">output_duplicateSpans</a></td>
+						<td><code>true</code></td>
+						<td>
+							When <code>true</code>, colspan &amp; rowspan content is duplicated in the output
+							<div class="collapsible">
+							<br>
+							By default, any <em>tbody</em> cells that are included in the colspan or rowspan will have the cell's content duplicated in the output. When set to <code>false</code>, the cells within the colspan or rowspan will be empty.<br>
+							Here is an example of the second table output with this option set to <code>false</code>:
+							<pre class="prettyprint lang-js">line,values,values,values
+line,value1,value2,value3
+1,1.1,1.2,1.3
+,1.4,1.5,
+2,2.1,2.2,2.3
+,2.4,2.5,
+3,3.1,3.2,3.3
+,3.4,3.5,
+4,4.1,,4.2
+,,,4.3</pre>This option does not affect thead cells, they will always have duplicated content.
 							</div>
 						</td>
 					</tr>
