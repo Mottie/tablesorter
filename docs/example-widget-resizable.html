@@ -21,9 +21,16 @@
 	<!-- Tablesorter: optional -->
 	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
 
-	<style>
-	th.tablesorter-header.resizable-false { background-color: #e6bf99; }
-	</style>
+	<style id="css">th.tablesorter-header.resizable-false {
+	background-color: #e6bf99;
+}
+/* ensure box-sizing is set to content-box, if using jQuery versions older than 1.8;
+ this page is using jQuery 1.4 */
+*, *:before, *:after {
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}</style>
 
 <script id="js">$(function() {
 
@@ -63,6 +70,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
 			<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
 			<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
@@ -208,6 +216,11 @@
 
 &lt;!-- tablesorter widget file - loaded after the plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
 	</div>
 
 	<h1>Javascript</h1>
