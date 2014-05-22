@@ -131,7 +131,6 @@ tsp = ts.pager = {
 				filteredPages: 0,
 				currentFilters: [],
 				page: wo.pager_startPage,
-				size: wo.pager_size,
 				startRow: 0,
 				endRow: 0,
 				ajaxCounter: 0,
@@ -147,6 +146,7 @@ tsp = ts.pager = {
 			ts.log('Pager initializing');
 		}
 
+		p.size = $.data(table, 'pagerLastSize') || wo.pager_size;
 		// added in case the pager is reinitialized after being destroyed.
 		p.$container = $(s.container).addClass(wo.pager_css.container).show();
 		// goto selector
@@ -246,6 +246,11 @@ tsp = ts.pager = {
 			})
 			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 				e.stopPropagation();
+				tsp.fixHeight(table, c);
+				var $rows = c.$tbodies.eq(0).children();
+				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
+				p.totalPages = Math.ceil( p.totalRows / p.size );
+				tsp.updatePageDisplay(table, c);
 				tsp.hideRows(table, c);
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');

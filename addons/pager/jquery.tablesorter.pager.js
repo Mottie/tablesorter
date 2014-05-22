@@ -726,6 +726,11 @@
 					})
 					.bind('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 						e.stopPropagation();
+						fixHeight(table, p);
+						var $rows = c.$tbodies.eq(0).children();
+						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
+						p.totalPages = Math.ceil( p.totalRows / p.size );
+						updatePageDisplay(table, p);
 						hideRows(table, p);
 					})
 					.bind('pageSize.pager', function(e,v){
