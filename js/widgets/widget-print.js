@@ -1,4 +1,4 @@
-/* Print widget (beta) for TableSorter 5/5/2014 (v2.16.4)
+/* Print widget (beta) for TableSorter 5/22/2014 (v2.17.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  */
 /*jshint browser:true, jquery:true, unused:false */

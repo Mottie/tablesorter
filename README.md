@@ -60,6 +60,123 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.0">Version 2.17.0</a> (5/22/2014)
+
+* Overall
+  * You can now target a column using a jQuery selector targeting the header cell (e.g. a class name, id or column index, as before).
+  * This works with the core options: `headers`, `textExtraction`.
+  * This also works with the widgets: `filter_formatter`, `filter_functions`, `filter_selectSource` and the `headers` options for `filter` & `resizable`.
+  * This change has *not yet been implemented* to the following options: `textSorter`, `sortList`, `sortForce`, `sortAppend` and `numberSorter` (will modify this option to target columns soon).
+  * What **won't work** is if you try to target the header using a filtering selector that uses an index, e.g. `"th:eq()"`, `":gt()"`, `":lt()"`, `":first"`, `":last"`, `":even"` or `":odd"`, `":first-child"`, `":last-child"`, `":nth-child()"`, `":nth-last-child()"`, etc.
+
+* Docs
+  * Switch from using CDN versions of jQuery, jQuery UI, Bootstrap, Sugar and Select2 instead of using [protocol-relative URLs](http://www.paulirish.com/2010/the-protocol-relative-url/) because they are a pain to use locally.
+  * Change style of "Update" tags to be slightly lighter than "New" tags.
+  * Updated [reflow widget demo](http://mottie.github.io/tablesorter/docs/example-widget-reflow.html) with demo tables in a resizable iframe, so the browser window no longer needs to be resized.
+  * Miscellaneous updates including correcting some version numbers, fixing links &amp; other issues with the demos.
+
+* Themes
+  * Fix green theme to properly include a background with the css3 sticky headers widget.
+
+* Core
+  * Instead of using empty or clearing rows from the table, the rows are now detached. This also applies to the pager.
+  * Added `resetToLoadState` method
+    * Using this method will clear out any settings that have changed since the table was initialized (refreshes the entire table); so any sorting or modified widget options will be cleared.
+    * However, it will not clear any values that were saved to storage. This method is basically like reloading the page.
+  * Refer to columns in the `headers` and/or `textExtraction` option by class name, ID, or column index (as before).
+
+    ```js
+    headers : {
+        '.first-name' : { sorter: 'text' },
+        '.disabled'   : { sorter: false }
+    },
+    textExtraction : {
+        '.styled' : function(node, table, cellIndex) {
+            return $(node).find('strong').text();
+        }
+    }
+    ```
+
+  * Added new "sorton" method values: "a" (ascending), "d" (descending), "n" (next), "s" (same) &amp; "o" (opposite).
+
+    ```js
+    // column 0: desc sort, column 1: asc sort
+    $("#table1").trigger("sorton", [ [[0,"d"],[1,"a"]] ]);
+    // column 0: next sort, column 1: opposite of column 0, column 2: same as column 0
+    $("#table2").trigger("sorton", [ [[0,"n"],[1,"o"],[2,"s"]] ]);
+    ```
+
+    Please refer to the [Sort table using a link outside the table](http://mottie.github.io/tablesorter/docs/example-trigger-sort.html) demo for more details.
+
+
+* ColumnSelector widget
+  * Added a method to refresh the selected columns using `$('table').trigger('refreshColumnSelector');`.
+  * Fix a js error when removing the widget.
+
+* Filter widget
+  * Fix child row filtering.
+  * Fix `filter-match` searches.
+  * Set filter parser or disable a filter in the `headers` option by referring to the header class name, ID, or column index (as before)
+
+    ```js
+    headers : {
+        '.first-name' : { filter : false },
+        '.last-name'  : { filter : 'parsed' }
+    }
+    ```
+
+  * Refer to `filter_functions`, `filter_formatter` and `filter_selectSource` columns by class name, ID, or column index (as before)
+
+    ```js
+    filter_functions : {
+        ".col-date" : {
+            "< 2004" : function (e, n, f, i) {
+                return n < Date.UTC(2004, 0, 1); // < Jan 1 2004
+            },
+            ...
+        }
+    },
+    filter_formatter : {
+        ".col-value" : function($cell, indx){
+          return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
+            ...
+        }
+    },
+    filter_selectSource : {
+        ".model-number" : [ "abc", "def", "ghi", "xyz" ]
+    }
+    ```
+
+* Math widget
+  * Now works properly with the pager. Fixes [issue #621](https://github.com/Mottie/tablesorter/issues/621).
+
+* Output widget
+  * Add `output_ignoreColumns` option. Set the zero-based index of the columns to ignore in this array. Fixes [issue #607](https://github.com/Mottie/tablesorter/issues/607)
+  * Add `config` parameter to `output_callback` function. NOTE: this parameter is added before the data parameter, so it may break any already existing custom callback functions.
+  * Add `output_duplicateSpans` option. Setting this option to `false` adds blank entries instead of duplicating the colspan or rowspan content. Fixes [issue #619](https://github.com/Mottie/tablesorter/issues/619).
+
+* Pager (addon &amp; widget)
+  * Use detach instead of empty on tbody rows. This should save any data associated with the rows.
+  * Fix pager updating not showing correct totals.
+
+* Print widget
+  * Add `print_callback` option allowing manipulation of the table & stylesheet before printing.
+  * Corrected the `print_columns` settings comments.
+
+* Resizable widget
+  * Disable a resizable header within the `headers` option by referring to the column class name, ID, or column index (as before)
+
+    ```js
+    headers : {
+        '.first-name' : { resizable: false }
+    }
+    ```
+
+  * Added note about using box-sizing &amp; jQuery versions older than 1.8.
+
+* Scroller widget
+  * Filter widget works with this widget again. Fixes [issue #620](https://github.com/Mottie/tablesorter/issues/620).
+
 #### <a name="v2.16.4">Version 2.16.4</a> (5/5/2014)
 
 * Docs
@@ -164,27 +281,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 * Core: 
   * Fixed an issue where ajax loaded data would cause a javascript error because of improper ignoring of data.
   * Ajax loaded data will now be parsed and cached - so stuff like the grouping widget will work properly.
-
-#### <a name="v2.16.0">Version 2.16.0</a> (4/23/2014)
-
-* Docs
-  * Add notice to readme about upgrading to v2.16.
-  * Add question section to readme about where to ask questions, including the new IRC channel.
-  * Update jQuery UI accordion code to reapply widgets to tables within the section, when open.
-
-* Build widget
-  * Now works with HTML in the data
-  * Add zebra widget to demos.
-
-* Core
-  * Check more than the first tbody when detecting parsers. Fixes [issue #589](https://github.com/Mottie/tablesorter/issues/589).
-  * Apply widgets on table initialization after a short delay.
-
-* Filter widget:
-  * Fix search already filtered rows
-  * Fix `filteredRows` count &amp; cleanup.
-  * SetFilters now behaves more like a triggered search. Fixes [issue #588](https://github.com/Mottie/tablesorter/issues/588).
-  * Filterformatter - Fix both datepicker scripts to work properly with non-U.S. formats. Fixes [issue #587](https://github.com/Mottie/tablesorter/issues/587).
-
-* Pager: Now stays on the same page after updating. Fixes [issue #590](https://github.com/Mottie/tablesorter/issues/590).
-* Testing: Add some preliminary tests for the filter widget.
