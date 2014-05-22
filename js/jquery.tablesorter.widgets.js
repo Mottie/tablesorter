@@ -1195,6 +1195,8 @@ ts.filter = {
 			$filters = $filters && $filters.length ? $filters.add(wo.filter_$externalFilters) : wo.filter_$externalFilters;
 		}
 		$filters.filter('select[data-column="' + column + '"]')[ updating ? 'html' : 'append' ](options);
+		if (!wo.filter_functions) { wo.filter_functions = {}; }
+		wo.filter_functions[column] = true;
 	},
 	buildDefault: function(table, updating) {
 		var columnIndex, $header,
