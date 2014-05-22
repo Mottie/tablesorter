@@ -140,6 +140,7 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
         ".col-value" : function($cell, indx){
           return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
             ...
+          });
         }
     },
     filter_selectSource : {

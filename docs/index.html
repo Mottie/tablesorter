@@ -468,7 +468,7 @@
 		<li><a href="example-widget-build-table.html">Build Table Widget</a> (<span class="version">v2.11</span>; <span class="version updated">v2.16</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns Highlight widget</a> (v2.0.17)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.15.7</span>).</li>
+		<li><span class="label label-info">Beta</span> <a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.17.0</span>).</li>
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.13.2</span>).</li>
 		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.16.3</span>):
 			<ul>
@@ -487,15 +487,15 @@
 			</ul>
 		</li>
 		<li><a href="example-widget-header-titles.html">Header titles widget</a> (v2.15.6; <span class="version updated">2.15.7</span>)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.16.2</span>).</li>
+		<li><span class="label label-info">Beta</span> <a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.0</span>).</li>
 		<li>
 			<span class="label label-info">Beta</span> <a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.0</span>)
 			<br><br>
 		</li>
 
-		<li><a href="example-pager.html">Pager plugin</a> (<span class="version updated">v2.16</span>).</li>
+		<li><a href="example-pager.html">Pager plugin</a> (<span class="version updated">v2.17</span>).</li>
 		<li>
-			<span class="label label-info">Beta</span> Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.16</span>).<br>
+			<span class="label label-info">Beta</span> Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.17</span>).<br>
 			<br>
 		</li>
 
@@ -504,7 +504,7 @@
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.9</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.15.12</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
-		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.16.2</span>).</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.17.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.16.2</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.16.4</span>).</li>
@@ -865,7 +865,7 @@
 				<td>null</td>
 				<td>
 					An object of instructions for per-"header cell" controls in the format: <code>headers: { 0: { option: setting }, ... }</code>
-					<span class="label label-info">docs updated</span>
+					<span class="label label-info">docs updated</span> (<span class="version updated">v2.17.0</span>)
 					<div class="collapsible">
 					<br>
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
@@ -921,7 +921,13 @@
 		&lt;th colspan=&quot;2&quot; data-column=&quot;2&quot;&gt;header-index 6&lt;/th&gt;
 	&lt;/tr&gt;
 &lt;/thead&gt;</pre>
-						So, in the above example, to disable the sort of the second table column (<code>data-column</code> index of 1), the header cell of index 2 needs to be set as follows: <code>2 : { sorter : false }</code>.
+						So, in the above example, to disable the sort of the second table column (<code>data-column</code> index of 1), the header cell of index 2 needs to be set as follows: <code>2 : { sorter : false }</code>.<br>
+						<br>
+						In <span class="version updated">v2.17.0</span>, you can reference the column(s) using a class name, id or column index.
+						<pre class="prettyprint lang-js">headers : {
+    '.first-name' : { sorter: 'text' },
+    '.disabled'   : { sorter: false }
+}</pre>
 					</div>
 				</td>
 				<td>
@@ -1352,8 +1358,12 @@ From the example function above, you'll end up with something similar to this HT
 				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.17.0</span>)
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
-					<br>
+					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name, id or column index).<br>
+					<pre class="prettyprint lang-js">textExtraction : {
+    '.styled' : function(node, table, cellIndex) {
+        return $(node).find('strong').text();
+    }
+}</pre>
 					As of version 2.16.0,
 					<ul>
 						<li>The default text extraction method has been renamed and updated to get data from a data-attribute (set by the <a href="#textattribute"><code>textAttribute</code></a> option).</li>
@@ -2017,7 +2027,13 @@ $(function(){
 					<div class="collapsible">
 					<br>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
-					<br>
+					<pre class="prettyprint lang-js">filter_formatter : {
+    ".col-value" : function($cell, indx){
+      return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
+        ...
+      });
+    }
+}</pre>
 					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
 					Most of the formatter functions have an option named <code>valueToHeader</code> which, when <code>true</code> adds a span to the header cell above the filter row and updates it with the current control's value (see <a href="example-widget-filter-formatter-2.html">example 2</a>). If the option exists and is set to <code>false</code>, then the current value is added to the control's handle and css can be used to create a popup to show the current value (see <a href="example-widget-filter-formatter-1.html">example 1</a>).<br>
@@ -2072,7 +2088,14 @@ $(function(){
 					<div class="collapsible">
 					<br>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
-					<br>
+					<pre class="prettyprint lang-js">filter_functions : {
+    ".col-date" : {
+        "< 2004" : function (e, n, f, i) {
+            return n < Date.UTC(2004, 0, 1); // < Jan 1 2004
+        },
+        ...
+    }
+}</pre>
 					Use the <a href="#widget-filter-functions"><code>&quot;filter_functions&quot;</code></a> option in three different ways:
 					<br>
 					<ul>
@@ -2387,7 +2410,9 @@ $('table').trigger('search', false);</pre></div>
 					<div class="collapsible">
 					<br>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
-					<br>
+					<pre class="prettyprint lang-js">filter_selectSource : {
+    ".model-number" : [ "abc", "def", "ghi", "xyz" ]
+}</pre>
 					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
 					<br>
 					This option allows using an alternate source, or customizing options of the filter select dropdown. This option can be set as follows:
@@ -3612,7 +3637,7 @@ $('table').find('th:eq(2)').trigger('sort');</pre>Using this method will maintai
 
 			<tr id="sorton">
 				<td><a href="#" class="permalink">sorton</a></td>
-				<td>Use this method to sort an initialized table in the desired order.
+				<td>Use this method to sort an initialized table in the desired order (<span class="version updated">v2.17.0</span>)
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">// Choose a new sort order
 var sort = [[0,0],[2,0]],
@@ -3622,7 +3647,11 @@ var sort = [[0,0],[2,0]],
 // Note that the sort value below is inside of another array (inside another set of square brackets)
 // A callback method was added in 2.3.9.
 $("table").trigger("sorton", [sort, callback]);</pre>
-				<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.
+				<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.<br>
+				<br>
+				In <span class="version updated">v2.17.0</span>, the sort direction can be set using "a" (ascending), "d" (descending), "n" (next), "s" (same) &amp; "o" (opposite).
+				<pre class="prettyprint lang-js">$('table').trigger('sorton', [ [[0,"a"],[2,"n"]] ]);</pre>
+				Please try out the demo (example link) to better understand how these values work.
 					</div>
 				</td>
 				<td><a href="example-trigger-sort.html">Example</a></td>

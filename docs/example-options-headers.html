@@ -27,8 +27,8 @@
 		theme : 'blue',
 
 		headers: {
-			// disable sorting of the first column (we start counting at zero)
-			0: {
+			// disable sorting of the first column (we can use zero or the header class name)
+			'.first-name' : {
 				// disable it by setting the property sorter to false
 				sorter: false
 			}
@@ -64,7 +64,7 @@
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th>First Name</th>
+			<th class="first-name">First Name</th>
 			<th>Last Name</th>
 			<th data-sorter="false">Age</th>
 			<th>Total</th>
