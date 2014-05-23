@@ -287,6 +287,12 @@
         widgets: ['zebra', 'output']
     });
 });</pre>
+		<h4>.htaccess</h4>
+		Do not forget to set Content-disposition headers in order to make downloads work properly in IE and FF. So <code>.htaccess</code> can look like:
+		<pre class="prettyprint lang-xml">&lt;FilesMatch "\.(?i:csv|txt)$"&gt;
+    ForceType application/octet-stream
+    Header set Content-Disposition attachment
+&lt;/FilesMatch&gt;</pre>
 		</div>
 
 		<h3><a href="#">Rowspan and colspan</a></h3>
