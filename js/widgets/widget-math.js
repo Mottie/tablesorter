@@ -12,7 +12,8 @@
 
 		// get all of the row numerical values in an arry
 		getRow : function(table, wo, $el, dataAttrib) {
-			var txt,
+			var $t, txt,
+				c = table.config,
 				arry = [],
 				$row = $el.closest('tr'),
 				$cells = $row.children();
@@ -21,7 +22,11 @@
 					$cells = $cells.not('[' + dataAttrib + '=ignore]').not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
 				}
 				arry = $cells.not($el).map(function(){
-					txt = this.textContent || $(this).text();
+					$t = $(this);
+					txt = $t.attr(c.textAttribute);
+					if (typeof txt === "undefined") {
+						txt = this.textContent || $t.text();
+					}
 					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
 					return isNaN(txt) ? 0 : txt;
 				}).get();
@@ -52,7 +57,10 @@
 						if (mathAbove) {
 							i = 0;
 						} else if ($t.length) {
-							txt = $t[0].textContent || $t.text();
+							txt = $t.attr(c.textAttribute);
+							if (typeof txt === "undefined") {
+								txt = $t[0].textContent || $t.text();
+							}
 							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
@@ -63,7 +71,10 @@
 				$rows.each(function(){
 					$t = $(this).children().filter('[data-column=' + cIndex + ']');
 					if (!$(this).hasClass(filtered) && $t.not('[' + dataAttrib + '^=above],[' + dataAttrib + '^=col]').length && !$t.is($el)) {
-						txt = ($t[0] ? $t[0].textContent : '') || $t.text();
+						txt = $t.attr(c.textAttribute);
+						if (typeof txt === "undefined") {
+							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
+						}
 						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
 						arry.push(isNaN(txt) ? 0 : txt);
 					}
@@ -85,7 +96,10 @@
 						$t = $(this);
 						col = parseInt( $t.attr('data-column'), 10);
 						if (!$t.filter('[' + dataAttrib + ']').length && $.inArray(col, wo.math_ignore) < 0) {
-							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
+							txt = $t.attr(c.textAttribute);
+							if (typeof txt === "undefined") {
+								txt = ($t[0] ? $t[0].textContent : '') || $t.text();
+							}
 							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
 							arry.push(isNaN(txt) ? 0 : txt);
 						}

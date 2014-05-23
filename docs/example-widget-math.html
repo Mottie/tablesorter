@@ -181,6 +181,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.17.1</span>,
+				<ul>
+					<li>Values added to the data-attribute set by the <a href="../#textattribute"><code>textAttribute</code> option</a> will now be used in the calculation instead of the actual cell content.</li>
+					<li>The Grand Total cells now shows a higher precision value to emphasize this point.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.16.4</span>, added:
 				<ul>
 					<li>Two new options: <code>math_prefix</code> and <code>math_suffix</code>, which will be added before or after the prefix or suffix, respectively.</li>
@@ -513,7 +519,7 @@ BAD => No minus (-) here! $#,###.00 or [-] here either <= BAD</textarea>
 		</tr>
 		<tr>
 			<th colspan="5">Grand Total</th>
-			<th data-math="all-sum" data-math-mask="##0.00">all-sum</th>
+			<th data-math="all-sum" data-math-mask="##0.0000">all-sum</th>
 		</tr>
 	</tfoot>
 
@@ -536,8 +542,8 @@ BAD => No minus (-) here! $#,###.00 or [-] here either <= BAD</textarea>
 
 	<tbody>
 		<tr><th>North</th><td>Joseph</td><td>$ 3,643</td><td>$ 5,846</td><td>$ 6,574</td><td class="totals" data-math="row-sum">row-sum</td></tr>
-		<tr><th>North</th><td>Lawrence</td><td>$ 4,456</td><td>$ 6,658</td><td>$ 7,685</td><td class="totals" data-math="row-sum">row-sum</td></tr>
-		<tr><th>North</th><td>Maria</td><td>$ 6,235</td><td>$ 4,616.99</td><td>$ 3,612.33</td><td class="totals" data-math="row-sum">row-sum</td></tr>
+		<tr><th>North</th><td>Lawrence</td><td>$ 4,456</td><td>$ 6,658</td><td data-text="$ 7,685.0049">$ 7,685</td><td class="totals" data-math="row-sum">row-sum</td></tr>
+		<tr><th>North</th><td>Maria</td><td>$ 6,235</td><td>$ 4,616.99</td><td data-text="3612.3267">$ 3,612.33</td><td class="totals" data-math="row-sum">row-sum</td></tr>
 		<tr><th>North</th><td>Matt</td><td>$ 3,868</td><td>$ 3,926</td><td>$ 3,254</td><td class="totals" data-math="row-sum">row-sum</td></tr>
 	</tbody>
 
