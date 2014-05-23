@@ -13,9 +13,11 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<script src="js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/tipsy.css" rel="stylesheet">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
+	<script src="js/jquery.tipsy.min.js"></script>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
@@ -76,25 +78,63 @@
 		color: #ddd;
 	}
 	#table1, #table2, #table3 {
-		max-width: 98%;
-		width: 1000px;
-		height: 410px;
+		max-width: 100%;
 	}
 	iframe {
-		width: 99%;
+		width: 100%;
 		height: 100%;
 		border: 0;
 	}
-	.ui-resizable-e {
-		background: #eee;
+	.sizes, .toggle {
+		display: inline-block;
+		height: 30px;
+		vertical-align: text-bottom;
 	}
-	.ui-resizable-e:after {
-		content: '\2190 Resize';
-		font-size: 14px;
-		position: relative;
-		top: 50%;
-		left: 10px;
+	.resize-frame {
+		list-style: none;
+		width: 250px;
+		height: 35px;
+		cursor: pointer;
+		padding: 5px;
+		margin: 0;
+		display: inline-block;
 	}
+	.resize-frame li {
+		background-image: url(img/screens.png);
+		background-repeat: no-repeat;
+		width: 35px;
+		height: 28px;
+		margin: 0;
+		padding: 0;
+		display: inline-block;
+	}
+	.resize-frame li:hover, .resize-frame li.active {
+		color: #00488c;
+		background-color: #eee;
+		background-image: url(img/screens-blue.png);
+		border-radius: 3px;
+	}
+	.resize-frame li.setauto {
+		vertical-align: top;
+		background-image: none;
+		font-weight: bold;
+		font-family: Menlo, Monaco, Consolas, monospace;
+		font-size: 12px;
+		text-indent: 4px;
+		padding-top: 4px;
+	}
+	.setdktp { background-position: 0 2px; }
+	.settbll { background-position: -35px 2px; }
+	.settblp { background-position: -70px 2px; }
+	.setsmtl { background-position: -105px 2px; }
+	.setsmtp { background-position: -142px 2px; }
+
+	.full     { width: 100%;   height: 420px; } /* full browser */
+	.desktop  { width: 1440px; height: 420px; } /* desktop 1440x1024 */
+	.tablet-l { width: 1024px; height: 420px; } /* tablet landscape 1024x768 */
+	.tablet-p { width: 768px;  height: 420px; } /* tablet portrait 768x1024 */
+	.smart-l  { width: 480px;  height: 320px; } /* smartphone landscape 480x320 */
+	.smart-p  { width: 320px;  height: 420px; } /* smartphone portrait 320x480 */
 	</style>
 	<script src="../js/widgets/widget-columnSelector.js"></script>
 
@@ -146,9 +186,40 @@
 	<script src="../js/widgets/widget-reflow.js"></script>
 	<script>
 	$(function(){
-		$('#table1, #table2, #table3').resizable({
-			handles : 'e'
+		// screen size class names
+		var j = 0,
+		allClasses = '',
+		sizes = [
+			[ 'full',     '100% width' ],
+			[ 'desktop',  'Desktop 1440x1024' ],
+			[ 'tablet-l', 'Tablet landscape 1024x768' ],
+			[ 'tablet-p', 'tablet portrait 768x1024' ],
+			[ 'smart-l',  'smartphone landscape 480x320' ],
+			[ 'smart-p',  'smartphone portrait 320x480' ]
+		];
+		$('.resize-frame li')
+			.each(function(i){
+				// add tooltip to each table size button
+				$(this).attr('title', sizes[j][1]);
+				j = (j + 1) % 6;
+				if (i < 6) {
+					allClasses += sizes[i][0] + ' ';
+				}
+			})
+			.on('click', function(){
+				var $t = $(this),
+					indx = $t.index();
+				$t.addClass('active').siblings().removeClass('active');
+				$t.parent().nextAll('div:first').removeClass(allClasses).addClass( sizes[indx][0] );
+			});
+		// toggle thead in iframe
+		$('button.toggle').click(function(){
+			$(this).nextAll('div:first').find('iframe').contents().find('thead').toggleClass('hide-header');
 		});
+
+		// add tooltip
+		$('.resize-frame li, .toggle').tipsy({ gravity: 's' });
+
 	});
 	</script>
 </head>
@@ -423,19 +494,49 @@ table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
 
 	</p>
 
-	<h1>Demo <small>(Resize the browser window)</small></h1>
+	<h1>Demo <small>(Pick a table width or resize the browser window)</small></h1>
 	<div id="demo"><h3>Reflow widget only</h3>
-	<div id="table1">
+	<span class="sizes">Set table width:</span>
+	<ul class="resize-frame">
+		<li class="setauto active">Auto</li>
+		<li class="setdktp"></li>
+		<li class="settbll"></li>
+		<li class="settblp"></li>
+		<li class="setsmtl"></li>
+		<li class="setsmtp"></li>
+	</ul>
+	<button class="toggle" title="Hide/show table header when the breakpoint is reached">Toggle Headers</button>
+	<div id="table1" class="full">
 		<iframe src="example-widget-reflow1.html"></iframe>
 	</div>
 
 	<h3>Reflow + columnSelector widget</h3>
-	<div id="table2" class="frame-wrapper">
+	<span class="sizes">Set table width:</span>
+	<ul class="resize-frame">
+		<li class="setauto active">Auto</li>
+		<li class="setdktp"></li>
+		<li class="settbll"></li>
+		<li class="settblp"></li>
+		<li class="setsmtl"></li>
+		<li class="setsmtp"></li>
+	</ul>
+	<button class="toggle" title="Hide/show table header when the breakpoint is reached">Toggle Headers</button>
+	<div id="table2" class="frame-wrapper full">
 		<iframe src="example-widget-reflow2.html"></iframe>
 	</div>
 
 	<h3>Reflow2 widget (multiple thead rows)</h3>
-	<div id="table3" class="frame-wrapper">
+	<span class="sizes">Set table width:</span>
+	<ul class="resize-frame">
+		<li class="setauto active">Auto</li>
+		<li class="setdktp"></li>
+		<li class="settbll"></li>
+		<li class="settblp"></li>
+		<li class="setsmtl"></li>
+		<li class="setsmtp"></li>
+	</ul>
+	<button class="toggle" title="Hide/show table header when the breakpoint is reached">Toggle Headers</button>
+	<div id="table3" class="frame-wrapper full">
 		<iframe src="example-widget-reflow3.html"></iframe>
 	</div>
 
