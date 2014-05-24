@@ -1225,7 +1225,7 @@
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
-						return e.target.tagName === "INPUT" ? '' : !c.cancelSelection;
+						return /(input|select|button|textarea)/i.test(e.target.tagName) ? '' : !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
