@@ -67,7 +67,7 @@
 
 			// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 			savePages: true,
-			
+
 			// defines custom storage key
 			storageKey: 'tablesorter-pager',
 
@@ -271,7 +271,7 @@
 					c = table.config,
 					$t = c.$table,
 					tds = '',
-					result = p.ajaxProcessing(data, table) || [ 0, [] ],
+					result = p.ajaxProcessing(data, table, xhr) || [ 0, [] ],
 					hl = $t.find('thead th').length;
 
 				// Clean up any previous error.
@@ -401,12 +401,12 @@
 				counter = ++p.ajaxCounter;
 
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
-				p.ajaxObject.success = function(data) {
+				p.ajaxObject.success = function(data, status, jqxhr) {
 					// Refuse to process old ajax commands that were overwritten by new ones - see #443
 					if (counter < p.ajaxCounter){
 						return;
 					}
-					renderAjax(data, table, p);
+					renderAjax(data, table, p, jqxhr);
 					$doc.unbind('ajaxError.pager');
 					if (typeof p.oldAjaxSuccess === 'function') {
 						p.oldAjaxSuccess(data);
@@ -484,7 +484,7 @@
 				// if filtered, start from zero
 				index = f ? 0 : s;
 				count = f ? 0 : s;
-				added = 0; 
+				added = 0;
 				while (added < e && index < rows.length) {
 					if (!f || !/filtered/.test(rows[index][0].className)){
 						count++;
