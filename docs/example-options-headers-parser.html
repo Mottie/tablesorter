@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Skip parsing of content</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<script>
+	$(function(){
+		$('table').on('tablesorter-initialized', function(){
+			var i, j, t = [],
+				cache = this.config.cache[0].normalized;
+			for (i = 0; i < cache.length; i++) {
+				t += '"' + cache[i].slice(0,3).join('", "') + '"\n';
+			}
+			$('#cache pre').html(t);
+		});
+	});
+	</script>
+
+	<script id="js">$(function(){
+	$("table").tablesorter({
+		theme : 'blue',
+
+		// pass the headers argument and passing a object
+		headers: {
+			// set initial sort order by column, this headers option setting overrides the sortInitialOrder option
+			1: { sorter: false, parser: false }
+		}
+
+	});
+});</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Skip parsing of content</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>In <span class="version">v2.17.1</span>, this parser setting was added to reduce the time needed to process the table content during initialization and updating.</li>
+			<li><em>Disabling of the sorting</em> of the same column should be observed as sorting will not work without the parsed data.</li>
+			<li><em>Disabling of filtering</em> of the same column may be necessary, especially if the data requires parsing when comparisons of data is required (e.g. looking for dates <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code> or <code>&gt;=</code> a certain time).</li>
+			<li>Use this setting by following any of these methods (they all do the same thing), in order of priority:
+				<ul>
+					<li>jQuery data <code>data-parser="false"</code> (equivalent to <code>data-parser="false"</code>).</li>
+					<li>metadata <code>class="{ parser: "false" }"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { parser: "false" } }</code>.</li>
+					<li>header class name <code>class="parser-false"</code>.</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Age</th>
+			<th class="sorter-false parser-false">Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Peter Parker</td><td>28</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>John Hood</td><td>33</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark Kent</td><td>18</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce Almighty</td><td>45</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce Evans</td><td>22</td><td>Jan 18, 2007 9:12 AM</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Cached Data</h1>
+	<div id="cache">
+		<pre class="prettyprint"></pre>
+	</div>
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
+

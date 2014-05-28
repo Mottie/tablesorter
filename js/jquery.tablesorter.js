@@ -219,7 +219,7 @@
 				var c = table.config,
 					// update table bodies in case we start with an empty table
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, p, time,
+					rows, list, l, i, h, ch, np, p, time,
 					j = 0,
 					parsersDebug = "",
 					len = tb.length;
@@ -240,17 +240,21 @@
 							ch = ts.getColumnData( table, c.headers, i );
 							// get column parser
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
+							np = ts.getData(h, ch, 'parser') === 'false';
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
 							c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
 							// text strings behaviour in numerical sorts
 							c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
+							if (np) {
+								p = ts.getParserById('no-parser');
+							}
 							if (!p) {
 								p = detectParserForColumn(table, rows, -1, i);
 							}
 							if (c.debug) {
 								parsersDebug += "column:" + i + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
 							}
-							list.push(p);
+							list[i] = p;
 						}
 					}
 					j += (list.length) ? len : 1;
@@ -327,7 +331,7 @@
 								t = getElementText(table, $row[0].cells[j], j);
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].format(t, table, $row[0].cells[j], j);
+								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(t, table, $row[0].cells[j], j);
 								cols.push(v);
 								if ((parsers[j].type || '').toLowerCase() === "numeric") {
 									// determine column max value (ignore sign)
@@ -839,7 +843,8 @@
 						row = $tb.eq(tbdy).find('tr').index( $row );
 						icell = $cell.index();
 						c.cache[tbdy].normalized[row][c.columns].$row = $row;
-						v = c.cache[tbdy].normalized[row][icell] = c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						v = c.cache[tbdy].normalized[row][icell] = c.parsers[icell].id === 'no-parser' ? '' :
+							c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
 						if ((c.parsers[icell].type || '').toLowerCase() === "numeric") {
 							// update column max value (ignore sign)
 							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
@@ -874,7 +879,8 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								cells[j] = c.parsers[j].id === 'no-parser' ? '' :
+									c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
 								if ((c.parsers[j].type || '').toLowerCase() === "numeric") {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
@@ -1630,6 +1636,17 @@
 	});
 
 	// add default parsers
+	ts.addParser({
+		id: 'no-parser',
+		is: function() {
+			return false;
+		},
+		format: function(s) {
+			return '';
+		},
+		type: 'text'
+	});
+
 	ts.addParser({
 		id: "text",
 		is: function() {

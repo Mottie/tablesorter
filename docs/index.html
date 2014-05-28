@@ -390,6 +390,7 @@
 		<li><a href="example-parsers.html">Parser, writing your own</a> (<a href="#function-addparser"><code>addParser</code></a>; <span class="updated version">v2.15.0</span>)</li>
 		<li><a href="example-parsers-advanced.html">Parser, writing your own, advanced use</a> (v2.1; <span class="updated version">v2.15.0</span>)</li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells (<a href="#textextraction"><code>textExtraction</code></a> function)</a></li>
+		<li><a href="example-options-headers-parser.html">Skip the parsing of column content</a> (<span class="version">v2.17.1</span>)</li>
 	</ul>
 
 	<h4>Widgets / Plugins</h4>
@@ -865,7 +866,7 @@
 				<td>null</td>
 				<td>
 					An object of instructions for per-"header cell" controls in the format: <code>headers: { 0: { option: setting }, ... }</code>
-					<span class="label label-info">docs updated</span> (<span class="version updated">v2.17.0</span>)
+					<span class="label label-info">docs updated</span> (<span class="version updated">v2.17.1</span>)
 					<div class="collapsible">
 					<br>
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
@@ -876,8 +877,8 @@
   $("table").tablesorter({
     headers: {
 
-      // See example - Disable first header cell
-      0: { sorter: false },
+      // See example - Disable first header cell; parser false skips extracting content
+      0: { sorter: false, parser: false },
 
       // See example 2: Sort column numerically &amp; treat any text as if its value is:
       1: { sorter: "digit", empty:  "top" }, // zero; sort empty cells to the top
@@ -935,6 +936,7 @@
 					<a href="example-options-headers-digits-strings.html">2</a>
 					<a href="example-options-headers-locked.html">3</a>
 					<a href="example-options-headers-order.html">4</a>
+					<a href="example-options-headers-parser.html">5</a>
 				</td>
 			</tr>
 

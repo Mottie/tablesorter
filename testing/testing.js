@@ -488,7 +488,7 @@ $(function(){
 		test parser cache
 	************************************************/
 	test( "parser cache; sorton methods; empty & string", function() {
-		expect(17);
+		expect(18);
 		$table1.trigger('sortReset');
 
 		// lower case because table was parsed before c1.ignoreCase was changed
@@ -547,6 +547,8 @@ $(function(){
 
 		t = [ 'a02', 'a10', 'a43', 'a255', 'a102', 'a33', '', 'a1', 'a55', 'a87' ];
 		deepEqual( t.sort($.tablesorter.sortNatural), [ '', 'a1', 'a02', 'a10', 'a33', 'a43', 'a55', 'a87', 'a102', 'a255' ], 'test sortNatural function directly' );
+
+		tester.cacheCompare( table4, 6, [ '', '', '', '', '', '', '', '', '', '' ], 'parser-false does not extract text' );
 
 	});
 
