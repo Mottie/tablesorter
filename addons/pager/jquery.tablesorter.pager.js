@@ -368,10 +368,13 @@
 				fixHeight(table, p);
 				$t.trigger('updateCache', [function(){
 					if (p.initialized) {
-						// apply widgets after table has rendered
-						$t
-							.trigger('applyWidgets')
-							.trigger('pagerChange', p);
+						// apply widgets after table has rendered & after a delay to prevent
+						// multiple applyWidget blocking code from blocking this trigger
+						setTimeout(function(){
+							$t
+								.trigger('applyWidgets')
+								.trigger('pagerChange', p);
+							}, 0);
 					}
 				}]);
 

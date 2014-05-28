@@ -570,9 +570,13 @@ tsp = ts.pager = {
 			tsp.fixHeight(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
-					// apply widgets after table has rendered
-					$t.trigger('applyWidgets');
-					$t.trigger('pagerChange', p);
+					// apply widgets after table has rendered & after a delay to prevent
+					// multiple applyWidget blocking code from blocking this trigger
+					setTimeout(function(){
+						$t
+							.trigger('applyWidgets')
+							.trigger('pagerChange', p);
+					}, 0);
 				}
 			}]);
 		}
