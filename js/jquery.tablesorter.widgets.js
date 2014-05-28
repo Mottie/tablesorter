@@ -458,21 +458,27 @@ ts.filter = {
 			}
 			return null;
 		},
+		// Look for a not match
+		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo ) {
+			if ( /^\!/.test(iFilter) ) {
+				iFilter = iFilter.replace('!', '');
+				if (ts.filter.regex.exact.test(iFilter)) {
+					// look for exact not matches - see #628
+					iFilter = iFilter.replace(ts.filter.regex.exact, '');
+					return iFilter === '' ? true : $.trim(iFilter) !== iExact;
+				} else {
+					var indx = iExact.search( $.trim(iFilter) );
+					return iFilter === '' ? true : !(wo.filter_startsWith ? indx === 0 : indx >= 0);
+				}
+			}
+			return null;
+		},
 		// Look for quotes or equals to get an exact match; ignore type since iExact could be numeric
 		exact: function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed, rowArray ) {
 			/*jshint eqeqeq:false */
 			if (ts.filter.regex.exact.test(iFilter)) {
 				var fltr = iFilter.replace(ts.filter.regex.exact, '');
 				return rowArray ? $.inArray(fltr, rowArray) >= 0 : fltr == iExact;
-			}
-			return null;
-		},
-		// Look for a not match
-		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo ) {
-			if ( /^\!/.test(iFilter) ) {
-				iFilter = iFilter.replace('!', '');
-				var indx = iExact.search( $.trim(iFilter) );
-				return iFilter === '' ? true : !(wo.filter_startsWith ? indx === 0 : indx >= 0);
 			}
 			return null;
 		},
