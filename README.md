@@ -60,6 +60,31 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.1">Version 2.17.1</a> (5/28/2014)
+
+* Docs:
+  * Add some missing examples &amp; updated some version number comments for the last update
+  * Reflow widget: Fix demo to use preset widths &amp; css transitions instead of forcing users to manually resize the examples.
+  * Output widget: add note about modifying the `.htaccess` file to enable downloading in both IE &amp; Firefox.
+
+* Core
+  * Allow use of select &amp; buttons within header cells. Previously only inputs were allowed. Fixes [issue #625](https://github.com/Mottie/tablesorter/issues/625).
+  * Add `parser-false` setting to prevent extracting &amp; parsing of content from set columns. Fixes [issue #629](https://github.com/Mottie/tablesorter/issues/629).
+
+* Filter widget
+  * Add a not-exact-match (`!=`) filter type (e.g. `!"Bruce"` or `!Bruce=` will show all rows that don't exactly match `Bruce`). See [issue #628](https://github.com/Mottie/tablesorter/issues/628).
+
+* Math widget
+  * Values are now obtained from data-attributes first, then the actual cell content. This will allow making calculations with higher precision values. Fixes [issue #624](https://github.com/Mottie/tablesorter/issues/624).
+
+* Pager (addon &amp; widget)
+  * The `ajaxProcessing` function now includes the jqxhr parameter. Thanks [JuarezTurrini](https://github.com/JuarezTurrini)! See [pull #626](https://github.com/Mottie/tablesorter/pull/626)
+  * Update the custom controls example to properly work with the pager widget. Fixes [issue #631](https://github.com/Mottie/tablesorter/issues/631).
+  * Fix widgets sometimes not being applied after page change.
+
+* Parser
+  * input-select parser no longer binds to non-tablesorter tables. Fixes [issue #633](https://github.com/Mottie/tablesorter/issues/633).
+
 #### <a name="v2.17.0">Version 2.17.0</a> (5/22/2014)
 
 * Overall
@@ -276,9 +301,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Check for filters before trying to set focus. Fixes [issue #594](https://github.com/Mottie/tablesorter/issues/594).
   * Add `stickyHeaders_filteredToTop` option. Fixes [issue #570](https://github.com/Mottie/tablesorter/issues/570).
 * Input select parser: don't update columns with both sorter &amp; filter disabled. See [issue #570](https://github.com/Mottie/tablesorter/issues/570).
-
-#### <a name="v2.16.1">Version 2.16.1</a> (4/24/2014)
-
-* Core: 
-  * Fixed an issue where ajax loaded data would cause a javascript error because of improper ignoring of data.
-  * Ajax loaded data will now be parsed and cached - so stuff like the grouping widget will work properly.

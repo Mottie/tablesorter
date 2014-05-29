@@ -2976,8 +2976,8 @@ $.extend($.tablesorter.themes.jui, {
     .tablesorter()
     .tablesorterPager({
       ajaxUrl: "http://mydatabase.com?page={page}&amp;size={size}&amp;{sortList:col}&amp;{filterList:fcol}",
-      ajaxProcessing: function(ajax){
-        // do something with the ajax
+      ajaxProcessing: function(data, table, xhr){
+        // do something with the ajax data
         return [ formatted_data, total_rows ];
       }
     });
@@ -3023,8 +3023,8 @@ $.extend($.tablesorter.themes.jui, {
     .tablesorter()
     .tablesorterPager({
       ajaxUrl: "http://mydatabase.com?page={page}&amp;size={size}&amp;{sortList:col}&amp;{filterList:fcol}",
-      ajaxProcessing: function(ajax){
-        // do something with the ajax
+      ajaxProcessing: function(data, table, xhr){
+        // do something with the ajax data
         return [ formatted_data, total_rows ];
       },
       // modify the url after all processing has been applied
@@ -3061,8 +3061,8 @@ $.extend($.tablesorter.themes.jui, {
         // see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
         dataType: 'json'
       },
-      ajaxProcessing: function(ajax){
-        // do something with the ajax;
+      ajaxProcessing: function(data, table, xhr){
+        // do something with the ajax data;
         return [ total_rows ];
       }
     });
@@ -3130,7 +3130,7 @@ $.extend($.tablesorter.themes.jui, {
     .tablesorter()
     .tablesorterPager({
       ajaxUrl: "http://mydatabase.com?page={page}&amp;size={size}",
-      ajaxProcessing: function(data){
+      ajaxProcessing: function(data, table, xhr){
         if (data && data.hasOwnProperty('rows')) {
           var r, row, c, d = data.rows,
           // total number of rows (required)
@@ -3158,7 +3158,7 @@ $.extend($.tablesorter.themes.jui, {
       }
     });
 });</pre>Or, in tablesorter <span class="version">v2.10</span>, return a jQuery object
-<pre class="prettyprint lang-js">ajaxProcessing: function(data, table){
+<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
   if (data && data.hasOwnProperty('rows')) {
     var r, row, c, d = data.rows,
     // total number of rows (required)
@@ -3186,7 +3186,7 @@ $.extend($.tablesorter.themes.jui, {
     return [ total, $(rows), headers ];
   }
 }</pre>Or, also in tablesorter <span class="version">v2.10</span>, just build the table yourself and return the total number of rows:
-<pre class="prettyprint lang-js">ajaxProcessing: function(data, table){
+<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
   if (data && data.hasOwnProperty('rows')) {
     var r, row, c, d = data.rows,
     // total number of rows (required)
@@ -3224,7 +3224,7 @@ So, lets say the data sent by the server looks like this:
     "tasty"         : "It's delicious!"
 }</pre>
 This ajaxProcessing function must return an object with "total", "headers" and "rows" properties! As before, "total" is the only required property; if the headers don't need to be changed, don't return a headers array, and if you append the rows to the table yourself within the ajaxProcessing function, you don't need to return a "rows" property.
-<pre class="prettyprint lang-js">ajaxProcessing: function(result, table){
+<pre class="prettyprint lang-js">ajaxProcessing: function(result, table, xhr){
     if (result && result.hasOwnProperty('data')) {
 
         // "total" is a required property!
