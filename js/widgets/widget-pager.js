@@ -153,7 +153,7 @@ tsp = ts.pager = {
 		p.$goto = p.$container.find(s.goto);
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
-		p.totalRows = c.$tbodies.eq(0).children().length;
+		p.totalRows = c.$tbodies.eq(0).children('tr').length;
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
@@ -247,7 +247,7 @@ tsp = ts.pager = {
 			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 				e.stopPropagation();
 				tsp.fixHeight(table, c);
-				var $rows = c.$tbodies.eq(0).children();
+				var $rows = c.$tbodies.eq(0).children('tr');
 				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				tsp.updatePageDisplay(table, c);
@@ -428,7 +428,7 @@ tsp = ts.pager = {
 				lastIndex = 0,
 				p = c.pager,
 				wo = c.widgetOptions,
-				rows = c.$tbodies.eq(0).children(),
+				rows = c.$tbodies.eq(0).children('tr'),
 				l = rows.length,
 				s = ( p.page * p.size ),
 				e =  s + p.size,
@@ -534,7 +534,7 @@ tsp = ts.pager = {
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
 					hsh = $t.hasClass('hasStickyHeaders');
-					$sh = hsh ? wo.$sticky.children('thead:first').children().children() : '';
+					$sh = hsh ? wo.$sticky.children('thead:first').children('tr').children() : '';
 					$f = $t.find('tfoot tr:first').children();
 					// don't change td headers (may contain pager)
 					c.$headers.filter('th').each(function(j){
@@ -862,7 +862,7 @@ tsp = ts.pager = {
 			p = c.pager;
 		if ( !p.ajax ) {
 			c.rowsCopy = rows;
-			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
+			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size || wo.pager_size || 10;
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			tsp.moveToPage(table, p, true);

@@ -221,7 +221,7 @@
 				var i,
 				lastIndex = 0,
 				c = table.config,
-				rows = c.$tbodies.eq(0).children(),
+				rows = c.$tbodies.eq(0).children('tr'),
 				l = rows.length,
 				s = ( p.page * p.size ),
 				e =  s + p.size,
@@ -332,7 +332,7 @@
 					// only add new header text if the length matches
 					if ( th && th.length === hl ) {
 						hsh = $t.hasClass('hasStickyHeaders');
-						$sh = hsh ? c.widgetOptions.$sticky.children('thead:first').children().children() : '';
+						$sh = hsh ? c.widgetOptions.$sticky.children('thead:first').children('tr').children() : '';
 						$f = $t.find('tfoot tr:first').children();
 						// don't change td headers (may contain pager)
 						c.$headers.filter('th').each(function(j){
@@ -655,7 +655,7 @@
 				p = c.pager;
 			if ( !p.ajax ) {
 				c.rowsCopy = rows;
-				p.totalRows = p.countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
+				p.totalRows = p.countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
 				p.size = $.data(table, 'pagerLastSize') || p.size || 10;
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				renderTable(table, rows, p);
@@ -730,7 +730,7 @@
 					.bind('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 						e.stopPropagation();
 						fixHeight(table, p);
-						var $rows = c.$tbodies.eq(0).children();
+						var $rows = c.$tbodies.eq(0).children('tr');
 						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 						p.totalPages = Math.ceil( p.totalRows / p.size );
 						updatePageDisplay(table, p);
