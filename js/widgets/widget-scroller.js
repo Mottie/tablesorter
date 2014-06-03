@@ -156,6 +156,7 @@ ts.addWidget({
 				});
 
 				$hdr.width($tbl.innerWidth());
+				$hdr.parent().width($tbl.innerWidth());
 				$div.show();
 			};
 
