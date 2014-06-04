@@ -1116,7 +1116,7 @@ ts.filter = {
 			$.each(arry, function(i, v){
 				// parse array data using set column parser; this DOES NOT pass the original
 				// table cell to the parser format function
-				parsed.push({ t : v, p : c.parsers && c.parsers[column].format( v, table, [], column ) || v });
+				parsed.push({ t : v, p : c.parsers && c.parsers[column].format( v, table, [], column ) });
 			});
 
 			// sort parsed select options
