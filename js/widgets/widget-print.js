@@ -82,8 +82,9 @@ printTable = ts.printTable = {
 			'<style>' + style + '</style>' +
 			'</head><body>' + data + '</body></html>'
 		);
-		generator.print();
 		generator.document.close();
+		generator.print();
+		generator.close();
 		return true;
 	},
 
