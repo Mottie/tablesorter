@@ -340,10 +340,7 @@ $(function(){
 	$table
 		.on('filterInit', function(){
 			init = true;
-		})
-		.on('filterEnd.init', function(){
 			runFilterTests();
-			$table.off('filterEnd.init');
 		})
 		.tablesorter({
 			ignoreCase: false,
