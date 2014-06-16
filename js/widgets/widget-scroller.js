@@ -155,7 +155,7 @@ ts.addWidget({
 					$hdr.find('th,td').eq(i).width(w);
 				});
 
-				$hdr.width($tbl.innerWidth());
+				$hdr.width($tbl.innerWidth()).parent().width($tbl.innerWidth());
 				$div.show();
 			};
 
