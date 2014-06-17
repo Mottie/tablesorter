@@ -1205,7 +1205,7 @@
 			};
 
 			ts.clearTableBody = function(table) {
-				$(table)[0].config.$tbodies.detach();
+				$(table)[0].config.$tbodies.children().detach();
 			};
 
 			ts.bindEvents = function(table, $headers, core){
