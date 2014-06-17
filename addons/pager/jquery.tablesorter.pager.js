@@ -289,7 +289,7 @@
 						exception === 'timeout' ? 'Time out error' :
 						exception === 'abort' ? 'Ajax Request aborted' :
 						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
-					c.$tbodies.eq(0).detach();
+					c.$tbodies.eq(0).children().detach();
 					p.totalRows = 0;
 				} else {
 					// process ajax object
@@ -311,7 +311,8 @@
 					if (d instanceof jQuery) {
 						if (p.processAjaxOnInit) {
 							// append jQuery object
-							c.$tbodies.eq(0).detach().append(d);
+							c.$tbodies.eq(0).children().detach();
+							c.$tbodies.eq(0).append(d);
 						}
 					} else if (l) {
 						// build table from array

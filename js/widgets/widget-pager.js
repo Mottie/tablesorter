@@ -491,7 +491,7 @@ tsp = ts.pager = {
 					ts.log('Ajax Error', xhr, exception);
 				}
 				ts.showError(table, exception.message + ' (' + xhr.status + ')');
-				c.$tbodies.eq(0).detach();
+				c.$tbodies.eq(0).children().detach();
 				p.totalRows = 0;
 			} else {
 				// process ajax object
@@ -513,7 +513,8 @@ tsp = ts.pager = {
 				if (d instanceof jQuery) {
 					if (wo.pager_processAjaxOnInit) {
 						// append jQuery object
-						c.$tbodies.eq(0).detach().append(d);
+						c.$tbodies.eq(0).children().detach()
+						c.$tbodies.eq(0).append(d);
 					}
 				} else if (l) {
 					// build table from array
