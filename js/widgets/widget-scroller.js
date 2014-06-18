@@ -87,6 +87,8 @@ ts.addWidget({
 					$win.bind('resize', ts.window_resize);
 				}
 			});
+		// required css definition
+		$('body').append('<style>.ts-scroller-reset { width: auto !important; }</style>');
 	},
 	format: function(table, c, wo) {
 		var h, $hdr, id, t, resize, $cells,
@@ -120,43 +122,44 @@ ts.addWidget({
 			}
 
 			resize = function(){
-				var d,
+				var d, b,
 					//Hide other scrollers so we can resize
 					$div = $('div.scroller[id != "' + id + '"]').hide();
 
 				$tbl.find('thead').show();
 
 				//Reset sizes so parent can resize.
-				$hdr
-					.width(0)
-					.parent().width(0)
-					.find('th,td').width(0);
-
 				$tbl
-					.width(0)
-					.find('thead').find('th,td').width(0);
+					.addClass('ts-scroller-reset')
+					.find('thead').find('.tablesorter-header-inner').addClass('ts-scroller-reset');
 				d = $tbl.parent();
-				d.width(0);
+				d.addClass('ts-scroller-reset');
 
 				d.parent().trigger('resize');
 				// Shrink a bit to accommodate scrollbar
 				d.width( d.parent().innerWidth() - ( d.parent().hasScrollBar() ? wo.scroller_barWidth : 0 ) );
 
 				$tbl.width( d.innerWidth() - ( d.hasScrollBar() ? wo.scroller_barWidth : 0 ) );
+
+				$tbl.parent().find('.ts-scroller-reset').removeClass('ts-scroller-reset');
+
+				b = parseInt( $tbl.css('border-left-width'), 10 ) + parseInt( $tbl.css('border-right-width'), 10 );
+
 				$tbl.find('thead').find('th,td').filter(':visible').each(function(i, c){
-					var $th = $(c),
-					//Wrap in browser detect??
+					var $th = $(c).find('.tablesorter-header-inner'),
+					// wrap in browser detect??
 					w = parseInt( $th.css('min-width').replace('auto', '0').replace(/(px|em)/, ''), 10 );
 					if ( $th.width() < w ) {
 						$th.width(w);
 					} else {
 						w = $th.width();
 					}
-					$hdr.find('th,td').eq(i).width(w);
+					$hdr.find('th,td').filter(':visible').eq(i).find('.tablesorter-header-inner').width(w - b);
 				});
 
 				$hdr.width($tbl.innerWidth());
 				$hdr.parent().width($tbl.innerWidth());
+
 				$div.show();
 			};
 
