@@ -53,8 +53,12 @@ ts.window_resize = function(){
 // Add extra scroller css
 $(function(){
 	var s = '<style>' +
+		'.tablesorter-scroller-reset { width: auto !important; } ' +
+		'.tablesorter-scroller { text-align: left; overflow: hidden;  }' +
+		'.tablesorter-scroller-header { overflow: hidden; }' +
 		'.tablesorter-scroller-header table.tablesorter { margin-bottom: 0; }' +
-		'.tablesorter-scroller-table table.tablesorter { margin-top: 0; } ' + 
+		'.tablesorter-scroller-table { overflow-y: scroll; }' +
+		'.tablesorter-scroller-table table.tablesorter { margin-top: 0; overflow: scroll; } ' +
 		'.tablesorter-scroller-table .tablesorter-filter-row, .tablesorter-scroller-table tfoot { display: none; }' +
 		'.tablesorter-scroller-table table.tablesorter thead tr.tablesorter-headerRow * {' +
 			'line-height:0;height:0;border:none;background-image:none;padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;overflow:hidden;' +
@@ -73,22 +77,20 @@ ts.addWidget({
 	},
 	init: function(table, thisWidget, c, wo){
 		var $win = $(window);
-		//Setup window.resizeEnd event
+		// Setup window.resizeEnd event
 		$win
 			.bind('resize', ts.window_resize)
 			.bind('resizeEnd', function() {
 				// init is run before format, so scroller_resizeWidth
 				// won't be defined within the "c" or "wo" parameters
 				if (typeof table.config.widgetOptions.scroller_resizeWidth === 'function') {
-					//IE calls resize when you modify content, so we have to unbind the resize event
-					//so we don't end up with an infinite loop. we can rebind after we're done.
+					// IE calls resize when you modify content, so we have to unbind the resize event
+					// so we don't end up with an infinite loop. we can rebind after we're done.
 					$win.unbind('resize', ts.window_resize);
 					table.config.widgetOptions.scroller_resizeWidth();
 					$win.bind('resize', ts.window_resize);
 				}
 			});
-		// required css definition
-		$('body').append('<style>.ts-scroller-reset { width: auto !important; }</style>');
 	},
 	format: function(table, c, wo) {
 		var h, $hdr, id, t, resize, $cells,
@@ -99,11 +101,11 @@ ts.addWidget({
 			h = wo.scroller_height || 300;
 			t = $tbl.find('tbody').height();
 			if (t !== 0 && h > t) { h = t + 10; }  // Table is less than h px
-			id = wo.scroller_id = wo.scroller_idPrefix + Math.floor(Math.random() * 101);
+			id = wo.scroller_id = wo.scroller_idPrefix + Math.floor(Math.random() * 1001);
 
 			$hdr = $('<table class="' + $tbl.attr('class') + '" cellpadding=0 cellspacing=0><thead>' + $tbl.find('thead:first').html() + '</thead></table>');
 			$tbl
-				.wrap('<div id="' + id + '" class="tablesorter-scroller" style="text-align:left;" />')
+				.wrap('<div id="' + id + '" class="tablesorter-scroller" />')
 				.before($hdr)
 				.find('.tablesorter-filter-row').addClass('hideme');
 
@@ -111,7 +113,7 @@ ts.addWidget({
 				.wrap('<div class="tablesorter-scroller-header" style="width:' + $tbl.width() + ';" />')
 				.find('.' + ts.css.header);
 
-			$tbl.wrap('<div class="tablesorter-scroller-table" style="height:' + h + 'px;width:' + $tbl.width() + ';overflow-y:scroll;" />');
+			$tbl.wrap('<div class="tablesorter-scroller-table" style="height:' + h + 'px;width:' + $tbl.width() + ';" />');
 
 			// make scroller header sortable
 			ts.bindEvents(table, $cells);
@@ -122,48 +124,57 @@ ts.addWidget({
 			}
 
 			resize = function(){
-				var d, b,
-					//Hide other scrollers so we can resize
+				var d, b, $h, $th, w,
+					// Hide other scrollers so we can resize
 					$div = $('div.scroller[id != "' + id + '"]').hide();
 
 				$tbl.find('thead').show();
 
-				//Reset sizes so parent can resize.
+				// Reset sizes so parent can resize.
 				$tbl
-					.addClass('ts-scroller-reset')
-					.find('thead').find('.tablesorter-header-inner').addClass('ts-scroller-reset');
+					.addClass('tablesorter-scroller-reset')
+					.find('thead').find('.tablesorter-header-inner').addClass('tablesorter-scroller-reset');
 				d = $tbl.parent();
-				d.addClass('ts-scroller-reset');
+				d.addClass('tablesorter-scroller-reset');
 
 				d.parent().trigger('resize');
+
 				// Shrink a bit to accommodate scrollbar
 				d.width( d.parent().innerWidth() - ( d.parent().hasScrollBar() ? wo.scroller_barWidth : 0 ) );
+				w = d.innerWidth() - ( d.hasScrollBar() ? wo.scroller_barWidth : 0 );
+				$tbl.width( w );
+				$hdr.width( w );
+				$hdr.parent().width( w );
 
-				$tbl.width( d.innerWidth() - ( d.hasScrollBar() ? wo.scroller_barWidth : 0 ) );
+				$tbl.closest('.tablesorter-scroller').find('.tablesorter-scroller-reset').removeClass('tablesorter-scroller-reset');
 
-				$tbl.parent().find('.ts-scroller-reset').removeClass('ts-scroller-reset');
-
+				// include left & right border widths
 				b = parseInt( $tbl.css('border-left-width'), 10 ) + parseInt( $tbl.css('border-right-width'), 10 );
+				$h = $hdr.find('thead').children().children();
 
-				$tbl.find('thead').find('th,td').filter(':visible').each(function(i, c){
-					var $th = $(c).find('.tablesorter-header-inner'),
-					// wrap in browser detect??
-					w = parseInt( $th.css('min-width').replace('auto', '0').replace(/(px|em)/, ''), 10 );
-					if ( $th.width() < w ) {
-						$th.width(w);
-					} else {
-						w = $th.width();
+				// adjust cloned header to match original table width - includes wrappers, headers, and header inner div
+				$tbl.find('thead').children().children().each(function(i, c){
+					$th = $(c).find('.tablesorter-header-inner');
+					if ($th.length) {
+						// I have no idea why this is in here anymore LOL
+						w = parseInt( $th.css('min-width').replace('auto', '0').replace(/(px|em)/, ''), 10 );
+						if ( $th.width() < w ) {
+							$th.width(w);
+						} else {
+							w = $th.width();
+						}
+						$h.eq(i)
+							.find('.tablesorter-header-inner').width(w - b)
+							// set inner width first
+							.parent()
+							.width( $th.parent().width() - b )
 					}
-					$hdr.find('th,td').filter(':visible').eq(i).find('.tablesorter-header-inner').width(w - b);
 				});
-
-				$hdr.width($tbl.innerWidth());
-				$hdr.parent().width($tbl.innerWidth());
 
 				$div.show();
 			};
 
-			//Expose to external calls
+			// Expose to external calls
 			wo.scroller_resizeWidth = resize;
 
 			resize();
@@ -172,6 +183,7 @@ ts.addWidget({
 			c.isScrolling = true;
 
 			t = $tbl.parent().parent().height();
+
 			// The header will always jump into view if scrolling the table body
 			$tbl.parent().bind('scroll', function(){
 				if (wo.scroller_jumpToHeader) {
@@ -180,11 +192,12 @@ ts.addWidget({
 						$win.scrollTop( $hdr.offset().top );
 					}
 				}
+				$hdr.parent().scrollLeft( $(this).scrollLeft() );
 			});
 
 		}
 
-		//Sorting, so scroll to top
+		// Sorting, so scroll to top
 		$tbl.parent().animate({ scrollTop: 0 }, 'fast');
 
 	},

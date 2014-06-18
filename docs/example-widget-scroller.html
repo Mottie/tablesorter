@@ -30,6 +30,14 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-scroller.js"></script>
 
+	<style id="css">.name { width: 20%; }
+.major { width: 35%; }
+.sex { width: 16%; }
+.english{ width: 8%; }
+.japanese { width: 8%; }
+.calculus { width: 8%; }
+.geometry { width: 100px; }</style>
+
 	<script id="js">$(function(){
 
 	$("table").tablesorter({
@@ -104,6 +112,13 @@ $(function() {
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version">v2.17.2</span>
+				<ul>
+					<li>The scroller widget will now work properly with predefined column widths.</li>
+					<li>Shrinking the browser window will now hide the header overflow.</li>
+					<li>Horizontal scrolling of the table body will now properly horizontally scroll the header.</li>
+				</ul>
+			</li>
 			<li>This widget can not be applied to the original plugin and requires jQuery version 1.4+ to function properly; if you need to make it work with older versions of jQuery and the plugin, please use <a href="http://tconnell.com/samples/scroller/">this version</a> of the widget.</li>
 			<li>This widget was originally written by <a href="http://tconnell.com/samples/scroller/">Connell & Associates, Inc.</a> and is dual-licensed under the MIT and GPL licenses. It has been modified to work with tablesorter version 2.9+.</li>
 			<li>Scroller widget options include:
@@ -134,7 +149,14 @@ $(function() {
 
 	<table class="tablesorter">
 	<thead>
-		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th class="filter-false sorter-false">Geometry</th></tr>
+		<tr>
+			<th class="name">Name</th>
+			<th class="major">Major</th><th>Sex</th>
+			<th class="english">English</th>
+			<th class="japanese">Japanese</th>
+			<th class="calculus">Calculus</th>
+			<th class="geometry filter-false sorter-false">Geometry</th>
+		</tr>
 	</thead>
 	<tfoot>
 		<tr><th>Name</th><th>Major</th><th>Sex</th><th>English</th><th>Japanese</th><th>Calculus</th><th>Geometry</th></tr>
