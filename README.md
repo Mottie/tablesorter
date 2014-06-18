@@ -60,6 +60,41 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.2">Version 2.17.2</a> (6/18/2014)
+
+* Docs
+  * Added more details about using pager ajax options.
+
+* Core
+  * The `clearTableBody` function now detaches rows instead of incorrectly detaching the tbody.
+
+* Editable widget:
+  * Corrected document option name typo. Fixes [issue #635](https://github.com/Mottie/tablesorter/issues/635). Thanks [shobute](https://github.com/shobute)!
+
+* Filter widget:
+  * The `selectSource` option now correctly handles parsed values that return zero.
+  * Filter formatter for jQuery UI datepicker now remembers the correct date.
+  * Corrected filter events & prevent table manipulation if filters are empty on initialization. Fixes [issue #645](https://github.com/Mottie/tablesorter/issues/645).
+
+* Pager addon/widget:
+
+  * Specifically target rows to prevent issues with ember scripts. Fixes [issue #638](https://github.com/Mottie/tablesorter/issues/638).
+  * Correctly detach and append jQuery rows provided by the `ajaxProcessing` function. Fixes [issue #650](https://github.com/Mottie/tablesorter/issues/650).
+
+* Print
+  * jQuery requirement modified to support jQuery v1.2+ (previously it was v1.7+).
+  * Popup now automatically closes with print dialog. Fixes [issue #643](https://github.com/Mottie/tablesorter/issues/643).
+
+* Scroller widget:
+  * The `thead` width is now set in IE. Fixes [issue #637](https://github.com/Mottie/tablesorter/issues/637).
+  * Set column widths are now maintained, including Bootstrap. Fixes issues [#634](https://github.com/Mottie/tablesorter/issues/634) &amp; [#380](https://github.com/Mottie/tablesorter/issues/380).
+  * Change default scroll bar width to `18`. Fixes [issue #363](https://github.com/Mottie/tablesorter/issues/363).
+  * Scroller now behaves properly with horizontal overflow scroll, column alignments, and hidden cells. Fixes issues [#340](https://github.com/Mottie/tablesorter/issues/340) &amp; [#333](https://github.com/Mottie/tablesorter/issues/333).
+
+* Themes
+  * Bootstrap white unsorted icon now shows when the `icon-white` class is added. See [issue #648](https://github.com/Mottie/tablesorter/issues/648).
+  * Remove auto height settings from filter elements.
+
 #### <a name="v2.17.1">Version 2.17.1</a> (5/28/2014)
 
 * Docs:
@@ -202,102 +237,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
 
 * Scroller widget
   * Filter widget works with this widget again. Fixes [issue #620](https://github.com/Mottie/tablesorter/issues/620).
-
-#### <a name="v2.16.4">Version 2.16.4</a> (5/5/2014)
-
-* Docs
-  * Fix stickyHeaders scroll position adjustment.
-  * Update [sticky headers widget demo](http://mottie.github.io/tablesorter/docs/example-widget-sticky-header.html) to include the `stickyHeaders_filteredToTop` option
-
-* ColumnSelector widget: updated css to include print media for the new print widget.
-
-* cssStickyHeaders widget: add `cssStickyHeaders_filteredToTop` option.
-
-* Filter widget
-  * Search operators (`< <= >= >`) now properly uses the parser.
-  * Range, not matches (`!`) &amp; search operators now search all rows as needed.
-  * Add filter language option, set the lanuage of `to`, `or` and `and`. Fixes [issue #602](https://github.com/Mottie/tablesorter/issues/602).
-  * Prevent form submission when pressing enter within the filter.
-  * Prevent javascript error if `delayInit` is set to `true`.
-  * Add a bunch of filter tests.
-
-* Math widget
-  * Add `math_prefix` and `math_suffix` options.
-  * The demo now includes a bunch of mask examples and an interactive example.
-
-* Output widget
-  * Add `output_encoding` option to allow setting the encoding to support accented characters in Excel.
-  * See [the demo page](http://mottie.github.io/tablesorter/docs/example-widget-output.html) for more details.
-  * See [this Stackoverflow question](http://stackoverflow.com/q/23388490/145346) & [issue #606](https://github.com/Mottie/tablesorter/issues/606).
-
-* Pager:
-  * Updated custom pager controls code to show the correct number of pages when the table is filtered.
-  * Fixes [issue #605](https://github.com/Mottie/tablesorter/issues/605).
-
-* Print widget (new)
-  * The user can print all, visible or filtered rows. And, choose to print all, visible or selected columns (using the columnSelector widget).
-  * By default, the widget is set to only print filtered rows &amp; visible columns.
-  * Note this required an update to the columnSelector widget to include print media.
-  * Try out the [print widget demo](http://mottie.github.io/tablesorter/docs/example-widget-print.html).
-
-* Miscellaneous
-  * Add Metro dark theme css file &amp; [demo](http://mottie.github.io/tablesorter/docs/example-option-theme-metro-style.html)
-  * Add Metro LESS file - see this [interactive demo](http://codepen.io/Mottie/pen/gCslk).
-  * Add Bootstrap LESS file - see this [interactive demo](http://codepen.io/Mottie/pen/Ltzpi).
-  * Metro style includes encoded images. The images & psd have also been included.
-
-#### <a name="v2.16.3">Version 2.16.3</a> (4/30/2014)
-
-* Docs:
-  * Clean up of docs for the following widgets:
-      * [Column selector widget](http://mottie.github.io/tablesorter/docs/example-widget-column-selector.html)
-      * [Editable widget](http://mottie.github.io/tablesorter/docs/example-widget-editable.html)
-      * [Grouping widget](http://mottie.github.io/tablesorter/docs/example-widget-grouping.html)
-      * [Math widget](http://mottie.github.io/tablesorter/docs/example-widget-math.html)
-      * [Select2 filterFormatter](http://mottie.github.io/tablesorter/docs/example-widget-filter-formatter-select2.html)
-  * Update [`textSorter` option demo](http://mottie.github.io/tablesorter/docs/example-option-custom-sort.html) - the sorting the Icelandic alphabet using sugar's array sort now works properly.
-
-* Core:
-  * Fix `headers` option indexing of cells in multiple header rows
-      * Setting an index in the multiple row header will now correctly set the column parser.
-      * See [this demo](http://jsfiddle.net/Mottie/abkNM/2645/) - the 10th cell (zero-based index) in the header has the sorter set to "month".
-  * Set processing icon to only show after 500ms, it will not show at all if the sort ends before then.
-  * Check for jQuery's `closest` function and use it, or fall back to equivalent code (maintaining support for jQuery 1.2.6+). Fixes [issue #597](https://github.com/Mottie/tablesorter/issues/597).
-  * Remove widget init delay added in v2.16.1-beta.
-
-* Filter:
-  * Remove old cached indexing:
-      * It was causing already filtered rows to return an incorrect cached row value.
-      * Fixes [issue #600](https://github.com/Mottie/tablesorter/issues/600) &amp; see this [Stackoverflow question](http://stackoverflow.com/q/23384787/145346).
-  * Update check for "filter-parsed" class, because the `getData` function will only return the first class name starting with "filter-".
-  * Filter select updates:
-      * Add `filter-select-nosort` header class name to prevent select option sorting.
-      * Filter select option sort now uses the assigned column parser to parse &amp; sort the options.
-      * Filter select options are now sorted using the `textSorter` function, if set, and if not set, it falls back to natural sorting.
-      * Fixes [issue #599](https://github.com/Mottie/tablesorter/issues/599).
-      * Add note to ensure textSorter receives strings, or a javascript error occurs.
-  * Select2 filterFormatter now allows setting of initial settings. Fixes [issue #598](https://github.com/Mottie/tablesorter/issues/598).
-
-* Sticky Headers
-  * Add support for `filter_hideFilters` set to `true`. See this [Stackoverflow question](http://stackoverflow.com/q/23342215/145346).
-
-#### <a name="v2.16.2">Version 2.16.2</a> (4/27/2014)
-
-* Docs:
-  * Added basic setup for output widget.
-  * Show various updates.
-  * Update readme with more resources.
-* Core:
-  * update `addRows` method will now accept a string or jQuery object.
-  * Sort direction is now counted correctly.
-  * Add "emptyMin" &amp; "emptyMax" setting to `emptyTo` option. Fixes [issue #577](https://github.com/Mottie/tablesorter/issues/577).
-  * Add internal `config.$extraHeaders` variable.
-* Filter widget:
-  * Search already filtered rows when not exactly matching content. Fixes [issue #593](https://github.com/Mottie/tablesorter/issues/593).
-  * Ensure `filter_functions` option is not `null`. Fixes [issue #593](https://github.com/Mottie/tablesorter/issues/593).
-  * Filter formatter: set datepicker to `null`. Fixes [issue #512](https://github.com/Mottie/tablesorter/issues/512).
-* Math widget: add `data-math-mask` for each cell.
-* StickyHeaders
-  * Check for filters before trying to set focus. Fixes [issue #594](https://github.com/Mottie/tablesorter/issues/594).
-  * Add `stickyHeaders_filteredToTop` option. Fixes [issue #570](https://github.com/Mottie/tablesorter/issues/570).
-* Input select parser: don't update columns with both sorter &amp; filter disabled. See [issue #570](https://github.com/Mottie/tablesorter/issues/570).

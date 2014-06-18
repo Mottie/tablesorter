@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 5/28/2014 (v2.17.1)
+ * updated 6/18/2014 (v2.17.2)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -221,7 +221,7 @@
 				var i,
 				lastIndex = 0,
 				c = table.config,
-				rows = c.$tbodies.eq(0).children(),
+				rows = c.$tbodies.eq(0).children('tr'),
 				l = rows.length,
 				s = ( p.page * p.size ),
 				e =  s + p.size,
@@ -289,7 +289,7 @@
 						exception === 'timeout' ? 'Time out error' :
 						exception === 'abort' ? 'Ajax Request aborted' :
 						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
-					c.$tbodies.eq(0).detach();
+					c.$tbodies.eq(0).children().detach();
 					p.totalRows = 0;
 				} else {
 					// process ajax object
@@ -311,7 +311,8 @@
 					if (d instanceof jQuery) {
 						if (p.processAjaxOnInit) {
 							// append jQuery object
-							c.$tbodies.eq(0).detach().append(d);
+							c.$tbodies.eq(0).children().detach();
+							c.$tbodies.eq(0).append(d);
 						}
 					} else if (l) {
 						// build table from array
@@ -332,7 +333,7 @@
 					// only add new header text if the length matches
 					if ( th && th.length === hl ) {
 						hsh = $t.hasClass('hasStickyHeaders');
-						$sh = hsh ? c.widgetOptions.$sticky.children('thead:first').children().children() : '';
+						$sh = hsh ? c.widgetOptions.$sticky.children('thead:first').children('tr').children() : '';
 						$f = $t.find('tfoot tr:first').children();
 						// don't change td headers (may contain pager)
 						c.$headers.filter('th').each(function(j){
@@ -655,7 +656,7 @@
 				p = c.pager;
 			if ( !p.ajax ) {
 				c.rowsCopy = rows;
-				p.totalRows = p.countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
+				p.totalRows = p.countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
 				p.size = $.data(table, 'pagerLastSize') || p.size || 10;
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				renderTable(table, rows, p);
@@ -730,7 +731,7 @@
 					.bind('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 						e.stopPropagation();
 						fixHeight(table, p);
-						var $rows = c.$tbodies.eq(0).children();
+						var $rows = c.$tbodies.eq(0).children('tr');
 						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 						p.totalPages = Math.ceil( p.totalRows / p.size );
 						updatePageDisplay(table, p);

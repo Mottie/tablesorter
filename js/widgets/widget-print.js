@@ -1,5 +1,5 @@
-/* Print widget (beta) for TableSorter 5/22/2014 (v2.17.0)
- * Requires tablesorter v2.8+ and jQuery 1.7+
+/* Print widget (beta) for TableSorter 6/18/2014 (v2.17.2)
+ * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
@@ -15,8 +15,8 @@ printTable = ts.printTable = {
 
 	init : function(c) {
 		c.$table
-			.off(printTable.event)
-			.on(printTable.event, function(){
+			.unbind(printTable.event)
+			.bind(printTable.event, function(){
 				// explicitly use table.config.widgetOptions because we want
 				// the most up-to-date values; not the "wo" from initialization
 				printTable.process(c, c.widgetOptions);
@@ -82,8 +82,9 @@ printTable = ts.printTable = {
 			'<style>' + style + '</style>' +
 			'</head><body>' + data + '</body></html>'
 		);
-		generator.print();
 		generator.document.close();
+		generator.print();
+		generator.close();
 		return true;
 	},
 

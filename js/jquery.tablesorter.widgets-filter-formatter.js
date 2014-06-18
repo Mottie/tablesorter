@@ -1,4 +1,4 @@
-/*! Filter widget formatter functions - updated 4/27/2014 (v2.16.2)
+/*! Filter widget formatter functions - updated 6/18/2014 (v2.17.2)
  * requires: tableSorter 2.15+ and jQuery 1.4.3+
  *
  * uiSpinner (jQuery UI spinner)
@@ -574,7 +574,7 @@ tsff = ts.filterFormatter = {
 			} else {
 				num = (tsff.updateCompare($cell, $input, o)[1]).toString() || '';
 				// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
-				num = num !== '' ? /\d{5}/g.test(num) ? Number(num) : num || '' : '';
+				num = num !== '' ? /\d{5}/g.test(num) ? new Date(Number(num)) : num || '' : '';
 			}
 			$cell.add($shcell).find('.date').datepicker( 'setDate', num || null );
 			setTimeout(function(){
@@ -718,6 +718,11 @@ tsff = ts.filterFormatter = {
 				// less than date (from date empty)
 				to = val.replace(/<=/, '') || '';
 			}
+
+			// differeniate 1388556000000 from 1/1/2014 using \d{5} regex
+			from = from !== '' ? /\d{5}/g.test(from) ? new Date(Number(from)) : from || '' : '';
+			to = to !== '' ? /\d{5}/g.test(to) ? new Date(Number(to)) : to || '' : '';
+
 			$cell.add($shcell).find('.dateFrom').datepicker('setDate', from || null);
 			$cell.add($shcell).find('.dateTo').datepicker('setDate', to || null);
 			// give datepicker time to process
