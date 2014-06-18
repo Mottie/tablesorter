@@ -86,7 +86,6 @@ caption {
 /* filter widget */
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
 	width: 98%;
-	height: auto;
 	margin: 0 auto;
 	padding: 4px 6px;
 	background-color: #fff;
