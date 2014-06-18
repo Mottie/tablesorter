@@ -22,7 +22,7 @@
 				widgets: ['zebra', 'scroller'],
 				widgetOptions : {
 					scroller_height       : 300,  // height of scroll window
-					scroller_barWidth     : 17,   // scroll bar width
+					scroller_barWidth     : 18,   // scroll bar width
 					scroller_jumpToHeader : true, // header snap to browser top when scrolling the tbody
 					scroller_idPrefix     : 's_'  // cloned thead id prefix (random number added to end)
 				}
@@ -71,7 +71,7 @@ ts.addWidget({
 	priority: 60, // run after the filter widget
 	options: {
 		scroller_height : 300,
-		scroller_barWidth : 17,
+		scroller_barWidth : 18,
 		scroller_jumpToHeader: true,
 		scroller_idPrefix : 's_'
 	},
