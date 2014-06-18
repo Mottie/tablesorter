@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 5/28/2014 (v2.17.1) */
+/* Pager widget (beta) for TableSorter 6/18/2014 (v2.17.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -513,7 +513,7 @@ tsp = ts.pager = {
 				if (d instanceof jQuery) {
 					if (wo.pager_processAjaxOnInit) {
 						// append jQuery object
-						c.$tbodies.eq(0).children().detach()
+						c.$tbodies.eq(0).children().detach();
 						c.$tbodies.eq(0).append(d);
 					}
 				} else if (l) {
