@@ -69,7 +69,8 @@
 
 		$('.toggleAll, .showAll, .hideAll').click(function(){
 			t = $.trim($(this).text());
-			$(this).parent().next('table').find('.collapsible')[t]();
+			// use nextAll to ignore any <br> or other elements between this link and the table
+			$(this).parent().nextAll('table:first').find('.collapsible')[t]();
 			return false;
 		});
 
