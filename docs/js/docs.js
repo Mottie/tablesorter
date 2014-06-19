@@ -29,7 +29,7 @@
 		}
 
 		// apply to already pre-formatted blocks to add <br> for IE
-		$('pre:not(.mod)').each(function(){
+		$('pre.prettyprint:not(.mod)').each(function(){
 			$t = $(this);
 			$t.html( cleanupCode( $t.html() ) );
 		});
