@@ -335,7 +335,7 @@ tsp = ts.pager = {
 		var i, pg, s, out, regex,
 			wo = c.widgetOptions,
 			p = c.pager,
-			f = c.$table.hasClass('hasFilters') && !wo.pager_ajaxUrl,
+			f = c.$table.hasClass('hasFilters'),
 			t = [],
 			sz = p.size || 10; // don't allow dividing by zero
 		t = [ wo && wo.filter_filteredRow || 'filtered', c.selectorRemove ];
@@ -343,14 +343,15 @@ tsp = ts.pager = {
 		regex = new RegExp( '(' + t.join('|') + ')' );
 		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-		p.filteredRows = (f) ? 0 : p.totalRows;
-		p.filteredPages = p.totalPages;
-		if (f) {
+		if (f && !wo.pager_ajaxUrl) {
+			p.filteredRows = 0;
 			$.each(c.cache[0].normalized, function(i, el) {
 				p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 			});
-			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
+		} else if (!f) {
+			p.filteredRows = p.totalRows;
 		}
+		p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 			t = (p.size * p.page > p.filteredRows);
 			p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -498,6 +499,7 @@ tsp = ts.pager = {
 				if (!$.isArray(result)) {
 					p.ajaxData = result;
 					p.totalRows = result.total;
+					p.filteredRows = result.filteredRows || result.total;
 					th = result.headers;
 					d = result.rows;
 				} else {

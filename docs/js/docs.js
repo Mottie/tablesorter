@@ -130,13 +130,21 @@
 						ui.newPanel.find('table').trigger('applyWidgets');
 					}
 				});
-				// open parent of nested accordion
+				// open parent accordion of nested accordion
 				if ( $this.find(hash).length && !$this.children(hash).length ) {
 					// div should have an id of ui-accordion-#-panel-#
 					id = $(hash).closest('.ui-accordion-content').attr('id').match(/(?:panel-)(\d+)/);
 					if (id && id.length) {
 						$this.accordion('option', 'active', Number(id[1]));
 					}
+
+				// open table row of nested accordion
+				} else if ( ($this.find(hash).closest('tr').attr('id') || '') !== '') {
+					t = $this.find(hash).closest('tr');
+					t.find('.collapsible').show();
+					setTimeout(function(){
+						window.scrollTo( 0, t.offset().top - 27 );
+					}, 200);
 				}
 			});
 		}

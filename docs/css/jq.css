@@ -87,6 +87,7 @@ span.alert { padding: 1px 3px; }
 .accordion { position: relative; }
 .accordion .accordion-link { position: absolute; right: 1%; margin-top: 16px; z-index: 1; width: 12px; height: 12px;}
 .accordion .accordion .accordion-link { margin-top: 12px; } /* nested accordion */
+.tablesorter .accordion .accordion-link { margin-top: 11px; }
 .remark, .error { font-weight: bold; color: red; font-size: 18px; }
 table th.nobold { font-weight: normal; }
 table th a { text-decoration: underline; color: #000; }

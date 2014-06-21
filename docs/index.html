@@ -9,10 +9,12 @@
 
 <!-- Demo stuff -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
+<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
+<script src="js/jquery-ui-latest.min.js"></script>
 <script src="js/prettify.js"></script>
 <script src="js/docs.js"></script>
 <script src="js/search.js"></script>
@@ -3111,17 +3113,137 @@ $.extend($.tablesorter.themes.jui, {
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1, <span class="version updated">v2.14.3</span>).
+					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1, <span class="version updated">v2.17.3</span>).
 					<div class="collapsible">
 					<br>
 					This function was created and modified to allow you a great deal of flexibility. The only required information that this function needs to return is an array containing the total number of rows, which is needed to calculate total pages.<br>
 					<br>
 					There are numerous examples below. Choosing which one to use is left to you. For more information, please check out related questions on <a href="http://stackoverflow.com/search?q=%5Btablesorter%5D+ajaxProcessing">Stackoverflow</a>, in particular see <a href="http://stackoverflow.com/q/16783740/145346">this thread</a> about how to use the different ajax options together.<br>
 					<br>
-					In <span class="version">v2.10</span>, the returned rows is now optional. And it can either be an array of arrays or a jQuery object (not attached to the table)
+					In <span class="version">v2.10</span>, the returned rows is now optional. And it can either be an array of arrays or a jQuery object (not attached to the table)<br>
 					<br>
-					Process your ajax data so that the following information is returned:
-					<pre class="prettyprint lang-js">// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
+					Process your ajax data so that the following information is returned:<br>
+					<br>
+
+					<div class="accordion">
+
+						<h3><a href="#">Object</a></h3>
+						<div>
+							After tablesorter <span class="version updated">v2.17.3</span>, this function can include a <code>filteredRows</code> property which will update the internal value and thus show a proper filtered row count, and update the "goto" page drop down selector appropriately.<br>
+							<br>
+							After tablesorter <span class="version">v2.11</span>, the <code>ajaxProcessing</code> function can return an object containing these properties, along with any extra properties. These extra properties will be available for use within the pager <code>output</code> string (see more details in <a href="https://github.com/Mottie/tablesorter/issues/326#issuecomment-25326546">issue #326</a>);<br>
+							<br>
+							So, lets say the data sent by the server looks like this:
+							<pre class="prettyprint lang-js">{
+    "total_rows"    : 100,
+    "filtered_rows" : 75,
+    "new_headers"   : [ "ID", "Name", "Data", "Value" ],
+    "data"          : '&lt;tr&gt;&lt;td&gt;a123&lt;/td&gt;&lt;td&gt;abc&lt;/td&gt;&lt;td&gt;xyz&lt;/td&gt;&lt;td&gt;999&lt;/td&gt;&lt;/tr&gt;',
+    "subject"       : "cheese",
+    "tasty"         : "It's delicious!"
+}</pre>
+							This ajaxProcessing function must return an object with "total", "headers" and "rows" properties! As before, "total" is the only required property; if the headers don't need to be changed, don't return a headers array, and if you append the rows to the table yourself within the ajaxProcessing function, you don't need to return a "rows" property.
+							<pre class="prettyprint lang-js">ajaxProcessing: function(result, table, xhr){
+    if (result && result.hasOwnProperty('data')) {
+
+        // "total" is a required property!
+        result.total = result["total_rows"];
+
+        // "filteredRows" is optional - in tablesorter v2.17.3, this updates the filter row count internally
+        // and updates the "goto" page dropdown selector appropriately
+        result.filteredRows = result["filtered_rows"];
+
+        // "headers" is optional. This is not needed if the table headers don't change
+        result.headers = result["new_headers"];
+
+        // "rows" is optional. No need to return this if you process and add the rows to the table yourself
+        // otherwise, return an array of arrays or jQuery object (shown in this example)
+        result.rows = $(result.data);
+
+        return result;
+    }
+}</pre>
+							Now in the <a href="#pager-output"><code>output</code></a> string, you can also reference the extra ajax data:
+							<pre class="prettyprint lang-js">output : '{startRow} to {endRow} of {filteredRows} ({totalRows}) rows about {subject} ({tasty})'</pre>
+						</div>
+
+						<h3><a href="#">Array (total only)</a></h3>
+						<div>
+							After tablesorter <span class="version">v2.10</span>, just build the table yourself and return the total number of rows:
+							<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
+  if (data && data.hasOwnProperty('rows')) {
+    var r, row, c, d = data.rows,
+    // total number of rows (required)
+    total = data.total_rows,
+    // all rows: array of arrays; each internal array has the table cell data for that row
+    rows = '',
+    // len should match pager set size (c.size)
+    len = d.length;
+    // this will depend on how the json is set up - see City0.json
+    // rows
+    for ( r=0; r &lt; len; r++ ) {
+      rows += '&lt;tr class="ajax-row"&gt;'; // new row
+      // cells
+      for ( c in d[r] ) {
+        if (typeof(c) === "string") {
+          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
+        }
+      }
+      rows += '&lt;/tr&gt;'; // end new row
+    }
+    // find first sortable tbody, then add new rows
+    table.config.$tbodies.eq(0).html(rows);
+    // no need to trigger an update method, it's done internally
+    return [ total ];
+  }
+}</pre>
+						</div>
+
+						<h3><a href="#">Array (rows as jQuery object)</a></h3>
+						<div>
+							After tablesorter <span class="version">v2.10</span>, return a jQuery object
+							<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
+  if (data && data.hasOwnProperty('rows')) {
+    var r, row, c, d = data.rows,
+    // total number of rows (required)
+    total = data.total_rows,
+    // array of header names (optional)
+    headers = data.headers,
+    // all rows: array of arrays; each internal array has the table cell data for that row
+    rows = '',
+    // len should match pager set size (c.size)
+    len = d.length;
+    // this will depend on how the json is set up - see City0.json
+    // rows
+    for ( r=0; r &lt; len; r++ ) {
+      rows += '&lt;tr class="ajax-row"&gt;'; // new row
+      // cells
+      for ( c in d[r] ) {
+        if (typeof(c) === "string") {
+          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
+        }
+      }
+      rows += '&lt;/tr&gt;'; // end new row
+    }
+    // don't attach the $(rows) because it's difficult to tell old from new data
+    // and no need to trigger an update method, it's done internally
+    return [ total, $(rows), headers ];
+  }
+}</pre>
+							Or, if your JSON contains all the rows within a string this method will work:
+							<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
+  if (data && data.hasOwnProperty('rows')) {
+    // data.rows would look something like this
+    // '&lt;tr&gt;&lt;td&gt;r0c0&lt;/td&gt;&lt;td&gt;r0c1&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;r1c0&lt;/td&gt;&lt;td&gt;r1c1&lt;/td&gt;&lt;/tr&gt;'
+    return [ data.total, $(data.rows), data.headers ];
+  }
+}</pre>
+						</div>
+
+						<h3><a href="#">Array (rows as an array of arrays)</a></h3>
+						<div>
+							After tablesorter v2.1, this function must return an array with values in any of the following orders:
+<pre class="prettyprint lang-js">// [ total_rows (number), rows (array of arrays), headers (array; optional) ]
 // or [ rows, total_rows, headers ]
 // or [ total_rows, $(rows) ]
 // or [ total_rows ]
@@ -3135,8 +3257,9 @@ $.extend($.tablesorter.themes.jui, {
   ],
   [ "header1", "header2", ... "headerN" ] // optional
 ]</pre><span class="label label-info">Note</span>: In <span class="version">v2.14.3</span>, the contents of the array can also contain table cell markup (i.e. <code>&quot;&lt;td class='green'&gt;+ 10%&lt;/td&gt;&quot;</code>).<br>
-<br>Here is some example JSON (comments added, but not allowed in JSON) which is contained in the <a href="https://github.com/Mottie/tablesorter/blob/master/docs/assets/City0.json">City0.json</a> file:
-<pre class="prettyprint lang-js">{
+							<br>
+							Here is some example JSON (comments added, but not allowed in JSON) which is contained in the <a href="https://github.com/Mottie/tablesorter/blob/master/docs/assets/City0.json">City0.json</a> file:
+							<pre class="prettyprint lang-js">{
   // total rows
   "total_rows": 80,
   // headers
@@ -3153,8 +3276,9 @@ $.extend($.tablesorter.themes.jui, {
   }, {
     // row 2, etc...
   }]
-}</pre>The above JSON is processed by the following code (this returns an array of array of table rows):
-<pre class="prettyprint lang-js">$(function(){
+}</pre>
+							The above JSON is processed by the following code (this returns an array of array of table rows):
+							<pre class="prettyprint lang-js">$(function(){
   $("table")
     .tablesorter()
     .tablesorterPager({
@@ -3186,91 +3310,11 @@ $.extend($.tablesorter.themes.jui, {
         }
       }
     });
-});</pre>Or, in tablesorter <span class="version">v2.10</span>, return a jQuery object
-<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
-  if (data && data.hasOwnProperty('rows')) {
-    var r, row, c, d = data.rows,
-    // total number of rows (required)
-    total = data.total_rows,
-    // array of header names (optional)
-    headers = data.headers,
-    // all rows: array of arrays; each internal array has the table cell data for that row
-    rows = '',
-    // len should match pager set size (c.size)
-    len = d.length;
-    // this will depend on how the json is set up - see City0.json
-    // rows
-    for ( r=0; r &lt; len; r++ ) {
-      rows += '&lt;tr class="ajax-row"&gt;'; // new row
-      // cells
-      for ( c in d[r] ) {
-        if (typeof(c) === "string") {
-          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
-        }
-      }
-      rows += '&lt;/tr&gt;'; // end new row
-    }
-    // don't attach the $(rows) because it's difficult to tell old from new data
-    // and no need to trigger an update method, it's done internally
-    return [ total, $(rows), headers ];
-  }
-}</pre>Or, also in tablesorter <span class="version">v2.10</span>, just build the table yourself and return the total number of rows:
-<pre class="prettyprint lang-js">ajaxProcessing: function(data, table, xhr){
-  if (data && data.hasOwnProperty('rows')) {
-    var r, row, c, d = data.rows,
-    // total number of rows (required)
-    total = data.total_rows,
-    // all rows: array of arrays; each internal array has the table cell data for that row
-    rows = '',
-    // len should match pager set size (c.size)
-    len = d.length;
-    // this will depend on how the json is set up - see City0.json
-    // rows
-    for ( r=0; r &lt; len; r++ ) {
-      rows += '&lt;tr class="ajax-row"&gt;'; // new row
-      // cells
-      for ( c in d[r] ) {
-        if (typeof(c) === "string") {
-          rows += '&lt;td&gt;' + d[r][c] + '&lt;/td&gt;'; // add each table cell data to row
-        }
-      }
-      rows += '&lt;/tr&gt;'; // end new row
-    }
-    // find first sortable tbody, then add new rows
-    table.config.$tbodies.eq(0).html(rows);
-    // no need to trigger an update method, it's done internally
-    return [ total ];
-  }
-}</pre>In tablesorter <span class="version">v2.11</span>, the <code>ajaxProcessing</code> function can return an object containing these properties, along with any extra properties. These extra properties will be available for use within the pager <code>output</code> string (see more details in <a href="https://github.com/Mottie/tablesorter/issues/326#issuecomment-25326546">issue #326</a>);<br>
-<br>
-So, lets say the data sent by the server looks like this:
-<pre class="prettyprint lang-js">{
-    "total_rows"    : 100,
-    "filtered_rows" : 75,
-    "new_headers"   : [ "ID", "Name", "Data", "Value" ],
-    "data"          : '&lt;tr&gt;&lt;td&gt;a123&lt;/td&gt;&lt;td&gt;abc&lt;/td&gt;&lt;td&gt;xyz&lt;/td&gt;&lt;td&gt;999&lt;/td&gt;&lt;/tr&gt;',
-    "subject"       : "cheese",
-    "tasty"         : "It's delicious!"
-}</pre>
-This ajaxProcessing function must return an object with "total", "headers" and "rows" properties! As before, "total" is the only required property; if the headers don't need to be changed, don't return a headers array, and if you append the rows to the table yourself within the ajaxProcessing function, you don't need to return a "rows" property.
-<pre class="prettyprint lang-js">ajaxProcessing: function(result, table, xhr){
-    if (result && result.hasOwnProperty('data')) {
+});</pre>
+						</div>
 
-        // "total" is a required property!
-        result.total = result["total_rows"];
-
-        // "headers" is optional. This is not needed if the table headers don't change
-        result.headers = result["new_headers"];
-
-        // "rows" is optional. No need to return this if you process and add the rows to the table yourself
-        // otherwise, return an array of arrays or jQuery object (shown in this example)
-        result.rows = $(result.data);
-
-        return result;
-    }
-}</pre>Now in the <a href="#pager-output"><code>output</code></a> string, you can also reference the extra ajax data:
-<pre class="prettyprint lang-js">output : '{startRow} to {endRow} of {filtered_rows} ({totalRows}) rows about {subject} ({tasty})'</pre>
-					</div>
+					</div> <!-- end accordion -->
+					</div> <!-- end collapsible div -->
 				</td>
 				<td><a href="example-pager-ajax.html">Example</a></td>
 			</tr>

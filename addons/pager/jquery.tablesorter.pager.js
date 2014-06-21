@@ -131,21 +131,22 @@
 		updatePageDisplay = function(table, p, completed) {
 			var i, pg, s, out, regex,
 				c = table.config,
-				f = c.$table.hasClass('hasFilters') && !p.ajaxUrl,
+				f = c.$table.hasClass('hasFilters'),
 				t = [],
 				sz = p.size || 10; // don't allow dividing by zero
 			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove ];
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			regex = new RegExp( '(' + t.join('|') + ')' );
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
-			p.filteredRows = (f) ? 0 : p.totalRows;
-			p.filteredPages = p.totalPages;
-			if (f) {
+			if (f && !p.ajaxUrl) {
+				p.filteredRows = 0;
 				$.each(c.cache[0].normalized, function(i, el) {
 					p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 				});
-				p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
+			} else if (!f) {
+				p.filteredRows = p.totalRows;
 			}
+			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows);
 				p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -296,6 +297,7 @@
 					if (!$.isArray(result)) {
 						p.ajaxData = result;
 						p.totalRows = result.total;
+						p.filteredRows = result.filteredRows || result.total;
 						th = result.headers;
 						d = result.rows;
 					} else {
