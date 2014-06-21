@@ -812,8 +812,7 @@ ts.filter = {
 			ts.filter.searching( table, true, true );
 		})
 		.bind('search change keypress '.split(' ').join(c.namespace + 'filter '), function(event){
-			// triggered change event won't fire a search unless the return key was pressed
-			if (event.which === 13 || event.type === 'search') {
+			if (event.which === 13 || event.type === 'search' || event.type === 'change') {
 				event.preventDefault();
 				// init search with no delay
 				ts.filter.searching( table, false, true );
