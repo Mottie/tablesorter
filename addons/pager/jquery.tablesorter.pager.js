@@ -134,7 +134,7 @@
 				f = c.$table.hasClass('hasFilters'),
 				t = [],
 				sz = p.size || 10; // don't allow dividing by zero
-			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove ];
+			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove.replace(/^(\w+\.)/g,'') ];
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			regex = new RegExp( '(' + t.join('|') + ')' );
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
@@ -203,7 +203,7 @@
 				if (h) {
 					d = h - $b.height();
 					if ( d > 5 && $.data(table, 'pagerLastSize') === p.size && $b.children('tr:visible').length < p.size ) {
-						$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.replace(/(tr)?\./g,'') + '" style="height:' + d + 'px;"></tr>');
+						$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '" style="height:' + d + 'px;"></tr>');
 					}
 				}
 			}
@@ -236,7 +236,7 @@
 						} else {
 							rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 							// don't count child rows
-							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !p.countChildRows ? 0 : 1;
+							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'')) && !p.countChildRows ? 0 : 1;
 							if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
 								lastIndex = i;
 							}
@@ -698,7 +698,7 @@
 				}
 
 				// skipped rows
-				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.substring(1) + '|' + c.cssChildRow + ')');
+				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
 
 				$t
 					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
@@ -847,7 +847,7 @@
 						})
 						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 						.appendTo( c.$table.find('thead:first') )
-						.addClass( errorRow + ' ' + c.selectorRemove.replace(/^[.#]/, '') )
+						.addClass( errorRow + ' ' + c.selectorRemove.replace(/^(\w+\.)/g,'') )
 						.attr({
 							role : 'alert',
 							'aria-live' : 'assertive'
