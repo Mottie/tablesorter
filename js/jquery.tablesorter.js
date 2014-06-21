@@ -1181,9 +1181,9 @@
 							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList) >= 0;
 						});
 					}
-					$h.addClass(ts.css.processing + ' ' + c.cssProcessing);
+					table.add($h).addClass(ts.css.processing + ' ' + c.cssProcessing);
 				} else {
-					$h.removeClass(ts.css.processing + ' ' + c.cssProcessing);
+					table.add($h).removeClass(ts.css.processing + ' ' + c.cssProcessing);
 				}
 			};
 
