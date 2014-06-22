@@ -49,6 +49,14 @@
 	$('#alphimals, #table2').tablesorter({
 		theme: 'blue',
 		widgets: ['zebra', 'staticRow']
+	})
+	// (ctrl or mac command) + click to toggle static row
+	.find('tbody tr').click(function(event){
+		if (event.ctrlKey || event.metaKey) {
+			$(this)
+				.toggleClass('static')
+				.trigger('staticRowsRefresh');
+		}
 	});
 
 	$('.addrow').click(function(){
@@ -61,8 +69,8 @@
 	$('.move').click(function(){
 		var direction = $(this).hasClass('up'),
 			$rows = $('#alphimals tr'),
-			$ig = $rows.filter('.static:contains(Iguana)'),
-			len = $rows.length - 1,
+			$ig = $rows.filter(':contains(Iguana)').addClass('static'),
+			len = $rows.length - 3, // subtract two because there are two other static rows
 			v = $ig.data('row-index');
 		v = direction ? --v : ++v;
 		v = v > len ? len : v <= 0 ? 0 : v;
@@ -92,6 +100,7 @@
 				<li>The widget was modified from <a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin">Tablesorter-Static-Row-Plugin</a> by <a href="https://github.com/ascii-soup">ascii-soup</a> (<a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin/blob/master/LICENSE">MIT license</a>).</li>
 				<li>It has been updated to work in tables with multiple tbodies, but not within information-only tbodies.</li>
 				<li>This widget was not tested, nor was it meant to be used with the pager.</li>
+				<li><span class="label label-info">Note</span> This demo was updated to allow toggling of static rows.</li>
 			</ul>
 		</div>
 
@@ -173,6 +182,7 @@ $(table).trigger('staticRowsRefresh');</pre>
 	</div>
 
 	<h1>Demo</h1>
+	<span class="label label-info">Note</span> Make any row static or normal by toggling the <code>static</code> class name using <kbd>Ctrl</kbd> + left click (<kbd>&#8984;</kbd> + click on Mac)<br>
 	<div id="demo"><h3>Single tbody</h3>
 <p><button class="addrow">Add Row</button> Move "Iguana" row: <button class="move up">up</button> <button class="move">down</button></p>
 <table id="alphimals" class="tablesorter">
