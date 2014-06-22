@@ -297,7 +297,7 @@
 					if (!$.isArray(result)) {
 						p.ajaxData = result;
 						p.totalRows = result.total;
-						p.filteredRows = result.filteredRows || result.total;
+						p.filteredRows = typeof result.filteredRows !== 'undefined' ? result.filteredRows : result.total;
 						th = result.headers;
 						d = result.rows;
 					} else {
