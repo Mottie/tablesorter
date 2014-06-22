@@ -121,7 +121,7 @@
 			dis = !!disable,
 			first = ( dis || p.page === 0 ),
 			tp = Math.min( p.totalPages, p.filteredPages ),
-			last = ( dis || (p.page === tp - 1) || p.totalPages === 0 );
+			last = ( dis || (p.page === tp - 1) || tp === 0 );
 			if ( p.updateArrows ) {
 				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ first ? a : r ](d).attr('aria-disabled', first);
 				p.$container.find(p.cssNext + ',' + p.cssLast)[ last ? a : r ](d).attr('aria-disabled', last);

@@ -322,7 +322,7 @@ tsp = ts.pager = {
 			dis = !!disable,
 			first = dis || p.page === 0,
 			tp = Math.min( p.totalPages, p.filteredPages ),
-			last = dis || p.page === tp - 1 || p.totalPages === 0,
+			last = dis || p.page === tp - 1 || tp === 0,
 			wo = c.widgetOptions,
 			s = wo.pager_selectors;
 		if ( wo.pager_updateArrows ) {
