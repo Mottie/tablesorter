@@ -868,7 +868,7 @@
 				<td>null</td>
 				<td>
 					An object of instructions for per-"header cell" controls in the format: <code>headers: { 0: { option: setting }, ... }</code>
-					<span class="label label-info">docs updated</span> (<span class="version updated">v2.17.1</span>)
+					(<span class="version updated">v2.17.1</span>) <span class="label label-info">docs updated</span>
 					<div class="collapsible">
 					<br>
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
@@ -2935,6 +2935,8 @@ $.extend($.tablesorter.themes.jui, {
 					Target your one or more pager markup blocks by setting this option with a jQuery selector.
 					<div class="collapsible">
 						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.container</code>; additionally you can change the class name that is applied to the pager (used within the <code>jquery.tablesorter.pager.css</code> file) by modifying the <code>widgetOption.pager_css.container</code> class name (default is <code>&quot;tablesorter-pager&quot;</code>)<br>
+						<br>
 						This is some example pager markup. It <em>should</em> contain all of the controls set by the multiple css-named options:<pre class="prettyprint lang-html">
 &lt;div class=&quot;pager&quot;&gt;
   &lt;form&gt;
@@ -2971,6 +2973,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>
 					Set this option to include a url template to use so that the pager plugin can interact with your database (v2.1; <span class="version updated">v2.9</span>).
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxUrl</code><br>
 					<br>
 					The tags within the <code>ajaxUrl</code> string are optional. If do not want the user to change the page size, then you only need to include the page in this string:
 					<pre class="prettyprint lang-js">ajaxUrl: "http://mydatabase.com?start={page}"</pre>
@@ -3020,8 +3024,10 @@ $.extend($.tablesorter.themes.jui, {
 				<td>Function</td>
 				<td>function(table, url) { return url; }</td>
 				<td>
-					This callback function allows you to modify the processed URL as desired <span class="label label-info">docs updated</span> (<span class="version">v2.8.1</span>).
+					This callback function allows you to modify the processed URL as desired (<span class="version">v2.8.1</span>) <span class="label label-info">docs updated</span>.
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_customAjaxUrl</code><br>
 					<br>
 					The <code>customAjaxUrl</code> function has two parameters, the table DOM element and the processed url string (all tags within the <code>ajaxUrl</code> have been replaced with their appropriate values).
 					<pre class="prettyprint lang-js">$(function(){
@@ -3073,6 +3079,8 @@ $.extend($.tablesorter.themes.jui, {
 					This option contains the ajax settings for the pager interaction with your database (<span class="version">v2.10</span>).
 					<div class="collapsible">
 					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxObject</code><br>
+					<br>
 					The <code>ajaxObject</code> is completely customizable, except for the `url` setting which is processed using the pager's `ajaxUrl` and `customAjaxUrl` options.<br>
 					<br>
 					Your server does not need to return a JSON format, if you want to return pure HTML, set the dataType to <code>&quot;html&quot;</code> and modify the <code>ajaxProcessing</code> function to instead work with HTML; then return a jQuery object or apply the HTML to the table yourself.<br>
@@ -3099,11 +3107,15 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 			<tr id="pager-processajaxoninit">
-				<td><span class="permalink">processAjaxOnInit</span></td>
+				<td><a href="#" class="permalink">processAjaxOnInit</a></td>
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
 					Set this option to <code>false</code> if your table data is preloaded into the table, but you are still using ajax (<span class="version">v2.14.5</span>).
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_processAjaxOnInit</code>
+					</div>
 				</td>
 				<td></td>
 			</tr>
@@ -3115,6 +3127,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>
 					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1, <span class="version updated">v2.17.3</span>).
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxProcessing</code><br>
 					<br>
 					This function was created and modified to allow you a great deal of flexibility. The only required information that this function needs to return is an array containing the total number of rows, which is needed to calculate total pages.<br>
 					<br>
@@ -3323,7 +3337,10 @@ $.extend($.tablesorter.themes.jui, {
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
 				<td>&quot;{page}/{totalPages}&quot;</td>
-				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9).<div class="collapsible">
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9).
+					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_output</code><br>
 					<br>
 					This option replaced the original <code>separator</code> option, which only separated the page number from the total number of pages. The formatted output from this option is placed inside the information block targeted by the <code>cssPageDisplay</code> option.<br>
 					<br>
@@ -3367,48 +3384,80 @@ $.extend($.tablesorter.themes.jui, {
 					If <code>true</code>, the addon hides the left pager arrow on the first page and right pager arrow on the last page.
 					<div class="collapsible">
 					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_updateArrows</code><br>
+					<br>
 					If <code>true</code> the classname from the <code>cssDisabled</code> option is applied to the arrows when at either page extreme.</div>
 				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-page">
-				<td><span class="permalink">page</span></td>
+				<td><a href="#" class="permalink">page</a></td>
 				<td>Numeric</td>
 				<td>0</td>
-				<td>Set the starting page of the pager (zero-based index).</td>
+				<td>
+					Set the starting page of the pager (zero-based index).
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_startPage</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-page-reset">
-				<td><span class="permalink">pageReset</span></td>
+				<td><a href="#" class="permalink">pageReset</a></td>
 				<td>Numeric, Boolean</td>
 				<td>0</td>
-				<td>Reset pager to this page after filtering; set to desired page number (zero-based index), or <code>false</code> to not change page at filter start (<span class="version updated">v2.16</span>).</td>
+				<td>
+					Reset pager to this page after filtering; set to desired page number (zero-based index), or <code>false</code> to not change page at filter start (<span class="version updated">v2.16</span>).
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_pageReset</code>
+					</div>
+				</td>
 				<td></td>
 			</tr>
 
 			<tr id="pager-size">
-				<td><span class="permalink">size</span></td>
+				<td><a href="#" class="permalink">size</a></td>
 				<td>Numeric</td>
 				<td>10</td>
-				<td>Set initial number of visible rows. This value is changed by the dropdown selector targeted by the <a href="#pager-csspagesize"><code>cssPageSize</code></a> option.</td>
+				<td>
+					Set initial number of visible rows. This value is changed by the dropdown selector targeted by the <a href="#pager-csspagesize"><code>cssPageSize</code></a> option.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_size</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="save-pages">
-				<td><span class="permalink">savePages</span></td>
+				<td><a href="#" class="permalink">savePages</a></td>
 				<td>Boolean</td>
 				<td>true</td>
-				<td>Saves the current pager page size and number. This option requires the <a href="#function-storage"><code>$.tablesorter.storage</code></a> script in the <code>jquery.tablesorter.widgets.js</code> file (<span class="version">v2.11</span>).</td>
+				<td>
+					Saves the current pager page size and number. This option requires the <a href="#function-storage"><code>$.tablesorter.storage</code></a> script in the <code>jquery.tablesorter.widgets.js</code> file (<span class="version">v2.11</span>).
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_savePages</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="custom-storage">
-				<td><span class="permalink">storageKey</span></td>
+				<td><a href="#" class="permalink">storageKey</a></td>
 				<td>String</td>
 				<td>&quot;tablesorter-pager&quot;</td>
-				<td>Saves tablesorter paging to custom key if defined. Key parameter name used by the <a href="#function-storage"><code>$.tablesorter.storage</code></a> function. Useful if you have multiple tables defined (<span class="version">v2.15</span>)</td>
+				<td>
+					Saves tablesorter paging to custom key if defined. Key parameter name used by the <a href="#function-storage"><code>$.tablesorter.storage</code></a> function. Useful if you have multiple tables defined (<span class="version">v2.15</span>)
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_storageKey</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
@@ -3418,6 +3467,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>false</td>
 				<td>Maintain the height of the table even when fewer than the set number of records is shown (v2.1; updated 2.7.1).
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_fixedHeight</code><br>
 					<br>
 					This option replaced the original <code>positionFixed</code> and <code>offset</code> options which set the absolute position of the pager block.<br>
 					<br>
@@ -3434,6 +3485,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>
 					If <code>true</code>, child rows will be counted towards the pager set size (<span class="version">v2.13</span>).
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_countChildRows</code><br>
 					<br>
 					<span class="label label-warning">*CAUTION*</span> When <code>true</code>, child row(s) may not appear to be attached to its parent row, may be split across pages or
 					may distort the table if rowspan or cellspans are included within the child row.<br>
@@ -3452,6 +3505,8 @@ $.extend($.tablesorter.themes.jui, {
 					If <code>true</code>, rows are removed from the table to speed up the sort of large tables (v2.0.21).
 					<div class="collapsible">
 					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_removeRows</code><br>
+					<br>
 					The original tablesorter plugin (v2.0.5) removed rows automatically, without providing an option. It really does speed up sorting of very large tables, but also breaks updating and modifying table content dynamically.<br>
 					<br>
 					If this option is <code>false</code>, the addon only hides the non-visible rows; this is useful if you plan to add/remove rows with the pager enabled.
@@ -3461,34 +3516,58 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 			<tr id="pager-cssfirst">
-				<td><span class="permalink">cssFirst</span></td>
+				<td><a href="#" class="permalink">cssFirst</a></td>
 				<td>String</td>
 				<td>&quot;.first&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the go to first page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.</td>
+				<td>
+					This option contains a jQuery selector string pointing to the go to first page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.first</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-cssprev">
-				<td><span class="permalink">cssPrev</span></td>
+				<td><a href="#" class="permalink">cssPrev</a></td>
 				<td>String</td>
 				<td>&quot;.prev&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the go to previous page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.</td>
+				<td>
+					This option contains a jQuery selector string pointing to the go to previous page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.prev</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-cssnext">
-				<td><span class="permalink">cssNext</span></td>
+				<td><a href="#" class="permalink">cssNext</a></td>
 				<td>String</td>
 				<td>&quot;.next&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the go to next page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.</td>
+				<td>
+					This option contains a jQuery selector string pointing to the go to next page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.next</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-csslast">
-				<td><span class="permalink">cssLast</span></td>
+				<td><a href="#" class="permalink">cssLast</a></td>
 				<td>String</td>
 				<td>&quot;.last&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the go to last page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.</td>
+				<td>
+					This option contains a jQuery selector string pointing to the go to last page arrow. See <a href="#pager-container"><code>container</code></a> for full HTML.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.last</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
@@ -3496,8 +3575,10 @@ $.extend($.tablesorter.themes.jui, {
 				<td><a href="#" class="permalink">cssGoto</a></td>
 				<td>String</td>
 				<td>&quot;.gotoPage&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the page select dropdown. See <a href="#pager-container"><code>container</code></a> for full HTML (v2.4)
+				<td>This option contains a jQuery selector string pointing to the page select dropdown. See <a href="#pager-container"><code>container</code></a> for full HTML (v2.4; <span class="version updated">v2.17.3</span>)
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.gotoPage</code> (changed from <code>goto</code> in <span class="version updated">v2.17.3</span>)<br>
 					<br>
 					Please note that this select dropdown is initially empty and automatically updated by the plugin with the correct number of pages, which depends on the <a href="#pager-size"><code>size</code></a> setting.
 					</div>
@@ -3512,6 +3593,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>This option contains a jQuery selector string pointing to the output element (v2.0.9)
 					<div class="collapsible">
 					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.pageDisplay</code><br>
+					<br>
 					In the original tablesorter (v2.0.5) this option could only target an input, it was updated (v2.0.9) to display the formatted output from the <code>output</code> option inside of any element (span, div or input).
 					</div>
 				</td>
@@ -3519,10 +3602,16 @@ $.extend($.tablesorter.themes.jui, {
 			</tr>
 
 			<tr id="pager-csspagesize">
-				<td><span class="permalink">cssPageSize</span></td>
+				<td><a href="#" class="permalink">cssPageSize</a></td>
 				<td>String</td>
 				<td>&quot;.pagesize&quot;</td>
-				<td>This option contains a jQuery selector string pointing to the page size selector. See <a href="#pager-container"><code>container</code></a> for full HTML.</td>
+				<td>
+					This option contains a jQuery selector string pointing to the page size selector. See <a href="#pager-container"><code>container</code></a> for full HTML.
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_selectors.pageSize</code>
+					</div>
+				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
@@ -3532,6 +3621,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>&quot;tablesorter-errorRow&quot;</td>
 				<td>This option contains the class name that is applied to the error information row that is added inside the pager with any ajax exceptions.
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_css.errorRow</code><br>
 					<br>
 					Note there is no period "." in front of this class name (it is not a selector).
 					</div></td>
@@ -3544,6 +3635,8 @@ $.extend($.tablesorter.themes.jui, {
 				<td>&quot;disabled&quot;</td>
 				<td>This option contains the class name that is applied to disabled pager controls.
 					<div class="collapsible">
+					<br>
+					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_css.disabled</code><br>
 					<br>
 					More explicitly, this class is applied to the pager arrows when they are at either extreme of pages and the <code>updateArrows</code> option is <code>true</code>. When the pager has been disabled, this class is applied to all controls.<br>
 					<br>

@@ -93,7 +93,7 @@ ts.addWidget({
 			prev        : '.prev',        // previous page arrow
 			next        : '.next',        // next page arrow
 			last        : '.last',        // go to last page arrow
-			goto        : '.gotoPage',    // go to page selector - select dropdown that sets the current page
+			gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
 			pageDisplay : '.pagedisplay', // location of where the "output" is displayed
 			pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
 		}
@@ -150,7 +150,7 @@ tsp = ts.pager = {
 		// added in case the pager is reinitialized after being destroyed.
 		p.$container = $(s.container).addClass(wo.pager_css.container).show();
 		// goto selector
-		p.$goto = p.$container.find(s.goto);
+		p.$goto = p.$container.find(s.gotoPage); // goto is a reserved word #657
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
 		p.totalRows = c.$tbodies.eq(0).children('tr').length;
