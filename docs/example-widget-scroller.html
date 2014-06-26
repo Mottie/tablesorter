@@ -48,6 +48,7 @@
 		widgetOptions : {
 			scroller_height : 300,
 			scroller_barWidth : 18,
+			scroller_upAfterSort: true,
 			scroller_jumpToHeader: true,
 			scroller_idPrefix : 's_'
 		}
@@ -112,21 +113,23 @@ $(function() {
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>In <span class="version">v2.17.2</span>
+			<li>In <span class="version">v2.17+</span>
 				<ul>
 					<li>The scroller widget will now work properly with predefined column widths.</li>
 					<li>Shrinking the browser window will now hide the header overflow.</li>
 					<li>Horizontal scrolling of the table body will now properly horizontally scroll the header.</li>
 					<li>Changed the default scroll bar width from <code>17</code> to <code>18</code>.</li>
+					<li>Added <code>scroller_upAfterSort</code> option.</li>
 				</ul>
 			</li>
 			<li>This widget can not be applied to the original plugin and requires jQuery version 1.4+ to function properly; if you need to make it work with older versions of jQuery and the plugin, please use <a href="http://tconnell.com/samples/scroller/">this version</a> of the widget.</li>
 			<li>This widget was originally written by <a href="http://tconnell.com/samples/scroller/">Connell & Associates, Inc.</a> and is dual-licensed under the MIT and GPL licenses. It has been modified to work with tablesorter version 2.9+.</li>
 			<li>Scroller widget options include:
 				<ul>
-					<li><code>scroller_height</code> - Set the height of the scroll window in pixels (default is <code>300</code>.</li>
+					<li><code>scroller_height</code> - Set the height of the scroll window in pixels (default is <code>300</code>).</li>
 					<li><code>scroller_barWidth</code> - Set the width (default is <code>17</code>) of the scroll bar in pixels. This will need to be changed if using a custom scroll bar plugin.</li>
 					<li><code>scroller_idPrefix</code> - This option contains a prefix string which is added to a random number. This id is then assigned to the wrapping scroll element. Modification is not necessary unless the prefix interferes with ID's already on your page.</li>
+					<li><code>scroller_upAfterSort</code> - when <code>true</code> (default), the scroller automatically scrolls the inner window back to the top after sorting. Set this option to <code>false</code> to prevent this, or stop the window from scrolling after interacting with a table cell (e.g. clicking on a checkbox); new in <span class="version">v2.17.3</span>.</li>
 					<li><code>scroller_jumpToHeader</code> - When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.<br>
 					<span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em></li>
 				</ul>

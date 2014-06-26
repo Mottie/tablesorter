@@ -73,6 +73,7 @@ ts.addWidget({
 		scroller_height : 300,
 		scroller_barWidth : 18,
 		scroller_jumpToHeader: true,
+		scroller_upAfterSort: true,
 		scroller_idPrefix : 's_'
 	},
 	init: function(table, thisWidget, c, wo){
@@ -198,7 +199,9 @@ ts.addWidget({
 		}
 
 		// Sorting, so scroll to top
-		$tbl.parent().animate({ scrollTop: 0 }, 'fast');
+		if (wo.scroller_upAfterSort) {
+			$tbl.parent().animate({ scrollTop: 0 }, 'fast');
+		}
 
 	},
 	remove : function(table, c, wo){
