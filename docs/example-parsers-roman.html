@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Roman Numeral Parser</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/parsers/parser-roman.js"></script>
+
+	<style>
+	th { width: 20%; }
+	</style>
+
+	<script id="js">$(function() {
+
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra'],
+
+		// roman numeral parser option
+		// ===========================
+		// column 0 & 1 are set to zero as placeholders
+		// column 2: ignore last character (1) - for Roman "roman-ignore" numeral parser
+		// column 3: ignore characters that match the set regex (beginning of the string to first space)
+		roman_ignore: [ 0, 0, 1, /^(\w+\s)/ ]
+
+	});
+
+});</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Roman Numeral Parser</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>This parser (added <span class="version">v2.17.3</span>) will convert roman numerals into their decimal equivalent so the table column can be sorted correctly.</li>
+				<li>There are actually 3 separate parsers included with this script.
+					<ul>
+						<li>They are very similar, but were written to cover different use cases.</li>
+						<li> Refer to each in their separate sections below.</li>
+					</ul>
+				</li>
+				<li>This demo includes the stored roman numeral values within the table cells, toggle the view using the button directly above the table.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">"roman" parser</a></h3>
+		<div>
+			<ul>
+				<li>This parser is optimized for columns that contain only roman numerals.</li>
+				<li>In the demo below, this parser is used for the "Short" and "Long" columns.</li>
+				<li>This parser has no option settings.</li>
+			</ul>
+			<pre class="prettyprint lang-js">$(function() {
+
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra'],
+		headers: {
+			0 : { sorter: 'roman' },
+			1 : { sorter: 'roman' }
+		}
+	});
+
+});</pre>
+
+		</div>
+
+		<h3><a href="#">"roman-ignore" parser</a></h3>
+		<div>
+			This parser is designed to use the <code>roman_ignore</code> option to either:
+
+			<h4>Ignore The Last "X" Characters</h4>
+			For content that contains a roman number followed by an alphabetical character, such as "Ia" or "IIb", this parser can be set to ignore the last character (spaces are trimmed automatically):
+			<pre class="prettyprint lang-js">$(function() {
+
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra'],
+		headers: {
+			2 : { sorter: 'roman-ignore' }
+		},
+		// roman numeral parser option
+		// ignore the last (1) character(s) in column 2 (zero-based index)
+		// the two zeros in the array are just placeholders ( [ , , 1 ] works as well )
+		roman_ignore: [ 0, 0, 1 ]
+
+	});
+
+});</pre>
+
+		<h4>Remove Non-Roman Numerals</h4>
+			For cells that contain a bit more complex layout, you can define a regular expression to ignore (remove) certain parts of the content.<br>
+			<br>
+			The value obtained from the <code>roman_ignore</code> option array is <em>used within a javascript replace function</em>, so it can be either a <strong>regular expression</strong> or a <strong>string</strong>.<br>
+			<br>
+			In this example (see the "Ignore regex" column in the demo below), content at the beginning of the cell is set to be ignored. This should <em>leave</em> the roman numeral string to be parsed by this script (spaces are trimmed automatically).
+			<pre class="prettyprint lang-js">$(function() {
+
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra'],
+		headers: {
+			3 : { sorter: 'roman-ignore' }
+		},
+		// roman numeral parser option
+		// ignore any words at the beginning of column 3 (zero-based index) using a regular expression
+		// additionally, if all column content contains the same character to ignore, a string can be
+		// passed within this option, e.g. "Chapter "
+		// the three zeros in the array are just placeholders ( [ , , , /^(\w+\s)/ ] works as well )
+		roman_ignore: [ 0, 0, 0, /^(\w+\s)/ ]
+
+	});
+
+});</pre>
+		</div>
+
+		<h3><a href="#">"roman-extract" parser</a></h3>
+		<div>
+			<ul>
+				<li>This parser will attempt to extract out a roman numeral block from the cell content.</li>
+				<li>It's not perfect. If the content contains two blocks of roman numerals, they will be combined. For example,
+					<ul>
+						<li>If a cell contains <code>X plus VII</code>, the parser will extract out <code>XVII</code> and return a value of 17.</li>
+						<li>Or worse yet, if a cell contains <code>VI minus X</code>, the parser will extract out <code>VIX</code> which is not a valid roman numeral, so it will instead return the initial value of <code>VI minus X</code>. If this is the case, use the "roman-ignore" parser instead.</li>
+					</ul>
+				</li>
+			</ul>
+			<pre class="prettyprint lang-js">$(function() {
+
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ['zebra'],
+		headers: {
+			4 : { sorter: 'roman-extract' }
+		}
+	});
+
+});</pre>
+		</div>
+
+	</div>
+
+	<h1>Demo</h1>
+
+<button type="button" class="toggleparsedvalue">toggle</button> parsed values within the column
+
+<div id="demo"><table>
+	<thead>
+		<tr>
+			<th class="sorter-false" colspan="2">Pure Roman Numerals</th>
+			<th class="sorter-false" colspan="2">Ignore Non-Roman Numerals</th>
+			<th class="sorter-false">Extract Roman Numerals</th>
+		</tr>
+		<tr>
+			<th class="sorter-roman">Short</th>
+			<th class="sorter-roman">Long</th>
+			<th class="sorter-roman-ignore">Ignore last (1) character *</th>
+			<th class="sorter-roman-ignore">Ignore regex (/^(\w+\s)/)</th>
+			<th class="sorter-roman-extract">Extract</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>I</td><td>MDLXXXV</td><td>iiia</td><td>Mark I</td><td>2000 XXVII Sydney</td></tr>
+		<tr><td>MXI</td><td>MDCLXVI</td><td>iiib</td><td>Mark IV</td><td>2012 XXX London</td></tr>
+		<tr><td>XII</td><td>MMDCCCLVIII</td><td>ia</td><td>Mark V</td><td>2020 XXXII Tokyo</td></tr>
+		<tr><td>CXI</td><td>MMCCI</td><td>va</td><td>Mark VII</td><td>2004 XXVIII Athens</td></tr>
+		<tr><td>XXI</td><td>MDCCCXL</td><td>vi b</td><td>Mk III</td><td>1980 XXII Moscow</td></tr>
+		<tr><td>XIII</td><td>MMMCXXIX</td><td>iva</td><td>Mod X</td><td>1972 XX Munich</td></tr>
+		<tr><td>V</td><td>DLXXVII</td><td>via</td><td>Mod IV</td><td>2016 XXXI Rio de Janeiro</td></tr>
+		<tr><td>X</td><td>MDCLXV</td><td>xia</td><td>Mk VIII</td><td>1996 XXVI Atlanta</td></tr>
+		<tr><td>XI</td><td>MDXVIII</td><td>xiiz</td><td>Mod XII</td><td>1976 XXI Montreal</td></tr>
+		<tr><td>CLXI</td><td>MDCCCLX</td><td>xd</td><td>Mk 0</td><td>1992 XXV Barcelona</td></tr>
+		<tr><td>C</td><td>CCCXCI</td><td>iiic</td><td>Mk VI</td><td>1988 XXIV Seoul</td></tr>
+		<tr><td>LV</td><td>MLXXX</td><td>xxf</td><td>Mk II</td><td>1984 XXIII Los Angeles</td></tr>
+		<tr><td>IX</td><td>DCCLVII</td><td>lig</td><td>Mod L</td><td>2008 XXIX Beijing</td></tr>
+	</tbody>
+</table></div>
+	<small>* Ignoring the last letter (set number to ignore in <code>roman_ignore</code> option array; notice that "vi b" sorts before "via" - <strong>spaces do matter</strong>!)</small><p>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
+&lt;!-- tablesorter plugin; requires jQuery --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- load roman numeral parser --&gt;
+&lt;script src=&quot;../js/parsers/parser-roman.js&quot;&gt;&lt;/script&gt;
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+<script>
+$(function(){
+	// add parsed values to order & value column
+	addParsedValues($('table'), [0,1,2,3,4]);
+});
+</script>
+
+</body>
+</html>
