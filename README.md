@@ -60,6 +60,36 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.3">Version 2.17.3</a> (6/28/2014)
+
+* Docs
+  * Added bold notes to the output widget demo about setting the server content-disposition. Fixes [issue #653](https://github.com/Mottie/tablesorter/issues/653).
+  * Updated to latest Bootstrap (v3.2.0), jQuery UI (v1.11.0) and Cupertino theme.
+  * Embedded gists within the documentation should now work properly.
+
+* Core
+  * Add "tablesorter-processing" class name to table during processing. Fixes [issue #655](https://github.com/Mottie/tablesorter/issues/655).
+
+* Filter
+  * When `filter_liveSearch` is set to a number, it now searches when pressing enter. Fixes [issue #654](https://github.com/Mottie/tablesorter/issues/654).
+  * Modify change event so a select searches the table without requiring a carriage return. Fixes [issue #650](https://github.com/Mottie/tablesorter/issues/650).
+
+* Pager
+  * Objects returned by `ajaxProcessing` can now include a `filteredRows` value. Fixes [issue #649](https://github.com/Mottie/tablesorter/issues/649).
+  * Fix internal use of `selectorRemove` option, to consistently extract out the class name from the selector string.
+  * Previous &amp; Next buttons now disable with zero filtered pages. Fixes [issue #649](https://github.com/Mottie/tablesorter/issues/649).
+  * Changed pager widget `goto` page selector option to `gotoPage`, because `goto` is a reserved word. Fixes [issue #657](https://github.com/Mottie/tablesorter/issues/657).
+
+* Scroller
+  * Add `scroller_upAfterSort` option to prevent scrolling after clicking a checkbox. Fixes [issue #660](https://github.com/Mottie/tablesorter/issues/660).
+
+* Static Row
+  * Static rows are now manipulated witin a detached tbody.
+  * Updated demo to allow toggling of static rows using ctrl (or command on Mac) + click.
+
+* Parsers
+  * Added new Roman numeral parsers. There are three different parsers to cover three different use cases. Please see the [roman numeral parser demo](http://mottie.github.io/tablesorter/docs/example-parsers-roman.html) for details.
+
 #### <a name="v2.17.2">Version 2.17.2</a> (6/18/2014)
 
 * Docs

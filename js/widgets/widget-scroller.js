@@ -10,7 +10,7 @@
 
 	Resizable scroller widget for the jQuery tablesorter plugin
 
-	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 6/18/2014 (v2.17.2)
+	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 6/28/2014 (v2.17.3)
 	Requires jQuery v1.7+
 	Requires the tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
 

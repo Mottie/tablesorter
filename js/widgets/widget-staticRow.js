@@ -1,6 +1,6 @@
 /*
  * StaticRow widget for jQuery TableSorter 2.0
- * Version 1.1 - modified by Rob Garrison (4/22/2014 for tablesorter v2.16.1-beta)
+ * Version 1.2 - modified by Rob Garrison (6/28/2014 for tablesorter v2.16.1-beta+)
  * Requires:
  *  jQuery v1.4+
  *  tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
