@@ -364,6 +364,7 @@ ts.addWidget({
 		filter_reset         : null,  // jQuery selector string of an element used to reset the filters
 		filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 		filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
+		filter_searchFiltered: true,  // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
 		filter_selectSource  : null,  // include a function to return an array of values to be added to the column filter select
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
@@ -944,24 +945,26 @@ ts.filter = {
 				$rows = $rows.not('.' + c.cssChildRow);
 				len = $rows.length;
 				// optimize searching only through already filtered rows - see #313
-				searchFiltered = true;
+				searchFiltered = wo.filter_searchFiltered;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
-				for (indx = 0; indx < columnIndex; indx++) {
-					val = filters[indx] || '';
-					// break out of loop if we've already determined not to search filtered rows
-					if (!searchFiltered) { indx = columnIndex; }
-					// search already filtered rows if...
-					searchFiltered = searchFiltered && lastSearch.length &&
-						// there are no changes from beginning of filter
-						val.indexOf(lastSearch[indx] || '') === 0 &&
-						// if there is NOT a logical "or", or range ("to" or "-") in the string
-						!regex.alreadyFiltered.test(val) &&
-						// if we are not doing exact matches, using "|" (logical or) or not "!"
-						!/[=\"\|!]/.test(val) &&
-						// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
-						!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) && 
-						// if filtering using a select without a "filter-match" class (exact match) - fixes #593
-						!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
+				if (searchFiltered) {
+					for (indx = 0; indx < columnIndex; indx++) {
+						val = filters[indx] || '';
+						// break out of loop if we've already determined not to search filtered rows
+						if (!searchFiltered) { indx = columnIndex; }
+						// search already filtered rows if...
+						searchFiltered = searchFiltered && lastSearch.length &&
+							// there are no changes from beginning of filter
+							val.indexOf(lastSearch[indx] || '') === 0 &&
+							// if there is NOT a logical "or", or range ("to" or "-") in the string
+							!regex.alreadyFiltered.test(val) &&
+							// if we are not doing exact matches, using "|" (logical or) or not "!"
+							!/[=\"\|!]/.test(val) &&
+							// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
+							!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) && 
+							// if filtering using a select without a "filter-match" class (exact match) - fixes #593
+							!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
+					}
 				}
 				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
 				// can't search when all rows are hidden - this happens when looking for exact matches

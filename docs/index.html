@@ -1617,6 +1617,8 @@ $(function(){
       filter_saveFilters   : false,  
       // typing delay in milliseconds before starting a search.
       filter_searchDelay   : 300,
+      // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
+      filter_searchFiltered: true,
       // include a function to return an array of values to be added to the column filter select
       filter_selectSource  : null,
       // if true, filter start from the beginning of the cell contents.
@@ -2402,6 +2404,45 @@ $('input.tablesorter-filter:eq(0)').trigger('search', false);</pre>
 					In tablesorter v2.4+, the trigger can be applied directly to the table:
 					<pre class="prettyprint lang-js">// refresh the widget filter; no delay
 $('table').trigger('search', false);</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-filter-searchfiltered">
+				<td><a href="#" class="permalink">filter_searchFiltered</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: Set this option to allow searching through already filtered rows (in special conditions); this will speed up searching in large tables (<span class="version">v2.17.4</span>).
+					<div class="collapsible">
+					<br>
+					To better explain this, lets do it by example. Lets say you have a column of color names and you enter "light" and results like "light blue" and "light grey" show up.<br>
+					<br>
+					When you press the space bar, a space is added, and instead of searching though all of the colors again, the filter widget only searches through the already filtered results that started with "light". This can substantially speed up searching, especially in large tables.<br>
+					<br>
+					But, there are some special circumstances which would make this method return incorrect results. So, this option was added to allow you to disable this feature in case one of these following conditions doesn't cover your need; but still, please report any issues!<br>
+					<br>
+					The search through filtered results <em>only occurs</em> if the following conditions are met:
+					<ul>
+						<li>The last search (for all columns) was not completely empty - all rows will be searched anyway.</li>
+						<li>If there were no changes to the search from the beginning of the search string (changing the above search to "bright" will force a new search of all rows).</li>
+						<li>If the search does not contain a logical or (<code> or </code> or <code>|</code>), or a range delimiter (<code> - </code> or <code> to </code>) within the search query.</li>
+						<li>If the search is not looking for an exact match (<code>"</code> or <code>=</code>) or a logical not search (<code>!</code>).</li>
+						<li>Or, if the search is using a select dropdown without a "filter-match" class name (looking for an exact match).</li>
+						<li>If the search does not contain an operator greater than or equal to a negative number (<code>&gt;=-10</code>) or less than or equal to a positive number (<code>&lt;=10</code>).</li>
+						<li>And lastly, only search filtered rows if all rows are not hidden.</li>
+					</ul>
+					If the <code>debug</code> option is set to <code>true</code>, then a message will appear while filtering stating the specific number of rows, or "all" rows, that are being searched.<br>
+					<br>
+					Use the <a href="#widget-filter-searchfiltered"><code>filter_searchFiltered</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_searchFiltered : false
+    }
+  });
+});</pre></div>
 				</td>
 				<td></td>
 			</tr>
