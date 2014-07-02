@@ -306,10 +306,12 @@
 						// ensure a zero returned row count doesn't fail the logical ||
 						rr_count = result[t ? 1 : 0];
 						p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
+						// can't set filtered rows when returning an array
+						p.filteredRows = p.totalRows;
 						d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
 						th = result[2]; // headers
 					}
-					l = d.length;
+					l = d && d.length;
 					if (d instanceof jQuery) {
 						if (p.processAjaxOnInit) {
 							// append jQuery object
