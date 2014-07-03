@@ -4911,6 +4911,28 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				<td></td>
 			</tr>
 
+			<tr id="variable-totalrows">
+				<td><a href="#" class="permalink">config.totalRows</a></td>
+				<td>Numeric</td>
+				<td>This variable contains the total number of rows within the table, not including rows within info-only tbodies (<span class="version">v2.17.4</span>)
+					<div class="collapsible">
+					<br>
+					Access this internal value at any time. It is also included as a variable in the <code>filterEnd</code> event so you can update an external count like this:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, data){
+    // use data.filteredRows or this.config.filteredRows for 
+    $('.filter-rows').html( data.filteredRows );
+    $('.total-rows').html( data.totalRows );
+});</pre>
+					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
+    $('.filter-rows').html( data.filteredRows );
+    $('.total-rows').html( data.totalRows );
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 		</tbody>
 
 		<!-- non-sorting tbody -->
@@ -4989,14 +5011,15 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 					This internal value will show an accurate number of filtered rows; which means the count won't include any rows from "information-only" tbodies.<br>
 					<br>
 					Access this internal value at any time after the filter widget has initialized, or as a shortcut it is included as a variable in the <code>filterEnd</code> event so you can update an external count like this:
-					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, filteredRows){
-    // use filteredRows or this.config.filteredRows
-    $('.filter-count').html( filteredRows );
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, data){
+    // use data.filteredRows or this.config.filteredRows for 
+    $('.filter-rows').html( data.filteredRows );
+    $('.total-rows').html( data.totalRows );
 });</pre>
 					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
 					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
-    var filteredRows = event.type === 'filterEnd' ? data : data.filteredRows;
-    $('.filter-count').html( filteredRows );
+    $('.filter-rows').html( data.filteredRows );
+    $('.total-rows').html( data.totalRows );
 });</pre>
 					</div>
 				</td>

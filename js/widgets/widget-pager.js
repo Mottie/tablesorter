@@ -351,6 +351,7 @@ tsp = ts.pager = {
 		} else if (!f) {
 			p.filteredRows = p.totalRows;
 		}
+		c.totalRows = p.totalRows;
 		c.filteredRows = p.filteredRows;
 		p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
@@ -499,7 +500,7 @@ tsp = ts.pager = {
 				// process ajax object
 				if (!$.isArray(result)) {
 					p.ajaxData = result;
-					p.totalRows = result.total;
+					c.totalRows = p.totalRows = result.total;
 					c.filteredRows = p.filteredRows = typeof result.filteredRows !== 'undefined' ? result.filteredRows : result.total;
 					th = result.headers;
 					d = result.rows;
@@ -510,7 +511,7 @@ tsp = ts.pager = {
 					rr_count = result[t ? 1 : 0];
 					p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
 					// can't set filtered rows when returning an array
-					c.filteredRows = p.filteredRows = p.totalRows;
+					c.totalRows = c.filteredRows = p.filteredRows = p.totalRows;
 					d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
 					th = result[2]; // headers
 				}
