@@ -1564,6 +1564,17 @@ ts.addWidget({
 				.append('<div class="' + ts.css.resizer + '" style="cursor:w-resize;position:absolute;z-index:1;right:-' +
 					padding + 'px;top:0;height:100%;width:20px;"></div>');
 		})
+		.find('.' + ts.css.resizer + ',.' + ts.css.grip)
+		.bind('mousedown', function(event) {
+			// save header cell and mouse position
+			$target = $(event.target).closest('th');
+			var $header = c.$headers.filter('[data-column="' + $target.attr('data-column') + '"]');
+			if ($header.length > 1) { $target = $target.add($header); }
+			// if table is not as wide as it's parent, then resize the table
+			$next = event.shiftKey ? $target.parent().find('th').not('.resizable-false').filter(':last') : $target.nextAll(':not(.resizable-false)').eq(0);
+			mouseXPosition = event.pageX;
+		});
+		$(document)
 		.bind('mousemove.tsresize', function(event) {
 			// ignore mousemove if no mousedown
 			if (mouseXPosition === 0 || !$target) { return; }
@@ -1578,28 +1589,15 @@ ts.addWidget({
 		})
 		.bind('mouseup.tsresize', function() {
 			stopResize();
-		})
-		.find('.' + ts.css.resizer + ',.' + ts.css.grip)
-		.bind('mousedown', function(event) {
-			// save header cell and mouse position
-			$target = $(event.target).closest('th');
-			var $header = c.$headers.filter('[data-column="' + $target.attr('data-column') + '"]');
-			if ($header.length > 1) { $target = $target.add($header); }
-			// if table is not as wide as it's parent, then resize the table
-			$next = event.shiftKey ? $target.parent().find('th').not('.resizable-false').filter(':last') : $target.nextAll(':not(.resizable-false)').eq(0);
-			mouseXPosition = event.pageX;
 		});
-		$table.find('thead:first')
-		.bind('mouseup.tsresize mouseleave.tsresize', function() {
-			stopResize();
-		})
+
 		// right click to reset columns to default widths
-		.bind('contextmenu.tsresize', function() {
-				ts.resizableReset(table);
-				// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
-				var allowClick = $.isEmptyObject ? $.isEmptyObject(storedSizes) : true;
-				storedSizes = {};
-				return allowClick;
+		$table.find('thead:first').bind('contextmenu.tsresize', function() {
+			ts.resizableReset(table);
+			// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
+			var allowClick = $.isEmptyObject ? $.isEmptyObject(storedSizes) : true;
+			storedSizes = {};
+			return allowClick;
 		});
 	},
 	remove: function(table, c) {
