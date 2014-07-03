@@ -205,7 +205,7 @@ tsp = ts.pager = {
 		p.isInitializing = false;
 		tsp.setPageSize(table, 0, c); // page size 0 is ignored
 		c.$table.trigger('pagerInitialized', c);
-
+		tsp.updatePageDisplay(table, c);
 	},
 
 	bindEvents: function(table, c){
