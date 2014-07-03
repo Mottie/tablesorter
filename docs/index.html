@@ -4980,6 +4980,24 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 				<td></td>
 			</tr>
 
+			<tr id="variable-filteredrows">
+				<td><a href="#" class="permalink">config.filteredRows</a></td>
+				<td>Numeric</td>
+				<td>Only available when the filter widget is active. This variable contains the current number of filtered rows (<span class="version">v2.17.4</span>)
+					<div class="collapsible">
+					<br>
+					This internal value will show an accurate number of filtered rows; which means the count won't include any rows from "information-only" tbodies.<br>
+					<br>
+					Access this internal value at any time after the filter widget has initialized, or as a shortcut it is included as a variable in the <code>filterEnd</code> event so you can update an external count like this:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, filteredRows){
+    // use filteredRows or this.config.filteredRows
+    $('.filter-count').html( filteredRows );
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="variable-sticky">
 				<td><a href="#" class="permalink">wo.$sticky</a></td>
 				<td>jQuery Object</td>

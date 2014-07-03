@@ -938,6 +938,8 @@ ts.filter = {
 					$(this).hasClass('filter-parsed');
 			}).get();
 		if (c.debug) { time = new Date(); }
+		// filtered rows count
+		c.filteredRows = 0;
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if ($tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock || ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
@@ -1100,6 +1102,7 @@ ts.filter = {
 					}
 				}
 			}
+			c.filteredRows += $rows.not('.' + wo.filter_filteredRow).length;
 			ts.processTbody(table, $tbody, false);
 		}
 		c.lastCombinedFilter = combinedFilters; // save last search
@@ -1111,7 +1114,7 @@ ts.filter = {
 		if (c.debug) {
 			ts.benchmark("Completed filter widget search", time);
 		}
-		if (wo.filter_initialized) { c.$table.trigger('filterEnd'); }
+		if (wo.filter_initialized) { c.$table.trigger('filterEnd', [c.filteredRows]); }
 		setTimeout(function(){
 			c.$table.trigger('applyWidgets'); // make sure zebra widget is applied
 		}, 0);
