@@ -4917,14 +4917,21 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				<td>This variable contains the total number of rows within the table, not including rows within info-only tbodies (<span class="version">v2.17.4</span>)
 					<div class="collapsible">
 					<br>
-					Access this internal value at any time. It is also included as a variable in the <code>filterInit</code> or <code>filterEnd</code> event so you can update an external count like this:
-					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, config){
-    // use data.filteredRows or this.config.filteredRows for 
+					Access this internal value at after tablesorter has initialized. It is also included as a variable in the <code>filterEnd</code> event so you can update an external count like this:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, data){
+    // use data.filteredRows or this.config.filteredRows
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
-});</pre>
+});</pre>The <code>filterEnd</code> event does not fire during filter widget initialization, so if you need to force a search, add this code to the table initialziation to get a <code>filterEnd</code> even to fire (for now):
+					<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    initialized: function(table){
+      $.tablesorter.setFilters( table, false, true );
+    }
+  });
+});</pre><hr>
 					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
-					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, config){
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
 });</pre>
@@ -5010,14 +5017,21 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 					<br>
 					This internal value will show an accurate number of filtered rows; which means the count won't include any rows from "information-only" tbodies.<br>
 					<br>
-					Access this internal value at any time after the filter widget has initialized, or as a shortcut it is included as a variable in the <code>filterInit</code> or <code>filterEnd</code> event so you can update an external count like this:
-					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, config){
-    // use data.filteredRows or this.config.filteredRows for 
+					Access this internal value at any time after the filter widget has initialized, or as a shortcut it is included as a variable in the <code>filterEnd</code> event so you can update an external count like this:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd', function(event, data){
+    // use data.filteredRows or this.config.filteredRows
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
-});</pre>
+});</pre>The <code>filterEnd</code> event does not fire during filter widget initialization, so if you need to force a search, add this code to the table initialziation to get a <code>filterEnd</code> even to fire (for now):
+					<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    initialized: function(table){
+      $.tablesorter.setFilters( table, false, true );
+    }
+  });
+});</pre><hr>
 					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
-					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, config){
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
 });</pre>
@@ -5292,6 +5306,24 @@ $.tablesorter.isValueInArray(2, sortList);</pre>
 						Use this function as follows:
 						<pre class="prettyprint lang-js">var parser = $.tablesorter.getParserById(&quot;currency&quot;),
 	value = parser.format('100%'); // returns 100 (number type, not a string)</pre>
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-haswidget">
+				<td><a href="#" class="permalink">hasWidget</a></td>
+				<td>This function allows the checking to see if a widget is installed (<span class="version">v2.17.4</span>).
+					<div class="collapsible"><br>
+						Access it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.hasWidget( table, 'mywidget');</pre>
+						<ul>
+							<li><code>table</code> - table element or jQuery object of the selected table.</li>
+							<li><code>'mywidget'</code> - ID of the widget to check.</li>
+						</ul>
+						This function returns a <code>boolean</code> value, where <code>true</code> means the widget is currently installed and active; and <code>false</code> means the widget is not installed.<br>
+						<br>
+						Use this function as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.hasWidget( $('table'), 'zebra' ); // true</pre>
 					</div>
 				</td>
 			</tr>

@@ -1487,6 +1487,11 @@
 				ts.widgets.push(widget);
 			};
 
+			ts.hasWidget = function(table, name){
+				table = $(table);
+				return table.length && table[0].config && table[0].config.widgetInit[name] || false;
+			};
+
 			ts.getWidgetById = function(name) {
 				var i, w, l = ts.widgets.length;
 				for (i = 0; i < l; i++) {
