@@ -694,7 +694,7 @@ ts.filter = {
 			if (!wo.filter_initialized) {
 				// filter widget initialized
 				wo.filter_initialized = true;
-				c.$table.trigger('filterInit');
+				c.$table.trigger('filterInit', c);
 			}
 		});
 		// if filter widget is added after pager has initialized; then set filter init flag
@@ -702,7 +702,7 @@ ts.filter = {
 			wo.filter_initialized = true;
 			c.$table
 				.trigger('filterFomatterUpdate')
-				.trigger('filterInit');
+				.trigger('filterInit', c);
 		}
 
 	},
@@ -1117,7 +1117,7 @@ ts.filter = {
 		if (c.debug) {
 			ts.benchmark("Completed filter widget search", time);
 		}
-		if (wo.filter_initialized) { c.$table.trigger('filterEnd', [{ filteredRows: c.filteredRows, totalRows: c.totalRows }] ); }
+		if (wo.filter_initialized) { c.$table.trigger('filterEnd', c ); }
 		setTimeout(function(){
 			c.$table.trigger('applyWidgets'); // make sure zebra widget is applied
 		}, 0);
