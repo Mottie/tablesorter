@@ -4993,6 +4993,11 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
     // use filteredRows or this.config.filteredRows
     $('.filter-count').html( filteredRows );
 });</pre>
+					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
+					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
+    var filteredRows = event.type === 'filterEnd' ? data : data.filteredRows;
+    $('.filter-count').html( filteredRows );
+});</pre>
 					</div>
 				</td>
 				<td></td>
