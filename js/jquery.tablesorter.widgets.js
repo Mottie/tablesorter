@@ -825,6 +825,7 @@ ts.filter = {
 			if (event.which === 13 || event.type === 'search' || event.type === 'change') {
 				event.preventDefault();
 				// init search with no delay
+				$(this).attr('data-lastSearchTime', new Date().getTime());
 				ts.filter.searching( table, false, true );
 			}
 		});
