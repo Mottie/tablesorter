@@ -4974,14 +4974,9 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 			</tr>
 
 			<tr id="variable-filter-initialized">
-				<td><a href="#" class="permalink">wo.filter_initialized</a></td>
-				<td>jQuery Object</td>
-				<td>Only available when the filter widget is active. This variable contains all external search inputs bound using the <a href="#function-bind-search"><code>bindSearch</code></a> function.
-					<div class="collapsible">
-					<br>
-					The <code>table.config.widgetOptions.filter_$externalFilters</code> variable contains an array of jQuery objects pointing to all external inputs, even if the <a href="#function-bind-search"><code>bindSearch</code></a> function is used multiple times.
-					</div>
-					</td>
+				<td><span class="permalink">wo.filter_initialized</span></td>
+				<td>Boolean</td>
+				<td>Only available when the filter widget is active. This variable is <code>true</code> once the filter widget has initialized; it is undefined otherwise.</td>
 				<td></td>
 			</tr>
 

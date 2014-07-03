@@ -682,7 +682,9 @@ ts.filter = {
 			ts.benchmark("Applying Filter widget", time);
 		}
 		// add default values
-		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
+		c.$table.bind('tablesorter-initialized pagerInitialized', function(e) {
+			// redefine "wo" as it does not update properly inside this callback
+			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];
 			if (filters.length) {
 				ts.setFilters(table, filters, true);
@@ -695,6 +697,13 @@ ts.filter = {
 				c.$table.trigger('filterInit');
 			}
 		});
+		// if filter widget is added after pager has initialized; then set filter init flag
+		if (c.pager && c.pager.initialized && !wo.filter_initialized) {
+			wo.filter_initialized = true;
+			c.$table
+				.trigger('filterFomatterUpdate')
+				.trigger('filterInit');
+		}
 
 	},
 	setDefaults: function(table, c, wo) {
