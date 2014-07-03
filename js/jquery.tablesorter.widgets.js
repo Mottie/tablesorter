@@ -957,7 +957,8 @@ ts.filter = {
 				searchFiltered = wo.filter_searchFiltered;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
 				if (searchFiltered) {
-					for (indx = 0; indx < columnIndex; indx++) {
+					// cycle through all filters; include last (columnIndex + 1 = match any column). Fixes #669
+					for (indx = 0; indx < columnIndex + 1; indx++) {
 						val = filters[indx] || '';
 						// break out of loop if we've already determined not to search filtered rows
 						if (!searchFiltered) { indx = columnIndex; }
