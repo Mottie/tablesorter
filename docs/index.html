@@ -969,6 +969,33 @@
 				<td></td>
 			</tr>
 
+			<tr id="initialized">
+				<td><a href="#" class="permalink">initialized</a></td>
+				<td>Function</td>
+				<td>null</td>
+				<td>This callback fires when tablesorter has completed initialization. (v2.2).
+					<div class="collapsible">
+						<pre class="prettyprint lang-js">$(function(){
+
+  // bind to tablesorter-initialized event BEFORE initializing tablesorter
+  $("table")
+    .bind("tablesorter-initialized",function(e, table) {
+      // do something after tablesorter has initialized
+    });
+
+  // initialize the tablesorter plugin
+  $("table").tablesorter({
+    // this is equivalent to the above bind method
+    initialized : function(table){
+      // do something after tablesorter has initialized
+    }
+  });
+
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="initwidgets">
 				<td><a href="#" class="permalink">initWidgets</a></td>
 				<td>Boolean</td>
@@ -4239,8 +4266,8 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 		</thead>
 		<tbody>
 
-			<tr id="initialized">
-				<td><a href="#" class="permalink">initialized</a></td>
+			<tr id="tablesorter-initialized">
+				<td><a href="#" class="permalink">tablesorter-initialized</a></td>
 				<td>This event fires when tablesorter has completed initialization. (v2.2).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">$(function(){
@@ -4387,7 +4414,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td>Event triggered when the filter widget has finished processing the search (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to do something like remove the class added to the filter row when the filtering started. Use it as follows:<pre class="prettyprint lang-js">$(function(){
-  $('table').bind('filterEnd', function(){
+  $('table').bind('filterEnd', function(event, config){
     $(this).find('tr.tablesorter-filter-row').removeClass('filtering');
   });
 });</pre></div>
@@ -4932,6 +4959,8 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 });</pre><hr>
 					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
 					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
+    // Note: data = table.config (filterEnd event); and data = table.config.pager (pagerComplete event)
+    // both objects contain data.filteredRows & data.totalRows
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
 });</pre>
@@ -5032,6 +5061,8 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 });</pre><hr>
 					If using the pager plugin or widget, the value returned from the <code>filterEnd</code> event will not be accurate, so you'll need to bind to the <code>pagerComplete</code> event instead:
 					<pre class="prettyprint lang-js">$('table').bind('filterEnd pagerComplete', function(event, data){
+    // Note: data = table.config (filterEnd event); and data = table.config.pager (pagerComplete event)
+    // both objects contain data.filteredRows & data.totalRows
     $('.filter-rows').html( data.filteredRows );
     $('.total-rows').html( data.totalRows );
 });</pre>
@@ -5120,7 +5151,7 @@ for (tbodyIndex = 0; tbodyIndex < tbodies.length; tbodyIndex++) {
 						All this function does is add or remove a class name of <code>&quot;tablesorter-processing&quot;</code> and the class name contained within the <a href="#cssprocessing"><code>cssProcessing</code> option</a>.<br>
 						<br>
 						Here is a basic example of how this function is used:
-						<pre class="prettyprint lang-js">$('table').bind('sortBegin sortEnd', function(event){
+						<pre class="prettyprint lang-js">$('table').bind('sortBegin sortEnd', function(event, table){
 	// this is included with the basic functionality of tablesorter
 	$.tablesorter.isProcessing( this, event === 'sortBegin' );
 });</pre>
