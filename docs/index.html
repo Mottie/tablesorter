@@ -498,7 +498,7 @@
 
 		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.17.2</span>).</li>
 		<li>
-			<span class="label label-info">Beta</span> Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.17.2</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.17.2</span>).<br>
 			<br>
 		</li>
 
@@ -977,7 +977,7 @@
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">$(function(){
 
-  // bind to tablesorter-initialized event BEFORE initializing tablesorter
+  // bind to tablesorter-initialized event BEFORE initializing tablesorter*
   $("table")
     .bind("tablesorter-initialized",function(e, table) {
       // do something after tablesorter has initialized
@@ -991,7 +991,7 @@
     }
   });
 
-});</pre></div>
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td></td>
 			</tr>
@@ -1155,7 +1155,11 @@ From the example function above, you'll end up with something similar to this HT
 					<div class="collapsible">
 					<br>
 					The value contains an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where columnIndex is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code>sortForce</code></a> for more details on other sort order options.<br>
-					<br>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    sortList : [[1,0], [2,0]] // initial sort columns (2nd and 3rd)
+  });
+});</pre>
 					This option can also be set using jQuery data (v2.3.1) or metadata on the table:
 					<table class="info">
 						<tfoot>
@@ -3911,7 +3915,10 @@ var sort = [[0,0],[2,0]],
         alert('new sort applied to ' + table.id);
     };
 // Note that the sort value below is inside of another array (inside another set of square brackets)
-// A callback method was added in 2.3.9.
+// without a callback it could look like this:
+$("table").trigger("sorton", [ [[0,0],[2,0]] ]);
+
+// when including a callback method the outer square bracket wrap both parameters (added in 2.3.9).
 $("table").trigger("sorton", [sort, callback]);</pre>
 				<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.<br>
 				<br>
@@ -4301,7 +4308,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">$(function(){
 
-  // bind to initialized event BEFORE initializing tablesorter
+  // bind to initialized event BEFORE initializing tablesorter*
   $("table")
     .bind("tablesorter-initialized",function(e, table) {
       // do something after tablesorter has initialized
@@ -4315,7 +4322,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
     }
   });
 
-});</pre></div>
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td></td>
 			</tr>
@@ -4417,10 +4424,19 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td>Event triggered when the filter widget has finished initializing (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to modify the filter elements (row, inputs and/or selects) as desired. Use it as follows:<pre class="prettyprint lang-js">$(function(){
-  $('table').bind('filterInit', function(){
-    $(this).find('tr.tablesorter-filter-row').addClass('fred');
-  });
-});</pre></div>
+  $('table')
+
+    // bind to filter initialized event BEFORE initializing tablesorter*
+    .bind('filterInit', function(){
+      $(this).find('tr.tablesorter-filter-row').addClass('fred');
+    })
+    
+     // initialize the sorter
+    .tablesorter({
+      widgets : ['filter']
+    });
+
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td><a href="example-option-show-processing.html">Example</a></td>
 			</tr>
@@ -4456,11 +4472,19 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td>Event triggered when the stickyHeader widget has finished initializing (<span class="version">v2.10.4</span>).
 					<div class="collapsible"><br>
 						You can use this event to do something like modify content within the sticky header:<pre class="prettyprint lang-js">$(function(){
-  $('table').bind('stickyHeadersInit', function(){
-    // this.config.widgetOptions.$sticky contains the entire sticky header table
-    this.config.widgetOptions.$sticky.find('tr.tablesorter-headerRow').addClass('sticky-styling');
+  $('table')
+    // bind to the init event BEFORE initializing tablesorter*
+    .bind('stickyHeadersInit', function(){
+      // this.config.widgetOptions.$sticky contains the entire sticky header table
+      this.config.widgetOptions.$sticky.find('tr.tablesorter-headerRow').addClass('sticky-styling');
+    })
+
+  // initialize the tablesorter plugin
+  .tablesorter({
+    widgets : ['stickyHeaders']
   });
-});</pre></div>
+
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td></td>
 			</tr>
@@ -4538,10 +4562,8 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 
   $("table")
 
-    // initialize the sorter
-    .tablesorter()
-
-    // bind to pager initialized event BEFORE calling the addon
+    // bind to pager initialized event BEFORE calling the ADDON
+    // or BEFORE initializing tablesorter when using the pager WIDGET*
     .bind('pagerBeforeInitialized', function(event, options){
       // options = table.config.pager (pager addon)
       // options = table.config (pager widget)
@@ -4549,12 +4571,15 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
       // event = event object; options = pager options
     })
 
+    // initialize the sorter
+    .tablesorter()
+
     // initialize the pager plugin
     .tablesorterPager({
       container: $("#pager")
     });
 
-});</pre></div>
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td></td>
 			</tr>
@@ -4567,10 +4592,8 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 
   $("table")
 
-    // initialize the sorter
-    .tablesorter()
-
-    // bind to pager initialized event BEFORE calling the addon
+    // bind to pager initialized event BEFORE calling the ADDON
+    // or BEFORE initializing tablesorter when using the pager WIDGET*
     .bind('pagerInitialized', function(event, options){
       // options = table.config.pager (pager addon)
       // options = table.config (pager widget) - so use options.pager.page below
@@ -4578,12 +4601,15 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
       $('#display').html( e.type + " event triggered, now on page " + (options.page + 1) );
     })
 
+    // initialize the sorter
+    .tablesorter()
+
     // initialize the pager plugin
     .tablesorterPager({
       container: $("#pager")
     });
 
-});</pre></div>
+});</pre><small>* Note: bind to all initialization events before initializing tablesorter; because most of the time, if bound after, the events will fire before the binding occurs</small>.</div>
 				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
