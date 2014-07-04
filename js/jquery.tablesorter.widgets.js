@@ -176,7 +176,7 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var i, time, classes, $header, $icon, $tfoot,
+		var i, time, classes, $header, $icon, $tfoot, $h,
 			themesAll = ts.themes,
 			$table = c.$table,
 			$headers = c.$headers,
@@ -225,17 +225,20 @@ ts.addWidget({
 		for (i = 0; i < c.columns; i++) {
 			$header = c.$headers.add(c.$extraHeaders).filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $header;
-			if (c.$headers.filter('[data-column="' + i + '"]:last')[0].sortDisabled) {
-				// no sort arrows for disabled columns!
-				$header.removeClass(remove);
-				$icon.removeClass(remove + ' ' + themes.icons);
-			} else {
-				classes = ($header.hasClass(ts.css.sortAsc)) ?
-					themes.sortAsc :
-					($header.hasClass(ts.css.sortDesc)) ? themes.sortDesc :
-						$header.hasClass(ts.css.header) ? themes.sortNone : '';
-				$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active);
-				$icon.removeClass(remove).addClass(classes);
+			$h = c.$headers.filter('[data-column="' + i + '"]:last');
+			if ($h.length) {
+				if ($h[0].sortDisabled) {
+					// no sort arrows for disabled columns!
+					$header.removeClass(remove);
+					$icon.removeClass(remove + ' ' + themes.icons);
+				} else {
+					classes = ($header.hasClass(ts.css.sortAsc)) ?
+						themes.sortAsc :
+						($header.hasClass(ts.css.sortDesc)) ? themes.sortDesc :
+							$header.hasClass(ts.css.header) ? themes.sortNone : '';
+					$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active);
+					$icon.removeClass(remove).addClass(classes);
+				}
 			}
 		}
 		if (c.debug) {
