@@ -60,6 +60,36 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.4">Version 2.17.4</a> (7/4/2014)
+
+* Docs
+  * Copied the tablesorter `initialized` option from the event section into the configuration; renamed the event appropriately (`tablesorter-initialized` event)
+  * Added notes about how to bind to "init" events; they should be bound before initializing tablesorter because in most cases, the events fire before the binding occurs.
+
+* Core
+  * Add `$.tablesorter.hasWidget(table, 'widgetId')` function. It returns a boolean value of `true` when the named widget is actively applied to the table.
+
+* Filter
+  * Add `filter_searchFiltered` option to allow disabling the search of already filtered rows.
+  * The `filter_initialized` flag now gets set appropriately. Fixes [issue #668](https://github.com/Mottie/tablesorter/issues/668).
+  * Include any column filter in determination of searching already filtered rows. Fixes [issue #669](https://github.com/Mottie/tablesorter/issues/669).
+  * Add internal `config.filteredRows` variable. Provides a value of the number of currently filtered (visible) rows. Fixes [issue #670](https://github.com/Mottie/tablesorter/issues/670).
+  * Add internal `config.totalRows` variable. Provides a value of the total number of rows in the current table, not including info-tbody rows.
+  * Fix change/search event being ignored for selects &amp; filterFormatter extensions.
+  * `filterInit` and `filterEnd` events now pass `config` as a parameter.
+
+* Pager
+  * Removed from beta status
+  * Filtered rows now equals the total rows when `ajaxProcessing` returns an array. Fixes [issue #667](https://github.com/Mottie/tablesorter/issues/667).
+  * Update the `config.filteredRows` when using ajax to match the internal `config.pager.filteredRows`. See [issue #670](https://github.com/Mottie/tablesorter/issues/670).
+  * Widget only: ensure `pagerComplete` event fires on initialization.
+
+* Resizable
+  * Bind mousemove to document instead of table header. Makes resizable handle use consistent with other resizing libraries, as the user would expect. Fixes [issue #665](https://github.com/Mottie/tablesorter/issues/665).
+  * Add `resizable_throttle` option to allow throttling of the mousemove/resize event. Set this option to `true` or a number between 1 and 10 to add a throttling delay. Fixes [issue #662](https://github.com/Mottie/tablesorter/issues/662).
+
+* UITheme: non-existent columns no longer cause a js error. Fixes [issue #672](https://github.com/Mottie/tablesorter/issues/672).
+
 #### <a name="v2.17.3">Version 2.17.3</a> (6/28/2014)
 
 * Docs
