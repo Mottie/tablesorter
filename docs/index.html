@@ -1680,6 +1680,8 @@ $(function(){
       resizable_addLastColumn: false,
       // Add the starting & reset header widths
       resizable_widths : [],
+      // throttle resizable event (needed for slow browsers)
+      resizable_throttle : false,
 
       // *** savesort widget ***
       // if false, the sort will not be saved for next page reload
@@ -2877,6 +2879,33 @@ $('table').trigger('search', false);</pre></div>
 });</pre></div>
 				</td>
 				<td><a href="example-widget-resizable.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-resizable-throttle">
+				<td><a href="#" class="permalink">resizable_throttle</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Resizable widget: Set this option to throttle the resizable events (<span class="version">v2.17.4</span>).
+					<div class="collapsible">
+					<br>
+					When <code>false</code> throttling of the mousemove (resizing) event is not applied.<br>
+					<br>
+					Set this option to either <code>true</code> for a default 5 millisecond delay, or set it to any number less than 10 to adjust the throttling delay that is applied to the mousemove/resizing event.<br>
+					<br>
+					Use the <a href="#widget-resizable-throttle"><code>&quot;resizable_widths&quot;</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["resizable"],
+    widgetOptions : {
+      // set to true for a default 5ms throttling delay
+      // or set to a number < 10 (more than that makes the resizing adjustment unusable
+      resizable_throttle : true
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-savesort">

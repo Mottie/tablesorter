@@ -1506,19 +1506,31 @@ ts.addWidget({
 	options: {
 		resizable : true,
 		resizable_addLastColumn : false,
-		resizable_widths : []
+		resizable_widths : [],
+		resizable_throttle : false // set to true (5ms) or any number 0-10 range
 	},
 	format: function(table, c, wo) {
 		if (c.$table.hasClass('hasResizable')) { return; }
 		c.$table.addClass('hasResizable');
 		ts.resizableReset(table, true); // set default widths
-		var $rows, $columns, $column, column,
+		var $rows, $columns, $column, column, timer,
 			storedSizes = {},
 			$table = c.$table,
 			mouseXPosition = 0,
 			$target = null,
 			$next = null,
 			fullWidth = Math.abs($table.parent().width() - $table.width()) < 20,
+			mouseMove = function(event){
+				if (mouseXPosition === 0 || !$target) { return; }
+				// resize columns
+				var leftEdge = event.pageX - mouseXPosition,
+					targetWidth = $target.width();
+				$target.width( targetWidth + leftEdge );
+				if ($target.width() !== targetWidth && fullWidth) {
+					$next.width( $next.width() - leftEdge );
+				}
+				mouseXPosition = event.pageX;
+			},
 			stopResize = function() {
 				if (ts.storage && $target && $next) {
 					storedSizes = {};
@@ -1587,14 +1599,14 @@ ts.addWidget({
 		.bind('mousemove.tsresize', function(event) {
 			// ignore mousemove if no mousedown
 			if (mouseXPosition === 0 || !$target) { return; }
-			// resize columns
-			var leftEdge = event.pageX - mouseXPosition,
-				targetWidth = $target.width();
-			$target.width( targetWidth + leftEdge );
-			if ($target.width() !== targetWidth && fullWidth) {
-				$next.width( $next.width() - leftEdge );
+			if (wo.resizable_throttle) {
+				clearTimeout(timer);
+				timer = setTimeout(function(){
+					mouseMove(event);
+				}, isNaN(wo.resizable_throttle) ? 5 : wo.resizable_throttle );
+			} else {
+				mouseMove(event);
 			}
-			mouseXPosition = event.pageX;
 		})
 		.bind('mouseup.tsresize', function() {
 			stopResize();
