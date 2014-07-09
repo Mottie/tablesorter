@@ -68,30 +68,32 @@
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired
 	// if this code interferes somehow, target the specific table $('#mytable'), instead of $('table')
-	$(window).load(function(){
-		// this flag prevents the updateCell event from being spammed
-		// it happens when you modify input text and hit enter
-		var alreadyUpdating = false,
-			t = $.tablesorter.css.table || 'tablesorter';
-		// bind to .tablesorter (default class name)
-		$('.' + t).find('tbody').on('change', 'select, input', function(e){
-			if (!alreadyUpdating) {
-				var $tar = $(e.target),
-					$cell = $tar.closest('td'),
-					$table = $cell.closest('table'),
-					indx = $cell[0].cellIndex,
-					c = $table[0].config || false,
-					$hdr = c && c.$headers && c.$headers.eq(indx);
-				// abort if not a tablesorter table, or
-				// don't use updateCell if column is set to "sorter-false" and "filter-false", or column is set to "parser-false"
-				if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ($hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false')) ) ) ){
-					return false;
+	$(function(){
+		$('table').on('tablesorter-initialized', function(){
+			// this flag prevents the updateCell event from being spammed
+			// it happens when you modify input text and hit enter
+			var alreadyUpdating = false;
+			// bind to .tablesorter (default class name)
+			$(this).children('tbody').on('change', 'select, input', function(e){
+				if (!alreadyUpdating) {
+					var $tar = $(e.target),
+						$cell = $tar.closest('td'),
+						$table = $cell.closest('table'),
+						indx = $cell[0].cellIndex,
+						c = $table[0].config || false,
+						$hdr = c && c.$headers && c.$headers.eq(indx);
+					// abort if not a tablesorter table, or
+					// don't use updateCell if column is set to "sorter-false" and "filter-false", or column is set to "parser-false"
+					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ($hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false')) ) ) ){
+						return false;
+					}
+					alreadyUpdating = true;
+					$table.trigger('updateCell', [ $tar.closest('td'), resort, function(){
+						updateServer(e, $table, $tar);
+						setTimeout(function(){ alreadyUpdating = false; }, 10);
+					} ]);
 				}
-				alreadyUpdating = true;
-				$table.trigger('updateCell', [ $tar.closest('td'), resort ]);
-				updateServer(e, $table, $tar);
-				setTimeout(function(){ alreadyUpdating = false; }, 10);
-			}
+			});
 		});
 	});
 
