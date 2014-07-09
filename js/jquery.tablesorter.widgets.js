@@ -54,7 +54,6 @@ $.extend(ts.css, {
 	filter    : 'tablesorter-filter',
 	wrapper   : 'tablesorter-wrapper',      // ui theme & resizable
 	resizer   : 'tablesorter-resizer',      // resizable
-	grip      : 'tablesorter-resizer-grip',
 	sticky    : 'tablesorter-stickyHeader', // stickyHeader
 	stickyVis : 'tablesorter-sticky-visible'
 });
@@ -1579,13 +1578,13 @@ ts.addWidget({
 		$columns
 		.each(function() {
 			var $column = $(this),
-				padding = parseInt($column.css('padding-right'), 10) + 10; // 10 is 1/2 of the 20px wide resizer grip
+				padding = parseInt($column.css('padding-right'), 10) + 10; // 10 is 1/2 of the 20px wide resizer
 			$column
 				.find('.' + ts.css.wrapper)
 				.append('<div class="' + ts.css.resizer + '" style="cursor:w-resize;position:absolute;z-index:1;right:-' +
 					padding + 'px;top:0;height:100%;width:20px;"></div>');
 		})
-		.find('.' + ts.css.resizer + ',.' + ts.css.grip)
+		.find('.' + ts.css.resizer)
 		.bind('mousedown', function(event) {
 			// save header cell and mouse position
 			$target = $(event.target).closest('th');
@@ -1629,7 +1628,7 @@ ts.addWidget({
 			.children('tr').children()
 			.unbind('mousemove.tsresize mouseup.tsresize')
 			// don't remove "tablesorter-wrapper" as uitheme uses it too
-			.find('.' + ts.css.resizer + ',.' + ts.css.grip).remove();
+			.find('.' + ts.css.resizer).remove();
 		ts.resizableReset(table);
 	}
 });
