@@ -137,15 +137,20 @@
 			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove.replace(/^(\w+\.)/g,'') ];
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			regex = new RegExp( '(' + t.join('|') + ')' );
-			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			if (f && !p.ajaxUrl) {
-				p.filteredRows = 0;
-				$.each(c.cache[0].normalized, function(i, el) {
-					p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
-				});
+				if ($.isEmptyObject(c.cache)) {
+					// delayInit: true so nothing is in the cache
+					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
+				} else {
+					p.filteredRows = 0;
+					$.each(c.cache[0].normalized, function(i, el) {
+						p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
+					});
+				}
 			} else if (!f) {
 				p.filteredRows = p.totalRows;
 			}
+			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			c.totalRows = p.totalRows;
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
@@ -292,7 +297,7 @@
 						exception === 'timeout' ? 'Time out error' :
 						exception === 'abort' ? 'Ajax Request aborted' :
 						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
-					c.$tbodies.eq(0).children().detach();
+					c.$tbodies.eq(0).children('tr').detach();
 					p.totalRows = 0;
 				} else {
 					// process ajax object
@@ -317,7 +322,7 @@
 					if (d instanceof jQuery) {
 						if (p.processAjaxOnInit) {
 							// append jQuery object
-							c.$tbodies.eq(0).children().detach();
+							c.$tbodies.eq(0).children('tr').detach();
 							c.$tbodies.eq(0).append(d);
 						}
 					} else if (l) {
@@ -477,7 +482,13 @@
 				l = rows && rows.length || 0, // rows may be undefined
 				s = ( p.page * p.size ),
 				e = p.size;
-			if ( l < 1 ) { return; } // empty table, abort!
+			if ( l < 1 ) {
+				if (c.debug) {
+					ts.log('Pager: no rows for pager to render');
+				}
+				// empty table, abort!
+				return;
+			}
 			if ( p.page >= p.totalPages ) {
 				// lets not render the table more than once
 				moveToLastPage(table, p);
@@ -540,12 +551,32 @@
 			});
 		},
 
+		// updateCache if delayInit: true
+		updateCache = function(table) {
+			var c = table.config,
+				p = c.pager;
+			c.$table.trigger('updateCache', [ function(){
+				var i,
+					rows = [],
+					n = table.config.cache[0].normalized;
+				p.totalRows = n.length;
+				for (i = 0; i < p.totalRows; i++) {
+					rows.push(n[i][c.columns].$row);
+				}
+				c.rowsCopy = rows;
+				moveToPage(table, p, true);
+			} ]);
+		},
+
 		moveToPage = function(table, p, pageMoved) {
 			if ( p.isDisabled ) { return; }
 			var c = table.config,
 				$t = $(table),
 				l = p.last,
 				pg = Math.min( p.totalPages, p.filteredPages );
+			if ( pageMoved !== false && p.initialized && $.isEmptyObject(table.config.cache)) {
+				return updateCache(table);
+			}
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
@@ -716,6 +747,10 @@
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function() {
 						if (p.initialized) {
+							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
+								// make sure we have a copy of all table rows once the cache has been built
+								updateCache(table);
+							}
 							// update page display first, so we update p.filteredPages
 							updatePageDisplay(table, p, false);
 							moveToPage(table, p, false);
@@ -754,7 +789,7 @@
 						e.stopPropagation();
 						p.page = (parseInt(v, 10) || 1) - 1;
 						if (p.$goto.length) { p.$goto.val(p.size); } // twice?
-						moveToPage(table, p);
+						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					});
 
@@ -784,7 +819,7 @@
 						.unbind('change')
 						.bind('change', function(){
 							p.page = $(this).val() - 1;
-							moveToPage(table, p);
+							moveToPage(table, p, true);
 							updatePageDisplay(table, p, false);
 						});
 				}
