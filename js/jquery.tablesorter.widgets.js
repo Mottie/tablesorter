@@ -592,7 +592,7 @@ ts.filter = {
 		}
 
 		c.$table.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '), function(event, filter) {
-			c.$table.find('.' + ts.css.filterRow).toggle( !(wo.filter_hideEmpty && $.isEmptyObject(c.cache)) ); // fixes #450
+			c.$table.find('.' + ts.css.filterRow).toggle( !(wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache')) ); // fixes #450
 			if ( !/(search|filter)/.test(event.type) ) {
 				event.stopPropagation();
 				ts.filter.buildDefault(table, true);
@@ -689,8 +689,10 @@ ts.filter = {
 			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];
 			if (filters.length) {
-				ts.setFilters(table, filters, true);
-				// ts.filter.checkFilters(table, filters);
+				// prevent delayInit from triggering a cache build if filters are empty
+				if ( !(c.delayInit && filters.join('') === '') ) {
+					ts.setFilters(table, filters, true);
+				}
 			}
 			c.$table.trigger('filterFomatterUpdate');
 			if (!wo.filter_initialized) {
@@ -852,7 +854,15 @@ ts.filter = {
 			filters = (filterArray) ? filter : ts.getFilters(table, true),
 			combinedFilters = (filters || []).join(''); // combined filter values
 		// prevent errors if delay init is set
-		if ($.isEmptyObject(c.cache)) { return; }
+		if ($.isEmptyObject(c.cache)) {
+			// update cache if delayInit set & pager has initialized (after user initiates a search)
+			if (c.delayInit && c.pager && c.pager.initialized) {
+				c.$table.trigger('updateCache', [function(){
+					ts.filter.checkFilters(table, false, skipFirst);
+				}] );
+			}
+			return;
+		}
 		// add filter array back into inputs
 		if (filterArray) {
 			ts.setFilters( table, filters, false, skipFirst !== true );
