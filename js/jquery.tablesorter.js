@@ -1016,6 +1016,7 @@
 				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
 				}
+				c.table = table;
 				c.$table = $table
 					.addClass(ts.css.table + ' ' + c.tableClass + k)
 					.attr({ role : 'grid'});
