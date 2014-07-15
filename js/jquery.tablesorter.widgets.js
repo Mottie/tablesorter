@@ -1220,7 +1220,7 @@ ts.filter = {
 					// check if has class filtered
 					if (onlyAvail && row.className.match(wo.filter_filteredRow)) { continue; }
 					// get non-normalized cell content
-					if (wo.filter_useParsedData) {
+					if (wo.filter_useParsedData || c.parsers[column].parsed || c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-parsed')) {
 						arry.push( '' + cache.normalized[rowIndex][column] );
 					} else {
 						cell = row.cells[column];
