@@ -274,6 +274,7 @@
 					$tb = c.$table.children('tbody'),
 				parsers = c.parsers;
 				c.cache = {};
+				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
 					return c.debug ? log('Warning: *Empty table!* Not building a cache') : '';
@@ -343,6 +344,8 @@
 							cc.normalized.push(cols);
 						}
 						cc.colMax = colMax;
+						// total up rows, not including child rows
+						c.totalRows += cc.normalized.length;
 					}
 				}
 				if (c.showProcessing) {
@@ -1043,6 +1046,8 @@
 				fixColumnWidth(table);
 				// try to auto detect column type, and store in tables config
 				buildParserCache(table);
+				// start total row count at zero
+				c.totalRows = 0;
 				// build the cache for the tbody cells
 				// delayInit will delay building the cache until the user starts a sort
 				if (!c.delayInit) { buildCache(table); }
