@@ -680,6 +680,9 @@ ts.filter = {
 			});
 		}
 
+		// set filtered rows count (intially unfiltered)
+		c.filteredRows = c.totalRows;
+
 		if (c.debug) {
 			ts.benchmark("Applying Filter widget", time);
 		}
