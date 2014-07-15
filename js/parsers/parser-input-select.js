@@ -64,6 +64,20 @@
 		type: "text"
 	});
 
+	// Select parser to get the selected text
+	$.tablesorter.addParser({
+		id: "select-text",
+		is: function(){
+			return false;
+		},
+		format: function(s, table, cell) {
+			var $s = $(cell).find('select');
+			return $s.length ? $s.find('option:selected').text() || '' : s;
+		},
+		parsed : true, // filter widget flag
+		type: "text"
+	});
+
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired
