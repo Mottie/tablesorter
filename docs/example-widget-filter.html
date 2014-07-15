@@ -222,7 +222,7 @@ $(function(){
 				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <code>filter_hideFilters</code> option to <code>false</code>.</li>
 				<li>This widget uses jQuery's <code>.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
 				<li>This widget does work with tablesorter v2.0.5.</li>
-				<li>Using the filters:
+				<li>Using the built-in filters (<a href="example-widget-filter-custom-search.html">learn how to customize them here</a> - demo created <span class="version">v2.17.5</span>):
 					<table class="tablesorter-blue notes">
 						<thead>
 							<tr>
@@ -233,7 +233,7 @@ $(function(){
 						</thead>
 						<tbody>
 							<tr><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds &quot;abc&quot;, &quot;abcd&quot;, &quot;abcde&quot;, etc);<button data-filter-column="1">Aaron</button> (finds &quot;Aaron&quot; and &quot;Philip Aaron Wong&quot;)</td></tr>
-							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc);<button data-filter-column="1">/r$/</button> (matches text that ends with an &quot;r&quot;)</td></tr>
+							<tr><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query ("mig" flags can be included <code>/\w/mig</code>)</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc);<button data-filter-column="1">/r$/</button> (matches text that ends with an &quot;r&quot;)</td></tr>
 							<tr><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small>.</td><td><button data-filter-column="5">&gt;= 10</button> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center"><code>!</code> or <code>!=</code></td><td>Not operator, or not exactly match. Filter the column with content that <strong>do not</strong> match the query. Include an equal (<code>=</code>), single (<code>'</code>) or double quote (<code>&quot;</code>) to exactly <em>not</em> match a filter (<span class="version">v2.17.1</span>).</td><td><code>!fe</code> (hide rows with &quot;female&quot; in that column, but shows rows with &quot;male&quot;);<button data-filter-column="1">!a</button> (find text that doesn't contain an &quot;a&quot;);<button data-filter-column="1">!"Bruce"</button> (find content that does not exactly match "Bruce")</td></tr>
 							<tr><td class="center"><code>&quot;</code> or <code>=</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc&quot;</code> or <code>abc=</code> (exactly match &quot;abc&quot;);<button data-filter-column="1">John&quot;</button> or <button data-filter-column="1">John=</button> (exactly match &quot;John&quot;)</td></tr>

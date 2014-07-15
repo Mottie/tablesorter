@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Search Types</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<style>
+	#types { width: 100%; }
+	</style>
+	<script>
+	$(function(){
+		$('#types').tablesorter();
+	});
+	</script>
+
+	<script id="js">// *** Filter search type function arguments ***
+// filter = filter input value for a column; iFilter = same as filter, except lowercase
+// exact = table cell text (or parsed data, if column parser enabled)
+// iExact = same as exact, except lowercase
+
+// search for a match from the beginning of a string
+// "^l" matches "lion" but not "koala"
+$.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
+	if ( /^\^/.test( iFilter ) ) {
+		return iExact.indexOf( iFilter.substring(1) ) === 0;
+	}
+	return null;
+};
+
+// search for a match at the end of a string
+// "a$" matches "Llama" but not "aardvark"
+$.tablesorter.filter.types.end = function( filter, iFilter, exact, iExact ) {
+	if ( /\$$/.test( iFilter ) ) {
+		var fl = iFilter.length - 1,
+			f = iFilter.substring(0, fl),
+			el = iExact.length;
+		return iExact.lastIndexOf(f) + fl === el;
+	}
+	return null;
+};
+
+$(function() {
+
+	$('#filters').tablesorter({
+		theme: 'blue',
+		widgets: ['zebra', 'filter'],
+		widgetOptions: {
+			filter_reset: '.reset'
+		}
+	});
+
+	// External search
+	// buttons set up like this:
+	// <button type="button" class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
+	$('button').click(function(){
+		var $t = $(this),
+			col = $t.data('filter-column'), // zero-based index
+			filter = [];
+
+		filter[col] = $t.text(); // text to add to filter
+		$('#filters').trigger('search', [ filter ]);
+		return false;
+	});
+
+});</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Custom Filter Widget Search Types</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+		<ul>
+			<li>This demo was added in <span class="version">v2.17.5</span>, but modification using these instructions works for v2.13.3+; when the filter widget was restructured to allow the adding of custom filter search types.</li>
+			<li>In this demo, two additional search types have been added as an example
+				<ul>
+					<li>Start a search from beginning of the content using the <code>^</code> designator.</li>
+					<li>Search for a specific ending in the content using the <code>$</code> designator.</li>
+				</ul>
+			</li>
+			<li>Please review the following sections for more details.</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Built-in Filters</a></h3>
+		<div>
+				The built-in filter search types include:
+				<table id="types" class="tablesorter-blue" data-sortList="[[0,0]]">
+					<thead>
+						<tr><th>Priority</th><th>Type</th><th class="sorter-false">Designator</th><th>Function</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>1</td><td>regex</td><td><code>/./mig</code></td><td>$.tablesorter.filter.types.regex</td></tr>
+						<tr><td>2</td><td>operators</td><td><code>&lt; &lt;= &gt;= &gt;</code></td><td>$.tablesorter.filter.types.operators</td></tr>
+						<tr><td>3</td><td>not</td><td><code>!</code> or <code>!=</code></td><td>$.tablesorter.filter.types.notMatch</td></tr>
+						<tr><td>4</td><td>exact</td><td><code>"</code> or <code>=</code></td><td>$.tablesorter.filter.types.exact</td></tr>
+						<tr><td>5</td><td>and</td><td><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;and&nbsp;</code></td><td>$.tablesorter.filter.types.and</td></tr>
+						<tr><td>6</td><td>range</td><td><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>$.tablesorter.filter.types.range</td></tr>
+						<tr><td>7</td><td>wild</td><td><code>*</code> or <code>?</code></td><td>$.tablesorter.filter.types.wild</td></tr>
+						<tr><td>7</td><td>or</td><td><code>|</code> or <code>&nbsp;or&nbsp;</code></td><td>$.tablesorter.filter.types.wild (built-into wild)</td></tr>
+						<tr><td>8</td><td>fuzzy</td><td><code>~</code></td><td>$.tablesorter.filter.types.fuzzy</td></tr>
+					</tbody>
+				</table>
+		</div>
+
+		<h3><a href="#">How to add Custom filter types</a></h3>
+		<div>
+		<ul>
+			<li>The first step is to decide what you want your filter to do.
+				<ul>
+					<li>Should it look for a symbol at the beginning, middle or end of the filter?</li>
+					<li>Does the designator need spaces around it (e.g. " and " or " or ") to prevent problems? You wouldn't be able to find the country of "Andorra" if the "and" or "or" designators didn't require spaces.</li>
+					<li>Make sure to name your filter so that it doesn't interfere with already existing ones, unless your filter is meant to replace an existing one. See the "Built-in Filters" section for a full list of filter function names.</li>
+					<li>Within your filter, first test for your designator symbol.
+						<ul>
+							<li>If it exists within the filter, then do your comparison and return a boolean of <code>true</code> or <code>false</code>.</li>
+							<li>Four arguments are passed to the filter function:
+								<ul>
+									<li><code>filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
+									<li><code>iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
+									<li><code>exact</code> - The exact (or parsed) text from the current table cell; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
+									<li><code>iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.</li>
+								</ul>
+							</li>
+							<li>If your designator doesn't exist, you *must* return <code>null</code> to allow comparisons with other filter types.</li>
+							<li>Here is a basic example with extensive comments:
+								<pre class="prettyprint lang-js">// search for a match from the beginning of a string
+// "^l" matches "lion" but not "koala"
+$.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
+	// test for filter type designator. In this example, "^" must be at the beginning of the filter
+	// for this test, the use of the case insensitive "iFilter" variable
+	// doesn't matter since we are only looking at the symbol
+	if ( /^\^/.test( iFilter ) ) {
+		// test the table content (exact or parsed) against the filter
+		// * Don't forget to remove the designator first ( the substring(1) part ), so "^h".substring(1) becomes "h"
+		// * In this case, we do care about using "iFilter" since we're comparing it with "iExact"
+		// * We use "indexOf" so that we know the match starts from the beginning of the string.
+		// * Your function should return a boolean indicating a match, or not.
+		return iExact.indexOf( iFilter.substring(1) ) === 0;
+	}
+	// ALWAYS return null if your custom filter type doesn't match
+	return null;
+};</pre></li>
+		</ul>
+		</div>
+
+		<h3><a href="#">How to remove filter types</a></h3>
+		<div>
+		<ul>
+			<li>If one of the built-in search types is interfering or bothersome to your users, then you can remove it using the following command (using fuzzy search as an example):
+			<pre class="prettyprint lang-js">$(function(){
+
+	// Remove fuzzy search
+	delete $.tablesorter.filter.types.fuzzy;
+
+	$('table').tablesorter({
+		theme: 'blue',
+		widgets: ['filter']
+	});
+
+});</pre></li>
+			<li>The full list of built-in filter type functions can be found in the "Built-in Filters" section.</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Localization</a></h3>
+		<div>
+			You can change the language of the searches used within the filter widget. This only applies to the "and", "or" and "to" (range) searches. For example, to change the localization to French, do the following:
+			<pre class="prettyprint lang-js">// add French support
+$.extend($.tablesorter.language, {
+	to  : 'à',
+	or  : 'ou',
+	and : 'et'
+});</pre>This results in searches that can be performed as follows:
+			<ul>
+				<li>"and" search: <code>Pierre et Franc</code> or <code>Pierre && Franc</code>.</li>
+				<li>"or" search: <code>Marie ou Claudette</code> or <code>Marie|Claudette</code></li>
+				<li>"to" search: <code>10 à 20</code> or <code>10 - 20</code></li>
+			</ul>
+			<span class="label label-info">Note</span> the symbolic searches never changed (<code>&nbsp;&&&nbsp;</code>, <code>|</code> and <code>&nbsp;-&nbsp;</code>)
+			<br>
+			<span class="label label-info">Important</span> Even though the language settings don't include spaces, the user is still required to enter spaces in the filter to perform these searches, e.g. <code>1 à 10</code> (shows rows with numbers between 1 and 10).
+			<hr>
+			If you want to support multiple languages, separate the language variables with a vertical bar (<code>|</code>, <kbd>Shift</kbd> + <kbd>&#92;</kbd>):
+			<pre class="prettyprint lang-js">// add French & Spanish support
+$.extend($.tablesorter.language, {
+	to  : 'à|a',
+	or  : 'ou|o',
+	and : 'et|y'
+});</pre></div>
+
+	</div>
+
+	<h1>Demo</h1>
+	<div id="demo"><button type="button" data-filter-column="1">^h</button> (beginning of word)<br>
+<button type="button" data-filter-column="1">s$</button> (end of word)<br>
+<button type="button" class="reset">Reset</button><br>
+
+<table id="filters" class="tablesorter">
+	<thead>
+		<tr><th>First Name</th><th>Last Name</th><th>City</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Aaron</td><td>Johnson Sr</td><td>Atlanta</td><td>35</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
+		<tr><td>Aaron</td><td>Johnson</td><td>Yuma</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
+		<tr><td>Clark</td><td>Henry Jr</td><td>Tampa</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
+		<tr><td>Denni</td><td>Henry</td><td>New York</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>John</td><td>Hood</td><td>Boston</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent Sr</td><td>Los Angeles</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Peter</td><td>Kent Esq</td><td>Seattle</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>
+		<tr><td>Peter</td><td>Johns</td><td>Milwaukee</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
+		<tr><td>Aaron</td><td>Evan</td><td>Chicago</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>Upland</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+		<tr><td>Clark</td><td>McMasters</td><td>Pheonix</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
+		<tr><td>Dennis</td><td>Masters</td><td>Indianapolis</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
+		<tr><td>John</td><td>Hood</td><td>Fort Worth</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-widget-filter-formatter-1.html">jQuery custom filter widget formatter (jQuery UI widgets) &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+
