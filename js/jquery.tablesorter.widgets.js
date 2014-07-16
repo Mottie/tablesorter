@@ -829,7 +829,9 @@ ts.filter = {
 			ts.filter.searching( table, true, true );
 		})
 		.bind('search change keypress '.split(' ').join(c.namespace + 'filter '), function(event){
-			if (event.which === 13 || event.type === 'search' || event.type === 'change') {
+			var column = $(this).data('column');
+			// don't allow "change" event to process if the input value is the same - fixes #685
+			if (event.which === 13 || event.type === 'search' || event.type === 'change' && this.value !== c.lastSearch[column]) {
 				event.preventDefault();
 				// init search with no delay
 				$(this).attr('data-lastSearchTime', new Date().getTime());
