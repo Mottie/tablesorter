@@ -443,7 +443,7 @@ ts.filter = {
 					savedSearch = query;
 				// parse filter value in case we're comparing numbers (dates)
 				if (parsed[index] || parser.type === 'numeric') {
-					result = parser.format( $.trim('' + iFilter.replace(ts.filter.regex.operators, '')), table, [], index );
+					result = ts.filter.parseFilter(table, $.trim('' + iFilter.replace(ts.filter.regex.operators, '')), index, parsed[index], true);
 					query = ( typeof result === "number" && result !== '' && !isNaN(result) ) ? result : query;
 				}
 
@@ -462,9 +462,9 @@ ts.filter = {
 			return null;
 		},
 		// Look for a not match
-		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo ) {
+		notMatch: function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
 			if ( /^\!/.test(iFilter) ) {
-				iFilter = iFilter.replace('!', '');
+				iFilter = ts.filter.parseFilter(table, iFilter.replace('!', ''), index, parsed[index]);
 				if (ts.filter.regex.exact.test(iFilter)) {
 					// look for exact not matches - see #628
 					iFilter = iFilter.replace(ts.filter.regex.exact, '');
@@ -480,19 +480,19 @@ ts.filter = {
 		exact: function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed, rowArray ) {
 			/*jshint eqeqeq:false */
 			if (ts.filter.regex.exact.test(iFilter)) {
-				var fltr = iFilter.replace(ts.filter.regex.exact, '');
+				var fltr = ts.filter.parseFilter(table, iFilter.replace(ts.filter.regex.exact, ''), index, parsed[index]);
 				return rowArray ? $.inArray(fltr, rowArray) >= 0 : fltr == iExact;
 			}
 			return null;
 		},
 		// Look for an AND or && operator (logical and)
-		and : function( filter, iFilter, exact, iExact ) {
+		and : function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
 			if ( ts.filter.regex.andTest.test(filter) ) {
 				var query = iFilter.split( ts.filter.regex.andSplit ),
-					result = iExact.search( $.trim(query[0]) ) >= 0,
+					result = iExact.search( $.trim(ts.filter.parseFilter(table, query[0], index, parsed[index])) ) >= 0,
 					indx = query.length - 1;
 				while (result && indx) {
-					result = result && iExact.search( $.trim(query[indx]) ) >= 0;
+					result = result && iExact.search( $.trim(ts.filter.parseFilter(table, query[indx], index, parsed[index])) ) >= 0;
 					indx--;
 				}
 				return result;
@@ -506,8 +506,8 @@ ts.filter = {
 					c = table.config,
 					// make sure the dash is for a range and not indicating a negative number
 					query = iFilter.split( ts.filter.regex.toSplit ),
-					range1 = ts.formatFloat(query[0].replace(ts.filter.regex.nondigit, ''), table),
-					range2 = ts.formatFloat(query[1].replace(ts.filter.regex.nondigit, ''), table);
+					range1 = ts.formatFloat( ts.filter.parseFilter(table, query[0].replace(ts.filter.regex.nondigit, ''), index, parsed[index]), table ),
+					range2 = ts.formatFloat( ts.filter.parseFilter(table, query[1].replace(ts.filter.regex.nondigit, ''), index, parsed[index]), table );
 					// parse filter value in case we're comparing numbers (dates)
 				if (parsed[index] || c.parsers[index].type === 'numeric') {
 					result = c.parsers[index].format('' + query[0], table, c.$headers.eq(index), index);
@@ -527,22 +527,23 @@ ts.filter = {
 		wild : function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed, rowArray ) {
 			if ( /[\?|\*]/.test(iFilter) || ts.filter.regex.orReplace.test(filter) ) {
 				var c = table.config,
-					query = iFilter.replace(ts.filter.regex.orReplace, "|");
+					query = ts.filter.parseFilter(table, iFilter.replace(ts.filter.regex.orReplace, "|"), index, parsed[index]);
 				// look for an exact match with the "or" unless the "filter-match" class is found
 				if (!c.$headers.filter('[data-column="' + index + '"]:last').hasClass('filter-match') && /\|/.test(query)) {
 					query = $.isArray(rowArray) ? '(' + query + ')' : '^(' + query + ')$';
 				}
+				// parsing the filter may not work properly when using wildcards =/
 				return new RegExp( query.replace(/\?/g, '\\S{1}').replace(/\*/g, '\\S*') ).test(iExact);
 			}
 			return null;
 		},
 		// fuzzy text search; modified from https://github.com/mattyork/fuzzy (MIT license)
-		fuzzy: function( filter, iFilter, exact, iExact ) {
+		fuzzy: function( filter, iFilter, exact, iExact, cached, index, table, wo, parsed ) {
 			if ( /^~/.test(iFilter) ) {
 				var indx,
 					patternIndx = 0,
 					len = iExact.length,
-					pattern = iFilter.slice(1);
+					pattern = ts.filter.parseFilter(table, iFilter.slice(1), index, parsed[index]);
 				for (indx = 0; indx < len; indx++) {
 					if (iExact[indx] === pattern[patternIndx]) {
 						patternIndx += 1;
@@ -731,6 +732,12 @@ ts.filter = {
 		}
 		c.$table.data('lastSearch', filters);
 		return filters;
+	},
+	parseFilter: function(table, filter, column, parsed, forceParse){
+		var c = table.config;
+		return forceParse || parsed ?
+			c.parsers[column].format( filter, table, [], column ) :
+			filter;
 	},
 	buildRow: function(table, c, wo) {
 		var column, $header, buildSelect, disabled, name, ffxn,
