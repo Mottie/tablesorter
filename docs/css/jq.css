@@ -79,6 +79,7 @@ div.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
 a.alert { color: #a00; padding: 0; }
 span.alert { padding: 1px 3px; }
 .hidden { display: none; }
+.fade { opacity: 0.5; }
 .results { color: red; }
 .clear { clear: both; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }

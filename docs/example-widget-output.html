@@ -53,9 +53,6 @@
 	.output-separator-input, .output-replacequotes {
 		width: 26px;
 	}
-	.output-type {
-		width: 80px;
-	}
 	pre {
 		/* override bootstrap setting */
 		overflow-y: hidden !important;
@@ -102,12 +99,7 @@
 	<script id="js">$(function() {
 
 	// set up demo for two table groups
-	var demos = ['.group1', '.group2'],
-		outputTypes = [
-			'data:text/csv;charset=utf8,',          // utf-8 no BOM
-			'data:text/csv;charset=utf8,%EF%BB%BF', // utf-8 with BOM
-			'data:text/csv;charset=windows-1252,'   // windows 1252
-		];
+	var demos = ['.group1', '.group2'];
 
 	$.each(demos, function(groupIndex){
 		var $this = $(demos[groupIndex]);
@@ -140,11 +132,9 @@
 				// return true to continue download/output
 				// return false to stop delivery & do something else with the data
 				output_callback      : function(config, data) { return true; },
-				// output data type (with BOM or Windows-1252 is needed for excel)
-				// NO BOM   : 'data:text/csv;charset=utf8,'
-				// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
-				// WIN 1252 : 'data:text/csv;charset=windows-1252'
-				output_encoding      : 'data:text/csv;charset=utf8,'
+
+				// the need to modify this for Excel no longer exists
+				output_encoding      : 'data:application/octet-stream;charset=utf8,'
 
 			}
 		});
@@ -186,7 +176,8 @@
 		// clicking the download button; all you really need is to
 		// trigger an "output" event on the table
 		$this.find('.download').click(function(){
-			var $table = $this.find('table'),
+			var typ,
+				$table = $this.find('table'),
 				wo = $table[0].config.widgetOptions,
 				saved = $this.find('.output-filter-all :checked').attr('class');
 			wo.output_separator    = $this.find('.output-separator-input').val();
@@ -198,7 +189,6 @@
 			wo.output_wrapQuotes   = $this.find('.output-wrap').is(':checked');
 			wo.output_headerRows   = $this.find('.output-headers').is(':checked');
 			wo.output_saveFileName = $this.find('.output-filename').val();
-			wo.output_encoding     = outputTypes[ parseInt( $this.find('.output-type').val(), 10) ];
 			$table.trigger('outputTable');
 			return false;
 		});
@@ -230,6 +220,7 @@
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.17.5</span>, the need to modify the server's content disposition no longer exists.</li>
 				<li>In <span class="version">v2.17.0</span>,
 					<ul>
 						<li>Added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
@@ -242,20 +233,9 @@
 			<h4>Requirements</h4>
 			<ul>
 				<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
-				<li>To download a file with the set filename and extension, the server's <code>Content-disposition</code> needs to be set.<p>
-					<div class="alert alert-danger">
-						<span class="alert-link">This widget <em>WILL NOT</em> download the file nor use the proper filename and extension, unless you make these server-side changes.</span>
-						<br>
-						(<small>This is a GitHub demo and will not save the file using the selected filename &amp; extension because I don't work at GitHub and I can't modify their server.</small>)
-					</div>
-					See the:
-					<ul>
-						<li><code>.htacess</code> example in the "Basic Setup" section below.</li>
-						<li>or, look at the "Setup Example (php)" section on how to set this up in php</li>
-					</ul>
-					<p>
-				</li>
-				<li><span class="label label-info">Excel</span> support requires setting the <code>output_encoding</code> option to use the "with BOM" encoding string. Get more details in the "Options" section below.</li>
+				<li><del>To download a file with the set filename and extension, the server's <code>Content-disposition</code> needs to be set</del></li>
+				<li>This widget now uses a method available in modern browsers (IE10+) to download files without the need for server side modifications</li>
+				<li>Support in older browsers (IE9 and older) have not been throughly tested.</li>
 			</ul>
 
 			<h4>Features &amp; Usage</h4>
@@ -283,6 +263,7 @@
 					<ul>
 						<li><a href="http://www.kunalbabre.com/projects/table2CSV.php">HTML Table to CSV</a> (License unknown)</li>
 						<li><a href="https://github.com/PixelsCommander/Download-File-JS">Download-File-JS</a> (<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache v2.0</a>)</li>
+						<li><a href="http://html5-demos.appspot.com/static/a.download.html">Download demo</a> from <a href="https://github.com/ebidel/html5demos">ebidel/html5demos</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -318,12 +299,15 @@
         widgets: ['zebra', 'output']
     });
 });</pre>
-		<h4>.htaccess</h4>
-		Do not forget to set Content-disposition headers in order to make downloads work properly in IE and FF. So <code>.htaccess</code> can look like:
-		<pre class="prettyprint lang-xml">&lt;FilesMatch "\.(?i:csv|txt)$"&gt;
-    ForceType application/octet-stream
-    Header set Content-Disposition attachment
-&lt;/FilesMatch&gt;</pre>
+		Modification of the <code>.htaccess</code> is no longer required
+			<div class="fade">
+			<h4>.htaccess</h4>
+			The Content-disposition headers <em>may need to be set</em> in order to make downloads work properly in IE. So <code>.htaccess</code> can look like:
+			<pre class="prettyprint lang-xml">&lt;FilesMatch "\.(?i:csv|txt)$"&gt;
+	    ForceType application/octet-stream
+	    Header set Content-Disposition attachment
+	&lt;/FilesMatch&gt;</pre>
+			</div>
 		</div>
 
 		<h3><a href="#">Setup Example (php)</a></h3>
@@ -672,15 +656,23 @@ line,value1,value2,value3
 					<tr id="output_encoding">
 						<td><a href="#" class="permalink">output_encoding</a></td>
 						<td>{see description}</td>
-						<td>Default encoding is utf-8 no BOM (<span class="version">2.16.4</span>)
+						<td>Default encoding setting (<span class="version">2.16.4</span>; <span class="version updated">2.17.5</span>)
 							<div class="collapsible">
 								<br>
+								As of <span class="version updated">2.17.5</span>, this option no longer needs to be modified to specifically make this widget download files that will work in Excel.<br>
+								<br>
+								The method used to download has been completely changed. The downloads still need an encoding setting, but this option is now set to a default of
+								<pre class="prettyprint lang-js">output_encoding : 'data:application/octet-stream;charset=utf8,'</pre>
+								<hr>
+								The information below is no longer relavant:
+								<div class="fade">
 								With the default settings (utf-8 no BOM), Excel does not properly encode accented characters unless the csv file is imported. Depending on the characters used, there are various methods which will allow proper encoding, but no one method is ideal. So this option can be set to allow the user to try different encodings. Set it as follows:
 								<pre class="prettyprint lang-js">// output data type (with BOM or Windows-1252 is needed for excel)
 // NO BOM   : 'data:text/csv;charset=utf8,'
 // With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
 // WIN 1252 : 'data:text/csv;charset=windows-1252,' // ANSI (subset of ISO-8859-1)
 output_encoding : 'data:text/csv;charset=utf8,'</pre><span class="label label-info">Note</span> The commas are important!
+								</div>
 							</div>
 						</td>
 					</tr>
@@ -757,16 +749,9 @@ $.tablesorter.output.replaceTab = '\\t';</pre>
 					<button type="button" class="output-quotes btn btn-default btn-xs" title="escaped quote">\"</button>
 				</li>
 				<li><label title="Remove extra white space from each cell">Trim spaces: <input class="output-trim" type="checkbox" checked /></label></li>
-				<li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox" /></lable></li>
+				<li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox" /></label></li>
 				<li><label title="Wrap all values in quotes">Wrap in Quotes: <input class="output-wrap" type="checkbox" /></label></li>
-				<li>
-					<label title="Choose a download filename">Filename: <input class="output-filename" type="text" size="15" value="mytable.csv"/></label>
-					<select class="output-type">
-						<option value="0">utf8</option>
-						<option value="1">utf8-BOM</option>
-						<option value="2">windows-1252</option>
-					</select>
-				</li>
+				<li><label title="Choose a download filename">Filename: <input class="output-filename" type="text" size="15" value="mytable.csv"/></label></li>
 			</ul>
 		</div>
 	</div>
@@ -868,17 +853,10 @@ $.tablesorter.output.replaceTab = '\\t';</pre>
 					<button type="button" class="output-quotes btn btn-default btn-xs" title="escaped quote">\"</button>
 				</li>
 				<li><label title="Remove extra white space from each cell">Trim spaces: <input class="output-trim" type="checkbox" checked /></label></li>
-				<li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox" /></lable></li>
+				<li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox" /></label></li>
 				<li><label title="Wrap all values in quotes">Wrap in Quotes: <input class="output-wrap" type="checkbox" /></label></li>
 				<li><label title="Include both header rows in output">Include both header rows: <input class="output-headers" type="checkbox" checked /></label></li>
-				<li>
-					<label title="Choose a download filename">Filename: <input class="output-filename" type="text" size="15" value="mytable.csv"/></label>
-					<select class="output-type">
-						<option value="0">utf8</option>
-						<option value="1">utf8-BOM</option>
-						<option value="2">windows-1252</option>
-					</select>
-				</li>
+				<li><label title="Choose a download filename">Filename: <input class="output-filename" type="text" size="15" value="mytable.csv"/></label></li>
 			</ul>
 		</div>
 

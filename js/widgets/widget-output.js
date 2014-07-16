@@ -221,33 +221,55 @@ output = ts.output = {
 	},
 
 	// modified from https://github.com/PixelsCommander/Download-File-JS
+	// & http://html5-demos.appspot.com/static/a.download.html
 	download : function (wo, data){
-		var e, link,
-			processedData = wo.output_encoding + encodeURIComponent(data);
+
+		var e, blob, gotBlob,
+			nav = window.navigator,
+			link = document.createElement('a');
 
 		// iOS devices do not support downloading. We have to inform user about this.
-		if (/(iP)/g.test(navigator.userAgent)) {
+		if (/(iP)/g.test(nav.userAgent)) {
 			alert(output.message);
 			return false;
 		}
-		// If in Chrome or Safari - download via virtual link click
-		if ( /(chrome|safari)/.test(navigator.userAgent.toLowerCase()) ) {
-			// Creating new link node.
-			link = document.createElement('a');
-			link.href = processedData;
-			link.download = wo.output_saveFileName;
-			// Dispatching click event.
-			if (document.createEvent) {
-				e = document.createEvent('MouseEvents');
-				e.initEvent('click', true, true);
-				link.dispatchEvent(e);
-				return true;
+
+		// test for blob support
+		try {
+			gotBlob = !!new Blob();
+		} catch (e) {
+			gotBlob = false;
+		};
+
+		// Use HTML5 Blob if browser supports it
+		if ( gotBlob ) {
+
+			window.URL = window.webkitURL || window.URL;
+			blob = new Blob([data], {type: wo.output_encoding});
+
+			if (nav.msSaveBlob) {
+				// IE 10+
+				nav.msSaveBlob(blob, wo.output_saveFileName);
+			} else {
+				// all other browsers
+				link.href = window.URL.createObjectURL(blob);
+				link.download = wo.output_saveFileName;
+				// Dispatching click event; using $(link).trigger() won't work
+				if (document.createEvent) {
+					e = document.createEvent('MouseEvents');
+					// event.initMouseEvent(type, canBubble, cancelable, view, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget);
+					e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+					link.dispatchEvent(e);
+				}
 			}
+			return false;
 		}
-		// Force file download (whether supported by server).
-		processedData += '?download';
-		window.open(processedData, '_self');
+
+		// fallback to force file download (whether supported by server).
+		// not sure if this actually works in IE9 and older...
+		window.open( wo.output_encoding + encodeURIComponent(data) + '?download' , '_self');
 		return true;
+
 	},
 
 	remove : function(c) {
@@ -278,11 +300,9 @@ ts.addWidget({
 		output_callback      : function(config, data){ return true; },
 		// JSON callback executed when a colspan is encountered in the header
 		output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
-		// output data type (with BOM or Windows-1252 is needed for excel)
-		// NO BOM   : 'data:text/csv;charset=utf8,'
-		// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
-		// WIN 1252 : 'data:text/csv;charset=windows-1252'
-		output_encoding      : 'data:text/csv;charset=utf8,'
+		// the need to modify this for Excel no longer exists
+		output_encoding      : 'data:application/octet-stream;charset=utf8,'
+
 	},
 	init: function(table, thisWidget, c) {
 		output.init(c);
