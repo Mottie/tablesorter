@@ -131,6 +131,7 @@ ts.storage = function(table, key, value, options) {
 // Add a resize event to table headers
 // **************************
 ts.addHeaderResizeEvent = function(table, disable, settings) {
+	table = $(table)[0]; // make sure we're usig a dom element
 	var headers,
 		defaults = {
 			timer : 250
