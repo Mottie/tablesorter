@@ -1540,13 +1540,14 @@
 					$.each(widgets, function(i,w){
 						if (w) {
 							if (init || !(c.widgetInit[w.id])) {
+								// set init flag first to prevent calling init more than once (e.g. pager)
+								c.widgetInit[w.id] = true;
 								if (w.hasOwnProperty('options')) {
 									wo = table.config.widgetOptions = $.extend( true, {}, w.options, wo );
 								}
 								if (w.hasOwnProperty('init')) {
 									w.init(table, w, c, wo);
 								}
-								c.widgetInit[w.id] = true;
 							}
 							if (!init && w.hasOwnProperty('format')) {
 								w.format(table, c, wo, false);
