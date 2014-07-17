@@ -699,19 +699,24 @@ ts.filter = {
 				}
 			}
 			c.$table.trigger('filterFomatterUpdate');
-			if (!wo.filter_initialized) {
-				// filter widget initialized
-				wo.filter_initialized = true;
-				c.$table.trigger('filterInit', c);
-			}
+			// trigger init after setTimeout to prevent multiple filterStart/End/Init triggers
+			setTimeout(function(){
+				if (!wo.filter_initialized) {
+					// filter widget initialized
+					wo.filter_initialized = true;
+					c.$table.trigger('filterInit', c);
+				}
+			}, 1);
 		});
 		// if filter widget is added after pager has initialized; then set filter init flag
-		if (c.pager && c.pager.initialized && !wo.filter_initialized) {
-			wo.filter_initialized = true;
-			c.$table
-				.trigger('filterFomatterUpdate')
-				.trigger('filterInit', c);
-		}
+		setTimeout(function(){
+			if (c.pager && c.pager.initialized && !wo.filter_initialized) {
+				wo.filter_initialized = true;
+				c.$table
+					.trigger('filterFomatterUpdate')
+					.trigger('filterInit', c);
+			}
+		}, 1);
 
 	},
 	setDefaults: function(table, c, wo) {
