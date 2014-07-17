@@ -102,6 +102,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		val = val.replace(/[/()$^]/g, '').split('|');
 		$cell.find('.select2').select2('val', val);
 		updateSelect2();
+		ts.filter.formatterUpdated($cell, indx);
 	});
 
 	// has sticky headers?

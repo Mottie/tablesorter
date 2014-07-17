@@ -184,6 +184,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>As of <span class="version">v2.17.5</span>, if writing a custom filterFormatter function, you'll need to call an additional function after initialization has completed so the "filterInit" event isn't triggered prematurely. See the "Custom Filter Formatter Function Information" section below for more details.</li>
 				<li>In <span class="version updated">v2.17.0</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
 				<li>In <span class="version">v2.16.0</span>, the <code>filter_placeholder</code> option was added. See the jQuery UI Datepicker Range Selector section for more details.</li>
 				<li>In <span class="version">v2.15.0</span>, the following changes were made:
@@ -269,7 +270,7 @@
             valueToHeader: false, // add current slider value to the header cell
             exactMatch: true,     // exact (true) or match (false)
             allText: 'all',       // text shown when the slider is at the minimum value
-            compare : [ '=', '>=', '<=' ], // any comparison would override the exactMatch option
+            compare : [ '=', '&gt;=', '&lt;=' ], // any comparison would override the exactMatch option
             selected : 2,         // zero-based index of compare starting selected value
 
             // add any of the jQuery UI Slider options here (http://api.jqueryui.com/slider/)
@@ -286,7 +287,7 @@
             valueToHeader: false, // add current slider value to the header cell
             exactMatch: false,    // exact (true) or match (false)
             allText: 'all',       // text shown when slider is at the minimum value; ignored when compare has a value
-            compare: [ '=', '>=', '<=' ], // search values greater/less than selected value; overrides exactMatch
+            compare: [ '=', '&gt;=', '&lt;=' ], // search values greater/less than selected value; overrides exactMatch
             selected : 1,         // zero-based index of compare starting selected value
 
             // add any of the jQuery UI Slider options here (http://api.jqueryui.com/slider/)
@@ -378,7 +379,7 @@
             delayed: true,    // delay search (set by filter_searchDelay)
             addToggle: false, // add a toggle switch to activate/deactive the search
             exactMatch: true, // exact (true) or match (false)
-            compare : [ '', '=', '>=', '<=' ], // search values greater/less than selected value; overrides exactMatch
+            compare : [ '', '=', '&gt;=', '&lt;=' ], // search values greater/less than selected value; overrides exactMatch
             selected : 2,     // zero-based index of compare starting selected value
 
             // add any of the jQuery UI Spinner options here (http://api.jqueryui.com/spinner/)
@@ -431,7 +432,7 @@
         4 : function($cell, indx){
           return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
             cellText : 'Dates', // text added before the input
-            compare : [ '', '=', '>=', '<=' ], // search values greater/less than selected value; overrides exactMatch
+            compare : [ '', '=', '&gt;=', '&lt;=' ], // search values greater/less than selected value; overrides exactMatch
             selected : 3,       // zero-based index of compare starting selected value
 
             // add any of the jQuery UI Datepicker options here (http://api.jqueryui.com/datepicker/)
@@ -544,7 +545,8 @@
 					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterFomatterUpdate', function(){
 	var savedSearch = $cell.find('input[type=hidden]').val();
 	// apply this saved search to your custom input
-});</pre>
+	$.tablesorter.filter.formatterUpdated($cell, indx); // new v2.17.5
+});</pre>As of <span class="version">v2.17.5</span>, you need to call <code>$.tablesorter.filter.formatterUpdated($cell, indx);</code> so the filter widget knows when all inputs have completed initialization, and fire the "filterInit" event.<br><br></li>
 				<li>If your selector needs a parsed value to work with, add the <code>filter-parsed</code> class name to the header cell above the filter, use this code to do that:
 					<pre class="prettyprint lang-javascript">$cell.closest('thead').find('th[data-column=' + indx + ']').addClass('filter-parsed');</pre>
 				</li>

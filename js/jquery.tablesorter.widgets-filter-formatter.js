@@ -145,6 +145,7 @@ tsff = ts.filterFormatter = {
 			var val = tsff.updateCompare($cell, $input, o)[0];
 			$cell.find('.spinner').val( val );
 			updateSpinner({ value: val }, true);
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		if (o.compare) {
@@ -303,6 +304,7 @@ tsff = ts.filterFormatter = {
 			var val = tsff.updateCompare($cell, $input, o)[0];
 			$cell.find('.slider').slider('value', val );
 			updateSlider({ value: val }, false);
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		if (o.compare) {
@@ -447,6 +449,7 @@ tsff = ts.filterFormatter = {
 		// update slider from hidden input, in case of saved filters
 		c.$table.bind('filterFomatterUpdate', function(){
 			getRange();
+			ts.filter.formatterUpdated($cell, indx);
 		});
 
 		// on reset
@@ -579,6 +582,7 @@ tsff = ts.filterFormatter = {
 			$cell.add($shcell).find('.date').datepicker( 'setDate', num || null );
 			setTimeout(function(){
 				date1Compare(true);
+				ts.filter.formatterUpdated($cell, indx);
 			}, 0);
 		});
 
@@ -728,6 +732,7 @@ tsff = ts.filterFormatter = {
 			// give datepicker time to process
 			setTimeout(function(){
 				closeDate();
+				ts.filter.formatterUpdated($cell, indx);
 			}, 0);
 		});
 
@@ -848,6 +853,7 @@ tsff = ts.filterFormatter = {
 				var val = tsff.updateCompare($cell, $input, o)[0] || o.value;
 				$cell.find('.number').val( ((val || '') + '').replace(/[><=]/g,'') );
 				updateNumber(false, true);
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			if (o.compare) {
@@ -968,6 +974,7 @@ tsff = ts.filterFormatter = {
 				var val = tsff.updateCompare($cell, $input, o)[0];
 				$cell.find('.range').val( val );
 				updateRange(val, false, true);
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			if (o.compare) {
@@ -1100,6 +1107,7 @@ tsff = ts.filterFormatter = {
 			// update slider from hidden input, in case of saved filters
 			c.$table.bind('filterFomatterUpdate', function(){
 				updateColor( $input.val(), true );
+				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			// on reset

@@ -572,8 +572,11 @@ ts.filter = {
 		}
 		c.$table.addClass('hasFilters');
 
-		// define searchTimer so using clearTimeout won't cause an undefined error
+		// define timers so using clearTimeout won't cause an undefined error
 		wo.searchTimer = null;
+		wo.filter_initTimer = null;
+		wo.filter_formatterCount = 0;
+		wo.filter_formatterInit = [];
 
 		$.extend( regex, {
 			child : new RegExp(c.cssChildRow),
@@ -702,22 +705,49 @@ ts.filter = {
 			// trigger init after setTimeout to prevent multiple filterStart/End/Init triggers
 			setTimeout(function(){
 				if (!wo.filter_initialized) {
-					// filter widget initialized
-					wo.filter_initialized = true;
-					c.$table.trigger('filterInit', c);
+					ts.filter.filterInitComplete(c);
 				}
-			}, 1);
+			}, 100);
 		});
 		// if filter widget is added after pager has initialized; then set filter init flag
-		setTimeout(function(){
-			if (c.pager && c.pager.initialized && !wo.filter_initialized) {
-				wo.filter_initialized = true;
-				c.$table
-					.trigger('filterFomatterUpdate')
-					.trigger('filterInit', c);
+		if (c.pager && c.pager.initialized && !wo.filter_initialized) {
+			c.$table.trigger('filterFomatterUpdate');
+			setTimeout(function(){
+				ts.filter.filterInitComplete(c);
+			}, 100);
+		}
+	},
+	// $cell parameter, but not the config, is passed to the
+	// filter_formatters, so we have to work with it instead
+	formatterUpdated: function($cell, column) {
+		var wo = $cell.closest('table')[0].config.widgetOptions;
+		if (!wo.filter_initialized) {
+			// add updates by column since this function
+			// may be called numerous times before initialization
+			wo.filter_formatterInit[column] = 1;
+		}
+	},
+	filterInitComplete: function(c){
+		var wo = c.widgetOptions,
+			count = 0;
+		$.each( wo.filter_formatterInit, function(i, val) {
+			if (val === 1) {
+				count++;
 			}
-		}, 1);
-
+		});
+		clearTimeout(wo.filter_initTimer);
+		if (!wo.filter_initialized && count === wo.filter_formatterCount) {
+			// filter widget initialized
+			wo.filter_initialized = true;
+			c.$table.trigger('filterInit', c);
+		} else if (!wo.filter_initialized) {
+			// fall back in case a filter_formatter doesn't call
+			// $.tablesorter.filter.formatterUpdated($cell, column), and the count is off
+			wo.filter_initTimer = setTimeout(function(){
+				wo.filter_initialized = true;
+				c.$table.trigger('filterInit', c);
+			}, 500);
+		}
 	},
 	setDefaults: function(table, c, wo) {
 		var isArray, saved, indx,
@@ -769,6 +799,7 @@ ts.filter = {
 			} else {
 				ffxn = ts.getColumnData( table, wo.filter_formatter, column );
 				if (ffxn) {
+					wo.filter_formatterCount++;
 					buildFilter = ffxn( c.$filters.eq(column), column );
 					// no element returned, so lets go find it
 					if (buildFilter && buildFilter.length === 0) {
