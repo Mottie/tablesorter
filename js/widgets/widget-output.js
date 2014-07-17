@@ -1,4 +1,4 @@
-/* Output widget (beta) for TableSorter 5/22/2014 (v2.17.0)
+/* Output widget (beta) for TableSorter 7/17/2014 (v2.17.5)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -237,9 +237,9 @@ output = ts.output = {
 		// test for blob support
 		try {
 			gotBlob = !!new Blob();
-		} catch (e) {
+		} catch (err) {
 			gotBlob = false;
-		};
+		}
 
 		// Use HTML5 Blob if browser supports it
 		if ( gotBlob ) {
