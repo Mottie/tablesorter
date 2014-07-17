@@ -1751,6 +1751,28 @@ $(function(){
 				<td></td>
 			</tr>
 
+			<tr id="imgattr">
+				<td><a href="#" class="permalink">imgAttr</a></td>
+				<td>String</td>
+				<td>"alt"</td>
+				<td>
+					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>).
+					<div class="collapsible"><br>
+						Change this setting to grab a different image attribute to be used for sorting:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    // parse image title (value to be used while sorting & filtering)
+    imgAttr : 'title',
+    headers : {
+      0 : { sorter: 'image' }
+    }
+  });
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 		</tbody>
 
 		<!-- non-sorting tbody -->
