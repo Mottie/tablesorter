@@ -133,25 +133,26 @@ $(function() {
 		<h3><a href="#">How to add Custom filter types</a></h3>
 		<div>
 		<ul>
-			<li>The first step is to decide what you want your filter to do.
+			<li>The first step is to decide what you want your filter to do.</li>
+			<li>Should it look for a symbol at the beginning, middle or end of the filter?</li>
+			<li>Does the designator need spaces around it (e.g. " and " or " or ") to prevent problems? You wouldn't be able to find the country of "Andorra" if the "and" or "or" designators didn't require spaces.</li>
+			<li>Make sure to name your filter so that it doesn't interfere with already existing ones, unless your filter is meant to replace an existing one. See the "Built-in Filters" section for a full list of filter function names.</li>
+			<li>Within your filter, first test for your designator symbol.
 				<ul>
-					<li>Should it look for a symbol at the beginning, middle or end of the filter?</li>
-					<li>Does the designator need spaces around it (e.g. " and " or " or ") to prevent problems? You wouldn't be able to find the country of "Andorra" if the "and" or "or" designators didn't require spaces.</li>
-					<li>Make sure to name your filter so that it doesn't interfere with already existing ones, unless your filter is meant to replace an existing one. See the "Built-in Filters" section for a full list of filter function names.</li>
-					<li>Within your filter, first test for your designator symbol.
+					<li>If it exists within the filter, then do your comparison and return a boolean of <code>true</code> or <code>false</code>.</li>
+					<li>Four arguments are passed to the filter function:
 						<ul>
-							<li>If it exists within the filter, then do your comparison and return a boolean of <code>true</code> or <code>false</code>.</li>
-							<li>Four arguments are passed to the filter function:
-								<ul>
-									<li><code>filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
-									<li><code>iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
-									<li><code>exact</code> - The exact (or parsed) text from the current table cell; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
-									<li><code>iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.</li>
-								</ul>
-							</li>
-							<li>If your designator doesn't exist, you *must* return <code>null</code> to allow comparisons with other filter types.</li>
-							<li>Here is a basic example with extensive comments:
-								<pre class="prettyprint lang-js">// search for a match from the beginning of a string
+							<li><code>filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
+							<li><code>iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
+							<li><code>exact</code> - The exact (or parsed) text from the current table cell; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
+							<li><code>iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.</li>
+						</ul>
+					</li>
+					<li>If your designator doesn't exist, you *must* return <code>null</code> to allow comparisons with other filter types.</li>
+				</ul>
+			</li>
+			<li>Here is a basic example with extensive comments:
+				<pre class="prettyprint lang-js">// search for a match from the beginning of a string
 // "^l" matches "lion" but not "koala"
 $.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
 	// test for filter type designator. In this example, "^" must be at the beginning of the filter
@@ -167,7 +168,8 @@ $.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
 	}
 	// ALWAYS return null if your custom filter type doesn't match
 	return null;
-};</pre></li>
+};</pre>
+			</li>
 		</ul>
 		</div>
 
