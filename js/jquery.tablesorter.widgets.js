@@ -1192,6 +1192,10 @@ ts.filter = {
 			source = wo.filter_selectSource,
 			fxn = $.isFunction(source) ? true : ts.getColumnData( table, source, column );
 
+		if (onlyAvail && c.$table.data('lastSearch')[column] !== '') {
+			onlyAvail = false;
+		}
+
 		// filter select source option
 		if (fxn === true) {
 			// OVERALL source
