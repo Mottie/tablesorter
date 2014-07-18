@@ -1190,9 +1190,10 @@ ts.filter = {
 			parsed = [],
 			arry = false,
 			source = wo.filter_selectSource,
+			last = c.$table.data('lastSearch') || [],
 			fxn = $.isFunction(source) ? true : ts.getColumnData( table, source, column );
 
-		if (onlyAvail && c.$table.data('lastSearch')[column] !== '') {
+		if (onlyAvail && last[column] !== '') {
 			onlyAvail = false;
 		}
 

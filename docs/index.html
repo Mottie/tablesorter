@@ -2342,8 +2342,10 @@ $(function(){
 				<td>String</td>
 				<td>&quot;filter-onlyAvail&quot;</td>
 				<td>
-					Filter widget: If a header contains a select dropdown and this class name, only the available (visible) options in the column will show (<span class="version">v2.10.1</span>).
+					Filter widget: If a header contains a select dropdown and this class name, only the available (visible) options in the column will show (<span class="version">v2.10.1</span>; <span class="version updated">v2.17.6</span>).
 					<div class="collapsible">
+					<br>
+					In <span class="version">v2.17.6</span>, columns with the only available class name set, that <em>are not</em> currently being filtered will only show the available options. Conversely, the column(s) with a selected option will show all options.<br>
 					<br>
 					This option is useful after one or more columns have been filtered, then the column select filter with this class applied will only show the contents of the column within the dropdown that are currently visible. See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo &quot;Discount&quot; column for an example (sort the &quot;First Name&quot; column first).<br>
 					<br>
