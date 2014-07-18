@@ -1284,34 +1284,58 @@ ts.filter = {
 		}
 		return arry;
 	},
-	buildSelect: function(table, column, updating, onlyAvail) {
-		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
+	buildSelect: function(table, column, arry, updating, onlyAvail) {
+		table = $(table)[0];
 		column = parseInt(column, 10);
-		var indx, txt, $filters,
+		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
+		var indx, txt, $filters, $filter,
 			c = table.config,
 			wo = c.widgetOptions,
 			node = c.$headers.filter('[data-column="' + column + '"]:last'),
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>',
-			arry = ts.filter.getOptionSource(table, column, onlyAvail),
 			// Get curent filter value
 			currentValue = c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').val();
 
-		// build option list
-		for (indx = 0; indx < arry.length; indx++) {
-			txt = arry[indx].replace(/\"/g, "&quot;");
-			// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
-			options += arry[indx] !== '' ? '<option value="' + txt + '"' + (currentValue === txt ? ' selected="selected"' : '') +
-				'>' + arry[indx] + '</option>' : '';
+		// nothing included in arry (external source), so get the options from filter_selectSource or column data
+		if (typeof arry === 'undefined' || arry === '') {
+			arry = ts.filter.getOptionSource(table, column, onlyAvail);
 		}
+
+		if ($.isArray(arry)) {
+			// build option list
+			for (indx = 0; indx < arry.length; indx++) {
+				txt = ('' + arry[indx]).replace(/\"/g, "&quot;");
+				// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
+				options += arry[indx] !== '' ? '<option value="' + txt + '"' + (currentValue === txt ? ' selected="selected"' : '') +
+					'>' + arry[indx] + '</option>' : '';
+			}
+			// clear arry so it doesn't get appended twice
+			arry = [];
+		}
+
 		// update all selects in the same column (clone thead in sticky headers & any external selects) - fixes 473
 		$filters = ( c.$filters ? c.$filters : c.$table.children('thead') ).find('.' + ts.css.filter);
 		if (wo.filter_$externalFilters) {
 			$filters = $filters && $filters.length ? $filters.add(wo.filter_$externalFilters) : wo.filter_$externalFilters;
 		}
-		$filters.filter('select[data-column="' + column + '"]')[ updating ? 'html' : 'append' ](options);
-		if (!wo.filter_functions) { wo.filter_functions = {}; }
-		wo.filter_functions[column] = true;
+		$filter = $filters.filter('select[data-column="' + column + '"]');
+
+		// make sure there is a select there!
+		if ($filter.length) {
+			$filter[ updating ? 'html' : 'append' ](options);
+
+			if (!$.isArray(arry)) {
+				// append options if arry is provided externally as a string or jQuery object
+				$filter.append(arry);
+			}
+
+			if ($.isEmptyObject(wo.filter_functions)) { wo.filter_functions = {}; }
+			// don't modify already set functions
+			if (typeof wo.filter_functions[column] === 'undefined') {
+				wo.filter_functions[column] = true;
+			}
+		}
 	},
 	buildDefault: function(table, updating) {
 		var columnIndex, $header,
@@ -1323,7 +1347,7 @@ ts.filter = {
 			$header = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
 			// look for the filter-select class; build/update it if found
 			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && !$header.hasClass('filter-false')) {
-				ts.filter.buildSelect(table, columnIndex, updating, $header.hasClass(wo.filter_onlyAvail));
+				ts.filter.buildSelect(table, columnIndex, '', updating, $header.hasClass(wo.filter_onlyAvail));
 			}
 		}
 	}

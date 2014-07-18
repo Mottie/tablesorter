@@ -5653,6 +5653,30 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 				</td>
 			</tr>
 
+			<tr id="function-buildselect">
+				<td><a href="#" class="permalink">buildSelect</a></td>
+				<td>This filter widget function allows the updating or replacing of filter select options from an external source. (<span class="version">v2.17.5</span>):
+					<div class="collapsible"><br>
+						Access it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.buildSelect( table, column, options, replace, onlyAvail );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>column</code> - zero-based column index.</li>
+							<li><code>options</code> - array of options, jQuery object of option elements, or HTML string of option elements to apply to the targetted select.</li>
+							<li><code>replace</code> - a boolean value, which if <code>true</code> all options will be replaced; if <code>false</code> the options will be appended to the current list of options.</li>
+							<li><code>onlyAvail</code> - an optional boolean flag, which will be ignored if the <code>options</code> parameter is defined or is an empty string; otherwise it is the value passed to the function which finds all table column values; if <code>true</code>, only the available options will be diplayed.</li>
+						</ul>
+						Use this function as follows:<br>
+						<pre class="prettyprint lang-js">// replace filter select options for the first column with 1,2,3,4
+$.tablesorter.buildSelect( $('table'), 0, [ 1, 2, 3, 4 ], true );
+
+// append "Aaron" and "Fred" to the second column's filter select options. These options will remain unsorted.
+$.tablesorter.buildSelect( $('table'), 1, $('<option>Aaron</option><option>Fred</option>'), false );</pre>
+						Please be aware that this function will allow you to modify the select options, but as soon as the user filters any column, all of the select options will refresh and obtain options from the table column, or from the <code>filter_selectSource</code> function.
+					</div>
+				</td>
+			</tr>
+
 			<tr id="function-getfilters">
 				<td><a href="#" class="permalink">getFilters</a></td>
 				<td>This filter widget function allows getting an array of the currently applied filters (<span class="version">v2.9</span>; <span class="version updated">v2.15</span>)
