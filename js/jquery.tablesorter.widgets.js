@@ -566,7 +566,7 @@ ts.filter = {
 			and : 'and'
 		}, ts.language);
 
-		var options, string, $header, column, filters, time, fxn,
+		var options, string, $header, column, filters, time, fxn, noSelect,
 			regex = ts.filter.regex;
 		if (c.debug) {
 			time = new Date();
@@ -591,7 +591,7 @@ ts.filter = {
 		});
 
 		// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
-		if (wo.filter_columnFilters !== false && c.$headers.filter('.filter-false').length !== c.$headers.length) {
+		if (wo.filter_columnFilters !== false && c.$headers.filter('.filter-false, .parser-false').length !== c.$headers.length) {
 			// build filter row
 			ts.filter.buildRow(table, c, wo);
 		}
@@ -644,10 +644,12 @@ ts.filter = {
 				fxn = ts.getColumnData( table, wo.filter_functions, column );
 				if (fxn) {
 					$header = c.$headers.filter('[data-column="' + column + '"]:last');
+					// don't build select if "filter-false" or "parser-false" set
+					noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 					options = '';
-					if (fxn === true && !$header.hasClass('filter-false')) {
+					if ( fxn === true && noSelect ) {
 						ts.filter.buildSelect(table, column);
-					} else if (typeof fxn === 'object' && !$header.hasClass('filter-false')) {
+					} else if ( typeof fxn === 'object' && noSelect ) {
 						// add custom drop down list
 						for (string in fxn) {
 							if (typeof string === 'string') {
@@ -776,7 +778,7 @@ ts.filter = {
 			filter;
 	},
 	buildRow: function(table, c, wo) {
-		var column, $header, buildSelect, disabled, name, ffxn,
+		var col, column, $header, buildSelect, disabled, name, ffxn,
 			// c.columns defined in computeThIndexes()
 			columns = c.columns,
 			buildFilter = '<tr class="' + ts.css.filterRow + '">';
@@ -793,7 +795,8 @@ ts.filter = {
 			buildSelect = (wo.filter_functions && ffxn && typeof ffxn !== "function" ) ||
 				$header.hasClass('filter-select');
 			// get data from jQuery data, metadata, headers option or header class name
-			disabled = ts.getData($header[0], ts.getColumnData( table, c.headers, column ), 'filter') === 'false';
+			col = ts.getColumnData( table, c.headers, column );
+			disabled = ts.getData($header[0], col, 'filter') === 'false' || ts.getData($header[0], col, 'parser') === 'false';
 
 			if (buildSelect) {
 				buildFilter = $('<select>').appendTo( c.$filters.eq(column) );
@@ -1338,15 +1341,16 @@ ts.filter = {
 		}
 	},
 	buildDefault: function(table, updating) {
-		var columnIndex, $header,
+		var columnIndex, $header, noSelect,
 			c = table.config,
 			wo = c.widgetOptions,
 			columns = c.columns;
 		// build default select dropdown
 		for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 			$header = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
+			noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 			// look for the filter-select class; build/update it if found
-			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && !$header.hasClass('filter-false')) {
+			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && noSelect) {
 				ts.filter.buildSelect(table, columnIndex, '', updating, $header.hasClass(wo.filter_onlyAvail));
 			}
 		}

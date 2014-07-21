@@ -477,11 +477,13 @@
 			}
 
 			function updateHeader(table) {
-				var s, $th,
+				var s, $th, col,
 					c = table.config;
 				c.$headers.each(function(index, th){
 					$th = $(th);
-					s = ts.getData( th, ts.getColumnData( table, c.headers, index, true ), 'sorter' ) === 'false';
+					col = ts.getColumnData( table, c.headers, index, true );
+					// add "sorter-false" class if "parser-false" is set
+					s = ts.getData( th, col, 'sorter' ) === 'false' || ts.getData( th, col, 'parser' ) === 'false';
 					th.sortDisabled = s;
 					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
 					// aria-controls - requires table ID
