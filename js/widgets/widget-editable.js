@@ -19,7 +19,7 @@
 		init: function(table, thisWidget, c, wo){
 			if (!wo.editable_columns.length) { return; }
 			var indx, tmp, $t, cols = [];
-			if (wo.editable_columns.indexOf('-') >= 0) {
+			if ($.type(wo.editable_columns) === "string" && wo.editable_columns.indexOf('-') >= 0) { // editable_columns can contain a range string (i.e. "2-4" )
 				// editable_columns can contain a range string (i.e. "2-4" )
 				tmp = wo.editable_columns.split('-');
 				indx = parseInt(tmp[0],10) || 0;
