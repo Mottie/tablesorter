@@ -1864,7 +1864,8 @@ $(function(){
 		<tbody>
 			<tr><td>30</td><td>columns</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>50</td><td>filter</td><td>v1.4.3</td><td>1.4.3 (nextUntil &amp; delegate)</td></tr>
-			<tr><td>Last</td><td>pager</td><td>v1.2.6</td><td></td></tr>
+			<tr><td>Last</td><td>pager plugin</td><td>v1.2.6</td><td></td></tr>
+			<tr><td>55</td><td>pager widget</td><td>v1.7</td><td>1.7 (on)</td></tr>
 			<tr><td>40</td><td>resizable</td><td>v1.4.1*</td><td>1.4 (isEmptyObject); 1.4.1 (parseJSON)*</td></tr>
 			<tr><td>20</td><td>saveSort</td><td>v1.4.1</td><td>1.4.1 (parseJSON)*</td></tr>
 			<tr><td>60</td><td>stickyHeaders</td><td>v1.2.6</td><td></td></tr>
@@ -3463,7 +3464,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
 				<td>&quot;{page}/{totalPages}&quot;</td>
-				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9).
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.17.6</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_output</code><br>
@@ -3485,9 +3486,11 @@ $.extend($.tablesorter.themes.jui, {
 	</thead>
 	<tbody>
 		<tr><td><code>{page}</code></td><td>The current pager page</td></tr>
+		<tr><td><code>{page:input}</code></td><td>The current pager page within an input (<span class="version">v2.17.6</span>)</td></tr>
 		<tr><td><code>{totalPages}</code></td><td>Total number of pager pages</td></tr>
 		<tr><td><code>{filteredPages}</code></td><td>Total number of pages left after being filtered</td></tr>
 		<tr><td><code>{startRow}</code></td><td>Starting row number currently displayed</td></tr>
+		<tr><td><code>{startRow:input}</code></td><td>Starting row number currently displayed within an input (<span class="version">v2.17.6</span>)</td></tr>
 		<tr><td><code>{endRow}</code></td><td>Ending row number currently displayed</td></tr>
 		<tr><td><code>{filteredRows}</code></td><td>Total number of rows left after being filtered</td></tr>
 		<tr><td><code>{totalRows}</code></td><td>Total number of rows</td></tr>

@@ -37,7 +37,8 @@
 
 				// output default: '{page}/{totalPages}'
 				// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-				pager_output: '{startRow} to {endRow} of {totalRows} rows', // '{page}/{totalPages}'
+				// also {page:input} & {startRow:input} will add a modifiable input in place of the value
+				pager_output: '{startRow:input} to {endRow} of {totalRows} rows', // '{page}/{totalPages}'
 
 				// apply disabled classname to the pager arrows when the rows at either extreme is visible
 				pager_updateArrows: true,
@@ -225,6 +226,7 @@
 						<li>See the Javascript code below for a full example.</li>
 					</ul>
 				</li>
+				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
 			</ul>
 		<p>
 
