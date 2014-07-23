@@ -78,6 +78,20 @@
 		type: "text"
 	});
 
+	// Custom parser for parsing textarea values
+	// updated dynamically using the "change" function below
+	$.tablesorter.addParser({
+		id: "textarea",
+		is: function(){
+			return false;
+		},
+		format: function(s, table, cell) {
+			return $(cell).find('textarea').val() || s;
+		},
+		parsed : true, // filter widget flag
+		type: "text"
+	});
+
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired
@@ -88,7 +102,7 @@
 			// it happens when you modify input text and hit enter
 			var alreadyUpdating = false;
 			// bind to .tablesorter (default class name)
-			$(this).children('tbody').on('change', 'select, input', function(e){
+			$(this).children('tbody').on('change', 'select, input, textarea', function(e){
 				if (!alreadyUpdating) {
 					var $tar = $(e.target),
 						$cell = $tar.closest('td'),
