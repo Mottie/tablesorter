@@ -333,7 +333,7 @@
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
 								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(t, table, $row[0].cells[j], j);
-								cols.push(v);
+								cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
 								if ((parsers[j].type || '').toLowerCase() === "numeric") {
 									// determine column max value (ignore sign)
 									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
@@ -848,8 +848,9 @@
 						row = $tb.eq(tbdy).find('tr').index( $row );
 						icell = $cell.index();
 						c.cache[tbdy].normalized[row][c.columns].$row = $row;
-						v = c.cache[tbdy].normalized[row][icell] = c.parsers[icell].id === 'no-parser' ? '' :
+						v = c.parsers[icell].id === 'no-parser' ? '' :
 							c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						c.cache[tbdy].normalized[row][icell] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
 						if ((c.parsers[icell].type || '').toLowerCase() === "numeric") {
 							// update column max value (ignore sign)
 							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
@@ -866,7 +867,7 @@
 						commonUpdate(table, resort, callback);
 					} else {
 						$row = $($row); // make sure we're using a jQuery object
-						var i, j, l, rowData, cells,
+						var i, j, l, v, rowData, cells,
 						rows = $row.filter('tr').length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
@@ -884,8 +885,9 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = c.parsers[j].id === 'no-parser' ? '' :
+								v = c.parsers[j].id === 'no-parser' ? '' :
 									c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								cells[j] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
 								if ((c.parsers[j].type || '').toLowerCase() === "numeric") {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
