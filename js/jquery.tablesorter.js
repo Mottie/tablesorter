@@ -423,7 +423,8 @@
 				c.columns = ts.computeColumnIndex( c.$table.children('thead, tfoot').children('tr') );
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
-				c.$headers.each(function(index) {
+				// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
+				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					// make sure to get header cell & not column indexed cell
 					ch = ts.getColumnData( table, c.headers, index, true );
