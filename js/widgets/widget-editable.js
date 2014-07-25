@@ -30,7 +30,9 @@
 				}
 			} else if ($.isArray(wo.editable_columns)) {
 				$.each(wo.editable_columns, function(i, col){
-					cols.push('td:nth-child(' + (col + 1) + ')');
+					if ( col < c.columns ) {
+						cols.push('td:nth-child(' + (col + 1) + ')');
+					}
 				});
 			}
 			// IE does not allow making TR/TH/TD cells directly editable (issue #404)
