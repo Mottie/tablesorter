@@ -282,8 +282,8 @@
 					totalRows, rowData, colMax,
 					c = table.config,
 					$tb = c.$table.children('tbody'),
-				extractors = c.extractors,
-				parsers = c.parsers;
+					extractors = c.extractors,
+					parsers = c.parsers;
 				c.cache = {};
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
@@ -889,7 +889,7 @@
 						updateHeader(table);
 						commonUpdate(table, resort, callback);
 					} else {
-						$row = $($row); // make sure we're using a jQuery object
+						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
 						var i, j, l, t, v, rowData, cells,
 						rows = $row.filter('tr').length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
@@ -1051,8 +1051,8 @@
 				c.table = table;
 				c.$table = $table
 					.addClass(ts.css.table + ' ' + c.tableClass + k)
-					.attr({ role : 'grid'});
-				c.$headers = $(table).find(c.selectorHeaders);
+					.attr('role', 'grid');
+				c.$headers = $table.find(c.selectorHeaders);
 
 				// give the table a unique id, which will be used in namespace binding
 				if (!c.namespace) {
@@ -1062,6 +1062,7 @@
 					c.namespace = '.' + c.namespace.replace(/\W/g,'');
 				}
 
+				c.$table.children().children('tr').attr('role', 'row');
 				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')').attr({
 					'aria-live' : 'polite',
 					'aria-relevant' : 'all'
