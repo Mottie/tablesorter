@@ -17,9 +17,20 @@
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
+	<link rel="stylesheet" href="../css/theme.ice.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script src="../js/widgets/widget-editable.js"></script>
+
+	<style>
+	table.info2.tablesorter-ice { table-layout: auto; }
+	.options th.option { width: 150px; }
+	.info2 th { vertical-align: middle; text-align: center; }
+	.info2 th.col { width: 42%; }
+	.color1 { color: purple; }
+	.color2 { color: blue; }
+	.color3 { color: green; }
+	</style>
 	<style id="css">.tablesorter tbody > tr > td[contenteditable=true]:focus {
 	outline: #08f 1px solid;
 	background: #eee;
@@ -28,10 +39,9 @@
 td.no-edit, span.no-edit {
 	background-color: rgba(230,191,153,0.5);
 }</style>
-
 	<script id="js">$(function() {
 
-	$("table")
+	$("#table")
 		.tablesorter({
 			theme : 'blue',
 
@@ -39,14 +49,17 @@ td.no-edit, span.no-edit {
 			widgetOptions: {
 				editable_columns       : [0,1,2],       // or "0-2" (v2.14.2); point to the columns to make editable (zero-based index)
 				editable_enterToAccept : true,          // press enter to accept content, or click outside if false
+				editable_autoAccept    : true,          // accepts any changes made to the table cell automatically (v2.17.6)
 				editable_autoResort    : false,         // auto resort after the content has changed.
+				editable_validate      : null,          // return a valid string: function(text, original){ return text; }
 				editable_noEdit        : 'no-edit',     // class name of cell that is not editable
 				editable_editComplete  : 'editComplete' // event fired after the table content has been edited
 			}
 		})
-		.children('tbody').on('editComplete', 'td', function(){
+		// config event variable new in v2.17.6
+		.children('tbody').on('editComplete', 'td', function(event, config){
 			var $this = $(this),
-				$allRows = $this.closest('table')[0].config.$tbodies.children('tr'),
+				$allRows = config.$tbodies.children('tr'),
 
 				newContent = $this.text(),
 				cellIndex = this.cellIndex, // there shouldn't be any colspans in the tbody
@@ -80,25 +93,68 @@ td.no-edit, span.no-edit {
 		<div>
 		<ul>
 			<li>This widget can not be applied to the original plugin and requires jQuery 1.7+ and a browser that supports <a href="http://caniuse.com/#feat=contenteditable"><code>contenteditable</code> attributes</a> (almost all modern browsers).</li>
-			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).</li>
+			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).<br><br></li>
+			<li>Updated <span class="version">v2.17.6</span>,
+				<ul>
+					<li>Fixed the <code>editable_enterToAccept</code> option to do what it was meant to do, accept when the user presses enter.</li>
+					<li>Added <code>editable_autoAccept</code> option, so that when it is <code>true</code> the original behavior of accepting content changes will be maintained.</li>
+					<li>Added <code>editable_validate</code> option, to allow validating the edited content.</li>
+					<li>Focus is now maintained within the contenteditable element after updating. This makes it easier to tab through the table while editing. This change also fixes <a href="http://stackoverflow.com/q/24947995/145346">this Stackoverflow issue</a>.</li>
+					<li>The <code>editComplete</code> event now passes the table <code>config</code> variable to make it easier to access tablesorter variables.</li>
+				</ul>
+			</li>
 			<li>Updated <span class="version updated">v2.13.2</span>, because of the limitation in IE, if a table cell contains any DIV or SPAN immediately inside the cell, it will be targeted instead of the table cell itself and made content editable. So, if you don't care about IE support, there is no need to include the extra markup.</li>
 			<li>In some browsers, additional CSS is needed to highlight a focused editable table cell. See the CSS block below.</li>
 			<li>Pressing escape while editing will cancel any changes.</li>
 			<li>In the demo below, click in any of the first three columns to edit the content, except for the cell containing <span class="no-edit">"Peter"</span>.</li>
 			<li>To prevent a table cell from becoming editable, add the class name <code>"no-edit"</code> to the cell. Set by the <code>editable_noEdit</code> option.</li>
-			<li>Edited content <em>will be accepted</em> in the following circumstances:
-				<ul>
-					<li>Pressing enter when the <code>editable_enterToAccept</code> option is <code>true</code>.</li>
-					<li>Clicking outside of the current editable content.</li>
-					<li>Moving the mouse outside of the current tbody. This is done because if the content editable is still active when the user clicks on the header to sort the column, all sorts of bad things happen.</li>
-				</ul>
-			</li>
-			<li>Edited content <em>will not be accepted</em> in the following circumstances:
-				<ul>
-					<li>Pressing Escape within the editable content.</li>
-				</ul>
-			</li>
 		</ul>
+		</div>
+
+		<h3><a href="#">When Content Changes are Accepted</a></h3>
+		<div>
+			<table class="info2 tablesorter-ice">
+				<thead>
+					<tr><th style="width:250px" colspan="2" rowspan="2"></th><th colspan="2">editable_enterToAccept</th></tr>
+					<tr><th class="col">true</th><th class="col">false</th></tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th stlye="width:200px" rowspan="2">editable_autoAccept</th>
+						<th style="width:50px">true</th>
+						<td>
+							<ul>
+								<li class="color1">Pressing alt-enter</li>
+								<li class="color2">Pressing enter</li>
+								<li class="color3">Clicking outside of the current editable content.</li>
+								<li class="color3">Moving the mouse outside of the current tbody (this is done because if the content editable is still active when the user clicks on the header to sort the column, all sorts of bad things happen).</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li class="color1">Pressing alt-enter</li>
+								<li class="color3">Clicking outside of the current editable content.</li>
+								<li class="color3">Moving the mouse outside of the current tbody.</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<th>false</th>
+						<td>
+							<ul>
+								<li class="color1">Pressing alt-enter</li>
+								<li class="color2">Pressing enter</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li class="color1">Pressing alt-enter</li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			* <span class="label label-info">Note</span> The content is only accepted when the <code>editable_validation</code> function <em>does not</em> return <code>false</code>.
 		</div>
 
 		<h3><a href="#">Options</a></h3>
@@ -109,9 +165,25 @@ td.no-edit, span.no-edit {
 			</div>
 			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
 				<thead>
-					<tr><th>Option</th><th class="sorter-false">Description</th></tr>
+					<tr><th class="option">Option</th><th class="sorter-false">Description</th></tr>
 				</thead>
 				<tbody>
+
+					<tr id="editable-auto-accept">
+						<td><a href="#" class="permalink">editable_autoAccept</a></td>
+						<td>Accepts any changes made to the table cell automatically <span class="version">v2.17.6</span>
+							<div class="collapsible">
+							<br>
+							If the user clicks outside or tabs out of the edited cell, or moves the mouse out of the current tbody, any changes to the cell will be accepted<br>
+							<br>
+							The only time the content is not accepted is if the user presses the escape key.<br>
+							<br>
+							if <code>false</code>, the acceptance behavior follows the <code>editable_enterToAccept</code> setting.<br>
+							<br>
+							Default value: <code>true</code>
+							</div>
+						</td>
+					</tr>
 
 					<tr id="editable-columns">
 						<td><a href="#" class="permalink">editable_columns</a></td>
@@ -170,15 +242,47 @@ td.no-edit, span.no-edit {
 						</td>
 					</tr>
 
+					<tr id="editable-validate">
+						<td><a href="#" class="permalink">editable_validate</a></td>
+						<td>Validate the content change.
+							<div class="collapsible">
+							<br>
+							Use this function to validate and/or modify the content before it is accepted.<br>
+							<br>
+							This function must return either a string containing the modified content or <code>false</code> to revert the content back to it's original value. Example:
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_validate : function(txt, orig){
+        // only allow one word
+        var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
+        return t ? t : false;
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
 				</tbody>
 			</table>
 		</div>
 
 	</div>
 
-	<p>
+	<p></p>
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+
+	<button class="auto">Toggle</button> <code>editable_autoAccept&nbsp;&nbsp;&nbsp;&nbsp;: <span>true</span></code><br>
+	<button class="enter">Toggle</button> <code>editable_enterToAccept : <span>true</span></code>
+	<br>
+
+	<div id="demo"><table id="table" class="tablesorter">
 	<thead>
 		<tr>
 			<th>First Name</th>
@@ -232,6 +336,7 @@ td.no-edit, span.no-edit {
 		</tr>
 	</tbody>
 </table></div>
+
 	<h1>Javascript</h1>
 	<div id="javascript">
 		<pre class="prettyprint lang-javascript"></pre>
@@ -246,6 +351,22 @@ td.no-edit, span.no-edit {
 	</div>
 
 </div>
+
+<script>
+$(function() {
+	$('.options').tablesorter();
+
+	var wo = $('#table')[0].config.widgetOptions;
+	$('.enter').click(function(){
+		var t = wo.editable_enterToAccept = !wo.editable_enterToAccept;
+		$(this).next().find('span').html('' + t);
+	});
+	$('.auto').click(function(){
+		var t = wo.editable_autoAccept = !wo.editable_autoAccept;
+		$(this).next().find('span').html('' + t);
+	});
+});
+</script>
 
 </body>
 </html>
