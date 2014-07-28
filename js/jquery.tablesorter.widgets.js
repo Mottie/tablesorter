@@ -1204,6 +1204,8 @@ ts.filter = {
 		if (fxn === true) {
 			// OVERALL source
 			arry = source(table, column, onlyAvail);
+		} else if ($.isArray(fxn)) {
+			arry = fxn;
 		} else if ($.type(source) === 'object' && fxn) {
 			// custom select source function for a SPECIFIC COLUMN
 			arry = fxn(table, column, onlyAvail);
