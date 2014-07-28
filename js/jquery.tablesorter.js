@@ -564,7 +564,7 @@
 					var colgroup = $('<colgroup>'),
 						overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies[0]).find("tr:first").children("td:visible").each(function() {
+					$(table.tBodies[0]).find("tr:first").children(":visible").each(function() {
 						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
 					$(table).prepend(colgroup);
