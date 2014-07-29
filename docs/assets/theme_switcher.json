@@ -203,7 +203,7 @@
 
 	{
 		"theme_name": "aristo",
-		"theme_url": "//taitems.github.com/Aristo-jQuery-UI-Theme/css/Aristo/Aristo.css",
+		"theme_url": "//taitems.github.io/Aristo-jQuery-UI-Theme/css/Aristo/Aristo.css",
 		"group": "3rd-party",
 		"active": "yes",
 		"author": "https://github.com/taitems/Aristo-jQuery-UI-Theme",
@@ -211,7 +211,7 @@
 	},
 	{
 		"theme_name": "jquery-ui-bootstrap",
-		"theme_url": "//addyosmani.github.com/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
+		"theme_url": "//jquery-ui-bootstrap.github.io/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.3.custom.css",
 		"group": "3rd-party",
 		"active": "yes",
 		"author": "//addyosmani.github.com/jquery-ui-bootstrap",
@@ -220,7 +220,7 @@
 	{
 		"theme_name": "Absolution",
 		"hosted_locally": "yes",
-		"theme_url": "/lib/jquery-ui-1.10.0.custom/css/3rd-party/Absolution/absolution.css",
+		"theme_url": "css/absolution/absolution.css",
 		"group": "3rd-party",
 		"active": "yes",
 		"author": "//www.michaelvanderheeren.be/archives/382",
@@ -229,7 +229,7 @@
 	},
 	{
 		"theme_name": "Selene",
-		"theme_url": "//gravityonmars.github.com/Selene/css/ui-selene/jquery-ui-1.8.17.custom.css",
+		"theme_url": "//gravityonmars.github.io/Selene/css/ui-selene/jquery-ui-1.8.17.custom.css",
 		"group": "3rd-party",
 		"active": "yes",
 		"author": "https://github.com/gravityonmars/Selene",
@@ -237,7 +237,7 @@
 	},
 	{
 		"theme_name": "kiandra-delta",
-		"theme_url": "//kiandra.github.com/Delta-jQuery-UI-Theme/theme/jquery-ui.css",
+		"theme_url": "//kiandra.github.io/Delta-jQuery-UI-Theme/theme/jquery-ui.css",
 		"group": "3rd-party",
 		"active": "yes",
 		"author": "https://github.com/kiandra/Delta-jQuery-UI-Theme",
@@ -247,7 +247,7 @@
 
 	{
 		"theme_name": "arctic",
-		"theme_url": "//cdn.wijmo.com/themes/arctic/jquery-wijmo.css",
+		"theme_url": "css/wijmo/arctic/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -255,7 +255,7 @@
 	},
 	{
 		"theme_name": "midnight",
-		"theme_url": "//cdn.wijmo.com/themes/midnight/jquery-wijmo.css",
+		"theme_url": "css/wijmo/midnight/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -263,7 +263,7 @@
 	},
 	{
 		"theme_name": "rocket",
-		"theme_url": "//cdn.wijmo.com/themes/rocket/jquery-wijmo.css",
+		"theme_url": "css/wijmo/rocket/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -271,7 +271,7 @@
 	},
 	{
 		"theme_name": "cobalt",
-		"theme_url": "//cdn.wijmo.com/themes/cobalt/jquery-wijmo.css",
+		"theme_url": "css/wijmo/cobalt/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -279,7 +279,7 @@
 	},
 	{
 		"theme_name": "sterling",
-		"theme_url": "//cdn.wijmo.com/themes/sterling/jquery-wijmo.css",
+		"theme_url": "css/wijmo/sterling/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -287,7 +287,7 @@
 	},
 	{
 		"theme_name": "metro",
-		"theme_url": "//cdn.wijmo.com/themes/metro/jquery-wijmo.css",
+		"theme_url": "css/wijmo/metro/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -295,7 +295,7 @@
 	},
 	{
 		"theme_name": "metro-dark",
-		"theme_url": "//cdn.wijmo.com/themes/metro-dark/jquery-wijmo.css",
+		"theme_url": "css/wijmo/metro-dark/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
@@ -303,7 +303,7 @@
 	},
 	{
 		"theme_name": "bootstrap-wijmo",
-		"theme_url": "//cdn.wijmo.com/themes/bootstrap/jquery-ui.css",
+		"theme_url": "css/wijmo/bootstrap/jquery-ui.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//addyosmani.github.com/jquery-ui-bootstrap",
@@ -311,7 +311,7 @@
 	},
 	{
 		"theme_name": "aristo-wijmo",
-		"theme_url": "//cdn.wijmo.com/themes/aristo/jquery-wijmo.css",
+		"theme_url": "css/wijmo/aristo/jquery-wijmo.css",
 		"group": "Wijmo",
 		"active": "yes",
 		"author": "//wijmo.com",
