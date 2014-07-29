@@ -372,7 +372,8 @@ ts.addWidget({
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
 		filter_serversideFiltering : false, // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
-		filter_defaultAttrib : 'data-value' // data attribute in the header cell that contains the default filter value
+		filter_defaultAttrib : 'data-value', // data attribute in the header cell that contains the default filter value
+		filter_selectSourceSeparator : '|' // filter_selectSource array text left of the separator is added to the option value, right into the option text
 	},
 	format: function(table, c, wo) {
 		if (!c.$table.hasClass('hasFilters')) {
@@ -566,7 +567,7 @@ ts.filter = {
 			and : 'and'
 		}, ts.language);
 
-		var options, string, $header, column, filters, time, fxn, noSelect,
+		var options, string, txt, $header, column, filters, val, time, fxn, noSelect,
 			regex = ts.filter.regex;
 		if (c.debug) {
 			time = new Date();
@@ -643,7 +644,8 @@ ts.filter = {
 			for (column = 0; column < c.columns; column++) {
 				fxn = ts.getColumnData( table, wo.filter_functions, column );
 				if (fxn) {
-					$header = c.$headers.filter('[data-column="' + column + '"]:last');
+					// remove "filter-select" from header otherwise the options added here are replaced with all options
+					$header = c.$headers.filter('[data-column="' + column + '"]:last').removeClass('filter-select');
 					// don't build select if "filter-false" or "parser-false" set
 					noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 					options = '';
@@ -655,7 +657,14 @@ ts.filter = {
 							if (typeof string === 'string') {
 								options += options === '' ?
 									'<option value="">' + ($header.data('placeholder') || $header.attr('data-placeholder') || wo.filter_placeholder.select || '') + '</option>' : '';
-								options += '<option value="' + string + '">' + string + '</option>';
+								val = string;
+								txt = string;
+								if (string.indexOf(wo.filter_selectSourceSeparator) >= 0) {
+									val = string.split(wo.filter_selectSourceSeparator);
+									txt = val[1];
+									val = val[0];
+								}
+								options += '<option ' + (txt === val ? '' : 'data-function-name="' + string + '" ') + 'value="' + val + '">' + txt + '</option>';
 							}
 						}
 						c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').append(options);
@@ -987,7 +996,7 @@ ts.filter = {
 		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
 			notFiltered, searchFiltered, filterMatched, showRow, time, val, indx,
-			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache, fxn,
+			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache, fxn, ffxn,
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1121,6 +1130,9 @@ ts.filter = {
 							iExact = !regex.type.test(typeof exact) && wo.filter_ignoreCase ? exact.toLocaleLowerCase() : exact;
 							result = showRow; // if showRow is true, show that row
 
+							// in case select filter option has a different value vs text "a - z|A through Z"
+							ffxn = c.$filters.eq(columnIndex).find('select option:selected').attr('data-function-name') || '';
+
 							// replace accents - see #357
 							filters[columnIndex] = c.sortLocaleCompare ? ts.replaceAccents(filters[columnIndex]) : filters[columnIndex];
 							// val = case insensitive, filters[columnIndex] = case sensitive
@@ -1134,9 +1146,9 @@ ts.filter = {
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
 									result = fxn(exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
-								} else if (typeof fxn[filters[columnIndex]] === 'function') {
+								} else if (typeof fxn[ffxn || filters[columnIndex]] === 'function') {
 									// selector option function
-									result = fxn[filters[columnIndex]](exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
+									result = fxn[ffxn || filters[columnIndex]](exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
 								}
 							} else {
 								filterMatched = null;
@@ -1204,6 +1216,9 @@ ts.filter = {
 		if (fxn === true) {
 			// OVERALL source
 			arry = source(table, column, onlyAvail);
+		} else if ( fxn instanceof $ || ($.type(fxn) === 'string' && fxn.indexOf('</option>') >= 0) ) {
+			// selectSource is a jQuery object or string of options
+			return fxn;
 		} else if ($.isArray(fxn)) {
 			arry = fxn;
 		} else if ($.type(source) === 'object' && fxn) {
@@ -1293,7 +1308,7 @@ ts.filter = {
 		table = $(table)[0];
 		column = parseInt(column, 10);
 		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
-		var indx, txt, $filters, $filter,
+		var indx, val, txt, t, $filters, $filter,
 			c = table.config,
 			wo = c.widgetOptions,
 			node = c.$headers.filter('[data-column="' + column + '"]:last'),
@@ -1301,7 +1316,6 @@ ts.filter = {
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>',
 			// Get curent filter value
 			currentValue = c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').val();
-
 		// nothing included in arry (external source), so get the options from filter_selectSource or column data
 		if (typeof arry === 'undefined' || arry === '') {
 			arry = ts.filter.getOptionSource(table, column, onlyAvail);
@@ -1310,10 +1324,18 @@ ts.filter = {
 		if ($.isArray(arry)) {
 			// build option list
 			for (indx = 0; indx < arry.length; indx++) {
-				txt = ('' + arry[indx]).replace(/\"/g, "&quot;");
+				txt = arry[indx] = ('' + arry[indx]).replace(/\"/g, "&quot;");
+				val = txt;
+				// allow including a symbol in the selectSource array
+				// "a-z|A through Z" so that "a-z" becomes the option value
+				// and "A through Z" becomes the option text
+				if (txt.indexOf(wo.filter_selectSourceSeparator) >= 0) {
+					t = txt.split(wo.filter_selectSourceSeparator);
+					val = t[0];
+					txt = t[1];
+				}
 				// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
-				options += arry[indx] !== '' ? '<option value="' + txt + '"' + (currentValue === txt ? ' selected="selected"' : '') +
-					'>' + arry[indx] + '</option>' : '';
+				options += arry[indx] !== '' ? '<option ' + (val === txt ? '' : 'data-function-name="' + arry[indx] + '" ') + 'value="' + val + '">' + txt + '</option>' : '';
 			}
 			// clear arry so it doesn't get appended twice
 			arry = [];
@@ -1329,17 +1351,12 @@ ts.filter = {
 		// make sure there is a select there!
 		if ($filter.length) {
 			$filter[ updating ? 'html' : 'append' ](options);
-
 			if (!$.isArray(arry)) {
 				// append options if arry is provided externally as a string or jQuery object
-				$filter.append(arry);
+				// options (default value) was already added
+				$filter.append(arry).val(currentValue);
 			}
-
-			if ($.isEmptyObject(wo.filter_functions)) { wo.filter_functions = {}; }
-			// don't modify already set functions
-			if (typeof wo.filter_functions[column] === 'undefined') {
-				wo.filter_functions[column] = true;
-			}
+			$filter.val(currentValue);
 		}
 	},
 	buildDefault: function(table, updating) {

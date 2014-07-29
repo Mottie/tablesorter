@@ -1652,6 +1652,8 @@ $(function(){
       filter_searchFiltered: true,
       // include a function to return an array of values to be added to the column filter select
       filter_selectSource  : null,
+      // filter_selectSource array text left of the separator is added to the option value, right into the option text
+      filter_selectSourceSeparator : '|',
       // if true, filter start from the beginning of the cell contents.
       filter_startsWith    : false,
       // filter all data using parsed content.
@@ -2515,7 +2517,7 @@ $('table').trigger('search', false);</pre></div>
 					<br>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
 					<pre class="prettyprint lang-js">filter_selectSource : {
-    ".model-number" : [ "abc", "def", "ghi", "xyz" ]
+  ".model-number" : [ "abc", "def", "ghi", "xyz" ]
 }</pre>
 					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
 					<br>
@@ -2565,6 +2567,62 @@ $('table').trigger('search', false);</pre></div>
 					</div>
 				</td>
 				<td><a href="example-widget-filter-formatter-select2.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-selectsource-separator">
+				<td><a href="#" class="permalink">filter_selectSourceSeparator</a></td>
+				<td>String</td>
+				<td>'|'</td>
+				<td>
+					Filter widget: Set this option to be any separator (<span class="version">v2.17.6</span>) that is to be used within the <code>filter_selectSource</code> returned array.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-selectsource-separator"><code>filter_selectSourceSeparator</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_selectSource : {
+        0 : [ 'en|English', 'fr|French', 'de|German' ]
+      },
+      // filter_selectSource array text left of the separator is added to the option value, right into the option text
+      filter_selectSourceSeparator : '|'
+    }
+  });
+});</pre>Results in this HTML:
+					<pre class="prettyprint lang-html">&lt;select&gt;
+	&lt;option value=&quot;&quot;&gt;&lt;/option&gt;
+	&lt;option value=&quot;en&quot;&gt;English&lt;/option&gt;
+	&lt;option value=&quot;fr&quot;&gt;French&lt;/option&gt;
+	&lt;option value=&quot;de&quot;&gt;German&lt;/option&gt;
+&lt;/select&gt;</pre>This also works for the <code>filter_functions</code>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions: {
+      filter_functions: {
+        // Add these options to the select dropdown (regex example)
+        1 : {
+          "<10|Less than 10" : function(e, n, f, i) { return n < 10; },
+          "10 - 100|Between 10 & 100" : function(e, n, f, i) { return n >= 10 && n <=100; },
+          ">100|Greater than 100" : function(e, n, f, i) { return n > 100; }
+        }
+      },
+      // filter_selectSource array text left of the separator is added to the option value, right into the option text
+      filter_selectSourceSeparator : '|'
+    }
+  });
+});</pre>
+					Results in this HTML (this adds a <code>data-function-name</code> attribute to keep a reference to the associated <code>filter_functions</code>.
+					<pre class="prettyprint lang-html">&lt;select&gt;
+  &lt;option value=&quot;&quot;&gt;&lt;/option&gt;
+  &lt;option data-function-name="&amp;lt;10|Less than 10" value=&quot;&amp;lt;10&quot;&gt;Less than 10&lt;/option&gt;
+  &lt;option data-function-name="10 - 100|Between 10 &amp;amp; 100" value=&quot;10 - 100&quot;&gt;Between 10 & 100&lt;/option&gt;
+  &lt;option data-function-name="&amp;gt;100|Greater than 100" value=&quot;&amp;gt;100&quot;&gt;Greater than 100&lt;/option&gt;
+&lt;/select&gt;</pre>
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-serversidefiltering">
