@@ -790,7 +790,7 @@ ts.filter = {
 		var col, column, $header, buildSelect, disabled, name, ffxn,
 			// c.columns defined in computeThIndexes()
 			columns = c.columns,
-			buildFilter = '<tr class="' + ts.css.filterRow + '">';
+			buildFilter = '<tr role="row" class="' + ts.css.filterRow + '">';
 		for (column = 0; column < columns; column++) {
 			buildFilter += '<td></td>';
 		}
