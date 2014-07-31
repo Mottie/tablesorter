@@ -306,6 +306,8 @@ tsp = ts.pager = {
 		}
 
 		if ( p.$size.length ) {
+			// setting an option as selected appears to cause issues with initial page size
+			p.$size.find('option').removeAttr('selected');
 			p.$size
 				.unbind('change.pager')
 				.bind('change.pager', function() {
