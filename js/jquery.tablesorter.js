@@ -396,6 +396,7 @@
 					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
+						$tb.children().detach(); // remove rows
 						n = cc[k].normalized;
 						totalRows = n.length;
 						for (i = 0; i < totalRows; i++) {
@@ -621,6 +622,10 @@
 			}
 
 			function initSort(table, cell, event){
+				if (table.isUpdating) {
+					// let any updates complete before initializing a sort
+					return setTimeout(function(){ initSort(table, cell, event); }, 50);
+				}
 				var arry, indx, col, order, s,
 					c = table.config,
 					key = !event[c.sortMultiSortKey],
