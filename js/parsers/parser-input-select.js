@@ -100,10 +100,36 @@
 		$('table').on('tablesorter-initialized', function(){
 			// this flag prevents the updateCell event from being spammed
 			// it happens when you modify input text and hit enter
-			var alreadyUpdating = false;
+			var table = this,
+				focused = false,
+				restoreValue = function(){
+					// focused = false; // uncomment this line to prevent auto-accepting changes
+					// make sure we restore original values
+					$(':focus').blur();
+					return;
+				};
 			// bind to .tablesorter (default class name)
-			$(this).children('tbody').on('change', 'select, input, textarea', function(e){
-				if (!alreadyUpdating) {
+			$(this).children('tbody')
+			.on('mouseleave', function(){
+				restoreValue();
+			})
+			.on('focus', 'input, textarea', function(e){
+				focused = true;
+				$(this).data('ts-original-value', this.value);
+			})
+			.on('blur', 'input, textarea', function(e){
+				// restore input value;
+				// "change" is triggered before "blur" so this doesn't replace the new update with the original
+				this.value = $(this).data('ts-original-value');
+			})
+			.on('change keyup', 'select, input, textarea', function(e){
+				if ( e.which === 27 ) {
+					// escape: restore original value
+					return this.value = $(this).data('ts-original-value');
+				}
+				// Update cell cache using... select: change, input: enter or textarea: alt + enter
+				if ( ( e.type === 'change' && focused ) ||
+					( e.type === 'keyup' && e.which === 13 && ( e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' && e.altKey ) ) ) {
 					var $tar = $(e.target),
 						$cell = $tar.closest('td'),
 						$table = $cell.closest('table'),
@@ -112,14 +138,17 @@
 						$hdr = c && c.$headers && c.$headers.eq(indx);
 					// abort if not a tablesorter table, or
 					// don't use updateCell if column is set to "sorter-false" and "filter-false", or column is set to "parser-false"
-					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ($hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false')) ) ) ){
-						return false;
+					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ( $hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false') ) ) ) ) {
+						return restoreValue();
 					}
-					alreadyUpdating = true;
-					$table.trigger('updateCell', [ $tar.closest('td'), resort, function(){
-						updateServer(e, $table, $tar);
-						setTimeout(function(){ alreadyUpdating = false; }, 10);
-					} ]);
+					// ignore change event if nothing changed
+					if ($tar.val() !== $tar.data('ts-original-value')) {
+						$tar.data('ts-original-value', $tar.val());
+						$table.trigger('updateCell', [ $tar.closest('td'), resort, function(){
+							updateServer(e, $table, $tar);
+							setTimeout(function(){ focused = false; }, 10);
+						} ]);
+					}
 				}
 			});
 		});
