@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 7/17/2014 (v2.17.5) */
+/* Pager widget for TableSorter 8/1/2014 (v2.17.6) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -306,6 +306,8 @@ tsp = ts.pager = {
 		}
 
 		if ( p.$size.length ) {
+			// setting an option as selected appears to cause issues with initial page size
+			p.$size.find('option').removeAttr('selected');
 			p.$size
 				.unbind('change.pager')
 				.bind('change.pager', function() {
@@ -336,7 +338,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
-		var i, pg, s, out, regex,
+		var i, pg, s, $out, regex,
 			wo = c.widgetOptions,
 			p = c.pager,
 			f = c.$table.hasClass('hasFilters'),
@@ -368,7 +370,7 @@ tsp = ts.pager = {
 			p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
 			p.page = (t) ? 0 : p.page;
 			p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
-			out = p.$container.find(wo.pager_selectors.pageDisplay);
+			$out = p.$container.find(wo.pager_selectors.pageDisplay);
 			// form the output string (can now get a new output string from the server)
 			s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
 				// {page} = one-based index; {page+#} = zero based index +/- value
@@ -377,15 +379,21 @@ tsp = ts.pager = {
 				})
 				// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 				.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
-					var str = m.replace(/[{}\s]/g,''),
+					var len, indx,
+						str = m.replace(/[{}\s]/g,''),
 						extra = str.split(':'),
 						data = p.ajaxData,
 						// return zero for default page/row numbers
 						deflt = /(rows?|pages?)$/i.test(str) ? 0 : '';
+					if (/(startRow|page)/.test(extra[0]) && extra[1] === 'input') {
+						len = ('' + (extra[0] === 'page' ? p.totalPages : p.totalRows)).length;
+						indx = extra[0] === 'page' ? p.page + 1 : p.startRow;
+						return '<input type="text" class="ts-' + extra[0] + '" style="max-width:' + len + 'em" value="' + indx + '"/>';
+					}
 					return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
 				});
-			if (out.length) {
-				out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+			if ($out.length) {
+				$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 				if ( p.$goto.length ) {
 					t = '';
 					pg = Math.min( p.totalPages, p.filteredPages );
@@ -394,6 +402,12 @@ tsp = ts.pager = {
 					}
 					p.$goto.html(t).val( p.page + 1 );
 				}
+				// rebind startRow/page inputs
+				$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
+					var v = $(this).val(),
+						pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
+					c.$table.trigger('pageSet.pager', [ pg ]);
+				});
 			}
 		}
 		tsp.pagerArrows(c);

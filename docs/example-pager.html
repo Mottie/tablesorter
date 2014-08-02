@@ -49,7 +49,8 @@
 
 		// output string - default is '{page}/{totalPages}'
 		// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-		output: '{startRow} to {endRow} ({totalRows})',
+		// also {page:input} & {startRow:input} will add a modifiable input in place of the value
+		output: '{startRow:input} to {endRow} ({totalRows})',
 
 		// apply disabled classname to the pager arrows when the rows at either extreme is visible - default is true
 		updateArrows: true,
@@ -197,11 +198,12 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
+				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
 				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code>removeRows</code> option to false will break the sort.</li>
 				<li>There have been lots of changes made in version 2.1, please check out the <a href="https://github.com/Mottie/tablesorter/wiki/Changes">change log</a>.</li>
 				<li>In <span class="version">v2.11</span>, the <code>savePages</code> option was added to saves the current page size and number (requires storage script).</li>
 			</ul>
-		</p>
+		<p>
 
 		<h1>Triggered Events</h1>
 		<ul id="display">
@@ -586,7 +588,7 @@ td.tablesorter-pager {
     &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
     &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
     &lt;select class=&quot;pagesize&quot;&gt;
-      &lt;option selected=&quot;selected&quot; value=&quot;10&quot;&gt;10&lt;/option&gt;
+      &lt;option value=&quot;10&quot;&gt;10&lt;/option&gt;
       &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
       &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
       &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;

@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.17.5 - Client-side table sorting with ease!
+* TableSorter 2.17.6 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.17.5";
+			ts.version = "2.17.6";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -219,7 +219,7 @@
 				var c = table.config,
 					// update table bodies in case we start with an empty table
 					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, np, p, time,
+					rows, list, l, i, h, ch, np, p, e, time,
 					j = 0,
 					parsersDebug = "",
 					len = tb.length;
@@ -229,7 +229,10 @@
 					time = new Date();
 					log('Detecting parsers for each column');
 				}
-				list = [];
+				list = {
+					extractors: [],
+					parsers: []
+				};
 				while (j < len) {
 					rows = tb[j].rows;
 					if (rows[j]) {
@@ -238,7 +241,8 @@
 							h = c.$headers.filter('[data-column="' + i + '"]:last');
 							// get column indexed table cell
 							ch = ts.getColumnData( table, c.headers, i );
-							// get column parser
+							// get column parser/extractor
+							e = ts.getParserById( ts.getData(h, ch, 'extractor') );
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 							np = ts.getData(h, ch, 'parser') === 'false';
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
@@ -248,31 +252,38 @@
 							if (np) {
 								p = ts.getParserById('no-parser');
 							}
+							if (!e) {
+								// For now, maybe detect someday
+								e = false;
+							}
 							if (!p) {
 								p = detectParserForColumn(table, rows, -1, i);
 							}
 							if (c.debug) {
-								parsersDebug += "column:" + i + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
+								parsersDebug += "column:" + i + "; extractor:" + e.id + "; parser:" + p.id + "; string:" + c.strings[i] + '; empty: ' + c.empties[i] + "\n";
 							}
-							list[i] = p;
+							list.parsers[i] = p;
+							list.extractors[i] = e;
 						}
 					}
-					j += (list.length) ? len : 1;
+					j += (list.parsers.length) ? len : 1;
 				}
 				if (c.debug) {
 					log(parsersDebug ? parsersDebug : "No parsers detected");
 					benchmark("Completed detecting parsers", time);
 				}
-				c.parsers = list;
+				c.parsers = list.parsers;
+				c.extractors = list.extractors;
 			}
 
 			/* utils */
 			function buildCache(table) {
-				var cc, t, v, i, j, k, $row, rows, cols, cacheTime,
+				var cc, t, tx, v, i, j, k, $row, rows, cols, cacheTime,
 					totalRows, rowData, colMax,
 					c = table.config,
 					$tb = c.$table.children('tbody'),
-				parsers = c.parsers;
+					extractors = c.extractors,
+					parsers = c.parsers;
 				c.cache = {};
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
@@ -330,10 +341,16 @@
 									continue;
 								}
 								t = getElementText(table, $row[0].cells[j], j);
+								// do extract before parsing if there is one
+								if (typeof extractors[j].id === 'undefined') {
+									tx = t;
+								} else {
+									tx = extractors[j].format(t, table, $row[0].cells[j], j);
+								}
 								// allow parsing if the string is empty, previously parsing would change it to zero,
 								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(t, table, $row[0].cells[j], j);
-								cols.push(v);
+								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
+								cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
 								if ((parsers[j].type || '').toLowerCase() === "numeric") {
 									// determine column max value (ignore sign)
 									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
@@ -379,6 +396,7 @@
 					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
+						$tb.children().detach(); // remove rows
 						n = cc[k].normalized;
 						totalRows = n.length;
 						for (i = 0; i < totalRows; i++) {
@@ -423,7 +441,8 @@
 				c.columns = ts.computeColumnIndex( c.$table.children('thead, tfoot').children('tr') );
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
-				c.$headers.each(function(index) {
+				// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
+				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
 					$t = $(this);
 					// make sure to get header cell & not column indexed cell
 					ch = ts.getColumnData( table, c.headers, index, true );
@@ -477,11 +496,13 @@
 			}
 
 			function updateHeader(table) {
-				var s, $th,
+				var s, $th, col,
 					c = table.config;
 				c.$headers.each(function(index, th){
 					$th = $(th);
-					s = ts.getData( th, ts.getColumnData( table, c.headers, index, true ), 'sorter' ) === 'false';
+					col = ts.getColumnData( table, c.headers, index, true );
+					// add "sorter-false" class if "parser-false" is set
+					s = ts.getData( th, col, 'sorter' ) === 'false' || ts.getData( th, col, 'parser' ) === 'false';
 					th.sortDisabled = s;
 					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
 					// aria-controls - requires table ID
@@ -544,7 +565,7 @@
 					var colgroup = $('<colgroup>'),
 						overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies[0]).find("tr:first").children("td:visible").each(function() {
+					$(table.tBodies[0]).find("tr:first").children(":visible").each(function() {
 						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
 					$(table).prepend(colgroup);
@@ -601,6 +622,10 @@
 			}
 
 			function initSort(table, cell, event){
+				if (table.isUpdating) {
+					// let any updates complete before initializing a sort
+					return setTimeout(function(){ initSort(table, cell, event); }, 50);
+				}
 				var arry, indx, col, order, s,
 					c = table.config,
 					key = !event[c.sortMultiSortKey],
@@ -833,7 +858,7 @@
 					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
-					var v, row, icell,
+					var v, t, row, icell,
 					$tb = $table.find('tbody'),
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
@@ -846,8 +871,14 @@
 						row = $tb.eq(tbdy).find('tr').index( $row );
 						icell = $cell.index();
 						c.cache[tbdy].normalized[row][c.columns].$row = $row;
-						v = c.cache[tbdy].normalized[row][icell] = c.parsers[icell].id === 'no-parser' ? '' :
-							c.parsers[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						if (typeof c.extractors[icell].id === 'undefined') {
+							t = getElementText(table, cell, icell);
+						} else {
+							t = c.extractors[icell].format( getElementText(table, cell, icell), table, cell, icell );
+						}
+						v = c.parsers[icell].id === 'no-parser' ? '' :
+							c.parsers[icell].format( t, table, cell, icell );
+						c.cache[tbdy].normalized[row][icell] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
 						if ((c.parsers[icell].type || '').toLowerCase() === "numeric") {
 							// update column max value (ignore sign)
 							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
@@ -863,8 +894,8 @@
 						updateHeader(table);
 						commonUpdate(table, resort, callback);
 					} else {
-						$row = $($row); // make sure we're using a jQuery object
-						var i, j, l, rowData, cells,
+						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
+						var i, j, l, t, v, rowData, cells,
 						rows = $row.filter('tr').length,
 						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
@@ -882,8 +913,14 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = c.parsers[j].id === 'no-parser' ? '' :
-									c.parsers[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								if (typeof c.extractors[j].id === 'undefined') {
+									t = getElementText(table, $row[i].cells[j], j);
+								} else {
+									t = c.extractors[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+								}
+								v = c.parsers[j].id === 'no-parser' ? '' :
+									c.parsers[j].format( t, table, $row[i].cells[j], j );
+								cells[j] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
 								if ((c.parsers[j].type || '').toLowerCase() === "numeric") {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
@@ -1019,8 +1056,8 @@
 				c.table = table;
 				c.$table = $table
 					.addClass(ts.css.table + ' ' + c.tableClass + k)
-					.attr({ role : 'grid'});
-				c.$headers = $(table).find(c.selectorHeaders);
+					.attr('role', 'grid');
+				c.$headers = $table.find(c.selectorHeaders);
 
 				// give the table a unique id, which will be used in namespace binding
 				if (!c.namespace) {
@@ -1030,6 +1067,7 @@
 					c.namespace = '.' + c.namespace.replace(/\W/g,'');
 				}
 
+				c.$table.children().children('tr').attr('role', 'row');
 				c.$tbodies = $table.children('tbody:not(.' + c.cssInfoBlock + ')').attr({
 					'aria-live' : 'polite',
 					'aria-relevant' : 'all'

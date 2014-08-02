@@ -1,4 +1,4 @@
-/*! tableSorter 2.16+ widgets - updated 7/17/2014 (v2.17.5)
+/*! tableSorter 2.16+ widgets - updated 8/1/2014 (v2.17.6)
  *
  * Column Styles
  * Column Filters
@@ -131,6 +131,7 @@ ts.storage = function(table, key, value, options) {
 // Add a resize event to table headers
 // **************************
 ts.addHeaderResizeEvent = function(table, disable, settings) {
+	table = $(table)[0]; // make sure we're usig a dom element
 	var headers,
 		defaults = {
 			timer : 250
@@ -371,7 +372,8 @@ ts.addWidget({
 		filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 		filter_useParsedData : false, // filter all data using parsed content
 		filter_serversideFiltering : false, // if true, server-side filtering should be performed because client-side filtering will be disabled, but the ui and events will still be used.
-		filter_defaultAttrib : 'data-value' // data attribute in the header cell that contains the default filter value
+		filter_defaultAttrib : 'data-value', // data attribute in the header cell that contains the default filter value
+		filter_selectSourceSeparator : '|' // filter_selectSource array text left of the separator is added to the option value, right into the option text
 	},
 	format: function(table, c, wo) {
 		if (!c.$table.hasClass('hasFilters')) {
@@ -565,7 +567,7 @@ ts.filter = {
 			and : 'and'
 		}, ts.language);
 
-		var options, string, $header, column, filters, time, fxn,
+		var options, string, txt, $header, column, filters, val, time, fxn, noSelect,
 			regex = ts.filter.regex;
 		if (c.debug) {
 			time = new Date();
@@ -590,7 +592,7 @@ ts.filter = {
 		});
 
 		// don't build filter row if columnFilters is false or all columns are set to "filter-false" - issue #156
-		if (wo.filter_columnFilters !== false && c.$headers.filter('.filter-false').length !== c.$headers.length) {
+		if (wo.filter_columnFilters !== false && c.$headers.filter('.filter-false, .parser-false').length !== c.$headers.length) {
 			// build filter row
 			ts.filter.buildRow(table, c, wo);
 		}
@@ -642,17 +644,27 @@ ts.filter = {
 			for (column = 0; column < c.columns; column++) {
 				fxn = ts.getColumnData( table, wo.filter_functions, column );
 				if (fxn) {
-					$header = c.$headers.filter('[data-column="' + column + '"]:last');
+					// remove "filter-select" from header otherwise the options added here are replaced with all options
+					$header = c.$headers.filter('[data-column="' + column + '"]:last').removeClass('filter-select');
+					// don't build select if "filter-false" or "parser-false" set
+					noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 					options = '';
-					if (fxn === true && !$header.hasClass('filter-false')) {
+					if ( fxn === true && noSelect ) {
 						ts.filter.buildSelect(table, column);
-					} else if (typeof fxn === 'object' && !$header.hasClass('filter-false')) {
+					} else if ( typeof fxn === 'object' && noSelect ) {
 						// add custom drop down list
 						for (string in fxn) {
 							if (typeof string === 'string') {
 								options += options === '' ?
 									'<option value="">' + ($header.data('placeholder') || $header.attr('data-placeholder') || wo.filter_placeholder.select || '') + '</option>' : '';
-								options += '<option value="' + string + '">' + string + '</option>';
+								val = string;
+								txt = string;
+								if (string.indexOf(wo.filter_selectSourceSeparator) >= 0) {
+									val = string.split(wo.filter_selectSourceSeparator);
+									txt = val[1];
+									val = val[0];
+								}
+								options += '<option ' + (txt === val ? '' : 'data-function-name="' + string + '" ') + 'value="' + val + '">' + txt + '</option>';
 							}
 						}
 						c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').append(options);
@@ -691,7 +703,7 @@ ts.filter = {
 			ts.benchmark("Applying Filter widget", time);
 		}
 		// add default values
-		c.$table.bind('tablesorter-initialized pagerInitialized', function(e) {
+		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
 			// redefine "wo" as it does not update properly inside this callback
 			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];
@@ -775,10 +787,10 @@ ts.filter = {
 			filter;
 	},
 	buildRow: function(table, c, wo) {
-		var column, $header, buildSelect, disabled, name, ffxn,
+		var col, column, $header, buildSelect, disabled, name, ffxn,
 			// c.columns defined in computeThIndexes()
 			columns = c.columns,
-			buildFilter = '<tr class="' + ts.css.filterRow + '">';
+			buildFilter = '<tr role="row" class="' + ts.css.filterRow + '">';
 		for (column = 0; column < columns; column++) {
 			buildFilter += '<td></td>';
 		}
@@ -792,7 +804,8 @@ ts.filter = {
 			buildSelect = (wo.filter_functions && ffxn && typeof ffxn !== "function" ) ||
 				$header.hasClass('filter-select');
 			// get data from jQuery data, metadata, headers option or header class name
-			disabled = ts.getData($header[0], ts.getColumnData( table, c.headers, column ), 'filter') === 'false';
+			col = ts.getColumnData( table, c.headers, column );
+			disabled = ts.getData($header[0], col, 'filter') === 'false' || ts.getData($header[0], col, 'parser') === 'false';
 
 			if (buildSelect) {
 				buildFilter = $('<select>').appendTo( c.$filters.eq(column) );
@@ -983,7 +996,7 @@ ts.filter = {
 		var cached, len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, childRowText, exact, iExact, iFilter, lastSearch, matches, result,
 			notFiltered, searchFiltered, filterMatched, showRow, time, val, indx,
-			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache, fxn,
+			anyMatch, iAnyMatch, rowArray, rowText, iRowText, rowCache, fxn, ffxn,
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1098,7 +1111,16 @@ ts.filter = {
 						if (filterMatched !== null) {
 							showRow = filterMatched;
 						} else {
-							showRow = (iRowText + childRowText).indexOf(iAnyMatch) >= 0;
+							if (wo.filter_startsWith) {
+								showRow = false;
+								columnIndex = columns;
+								while (!showRow && columnIndex > 0) {
+									columnIndex--;
+									showRow = showRow || rowArray[columnIndex].indexOf(iAnyMatch) === 0;
+								}
+							} else {
+								showRow = (iRowText + childRowText).indexOf(iAnyMatch) >= 0;
+							}
 						}
 					}
 
@@ -1117,6 +1139,9 @@ ts.filter = {
 							iExact = !regex.type.test(typeof exact) && wo.filter_ignoreCase ? exact.toLocaleLowerCase() : exact;
 							result = showRow; // if showRow is true, show that row
 
+							// in case select filter option has a different value vs text "a - z|A through Z"
+							ffxn = c.$filters.eq(columnIndex).find('select option:selected').attr('data-function-name') || '';
+
 							// replace accents - see #357
 							filters[columnIndex] = c.sortLocaleCompare ? ts.replaceAccents(filters[columnIndex]) : filters[columnIndex];
 							// val = case insensitive, filters[columnIndex] = case sensitive
@@ -1130,9 +1155,9 @@ ts.filter = {
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
 									result = fxn(exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
-								} else if (typeof fxn[filters[columnIndex]] === 'function') {
+								} else if (typeof fxn[ffxn || filters[columnIndex]] === 'function') {
 									// selector option function
-									result = fxn[filters[columnIndex]](exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
+									result = fxn[ffxn || filters[columnIndex]](exact, cached, filters[columnIndex], columnIndex, $rows.eq(rowIndex));
 								}
 							} else {
 								filterMatched = null;
@@ -1189,12 +1214,22 @@ ts.filter = {
 			parsed = [],
 			arry = false,
 			source = wo.filter_selectSource,
+			last = c.$table.data('lastSearch') || [],
 			fxn = $.isFunction(source) ? true : ts.getColumnData( table, source, column );
+
+		if (onlyAvail && last[column] !== '') {
+			onlyAvail = false;
+		}
 
 		// filter select source option
 		if (fxn === true) {
 			// OVERALL source
 			arry = source(table, column, onlyAvail);
+		} else if ( fxn instanceof $ || ($.type(fxn) === 'string' && fxn.indexOf('</option>') >= 0) ) {
+			// selectSource is a jQuery object or string of options
+			return fxn;
+		} else if ($.isArray(fxn)) {
+			arry = fxn;
 		} else if ($.type(source) === 'object' && fxn) {
 			// custom select source function for a SPECIFIC COLUMN
 			arry = fxn(table, column, onlyAvail);
@@ -1278,46 +1313,73 @@ ts.filter = {
 		}
 		return arry;
 	},
-	buildSelect: function(table, column, updating, onlyAvail) {
-		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
+	buildSelect: function(table, column, arry, updating, onlyAvail) {
+		table = $(table)[0];
 		column = parseInt(column, 10);
-		var indx, txt, $filters,
+		if (!table.config.cache || $.isEmptyObject(table.config.cache)) { return; }
+		var indx, val, txt, t, $filters, $filter,
 			c = table.config,
 			wo = c.widgetOptions,
 			node = c.$headers.filter('[data-column="' + column + '"]:last'),
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>',
-			arry = ts.filter.getOptionSource(table, column, onlyAvail),
 			// Get curent filter value
 			currentValue = c.$table.find('thead').find('select.' + ts.css.filter + '[data-column="' + column + '"]').val();
-
-		// build option list
-		for (indx = 0; indx < arry.length; indx++) {
-			txt = arry[indx].replace(/\"/g, "&quot;");
-			// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
-			options += arry[indx] !== '' ? '<option value="' + txt + '"' + (currentValue === txt ? ' selected="selected"' : '') +
-				'>' + arry[indx] + '</option>' : '';
+		// nothing included in arry (external source), so get the options from filter_selectSource or column data
+		if (typeof arry === 'undefined' || arry === '') {
+			arry = ts.filter.getOptionSource(table, column, onlyAvail);
 		}
+
+		if ($.isArray(arry)) {
+			// build option list
+			for (indx = 0; indx < arry.length; indx++) {
+				txt = arry[indx] = ('' + arry[indx]).replace(/\"/g, "&quot;");
+				val = txt;
+				// allow including a symbol in the selectSource array
+				// "a-z|A through Z" so that "a-z" becomes the option value
+				// and "A through Z" becomes the option text
+				if (txt.indexOf(wo.filter_selectSourceSeparator) >= 0) {
+					t = txt.split(wo.filter_selectSourceSeparator);
+					val = t[0];
+					txt = t[1];
+				}
+				// replace quotes - fixes #242 & ignore empty strings - see http://stackoverflow.com/q/14990971/145346
+				options += arry[indx] !== '' ? '<option ' + (val === txt ? '' : 'data-function-name="' + arry[indx] + '" ') + 'value="' + val + '">' + txt + '</option>' : '';
+			}
+			// clear arry so it doesn't get appended twice
+			arry = [];
+		}
+
 		// update all selects in the same column (clone thead in sticky headers & any external selects) - fixes 473
 		$filters = ( c.$filters ? c.$filters : c.$table.children('thead') ).find('.' + ts.css.filter);
 		if (wo.filter_$externalFilters) {
 			$filters = $filters && $filters.length ? $filters.add(wo.filter_$externalFilters) : wo.filter_$externalFilters;
 		}
-		$filters.filter('select[data-column="' + column + '"]')[ updating ? 'html' : 'append' ](options);
-		if (!wo.filter_functions) { wo.filter_functions = {}; }
-		wo.filter_functions[column] = true;
+		$filter = $filters.filter('select[data-column="' + column + '"]');
+
+		// make sure there is a select there!
+		if ($filter.length) {
+			$filter[ updating ? 'html' : 'append' ](options);
+			if (!$.isArray(arry)) {
+				// append options if arry is provided externally as a string or jQuery object
+				// options (default value) was already added
+				$filter.append(arry).val(currentValue);
+			}
+			$filter.val(currentValue);
+		}
 	},
 	buildDefault: function(table, updating) {
-		var columnIndex, $header,
+		var columnIndex, $header, noSelect,
 			c = table.config,
 			wo = c.widgetOptions,
 			columns = c.columns;
 		// build default select dropdown
 		for (columnIndex = 0; columnIndex < columns; columnIndex++) {
 			$header = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
+			noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 			// look for the filter-select class; build/update it if found
-			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && !$header.hasClass('filter-false')) {
-				ts.filter.buildSelect(table, columnIndex, updating, $header.hasClass(wo.filter_onlyAvail));
+			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && noSelect) {
+				ts.filter.buildSelect(table, columnIndex, '', updating, $header.hasClass(wo.filter_onlyAvail));
 			}
 		}
 	}

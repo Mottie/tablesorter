@@ -1,5 +1,5 @@
 /*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
- * Updated 7/17/2014 (v2.17.5)
+ * Updated 8/1/2014 (v2.17.6)
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
@@ -78,6 +78,20 @@
 		type: "text"
 	});
 
+	// Custom parser for parsing textarea values
+	// updated dynamically using the "change" function below
+	$.tablesorter.addParser({
+		id: "textarea",
+		is: function(){
+			return false;
+		},
+		format: function(s, table, cell) {
+			return $(cell).find('textarea').val() || s;
+		},
+		parsed : true, // filter widget flag
+		type: "text"
+	});
+
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired
@@ -86,10 +100,36 @@
 		$('table').on('tablesorter-initialized', function(){
 			// this flag prevents the updateCell event from being spammed
 			// it happens when you modify input text and hit enter
-			var alreadyUpdating = false;
+			var focused = false,
+				restoreValue = function(){
+					// focused = false; // uncomment this line to prevent auto-accepting changes
+					// make sure we restore original values
+					$(':focus').blur();
+					return;
+				};
 			// bind to .tablesorter (default class name)
-			$(this).children('tbody').on('change', 'select, input', function(e){
-				if (!alreadyUpdating) {
+			$(this).children('tbody')
+			.on('mouseleave', function(){
+				restoreValue();
+			})
+			.on('focus', 'select, input, textarea', function(){
+				focused = true;
+				$(this).data('ts-original-value', this.value);
+			})
+			.on('blur', 'input, textarea', function(){
+				// restore input value;
+				// "change" is triggered before "blur" so this doesn't replace the new update with the original
+				this.value = $(this).data('ts-original-value');
+			})
+			.on('change keyup', 'select, input, textarea', function(e){
+				if ( e.which === 27 ) {
+					// escape: restore original value
+					this.value = $(this).data('ts-original-value');
+					return;
+				}
+				// Update cell cache using... select: change, input: enter or textarea: alt + enter
+				if ( ( e.type === 'change' && focused ) ||
+					( e.type === 'keyup' && e.which === 13 && ( e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' && e.altKey ) ) ) {
 					var $tar = $(e.target),
 						$cell = $tar.closest('td'),
 						$table = $cell.closest('table'),
@@ -98,14 +138,17 @@
 						$hdr = c && c.$headers && c.$headers.eq(indx);
 					// abort if not a tablesorter table, or
 					// don't use updateCell if column is set to "sorter-false" and "filter-false", or column is set to "parser-false"
-					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ($hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false')) ) ) ){
-						return false;
+					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ( $hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false') ) ) ) ) {
+						return restoreValue();
 					}
-					alreadyUpdating = true;
-					$table.trigger('updateCell', [ $tar.closest('td'), resort, function(){
-						updateServer(e, $table, $tar);
-						setTimeout(function(){ alreadyUpdating = false; }, 10);
-					} ]);
+					// ignore change event if nothing changed
+					if ($tar.val() !== $tar.data('ts-original-value')) {
+						$tar.data('ts-original-value', $tar.val());
+						$table.trigger('updateCell', [ $tar.closest('td'), resort, function(){
+							updateServer(e, $table, $tar);
+							setTimeout(function(){ focused = false; }, 10);
+						} ]);
+					}
 				}
 			});
 		});
