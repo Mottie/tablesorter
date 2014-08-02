@@ -1,4 +1,4 @@
-/*! tableSorter 2.16+ widgets - updated 7/17/2014 (v2.17.5)
+/*! tableSorter 2.16+ widgets - updated 8/1/2014 (v2.17.6)
  *
  * Column Styles
  * Column Filters
@@ -703,7 +703,7 @@ ts.filter = {
 			ts.benchmark("Applying Filter widget", time);
 		}
 		// add default values
-		c.$table.bind('tablesorter-initialized pagerInitialized', function(e) {
+		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
 			// redefine "wo" as it does not update properly inside this callback
 			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];

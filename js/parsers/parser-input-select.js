@@ -1,5 +1,5 @@
 /*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
- * Updated 7/17/2014 (v2.17.5)
+ * Updated 8/1/2014 (v2.17.6)
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
@@ -100,8 +100,7 @@
 		$('table').on('tablesorter-initialized', function(){
 			// this flag prevents the updateCell event from being spammed
 			// it happens when you modify input text and hit enter
-			var table = this,
-				focused = false,
+			var focused = false,
 				restoreValue = function(){
 					// focused = false; // uncomment this line to prevent auto-accepting changes
 					// make sure we restore original values
@@ -113,11 +112,11 @@
 			.on('mouseleave', function(){
 				restoreValue();
 			})
-			.on('focus', 'select, input, textarea', function(e){
+			.on('focus', 'select, input, textarea', function(){
 				focused = true;
 				$(this).data('ts-original-value', this.value);
 			})
-			.on('blur', 'input, textarea', function(e){
+			.on('blur', 'input, textarea', function(){
 				// restore input value;
 				// "change" is triggered before "blur" so this doesn't replace the new update with the original
 				this.value = $(this).data('ts-original-value');
@@ -125,7 +124,8 @@
 			.on('change keyup', 'select, input, textarea', function(e){
 				if ( e.which === 27 ) {
 					// escape: restore original value
-					return this.value = $(this).data('ts-original-value');
+					this.value = $(this).data('ts-original-value');
+					return;
 				}
 				// Update cell cache using... select: change, input: enter or textarea: alt + enter
 				if ( ( e.type === 'change' && focused ) ||

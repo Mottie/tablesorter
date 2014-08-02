@@ -60,6 +60,47 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
 
+#### <a name="v2.17.6">Version 2.17.6</a> (8/1/2014)
+
+* Core
+  * Adding a class name of `parser-false` to a column will now automatically set `sorter-false` and `filter-false` behavior.
+  * Add extractor type which allows giving a column two parsers, one to extract content from an input/select and the second to parse the extracted text. Thanks to [TheSin-](https://github.com/TheSin-)!
+  * Ensure custom parsed data adheres to the `ignoreCase` option.
+  * Add a delay to any sort if there is an update in progress. This prevents issues with a sort being applied causing duplicate rows to be added to the table, hopefully.
+  * The `widthFixed` option now finds both visible `th` and `td` cells within the first row of the tbody to set column width percentages.
+  * Ensure all rows have a set role for screen readers (`role="row"`). Fixes [issue #690](https://github.com/Mottie/tablesorter/issues/690).
+  * Redefine `c.$headers` when building headers for new/replaced header cells (not just content). Fixes [issue #683](https://github.com/Mottie/tablesorter/issues/683).
+* Docs
+  * Fixed lots of minor HTML issues (e.g. missing closing `</li>` &amp; `<p>` tags)
+* Parsers
+  * Add parser for textareas within the `parser-input-select.js` file.
+  * Modify input &amp; textarea parser to only update the table cache when:
+      * The user presses enter (input) or alt + enter (textarea) within the element.
+      * When the element is blurred.
+      * Or, when the mouse leaves the tbody.
+* Editable
+  * Add two new options:
+      * `editable_autoAccept`: accepts any changes made to the table cell automatically (`true` by default)
+      * `editable_validate`: a function used to validate the changes; return a valid string (`null` by default)
+  * Modify `editable_columns` type check to prevent javascript errors. See [pull #688](https://github.com/Mottie/tablesorter/issues/688). Thanks [scratcher28](https://github.com/scratcher28)!
+  * Limit the `editable_columns` array value to columns within the table.
+* Filter
+  * Make all options show within the current select when the `filter-onlyAvail` class is set on a column.
+  * Updated &amp; added docs for `$.tablesorter.filter.buildSelect` function to allow external calls to modify filter select options.
+  * Update `filter_selectSource` to accept arrays instead of a function. This was documented as working, but it wasn't coded until now. Sorry!
+  * Add `filter_selectSourceSeparator` option:
+      * Include a separator within the `filter_selectSource` array (e.g. "a-z|A through Z").
+      * The text that is left of the separator is added to the option value, the the text on the right is added to the option text.
+      * So `"a-z|A through Z"` becomes `<option value="a-z">A through Z</option>`.
+      * Fixes [issue #692](https://github.com/Mottie/tablesorter/issues/692).
+  * Add `role="row"` to the filter row. Fixes [issue #697](https://github.com/Mottie/tablesorter/issues/697).
+  * Any match inputs now follow the `filter_startsWith` setting. See [this Stackoverflow](http://stackoverflow.com/q/25070448/145346) question.
+* Pager
+  * The `ouput` option can now include user modifiable `startRow` (`{startRow:input}`) or `page` (`{page:input}`) inputs within the output.
+  * Remove selected attribute from page selector options. Fixes [issue #700](https://github.com/Mottie/tablesorter/issues/700).
+* Resizable
+  * Update `$.tablesorter.addHeaderResizeEvent` function's first parameter `table` to accept table DOM elements as well as jQuery objects. Fixes [issue #687](https://github.com/Mottie/tablesorter/issues/687).
+
 #### <a name="v2.17.5">Version 2.17.5</a> (7/17/2014)
 
 * Core
@@ -123,33 +164,3 @@ View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Chan
   * Add `resizable_throttle` option to allow throttling of the mousemove/resize event. Set this option to `true` or a number between 1 and 10 to add a throttling delay. Fixes [issue #662](https://github.com/Mottie/tablesorter/issues/662).
 
 * UITheme: non-existent columns no longer cause a js error. Fixes [issue #672](https://github.com/Mottie/tablesorter/issues/672).
-
-#### <a name="v2.17.3">Version 2.17.3</a> (6/28/2014)
-
-* Docs
-  * Added bold notes to the output widget demo about setting the server content-disposition. Fixes [issue #653](https://github.com/Mottie/tablesorter/issues/653).
-  * Updated to latest Bootstrap (v3.2.0), jQuery UI (v1.11.0) and Cupertino theme.
-  * Embedded gists within the documentation should now work properly.
-
-* Core
-  * Add "tablesorter-processing" class name to table during processing. Fixes [issue #655](https://github.com/Mottie/tablesorter/issues/655).
-
-* Filter
-  * When `filter_liveSearch` is set to a number, it now searches when pressing enter. Fixes [issue #654](https://github.com/Mottie/tablesorter/issues/654).
-  * Modify change event so a select searches the table without requiring a carriage return. Fixes [issue #650](https://github.com/Mottie/tablesorter/issues/650).
-
-* Pager
-  * Objects returned by `ajaxProcessing` can now include a `filteredRows` value. Fixes [issue #649](https://github.com/Mottie/tablesorter/issues/649).
-  * Fix internal use of `selectorRemove` option, to consistently extract out the class name from the selector string.
-  * Previous &amp; Next buttons now disable with zero filtered pages. Fixes [issue #649](https://github.com/Mottie/tablesorter/issues/649).
-  * Changed pager widget `goto` page selector option to `gotoPage`, because `goto` is a reserved word. Fixes [issue #657](https://github.com/Mottie/tablesorter/issues/657).
-
-* Scroller
-  * Add `scroller_upAfterSort` option to prevent scrolling after clicking a checkbox. Fixes [issue #660](https://github.com/Mottie/tablesorter/issues/660).
-
-* Static Row
-  * Static rows are now manipulated witin a detached tbody.
-  * Updated demo to allow toggling of static rows using ctrl (or command on Mac) + click.
-
-* Parsers
-  * Added new Roman numeral parsers. There are three different parsers to cover three different use cases. Please see the [roman numeral parser demo](http://mottie.github.io/tablesorter/docs/example-parsers-roman.html) for details.
