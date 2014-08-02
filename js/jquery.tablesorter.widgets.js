@@ -1111,7 +1111,16 @@ ts.filter = {
 						if (filterMatched !== null) {
 							showRow = filterMatched;
 						} else {
-							showRow = (iRowText + childRowText).indexOf(iAnyMatch) >= 0;
+							if (wo.filter_startsWith) {
+								showRow = false;
+								columnIndex = columns;
+								while (!showRow && columnIndex > 0) {
+									columnIndex--;
+									showRow = showRow || rowArray[columnIndex].indexOf(iAnyMatch) === 0;
+								}
+							} else {
+								showRow = (iRowText + childRowText).indexOf(iAnyMatch) >= 0;
+							}
 						}
 					}
 
