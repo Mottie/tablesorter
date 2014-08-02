@@ -381,6 +381,7 @@
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (<a href="#stringto"><code>stringTo</code></a>; v2.0.10)</li>
 		<li><a href="example-parsers-class-name.html">Disable or set the column parser using class names</a> (v2.0.11)</li>
 		<li><a href="example-parsers-jquery-data.html">Disable or set the column parser using jQuery Data</a> (v2.3)</li>
+		<li><a href="example-extractors-parsers.html">Using extractors with parsers</a> (<span class="version">v2.17.6</span>)</li>
 		<li><a href="example-option-date-format.html">Changing the date format</a> (v2.0.23)</li>
 	</ul>
 
@@ -5720,7 +5721,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 				<td>This filter widget function allows the updating or replacing of filter select options from an external source. (<span class="version">v2.17.5</span>):
 					<div class="collapsible"><br>
 						Access it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.buildSelect( table, column, options, replace, onlyAvail );</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.filter.buildSelect( table, column, options, replace, onlyAvail );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>column</code> - zero-based column index.</li>
@@ -5730,10 +5731,10 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 						</ul>
 						Use this function as follows:<br>
 						<pre class="prettyprint lang-js">// replace filter select options for the first column with 1,2,3,4
-$.tablesorter.buildSelect( $('table'), 0, [ 1, 2, 3, 4 ], true );
+$.tablesorter.filter.buildSelect( $('table'), 0, [ 1, 2, 3, 4 ], true );
 
 // append "Aaron" and "Fred" to the second column's filter select options. These options will remain unsorted.
-$.tablesorter.buildSelect( $('table'), 1, $('<option>Aaron</option><option>Fred</option>'), false );</pre>
+$.tablesorter.filter.buildSelect( $('table'), 1, $('<option>Aaron</option><option>Fred</option>'), false );</pre>
 						Please be aware that this function will allow you to modify the select options, but as soon as the user filters any column, all of the select options will refresh and obtain options from the table column, or from the <code>filter_selectSource</code> function.
 					</div>
 				</td>

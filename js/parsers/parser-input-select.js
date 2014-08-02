@@ -113,7 +113,7 @@
 			.on('mouseleave', function(){
 				restoreValue();
 			})
-			.on('focus', 'input, textarea', function(e){
+			.on('focus', 'select, input, textarea', function(e){
 				focused = true;
 				$(this).data('ts-original-value', this.value);
 			})
