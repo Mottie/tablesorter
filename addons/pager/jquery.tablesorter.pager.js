@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 7/17/2014 (v2.17.5)
+ * updated 8/1/2014 (v2.17.6)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -129,7 +129,7 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			var i, pg, s, out, regex,
+			var i, pg, s, $out, regex,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters'),
 				t = [],
@@ -159,7 +159,7 @@
 				p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
 				p.page = (t) ? 0 : p.page;
 				p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
-				out = p.$container.find(p.cssPageDisplay);
+				$out = p.$container.find(p.cssPageDisplay);
 				// form the output string (can now get a new output string from the server)
 				s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
 					// {page} = one-based index; {page+#} = zero based index +/- value
@@ -168,15 +168,21 @@
 					})
 					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
-						var str = m.replace(/[{}\s]/g,''),
+						var len, indx,
+							str = m.replace(/[{}\s]/g,''),
 							extra = str.split(':'),
 							data = p.ajaxData,
 							// return zero for default page/row numbers
 							deflt = /(rows?|pages?)$/i.test(str) ? 0 : '';
+						if (/(startRow|page)/.test(extra[0]) && extra[1] === 'input') {
+							len = ('' + (extra[0] === 'page' ? p.totalPages : p.totalRows)).length;
+							indx = extra[0] === 'page' ? p.page + 1 : p.startRow;
+							return '<input type="text" class="ts-' + extra[0] + '" style="max-width:' + len + 'em" value="' + indx + '"/>';
+						}
 						return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
 					});
-				if (out.length) {
-					out[ (out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+				if ($out.length) {
+					$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 					if ( p.$goto.length ) {
 						t = '';
 						pg = Math.min( p.totalPages, p.filteredPages );
@@ -185,6 +191,12 @@
 						}
 						p.$goto.html(t).val( p.page + 1 );
 					}
+					// rebind startRow/page inputs
+					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
+						var v = $(this).val(),
+							pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
+						c.$table.trigger('pageSet.pager', [ pg ]);
+					});
 				}
 			}
 			pagerArrows(p);
@@ -546,7 +558,7 @@
 				}
 			}
 			// disable size selector
-			p.$size.add(p.$goto).each(function(){
+			p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page')).each(function(){
 				$(this).attr('aria-disabled', 'true').addClass(p.cssDisabled)[0].disabled = true;
 			});
 		},
@@ -665,7 +677,10 @@
 		enablePager = function(table, p, triggered){
 			var info,
 				c = table.config;
-			p.$size.add(p.$goto).removeClass(p.cssDisabled).removeAttr('disabled').attr('aria-disabled', 'false');
+			p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page'))
+				.removeClass(p.cssDisabled)
+				.removeAttr('disabled')
+				.attr('aria-disabled', 'false');
 			p.isDisabled = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || 10;
@@ -827,6 +842,8 @@
 				// page size selector
 				p.$size = pager.find(p.cssPageSize);
 				if ( p.$size.length ) {
+					// setting an option as selected appears to cause issues with initial page size
+					p.$size.find('option').removeAttr('selected');
 					p.$size.unbind('change.pager').bind('change.pager', function() {
 						p.$size.val( $(this).val() ); // in case there are more than one pagers
 						if ( !$(this).hasClass(p.cssDisabled) ) {

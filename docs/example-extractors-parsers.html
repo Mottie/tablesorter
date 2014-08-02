@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Using extractors with parsers</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
+	<script src="../js/parsers/parser-input-select.js"></script>
+
+	<script id="js">// add parser through the tablesorter addParser method
+$.tablesorter.addParser({
+	// set a unique id
+	id: 'grades',
+	is: function() {
+		// return false so this parser is not auto detected
+		return false;
+	},
+	format: function(s) {
+		return s.toLowerCase()
+			.replace(/good/, 2)
+			.replace(/medium/, 1)
+			.replace(/bad/, 0);
+	},
+	type: 'numeric'
+});
+
+$(function() {
+	$("table").tablesorter({
+		theme: 'blue'
+		// "extractor-select" and "sorter-grades" are added as a class name in the HTML
+		// or un-comment out the option below
+		// ,headers: { 6: { extractor: 'select', sorter: 'grades' } }
+	});
+
+});</script>
+</head>
+<body>
+
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Using extractors with parsers</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>The extractor type was added in <span class="version">v2.17.6</span> and allows you to apply two parsers to a column:
+				<ul>
+					<li>In this demo, the last column contains select dropdowns that have "good", "medium" and "bad" options.</li>
+					<li>So there is a need to use a parser to extract content from the selected option within the select and then use the grades parser to give each grade a sortable value.</li>
+					<li>Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for adding this functionality!</li>
+				</ul>
+			</li>
+			<li>The extractor <em>is always</em> used before the parser.</li>
+			<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
+				<ul>
+					<li>jQuery data <code>data-extractor="select"</code>.</li>
+					<li>metadata <code>class="{ extractor: 'select'}"</code>. This requires the metadata plugin.</li>
+					<li>headers option <code>headers : { 0 : { extractor : 'select' } }</code>.</li>
+					<li>header class name <code>class="extractor-select"</code>.</li>
+				</ul>
+			</li>
+		</ul>
+	<p>
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="sorter-text">Name</th>
+			<th>Major</th>
+			<th>Gender</th>
+			<th>English</th>
+			<th>Japanese</th>
+			<th>Calculus</th>
+			<th class="extractor-select sorter-grades">Overall grades</th> <!-- set the column parser using a class name -->
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td><select><option>good</option><option selected="selected">medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td><select><option selected="selected">good</option><option>medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td><select><option selected="selected">good</option><option>medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>20</td><td>50</td><td>65</td><td><select><option>good</option><option>medium</option><option selected="selected">bad</option></select></td></tr>
+		<tr><td>Student05</td><td>Mathematics</td><td>female</td><td>70</td><td>78</td><td>70</td><td><select><option>good</option><option selected="selected">medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>44</td><td>65</td><td>60</td><td><select><option>good</option><option>medium</option><option selected="selected">bad</option></select></td></tr>
+		<tr><td>Student07</td><td>Languages</td><td>female</td><td>99</td><td>92</td><td>89</td><td><select><option selected="selected">good</option><option>medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student08</td><td>Mathematics</td><td>female</td><td>90</td><td>98</td><td>90</td><td><select><option selected="selected">good</option><option>medium</option><option>bad</option></select></td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>55</td><td>72</td><td>66</td><td><select><option>good</option><option selected="selected">medium</option><option>bad</option></select></td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-option-date-format.html">Changing the date format &rsaquo;&rsaquo;</a>
+</div>
+
+</div>
+
+</body>
+</html>
+

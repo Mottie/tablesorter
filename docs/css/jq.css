@@ -18,7 +18,7 @@ table.tablesorter table.info tbody th,table.tablesorter table.info td {border:#0
 table.tablesorter table.info tbody th {background:#eee;}
 table.options {width:100%;}
 table.options pre {width:95%;}
-table.options .property, .setWidth {width:115px;}
+table.options .property, .setwidth {width:115px;}
 table.options .type {width:100px; }
 table.options .defaults {width:160px;}
 table.options .examples {width:60px;}
