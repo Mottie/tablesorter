@@ -58,7 +58,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 ### Change Log
 
-View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Change).
+View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
 #### <a name="v2.17.6">Version 2.17.6</a> (8/1/2014)
 
