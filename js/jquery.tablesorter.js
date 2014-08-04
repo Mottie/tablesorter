@@ -396,7 +396,6 @@
 					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
-						$tb.children().detach(); // remove rows
 						n = cc[k].normalized;
 						totalRows = n.length;
 						for (i = 0; i < totalRows; i++) {
