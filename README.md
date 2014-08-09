@@ -60,6 +60,12 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.17.7">Version 2.17.7</a> (8/9/2014)
+
+* Core: Do not detach rows before appending to prevent ajax rows from disappearing. Fixes [issue #701](https://github.com/Mottie/tablesorter/issues/701).
+* Docs: Fix change log links.
+* Filter: attached external select causing javascript errors. Fixes [issue #702](https://github.com/Mottie/tablesorter/issues/702)
+
 #### <a name="v2.17.6">Version 2.17.6</a> (8/1/2014)
 
 * Core
