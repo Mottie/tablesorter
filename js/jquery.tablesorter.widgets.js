@@ -1,4 +1,4 @@
-/*! tableSorter 2.16+ widgets - updated 8/1/2014 (v2.17.6)
+/*! tableSorter 2.16+ widgets - updated 8/9/2014 (v2.17.7)
  *
  * Column Styles
  * Column Filters
@@ -1140,7 +1140,8 @@ ts.filter = {
 							result = showRow; // if showRow is true, show that row
 
 							// in case select filter option has a different value vs text "a - z|A through Z"
-							ffxn = c.$filters.eq(columnIndex).find('select option:selected').attr('data-function-name') || '';
+							ffxn = wo.filter_columnFilters ? 
+								c.$filters.add(c.$externalFilters).filter('[data-column="'+ columnIndex + '"]').find('select option:selected').attr('data-function-name') || '' : '';
 
 							// replace accents - see #357
 							filters[columnIndex] = c.sortLocaleCompare ? ts.replaceAccents(filters[columnIndex]) : filters[columnIndex];
