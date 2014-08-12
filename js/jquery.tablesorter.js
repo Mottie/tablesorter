@@ -798,7 +798,7 @@
 			function resortComplete($table, callback){
 				var table = $table[0];
 				if (table.isUpdating) {
-					$table.trigger('updateComplete');
+					$table.trigger('updateComplete', table);
 				}
 				if ($.isFunction(callback)) {
 					callback($table[0]);
