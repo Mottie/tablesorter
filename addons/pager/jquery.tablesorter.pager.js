@@ -186,8 +186,14 @@
 					if ( p.$goto.length ) {
 						t = '';
 						pg = Math.min( p.totalPages, p.filteredPages );
-						for ( i = 1; i <= pg; i++ ) {
+						// Filter the options page number link array if it's larger than 'max_option_size'
+						// as large page set links will slow the browser on large dom inserts
+						var max_option_size = 20,
+						skip_set_size = Math.floor(pg / max_option_size),
+						large_collection = pg > max_option_size;
+						for ( i = 1; i <= pg; ) {
 							t += '<option>' + i + '</option>';
+							(large_collection) ? i = i+skip_set_size : i++;
 						}
 						p.$goto[0].innerHTML = t;
 						p.$goto[0].value = p.page + 1;
