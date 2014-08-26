@@ -189,7 +189,8 @@
 						for ( i = 1; i <= pg; i++ ) {
 							t += '<option>' + i + '</option>';
 						}
-						p.$goto.html(t).val( p.page + 1 );
+						p.$goto[0].innerHTML = t;
+						p.$goto[0].value = p.page + 1;
 					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
