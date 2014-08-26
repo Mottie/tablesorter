@@ -52,6 +52,9 @@ td.no-edit, span.no-edit {
 				editable_autoAccept    : true,          // accepts any changes made to the table cell automatically (v2.17.6)
 				editable_autoResort    : false,         // auto resort after the content has changed.
 				editable_validate      : null,          // return a valid string: function(text, original){ return text; }
+				editable_focused       : null,          // function(txt, columnIndex, $element) { }
+				editable_blur          : null,          // function(txt, columnIndex, $element) { }
+				editable_selectAll     : null,          // function(txt, columnIndex, $element) { return true; }
 				editable_noEdit        : 'no-edit',     // class name of cell that is not editable
 				editable_editComplete  : 'editComplete' // event fired after the table content has been edited
 			}
@@ -237,6 +240,90 @@ td.no-edit, span.no-edit {
 							<div class="collapsible">
 							<br>
 							Default value: <code>'editComplete'</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-focused">
+						<td><a href="#" class="permalink">editable_focused</a></td>
+						<td>Callback function that is executeed when the contenteditable cell is focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this function to manipulate or adjust the content when the content editable is focused
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_focused : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        $element.closest('td').addClass('focused');
+      },
+      editable_blur : function(txt, columnIndex, $element){
+        $element.closest('td').removeClass('focused');
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-blur">
+						<td><a href="#" class="permalink">editable_blur</a></td>
+						<td>Callback function that is executeed when the contenteditable cell is no longer focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this function to manipulate or adjust the content when the content editable is blurred
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_focused : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        $element.closest('td').addClass('focused');
+      },
+      editable_blur : function(txt, columnIndex, $element){
+        $element.closest('td').removeClass('focused');
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-selectall">
+						<td><a href="#" class="permalink">editable_selectAll</a></td>
+						<td>Set to automatically select all content when the contenteditable cell is focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this option to a boolean, or a function that returns a boolean:
+							<ul>
+								<li>When <code>true</code>, all of the text within the current contenteditable element will be selected.</li>
+								<li>When <code>false</code>, no selection is made.</li>
+								<li>When this option contains a function, return either <code>true</code> to select all of the text within the element, or <code>false</code> to not select any text.</li>
+							</ul>
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_selectAll : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        // only select everthing within the element when the content starts with the letter "B"
+        return /^b/i.test(txt) && columnIndex === 0;
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
 							</div>
 						</td>
 					</tr>

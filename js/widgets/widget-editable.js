@@ -14,7 +14,10 @@
 			editable_enterToAccept : true,
 			editable_autoAccept    : true,
 			editable_autoResort    : false,
-			editable_validate      : null, // function(text, originalText){ return text; }
+			editable_validate      : null,  // function(text, originalText){ return text; }
+			editable_focused       : null,  // function(text, columnIndex, $element) {}
+			editable_blur          : null,  // function(text, columnIndex, $element) { }
+			editable_selectAll     : false, // true/false or function(text, columnIndex, $element) { return true; }
 			editable_noEdit        : 'no-edit',
 			editable_editComplete  : 'editComplete'
 		},
@@ -30,6 +33,17 @@
 					setTimeout(function(){
 						$cell.focus();
 					}, 50);
+				},
+				selectAll = function(cell){
+					setTimeout(function(){
+						// select all text in contenteditable
+						// see http://stackoverflow.com/a/6150060/145346
+						var range = document.createRange();
+						range.selectNodeContents(cell);
+						var sel = window.getSelection();
+						sel.removeAllRanges();
+						sel.addRange(range);
+					}, 100);
 				};
 
 			if ( $.type(wo.editable_columns) === "string" && wo.editable_columns.indexOf('-') >= 0 ) {
@@ -64,9 +78,12 @@
 					}
 				})
 				.on('focus.tseditable', '[contenteditable]', function(e){
+					clearTimeout( $(this).data('timer') );
 					c.$table.data( 'contentFocused', e.target );
 					var $this = $(this),
-						v = $this.html();
+						selAll = wo.editable_selectAll,
+						column = $this.closest('td').index(),
+						txt = $this.html();
 					if (wo.editable_enterToAccept) {
 						// prevent enter from adding into the content
 						$this.on('keydown.tseditable', function(e){
@@ -75,7 +92,21 @@
 							}
 						});
 					}
-					$this.data({ before : v, original: v });
+					$this.data({ before : txt, original: txt });
+
+					if (typeof wo.editable_focused === 'function') {
+						wo.editable_focused( txt, column, $this );
+					}
+
+					if (selAll) {
+						if (typeof selAll === 'function') {
+							if ( selAll( txt, column, $this ) ) {
+								selectAll($this[0]);
+							}
+						} else {
+							selectAll($this[0]);
+						}
+					}
 				})
 				.on('blur focusout keydown '.split(' ').join('.tseditable '), '[contenteditable]', function(e){
 					if ( !c.$table.data('contentFocused') ) { return; }
@@ -124,6 +155,12 @@
 							return false;
 						}
 					} else if ( !valid && e.type !== 'keydown' ) {
+						clearTimeout( $this.data('timer') );
+						$this.data('timer', setTimeout(function(){
+							if ($.isFunction(wo.editable_blur)) {
+								wo.editable_blur( $this.text(), column, $this );
+							}
+						}, 100));
 						// restore original content on blur
 						$this.html( $this.data('original') );
 					}
