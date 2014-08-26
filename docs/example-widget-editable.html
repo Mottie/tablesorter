@@ -59,11 +59,10 @@ td.no-edit, span.no-edit {
 		// config event variable new in v2.17.6
 		.children('tbody').on('editComplete', 'td', function(event, config){
 			var $this = $(this),
-				$allRows = config.$tbodies.children('tr'),
 
 				newContent = $this.text(),
 				cellIndex = this.cellIndex, // there shouldn't be any colspans in the tbody
-				rowIndex = $allRows.index( $this.closest('tr') );
+				rowIndex = $this.closest('tr').attr('id'); // data-row-index stored in row id
 			/*
 			$.post("mysite.php", {
 				"row"     : rowIndex,
@@ -294,7 +293,7 @@ td.no-edit, span.no-edit {
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr id="db-row-344">
 			<td class="no-edit">Peter</td>
 			<td><div>Parker</div></td>
 			<td><div>28</div></td>
@@ -302,7 +301,7 @@ td.no-edit, span.no-edit {
 			<td>20%</td>
 			<td>Jul 6, 2006 8:14 AM</td>
 		</tr>
-		<tr>
+		<tr id="db-row-884">
 			<td><div>John</div></td>
 			<td><div>Hood</div></td>
 			<td><div>33</div></td>
@@ -310,7 +309,7 @@ td.no-edit, span.no-edit {
 			<td>25%</td>
 			<td>Dec 10, 2002 5:14 AM</td>
 		</tr>
-		<tr>
+		<tr id="db-row-234">
 			<td><div>Clark</div></td>
 			<td><div>Kent</div></td>
 			<td><div>18</div></td>
@@ -318,7 +317,7 @@ td.no-edit, span.no-edit {
 			<td>44%</td>
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
-		<tr>
+		<tr id="db-row-756">
 			<td><div>Bruce</div></td>
 			<td><div>Almighty</div></td>
 			<td><div>45</div></td>
@@ -326,7 +325,7 @@ td.no-edit, span.no-edit {
 			<td>44%</td>
 			<td>Jan 18, 2001 9:12 AM</td>
 		</tr>
-		<tr>
+		<tr id="db-row-232">
 			<td><div>Bruce</div></td>
 			<td><div>Evans</div></td>
 			<td><div>22</div></td>
