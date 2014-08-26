@@ -21,7 +21,17 @@
 		init: function(table, thisWidget, c, wo){
 			if ( !wo.editable_columns.length ) { return; }
 			var indx, tmp, $t,
-				cols = [];
+				cols = [],
+				editComplete = function($cell){
+					$cell
+						.removeClass('tseditable-last-edited-cell')
+						.trigger( wo.editable_editComplete, [c] );
+					// restore focus last cell after updating
+					setTimeout(function(){
+						$cell.focus();
+					}, 50);
+				};
+
 			if ( $.type(wo.editable_columns) === "string" && wo.editable_columns.indexOf('-') >= 0 ) {
 				// editable_columns can contain a range string (i.e. "2-4" )
 				tmp = wo.editable_columns.split('-');
@@ -83,26 +93,27 @@
 					if ( t && $this.data('before') !== $this.html() ) {
 						valid = $.isFunction(wo.editable_validate) ? wo.editable_validate( $this.html(), $this.data('original') ) : $this.html();
 						if ( t && valid !== false ) {
+							c.$table.find('.tseditable-last-edited-cell').removeClass('tseditable-last-edited-cell');
 							$this
+								.addClass('tseditable-last-edited-cell')
 								.html( valid )
 								.data('before', valid)
+								.data('original', valid)
 								.trigger('change');
-							c.$table.trigger('updateCell', [ $this.closest('td'), wo.editable_autoResort, function(table){
-								$this.trigger( wo.editable_editComplete, [c] );
-								$this.data( 'original', $this.html() );
-								if ( wo.editable_autoResort && c.sortList.length ) {
-									c.$table.trigger('applyWidgets');
+							c.$table.trigger('updateCell', [ $this.closest('td'), false, function(table){
+								if (wo.editable_autoResort) {
+									setTimeout(function(){
+										c.$table.trigger("sorton", [ c.sortList, function(){
+											editComplete(c.$table.find('.tseditable-last-edited-cell'));
+										}, true ]);
+									}, 10);
+								} else {
+									editComplete(c.$table.find('.tseditable-last-edited-cell'));
 								}
-								// restore focus last cell after updating
-								setTimeout(function(){
-									var t = c.$table.data('contentFocused');
-									if ( t instanceof HTMLElement ) { t.focus(); }
-								}, 50);
 							} ]);
 							return false;
 						}
-					}
-					if ( !valid && e.type !== 'keydown' ) {
+					} else if ( !valid && e.type !== 'keydown' ) {
 						// restore original content on blur
 						$this.html( $this.data('original') );
 					}
