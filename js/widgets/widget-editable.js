@@ -79,9 +79,10 @@
 				})
 				.on('blur focusout keydown '.split(' ').join('.tseditable '), '[contenteditable]', function(e){
 					if ( !c.$table.data('contentFocused') ) { return; }
-					var t,
+					var t, validate,
 						valid = false,
-						$this = $(e.target);
+						$this = $(e.target),
+						column = $this.closest('td').index();
 					if ( e.which === 27 ) {
 						// user cancelled
 						$this.html( $this.data('original') ).trigger('blur.tseditable');
@@ -91,7 +92,16 @@
 					t = e.which === 13 && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
 					// change if new or user hits enter (if option set)
 					if ( t && $this.data('before') !== $this.html() ) {
-						valid = $.isFunction(wo.editable_validate) ? wo.editable_validate( $this.html(), $this.data('original') ) : $this.html();
+
+						validate = wo.editable_validate;
+						valid = $this.html();
+
+						if (typeof(validate) === "function") {
+							valid = validate( $this.html(), $this.data('original'), column );
+						} else if (typeof (validate = $.tablesorter.getColumnData( table, validate, column )) === 'function') {
+							valid = validate( $this.html(), $this.data('original'), column );
+						}
+
 						if ( t && valid !== false ) {
 							c.$table.find('.tseditable-last-edited-cell').removeClass('tseditable-last-edited-cell');
 							$this

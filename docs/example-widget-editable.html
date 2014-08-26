@@ -243,24 +243,49 @@ td.no-edit, span.no-edit {
 
 					<tr id="editable-validate">
 						<td><a href="#" class="permalink">editable_validate</a></td>
-						<td>Validate the content change.
+						<td>Validate the content change (<span class="version updated">v2.17.8</span>)
 							<div class="collapsible">
 							<br>
 							Use this function to validate and/or modify the content before it is accepted.<br>
 							<br>
+							In <span class="version updated">v2.17.8</span>:
+							<ul>
+								<li>Set this option to be a global function, or an object containing a column index, or class name of the desired column</li>
+								<li>A <code>columnIndex</code> is now included in the function parameters</li>
+							</ul>
 							This function must return either a string containing the modified content or <code>false</code> to revert the content back to it's original value. Example:
 							<pre class="prettyprint lang-js">$(function(){
 
-  $('table').tablesorter({
+  $('#table1').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_validate : function(txt, orig){
+      // global validate function
+      editable_validate : function(txt, orig, columnIndex){
         // only allow one word
         var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
         return t ? t : false;
       }
     }
   });
+
+  $('#table2').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      // validate function per column
+      editable_validate : {
+        0 : function(txt, orig, columnIndex){
+          // allow up to two words
+          var t = txt.split(' ');
+          return t.length > 2 ? t[0] + (t[1] ? ' ' + t[1] : '') : txt;
+        },
+        '.price' : function(txt, orig, columnIndex) {
+          // make sure the price column(s) are using a number
+          return isNaN( txt.replace(/[$,\s]/g, '') ) ? false : txt;
+        }
+      }
+    }
+  });
+
 
 });</pre>
 							Default value: <code>null</code>
