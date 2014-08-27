@@ -58,12 +58,15 @@
 			// starting page of the pager (zero based index)
 			page: 0,
 
-		// reset pager after filtering; set to desired page #
-		// set to false to not change page at filter start
+			// reset pager after filtering; set to desired page #
+			// set to false to not change page at filter start
 			pageReset: 0,
 
 			// Number of visible rows
 			size: 10,
+
+			// Number of options to include in the pager number selector
+			maxOptionSize: 20,
 
 			// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 			savePages: true,
@@ -186,11 +189,11 @@
 					if ( p.$goto.length ) {
 						t = '';
 						pg = Math.min( p.totalPages, p.filteredPages );
-						// Filter the options page number link array if it's larger than 'max_option_size'
+						// Filter the options page number link array if it's larger than 'maxOptionSize'
 						// as large page set links will slow the browser on large dom inserts
 						var max_option_size = 20,
-						skip_set_size = Math.floor(pg / max_option_size),
-						large_collection = pg > max_option_size,
+						skip_set_size = Math.floor(pg / p.maxOptionSize),
+						large_collection = pg > p.maxOptionSize,
 						current_page = p.page + 1,
 						start_page = 1,
 						end_page = pg,
@@ -202,7 +205,7 @@
 							(large_collection) ? i = i+skip_set_size : i++;
  						}
 						if (large_collection) {
-							var central_focus_size = Math.floor(max_option_size / 2) - 1,
+							var central_focus_size = Math.floor(p.maxOptionSize / 2) - 1,
 							lower_focus_window = Math.abs(Math.floor(current_page - central_focus_size/2)),
 							focus_option_pages = [];
 							start_page = Math.min(current_page, lower_focus_window);
