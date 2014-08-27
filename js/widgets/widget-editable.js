@@ -139,9 +139,9 @@
 						valid = $this.html();
 
 						if (typeof(validate) === "function") {
-							valid = validate( $this.html(), $this.data('original'), column );
+							valid = validate( $this.html(), $this.data('original'), column, $this );
 						} else if (typeof (validate = $.tablesorter.getColumnData( table, validate, column )) === 'function') {
-							valid = validate( $this.html(), $this.data('original'), column );
+							valid = validate( $this.html(), $this.data('original'), column, $this );
 						}
 
 						if ( t && valid !== false ) {

@@ -371,6 +371,7 @@ td.no-edit, span.no-edit {
 							<ul>
 								<li>Set this option to be a global function, or an object containing a column index, or class name of the desired column</li>
 								<li>A <code>columnIndex</code> is now included in the function parameters</li>
+								<li>A <code>$element</code> parameter has been included which contains the contenteditable element. To get the table cell, use <code>$element.closest('td');</code></li>
 							</ul>
 							This function must return either a string containing the modified content or <code>false</code> to revert the content back to it's original value. Example:
 							<pre class="prettyprint lang-js">$(function(){
@@ -379,7 +380,7 @@ td.no-edit, span.no-edit {
     widgets : ['editable'],
     widgetOptions : {
       // global validate function
-      editable_validate : function(txt, orig, columnIndex){
+      editable_validate : function(txt, orig, columnIndex, $element){
         // only allow one word
         var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
         return t ? t : false;
@@ -392,12 +393,12 @@ td.no-edit, span.no-edit {
     widgetOptions : {
       // validate function per column
       editable_validate : {
-        0 : function(txt, orig, columnIndex){
+        0 : function(txt, orig, columnIndex, $element){
           // allow up to two words
           var t = txt.split(' ');
           return t.length > 2 ? t[0] + (t[1] ? ' ' + t[1] : '') : txt;
         },
-        '.price' : function(txt, orig, columnIndex) {
+        '.price' : function(txt, orig, columnIndex, $element) {
           // make sure the price column(s) are using a number
           return isNaN( txt.replace(/[$,\s]/g, '') ) ? false : txt;
         }
