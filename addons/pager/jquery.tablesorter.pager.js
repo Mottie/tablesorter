@@ -190,13 +190,34 @@
 						// as large page set links will slow the browser on large dom inserts
 						var max_option_size = 20,
 						skip_set_size = Math.floor(pg / max_option_size),
-						large_collection = pg > max_option_size;
-						for ( i = 1; i <= pg; ) {
-							t += '<option>' + i + '</option>';
+						large_collection = pg > max_option_size,
+						current_page = p.page + 1,
+						start_page = 1,
+						end_page = pg,
+						option_pages = [];
+						//construct default options pages array
+						var option_pages_start_page = (large_collection && current_page == 1) ? skip_set_size : 1
+						for (i = option_pages_start_page; i <= pg;) {
+ 						 	option_pages.push(i);
 							(large_collection) ? i = i+skip_set_size : i++;
+ 						}
+						if (large_collection) {
+							var central_focus_size = Math.floor(max_option_size / 2) - 1,
+							lower_focus_window = Math.abs(Math.floor(current_page - central_focus_size/2)),
+							focus_option_pages = [];
+							start_page = Math.min(current_page, lower_focus_window);
+							end_page = start_page + central_focus_size;
+							//construct an array to get a focus set around the current page
+							for (i = start_page; i <= end_page ; i++) focus_option_pages.push(i);
+							var insert_index = Math.floor(option_pages.length / 2) - Math.floor(focus_option_pages.length / 2);
+							Array.prototype.splice.apply(option_pages, [ insert_index, focus_option_pages.length ].concat(focus_option_pages));
+							option_pages.sort(function sortNumber(a,b) { return a - b; });
+						}
+						for ( i = 0; i < option_pages.length; i++) {
+							t += '<option>' + option_pages[i] + '</option>';
 						}
 						p.$goto[0].innerHTML = t;
-						p.$goto[0].value = p.page + 1;
+						p.$goto[0].value = current_page;
 					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
