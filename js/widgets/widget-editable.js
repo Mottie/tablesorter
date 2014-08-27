@@ -128,7 +128,7 @@
 						column = $this.closest('td').index();
 					if ( e.which === 27 ) {
 						// user cancelled
-						$this.html( $this.data('original') ).trigger('blur.tseditable');
+						$this.html( $.trim( $this.data('original') ) ).trigger('blur.tseditable');
 						c.$table.data( 'contentFocused', false );
 						return false;
 					}
@@ -149,7 +149,7 @@
 							c.$table.find('.tseditable-last-edited-cell').removeClass('tseditable-last-edited-cell');
 							$this
 								.addClass('tseditable-last-edited-cell')
-								.html( valid )
+								.html( $.trim( valid ) )
 								.data('before', valid)
 								.data('original', valid)
 								.trigger('change');
@@ -174,7 +174,7 @@
 							}
 						}, 100));
 						// restore original content on blur
-						$this.html( $this.data('original') );
+						$this.html( $.trim( $this.data('original') ) );
 					}
 				});
 		}
