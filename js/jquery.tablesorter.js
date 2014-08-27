@@ -560,14 +560,16 @@
 
 			// automatically add col group, and column sizes if set
 			function fixColumnWidth(table) {
-				if (table.config.widthFixed && $(table).find('colgroup').length === 0) {
-					var colgroup = $('<colgroup>'),
-						overallWidth = $(table).width();
+				var colgroup, overallWidth,
+					c = table.config;
+				if (c.widthFixed && c.$table.find('colgroup').length === 0) {
+					colgroup = $('<colgroup>');
+					overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies[0]).find("tr:first").children(":visible").each(function() {
+					$(table.tBodies).not('.' + c.cssInfoBlock).find("tr:first").children(":visible").each(function() {
 						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
-					$(table).prepend(colgroup);
+					c.$table.prepend(colgroup);
 				}
 			}
 
