@@ -94,7 +94,7 @@
 					var $this = $(this),
 						selAll = wo.editable_selectAll,
 						column = $this.closest('td').index(),
-						txt = $this.html();
+						txt = $.trim( $this.text() );
 					if (wo.editable_enterToAccept) {
 						// prevent enter from adding into the content
 						$this.on('keydown.tseditable', function(e){
@@ -124,6 +124,7 @@
 					var t, validate,
 						valid = false,
 						$this = $(e.target),
+						txt = $.trim( $this.text() ),
 						column = $this.closest('td').index();
 					if ( e.which === 27 ) {
 						// user cancelled
@@ -133,15 +134,15 @@
 					}
 					t = e.which === 13 && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
 					// change if new or user hits enter (if option set)
-					if ( t && $this.data('before') !== $this.html() ) {
+					if ( t && $this.data('before') !== txt ) {
 
 						validate = wo.editable_validate;
-						valid = $this.html();
+						valid = txt;
 
 						if (typeof(validate) === "function") {
-							valid = validate( $this.html(), $this.data('original'), column, $this );
+							valid = validate( txt, $this.data('original'), column, $this );
 						} else if (typeof (validate = $.tablesorter.getColumnData( table, validate, column )) === 'function') {
-							valid = validate( $this.html(), $this.data('original'), column, $this );
+							valid = validate( txt, $this.data('original'), column, $this );
 						}
 
 						if ( t && valid !== false ) {
@@ -152,7 +153,7 @@
 								.data('before', valid)
 								.data('original', valid)
 								.trigger('change');
-							c.$table.trigger('updateCell', [ $this.closest('td'), false, function(table){
+							c.$table.trigger('updateCell', [ $this.closest('td'), false, function(){
 								if (wo.editable_autoResort) {
 									setTimeout(function(){
 										c.$table.trigger("sorton", [ c.sortList, function(){
@@ -169,7 +170,7 @@
 						clearTimeout( $this.data('timer') );
 						$this.data('timer', setTimeout(function(){
 							if ($.isFunction(wo.editable_blur)) {
-								wo.editable_blur( $this.text(), column, $this );
+								wo.editable_blur( $.trim( $this.text() ), column, $this );
 							}
 						}, 100));
 						// restore original content on blur
