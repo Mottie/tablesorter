@@ -249,7 +249,7 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				tsp.destroyPager(table, c);
 			})
-			.on('updateComplete.pager '), function(e, table, triggered){
+			.on('updateComplete.pager', function(e, table, triggered){
 				e.stopPropagation();
 				// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 				if (!table || triggered) { return; }
