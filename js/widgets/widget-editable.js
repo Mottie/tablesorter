@@ -14,10 +14,11 @@
 			editable_enterToAccept : true,
 			editable_autoAccept    : true,
 			editable_autoResort    : false,
-			editable_validate      : null,  // function(text, originalText){ return text; }
-			editable_focused       : null,  // function(text, columnIndex, $element) {}
-			editable_blur          : null,  // function(text, columnIndex, $element) { }
-			editable_selectAll     : false, // true/false or function(text, columnIndex, $element) { return true; }
+			editable_wrapContent   : '<div>', // wrap the cell content... makes this widget work in IE, and with autocomplete
+			editable_validate      : null,    // function(text, originalText){ return text; }
+			editable_focused       : null,    // function(text, columnIndex, $element) {}
+			editable_blur          : null,    // function(text, columnIndex, $element) { }
+			editable_selectAll     : false,   // true/false or function(text, columnIndex, $element) { return true; }
 			editable_noEdit        : 'no-edit',
 			editable_editComplete  : 'editComplete'
 		},
@@ -62,12 +63,22 @@
 					}
 				});
 			}
+			tmp = $('<div>').wrapInner(wo.editable_wrapContent).children().length || $.isFunction(wo.editable_wrapContent);
 			// IE does not allow making TR/TH/TD cells directly editable (issue #404)
 			// so add a div or span inside ( it's faster than using wrapInner() )
 			c.$tbodies.find( cols.join(',') ).not( '.' + wo.editable_noEdit ).each(function(){
 				// test for children, if they exist, then make the children editable
 				$t = $(this);
-				( $t.children().length ? $t.children() : $t ).prop( 'contenteditable', true );
+
+				if (tmp && $t.children().length === 0) {
+					$t.wrapInner( wo.editable_wrapContent );
+				}
+				if ($t.children().length) {
+					// make all children content editable
+					$t.children().not('.' + wo.editable_noEdit).prop( 'contenteditable', true );
+				} else {
+					$t.prop( 'contenteditable', true );
+				}
 			});
 			c.$tbodies
 				.on('mouseleave.tseditable', function(){

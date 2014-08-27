@@ -38,6 +38,9 @@
 }
 td.no-edit, span.no-edit {
 	background-color: rgba(230,191,153,0.5);
+}
+.focused {
+	color: blue;
 }</style>
 	<script id="js">$(function() {
 
@@ -51,10 +54,23 @@ td.no-edit, span.no-edit {
 				editable_enterToAccept : true,          // press enter to accept content, or click outside if false
 				editable_autoAccept    : true,          // accepts any changes made to the table cell automatically (v2.17.6)
 				editable_autoResort    : false,         // auto resort after the content has changed.
-				editable_validate      : null,          // return a valid string: function(text, original){ return text; }
-				editable_focused       : null,          // function(txt, columnIndex, $element) { }
-				editable_blur          : null,          // function(txt, columnIndex, $element) { }
-				editable_selectAll     : null,          // function(txt, columnIndex, $element) { return true; }
+				editable_validate      : null,          // return a valid string: function(text, original, columnIndex){ return text; }
+				editable_focused       : function(txt, columnIndex, $element) {
+					// $element is the div, not the td
+					// to get the td, use $element.closest('td')
+					$element.addClass('focused');
+				},
+				editable_blur          : function(txt, columnIndex, $element) {
+					// $element is the div, not the td
+					// to get the td, use $element.closest('td')
+					$element.removeClass('focused');
+				},
+				editable_selectAll     : function(txt, columnIndex, $element){
+					// note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+					// only select everthing within the element when the content starts with the letter "B"
+					return /^b/i.test(txt) && columnIndex === 0;
+				},
+				editable_wrapContent   : '<div>',       // wrap all editable cell content... makes this widget work in IE, and with autocomplete
 				editable_noEdit        : 'no-edit',     // class name of cell that is not editable
 				editable_editComplete  : 'editComplete' // event fired after the table content has been edited
 			}
@@ -239,6 +255,22 @@ td.no-edit, span.no-edit {
 						<td>Event fired after the table content has been edited
 							<div class="collapsible">
 							<br>
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table')
+    .tablesorter({
+      widgets : ['editable'],
+      widgetOptions : {
+        editable_editComplete : 'giterdone'
+      }
+    })
+    // use delegated event binding
+    .on('giterdone', 'td', function(event, config){
+      // this = td; the event bubble up 
+      console.log( 'new content = ' + $(this).text() );
+    });
+
+});</pre>
 							Default value: <code>'editComplete'</code>
 							</div>
 						</td>
@@ -373,9 +405,35 @@ td.no-edit, span.no-edit {
     }
   });
 
-
 });</pre>
 							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-wrapcontent">
+						<td><a href="#" class="permalink">editable_wrapContent</a></td>
+						<td>Wrap the editable cell content with this element (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Internally, the widget uses jQuery's <code>wrapInner</code> to wrap the cell contents, using the following rules:
+							<ul>
+								<li>If this option is set to <code>false</code> or an empty string (<code>''</code>), then no wrapping will occur. The "contenteditable" attribute will be applied to the table cell.</li>
+								<li>If the table cell has no children, then the content is wrapped using this option, and the wrapping element will have the "contentediable" attribute enabled.</li>
+								<li>If the cell already has children (one or more) immediately inside of the table cell, no wrapping occurs and the child element(s) that don't have the class name set in <code>editable_noEdit</code>, will have the "contenteditable" attribute enabled.</li>
+							</ul>
+							Note: that this option uses jQuery's <code>wrapInner</code>, so this option can be set to a html string or selector, jQuery object, DOM element, or a function (jQuery 1.4+)
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_wrap : '<div>'
+    }
+  });
+
+});</pre>
+							Default value: <code>'&lt;div&gt;'</code>
 							</div>
 						</td>
 					</tr>
@@ -407,40 +465,40 @@ td.no-edit, span.no-edit {
 	<tbody>
 		<tr id="db-row-344">
 			<td class="no-edit">Peter</td>
-			<td><div>Parker</div></td>
-			<td><div>28</div></td>
+			<td>Parker</td>
+			<td>28</td>
 			<td>$9.99</td>
 			<td>20%</td>
 			<td>Jul 6, 2006 8:14 AM</td>
 		</tr>
 		<tr id="db-row-884">
-			<td><div>John</div></td>
-			<td><div>Hood</div></td>
-			<td><div>33</div></td>
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
 			<td>$19.99</td>
 			<td>25%</td>
 			<td>Dec 10, 2002 5:14 AM</td>
 		</tr>
 		<tr id="db-row-234">
-			<td><div>Clark</div></td>
-			<td><div>Kent</div></td>
-			<td><div>18</div></td>
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
 			<td>$15.89</td>
 			<td>44%</td>
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
 		<tr id="db-row-756">
-			<td><div>Bruce</div></td>
-			<td><div>Almighty</div></td>
-			<td><div>45</div></td>
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
 			<td>$153.19</td>
 			<td>44%</td>
 			<td>Jan 18, 2001 9:12 AM</td>
 		</tr>
 		<tr id="db-row-232">
-			<td><div>Bruce</div></td>
-			<td><div>Evans</div></td>
-			<td><div>22</div></td>
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
 			<td>$13.19</td>
 			<td>11%</td>
 			<td>Jan 18, 2007 9:12 AM</td>
