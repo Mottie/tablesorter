@@ -64,7 +64,8 @@ p.tip em, div.tip em,.label-info {padding: 2px; background-color: #5bc0de; color
 span.tip em, .label-success { background-color: #5cb85c; }
 .updated .label-success { background-color: #8eCe8e; }
 span.tip.old em, .label-default { background-color: #999; }
-span.warn em, .label.alert { background-color: #d9534f; }
+span.warning { background-color: #f0ad4e; } /* orange */
+span.warn em, .label.alert { background-color: #d9534f; } /* red */
 .label.warning { background-color: #f0ad4e; }
 tr td.lookhere, span.lookhere { background-color: rgba(230,191,153,0.5); }
 div.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }

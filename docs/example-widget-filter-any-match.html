@@ -30,6 +30,8 @@
 			// Set to use a jQuery selector (or jQuery object) pointing to the
 			// external filter (column specific or any match)
 			filter_external : '.search',
+			// add a default type search to the first name column
+			filter_defaultFilter: { 1 : '~{query}' },
 			// include column filters
 			filter_columnFilters: true,
 			filter_placeholder: { search : 'Search...' },
@@ -57,6 +59,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.17.8</span>, added a default fuzzy search to the "First Name" column.</li>
 			<li>This is a demo of the <a href="index.html#widget-filter-external"><code>filter_external</code></a> option (added <span class="version">v2.15</span>).</li>
 			<li>In <span class="version">v2.15</span>
 				<ul>
@@ -108,7 +111,7 @@ $('table').trigger('search', [ columns ]);</pre>
 	<h1>Demo</h1>
 
 	<div id="demo"><input class="search" type="search" data-column="all"> (Match any column)<br>
-<input class="search" type="search" data-column="1"> (First Name)<br>
+<input class="search" type="search" data-column="1"> (First Name; fuzzy search... try "be")<br>
 
 <!-- targeted by the "filter_reset" option -->
 <button type="button" class="reset">Reset Search</button>
@@ -117,7 +120,7 @@ $('table').trigger('search', [ columns ]);</pre>
 	<thead>
 		<tr>
 			<th>Rank</th>
-			<th>First Name</th>
+			<th data-placeholder="Fuzzy search">First Name</th>
 			<th>Last Name</th>
 			<th>Age</th>
 			<th>Total</th>

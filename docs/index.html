@@ -479,7 +479,7 @@
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.15</span>)</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.15</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
-				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>)</li>
+				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.17.8</span>)</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.17.5</span>)</li>
 			</ul>
@@ -1623,6 +1623,8 @@ $(function(){
       filter_cssFilter     : '',
       // data attribute in the header cell that contains the default filter value
       filter_defaultAttrib : 'data-value',
+      // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
+      filter_defaultFilter : [],
       // jQuery selector string (or jQuery object) of external search inputs
       filter_external      : '',
       // class added to filtered rows; needed by pager plugin
@@ -2041,6 +2043,55 @@ $(function(){
 					</div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-defaultfilter">
+				<td><a href="#" class="permalink">filter_defaultFilter</a></td>
+				<td>Object</td>
+				<td>{ }</td>
+				<td>
+					Filter widget: Add a default filter type to a column (<span class="version">v2.17.8</span>).
+					<div class="collapsible">
+					<br>
+					<span class="label warning">Warning</span> If a column has a default filter set, the user <strong>will not</strong> be able to use other filters.<br>
+					<br>
+					Use the <a href="#widget-defaultfilter"><code>filter_defaultFilter</code></a> option as follows:
+						<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+
+      filter_defaultFilter : {
+        // target a column by class name or column index (zero-based)
+
+        '.fuzzy' : '~{q}',
+        2 : '{q}=',
+
+        // for default "anyMatches" use the column length as the index
+        // e.g. if your table has 5 columns (0,1,2,3,4), then set the anyMatch column as 5.
+        5 : '{q} or {q}' // any match column
+      }
+
+    }
+  });
+});</pre>
+					Set up the column string as follows:
+					<ul>
+						<li>Add the desired filter type symbol along with <code>{query}</code> or <code>{q}</code> to maintain positioning</li>
+						<li>Symbols can be added to the beginning <code>"~{query}"</code> (default fuzzy search) or end <code>"{q}="</code> (default exact search)</li>
+						<li>For symbols that separate queries, like "AND", "OR" or "-" (range):
+							<ul>
+								<li>Add one additional <code>{q}</code> tag.</li>
+								<li>For example, to add a default "OR" search, use <code>"{q} OR {q}"</code>.</li>
+								<li>If the user enters <code>"a b c d"</code> the column will be filtered using <code>"a OR b OR c OR d"</code>, so there is no need to add more <code>{q}</code> tags within the string; adding more will likely mess up the results.</li>
+								<li>If the user only enters <code>"a"</code>, then the column will be filtered using <code>"a OR a"</code> so as not to cause other issues.</li>
+							</ul>
+						</li>
+						<li><span class="label label-info">Note</span> It is not possible to set up a default filter search within a query. So the "wild" filter search will not work as intended (e.g. <code>{q}*</code> and <code>{q}?</code> are essentially the same as <code>{q}</code>.</li>
+					</ul>
+					</div>
+				</td>
+				<td><a href="example-widget-filter-any-match.html">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-external">
