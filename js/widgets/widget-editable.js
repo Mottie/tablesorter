@@ -26,14 +26,16 @@
 			if ( !wo.editable_columns.length ) { return; }
 			var indx, tmp, $t,
 				cols = [],
-				editComplete = function($cell){
+				editComplete = function($cell, refocus){
 					$cell
 						.removeClass('tseditable-last-edited-cell')
 						.trigger( wo.editable_editComplete, [c] );
 					// restore focus last cell after updating
-					setTimeout(function(){
-						$cell.focus();
-					}, 50);
+					if (refocus) {
+						setTimeout(function(){
+							$cell.focus();
+						}, 50);
+					}
 				},
 				selectAll = function(cell){
 					setTimeout(function(){
@@ -157,7 +159,7 @@
 								if (wo.editable_autoResort) {
 									setTimeout(function(){
 										c.$table.trigger("sorton", [ c.sortList, function(){
-											editComplete(c.$table.find('.tseditable-last-edited-cell'));
+											editComplete(c.$table.find('.tseditable-last-edited-cell'), true);
 										}, true ]);
 									}, 10);
 								} else {
