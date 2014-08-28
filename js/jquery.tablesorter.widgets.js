@@ -1006,12 +1006,12 @@ ts.filter = {
 	defaultFilter: function(filter, mask){
 		if (filter === '') { return filter; }
 		var regex = ts.filter.regex.iQuery,
-			maskRegex = ts.filter.regex.igQuery,
-			query = $.trim(filter).split(/\s/),
+			maskLen = mask.match( ts.filter.regex.igQuery ).length,
+			query = maskLen > 1 ? $.trim(filter).split(/\s/) : [ $.trim(filter) ],
 			len = query.length - 1,
 			indx = 0,
 			val = mask;
-		if ( len < 1 && mask.match( maskRegex ).length > 1 ) {
+		if ( len < 1 && maskLen > 1 ) {
 			// only one "word" in query but mask has >1 slots
 			query[1] = query[0];
 		}
