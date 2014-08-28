@@ -1005,7 +1005,6 @@ ts.filter = {
 	},
 	defaultFilter: function(filter, mask){
 		if (filter === '') { return filter; }
-		console.log(filter, mask);
 		var regex = ts.filter.regex.iQuery,
 			maskLen = mask.match( ts.filter.regex.igQuery ).length,
 			query = maskLen > 1 ? $.trim(filter).split(/\s/) : [ $.trim(filter) ],
