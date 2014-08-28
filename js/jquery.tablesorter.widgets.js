@@ -1005,6 +1005,7 @@ ts.filter = {
 	},
 	defaultFilter: function(filter, mask){
 		if (filter === '') { return filter; }
+		console.log(filter, mask);
 		var regex = ts.filter.regex.iQuery,
 			maskLen = mask.match( ts.filter.regex.igQuery ).length,
 			query = maskLen > 1 ? $.trim(filter).split(/\s/) : [ $.trim(filter) ],
@@ -1104,7 +1105,7 @@ ts.filter = {
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
 					}
 					if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || '')) {
-						data.anyMatchFilter = ts.filter.defaultFilter(data.anyMatchFilter, wo.filter_defaultFilter[c.columns]);
+						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) );
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
@@ -1200,7 +1201,7 @@ ts.filter = {
 							data.filter = c.sortLocaleCompare ? ts.replaceAccents(data.filter) : data.filter;
 
 							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
-								data.filter = ts.filter.defaultFilter(data.filter, wo.filter_defaultFilter[columnIndex]);
+								data.filter = ts.filter.defaultFilter( data.filter, ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) );
 							}
 							// val = case insensitive, columnFilter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
