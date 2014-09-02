@@ -412,6 +412,34 @@ td.no-edit, span.no-edit {
 						</td>
 					</tr>
 
+					<tr id="editable-trimcontent">
+						<td><a href="#" class="permalink">editable_trimContent</a></td>
+						<td>Trim the content within the editable cell (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							When a table cell is formatted as follows:
+							<pre class="prettyprint lang-html">&lt;td&gt;
+	John
+&lt;/td&gt;</pre>All carriage returns and tab(s) within the table cell would be included before editing. Once the contenteditable element has focus, the content is cleaned up.<br>
+							<br>
+							If this option is <code>true</code>, this widget will trim content <em>upon initialization</em>; this is necessary if you need cleaned it up content before editing, like with an autocomplete script.<br>
+							<br>
+							Use this option as follows:
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_trimContent : true
+    }
+  });
+
+});</pre>
+							Default value: <code>true</code>
+							</div>
+						</td>
+					</tr>
+
 					<tr id="editable-wrapcontent">
 						<td><a href="#" class="permalink">editable_wrapContent</a></td>
 						<td>Wrap the editable cell content with this element (<span class="version">v2.17.8</span>)

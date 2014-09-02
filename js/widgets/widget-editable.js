@@ -15,6 +15,7 @@
 			editable_autoAccept    : true,
 			editable_autoResort    : false,
 			editable_wrapContent   : '<div>', // wrap the cell content... makes this widget work in IE, and with autocomplete
+			editable_trimContent   : true,    // trim content inside of contenteditable (remove tabs & carriage returns)
 			editable_validate      : null,    // function(text, originalText){ return text; }
 			editable_focused       : null,    // function(text, columnIndex, $element) {}
 			editable_blur          : null,    // function(text, columnIndex, $element) { }
@@ -77,8 +78,21 @@
 				}
 				if ($t.children().length) {
 					// make all children content editable
-					$t.children().not('.' + wo.editable_noEdit).prop( 'contenteditable', true );
+					$t.children().not('.' + wo.editable_noEdit).each(function(){
+						var $this = $(this);
+						if (wo.editable_trimContent) {
+							$this.text(function(i, txt){
+								return $.trim(txt);
+							});
+						}
+						$this.prop( 'contenteditable', true );
+					});
 				} else {
+					if (wo.editable_trimContent) {
+						$t.text(function(i, txt){
+							return $.trim(txt);
+						});
+					}
 					$t.prop( 'contenteditable', true );
 				}
 			});
@@ -134,6 +148,7 @@
 						c.$table.data( 'contentFocused', false );
 						return false;
 					}
+					// accept on enter (if set), alt-enter (always) or if autoAccept is set and element is blurred or unfocused
 					t = e.which === 13 && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
 					// change if new or user hits enter (if option set)
 					if ( t && $this.data('before') !== txt ) {
