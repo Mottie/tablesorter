@@ -589,6 +589,7 @@ ts.filter = {
 		wo.filter_initTimer = null;
 		wo.filter_formatterCount = 0;
 		wo.filter_formatterInit = [];
+		wo.filter_initializing = true;
 
 		txt = '\\{' + ts.filter.regex.query + '\\}';
 		$.extend( regex, {
@@ -764,12 +765,14 @@ ts.filter = {
 		if (!wo.filter_initialized && count === wo.filter_formatterCount) {
 			// filter widget initialized
 			wo.filter_initialized = true;
+			wo.filter_initializing = false;
 			c.$table.trigger('filterInit', c);
 		} else if (!wo.filter_initialized) {
 			// fall back in case a filter_formatter doesn't call
 			// $.tablesorter.filter.formatterUpdated($cell, column), and the count is off
 			wo.filter_initTimer = setTimeout(function(){
 				wo.filter_initialized = true;
+				wo.filter_initializing = false;
 				c.$table.trigger('filterInit', c);
 			}, 500);
 		}
@@ -1027,7 +1030,7 @@ ts.filter = {
 		return val;
 	},
 	findRows: function(table, filters, combinedFilters) {
-		if (table.config.lastCombinedFilter === combinedFilters) { return; }
+		if (table.config.lastCombinedFilter === combinedFilters || table.config.widgetOptions.filter_initializing) { return; }
 		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, lastSearch, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, fxn, ffxn,
