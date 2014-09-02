@@ -1863,21 +1863,18 @@
 			}
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
+				row = 0;
 				$tb = b.eq(k);
-				l = $tb.children('tr').length;
-				if (l > 1) {
-					row = 0;
-					$tv = $tb.children('tr:visible').not(c.selectorRemove);
-					// revered back to using jQuery each - strangely it's the fastest method
-					/*jshint loopfunc:true */
-					$tv.each(function(){
-						$tr = $(this);
-						// style children rows the same way the parent row was styled
-						if (!child.test(this.className)) { row++; }
-						even = (row % 2 === 0);
-						$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
-					});
-				}
+				$tv = $tb.children('tr:visible').not(c.selectorRemove);
+				// revered back to using jQuery each - strangely it's the fastest method
+				/*jshint loopfunc:true */
+				$tv.each(function(){
+					$tr = $(this);
+					// style child rows the same way the parent row was styled
+					if (!child.test(this.className)) { row++; }
+					even = (row % 2 === 0);
+					$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
+				});
 			}
 			if (c.debug) {
 				ts.benchmark("Applying Zebra widget", time);
