@@ -1529,7 +1529,7 @@ ts.addWidget({
 			return;
 		}
 		var $table = c.$table,
-			$attach = $(wo.stickyHeaders_attachTo),
+			$attach = $(wo.stickyHeaders_attachTo || 'window'),
 			$thead = $table.children('thead:first'),
 			$win = $attach.length ? $attach : $(window),
 			$header = $thead.children('tr').not('.sticky-false').children(),
