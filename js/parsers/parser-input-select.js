@@ -101,16 +101,20 @@
 			// this flag prevents the updateCell event from being spammed
 			// it happens when you modify input text and hit enter
 			var focused = false,
-				restoreValue = function(){
+				restoreValue = function(isTbody){
 					// focused = false; // uncomment this line to prevent auto-accepting changes
 					// make sure we restore original values
-					$(':focus').blur();
+					// isTbody is needed to prevent the select from closing in IE
+					// see https://connect.microsoft.com/IE/feedbackdetail/view/962618/
+					if (isTbody) {
+						$(':focus').blur();
+					}
 					return;
 				};
 			// bind to .tablesorter (default class name)
 			$(this).children('tbody')
-			.on('mouseleave', function(){
-				restoreValue();
+			.on('mouseleave', function(e){
+				restoreValue(e.target.tagName === 'TBODY');
 			})
 			.on('focus', 'select, input, textarea', function(){
 				focused = true;
