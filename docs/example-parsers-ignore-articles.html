@@ -8,6 +8,8 @@
 	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -28,7 +30,8 @@
 		headers: {
 			2: {
 				sorter: 'ignoreArticles',
-				ignoreArticles : 'en'
+				ignoreArticles : 'en',
+				ignoreArticlesExcept : ''
 			}
 		}
 	});
@@ -45,20 +48,54 @@
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li>This parser can not be applied to the original plugin.</li>
-			<li>Set the language to use by adding any of the following (they all do the same thing), set in order of priority (<span class="version">v2.8.2</span>):
-				<ul>
-					<li>jQuery data <code>data-ignore-articles="fr"</code>.</li>
-					<li>metadata <code>class="{ ignoreArticles : 'fr' }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { ignoreArticles : 'fr' } }</code>.</li>
-					<li>header class name <code>class="ignoreArticles-fr"</code>.</li>
-				</ul>
-			</li>
-			<li>To add a custom language to the parser, use the following code:
-				<pre class="prettyprint lang-javascript">$.extend( $.tablesorter.ignoreArticles, {
+	<p></p>
+	<br>
+	<div id="root" class="accordion">
+
+		<h3 id="notes"><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>In <span class="version">v2.17.8</span>, added a new option <code>ignoreArticlesExcept</code> option which allows ignoring a set pattern.</li>
+				<li>This parser can not be applied to the original plugin.</li>
+			</ul>
+		</div>
+
+		<h3 id="setup"><a href="#">Setup</a></h3>
+		<div>
+			<ul>
+				<li>Set the language (French shown below; English is set by default) to use by adding any of the following (they all do the same thing), set in order of priority (<span class="version">v2.8.2</span>):
+					<ul>
+						<li>jQuery data <code>data-ignore-articles="fr"</code>.</li>
+						<li>metadata <code>class="{ ignoreArticles : 'fr' }"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code>headers : { 0 : { ignoreArticles : 'fr' } }</code>.</li>
+						<li>header class name <code>class="ignoreArticles-fr"</code>.</li>
+					</ul>
+					<br>
+				</li>
+				<li>In <span class="version">v2.17.8</span>, you can set up a string to ignore, e.g. keep a title intact like "A to Z", as follows:
+					<ul>
+						<li>jQuery data <code>data-ignore-articles-except="a to"</code>.</li>
+						<li>metadata <code>class="{ ignoreArticlesExcept : 'a to' }"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code>headers : { 0 : { ignoreArticlesExcept : 'a to' } }</code>.</li>
+					</ul>
+				</li>
+				<li>To add more than one title to ignore, separate them using a vertical bar (<kbd>shift</kbd>+<kbd>\</kbd>)
+					<pre class="prettyprint lang-js">headers: {
+  0: {
+    ignoreArticles : 'en',
+    // no special parsing for titles like "A to Z" or "A B C" or "A One"
+    ignoreArticlesExcept : 'a to|a b |a one'
+  }
+}</pre><span class="label label-info">Note</span> If your title needs a space (e.g. "A B C") make sure it isn't at the end of the <code>ignoreArticlesExcept</code> string; spaces on either end get stripped away.
+				</li>
+			</ul>
+		</div>
+
+		<h3 id="customizing"><a href="#">Customizing</a></h3>
+		<div>
+			<ul>
+				<li>To add a custom language to the parser, use the following code:
+					<pre class="prettyprint lang-javascript">$.extend( $.tablesorter.ignoreArticles, {
   "xx" : "a, l'_, de la"
 });
 
@@ -66,21 +103,22 @@ $('table').tablesorter({
   headers: {
     2: {
       sorter: 'ignoreArticles',
-      ignoreArticles : 'xx'
+      ignoreArticles : 'xx',
+      ignoreArticlesExcept : 'a to'
     }
   }
 });</pre>
-				<ul>
-					<li>where <code>xx</code> is the <code>ignoreArticles</code> id (abbreviation for the language)</li>
-					<li>Each leading article must be separated by a comma and will be case-insensitive.</li>
-					<li>Leading articles will only be removed if they are followed by a space; spaces are automatically included when parsed unless the article definition is followed by an underscore. See the <code>l'_</code> note below.</li>
-					<li><code>a</code> is an example of a leading article which will be removed. So, "A Fistfull of Dollars" will only parse "Fistfull of Dollars" and will sort with the other words that start with an "F".</li>
-					<li><code>l'_</code> includes an underscore (<code>_</code>); this tells the parser to <strong><em>not</em></strong> add a space after the word. So a title like "l'enfant" will parse as "enfant".</li>
-					<li><code>de la</code> is an example showing that the parser can remove a multiple-word article.</li>
-				</ul>
-			</li>
-			<li>Some languages have been included by default. The information below was obtained from <a href="http://en.wikipedia.org/wiki/Article_%28grammar%29#Variation_among_languages">this wikipedia page</a>, so if you discover any errors, or if you want to contribute another language, please <a href="https://github.com/Mottie/tablesorter/issues">open an issue</a>.
-				<pre class="prettyprint lang-javascript">$.tablesorter.ignoreArticles = {
+					<ul>
+						<li>where <code>xx</code> is the <code>ignoreArticles</code> id (abbreviation for the language)</li>
+						<li>Each leading article must be separated by a comma and will be case-insensitive.</li>
+						<li>Leading articles will only be removed if they are followed by a space; spaces are automatically included when parsed unless the article definition is followed by an underscore. See the <code>l'_</code> note below.</li>
+						<li><code>a</code> is an example of a leading article which will be removed. So, "A Fistfull of Dollars" will only parse "Fistfull of Dollars" and will sort with the other words that start with an "F".</li>
+						<li><code>l'_</code> includes an underscore (<code>_</code>); this tells the parser to <strong><em>not</em></strong> add a space after the word. So a title like "l'enfant" will parse as "enfant".</li>
+						<li><code>de la</code> is an example showing that the parser can remove a multiple-word article.</li>
+					</ul>
+				</li>
+				<li>Some languages have been included by default. The information below was obtained from <a href="http://en.wikipedia.org/wiki/Article_%28grammar%29#Variation_among_languages">this wikipedia page</a>, so if you discover any errors, or if you want to contribute another language, please <a href="https://github.com/Mottie/tablesorter/issues">open an issue</a>.
+					<pre class="prettyprint lang-javascript">$.tablesorter.ignoreArticles = {
   "en" : "the, a, an",
   "de" : "der, die, das, des, dem, den, ein, eine, einer, eines, einem, einen",
   "nl" : "de, het, de, een",
@@ -90,8 +128,10 @@ $('table').tablesorter({
   "it" : "il, lo, la, l'_, i, gli, le, un', uno, una, un",
   "hu" : "a, az, egy"
 };</pre></li>
-		</ul>
-	<p>
+			</ul>
+		</div>
+
+	</div>
 
 	<h1>Demo</h1>
 	<br>
@@ -379,7 +419,8 @@ $(function() {
     headers: {
       2: {
         sorter: 'ignoreArticles',
-        ignoreArticles : 'fr'
+        ignoreArticles : 'fr',
+        ignoreArticlesExcept : ''
       }
     }
   });
