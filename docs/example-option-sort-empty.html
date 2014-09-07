@@ -49,11 +49,22 @@ $(function(){
 
 	<p class="tip">
 		<em>NOTE!</em>
-		Set the <code>emptyTo</code> selector below:
+		<p></p>
 		<ul>
-			<li><code>top</code> - sort empty table cells to the top.</li>
-			<li><code>bottom</code> - sort empty table cells to the bottom.</li>
-			<li><code>none</code> or <code>zero</code> - sort empty table cells as if the cell has the value equal to zero.</li>
+			<li>Set the <code>emptyTo</code> selector below:
+				<ul>
+					<li><code>top</code> - sort empty table cells to the top.</li>
+					<li><code>bottom</code> - sort empty table cells to the bottom.</li>
+					<li><code>none</code> or <code>zero</code>
+						<ul>
+							<li>Sort empty table cells as if the cell has the value equal to zero</li>
+							<li>None/zero has a value less than A through Z (in javascript, <code>0 &lt; 'A' && 0 &lt; 'Z'</code>); so in an alphabetical column, empty cells will sort at the top in an ascending sort &amp; at the bottom in a descending sort.</li>
+							<li>In numerical columns, empty cells will sort as if their value was zero.</li>
+						</ul>
+					</li>
+				</ul>
+				<br>
+			</li>
 			<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
 				<ul>
 					<li>jQuery data <code>data-empty="top"</code>.</li>
@@ -62,6 +73,7 @@ $(function(){
 					<li>header class name <code>class="empty-top"</code>.</li>
 					<li>Overall <code>emptyTo</code> option.</li>
 				</ul>
+				<br>
 			</li>
 			<li><code>emptyToBottom</code> option was added in v2.1.11, then replaced by the <code>emptyTo</code> option in v2.1.16.</li>
 		</ul>
@@ -72,7 +84,7 @@ $(function(){
 Set <code>emptyTo</code> option: <select>
 	<option>bottom</option>
 	<option>top</option>
-	<option>zero</option>
+	<option value="zero">none/zero</option>
 </select>
 
 <div id="demo"><table class="tablesorter">
@@ -162,7 +174,8 @@ Set <code>emptyTo</code> option: <select>
 		</tr>
 	</tbody>
 </table></div>
-* <strong>Note</strong>: The "Account #" column has the "empty-top" class name set which over-rides the <code>emptyTo</code> option (see the order of priority note above).
+	* <span class="label label-info">Note</span> The "Account #" column has the "empty-top" class name set which over-rides the <code>emptyTo</code> option (see the order of priority note above).
+	<p></p>
 
 	<h1>Javascript</h1>
 	<div id="javascript">
