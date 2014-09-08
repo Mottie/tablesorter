@@ -1763,6 +1763,7 @@
 		format: function(s) {
 			return s ? $.trim(s.replace(/(https?|ftp|file):\/\//, '')) : s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
