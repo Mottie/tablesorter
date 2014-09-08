@@ -101,7 +101,7 @@
 					if ( c.$table.data('contentFocused') ) {
 						// change to "true" instead of element to allow focusout to process
 						c.$table.data( 'contentFocused', true );
-						$(':focus').trigger('blur');
+						$(':focus').trigger('focusout');
 					}
 				})
 				.on('focus.tseditable', '[contenteditable]', function(e){
