@@ -246,9 +246,9 @@
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 							np = ts.getData(h, ch, 'parser') === 'false';
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
-							c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+							c.empties[i] = ( ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' ) ).toLowerCase();
 							// text strings behaviour in numerical sorts
-							c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
+							c.strings[i] = ( ts.getData(h, ch, 'string') || c.stringTo || 'max' ).toLowerCase();
 							if (np) {
 								p = ts.getParserById('no-parser');
 							}
@@ -1049,7 +1049,10 @@
 					return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
 				})($.fn.jquery.split("."));
 				// digit sort text location; keeping max+/- for backwards compatibility
-				c.string = { 'max': 1, 'min': -1, 'emptyMin': 1, 'emptyMax': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				c.string = { 'max': 1, 'min': -1, 'emptymin': 1, 'emptymax': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				// ensure case insensitivity
+				c.emptyTo = c.emptyTo.toLowerCase();
+				c.stringTo = c.stringTo.toLowerCase();
 				// add table theme class only if there isn't already one there
 				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
