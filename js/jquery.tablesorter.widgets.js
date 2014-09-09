@@ -756,7 +756,13 @@ ts.filter = {
 	},
 	filterInitComplete: function(c){
 		var wo = c.widgetOptions,
-			count = 0;
+			count = 0,
+			completed = function(){
+				wo.filter_initialized = true;
+				wo.filter_initializing = false;
+				ts.filter.findRows(c.table, c.$table.data('lastSearch'), null);
+				c.$table.trigger('filterInit', c);
+			};
 		$.each( wo.filter_formatterInit, function(i, val) {
 			if (val === 1) {
 				count++;
@@ -765,19 +771,16 @@ ts.filter = {
 		clearTimeout(wo.filter_initTimer);
 		if (!wo.filter_initialized && count === wo.filter_formatterCount) {
 			// filter widget initialized
-			wo.filter_initialized = true;
-			wo.filter_initializing = false;
-			c.$table.trigger('filterInit', c);
+			completed();
 		} else if (!wo.filter_initialized) {
 			// fall back in case a filter_formatter doesn't call
 			// $.tablesorter.filter.formatterUpdated($cell, column), and the count is off
 			wo.filter_initTimer = setTimeout(function(){
-				wo.filter_initialized = true;
-				wo.filter_initializing = false;
-				c.$table.trigger('filterInit', c);
+				completed();
 			}, 500);
 		}
 	},
+	
 	setDefaults: function(table, c, wo) {
 		var isArray, saved, indx,
 			// get current (default) filters
