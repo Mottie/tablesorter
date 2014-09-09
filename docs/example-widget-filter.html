@@ -64,12 +64,19 @@
 			// this option can either be a string (class applied to all filters) or an array (class applied to indexed filter)
 			filter_cssFilter : '', // or []
 
+			// add a default column filter type "~{query}" to make fuzzy searches default;
+			// "{q1} AND {q2}" to make all searches use a logical AND.
+			filter_defaultFilter : {},
+
+			// filters to exclude, per column
+			filter_excludeFilter : {},
+
 			// jQuery selector (or object) pointing to an input to be used to match the contents of any column
 			// please refer to the filter-any-match demo for limitations - new in v2.15
 			filter_external : '',
 
 			// class added to filtered rows (rows that are not showing); needed by pager plugin
-			filter_filteredRow   : 'filtered',
+			filter_filteredRow : 'filtered',
 
 			// add custom filter elements to the filter row
 			// see the filter formatter demos for more specifics
@@ -104,7 +111,7 @@
 
 			// if true, server-side filtering should be performed because client-side filtering will be disabled, but
 			// the ui and events will still be used.
-			filter_serversideFiltering: false,
+			filter_serversideFiltering : false,
 
 			// Set this option to true to use the filter to find text from the start of the column
 			// So typing in "a" will find "albert" but not "frank", both have a's; default is false
@@ -295,8 +302,20 @@ $(function(){
 						<td>this option contains the name of the data-attribute which contains the default (starting) filter value.</td>
 					</tr>
 
+					<tr id="filter-defaultfilter">
+						<td><span class="permalink">filter_defaultFilter</span></td>
+						<td>{ }</td>
+						<td>Set a default filter for a set column (<span class="version">v2.17.8</span>).</td>
+					</tr>
+
+					<tr id="filter-excludefilter">
+						<td><span class="permalink">filter_excludeFilter</span></td>
+						<td>{ }</td>
+						<td>Set a column to exclude the chosen filter types (range, exact, notMatch, etc) (<span class="version">v2.17.8</span>).</td>
+					</tr>
+
 					<tr id="filter-external">
-						<td><span class="permalink">filter_external</span></td>
+						<td><a href="#" class="permalink">filter_external</a></td>
 						<td>''</td>
 						<td>
 							Set to a jQuery selector (or object) pointing to an input to be used to match the contents of any column (<span class="version">v2.15</span>).
@@ -405,10 +424,22 @@ $(function(){
 						<td>Typing delay in milliseconds before starting a search.</td>
 					</tr>
 
+					<tr id="filter-search-filtered">
+						<td><span class="permalink">filter_searchFiltered</span></td>
+						<td>true</td>
+						<td>Allow searching through already filtered rows in special circumstances; will speed up searching in large tables if <code>true</code>.</td>
+					</tr>
+
 					<tr id="filter-select-source">
 						<td><span class="permalink">filter_selectSource</span></td>
 						<td>null</td>
 						<td>Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>).</td>
+					</tr>
+
+					<tr id="filter-select-source-separator">
+						<td><span class="permalink">filter_selectSourceSeparator</span></td>
+						<td>null</td>
+						<td><code>filter_selectSource</code> array text left of the separator is added to the option value, right into the option text.</td>
 					</tr>
 
 					<tr id="filter-serverside-filtering">

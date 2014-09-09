@@ -1624,7 +1624,9 @@ $(function(){
       // data attribute in the header cell that contains the default filter value
       filter_defaultAttrib : 'data-value',
       // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
-      filter_defaultFilter : [],
+      filter_defaultFilter : {},
+      // filters to exclude, per column
+      filter_excludeFilter : {},
       // jQuery selector string (or jQuery object) of external search inputs
       filter_external      : '',
       // class added to filtered rows; needed by pager plugin
@@ -2092,6 +2094,47 @@ $(function(){
 					</div>
 				</td>
 				<td><a href="example-widget-filter-any-match.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-exclude-filter">
+				<td><a href="#" class="permalink">filter_excludeFilter</a></td>
+				<td>Object</td>
+				<td>{ }</td>
+				<td>Additional CSS class applied to each filter (<span class="version">v2.17.8</span>).
+					Filter widget: Exclude a filter type(s) for a column.
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-excludefilter"><code>filter_excludeFilter</code></a> option as follows:
+						<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+
+      filter_excludeFilter : {
+        // target a column by class name or column index (zero-based)
+        '.title' : 'range',
+
+        // separate multiple filter types using spaces
+        2 : 'range notMatch exact'
+      }
+
+    }
+  });
+});</pre>
+					Exclusion names must be separated by a comma. Here is a full list of filter type names:
+					<ul>
+						<li><code>and</code> - logical <code>" AND "</code> or <code> && </code> type filter.</li>
+						<li><code>exact</code> - exact match (using <code>"</code> or <code>=</code>).</li>
+						<li><code>fuzzy</code> - fuzzy match (<code>~</code>)</li>
+						<li><code>notMatch</code> - not match (<code>!</code> or <code>!=</code>)</li>
+						<li><code>operators</code> - comparison filters (<code>&lt; &lt;= &gt;= &gt;</code>)</li>
+						<li><code>range</code> - range (<code> - </code> or <code> to </code>)</li>
+						<li><code>regex</code> - regex (<code>/\d/</code>)</li>
+						<li><code>wild</code> - wild card matching (<code>?</code> for single characters, <code>*</code> for multiple characters not including spaces, or <code>|</code> or <code> OR </code> for a logical OR.</li>
+					</ul>
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-external">

@@ -354,7 +354,8 @@ ts.addWidget({
 		filter_childRows     : false, // if true, filter includes child row content in the search
 		filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 		filter_cssFilter     : '',    // css class name added to the filter row & each input in the row (tablesorter-filter is ALWAYS added)
-		filter_defaultFilter : [],    // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
+		filter_defaultFilter : {},    // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
+		filter_excludeFilter : {},    // filters to exclude, per column
 		filter_external      : '',    // jQuery selector string (or jQuery object) of external filters
 		filter_filteredRow   : 'filtered', // class added to filtered rows; needed by pager plugin
 		filter_formatter     : null,  // add custom filter elements to the filter row
@@ -1033,7 +1034,7 @@ ts.filter = {
 		if (table.config.lastCombinedFilter === combinedFilters || table.config.widgetOptions.filter_initializing) { return; }
 		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
 			childRow, lastSearch, matches, result, showRow, time, val, indx,
-			notFiltered, searchFiltered, filterMatched, fxn, ffxn,
+			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1181,6 +1182,10 @@ ts.filter = {
 					for (columnIndex = 0; columnIndex < c.columns; columnIndex++) {
 						data.filter = filters[columnIndex];
 						data.index = columnIndex;
+
+						// filter types to exclude, per column
+						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s*,\s*/);
+
 						// ignore if filter is empty or disabled
 						if (data.filter) {
 							data.cache = data.cacheArray[columnIndex];
@@ -1225,10 +1230,12 @@ ts.filter = {
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
 								$.each(ts.filter.types, function(type, typeFunction) {
-									matches = typeFunction( c, data );
-									if (matches !== null) {
-										filterMatched = matches;
-										return false;
+									if ($.inArray(type, excludeMatch) < 0) {
+										matches = typeFunction( c, data );
+										if (matches !== null) {
+											filterMatched = matches;
+											return false;
+										}
 									}
 								});
 								if (filterMatched !== null) {
