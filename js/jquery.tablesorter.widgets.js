@@ -1184,7 +1184,7 @@ ts.filter = {
 						data.index = columnIndex;
 
 						// filter types to exclude, per column
-						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s*,\s*/);
+						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
 
 						// ignore if filter is empty or disabled
 						if (data.filter) {
