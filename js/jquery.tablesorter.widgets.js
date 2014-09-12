@@ -1210,15 +1210,18 @@ ts.filter = {
 							// replace accents - see #357
 							data.filter = c.sortLocaleCompare ? ts.replaceAccents(data.filter) : data.filter;
 
+							val = true;
 							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
 								data.filter = ts.filter.defaultFilter( data.filter, ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) );
+								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
+								val = false;
 							}
-							// val = case insensitive, columnFilter = case sensitive
+							// data.iFilter = case insensitive, data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
 							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
 							$cell = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
 							hasSelect = $cell.hasClass('filter-select');
-							if (fxn || hasSelect) {
+							if ( fxn || ( hasSelect && val ) ) {
 								if (fxn === true || hasSelect) {
 									// default selector uses exact match unless "filter-match" class is found
 									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
