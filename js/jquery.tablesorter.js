@@ -447,14 +447,16 @@
 					ch = ts.getColumnData( table, c.headers, index, true );
 					// save original header content
 					c.headerContent[index] = $(this).html();
-					// set up header template
-					t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
-					if (c.onRenderTemplate) {
-						h = c.onRenderTemplate.apply($t, [index, t]);
-						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
+					// if headerTemplate is empty, don't reformat the header cell
+					if ( c.headerTemplate !== '' ) {
+						// set up header template
+						t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
+						if (c.onRenderTemplate) {
+							h = c.onRenderTemplate.apply($t, [index, t]);
+							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
+						}
+						$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 					}
-					$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
-
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 					this.column = parseInt( $(this).attr('data-column'), 10);
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
