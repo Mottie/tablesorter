@@ -32,7 +32,8 @@ $.tablesorter.customPagerControls = function(settings) {
 		addKeyboard    : true                      // add left/right keyboard arrows to change current page
 	},
 	options = $.extend({}, defaults, settings),
-	$table = $(options.table);
+	$table = $(options.table),
+	$pager = $(options.pager);
 
 	$table
 		.on('pagerInitialized pagerComplete', function (e, c) {
@@ -62,11 +63,11 @@ $.tablesorter.customPagerControls = function(settings) {
 							( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
 				});
 			}
-			$('.pagecount').html(pages.html());
+			$pager.find('.pagecount').html(pages.html());
 		});
 
 	// set up pager controls
-	$(options.pager).find(options.pageSize).on('click', function () {
+	$pager.find(options.pageSize).on('click', function () {
 		$(this)
 		.addClass(options.currentClass)
 		.siblings()
@@ -90,10 +91,10 @@ $.tablesorter.customPagerControls = function(settings) {
 			if (/input|select|textarea/i.test(events.target.tagName)) { return; }
 			if (events.which === 37) {
 				// left
-				$(options.pager).find(options.currentPage).filter('.' + options.currentClass).prevAll(':not(span):first').click();
+				$pager.find(options.currentPage).filter('.' + options.currentClass).prevAll(':not(span):first').click();
 			} else if (events.which === 39) {
 				// right
-				$(options.pager).find(options.currentPage).filter('.' + options.currentClass).nextAll(':not(span):first').click();
+				$pager.find(options.currentPage).filter('.' + options.currentClass).nextAll(':not(span):first').click();
 			}
 		});
 	}
