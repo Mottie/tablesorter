@@ -1035,8 +1035,8 @@ ts.filter = {
 	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters || table.config.widgetOptions.filter_initializing) { return; }
-		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, columnIndex,
-			childRow, lastSearch, matches, result, showRow, time, val, indx,
+		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
+			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
 			regex = ts.filter.regex,
 			c = table.config,
@@ -1216,11 +1216,12 @@ ts.filter = {
 							// val = case insensitive, columnFilter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
 							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
-							if (fxn) {
-								if (fxn === true) {
-									// default selector; no "filter-select" class
-									result = (c.$headers.filter('[data-column="' + columnIndex + '"]:last').hasClass('filter-match')) ?
-										data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
+							$cell = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
+							hasSelect = $cell.hasClass('filter-select');
+							if (fxn || hasSelect) {
+								if (fxn === true || hasSelect) {
+									// default selector uses exact match unless "filter-match" class is found
+									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
 									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex));
