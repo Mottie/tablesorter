@@ -232,7 +232,8 @@ tsp = ts.pager = {
 					}
 					// update page display first, so we update p.filteredPages
 					tsp.updatePageDisplay(table, c, false);
-					tsp.moveToPage(table, p, false);
+					// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
+					c.pager.last.page = -1;
 					c.$table.trigger('applyWidgets');
 					tsp.fixHeight(table, c);
 				}
@@ -842,7 +843,9 @@ tsp = ts.pager = {
 		}
 		$.data(table, 'pagerLastPage', p.page);
 		if (p.initialized && pageMoved !== false) {
-			c.$table.trigger('pageMoved', c);
+			c.$table
+				.trigger('pageMoved', c)
+				.trigger('applyWidgets');
 			if (!p.ajax && table.isUpdating) {
 				c.$table.trigger('updateComplete', [ table, true ]);
 			}
