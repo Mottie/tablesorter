@@ -191,17 +191,17 @@
 						pg = Math.min( p.totalPages, p.filteredPages );
 						// Filter the options page number link array if it's larger than 'maxOptionSize'
 						// as large page set links will slow the browser on large dom inserts
-						skip_set_size = Math.floor(pg / p.maxOptionSize),
+						var skip_set_size = Math.floor(pg / p.maxOptionSize),
 						large_collection = pg > p.maxOptionSize,
 						current_page = p.page + 1,
 						start_page = 1,
 						end_page = pg,
 						option_pages = [];
 						//construct default options pages array
-						var option_pages_start_page = (large_collection && current_page == 1) ? skip_set_size : 1
+						var option_pages_start_page = (large_collection && current_page == 1) ? skip_set_size : 1;
 						for (i = option_pages_start_page; i <= pg;) {
- 						 	option_pages.push(i);
-							(large_collection) ? i = i+skip_set_size : i++;
+ 							option_pages.push(i);
+							i = large_collection ? i + skip_set_size : i++;
  						}
 						if (large_collection) {
 							var central_focus_size = Math.floor(p.maxOptionSize / 2) - 1,
