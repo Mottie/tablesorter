@@ -191,7 +191,6 @@
 						pg = Math.min( p.totalPages, p.filteredPages );
 						// Filter the options page number link array if it's larger than 'maxOptionSize'
 						// as large page set links will slow the browser on large dom inserts
-						var max_option_size = 20,
 						skip_set_size = Math.floor(pg / p.maxOptionSize),
 						large_collection = pg > p.maxOptionSize,
 						current_page = p.page + 1,
