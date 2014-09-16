@@ -58,12 +58,15 @@
 			// starting page of the pager (zero based index)
 			page: 0,
 
-		// reset pager after filtering; set to desired page #
-		// set to false to not change page at filter start
+			// reset pager after filtering; set to desired page #
+			// set to false to not change page at filter start
 			pageReset: 0,
 
 			// Number of visible rows
 			size: 10,
+
+			// Number of options to include in the pager number selector
+			maxOptionSize: 20,
 
 			// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 			savePages: true,
@@ -186,11 +189,37 @@
 					if ( p.$goto.length ) {
 						t = '';
 						pg = Math.min( p.totalPages, p.filteredPages );
-						for ( i = 1; i <= pg; i++ ) {
-							t += '<option>' + i + '</option>';
+						// Filter the options page number link array if it's larger than 'maxOptionSize'
+						// as large page set links will slow the browser on large dom inserts
+						skip_set_size = Math.floor(pg / p.maxOptionSize),
+						large_collection = pg > p.maxOptionSize,
+						current_page = p.page + 1,
+						start_page = 1,
+						end_page = pg,
+						option_pages = [];
+						//construct default options pages array
+						var option_pages_start_page = (large_collection && current_page == 1) ? skip_set_size : 1
+						for (i = option_pages_start_page; i <= pg;) {
+ 						 	option_pages.push(i);
+							(large_collection) ? i = i+skip_set_size : i++;
+ 						}
+						if (large_collection) {
+							var central_focus_size = Math.floor(p.maxOptionSize / 2) - 1,
+							lower_focus_window = Math.abs(Math.floor(current_page - central_focus_size/2)),
+							focus_option_pages = [];
+							start_page = Math.min(current_page, lower_focus_window);
+							end_page = start_page + central_focus_size;
+							//construct an array to get a focus set around the current page
+							for (i = start_page; i <= end_page ; i++) focus_option_pages.push(i);
+							var insert_index = Math.floor(option_pages.length / 2) - Math.floor(focus_option_pages.length / 2);
+							Array.prototype.splice.apply(option_pages, [ insert_index, focus_option_pages.length ].concat(focus_option_pages));
+							option_pages.sort(function sortNumber(a,b) { return a - b; });
+						}
+						for ( i = 0; i < option_pages.length; i++) {
+							t += '<option>' + option_pages[i] + '</option>';
 						}
 						p.$goto[0].innerHTML = t;
-						p.$goto[0].value = p.page + 1;
+						p.$goto[0].value = current_page;
 					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
