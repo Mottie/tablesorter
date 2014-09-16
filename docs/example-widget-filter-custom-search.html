@@ -30,27 +30,28 @@
 	</script>
 
 	<script id="js">// *** Filter search type function arguments ***
-// filter = filter input value for a column; iFilter = same as filter, except lowercase
-// exact = table cell text (or parsed data, if column parser enabled)
-// iExact = same as exact, except lowercase
+// data.filter = filter input value for a column; iFilter = same as filter, except lowercase
+// data.exact = table cell text (or parsed data, if column parser enabled)
+// data.iExact = same as exact, except lowercase
 
 // search for a match from the beginning of a string
 // "^l" matches "lion" but not "koala"
-$.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
-	if ( /^\^/.test( iFilter ) ) {
-		return iExact.indexOf( iFilter.substring(1) ) === 0;
+$.tablesorter.filter.types.start = function( config, data ) {
+	if ( /^\^/.test( data.iFilter ) ) {
+		return data.iExact.indexOf( data.iFilter.substring(1) ) === 0;
 	}
 	return null;
 };
 
 // search for a match at the end of a string
 // "a$" matches "Llama" but not "aardvark"
-$.tablesorter.filter.types.end = function( filter, iFilter, exact, iExact ) {
-	if ( /\$$/.test( iFilter ) ) {
-		var fl = iFilter.length - 1,
-			f = iFilter.substring(0, fl),
-			el = iExact.length;
-		return iExact.lastIndexOf(f) + fl === el;
+$.tablesorter.filter.types.end = function( config, data ) {
+	if ( /\$$/.test( data.iFilter ) ) {
+		var filter = data.iFilter,
+			filterLength = filter.length - 1,
+			removedSymbol = filter.substring(0, filterLength),
+			exactLength = data.iExact.length;
+		return data.iExact.lastIndexOf(removedSymbol) + filterLength === exactLength;
 	}
 	return null;
 };
@@ -98,6 +99,7 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li><span class="label warning">Notice!</span> In version <span class="version">v2.17.8</span>, some drastic changes were made to the way variables are passed to the filters. Please check out the "How to add Custom Filter types" section below.</li>
 			<li>This demo was added in <span class="version">v2.17.5</span>, but modification using these instructions works for v2.13.3+; when the filter widget was restructured to allow the adding of custom filter search types.</li>
 			<li>In this demo, two additional search types have been added as an example
 				<ul>
@@ -137,16 +139,35 @@ $(function() {
 			<li>Should it look for a symbol at the beginning, middle or end of the filter?</li>
 			<li>Does the designator need spaces around it (e.g. " and " or " or ") to prevent problems? You wouldn't be able to find the country of "Andorra" if the "and" or "or" designators didn't require spaces.</li>
 			<li>Make sure to name your filter so that it doesn't interfere with already existing ones, unless your filter is meant to replace an existing one. See the "Built-in Filters" section for a full list of filter function names.</li>
+			<li>Changed in <span class="version updated">v2.17.8</span>, only two parameters are passed to the filter type function:
+				<pre class="prettyprint lang-js">$.tablesorter.filter.types.myNewFilter = function( config, data ) { /* ... */ }</pre>
+				<ul>
+					<li><code>config</code> - tablesorter config containing all variables (<code>table.config</code>)</li>
+					<li><code>data</code> - filter data containing all filter variables. All variables are listed below.</li>
+				</ul>
+				<br>
+			</li>
 			<li>Within your filter, first test for your designator symbol.
 				<ul>
 					<li>If it exists within the filter, then do your comparison and return a boolean of <code>true</code> or <code>false</code>.</li>
-					<li>Four arguments are passed to the filter function:
+					<li>The following arguments are passed to the filter function within the <code>data</code> parameter (changed in <span class="version updated">v2.17.8</span>):
 						<ul>
-							<li><code>filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
-							<li><code>iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
-							<li><code>exact</code> - The exact (or parsed) text from the current table cell; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
-							<li><code>iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.</li>
+							<li><code>data.filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
+							<li><code>data.iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
+							<li><code>data.exact</code> - The exact (or parsed) text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
+							<li><code>data.iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.<br><br></li>
+							<li><code>data.index</code> - The current column index (zero-based) being filtered. When performing an "any match", this index is equal to <code>config.columns</code> which is the last column of the table plus one.</li>
+							<li><code>data.cache</code> - The parsed text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>. This value will be in all lower case if <code>config.ignoreCase</code> is <code>true</code>.<br><br></li>
+
+							<li><code>data.anyMatch</code> - This is a boolean value indicating when the <code>data.exact</code> and <code>data.iExact</code> parameters contain data from the entire row instead of one cell. This value will always be <code>false</code> if the table does not include an associated any match filter.<br><br></li>
+
+							<li><code>data.rowArray</code> - An array of the exact text from each table cell.</li>
+							<li><code>data.cacheArray</code> - An array of parsed text from each table cell.</li>
+							<li><code>data.childRowText</code> - contains all text from any associated child rows.</li>
+
+							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.</li>
 						</ul>
+						<br>
 					</li>
 					<li>If your designator doesn't exist, you *must* return <code>null</code> to allow comparisons with other filter types.</li>
 				</ul>
@@ -154,17 +175,17 @@ $(function() {
 			<li>Here is a basic example with extensive comments:
 				<pre class="prettyprint lang-js">// search for a match from the beginning of a string
 // "^l" matches "lion" but not "koala"
-$.tablesorter.filter.types.start = function( filter, iFilter, exact, iExact ) {
+$.tablesorter.filter.types.start = function( config, data ) {
 	// test for filter type designator. In this example, "^" must be at the beginning of the filter
 	// for this test, the use of the case insensitive "iFilter" variable
 	// doesn't matter since we are only looking at the symbol
-	if ( /^\^/.test( iFilter ) ) {
+	if ( /^\^/.test( data.iFilter ) ) {
 		// test the table content (exact or parsed) against the filter
 		// * Don't forget to remove the designator first ( the substring(1) part ), so "^h".substring(1) becomes "h"
 		// * In this case, we do care about using "iFilter" since we're comparing it with "iExact"
 		// * We use "indexOf" so that we know the match starts from the beginning of the string.
 		// * Your function should return a boolean indicating a match, or not.
-		return iExact.indexOf( iFilter.substring(1) ) === 0;
+		return data.iExact.indexOf( data.iFilter.substring(1) ) === 0;
 	}
 	// ALWAYS return null if your custom filter type doesn't match
 	return null;

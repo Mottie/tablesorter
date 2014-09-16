@@ -1,5 +1,5 @@
 /*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
- * Updated 8/1/2014 (v2.17.6)
+ * Updated 9/15/2014 (v2.17.8)
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
@@ -101,16 +101,20 @@
 			// this flag prevents the updateCell event from being spammed
 			// it happens when you modify input text and hit enter
 			var focused = false,
-				restoreValue = function(){
+				restoreValue = function(isTbody){
 					// focused = false; // uncomment this line to prevent auto-accepting changes
 					// make sure we restore original values
-					$(':focus').blur();
+					// isTbody is needed to prevent the select from closing in IE
+					// see https://connect.microsoft.com/IE/feedbackdetail/view/962618/
+					if (isTbody) {
+						$(':focus').blur();
+					}
 					return;
 				};
 			// bind to .tablesorter (default class name)
 			$(this).children('tbody')
-			.on('mouseleave', function(){
-				restoreValue();
+			.on('mouseleave', function(e){
+				restoreValue(e.target.tagName === 'TBODY');
 			})
 			.on('focus', 'select, input, textarea', function(){
 				focused = true;

@@ -133,18 +133,20 @@
 				// open parent accordion of nested accordion
 				if ( $this.find(hash).length && !$this.children(hash).length ) {
 					// div should have an id of ui-accordion-#-panel-#
-					id = $(hash).closest('.ui-accordion-content').attr('id').match(/(?:panel-)(\d+)/);
+					id = $(hash).closest('.ui-accordion-content').attr('id').match(/\d+$/);
 					if (id && id.length) {
-						$this.accordion('option', 'active', Number(id[1]));
+						$this.accordion('option', 'active', Number(id[0]) - 1);
 					}
 
 				// open table row of nested accordion
 				} else if ( ($this.find(hash).closest('tr').attr('id') || '') !== '') {
 					t = $this.find(hash).closest('tr');
 					t.find('.collapsible').show();
-					setTimeout(function(){
-						window.scrollTo( 0, t.offset().top - 27 );
-					}, 200);
+					if (t.closest('table').hasClass('hasStickyHeaders')) {
+						setTimeout(function(){
+							window.scrollTo( 0, t.offset().top - 27 );
+						}, 200);
+					}
 				}
 			});
 		}
@@ -165,7 +167,7 @@
 					$t = prop.closest('table');
 					if ($t.length) {
 						wo = $t[0].config.widgetOptions;
-						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || 27;
+						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? 27 : 0;
 						if ($t.hasClass('options') || $t.hasClass('api')) {
 							window.scrollTo( 0, prop.offset().top - h );
 						}

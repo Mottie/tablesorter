@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 8/1/2014 (v2.17.6)
+ * updated 9/15/2014 (v2.17.8)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -189,7 +189,8 @@
 						for ( i = 1; i <= pg; i++ ) {
 							t += '<option>' + i + '</option>';
 						}
-						p.$goto.html(t).val( p.page + 1 );
+						p.$goto[0].innerHTML = t;
+						p.$goto[0].value = p.page + 1;
 					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
@@ -532,9 +533,8 @@
 			}
 			updatePageDisplay(table, p);
 			if ( !p.isDisabled ) { fixHeight(table, p); }
-			$t.trigger('applyWidgets');
 			if (table.isUpdating) {
-				$t.trigger("updateComplete", table);
+				$t.trigger('updateComplete', [ table, true ]);
 			}
 		},
 
@@ -553,6 +553,7 @@
 					.removeAttr('aria-describedby')
 					.find('tr.pagerSavedHeightSpacer').remove();
 				renderTable(table, table.config.rowsCopy, p);
+				$(table).trigger('applyWidgets');
 				if (table.config.debug) {
 					ts.log('pager disabled');
 				}
@@ -621,7 +622,7 @@
 					.trigger('pageMoved', p)
 					.trigger('applyWidgets');
 				if (table.isUpdating) {
-					$t.trigger('updateComplete');
+					$t.trigger('updateComplete', [ table, true ]);
 				}
 			}
 		},
@@ -751,7 +752,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
+					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
 						// don't change page is filters are the same (pager updating, etc)
@@ -769,6 +770,7 @@
 							// update page display first, so we update p.filteredPages
 							updatePageDisplay(table, p, false);
 							moveToPage(table, p, false);
+							c.$table.trigger('applyWidgets');
 							fixHeight(table, p);
 						}
 					})
@@ -784,12 +786,18 @@
 						e.stopPropagation();
 						destroyPager(table, p);
 					})
-					.bind('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
+					.bind('updateComplete.pager', function(e, table, triggered){
 						e.stopPropagation();
+						// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
+						if ( !table || triggered ) { return; }
 						fixHeight(table, p);
-						var $rows = c.$tbodies.eq(0).children('tr');
+						var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 						p.totalPages = Math.ceil( p.totalRows / p.size );
+						if ($rows.length && c.rowsCopy && c.rowsCopy.length === 0) {
+							// make a copy of all table rows once the cache has been built
+							updateCache(table);
+						}
 						updatePageDisplay(table, p);
 						hideRows(table, p);
 					})

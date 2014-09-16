@@ -38,6 +38,9 @@
 }
 td.no-edit, span.no-edit {
 	background-color: rgba(230,191,153,0.5);
+}
+.focused {
+	color: blue;
 }</style>
 	<script id="js">$(function() {
 
@@ -51,7 +54,23 @@ td.no-edit, span.no-edit {
 				editable_enterToAccept : true,          // press enter to accept content, or click outside if false
 				editable_autoAccept    : true,          // accepts any changes made to the table cell automatically (v2.17.6)
 				editable_autoResort    : false,         // auto resort after the content has changed.
-				editable_validate      : null,          // return a valid string: function(text, original){ return text; }
+				editable_validate      : null,          // return a valid string: function(text, original, columnIndex){ return text; }
+				editable_focused       : function(txt, columnIndex, $element) {
+					// $element is the div, not the td
+					// to get the td, use $element.closest('td')
+					$element.addClass('focused');
+				},
+				editable_blur          : function(txt, columnIndex, $element) {
+					// $element is the div, not the td
+					// to get the td, use $element.closest('td')
+					$element.removeClass('focused');
+				},
+				editable_selectAll     : function(txt, columnIndex, $element){
+					// note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+					// only select everthing within the element when the content starts with the letter "B"
+					return /^b/i.test(txt) && columnIndex === 0;
+				},
+				editable_wrapContent   : '<div>',       // wrap all editable cell content... makes this widget work in IE, and with autocomplete
 				editable_noEdit        : 'no-edit',     // class name of cell that is not editable
 				editable_editComplete  : 'editComplete' // event fired after the table content has been edited
 			}
@@ -59,11 +78,10 @@ td.no-edit, span.no-edit {
 		// config event variable new in v2.17.6
 		.children('tbody').on('editComplete', 'td', function(event, config){
 			var $this = $(this),
-				$allRows = config.$tbodies.children('tr'),
 
 				newContent = $this.text(),
 				cellIndex = this.cellIndex, // there shouldn't be any colspans in the tbody
-				rowIndex = $allRows.index( $this.closest('tr') );
+				rowIndex = $this.closest('tr').attr('id'); // data-row-index stored in row id
 			/*
 			$.post("mysite.php", {
 				"row"     : rowIndex,
@@ -237,25 +255,132 @@ td.no-edit, span.no-edit {
 						<td>Event fired after the table content has been edited
 							<div class="collapsible">
 							<br>
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table')
+    .tablesorter({
+      widgets : ['editable'],
+      widgetOptions : {
+        editable_editComplete : 'giterdone'
+      }
+    })
+    // use delegated event binding
+    .on('giterdone', 'td', function(event, config){
+      // this = td; the event bubble up 
+      console.log( 'new content = ' + $(this).text() );
+    });
+
+});</pre>
 							Default value: <code>'editComplete'</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-focused">
+						<td><a href="#" class="permalink">editable_focused</a></td>
+						<td>Callback function that is executeed when the contenteditable cell is focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this function to manipulate or adjust the content when the content editable is focused
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_focused : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        $element.closest('td').addClass('focused');
+      },
+      editable_blur : function(txt, columnIndex, $element){
+        $element.closest('td').removeClass('focused');
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-blur">
+						<td><a href="#" class="permalink">editable_blur</a></td>
+						<td>Callback function that is executeed when the contenteditable cell is no longer focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this function to manipulate or adjust the content when the content editable is blurred
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_focused : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        $element.closest('td').addClass('focused');
+      },
+      editable_blur : function(txt, columnIndex, $element){
+        $element.closest('td').removeClass('focused');
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-selectall">
+						<td><a href="#" class="permalink">editable_selectAll</a></td>
+						<td>Set to automatically select all content when the contenteditable cell is focused (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Set this option to a boolean, or a function that returns a boolean:
+							<ul>
+								<li>When <code>true</code>, all of the text within the current contenteditable element will be selected.</li>
+								<li>When <code>false</code>, no selection is made.</li>
+								<li>When this option contains a function, return either <code>true</code> to select all of the text within the element, or <code>false</code> to not select any text.</li>
+							</ul>
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_selectAll : function(txt, columnIndex, $element){
+        // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
+        // only select everthing within the element when the content starts with the letter "B"
+        return /^b/i.test(txt) && columnIndex === 0;
+      }
+    }
+  });
+
+});</pre>
+							Default value: <code>null</code>
 							</div>
 						</td>
 					</tr>
 
 					<tr id="editable-validate">
 						<td><a href="#" class="permalink">editable_validate</a></td>
-						<td>Validate the content change.
+						<td>Validate the content change (<span class="version updated">v2.17.8</span>)
 							<div class="collapsible">
 							<br>
 							Use this function to validate and/or modify the content before it is accepted.<br>
 							<br>
+							In <span class="version updated">v2.17.8</span>:
+							<ul>
+								<li>Set this option to be a global function, or an object containing a column index, or class name of the desired column</li>
+								<li>A <code>columnIndex</code> is now included in the function parameters</li>
+								<li>A <code>$element</code> parameter has been included which contains the contenteditable element. To get the table cell, use <code>$element.closest('td');</code></li>
+							</ul>
 							This function must return either a string containing the modified content or <code>false</code> to revert the content back to it's original value. Example:
 							<pre class="prettyprint lang-js">$(function(){
 
-  $('table').tablesorter({
+  $('#table1').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_validate : function(txt, orig){
+      // global validate function
+      editable_validate : function(txt, orig, columnIndex, $element){
         // only allow one word
         var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
         return t ? t : false;
@@ -263,8 +388,81 @@ td.no-edit, span.no-edit {
     }
   });
 
+  $('#table2').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      // validate function per column
+      editable_validate : {
+        0 : function(txt, orig, columnIndex, $element){
+          // allow up to two words
+          var t = txt.split(' ');
+          return t.length > 2 ? t[0] + (t[1] ? ' ' + t[1] : '') : txt;
+        },
+        '.price' : function(txt, orig, columnIndex, $element) {
+          // make sure the price column(s) are using a number
+          return isNaN( txt.replace(/[$,\s]/g, '') ) ? false : txt;
+        }
+      }
+    }
+  });
+
 });</pre>
 							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-trimcontent">
+						<td><a href="#" class="permalink">editable_trimContent</a></td>
+						<td>Trim the content within the editable cell (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							When a table cell is formatted as follows:
+							<pre class="prettyprint lang-html">&lt;td&gt;
+	John
+&lt;/td&gt;</pre>All carriage returns and tab(s) within the table cell would be included before editing. Once the contenteditable element has focus, the content is cleaned up.<br>
+							<br>
+							If this option is <code>true</code>, this widget will trim content <em>upon initialization</em>; this is necessary if you need cleaned it up content before editing, like with an autocomplete script.<br>
+							<br>
+							Use this option as follows:
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_trimContent : true
+    }
+  });
+
+});</pre>
+							Default value: <code>true</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="editable-wrapcontent">
+						<td><a href="#" class="permalink">editable_wrapContent</a></td>
+						<td>Wrap the editable cell content with this element (<span class="version">v2.17.8</span>)
+							<div class="collapsible">
+							<br>
+							Internally, the widget uses jQuery's <code>wrapInner</code> to wrap the cell contents, using the following rules:
+							<ul>
+								<li>If this option is set to <code>false</code> or an empty string (<code>''</code>), then no wrapping will occur. The "contenteditable" attribute will be applied to the table cell.</li>
+								<li>If the table cell has no children, then the content is wrapped using this option, and the wrapping element will have the "contentediable" attribute enabled.</li>
+								<li>If the cell already has children (one or more) immediately inside of the table cell, no wrapping occurs and the child element(s) that don't have the class name set in <code>editable_noEdit</code>, will have the "contenteditable" attribute enabled.</li>
+							</ul>
+							Note: that this option uses jQuery's <code>wrapInner</code>, so this option can be set to a html string or selector, jQuery object, DOM element, or a function (jQuery 1.4+)
+							<pre class="prettyprint lang-js">$(function(){
+
+  $('#table').tablesorter({
+    widgets : ['editable'],
+    widgetOptions : {
+      editable_wrap : '<div>'
+    }
+  });
+
+});</pre>
+							Default value: <code>'&lt;div&gt;'</code>
 							</div>
 						</td>
 					</tr>
@@ -294,42 +492,42 @@ td.no-edit, span.no-edit {
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr id="db-row-344">
 			<td class="no-edit">Peter</td>
-			<td><div>Parker</div></td>
-			<td><div>28</div></td>
+			<td>Parker</td>
+			<td>28</td>
 			<td>$9.99</td>
 			<td>20%</td>
 			<td>Jul 6, 2006 8:14 AM</td>
 		</tr>
-		<tr>
-			<td><div>John</div></td>
-			<td><div>Hood</div></td>
-			<td><div>33</div></td>
+		<tr id="db-row-884">
+			<td>John</td>
+			<td>Hood</td>
+			<td>33</td>
 			<td>$19.99</td>
 			<td>25%</td>
 			<td>Dec 10, 2002 5:14 AM</td>
 		</tr>
-		<tr>
-			<td><div>Clark</div></td>
-			<td><div>Kent</div></td>
-			<td><div>18</div></td>
+		<tr id="db-row-234">
+			<td>Clark</td>
+			<td>Kent</td>
+			<td>18</td>
 			<td>$15.89</td>
 			<td>44%</td>
 			<td>Jan 12, 2003 11:14 AM</td>
 		</tr>
-		<tr>
-			<td><div>Bruce</div></td>
-			<td><div>Almighty</div></td>
-			<td><div>45</div></td>
+		<tr id="db-row-756">
+			<td>Bruce</td>
+			<td>Almighty</td>
+			<td>45</td>
 			<td>$153.19</td>
 			<td>44%</td>
 			<td>Jan 18, 2001 9:12 AM</td>
 		</tr>
-		<tr>
-			<td><div>Bruce</div></td>
-			<td><div>Evans</div></td>
-			<td><div>22</div></td>
+		<tr id="db-row-232">
+			<td>Bruce</td>
+			<td>Evans</td>
+			<td>22</td>
 			<td>$13.19</td>
 			<td>11%</td>
 			<td>Jan 18, 2007 9:12 AM</td>

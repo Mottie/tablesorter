@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 8/1/2014 (v2.17.6) */
+/* Pager widget for TableSorter 9/15/2014 (v2.17.8) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -215,7 +215,7 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.unbind('filterStart filterEnd sortEnd disable enable destroy update updateRows updateAll addRows pageSize '.split(' ').join('.pager '))
+			.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize '.split(' ').join('.pager '))
 			.bind('filterStart.pager', function(e, filters) {
 				p.currentFilters = filters;
 				// don't change page is filters are the same (pager updating, etc)
@@ -232,7 +232,9 @@ tsp = ts.pager = {
 					}
 					// update page display first, so we update p.filteredPages
 					tsp.updatePageDisplay(table, c, false);
-					tsp.moveToPage(table, p, false);
+					// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
+					c.pager.last.page = -1;
+					c.$table.trigger('applyWidgets');
 					tsp.fixHeight(table, c);
 				}
 			})
@@ -248,12 +250,18 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				tsp.destroyPager(table, c);
 			})
-			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
+			.on('updateComplete.pager', function(e, table, triggered){
 				e.stopPropagation();
+				// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
+				if (!table || triggered) { return; }
 				tsp.fixHeight(table, c);
-				var $rows = c.$tbodies.eq(0).children('tr');
+				var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 				p.totalPages = Math.ceil( p.totalRows / p.size );
+				if ($rows.length && c.rowsCopy && c.rowsCopy.length === 0) {
+					// make a copy of all table rows once the cache has been built
+					tsp.updateCache(table);
+				}
 				tsp.updatePageDisplay(table, c);
 				tsp.hideRows(table, c);
 				// make sure widgets are applied - fixes #450
@@ -400,7 +408,8 @@ tsp = ts.pager = {
 					for ( i = 1; i <= pg; i++ ) {
 						t += '<option>' + i + '</option>';
 					}
-					p.$goto.html(t).val( p.page + 1 );
+					p.$goto[0].innerHTML = t;
+					p.$goto[0].value = p.page + 1;
 				}
 				// rebind startRow/page inputs
 				$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
@@ -740,9 +749,8 @@ tsp = ts.pager = {
 
 		wo.pager_startPage = p.page;
 		wo.pager_size = p.size;
-		c.$table.trigger('applyWidgets');
 		if (table.isUpdating) {
-			c.$table.trigger('updateComplete');
+			c.$table.trigger('updateComplete', [ table, true ]);
 		}
 
 	},
@@ -764,6 +772,7 @@ tsp = ts.pager = {
 				.removeAttr('aria-describedby')
 				.find('tr.pagerSavedHeightSpacer').remove();
 			tsp.renderTable(table, c.rowsCopy);
+			c.$table.trigger('applyWidgets');
 			if (c.debug) {
 				ts.log('pager disabled');
 			}
@@ -834,9 +843,11 @@ tsp = ts.pager = {
 		}
 		$.data(table, 'pagerLastPage', p.page);
 		if (p.initialized && pageMoved !== false) {
-			c.$table.trigger('pageMoved', c);
+			c.$table
+				.trigger('pageMoved', c)
+				.trigger('applyWidgets');
 			if (!p.ajax && table.isUpdating) {
-				c.$table.trigger('updateComplete');
+				c.$table.trigger('updateComplete', [ table, true ]);
 			}
 		}
 	},

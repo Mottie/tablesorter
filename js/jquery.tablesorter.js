@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.17.7 - Client-side table sorting with ease!
+* TableSorter 2.17.8 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.17.7";
+			ts.version = "2.17.8";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -246,9 +246,9 @@
 							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
 							np = ts.getData(h, ch, 'parser') === 'false';
 							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
-							c.empties[i] = ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' );
+							c.empties[i] = ( ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' ) ).toLowerCase();
 							// text strings behaviour in numerical sorts
-							c.strings[i] = ts.getData(h, ch, 'string') || c.stringTo || 'max';
+							c.strings[i] = ( ts.getData(h, ch, 'string') || c.stringTo || 'max' ).toLowerCase();
 							if (np) {
 								p = ts.getParserById('no-parser');
 							}
@@ -447,14 +447,16 @@
 					ch = ts.getColumnData( table, c.headers, index, true );
 					// save original header content
 					c.headerContent[index] = $(this).html();
-					// set up header template
-					t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
-					if (c.onRenderTemplate) {
-						h = c.onRenderTemplate.apply($t, [index, t]);
-						if (h && typeof h === 'string') { t = h; } // only change t if something is returned
+					// if headerTemplate is empty, don't reformat the header cell
+					if ( c.headerTemplate !== '' ) {
+						// set up header template
+						t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
+						if (c.onRenderTemplate) {
+							h = c.onRenderTemplate.apply($t, [index, t]);
+							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
+						}
+						$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 					}
-					$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
-
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
 					this.column = parseInt( $(this).attr('data-column'), 10);
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
@@ -560,14 +562,16 @@
 
 			// automatically add col group, and column sizes if set
 			function fixColumnWidth(table) {
-				if (table.config.widthFixed && $(table).find('colgroup').length === 0) {
-					var colgroup = $('<colgroup>'),
-						overallWidth = $(table).width();
+				var colgroup, overallWidth,
+					c = table.config;
+				if (c.widthFixed && c.$table.find('colgroup').length === 0) {
+					colgroup = $('<colgroup>');
+					overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies[0]).find("tr:first").children(":visible").each(function() {
+					$(table.tBodies).not('.' + c.cssInfoBlock).find("tr:first").children(":visible").each(function() {
 						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
 					});
-					$(table).prepend(colgroup);
+					c.$table.prepend(colgroup);
 				}
 			}
 
@@ -798,7 +802,7 @@
 			function resortComplete($table, callback){
 				var table = $table[0];
 				if (table.isUpdating) {
-					$table.trigger('updateComplete');
+					$table.trigger('updateComplete', table);
 				}
 				if ($.isFunction(callback)) {
 					callback($table[0]);
@@ -1047,7 +1051,10 @@
 					return (version[0] > 1) || (version[0] === 1 && parseInt(version[1], 10) >= 4);
 				})($.fn.jquery.split("."));
 				// digit sort text location; keeping max+/- for backwards compatibility
-				c.string = { 'max': 1, 'min': -1, 'emptyMin': 1, 'emptyMax': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				c.string = { 'max': 1, 'min': -1, 'emptymin': 1, 'emptymax': -1, 'zero': 0, 'none': 0, 'null': 0, 'top': true, 'bottom': false };
+				// ensure case insensitivity
+				c.emptyTo = c.emptyTo.toLowerCase();
+				c.stringTo = c.stringTo.toLowerCase();
 				// add table theme class only if there isn't already one there
 				if (!/tablesorter\-/.test($table.attr('class'))) {
 					k = (c.theme !== '' ? ' tablesorter-' + c.theme : '');
@@ -1761,6 +1768,7 @@
 		format: function(s) {
 			return s ? $.trim(s.replace(/(https?|ftp|file):\/\//, '')) : s;
 		},
+		parsed : true, // filter widget flag
 		type: "text"
 	});
 
@@ -1853,7 +1861,7 @@
 		id: "zebra",
 		priority: 90,
 		format: function(table, c, wo) {
-			var $tb, $tv, $tr, row, even, time, k, l,
+			var $tb, $tv, $tr, row, even, time, k,
 			child = new RegExp(c.cssChildRow, 'i'),
 			b = c.$tbodies;
 			if (c.debug) {
@@ -1861,21 +1869,18 @@
 			}
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
+				row = 0;
 				$tb = b.eq(k);
-				l = $tb.children('tr').length;
-				if (l > 1) {
-					row = 0;
-					$tv = $tb.children('tr:visible').not(c.selectorRemove);
-					// revered back to using jQuery each - strangely it's the fastest method
-					/*jshint loopfunc:true */
-					$tv.each(function(){
-						$tr = $(this);
-						// style children rows the same way the parent row was styled
-						if (!child.test(this.className)) { row++; }
-						even = (row % 2 === 0);
-						$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
-					});
-				}
+				$tv = $tb.children('tr:visible').not(c.selectorRemove);
+				// revered back to using jQuery each - strangely it's the fastest method
+				/*jshint loopfunc:true */
+				$tv.each(function(){
+					$tr = $(this);
+					// style child rows the same way the parent row was styled
+					if (!child.test(this.className)) { row++; }
+					even = (row % 2 === 0);
+					$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
+				});
 			}
 			if (c.debug) {
 				ts.benchmark("Applying Zebra widget", time);

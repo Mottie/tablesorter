@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter - Duration parser</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	th { width: 20%; }
+	span.valx { float: right; }
+	</style>
+
+	<link href="../css/theme.blue.css" rel="stylesheet">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- load duration parsers -->
+	<script src="../js/parsers/parser-duration.js"></script>
+
+	<script id="js">$(function() {
+
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		theme : 'blue',
+		sortList : [[1,0]],
+		widgets : ["zebra"],
+
+		// Change max length of values
+		// if any time value is > 9999 & < 100,000 then change this option to 5
+		// values > 99,999 and < 100,000 then change the option to 6, etc
+		durationLength : 4,
+		// Modify the labels used in your table
+		// labels can be of any length; multiple labels must be separated by a comma
+		// 'y,d,h,m,s'
+		durationLabels : '(?:years|year|y),(?:days|day|d),(?:hours|hour|h),(?:minutes|minute|min|m),(?:seconds|second|sec|s)'
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Duration parser</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This parser will convert a duration time "<code>####</code><span class="label label-info">y</span> <code>####</code><span class="label label-info">d</span> <code>####</code><span class="label label-info">h</span> <code>####</code><span class="label label-info">m</span> <code>####</code><span class="label label-info">s</span>" into a sortable value.</li>
+			<li>It is not designed to convert <code>365</code> days into <code>1</code> year, nor performo any other conversions.</li>
+			<li>Options:
+				<ul>
+					<li><code>durationLabels</code>
+						<ul>
+							<li>Default: <code>'(?:years|year|y),(?:days|day|d),(?:hours|hour|h),(?:minutes|minute|min|m),(?:seconds|second|sec|s)'</code></li>
+							<li>Add more or change the duration labels by modifying this option; separate the labels with a comma.</li>
+							<li>The label doesn't need to include regex. If you are only using one letter, change the label to <code>'y,d,h,m,s'</code></li>
+						</ul>
+					</li>
+					<li><code>durationLength</code>
+						<ul>
+							<li>Default: <code>4</code></li>
+							<li>Modify this value so that the <em>max length</em> of values is included.</li>
+							<li>The default value of <code>4</code> will include values up to <code>9,999</code></li>
+							<li>Values less than or equal to <code>99,999</code> will require this option to be set to <code>5</code></li>
+							<li>Values less than or equal to <code>999,999</code> need this value set to <code>6</code>, etc.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	<p>
+
+	<h1>Demo</h1>
+
+	<button type="button" class="toggleparsedvalue">toggle</button> parsed values within the column
+
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th class="sorter-duration">Duration</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Frank</td><td>1y 23d 12h 44m 9s</td></tr>
+		<tr><td>Fred</td><td>12d 12h 14m 20s</td></tr>
+		<tr><td>Albert</td><td>12h 14m 3s</td></tr>
+		<tr><td>Aaron</td><td>3d 11h 13m 22s</td></tr>
+		<tr><td>Oliver</td><td>3d 11h 14s</td></tr>
+		<tr><td>Xavier</td><td>11m 41s</td></tr>
+		<tr><td>Henry</td><td>12m</td></tr>
+		<tr><td>Lucy</td><td>23d 12h 44m 10s</td></tr>
+		<tr><td>Marsha</td><td>1y 1h 1m 1s</td></tr>
+		<tr><td>Pat</td><td>12 days 12hours 44minutes 50 seconds</td></tr>
+		<tr><td>George</td><td>33s</td></tr>
+		<tr><td>Oscar</td><td>24d 12h 11m 11s</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Script</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-js"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+	<script>
+	$(function(){
+		var $table = $('table'),
+			len = $table[0].config.durationLength,
+			regex = new RegExp('(\\d{' + len + '})', 'g');
+		// add parsed values to order & value column
+		addParsedValues( $table, [1], function(v){
+			var t = v.replace(regex, '$1|'); 
+			return t.substring(0, t.length - 1);
+		});
+	});
+	</script>
+
+</body>
+</html>
