@@ -65,6 +65,51 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.17.8">Version 2.17.8</a> (9/15/2014)
+
+* Core
+  * Fix `widthFixed` option to ignore info block tbodies.
+  * Make `emptyTo` & `stringTo` settings case insensitive.
+  * An empty string `headerTemplate` option will now prevent adding an inner div to the header.
+* Docs
+  * Fix setting active accordion from hash script.
+  * Add `emptyTo` clarification.
+  * Main readme: Add related projects section.
+* Editable
+  * Autoresort true no longer breaks the table.
+  * Update demo to use row id instead of index.
+  * Update validate function to allow setting it per column.
+  * Add `editable_focus`, `editable_blur` and `editable_selectAll` options. See [issue #708](//github.com/Mottie/tablesorter/issues/708).
+  * Add `editable_wrapContent` option.
+  * Add `editable_trimContent` option.
+  * Validate function now includes a contenteditable element parameter.
+  * All text callback parameters are now trimmed.
+  * Trim everything & revert widget changes.
+  * Refocus edited element after resort only.
+  * Switch form focus to focusout.
+* Filter
+  * Add `filter_defaultFilter` option.
+      * fix issue with using class selectors.
+      * Make happy with spaces within the query.
+      * Will override exact/partial select filters. Fixes [issue #721](//github.com/Mottie/tablesorter/issues/721).
+      * Fixes [issue #704](//github.com/Mottie/tablesorter/issues/704).
+  * Add `filter_excludeFilter` option; add multiple exclusions separated by spaces, not commas.
+  * Prevent multiple searches during initialization.
+  * Ensure initial filter settings get applied.
+  * Selects will exactly match the selected option unless "filter-match" class is set. Fixes [issue #721](//github.com/Mottie/tablesorter/issues/721).
+* Pager
+  * Update cache & rows copy. Fixes [issue #703](//github.com/Mottie/tablesorter/issues/703).
+  * Use native javascript to populate & set the goto select. Fixes [issue #711](//github.com/Mottie/tablesorter/issues/711).
+  * Custom pager controls. Fix control updates for multiple tables.
+  * Fix pager widget to be properly applied after a page move.
+* StickyHeaders: Fix issue so it works with jQuery v1.2.6 again.
+* Zebra: Apply style to one row. Fixes [issue #715](//github.com/Mottie/tablesorter/issues/715).
+* Parser
+  * Duration parser - added with [demo](//mottie.github.io/tablesorter/docs/example-parsers-duration.html).
+  * Select parser - Fix for IE10+ not allowing select options to be clicked.
+  * IgnoreArticles parser - Added `ignoreArticlesExcept` option.
+  * url parser - ensure it is used by the filter widget.
+
 #### <a name="v2.17.7">Version 2.17.7</a> (8/9/2014)
 
 * Core: Do not detach rows before appending to prevent ajax rows from disappearing. Fixes [issue #701](//github.com/Mottie/tablesorter/issues/701).
@@ -111,67 +156,3 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Remove selected attribute from page selector options. Fixes [issue #700](//github.com/Mottie/tablesorter/issues/700).
 * Resizable
   * Update `$.tablesorter.addHeaderResizeEvent` function's first parameter `table` to accept table DOM elements as well as jQuery objects. Fixes [issue #687](//github.com/Mottie/tablesorter/issues/687).
-
-#### <a name="v2.17.5">Version 2.17.5</a> (7/17/2014)
-
-* Core
-  * Update `config.totalRows` variable before initialization. Fixes [issue #670](//github.com/Mottie/tablesorter/issues/670).
-  * Add `config.table` variable; useful for functions that only pass the `config`.
-  * Ensure widget init functions are only called once; and set indicator for all widgets, not just ones with options (for `hasWidget`).
-
-* Docs
-  * Add [custom filter widget search types demo](//mottie.github.io/tablesorter/docs/example-filter-custom-search.html).
-  * Add `imgAttr` parser "utility option" instructions.
-
-* Filter
-  * Force cache build on initial search when `delayInit` is `true`. Fixes [issue #678](//github.com/Mottie/tablesorter/issues/678).
-  * Make `config.filteredRows` count available within `filterInit` event. Fixes [issue #670](//github.com/Mottie/tablesorter/issues/670).
-  * Selects now obtain parsed data when it is set for a particular column. Fixes [issue #684](//github.com/Mottie/tablesorter/issues/684).
-  * Ignore change event if input value hasn't changed, otherwise it interferes with other events within the table. Fixes [issue #685](//github.com/Mottie/tablesorter/issues/685).
-  * Ensure search query is parsed for both specific filter types and non-filter type searches, if the column is set to use parsed data.
-  * Filter initialization ("filterInit") event is now delayed to prevent filterStart &amp; filterEnd event spamming. Fixes [issue #668](//github.com/Mottie/tablesorter/issues/668).
-  * Filter formatter functions are now required to call a function after initialization to delay "filterInit" event. Fixes [issue #668](//github.com/Mottie/tablesorter/issues/668).
-
-* Output
-  * Update download method which allows downloading files without modifying the server htaccess. Fixes [issue #681](//github.com/Mottie/tablesorter/issues/681).
-
-* Pager
-  * Initialize without building cache when `delayInit` is `true`. Fixes [issue #678](//github.com/Mottie/tablesorter/issues/678).
-
-* Parsers
-  * Update input/select element binding
-  * Add image alt parser; set `config.imgAttr` with attribute to target (default is `"alt"`).
-  * Add `select-text` parser which grabs the currently selected option text instead of the select value.
-
-* Resizable
-  * Remove unused grip code
-
-#### <a name="v2.17.4">Version 2.17.4</a> (7/4/2014)
-
-* Docs
-  * Copied the tablesorter `initialized` option from the event section into the configuration; renamed the event appropriately (`tablesorter-initialized` event)
-  * Added notes about how to bind to "init" events; they should be bound before initializing tablesorter because in most cases, the events fire before the binding occurs.
-
-* Core
-  * Add `$.tablesorter.hasWidget(table, 'widgetId')` function. It returns a boolean value of `true` when the named widget is actively applied to the table.
-
-* Filter
-  * Add `filter_searchFiltered` option to allow disabling the search of already filtered rows.
-  * The `filter_initialized` flag now gets set appropriately. Fixes [issue #668](//github.com/Mottie/tablesorter/issues/668).
-  * Include any column filter in determination of searching already filtered rows. Fixes [issue #669](//github.com/Mottie/tablesorter/issues/669).
-  * Add internal `config.filteredRows` variable. Provides a value of the number of currently filtered (visible) rows. Fixes [issue #670](//github.com/Mottie/tablesorter/issues/670).
-  * Add internal `config.totalRows` variable. Provides a value of the total number of rows in the current table, not including info-tbody rows.
-  * Fix change/search event being ignored for selects &amp; filterFormatter extensions.
-  * `filterInit` and `filterEnd` events now pass `config` as a parameter.
-
-* Pager
-  * Removed from beta status
-  * Filtered rows now equals the total rows when `ajaxProcessing` returns an array. Fixes [issue #667](//github.com/Mottie/tablesorter/issues/667).
-  * Update the `config.filteredRows` when using ajax to match the internal `config.pager.filteredRows`. See [issue #670](//github.com/Mottie/tablesorter/issues/670).
-  * Widget only: ensure `pagerComplete` event fires on initialization.
-
-* Resizable
-  * Bind mousemove to document instead of table header. Makes resizable handle use consistent with other resizing libraries, as the user would expect. Fixes [issue #665](//github.com/Mottie/tablesorter/issues/665).
-  * Add `resizable_throttle` option to allow throttling of the mousemove/resize event. Set this option to `true` or a number between 1 and 10 to add a throttling delay. Fixes [issue #662](//github.com/Mottie/tablesorter/issues/662).
-
-* UITheme: non-existent columns no longer cause a js error. Fixes [issue #672](//github.com/Mottie/tablesorter/issues/672).

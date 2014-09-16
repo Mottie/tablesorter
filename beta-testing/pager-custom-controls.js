@@ -1,5 +1,5 @@
 /*!
- * custom pager controls (beta) for TableSorter 9/12/2014 (v2.17.8)
+ * custom pager controls (beta) for TableSorter 9/15/2014 (v2.17.8)
   initialize custom pager script BEFORE initializing tablesorter/tablesorter pager
   custom pager looks like this:
   1 | 2 … 5 | 6 | 7 … 99 | 100

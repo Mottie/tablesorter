@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.17.7 - Client-side table sorting with ease!
+* TableSorter 2.17.8 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.17.7";
+			ts.version = "2.17.8";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -1861,7 +1861,7 @@
 		id: "zebra",
 		priority: 90,
 		format: function(table, c, wo) {
-			var $tb, $tv, $tr, row, even, time, k, l,
+			var $tb, $tv, $tr, row, even, time, k,
 			child = new RegExp(c.cssChildRow, 'i'),
 			b = c.$tbodies;
 			if (c.debug) {
