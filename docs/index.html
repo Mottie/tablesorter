@@ -524,6 +524,7 @@
 	<h4 id="custom-parsers">Custom Parsers</h4>
 	<ul>
 		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.14</span>; includes weekday, month, two-digit year &amp; <a href="http://sugarjs.com/dates">sugar.js</a> date parsers).</li>
+		<li><a href="example-parsers-duration.html">Duration parser</a> (<span class="version">v2.17.8</span>).</li>
 		<li><a href="example-parsers-file-type.html">File type parser</a> (<span class="version">v2.13</span>).</li>
 		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore &quot;A&quot;, &quot;An&quot; and &quot;The&quot; in titles) (<span class="version">v2.8</span>).</li>
 		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.17.5</span>).</li>
@@ -948,8 +949,10 @@
 				<td><a href="#" class="permalink">headerTemplate</a></td>
 				<td>String</td>
 				<td>&quot;{content}&quot;</td>
-				<td>This is a template string which allows adding additional content to the header while it is being built (v2.7).
+				<td>This is a template string which allows adding additional content to the header while it is being built (v2.7; <span class="version updated">v2.17.8</span>).
 					<div class="collapsible"><br>
+						In <span class="version updated">v2.17.8</span>, if this option is set to an empty string (<code>''</code>), an inner div will no longer be wrapped around the header content.<br>
+						<br>
 						This template string has two modifying tags: <code>{content}</code> and <code>{icon}</code>.<br>
 						<code>{content}</code> will be replaced by the current header HTML content.<br>
 						<code>{icon}</code> will be replaced by <code>&lt;i class=&quot;tablesorter-icon&quot;&gt;&lt;/i&gt;</code>, but only if a class name is defined in the <code>cssIcon</code> option.<br>
