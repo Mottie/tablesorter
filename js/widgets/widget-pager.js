@@ -26,6 +26,9 @@ ts.addWidget({
 		// Number of visible rows
 		pager_size: 10,
 
+		// Number of options to include in the pager number selector
+		pager_maxOptionSize: 20,
+
 		// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 		pager_savePages: true,
 
@@ -400,16 +403,15 @@ tsp = ts.pager = {
 					}
 					return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
 				});
+
 			if ($out.length) {
 				$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 				if ( p.$goto.length ) {
-					t = '';
-					pg = Math.min( p.totalPages, p.filteredPages );
-					for ( i = 1; i <= pg; i++ ) {
-						t += '<option>' + i + '</option>';
-					}
-					p.$goto[0].innerHTML = t;
-					p.$goto[0].value = p.page + 1;
+					t = '<option>' + tsp.buildPageSelect(p, c).join('</option><option>') + '</option>';
+					p.$goto.each(function(){
+						this.innerHTML = t;
+						this.value = p.page + 1;
+					});
 				}
 				// rebind startRow/page inputs
 				$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
@@ -430,6 +432,68 @@ tsp = ts.pager = {
 				});
 			}
 		}
+	},
+
+	buildPageSelect: function(p, c) {
+		// Filter the options page number link array if it's larger than 'pager_maxOptionSize'
+		// as large page set links will slow the browser on large dom inserts
+		var i, central_focus_size, lower_focus_window, focus_option_pages, insert_index, option_length, focus_length,
+			wo = c.widgetOptions,
+			pg = Math.min( p.totalPages, p.filteredPages ),
+			// make skip set size multiples of 5
+			skip_set_size = Math.ceil( ( pg / wo.pager_maxOptionSize ) / 5 ) * 5,
+			large_collection = pg > wo.pager_maxOptionSize,
+			current_page = p.page + 1,
+			start_page = skip_set_size,
+			end_page = pg - skip_set_size,
+			option_pages = [1],
+			// construct default options pages array
+			option_pages_start_page = (large_collection) ? skip_set_size : 1;
+
+		for ( i = option_pages_start_page; i <= pg; ) {
+			option_pages.push(i);
+			i = i + ( large_collection ? skip_set_size : 1 );
+		}
+		option_pages.push(pg);
+
+		if (large_collection) {
+			focus_option_pages = [];
+			// don't allow central focus size to be > 5 on either side of current page
+			central_focus_size = Math.max( Math.floor( wo.pager_maxOptionSize / skip_set_size ) - 1, 5 );
+
+			start_page = current_page - central_focus_size;
+			if (start_page < 1) { start_page = 1; }
+			end_page = current_page + central_focus_size;
+			if (end_page > pg) { end_page = pg; }
+			// construct an array to get a focus set around the current page
+			for (i = start_page; i <= end_page ; i++) {
+				focus_option_pages.push(i);
+			}
+
+			// keep unique values
+			option_pages = $.grep(option_pages, function(value, indx) {
+				return $.inArray(value, option_pages) === indx;
+			});
+
+			option_length = option_pages.length;
+			focus_length = focus_option_pages.length;
+
+			// make sure at all option_pages aren't replaced
+			if (option_length - focus_length > skip_set_size / 2 && option_length + focus_length > wo.pager_maxOptionSize ) {
+				insert_index = Math.floor(option_length / 2) - Math.floor(focus_length / 2);
+				Array.prototype.splice.apply(option_pages, [ insert_index, focus_length ]);
+			}
+			option_pages = option_pages.concat(focus_option_pages);
+
+		}
+
+		// keep unique values again
+		option_pages = $.grep(option_pages, function(value, indx) {
+			return $.inArray(value, option_pages) === indx;
+		})
+		.sort(function(a,b) { return a - b; });
+
+		return option_pages;
 	},
 
 	fixHeight: function(table, c) {
