@@ -187,7 +187,7 @@
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
-				var cur,
+				var cur, $node,
 				i = ts.parsers.length,
 				node = false,
 				nodeValue = '',
@@ -197,6 +197,7 @@
 					if (rows[rowIndex]) {
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = getElementText(table, node, cellIndex);
+						$node = $(node);
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
@@ -207,7 +208,7 @@
 				while (--i >= 0) {
 					cur = ts.parsers[i];
 					// ignore the default text parser because it will always be true
-					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node)) {
+					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node, $node)) {
 						return cur;
 					}
 				}
@@ -1744,23 +1745,6 @@
 	});
 
 	ts.addParser({
-		id: "ipAddress",
-		is: function(s) {
-			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
-		},
-		format: function(s, table) {
-			var i, a = s ? s.split(".") : '',
-			r = "",
-			l = a.length;
-			for (i = 0; i < l; i++) {
-				r += ("00" + a[i]).slice(-3);
-			}
-			return s ? ts.formatFloat(r, table) : s;
-		},
-		type: "numeric"
-	});
-
-	ts.addParser({
 		id: "url",
 		is: function(s) {
 			return (/^(https?|ftp|file):\/\//).test(s);
@@ -1792,6 +1776,19 @@
 			return s ? ts.formatFloat(s.replace(/%/g, ""), table) : s;
 		},
 		type: "numeric"
+	});
+
+	// added image parser to core v2.17.9
+	ts.addParser({
+		id: "image",
+		is: function(s, table, node, $node){
+			return $node.find('img').length > 0;
+		},
+		format: function(s, table, cell) {
+			return $(cell).find('img').attr(table.config.imgAttr || 'alt') || s;
+		},
+		parsed : true, // filter widget flag
+		type: "text"
 	});
 
 	ts.addParser({
@@ -1891,9 +1888,9 @@
 				b = c.$tbodies,
 				rmv = (wo.zebra || [ "even", "odd" ]).join(' ');
 			for (k = 0; k < b.length; k++ ){
-				$tb = $.tablesorter.processTbody(table, b.eq(k), true); // remove tbody
+				$tb = ts.processTbody(table, b.eq(k), true); // remove tbody
 				$tb.children().removeClass(rmv);
-				$.tablesorter.processTbody(table, $tb, false); // restore tbody
+				ts.processTbody(table, $tb, false); // restore tbody
 			}
 		}
 	});

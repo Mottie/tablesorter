@@ -22,7 +22,7 @@
 $.tablesorter.addParser({
 	// set a unique id
 	id: 'grades',
-	is: function(s, table, cell) {
+	is: function(s, table, cell, $cell) {
 		// return false so this parser is not auto detected
 		return false;
 	},
@@ -65,7 +65,7 @@ $(function() {
 			<li>The <code>is</code> block will allow the parser to be used for autodetecting the parser
 				<ul>
 					<li>Most custom parsers are made for a specific set of data/column, so the <code>is</code> block usually just returns false telling the plugin that the parser doesn't match any columns.</li>
-					<li>If so desired, the function provides three parameters: <code>s</code> contains the text from the cell, <code>table</code> is the table DOM element and <code>cell</code> is the current cell DOM element.</li>
+					<li>If so desired, the function provides four parameters: <code>s</code> contains the text from the cell, <code>table</code> is the table DOM element, <code>cell</code> is the current cell DOM element and <code>$cell</code> is the current cell as a jQuery object (added <span class="version">v2.18.0</span>).</li>
 					<li>This function must <code>return true</code> before the plugin will use the custom parser's format block to process the column content.</li>
 					<li>In version 2.7.4, the <code>is</code> block became optional because most parsers just return false.</li>
 				</ul>
@@ -99,10 +99,11 @@ $(function() {
 		<pre class="prettyprint lang-javascript">$.tablesorter.addParser({
   // use a unique id
   id: 'myparser',
-  is: function(s, table, cell) {
+  is: function(s, table, cell, $cell) {
     // s is the text from the cell
     // table is the current table (as a DOM element; not jQuery object)
     // cell is the current table cell (DOM element)
+    // $cell is the current table cell (jQuery object; added v2.18.0)
     // return false if you don't want this parser to be auto detected
     return false;
   },

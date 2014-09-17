@@ -390,7 +390,7 @@
 
 	<h4>Parsers / Extracting Content</h4>
 	<ul>
-		<li><a href="example-parsers.html">Parser, writing your own</a> (<a href="#function-addparser"><code>addParser</code></a>; <span class="updated version">v2.15.0</span>)</li>
+		<li><a href="example-parsers.html">Parser, writing your own</a> (<a href="#function-addparser"><code>addParser</code></a>; <span class="updated version">v2.15.0</span>; <span class="version updated">v2.18.0</span>)</li>
 		<li><a href="example-parsers-advanced.html">Parser, writing your own, advanced use</a> (v2.1; <span class="updated version">v2.15.0</span>)</li>
 		<li><a href="example-option-text-extraction.html">Dealing with markup inside cells</a> (<a href="#textextraction"><code>textExtraction</code></a> function)</li>
 		<li><a href="example-options-headers-parser.html">Skip the parsing of column content</a> (<span class="version">v2.17.1</span>)</li>
@@ -528,9 +528,9 @@
 		<li><a href="example-parsers-file-type.html">File type parser</a> (<span class="version">v2.13</span>).</li>
 		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore &quot;A&quot;, &quot;An&quot; and &quot;The&quot; in titles) (<span class="version">v2.8</span>).</li>
 		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.17.5</span>).</li>
-		<li><a href="example-parsers-ip-address.html">IPv6 address parser</a> (<span class="version">v2.12</span>).</li>
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-metric.html">Metric parser</a> (<span class="version">v2.8</span>).</li>
+		<li><a href="example-parsers-ip-address.html">Network (IPv4, IPv6 and MAC address parser</a> (<span class="version">v2.12</span>; <span class="version updated">v2.18.0</span>).</li>
 		<li><a href="example-parsers-roman.html">Roman Numeral parser</a> (<span class="version">v2.17.3</span>).</li>
 		<li><a href="example-option-textsorter-semver.html">Semantic Versioning (Semver) sorting</a> (<span class="version">v2.14.3</span>).</li>
 	</ul>
@@ -934,6 +934,7 @@
     '.first-name' : { sorter: 'text' },
     '.disabled'   : { sorter: false }
 }</pre>
+						<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.
 					</div>
 				</td>
 				<td>
@@ -970,6 +971,28 @@
 				<td>Boolean</td>
 				<td>true</td>
 				<td>When true, text sorting will ignore the character case. If false, upper case characters will sort before lower case. (v2.2).</td>
+				<td></td>
+			</tr>
+
+			<tr id="imgattr">
+				<td><a href="#" class="permalink">imgAttr</a></td>
+				<td>String</td>
+				<td>"alt"</td>
+				<td>
+					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>; moved to tablesorter core in <span class="version updated">v2.18.0</span>; see <a href="#parsers"><code>config.parsers</code></a>).
+					<div class="collapsible"><br>
+						Change this setting to grab a different image attribute to be used for sorting:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    // parse image title (value to be used while sorting & filtering)
+    imgAttr : 'title',
+    headers : {
+      0 : { sorter: 'image' } // this parser is auto-detected, but will only work on the first image
+    }
+  });
+});</pre>
+					</div>
+				</td>
 				<td></td>
 			</tr>
 
@@ -1404,6 +1427,8 @@ From the example function above, you'll end up with something similar to this HT
         return $(node).find('strong').text();
     }
 }</pre>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<br>
 					As of version 2.16.0,
 					<ul>
 						<li>The default text extraction method has been renamed and updated to get data from a data-attribute (set by the <a href="#textattribute"><code>textAttribute</code></a> option).</li>
@@ -1482,7 +1507,7 @@ $(function(){
       return a - b;
     }
   });
-});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches `a` and `b` depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
+});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
 					</div>
 				</td>
 				<td></td>
@@ -1530,7 +1555,7 @@ $(function(){
       3 : Array.AlphanumericSort     // alphanumeric sort from sugar (http://sugarjs.com/arrays#sorting)
     }
   });
-});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches `a` and `b` depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
+});</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
 					</div>
 				</td>
 				<td>
@@ -1755,28 +1780,6 @@ $(function(){
 						The table url &amp; id can also be overridden by setting table data attributes <code>data-table-page</code> (url) and <code>data-table-group</code> (id)<br>(e.g. <code>&lt;table class=&quot;tablesorter&quot; data-table-page=&quot;mydomain&quot; data-table-group=&quot;financial&quot;&gt;...&lt;/table&gt;</code>)<br>
 						<br>
 						For a bit more detail, specifically on how to use the new storage function options for a custom widget, please refer to <a href="https://github.com/Mottie/tablesorter/issues/389#issuecomment-26594259">issue #389</a>.
-					</div>
-				</td>
-				<td></td>
-			</tr>
-
-			<tr id="imgattr">
-				<td><a href="#" class="permalink">imgAttr</a></td>
-				<td>String</td>
-				<td>"alt"</td>
-				<td>
-					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>).
-					<div class="collapsible"><br>
-						Change this setting to grab a different image attribute to be used for sorting:
-						<pre class="prettyprint lang-js">$(function(){
-  $('table').tablesorter({
-    // parse image title (value to be used while sorting & filtering)
-    imgAttr : 'title',
-    headers : {
-      0 : { sorter: 'image' }
-    }
-  });
-});</pre>
 					</div>
 				</td>
 				<td></td>
@@ -2197,6 +2200,8 @@ $(function(){
       });
     }
 }</pre>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<br>
 					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
 					Most of the formatter functions have an option named <code>valueToHeader</code> which, when <code>true</code> adds a span to the header cell above the filter row and updates it with the current control's value (see <a href="example-widget-filter-formatter-2.html">example 2</a>). If the option exists and is set to <code>false</code>, then the current value is added to the control's handle and css can be used to create a popup to show the current value (see <a href="example-widget-filter-formatter-1.html">example 1</a>).<br>
@@ -2259,6 +2264,8 @@ $(function(){
         ...
     }
 }</pre>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<br>
 					Use the <a href="#widget-filter-functions"><code>&quot;filter_functions&quot;</code></a> option in three different ways:
 					<br>
 					<ul>
@@ -2617,6 +2624,8 @@ $('table').trigger('search', false);</pre></div>
 					<pre class="prettyprint lang-js">filter_selectSource : {
   ".model-number" : [ "abc", "def", "ghi", "xyz" ]
 }</pre>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<br>
 					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
 					<br>
 					This option allows using an alternate source, or customizing options of the filter select dropdown. This option can be set as follows:
@@ -3364,7 +3373,7 @@ $.extend($.tablesorter.themes.jui, {
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxObject</code><br>
 					<br>
-					The <code>ajaxObject</code> is completely customizable, except for the `url` setting which is processed using the pager's `ajaxUrl` and `customAjaxUrl` options.<br>
+					The <code>ajaxObject</code> is completely customizable, except for the <code>url</code> setting which is processed using the pager's <code>ajaxUrl</code> and <code>customAjaxUrl</code> options.<br>
 					<br>
 					Your server does not need to return a JSON format, if you want to return pure HTML, set the dataType to <code>&quot;html&quot;</code> and modify the <code>ajaxProcessing</code> function to instead work with HTML; then return a jQuery object or apply the HTML to the table yourself.<br>
 					<br>
@@ -5073,7 +5082,8 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 						<tr><th><code>sorter: &quot;text&quot;</code></th><td>Sort alpha-numerically.</td></tr>
 						<tr><th><code>sorter: &quot;digit&quot;</code></th><td>Sort numerically.</td></tr>
 						<tr><th><code>sorter: &quot;currency&quot;</code></th><td>Sort by currency value (supports "&#163;$&#8364;&#x00a4;&#x00a5;&#x00a2;").</td></tr>
-						<tr><th><code>sorter: &quot;ipAddress&quot;</code></th><td>Sort by IP Address.</td></tr>
+						<tr><th><code>sorter: &quot;image&quot;</code></th><td>Sort by image alt value (see <a href="#imgattr"><code>imgAttr</code></a> option).</td></tr>
+						<tr><th><code>sorter: &quot;ipAddress&quot;</code></th><td>Sort by IP Address; <span class="label label-warning">Warning</span> This parser was moved to the <code>parser-network.js</code> file in <span class="version updated">v2.18.0</span>.</td></tr>
 						<tr><th><code>sorter: &quot;url&quot;</code></th><td>Sort by url.</td></tr>
 						<tr><th><code>sorter: &quot;isoDate&quot;</code></th><td>Sort by ISO date (YYYY-MM-DD or YYYY/MM/DD; these formats can be followed by a time).</td></tr>
 						<tr><th><code>sorter: &quot;percent&quot;</code></th><td>Sort by percent.</td></tr>
@@ -5767,7 +5777,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 							<li><code>table</code> - table DOM element (or jQuery object) of table (or tables).</li>
 							<li><code>message</code> - a plain string, or string of an HTML row.</li>
 						</ul>
-						This function will add a table row to the thead, with a class name from either the pager plugin <code>cssErrorRow</code> option setting, or the pager widget <code>pager_css.errorRow</code> option (the default class name is `&quot;tablesorter-errorRow&quot;`; and styled within each theme css file).<br>
+						This function will add a table row to the thead, with a class name from either the pager plugin <code>cssErrorRow</code> option setting, or the pager widget <code>pager_css.errorRow</code> option (the default class name is <code>&quot;tablesorter-errorRow&quot;</code>; and styled within each theme css file).<br>
 						<br>
 						When passing this function a message, there are three possibilities:
 						<ol>

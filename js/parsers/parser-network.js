@@ -1,15 +1,16 @@
-﻿/*! IPv6 Address parser (WIP)
-* IPv6 Address (ffff:0000:0000:0000:0000:0000:0000:0000)
-* needs to support short versions like "::8" or "1:2::7:8"
-* and "::00:192.168.10.184" (embedded IPv4 address)
-* see http://www.intermapper.com/support/tools/IPV6-Validator.aspx
-*/
+/*! Network parsers - IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
 ;(function($){
 	"use strict";
 
 	var ts = $.tablesorter;
 
+	/*! IPv6 Address parser (WIP)
+	* IPv6 Address (ffff:0000:0000:0000:0000:0000:0000:0000)
+	* needs to support short versions like "::8" or "1:2::7:8"
+	* and "::00:192.168.10.184" (embedded IPv4 address)
+	* see http://www.intermapper.com/support/tools/IPV6-Validator.aspx
+	*/
 	$.extend( ts.regex, {}, {
 		ipv4Validate : /((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})/,
 		ipv4Extract  : /([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/,
@@ -20,14 +21,14 @@
 	});
 
 	ts.addParser({
-		id: "ipv6Address",
+		id: 'ipv6Address',
 		is: function(s) {
 			return ts.regex.ipv6Validate.test(s);
 		},
 		format: function(address, table) {
 			// code modified from http://forrst.com/posts/JS_Expand_Abbreviated_IPv6_Addresses-1OR
 			var i, t, sides, groups, groupsPresent,
-				hex = table ? (typeof table === "boolean" ? table : table && table.config.ipv6HexFormat || false) : false,
+				hex = table ? (typeof table === 'boolean' ? table : table && table.config.ipv6HexFormat || false) : false,
 				fullAddress = '',
 				expandedAddress = '',
 				validGroupCount = 8,
@@ -44,23 +45,23 @@
 				address = address.replace( ts.regex.ipv4Extract, t );
 			}
 
-			if (address.indexOf("::") == -1) {
+			if (address.indexOf('::') == -1) {
 				// All eight groups are present
 				fullAddress = address;
 			} else {
-				// Consecutive groups of zeroes have been collapsed with "::".
-				sides = address.split("::");
+				// Consecutive groups of zeroes have been collapsed with '::'.
+				sides = address.split('::');
 				groupsPresent = 0;
 				for (i = 0; i < sides.length; i++) {
-					groupsPresent += sides[i].split(":").length;
+					groupsPresent += sides[i].split(':').length;
 				}
-				fullAddress += sides[0] + ":";
+				fullAddress += sides[0] + ':';
 				for (i = 0; i < validGroupCount - groupsPresent; i++) {
-					fullAddress += "0000:";
+					fullAddress += '0000:';
 				}
 				fullAddress += sides[1];
 			}
-			groups = fullAddress.split(":");
+			groups = fullAddress.split(':');
 			for (i = 0; i < validGroupCount; i++) {
 				// it's fastest & easiest for tablesorter to sort decimal values (vs hex)
 				groups[i] = hex ? ('0000' + groups[i]).slice(-4) :
@@ -70,7 +71,43 @@
 			return hex ? expandedAddress : expandedAddress.replace(/:/g, '');
 		},
 		// uses natural sort hex compare
-		type: "numeric"
+		type: 'numeric'
+	});
+
+	// ipv4 address
+	// moved here from jquery.tablesorter.js (core file)
+	ts.addParser({
+		id: 'ipAddress',
+		is: function(s) {
+			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
+		},
+		format: function(s, table) {
+			var i, a = s ? s.split('.') : '',
+			r = '',
+			l = a.length;
+			for (i = 0; i < l; i++) {
+				r += ('000' + a[i]).slice(-3);
+			}
+			return s ? ts.formatFloat(r, table) : s;
+		},
+		type: 'numeric'
+	});
+
+	ts.addParser({
+		id: 'MAC',
+		is: function(s) {
+			return ts.regex.ipv6Validate.test(s);
+		},
+		format: function(s) {
+			var t = '',
+				val = s.replace(/[:.-]/g, '').match(/\w{2}/g);
+			$.each(val, function(i, v){
+				t += ( '000' + parseInt(v, 16) ).slice(-3);
+			});
+			return t;
+		},
+		// uses natural sort hex compare
+		type: 'numeric'
 	});
 
 })(jQuery);
