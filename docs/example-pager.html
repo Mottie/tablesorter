@@ -184,6 +184,13 @@
 		});
 
 });</script>
+	<script>
+	$(function(){
+		$('.clear').click(function(){
+			$('#display').html( new Array(6).join('<li>&nbsp;</li>') );
+		});
+	});
+	</script>
 </head>
 <body id="pager-demo">
 	<div id="banner">
@@ -205,9 +212,11 @@
 			</ul>
 		<p>
 
-		<h1>Triggered Events</h1>
+		<h1>Triggered Events &nbsp; <button class="clear">Clear</button></h1>
 		<ul id="display">
 			<li>Pager events will appear here.</li>
+			<li>&nbsp;</li>
+			<li>&nbsp;</li>
 			<li>&nbsp;</li>
 			<li>&nbsp;</li>
 		</ul>

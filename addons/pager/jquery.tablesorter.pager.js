@@ -132,7 +132,7 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			if ( !p.initialized || completed !== true ) { return; }
+			if ( !p.initialized ) { return; }
 			var i, pg, s, $out, regex,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters'),
@@ -950,6 +950,7 @@
 				// pager initialized
 				if (!p.ajax) {
 					p.initialized = true;
+					updatePageDisplay(table, p, true);
 					$(table).trigger('pagerInitialized', p);
 				}
 			});
