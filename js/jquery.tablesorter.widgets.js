@@ -410,7 +410,7 @@ ts.filter = {
 		child     : /tablesorter-childRow/, // child row class name; this gets updated in the script
 		filtered  : /filtered/, // filtered (hidden) row class name; updated in the script
 		type      : /undefined|number/, // check type
-		exact     : /(^[\"|\'|=]+)|([\"|\'|=]+$)/g, // exact match (allow '==')
+		exact     : /(^[\"\'=]+)|([\"\'=]+$)/g, // exact match (allow '==')
 		nondigit  : /[^\w,. \-()]/g, // replace non-digits (from digit & currency parser)
 		operators : /[<>=]/g, // replace operators
 		query     : '(q|query)' // replace filter queries
@@ -537,12 +537,14 @@ ts.filter = {
 		},
 		// Look for wild card: ? = single, * = multiple, or | = logical OR
 		wild : function( c, data ) {
-			if ( /[\?|\*]/.test(data.iFilter) || ts.filter.regex.orReplace.test(data.filter) ) {
+			if ( /[\?\*\|]/.test(data.iFilter) || ts.filter.regex.orReplace.test(data.filter) ) {
 				var index = data.index,
 					parsed = data.parsed[index],
 					query = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.orReplace, "|"), index, parsed);
 				// look for an exact match with the "or" unless the "filter-match" class is found
 				if (!c.$headers.filter('[data-column="' + index + '"]:last').hasClass('filter-match') && /\|/.test(query)) {
+					// show all results while using filter match. Fixes #727
+					if (query[ query.length - 1 ] === '|') { query += '*'; }
 					query = data.anyMatch && $.isArray(data.rowArray) ? '(' + query + ')' : '^(' + query + ')$';
 				}
 				// parsing the filter may not work properly when using wildcards =/
