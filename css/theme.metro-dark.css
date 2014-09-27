@@ -12,7 +12,7 @@ Metro Dark Theme
 	text-align: left;
 }
 
-.tablesorter-metro-dark tr.dark-row th, .tablesorter-metro-dark tr.dark-row td {
+.tablesorter-metro-dark tr.dark-row th, .tablesorter-metro-dark tr.dark-row td, .tablesorter-metro-dark caption.dark-row {
 	background-color: #222;
 	color: #fff;
 	padding: 2px;
