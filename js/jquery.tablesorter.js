@@ -458,7 +458,7 @@
 						}
 						$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 					}
-					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index]); }
+					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index, c, c.$table]); }
 					this.column = parseInt( $(this).attr('data-column'), 10);
 					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
 					this.count = -1; // set to -1 because clicking on the header automatically adds one

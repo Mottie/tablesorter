@@ -1044,14 +1044,20 @@
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This function is called after content is to the TH tags (after the template is procressed and added). You can use this to modify the HTML in each header tag for additional styling.
+					This function is called after content is to the TH tags (after the template is procressed and added). You can use this to modify the HTML in each header tag for additional styling (<span class="version updated">v2.18.0</span>).
 					<div class="collapsible">
 					<br>
-					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).
+					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).<br>
+					Function parameters:
+					<ul>
+						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
+						<li><code>config</code> - The current <code>table.config</code>.</li>
+						<li><code>$table</code> - This value is the current table jQuery object. If this function is being applied to cloned headers, as is does in the stickyHeaders widget, then this value will contain the sticky header clone added after the current table, and not the main table (<span class="version">v2.18.0</span>).</li>
+					</ul>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     headerTemplate: '{content}',
-    onRenderHeader: function (){
+    onRenderHeader: function (index, config, $table){
       $(this).find('div').addClass('roundedCorners');
     }
   });
