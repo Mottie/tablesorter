@@ -886,6 +886,7 @@ tsp = ts.pager = {
 		// don't allow rendering multiple times on the same page/size/totalRows/filters/sorts
 		if ( l.page === p.page && l.size === p.size && l.totalRows === p.totalRows &&
 			(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
+			(l.ajaxUrl || '') === (p.ajaxObject.url || '') &&
 			l.sortList === (c.sortList || []).join(',') ) {
 				return;
 			}
@@ -898,7 +899,8 @@ tsp = ts.pager = {
 			// fixes #408; modify sortList otherwise it auto-updates
 			sortList : (c.sortList || []).join(','),
 			totalRows : p.totalRows,
-			currentFilters : p.currentFilters || []
+			currentFilters : p.currentFilters || [],
+			ajaxUrl : p.ajaxObject.url || ''
 		};
 		if (p.ajax) {
 			tsp.getAjax(table, c);
