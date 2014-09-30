@@ -1762,7 +1762,8 @@
 			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/).test(s);
 		},
 		format: function(s, table) {
-			return s ? ts.formatFloat((s !== "") ? (new Date(s.replace(/-/g, "/")).getTime() || s) : "", table) : s;
+			var date = s ? new Date( s.replace(/-/g, "/") ) : s;
+			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: "numeric"
 	});
@@ -1799,7 +1800,8 @@
 			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i).test(s) || (/^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i).test(s);
 		},
 		format: function(s, table) {
-			return s ? ts.formatFloat( (new Date(s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || s), table) : s;
+			var date = s ? new Date( s.replace(/(\S)([AP]M)$/i, "$1 $2") ) : s;
+			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: "numeric"
 	});
@@ -1812,19 +1814,22 @@
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
-				var c = table.config,
+				var date, d,
+					c = table.config,
 					ci = c.$headers.filter('[data-column=' + cellIndex + ']:last'),
 					format = ci.length && ci[0].dateFormat || ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') || c.dateFormat;
-				s = s.replace(/\s+/g," ").replace(/[\-.,]/g, "/"); // escaped - because JSHint in Firefox was showing it as an error
+				d = s.replace(/\s+/g," ").replace(/[\-.,]/g, "/"); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === "mmddyyyy") {
-					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
+					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$1/$2");
 				} else if (format === "ddmmyyyy") {
-					s = s.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
+					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, "$3/$2/$1");
 				} else if (format === "yyyymmdd") {
-					s = s.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
+					d = d.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, "$1/$2/$3");
 				}
+				date = new Date(d);
+				return date instanceof Date && isFinite(date) ? date.getTime() : s;
 			}
-			return s ? ts.formatFloat( (new Date(s).getTime() || s), table) : s;
+			return s;
 		},
 		type: "numeric"
 	});
@@ -1835,7 +1840,8 @@
 			return (/^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i).test(s);
 		},
 		format: function(s, table) {
-			return s ? ts.formatFloat( (new Date("2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2")).getTime() || s), table) : s;
+			var date = s ? new Date( "2000/01/01 " + s.replace(/(\S)([AP]M)$/i, "$1 $2") ) : s;
+			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: "numeric"
 	});
