@@ -182,6 +182,10 @@ tsp = ts.pager = {
 
 		tsp.enablePager(table, c, false);
 
+		// p must have ajaxObject
+		p.ajaxObject = c.widgetOptions.pager_ajaxObject;
+		p.ajaxObject.url = c.widgetOptions.pager_ajaxUrl;
+
 		if ( typeof(wo.pager_ajaxUrl) === 'string' ) {
 			// ajax pager; interact with database
 			p.ajax = true;
