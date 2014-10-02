@@ -1653,6 +1653,8 @@ $(function(){
       filter_childRows     : false,
       // show column filters
       filter_columnFilters : true,
+      // css class name added to the filter cell (string or array)
+      filter_cellFilter    : '',
       // css class applied to the filter row inputs/select
       filter_cssFilter     : '',
       // data attribute in the header cell that contains the default filter value
@@ -2034,6 +2036,33 @@ $(function(){
 				<td></td>
 			</tr>
 
+			<tr id="widget-filter-cellfilter">
+				<td><a href="#" class="permalink">filter_cellFilter</a></td>
+				<td>String or Array</td>
+				<td>&quot;&quot;</td>
+				<td>Additional CSS class applied to each filter cell (<span class="version">v2.18.0</span>).
+					<div class="collapsible"><br>
+						When the filter row is built, each table cell (<code>&lt;td&gt;</code>) will get the class name from this option.
+						<ul>
+							<li>If this option is a plain string, all filter row cells will get the text applied as a class name.</li>
+							<li>If this option is an array, then each filter row cell will get the text from the associate array element applied as a class name.</li>
+						</ul>
+						<p>Use the <a href="#widget-filter-cellfilter"><code>filter_cellFilter</code></a> option to add an extra css class name as follows:</p>
+						<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      // css class applied to the table row containing the filters & the inputs within that row
+      // or [ "filter-cell0", "filter-cell1", "filter-cell2", etc... ]
+      filter_cellFilter : "tablesorter-filter-cell"
+    }
+  });
+});</pre><span class="label label-info">Note</span> The cells from this option are also contained within the <a href="#variable-filters"><code>config.$filters</code></a> variable.
+					</div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
+			</tr>
+
 			<tr id="widget-filter-cssfilter">
 				<td><a href="#" class="permalink">filter_cssFilter</a></td>
 				<td>String or Array</td>
@@ -2043,13 +2072,13 @@ $(function(){
 						As of v2.15, this option can also contain an array of class names that are to be applied to input filters.<br>
 						<br>
 						Changed to empty string in v2.11, as the <code>&quot;tablesorter-filter&quot;</code> class will always be added to the filter; this option now contains any additional class names to add.
-						<p>Use the <a href="#widget-filter-cssfilter"><code>&quot;tablesorter-filter&quot;</code></a> option to add an extra css class name as follows:</p>
+						<p>Use the <a href="#widget-filter-cssfilter"><code>filter_cssFilter</code></a> option to add an extra css class name as follows:</p>
 						<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     widgets: ["filter"],
     widgetOptions : {
       // css class applied to the table row containing the filters & the inputs within that row
-      // or [ "filter1", "filter2", "filter3", etc... ]
+      // or [ "filter0", "filter1", "filter2", etc... ]
       filter_cssFilter : "tablesorter-filter"
     }
   });
