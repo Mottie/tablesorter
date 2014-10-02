@@ -133,7 +133,7 @@
 
 		updatePageDisplay = function(table, p, completed) {
 			if ( !p.initialized ) { return; }
-			var i, pg, s, $out, regex,
+			var s, $out, regex,
 				c = table.config,
 				f = c.$table.hasClass('hasFilters'),
 				t = [],
@@ -218,7 +218,7 @@
 		buildPageSelect = function(p) {
 			// Filter the options page number link array if it's larger than 'maxOptionSize'
 			// as large page set links will slow the browser on large dom inserts
-			var i, central_focus_size, lower_focus_window, focus_option_pages, insert_index, option_length, focus_length,
+			var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
 				pg = Math.min( p.totalPages, p.filteredPages ),
 				// make skip set size multiples of 5
 				skip_set_size = Math.ceil( ( pg / p.maxOptionSize ) / 5 ) * 5,
@@ -661,7 +661,10 @@
 			// don't allow rendering multiple times on the same page/size/totalRows/filters/sorts
 			if ( l.page === p.page && l.size === p.size && l.totalRows === p.totalRows &&
 				(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
+				// check for ajax url changes see #730
 				(l.ajaxUrl || '') === (p.ajaxObject.url || '') &&
+				// & ajax url option changes (dynamically add/remove/rename sort & filter parameters)
+				(l.optAjaxUrl || '') === (p.ajaxUrl || '') &&
 				l.sortList === (c.sortList || []).join(',') ) { return; }
 			if (c.debug) {
 				ts.log('Pager changing to page ' + p.page);
@@ -673,7 +676,8 @@
 				sortList : (c.sortList || []).join(','),
 				totalRows : p.totalRows,
 				currentFilters : p.currentFilters || [],
-				ajaxUrl : p.ajaxObject.url || ''
+				ajaxUrl : p.ajaxObject.url || '',
+				optAjaxUrl : p.ajaxUrl || ''
 			};
 			if (p.ajax) {
 				getAjax(table, p);
@@ -816,7 +820,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize '.split(' ').join('.pager '))
+					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
 					.bind('filterStart.pager', function(e, filters) {
 						p.currentFilters = filters;
 						// don't change page is filters are the same (pager updating, etc)

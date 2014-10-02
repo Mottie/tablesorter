@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 9/15/2014 (v2.17.8) */
+/* Pager widget for TableSorter 9/15/2014 (v2.17.8) - requires jQuery 1.7+ */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -183,8 +183,8 @@ tsp = ts.pager = {
 		tsp.enablePager(table, c, false);
 
 		// p must have ajaxObject
-		p.ajaxObject = c.widgetOptions.pager_ajaxObject;
-		p.ajaxObject.url = c.widgetOptions.pager_ajaxUrl;
+		p.ajaxObject = wo.pager_ajaxObject; // $.extend({}, wo.pager_ajaxObject );
+		p.ajaxObject.url = wo.pager_ajaxUrl;
 
 		if ( typeof(wo.pager_ajaxUrl) === 'string' ) {
 			// ajax pager; interact with database
@@ -222,8 +222,8 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize '.split(' ').join('.pager '))
-			.bind('filterStart.pager', function(e, filters) {
+			.off('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+			.on('filterStart.pager', function(e, filters) {
 				p.currentFilters = filters;
 				// don't change page is filters are the same (pager updating, etc)
 				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
@@ -231,7 +231,7 @@ tsp = ts.pager = {
 				}
 			})
 			// update pager after filter widget completes
-			.bind('filterEnd.pager sortEnd.pager', function() {
+			.on('filterEnd.pager sortEnd.pager', function() {
 				if (p.initialized) {
 					if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 						// make sure we have a copy of all table rows once the cache has been built
@@ -245,7 +245,7 @@ tsp = ts.pager = {
 					tsp.fixHeight(table, c);
 				}
 			})
-			.bind('disable.pager', function(e){
+			.on('disable.pager', function(e){
 				e.stopPropagation();
 				tsp.showAllRows(table, c);
 			})
@@ -294,8 +294,8 @@ tsp = ts.pager = {
 		fxn = [ 'moveToFirstPage', 'moveToPrevPage', 'moveToNextPage', 'moveToLastPage' ];
 		p.$container.find(ctrls.join(','))
 			.attr("tabindex", 0)
-			.unbind('click.pager')
-			.bind('click.pager', function(e){
+			.off('click.pager')
+			.on('click.pager', function(e){
 				e.stopPropagation();
 				var i,
 					$c = $(this),
@@ -312,8 +312,8 @@ tsp = ts.pager = {
 
 		if ( p.$goto.length ) {
 			p.$goto
-				.unbind('change')
-				.bind('change', function(){
+				.off('change')
+				.on('change', function(){
 					p.page = $(this).val() - 1;
 					tsp.moveToPage(table, p, true);
 					tsp.updatePageDisplay(table, c, false);
@@ -324,8 +324,8 @@ tsp = ts.pager = {
 			// setting an option as selected appears to cause issues with initial page size
 			p.$size.find('option').removeAttr('selected');
 			p.$size
-				.unbind('change.pager')
-				.bind('change.pager', function() {
+				.off('change.pager')
+				.on('change.pager', function() {
 					p.$size.val( $(this).val() ); // in case there are more than one pagers
 					if ( !$(this).hasClass(wo.pager_css.disabled) ) {
 						tsp.setPageSize(table, parseInt( $(this).val(), 10 ), c);
@@ -353,7 +353,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
-		var i, pg, s, $out, regex,
+		var s, $out, regex,
 			wo = c.widgetOptions,
 			p = c.pager,
 			f = c.$table.hasClass('hasFilters'),
@@ -418,7 +418,7 @@ tsp = ts.pager = {
 					});
 				}
 				// rebind startRow/page inputs
-				$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
+				$out.find('.ts-startRow, .ts-page').off('change').on('change', function(){
 					var v = $(this).val(),
 						pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
 					c.$table.trigger('pageSet.pager', [ pg ]);
@@ -441,7 +441,7 @@ tsp = ts.pager = {
 	buildPageSelect: function(p, c) {
 		// Filter the options page number link array if it's larger than 'pager_maxOptionSize'
 		// as large page set links will slow the browser on large dom inserts
-		var i, central_focus_size, lower_focus_window, focus_option_pages, insert_index, option_length, focus_length,
+		var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
 			wo = c.widgetOptions,
 			pg = Math.min( p.totalPages, p.filteredPages ),
 			// make skip set size multiples of 5
@@ -696,7 +696,6 @@ tsp = ts.pager = {
 		var counter,
 			url = tsp.getAjaxUrl(table, c),
 			$doc = $(document),
-			wo = c.widgetOptions,
 			p = c.pager;
 		if ( url !== '' ) {
 			if (c.showProcessing) {
@@ -704,25 +703,25 @@ tsp = ts.pager = {
 			}
 			$doc.on('ajaxError.pager', function(e, xhr, settings, exception) {
 				tsp.renderAjax(null, table, c, xhr, exception);
-				$doc.unbind('ajaxError.pager');
+				$doc.off('ajaxError.pager');
 			});
 			counter = ++p.ajaxCounter;
-			wo.pager_ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
-			wo.pager_ajaxObject.success = function(data, status, jqxhr) {
+			p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
+			p.ajaxObject.success = function(data, status, jqxhr) {
 				// Refuse to process old ajax commands that were overwritten by new ones - see #443
 				if (counter < p.ajaxCounter){
 					return;
 				}
 				tsp.renderAjax(data, table, c, jqxhr);
-				$doc.unbind('ajaxError.pager');
+				$doc.off('ajaxError.pager');
 					if (typeof p.oldAjaxSuccess === 'function') {
 						p.oldAjaxSuccess(data);
 					}
 			};
 			if (c.debug) {
-				ts.log('ajax initialized', wo.pager_ajaxObject);
+				ts.log('ajax initialized', p.ajaxObject);
 			}
-			$.ajax(wo.pager_ajaxObject);
+			$.ajax(p.ajaxObject);
 		}
 	},
 
@@ -879,6 +878,7 @@ tsp = ts.pager = {
 			return tsp.updateCache(table);
 		}
 		var c = table.config,
+			wo = c.widgetOptions,
 			l = p.last,
 			pg = Math.min( p.totalPages, p.filteredPages );
 		if ( p.page < 0 ) { p.page = 0; }
@@ -890,7 +890,10 @@ tsp = ts.pager = {
 		// don't allow rendering multiple times on the same page/size/totalRows/filters/sorts
 		if ( l.page === p.page && l.size === p.size && l.totalRows === p.totalRows &&
 			(l.currentFilters || []).join(',') === (p.currentFilters || []).join(',') &&
+			// check for ajax url changes see #730
 			(l.ajaxUrl || '') === (p.ajaxObject.url || '') &&
+			// & ajax url option changes (dynamically add/remove/rename sort & filter parameters)
+			(l.optAjaxUrl || '') === (wo.pager_ajaxUrl || '') &&
 			l.sortList === (c.sortList || []).join(',') ) {
 				return;
 			}
@@ -904,7 +907,8 @@ tsp = ts.pager = {
 			sortList : (c.sortList || []).join(','),
 			totalRows : p.totalRows,
 			currentFilters : p.currentFilters || [],
-			ajaxUrl : p.ajaxObject.url || ''
+			ajaxUrl : p.ajaxObject.url || '',
+			optAjaxUrl : wo.pager_ajaxUrl
 		};
 		if (p.ajax) {
 			tsp.getAjax(table, c);
@@ -966,7 +970,7 @@ tsp = ts.pager = {
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
 		delete table.config.rowsCopy;
-		c.$table.unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+		c.$table.off('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}
