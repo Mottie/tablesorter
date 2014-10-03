@@ -1718,6 +1718,8 @@ ts.addWidget({
 		var $rows, $columns, $column, column, timer,
 			storedSizes = {},
 			$table = c.$table,
+			$wrap = $table.parent(),
+			overflow = $table.parent().css('overflow') === 'auto',
 			mouseXPosition = 0,
 			$target = null,
 			$next = null,
@@ -1730,6 +1732,14 @@ ts.addWidget({
 				$target.width( targetWidth + leftEdge );
 				if ($target.width() !== targetWidth && fullWidth) {
 					$next.width( $next.width() - leftEdge );
+				} else if (overflow) {
+					$table.width(function(i, w){
+						return w + leftEdge;
+					});
+					if (!$next.length) {
+						// if expanding right-most column, scroll the wrapper
+						$wrap[0].scrollLeft = $table.width();
+					}
 				}
 				mouseXPosition = event.pageX;
 			},
