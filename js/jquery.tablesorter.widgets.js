@@ -190,16 +190,16 @@ ts.addWidget({
 			if (themes.even !== '') { wo.zebra[0] += ' ' + themes.even; }
 			if (themes.odd !== '') { wo.zebra[1] += ' ' + themes.odd; }
 			// add caption style
-			$table.find('caption').addClass(themes.caption);
+			$table.children('caption').addClass(themes.caption);
 			// add table/footer class names
 			$tfoot = $table
 				// remove other selected themes
 				.removeClass( c.theme === '' ? '' : 'tablesorter-' + c.theme )
 				.addClass('tablesorter-' + theme + ' ' + themes.table) // add theme widget class name
-				.find('tfoot');
+				.children('tfoot');
 			if ($tfoot.length) {
 				$tfoot
-					.find('tr').addClass(themes.footerRow)
+					.children('tr').addClass(themes.footerRow)
 					.children('th, td').addClass(themes.footerCells);
 			}
 			// update header classes
@@ -219,13 +219,13 @@ ts.addWidget({
 				$headers.find('.' + ts.css.icon).addClass(themes.icons);
 			}
 			if ($table.hasClass('hasFilters')) {
-				$headers.find('.' + ts.css.filterRow).addClass(themes.filterRow);
+				$table.children('thead').children('.' + ts.css.filterRow).addClass(themes.filterRow);
 			}
 		}
 		for (i = 0; i < c.columns; i++) {
 			$header = c.$headers.add(c.$extraHeaders).filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $header;
-			$h = c.$headers.filter('[data-column="' + i + '"]:last');
+			$h = $headers.filter('[data-column="' + i + '"]:last');
 			if ($h.length) {
 				if ($h[0].sortDisabled) {
 					// no sort arrows for disabled columns!
@@ -783,7 +783,7 @@ ts.filter = {
 			}, 500);
 		}
 	},
-	
+
 	setDefaults: function(table, c, wo) {
 		var isArray, saved, indx,
 			// get current (default) filters
@@ -1100,7 +1100,7 @@ ts.filter = {
 							// if we are not doing exact matches, using "|" (logical or) or not "!"
 							!/[=\"\|!]/.test(val) &&
 							// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
-							!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) && 
+							!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) &&
 							// if filtering using a select without a "filter-match" class (exact match) - fixes #593
 							!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
 					}
@@ -1212,7 +1212,7 @@ ts.filter = {
 							result = showRow; // if showRow is true, show that row
 
 							// in case select filter option has a different value vs text "a - z|A through Z"
-							ffxn = wo.filter_columnFilters ? 
+							ffxn = wo.filter_columnFilters ?
 								c.$filters.add(c.$externalFilters).filter('[data-column="'+ columnIndex + '"]').find('select option:selected').attr('data-function-name') || '' : '';
 
 							// replace accents - see #357
