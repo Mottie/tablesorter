@@ -11,8 +11,8 @@ var ts = $.tablesorter,
 namespace = '.tscolsel',
 tsColSel = ts.columnSelector = {
 
-	queryAll   : '@media only all { [columns] { display: none; } }',
-	queryBreak : '@media all and (min-width: [size]) { [columns] { display: table-cell; } }',
+	queryAll   : '@media only all { [columns] { display: none; } } ',
+	queryBreak : '@media all and (min-width: [size]) { [columns] { display: table-cell; } } ',
 
 	init: function(table, c, wo) {
 		var $t, colSel;
@@ -80,7 +80,6 @@ tsColSel = ts.columnSelector = {
 				priority = $this.attr(wo.columnSelector_priority) || 1,
 				colId = $this.attr('data-column'),
 				state = ts.getData(this, c.headers[colId], 'columnSelector');
-
 
 			// if this column not hidable at all
 			// include getData check (includes "columnSelector-false" class, data attribute, etc)
@@ -204,9 +203,11 @@ tsColSel = ts.columnSelector = {
 		if (colSel.$style) {
 			colSel.$style.prop('disabled', true);
 		}
-		colSel.$breakpoints
-			.prop('disabled', false)
-			.html( tsColSel.queryAll.replace(/\[columns\]/g, mediaAll.join(',')) + breakpts );
+		if (mediaAll.length) {
+			colSel.$breakpoints
+				.prop('disabled', false)
+				.html( tsColSel.queryAll.replace(/\[columns\]/g, mediaAll.join(',')) + breakpts );
+		}
 	},
 
 	updateCols: function(c, wo) {
