@@ -190,6 +190,7 @@ tsColSel = ts.columnSelector = {
 			breaks = [];
 			c.$headers.filter('[' + wo.columnSelector_priority + '=' + (priority + 1) + ']').each(function(){
 				column = parseInt($(this).attr('data-column'), 10) + 1;
+				breaks.push(prefix + ' col:nth-child(' + column + ')');
 				breaks.push(prefix + ' tr th:nth-child(' + column + ')');
 				breaks.push(prefix + ' tr td:nth-child(' + column + ')');
 			});
@@ -221,6 +222,7 @@ tsColSel = ts.columnSelector = {
 		colSel.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
 			if (!this.checked) {
 				column = parseInt( $(this).attr('data-column'), 10 ) + 1;
+				styles.push(prefix + ' col:nth-child(' + column + ')');
 				styles.push(prefix + ' tr th:nth-child(' + column + ')');
 				styles.push(prefix + ' tr td:nth-child(' + column + ')');
 			}
