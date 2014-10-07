@@ -33,7 +33,7 @@ ts.themes = {
 	},
 	"jui" : {
 		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
-		caption    : 'ui-widget-content ui-corner-all',
+		caption    : 'ui-widget-content',
 		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
 		footerRow  : '',
 		footerCells: '',
@@ -232,9 +232,9 @@ ts.addWidget({
 			c.appliedTheme = c.theme;
 		}
 		for (i = 0; i < c.columns; i++) {
-			$header = c.$headers.add(c.$extraHeaders).filter('[data-column="' + i + '"]');
+			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $header;
-			$h = $headers.filter('[data-column="' + i + '"]:last');
+			$h = $headers.not('.sorter-false').filter('[data-column="' + i + '"]:last');
 			if ($h.length) {
 				if ($h[0].sortDisabled) {
 					// no sort arrows for disabled columns!

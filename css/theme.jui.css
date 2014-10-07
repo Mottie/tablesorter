@@ -43,6 +43,9 @@
 .tablesorter-jui thead .sorter-false {
 	cursor: default;
 }
+.tablesorter-jui thead tr .sorter-false .ui-icon {
+	display: none;
+}
 
 /* tfoot */
 .tablesorter-jui tfoot th,
