@@ -411,7 +411,10 @@ tsp = ts.pager = {
 			if ($out.length) {
 				$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 				if ( p.$goto.length ) {
-					t = '<option>' + tsp.buildPageSelect(p, c).join('</option><option>') + '</option>';
+					t = '';
+					$.each(tsp.buildPageSelect(p, c), function(i, opt){
+						t += '<option value="' + opt + '">' + opt + '</option>';
+					});
 					p.$goto.each(function(){
 						this.innerHTML = t;
 						this.value = p.page + 1;
