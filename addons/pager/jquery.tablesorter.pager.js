@@ -206,6 +206,7 @@
 				}
 			}
 			pagerArrows(p);
+			fixHeight(table, p);
 			if (p.initialized && completed !== false) {
 				c.$table.trigger('pagerComplete', p);
 				// save pager info to storage
@@ -282,22 +283,28 @@
 			var d, h,
 				c = table.config,
 				$b = c.$tbodies.eq(0);
-			if (p.fixedHeight) {
-				$b.find('tr.pagerSavedHeightSpacer').remove();
+			$b.find('tr.pagerSavedHeightSpacer').remove();
+			if (p.fixedHeight && !p.isDisabled) { 
 				h = $.data(table, 'pagerSavedHeight');
 				if (h) {
 					d = h - $b.height();
 					if ( d > 5 && $.data(table, 'pagerLastSize') === p.size && $b.children('tr:visible').length < p.size ) {
-						$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '" style="height:' + d + 'px;"></tr>');
+						$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '" style="height:' + d + 'px;"></tr>');
 					}
 				}
 			}
 		},
 
 		changeHeight = function(table, p) {
-			var $b = table.config.$tbodies.eq(0);
+			var h,
+				c = table.config,
+				$b = c.$tbodies.eq(0);
 			$b.find('tr.pagerSavedHeightSpacer').remove();
-			$.data(table, 'pagerSavedHeight', $b.height());
+			if (!$b.children('tr:visible').length) {
+				$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '"><td>&nbsp</td></tr>');
+			}
+			h = $b.children('tr').eq(0).height() * p.size;
+			$.data(table, 'pagerSavedHeight', h);
 			fixHeight(table, p);
 			$.data(table, 'pagerLastSize', p.size);
 		},
@@ -455,7 +462,6 @@
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p, true);
-				fixHeight(table, p);
 				$t.trigger('updateCache', [function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
@@ -597,7 +603,6 @@
 				ts.processTbody(table, $tb, false);
 			}
 			updatePageDisplay(table, p, true);
-			if ( !p.isDisabled ) { fixHeight(table, p); }
 			if (table.isUpdating) {
 				$t.trigger('updateComplete', [ table, true ]);
 			}
@@ -765,11 +770,11 @@
 				p.$container.find(p.cssPageDisplay).attr('id', info);
 				c.$table.attr('aria-describedby', info);
 			}
+			changeHeight(table, p);
 			if ( triggered ) {
 				c.$table.trigger('updateRows');
 				setPageSize(table, p.size, p);
 				hideRowsSetup(table, p);
-				fixHeight(table, p);
 				if (c.debug) {
 					ts.log('pager enabled');
 				}
@@ -839,11 +844,9 @@
 								// make sure we have a copy of all table rows once the cache has been built
 								updateCache(table);
 							}
-							// update page display first, so we update p.filteredPages
-							updatePageDisplay(table, p, false);
 							moveToPage(table, p, false);
 							c.$table.trigger('applyWidgets');
-							fixHeight(table, p);
+							updatePageDisplay(table, p, false);
 						}
 					})
 					.bind('disable.pager', function(e){
@@ -862,7 +865,6 @@
 						e.stopPropagation();
 						// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 						if ( !table || triggered ) { return; }
-						fixHeight(table, p);
 						var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 						p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -870,8 +872,12 @@
 							// make a copy of all table rows once the cache has been built
 							updateCache(table);
 						}
-						updatePageDisplay(table, p, true);
+						if ( p.page >= p.totalPages ) {
+							moveToLastPage(table, p);
+						}
 						hideRows(table, p);
+						changeHeight(table, p);
+						updatePageDisplay(table, p, true);
 					})
 					.bind('pageSize.pager', function(e,v){
 						e.stopPropagation();
@@ -954,8 +960,6 @@
 					$(this).trigger("appendCache", true);
 					hideRowsSetup(table, p);
 				}
-
-				changeHeight(table, p);
 
 				// pager initialized
 				if (!p.ajax) {

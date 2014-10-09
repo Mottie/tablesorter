@@ -204,7 +204,6 @@ tsp = ts.pager = {
 
 	initComplete: function(table, c){
 		var p = c.pager;
-		tsp.changeHeight(table, c);
 		tsp.bindEvents(table, c);
 		tsp.setPageSize(table, 0, c); // page size 0 is ignored
 
@@ -237,12 +236,10 @@ tsp = ts.pager = {
 						// make sure we have a copy of all table rows once the cache has been built
 						tsp.updateCache(table);
 					}
-					// update page display first, so we update p.filteredPages
-					tsp.updatePageDisplay(table, c, false);
 					// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
 					c.pager.last.page = -1;
 					c.$table.trigger('applyWidgets');
-					tsp.fixHeight(table, c);
+					tsp.updatePageDisplay(table, c, false);
 				}
 			})
 			.on('disable.pager', function(e){
@@ -261,7 +258,6 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 				if (!table || triggered) { return; }
-				tsp.fixHeight(table, c);
 				var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 				p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -269,8 +265,12 @@ tsp = ts.pager = {
 					// make a copy of all table rows once the cache has been built
 					tsp.updateCache(table);
 				}
-				tsp.updatePageDisplay(table, c);
+				if ( p.page >= p.totalPages ) {
+					tsp.moveToLastPage(table, p);
+				}
 				tsp.hideRows(table, c);
+				tsp.changeHeight(table, c);
+				tsp.updatePageDisplay(table, c);
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');
 			})
@@ -371,7 +371,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
-		var s, t, $out, regex,
+		var s, t, $out,
 			wo = c.widgetOptions,
 			p = c.pager,
 			sz = p.size || 10; // don't allow dividing by zero
@@ -418,7 +418,7 @@ tsp = ts.pager = {
 						t += '<option value="' + opt + '">' + opt + '</option>';
 					});
 					// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
-					p.$goto.html(t).val( p.page + 1 );;
+					p.$goto.html(t).val( p.page + 1 );
 				}
 				// rebind startRow/page inputs
 				$out.find('.ts-startRow, .ts-page').off('change').on('change', function(){
@@ -429,6 +429,7 @@ tsp = ts.pager = {
 			}
 		}
 		tsp.pagerArrows(c);
+		tsp.fixHeight(table, c);
 		if (p.initialized && completed !== false) {
 			c.$table.trigger('pagerComplete', c);
 			// save pager info to storage
@@ -508,22 +509,26 @@ tsp = ts.pager = {
 			p = c.pager,
 			wo = c.widgetOptions,
 			$b = c.$tbodies.eq(0);
-		if (wo.pager_fixedHeight) {
-			$b.find('tr.pagerSavedHeightSpacer').remove();
+		$b.find('tr.pagerSavedHeightSpacer').remove();
+		if (wo.pager_fixedHeight && !p.isDisabled) {
 			h = $.data(table, 'pagerSavedHeight');
 			if (h) {
 				d = h - $b.height();
 				if ( d > 5 && $.data(table, 'pagerLastSize') === p.size && $b.children('tr:visible').length < p.size ) {
-					$b.append('<tr class="pagerSavedHeightSpacer ' + wo.pager_selectors.remove.replace(/^(\w+\.)/g,'') + '" style="height:' + d + 'px;"></tr>');
+					$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '" style="height:' + d + 'px;"></tr>');
 				}
 			}
 		}
 	},
 
 	changeHeight: function(table, c) {
-		var $b = c.$tbodies.eq(0);
+		var h, $b = c.$tbodies.eq(0);
 		$b.find('tr.pagerSavedHeightSpacer').remove();
-		$.data(table, 'pagerSavedHeight', $b.height());
+		if (!$b.children('tr:visible').length) {
+			$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '"><td>&nbsp</td></tr>');
+		}
+		h = $b.children('tr').eq(0).height() * c.pager.size;
+		$.data(table, 'pagerSavedHeight', h);
 		tsp.fixHeight(table, c);
 		$.data(table, 'pagerLastSize', c.pager.size);
 	},
@@ -677,7 +682,6 @@ tsp = ts.pager = {
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
 			tsp.updatePageDisplay(table, c);
-			tsp.fixHeight(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
 					// apply widgets after table has rendered & after a delay to prevent
@@ -815,7 +819,6 @@ tsp = ts.pager = {
 		}
 
 		tsp.updatePageDisplay(table, c);
-		if ( !p.isDisabled ) { tsp.fixHeight(table, c); }
 
 		wo.pager_startPage = p.page;
 		wo.pager_size = p.size;
@@ -882,7 +885,7 @@ tsp = ts.pager = {
 		}
 		var pg, c = table.config,
 			wo = c.widgetOptions,
-			l = p.last
+			l = p.last;
 		tsp.calcFilters(table, c);
 		pg = Math.min( p.totalPages, p.filteredPages );
 		if ( p.page < 0 ) { p.page = 0; }
@@ -994,11 +997,11 @@ tsp = ts.pager = {
 			p.$container.find(c.widgetOptions.pager_selectors.pageDisplay).attr('id', info);
 			c.$table.attr('aria-describedby', info);
 		}
+		tsp.changeHeight(table, c);
 		if ( triggered ) {
 			c.$table.trigger('updateRows');
 			tsp.setPageSize(table, p.size, c);
 			tsp.hideRowsSetup(table, c);
-			tsp.fixHeight(table, c);
 			if (c.debug) {
 				ts.log('pager enabled');
 			}
