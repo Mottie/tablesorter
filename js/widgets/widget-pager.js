@@ -446,7 +446,7 @@ tsp = ts.pager = {
 		// as large page set links will slow the browser on large dom inserts
 		var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
 			wo = c.widgetOptions,
-			pg = Math.min( p.totalPages, p.filteredPages ),
+			pg = Math.min( p.totalPages, p.filteredPages ) || 1,
 			// make skip set size multiples of 5
 			skip_set_size = Math.ceil( ( pg / wo.pager_maxOptionSize ) / 5 ) * 5,
 			large_collection = pg > wo.pager_maxOptionSize,
