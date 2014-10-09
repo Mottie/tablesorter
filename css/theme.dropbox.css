@@ -116,9 +116,9 @@
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-dropbox tr.odd td {
+.tablesorter-dropbox tr.odd > td {
 }
-.tablesorter-dropbox tr.even td {
+.tablesorter-dropbox tr.even > td {
 }
 
 /* Column Widget - column sort colors */

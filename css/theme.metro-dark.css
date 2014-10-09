@@ -36,7 +36,7 @@ Metro Dark Theme
 .tablesorter-metro-dark .header,
 .tablesorter-metro-dark .tablesorter-header {
 	background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAGFBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u5jNePWAAAACHRSTlMAMxIHKwEgMWD59H4AAABSSURBVAjXY2BgYFJgAAHzYhDJ6igSAKTYBAUTgJSioKAQAwNzoaCguAFDiCAQuDIkgigxBgiA8cJAVCpQt6AgSL+JoKAzA0gjUBsQqBcBCYhFAAE/CV4zeSzxAAAAAElFTkSuQmCC);
-	background-position: center right;
+	background-position: right 5px center;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	white-space: normal;
@@ -95,10 +95,10 @@ Metro Dark Theme
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-metro-dark tr.odd td {
+.tablesorter-metro-dark tr.odd > td {
 	background-color: #eee;
 }
-.tablesorter-metro-dark tr.even td {
+.tablesorter-metro-dark tr.even > td {
 	background-color: #fff;
 }
 

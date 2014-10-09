@@ -90,7 +90,7 @@ Test out these custom less files live
 }
 
 /*** Arrows ***/
-@arrowPosition : 95% center;
+@arrowPosition : right 5px center;
 
 /* black */
 @unsortedBlack : url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
@@ -210,10 +210,10 @@ Test out these custom less files live
 		}
 
 		/* Zebra Widget - row alternating colors */
-		tr.odd td {
+		tr.odd > td {
 			.oddRows;
 		}
-		tr.even td {
+		tr.even > td {
 			.evenRows;
 		}
 

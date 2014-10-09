@@ -100,7 +100,7 @@ Test out these custom less files live
 }
 
 /*** Arrows ***/
-@arrowPosition : center right;
+@arrowPosition : right 5px center;
 
 /* black */
 @unsortedBlack : url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMwsqXt+gIBUGxGoDMAAAAFlJREFUCNctzC0SQAAUReEzGNQ3AlHRiSRZFCVZYgeswRL8hLdK7834wj3tAlGP6y7fYHpKS6w6WwbVG0I1NZVnZPG8/DYxOYlnhUYkA06R1s9ESsxR4NIdPhkPFDFYuEnMAAAAAElFTkSuQmCC);
@@ -225,10 +225,10 @@ Test out these custom less files live
 		}
 
 		/* Zebra Widget - row alternating colors */
-		tr.odd td {
+		tr.odd > td {
 			.oddRows;
 		}
-		tr.even td {
+		tr.even > td {
 			.evenRows;
 		}
 
