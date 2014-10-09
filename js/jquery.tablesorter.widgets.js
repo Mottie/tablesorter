@@ -9,8 +9,8 @@
  * [ "columns", "filter", "resizable", "stickyHeaders", "uitheme", "saveSort" ]
  */
 /*jshint browser:true, jquery:true, unused:false, loopfunc:true */
-/*global jQuery: false, localStorage: false, navigator: false */
-;(function($) {
+/*global jQuery: false, localStorage: false */
+;(function ($, window) {
 "use strict";
 var ts = $.tablesorter = $.tablesorter || {};
 
@@ -55,7 +55,8 @@ $.extend(ts.css, {
 	wrapper   : 'tablesorter-wrapper',      // ui theme & resizable
 	resizer   : 'tablesorter-resizer',      // resizable
 	sticky    : 'tablesorter-stickyHeader', // stickyHeader
-	stickyVis : 'tablesorter-sticky-visible'
+	stickyVis : 'tablesorter-sticky-visible',
+	stickyWrap: 'tablesorter-sticky-wrapper'
 });
 
 // *** Store data in local storage, with a cookie fallback ***
@@ -1536,6 +1537,8 @@ ts.addWidget({
 	options: {
 		stickyHeaders : '',       // extra class name added to the sticky header row
 		stickyHeaders_attachTo : null, // jQuery selector or object to attach sticky header to
+		stickyHeaders_xScroll : null, // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
+		stickyHeaders_yScroll : null, // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
 		stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
 		stickyHeaders_filteredToTop: true, // scroll table top into view after filtering
 		stickyHeaders_cloneId : '-sticky', // added to table ID, if it exists
@@ -1549,54 +1552,74 @@ ts.addWidget({
 			return;
 		}
 		var $table = c.$table,
-			$attach = $(wo.stickyHeaders_attachTo || 'window'),
+			$attach = $(wo.stickyHeaders_attachTo),
+			namespace = c.namespace + 'stickyheaders ',
+			// element to watch for the scroll event
+			$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
+			$xScroll = $(wo.stickyHeaders_xScroll || wo.stickyHeaders_attachTo || window),
 			$thead = $table.children('thead:first'),
-			$win = $attach.length ? $attach : $(window),
 			$header = $thead.children('tr').not('.sticky-false').children(),
-			innerHeader = '.' + ts.css.headerIn,
-			$tfoot = $table.find('tfoot'),
+			$tfoot = $table.children('tfoot'),
 			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
 			stickyOffset = $attach.length ? 0 : $stickyOffset.length ?
 				$stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
+			// is this table nested? If so, find parent sticky header wrapper (div, not table)
+			$nestedSticky = $table.parent().closest('.' + ts.css.table).hasClass('hasStickyHeaders') ?
+				$table.parent().closest('table.tablesorter')[0].config.widgetOptions.$sticky.parent() : [],
+			nestedStickyTop = $nestedSticky.length ? $nestedSticky.height() : 0,
+			// clone table, then wrap to make sticky header
 			$stickyTable = wo.$sticky = $table.clone()
-				.addClass('containsStickyHeaders')
-				.css({
-					position   : $attach.length ? 'absolute' : 'fixed',
-					margin     : 0,
-					top        : stickyOffset,
-					left       : 0,
-					visibility : 'hidden',
-					zIndex     : wo.stickyHeaders_zIndex ? wo.stickyHeaders_zIndex : 2
-				}),
-			$stickyThead = $stickyTable.children('thead:first').addClass(ts.css.sticky + ' ' + wo.stickyHeaders),
+				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders)
+				.wrap('<div class="' + ts.css.stickyWrap + '">'),
+			$stickyWrap = $stickyTable.parent().css({
+				position   : $attach.length ? 'absolute' : 'fixed',
+				margin     : 0,
+				top        : stickyOffset + nestedStickyTop,
+				left       : 0,
+				visibility : 'hidden',
+				zIndex     : wo.stickyHeaders_zIndex || 2
+			}),
+			$stickyThead = $stickyTable.children('thead:first'),
 			$stickyCells,
 			laststate = '',
 			spacing = 0,
-			nonwkie = $table.css('border-collapse') !== 'collapse' && !/(webkit|msie)/i.test(navigator.userAgent),
+			setWidth = function($orig, $clone){
+				$orig.filter(':visible').each(function(i) {
+					var width, border,
+						$cell = $clone.filter(':visible').eq(i),
+						$this = $(this);
+					// code from https://github.com/jmosbech/StickyTableHeaders
+					if ($this.css('box-sizing') === 'border-box') {
+						width = $this.outerWidth();
+					} else {
+						if ($cell.css('border-collapse') === 'collapse') {
+							if (window.getComputedStyle) {
+								width = parseFloat( window.getComputedStyle(this, null).width );
+							} else {
+								// ie8 only
+								border = parseFloat( $this.css('border-width') );
+								width = $this.outerWidth() - parseFloat( $this.css('padding-left') ) - parseFloat( $this.css('padding-right') ) - border;
+							}
+						} else {
+							width = $this.width();
+						}
+					}
+					$cell.css({
+						'min-width': width,
+						'max-width': width
+					});
+				});
+			},
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
 				spacing = 0;
-				// yes, I dislike browser sniffing, but it really is needed here :(
-				// webkit automatically compensates for border spacing
-				if (nonwkie) {
-					// Firefox & Opera use the border-spacing
-					// update border-spacing here because of demos that switch themes
-					spacing = parseInt($header.eq(0).css('border-left-width'), 10) * 2;
-				}
-				$stickyTable.css({
-					left : $attach.length ? (parseInt($attach.css('padding-left'), 10) || 0) + parseInt(c.$table.css('padding-left'), 10) +
-						parseInt(c.$table.css('margin-left'), 10) + parseInt($table.css('border-left-width'), 10) :
-						$thead.offset().left - $win.scrollLeft() - spacing,
-					width: $table.width()
+				$stickyWrap.css({
+					left : $attach.length ? parseInt($attach.css('padding-left'), 10) || 0 :
+							$table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing,
+					width: $table.outerWidth()
 				});
-				$stickyCells.filter(':visible').each(function(i) {
-					var $cell = $header.filter(':visible').eq(i),
-						// some wibbly-wobbly... timey-wimey... stuff, to make columns line up in Firefox
-						offset = nonwkie && $(this).attr('data-column') === ( '' + parseInt(c.columns/2, 10) ) ? 1 : 0;
-					$(this)
-						.css({ width: $cell.width() - spacing })
-						.find(innerHeader).width( $cell.find(innerHeader).width() - offset );
-				});
+				setWidth( $table, $stickyTable );
+				setWidth( $header, $stickyCells );
 			};
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
@@ -1606,42 +1629,60 @@ ts.addWidget({
 		$stickyTable.find('tbody, tfoot').remove();
 		if (!wo.stickyHeaders_includeCaption) {
 			$stickyTable.find('caption').remove();
-		} else {
-			$stickyTable.find('caption').css( 'margin-left', '-1px' );
 		}
 		// issue #172 - find td/th in sticky header
 		$stickyCells = $stickyThead.children().children();
-		$stickyTable.css({ height:0, width:0, padding:0, margin:0, border:0 });
+		$stickyTable.css({ height:0, width:0, margin: 0 });
 		// remove resizable block
 		$stickyCells.find('.' + ts.css.resizer).remove();
 		// update sticky header class names to match real header after sorting
 		$table
 			.addClass('hasStickyHeaders')
-			.bind('pagerComplete.tsSticky', function() {
+			.bind('pagerComplete' + namespace, function() {
 				resizeHeader();
 			});
 
 		ts.bindEvents(table, $stickyThead.children().children('.tablesorter-header'));
 
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
-		$table.after( $stickyTable );
+		$table.after( $stickyWrap );
+
+		// onRenderHeader is defined, we need to do something about it (fixes #641)
+		if (c.onRenderHeader) {
+			$stickyThead.children('tr').children().each(function(index){
+				// send second parameter 
+				c.onRenderHeader.apply( $(this), [ index, c, $stickyTable ] );
+			});
+		}
+
 		// make it sticky!
-		$win.bind('scroll.tsSticky resize.tsSticky', function(event) {
+		$xScroll.add($yScroll)
+		.unbind('scroll resize '.split(' ').join( namespace ) )
+		.bind('scroll resize '.split(' ').join( namespace ), function(event) {
 			if (!$table.is(':visible')) { return; } // fixes #278
+			// Detect nested tables - fixes #724
+			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
 			var prefix = 'tablesorter-sticky-',
 				offset = $table.offset(),
-				captionHeight = (wo.stickyHeaders_includeCaption ? 0 : $table.find('caption').outerHeight(true)),
-				scrollTop = ($attach.length ? $attach.offset().top : $win.scrollTop()) + stickyOffset - captionHeight,
-				tableHeight = $table.height() - ($stickyTable.height() + ($tfoot.height() || 0)),
-				isVisible = (scrollTop > offset.top) && (scrollTop < offset.top + tableHeight) ? 'visible' : 'hidden',
+				yWindow = $.isWindow( $yScroll[0] ),
+				xWindow = $.isWindow( $xScroll[0] ),
+				// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+				scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+				tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
+				isVisible = ( scrollTop > offset.top) && (scrollTop < offset.top + tableHeight) ? 'visible' : 'hidden',
 				cssSettings = { visibility : isVisible };
+
 			if ($attach.length) {
-				cssSettings.top = $attach.scrollTop();
-			} else {
-				// adjust when scrolling horizontally - fixes issue #143
-				cssSettings.left = $thead.offset().left - $win.scrollLeft() - spacing;
+				cssSettings.top = yWindow ? scrollTop : $attach.scrollTop();
 			}
-			$stickyTable
+			if (xWindow) {
+				// adjust when scrolling horizontally - fixes issue #143
+				cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing;
+			}
+			if ($nestedSticky.length) {
+				cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
+			}
+			$stickyWrap
 				.removeClass(prefix + 'visible ' + prefix + 'hidden')
 				.addClass(prefix + isVisible)
 				.css(cssSettings);
@@ -1656,14 +1697,14 @@ ts.addWidget({
 		}
 
 		// look for filter widget
-		if ($table.hasClass('hasFilters')) {
+		if ($table.hasClass('hasFilters') && wo.filter_columnFilters) {
 			// scroll table into view after filtering, if sticky header is active - #482
-			$table.bind('filterEnd', function() {
+			$table.bind('filterEnd' + namespace, function() {
 				// $(':focus') needs jQuery 1.6+
 				var $td = $(document.activeElement).closest('td'),
 					column = $td.parent().children().index($td);
 				// only scroll if sticky header is active
-				if ($stickyTable.hasClass(ts.css.stickyVis) && wo.stickyHeaders_filteredToTop) {
+				if ($stickyWrap.hasClass(ts.css.stickyVis) && wo.stickyHeaders_filteredToTop) {
 					// scroll to original table (not sticky clone)
 					window.scrollTo(0, $table.position().top);
 					// give same input/select focus; check if c.$filters exists; fixes #594
@@ -1683,14 +1724,16 @@ ts.addWidget({
 
 	},
 	remove: function(table, c, wo) {
+		var namespace = c.namespace + 'stickyheaders ';
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind('pagerComplete.tsSticky')
-			.find('.' + ts.css.sticky).remove();
+			.unbind( 'pagerComplete filterEnd '.split(' ').join(namespace) )
+			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		// don't unbind if any table on the page still has stickyheaders applied
 		if (!$('.hasStickyHeaders').length) {
-			$(window).unbind('scroll.tsSticky resize.tsSticky');
+			$(window).add(wo.stickyHeaders_xScroll).add(wo.stickyHeaders_yScroll).add(wo.stickyHeaders_attachTo)
+				.unbind( 'scroll resize '.split(' ').join(namespace) );
 		}
 		ts.addHeaderResizeEvent(table, false);
 	}
@@ -1925,4 +1968,4 @@ ts.addWidget({
 	}
 });
 
-})(jQuery);
+})(jQuery, window);

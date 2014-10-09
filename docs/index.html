@@ -510,9 +510,9 @@
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.17.3</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.3</span>).</li>
-		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.16.2</span>)</li>
-		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.16.4</span>).</li>
-		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>):
+		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.18.0</span>)</li>
+		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.18.0</span>).</li>
+		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.18.0</span>):
 			<ul>
 				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
 				<li><a href="example-widget-bootstrap-theme.html">Bootstrap</a> (v2.4)</li>
@@ -1413,7 +1413,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td><a href="#" class="permalink">theme</a></td>
 				<td>String</td>
 				<td>&quot;default&quot;</td>
-				<td>This option will add a theme css class name to the table <code>&quot;tablesorter-{theme}&quot;</code> for styling (v2.4; <span class="version updated">v2.16.4</span>).
+				<td>This option will add a theme css class name to the table <code>&quot;tablesorter-{theme}&quot;</code> for styling (v2.4; <span class="version updated">v2.18.0</span>).
 					<div class="collapsible">
 						<br>When changing this theme option, make sure that the appropriate css theme file has also been loaded. Included theme files include:
 						<a href="themes.html" target="_blank" title="open themes in a new window">see all themes</a><br>
@@ -1724,7 +1724,11 @@ $(function(){
       // extra class name added to the sticky header row
       stickyHeaders : '',
       // jQuery selector or object to attach sticky header to
-      stickyHeaders_attachTo : null
+      stickyHeaders_attachTo : null,
+      // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
+      stickyHeaders_xScroll : null,
+      // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
+      stickyHeaders_yScroll : null,
       // number or jquery selector targeting the position:fixed element
       stickyHeaders_offset : 0,
       // scroll table top into view after filtering
@@ -1736,7 +1740,7 @@ $(function(){
       // if false and a caption exist, it won't be included in the sticky header
       stickyHeaders_includeCaption : true,
       // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
-      stickyHeaders_zIndex : 2
+      stickyHeaders_zIndex : 2,
 
       // *** resizable widget ***
       // if false, resized columns are not saved for next page reload
@@ -2964,6 +2968,54 @@ $('table').trigger('search', false);</pre></div>
     widgetOptions : {
       // Where to attach the stickyHeaders
       stickyHeaders_attachTo : '.wrapper' // $('.wrapper') jQuery object can also be used
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-sticky-header.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-xscroll">
+				<td><a href="#" class="permalink">stickyHeaders_xScroll</a></td>
+				<td>String</td>
+				<td>null</td>
+				<td>
+					Sticky Headers widget: points to the element in which to monitor for horizontal scrolling (<span class="version">v2.18.0</span>).
+					<div class="collapsible">
+					<br>
+					If undefined (or <code>null</code>), the window element will be monitored.<br>
+					<br>
+					Use the <a href="#widget-sticky-headers-xscroll"><code>stickyHeaders_xScroll</code></a> option as follows:<br>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
+      stickyHeaders_xScroll : '.wrapper' // $('.wrapper') jQuery object can also be used
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-sticky-header.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-sticky-headers-yscroll">
+				<td><a href="#" class="permalink">stickyHeaders_yScroll</a></td>
+				<td>String</td>
+				<td>null</td>
+				<td>
+					Sticky Headers widget: points to the element in which to monitor for vertical scrolling (<span class="version">v2.18.0</span>).
+					<div class="collapsible">
+					<br>
+					If undefined (or <code>null</code>), the window element will be monitored.<br>
+					<br>
+					Use the <a href="#widget-sticky-headers-yscroll"><code>stickyHeaders_yScroll</code></a> option as follows:<br>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
+      stickyHeaders_yScroll : '.wrapper' // $('.wrapper') jQuery object can also be used
     }
   });
 });</pre></div>

@@ -65,7 +65,7 @@ $(function() {
 		themes = 'default blue green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
-		o += '<option>' + t[i] + '</option>';
+		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
 	}
 
 	$('select')
@@ -82,7 +82,7 @@ $(function() {
 			});
 			$('table')
 				.removeClass('tablesorter-' + t.join(' tablesorter-') + ' tablesorter-jui')
-				.addClass('tablesorter-' + theme.replace(/-/,''));
+				.addClass('tablesorter-' + (theme === 'black-ice' ? 'blackice' : theme) );
 			// make sure columns align
 			$(window).trigger('resize');
 		}).change();
