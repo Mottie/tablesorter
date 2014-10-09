@@ -131,17 +131,10 @@
 			}
 		},
 
-		updatePageDisplay = function(table, p, completed) {
-			if ( !p.initialized ) { return; }
-			var s, $out, regex,
-				c = table.config,
-				f = c.$table.hasClass('hasFilters'),
-				t = [],
-				sz = p.size || 10; // don't allow dividing by zero
-			t = [ (c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered'), c.selectorRemove.replace(/^(\w+\.)/g,'') ];
-			if (p.countChildRows) { t.push(c.cssChildRow); }
-			regex = new RegExp( '(' + t.join('|') + ')' );
-			if (f && !p.ajaxUrl) {
+		calcFilters = function(table, p) {
+			var c = table.config,
+				hasFilters = c.$table.hasClass('hasFilters');
+			if (hasFilters && !p.ajaxUrl) {
 				if ($.isEmptyObject(c.cache)) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
@@ -151,11 +144,20 @@
 						p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 					});
 				}
-			} else if (!f) {
+			} else if (!hasFilters) {
 				p.filteredRows = p.totalRows;
 			}
+		},
+
+		updatePageDisplay = function(table, p, completed) {
+			if ( !p.initialized ) { return; }
+			var s, t, $out,
+				c = table.config,
+				sz = p.size || 10; // don't allow dividing by zero
+			if (p.countChildRows) { t.push(c.cssChildRow); }
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			c.totalRows = p.totalRows;
+			calcFilters(table, p);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
@@ -220,7 +222,7 @@
 			// Filter the options page number link array if it's larger than 'maxOptionSize'
 			// as large page set links will slow the browser on large dom inserts
 			var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
-				pg = Math.min( p.totalPages, p.filteredPages ),
+				pg = Math.min( p.totalPages, p.filteredPages ) || 1,
 				// make skip set size multiples of 5
 				skip_set_size = Math.ceil( ( pg / p.maxOptionSize ) / 5 ) * 5,
 				large_collection = pg > p.maxOptionSize,
@@ -646,13 +648,14 @@
 
 		moveToPage = function(table, p, pageMoved) {
 			if ( p.isDisabled ) { return; }
-			var c = table.config,
+			var pg, c = table.config,
 				$t = $(table),
-				l = p.last,
-				pg = Math.min( p.totalPages, p.filteredPages ) || 1;
+				l = p.last;
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject(c.cache)) {
 				return updateCache(table);
 			}
+			calcFilters(table, p);
+			pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 			// fixes issue where one currentFilter is [] and the other is ['','',''],

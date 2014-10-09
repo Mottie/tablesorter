@@ -352,18 +352,10 @@ tsp = ts.pager = {
 		}
 	},
 
-	updatePageDisplay: function(table, c, completed) {
-		var s, $out, regex,
-			wo = c.widgetOptions,
-			p = c.pager,
-			f = c.$table.hasClass('hasFilters'),
-			t = [],
-			sz = p.size || 10; // don't allow dividing by zero
-		t = [ wo && wo.filter_filteredRow || 'filtered', c.selectorRemove.replace(/^(\w+\.)/g,'') ];
-		if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
-		regex = new RegExp( '(' + t.join('|') + ')' );
-		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
-		if (f && !wo.pager_ajaxUrl) {
+	calcFilters: function(table, c) {
+		var p = c.pager,
+			hasFilters = c.$table.hasClass('hasFilters');
+		if (hasFilters && !p.ajaxUrl) {
 			if ($.isEmptyObject(c.cache)) {
 				// delayInit: true so nothing is in the cache
 				p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( c.widgetOptions.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
@@ -373,11 +365,21 @@ tsp = ts.pager = {
 					p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 				});
 			}
-		} else if (!f) {
+		} else if (!hasFilters) {
 			p.filteredRows = p.totalRows;
 		}
+	},
+
+	updatePageDisplay: function(table, c, completed) {
+		var s, t, $out, regex,
+			wo = c.widgetOptions,
+			p = c.pager,
+			sz = p.size || 10; // don't allow dividing by zero
+		if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
+		p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 		p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 		c.totalRows = p.totalRows;
+		tsp.calcFilters(table, c);
 		c.filteredRows = p.filteredRows;
 		p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
@@ -878,10 +880,11 @@ tsp = ts.pager = {
 		if ( pageMoved !== false && p.initialized && $.isEmptyObject(table.config.cache)) {
 			return tsp.updateCache(table);
 		}
-		var c = table.config,
+		var pg, c = table.config,
 			wo = c.widgetOptions,
-			l = p.last,
-			pg = Math.min( p.totalPages, p.filteredPages ) || 1;
+			l = p.last
+		tsp.calcFilters(table, c);
+		pg = Math.min( p.totalPages, p.filteredPages );
 		if ( p.page < 0 ) { p.page = 0; }
 		if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 		// fixes issue where one current filter is [] and the other is ['','',''],
