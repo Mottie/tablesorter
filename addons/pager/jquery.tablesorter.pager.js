@@ -192,10 +192,8 @@
 						$.each(buildPageSelect(p), function(i, opt){
 							t += '<option value="' + opt + '">' + opt + '</option>';
 						});
-						p.$goto.each(function(){
-							this.innerHTML = t;
-							this.value = p.page + 1;
-						});
+						// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
+						p.$goto.html(t).val( p.page + 1 );
 					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
@@ -651,8 +649,8 @@
 			var c = table.config,
 				$t = $(table),
 				l = p.last,
-				pg = Math.min( p.totalPages, p.filteredPages );
-			if ( pageMoved !== false && p.initialized && $.isEmptyObject(table.config.cache)) {
+				pg = Math.min( p.totalPages, p.filteredPages ) || 1;
+			if ( pageMoved !== false && p.initialized && $.isEmptyObject(c.cache)) {
 				return updateCache(table);
 			}
 			if ( p.page < 0 ) { p.page = 0; }

@@ -415,10 +415,8 @@ tsp = ts.pager = {
 					$.each(tsp.buildPageSelect(p, c), function(i, opt){
 						t += '<option value="' + opt + '">' + opt + '</option>';
 					});
-					p.$goto.each(function(){
-						this.innerHTML = t;
-						this.value = p.page + 1;
-					});
+					// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
+					p.$goto.html(t).val( p.page + 1 );;
 				}
 				// rebind startRow/page inputs
 				$out.find('.ts-startRow, .ts-page').off('change').on('change', function(){
@@ -883,7 +881,7 @@ tsp = ts.pager = {
 		var c = table.config,
 			wo = c.widgetOptions,
 			l = p.last,
-			pg = Math.min( p.totalPages, p.filteredPages );
+			pg = Math.min( p.totalPages, p.filteredPages ) || 1;
 		if ( p.page < 0 ) { p.page = 0; }
 		if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 		// fixes issue where one current filter is [] and the other is ['','',''],
