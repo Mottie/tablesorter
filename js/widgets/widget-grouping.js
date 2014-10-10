@@ -43,6 +43,7 @@ ts.grouping = {
 				hours = time.getHours();
 			return part === 'year' ? time.getFullYear() :
 				part === 'month' ? wo.group_months[time.getMonth()] :
+				part === 'monthyear' ?  wo.group_months[time.getMonth()] + ' ' + time.getFullYear() :
 				part === 'day' ? wo.group_months[time.getMonth()] + ' ' + time.getDate() :
 				part === 'week' ? wo.group_week[time.getDay()] :
 				part === 'time' ? ('00' + (hours > 12 ? hours - 12 : hours === 0 ? hours + 12 : hours)).slice(-2) + ':' +
