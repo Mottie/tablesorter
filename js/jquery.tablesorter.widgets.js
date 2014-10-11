@@ -274,7 +274,7 @@ ts.addWidget({
 		columns : [ "primary", "secondary", "tertiary" ]
 	},
 	format: function(table, c, wo) {
-		var time, $tbody, tbodyIndex, $rows, rows, $row, $cells, remove, indx,
+		var $tbody, tbodyIndex, $rows, rows, $row, $cells, remove, indx,
 			$table = c.$table,
 			$tbodies = c.$tbodies,
 			sortList = c.sortList,
@@ -283,9 +283,6 @@ ts.addWidget({
 			css = wo && wo.columns || [ "primary", "secondary", "tertiary" ],
 			last = css.length - 1;
 			remove = css.join(' ');
-		if (c.debug) {
-			time = new Date();
-		}
 		// check if there is a sort (on initialization there may not be one)
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // detach tbody
@@ -324,9 +321,6 @@ ts.addWidget({
 					$rows.filter('[data-column="' + sortList[indx][0] + '"]').addClass(css[indx] || css[last]);
 				}
 			}
-		}
-		if (c.debug) {
-			ts.benchmark("Applying Columns widget", time);
 		}
 	},
 	remove: function(table, c, wo) {
@@ -581,11 +575,8 @@ ts.filter = {
 			and : 'and'
 		}, ts.language);
 
-		var options, string, txt, $header, column, filters, val, time, fxn, noSelect,
+		var options, string, txt, $header, column, filters, val, fxn, noSelect,
 			regex = ts.filter.regex;
-		if (c.debug) {
-			time = new Date();
-		}
 		c.$table.addClass('hasFilters');
 
 		// define timers so using clearTimeout won't cause an undefined error
@@ -717,9 +708,6 @@ ts.filter = {
 		// set filtered rows count (intially unfiltered)
 		c.filteredRows = c.totalRows;
 
-		if (c.debug) {
-			ts.benchmark("Applying Filter widget", time);
-		}
 		// add default values
 		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
 			// redefine "wo" as it does not update properly inside this callback
@@ -728,6 +716,7 @@ ts.filter = {
 			if (filters.length) {
 				// prevent delayInit from triggering a cache build if filters are empty
 				if ( !(c.delayInit && filters.join('') === '') ) {
+
 					ts.setFilters(table, filters, true);
 				}
 			}

@@ -54,7 +54,7 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, time, cache, saveName, direction,
+		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, cache, saveName, direction,
 			lang = wo.grouping_language,
 			group = '',
 			savedGroup = false,
@@ -67,7 +67,6 @@ ts.grouping = {
 			c.$table.data('pagerSavedHeight', 0);
 		}
 		if (column >= 0 && !c.$headers.filter('[data-column="' + column + '"]:last').hasClass('group-false')) {
-			if (c.debug){ time = new Date(); }
 			wo.group_currentGroup = ''; // save current groups
 			wo.group_currentGroups = {};
 
@@ -151,9 +150,6 @@ ts.grouping = {
 				}
 			});
 			c.$table.trigger(wo.group_complete);
-			if (c.debug) {
-				$.tablesorter.benchmark("Applying groups widget: ", time);
-			}
 		}
 	},
 

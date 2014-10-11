@@ -1040,6 +1040,23 @@
 				<td></td>
 			</tr>
 
+			<tr id="widgetclass">
+				<td><a href="#" class="permalink">widgetClass</a></td>
+				<td>String</td>
+				<td>'widget-{name}'</td>
+				<td>When the table has a class name that matches the template and a widget id that matches the <code>{name}</code>, the widget will automatically be added to the table (<span class="version">v2.18.0</span>)
+					<div class="collapsible">
+					<br>
+					By default, this option is set to <code>'widget-{name}'</code>. So if the table has a class name of <code>widget-zebra</code> the zebra widget will be automatically added to the <code>config.widgets</code> option and applied to the table.<br>
+					<br>
+					Some widget ID's with special characters may not be detected; ID's with letters, numbers, underscores and/or dashes will be correctly detected.<br>
+					<br>
+					The template string *must* contain the <code>{name}</code> tag.
+					</div>
+					</td>
+				<td></td>
+			</tr>
+
 			<tr id="onrenderheader">
 				<td><a href="#" class="permalink">onRenderHeader</a></td>
 				<td>Function</td>

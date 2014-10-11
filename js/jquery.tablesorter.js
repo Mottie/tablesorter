@@ -75,6 +75,7 @@
 					zebra : [ 'even', 'odd' ]    // zebra widget alternating row class names
 				},
 				initWidgets      : true,       // apply widgets on tablesorter initialization
+				widgetClass     : 'widget-{name}', // table class name template to match to include a widget
 
 				// *** callbacks
 				initialized      : null,       // function(table){},
@@ -1561,10 +1562,20 @@
 				var c = table.config,
 					wo = c.widgetOptions,
 					widgets = [],
-					time, w, wd;
+					time, time2, w, wd;
 				// prevent numerous consecutive widget applications
 				if (init !== false && table.hasInitialized && (table.isApplyingWidgets || table.isUpdating)) { return; }
 				if (c.debug) { time = new Date(); }
+				wd = new RegExp( '\\b' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' )+ '\\b', 'g' );
+				if ( c.table.className.match( wd ) ) {
+					// extract out the widget id from the table class (widget id's can include dashes)
+					w = c.table.className.match( wd );
+					if ( w ) {
+						$.each( w, function( i,n ){
+							c.widgets.push( n.replace( wd, '$1' ) );
+						});
+					}
+				}
 				if (c.widgets.length) {
 					table.isApplyingWidgets = true;
 					// ensure unique widget ids
@@ -1594,17 +1605,22 @@
 									wo = table.config.widgetOptions = $.extend( true, {}, w.options, wo );
 								}
 								if (w.hasOwnProperty('init')) {
+									if (c.debug) { time2 = new Date(); }
 									w.init(table, w, c, wo);
+									if (c.debug) { ts.benchmark('Initializing ' + w.id + ' widget', time2); }
 								}
 							}
 							if (!init && w.hasOwnProperty('format')) {
+								if (c.debug) { time2 = new Date(); }
 								w.format(table, c, wo, false);
+								if (c.debug) { ts.benchmark( ( init ? 'Initializing ' : 'Applying ' ) + w.id + ' widget', time2); }
 							}
 						}
 					});
 				}
 				setTimeout(function(){
 					table.isApplyingWidgets = false;
+					$.data(table, 'lastWidgetApplication', new Date());
 				}, 0);
 				if (c.debug) {
 					w = c.widgets.length;
@@ -1887,9 +1903,6 @@
 					even = (row % 2 === 0);
 					$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
 				});
-			}
-			if (c.debug) {
-				ts.benchmark("Applying Zebra widget", time);
 			}
 		},
 		remove: function(table, c, wo){
