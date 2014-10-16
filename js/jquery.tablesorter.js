@@ -1081,8 +1081,8 @@
 					'aria-live' : 'polite',
 					'aria-relevant' : 'all'
 				});
-				if (c.$table.find('caption').length) {
-					k = c.$table.find('caption')[0];
+				if (c.$table.children('caption').length) {
+					k = c.$table.children('caption')[0];
 					if (!k.id) { k.id = c.namespace.slice(1) + 'caption'; }
 					c.$table.attr('aria-labelledby', k.id);
 				}
