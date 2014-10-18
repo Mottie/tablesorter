@@ -1561,15 +1561,18 @@
 				table = $(table)[0]; // in case this is called externally
 				var c = table.config,
 					wo = c.widgetOptions,
+					tableClass = ' ' + c.table.className + ' ',
 					widgets = [],
 					time, time2, w, wd;
 				// prevent numerous consecutive widget applications
 				if (init !== false && table.hasInitialized && (table.isApplyingWidgets || table.isUpdating)) { return; }
 				if (c.debug) { time = new Date(); }
-				wd = new RegExp( '\\b' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' )+ '\\b', 'g' );
-				if ( c.table.className.match( wd ) ) {
+				// look for widgets to apply from in table class
+				// stop using \b otherwise this matches "ui-widget-content" & adds "content" widget
+				wd = new RegExp( '\\s' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' )+ '\\s', 'g' );
+				if ( tableClass.match( wd ) ) {
 					// extract out the widget id from the table class (widget id's can include dashes)
-					w = c.table.className.match( wd );
+					w = tableClass.match( wd );
 					if ( w ) {
 						$.each( w, function( i,n ){
 							c.widgets.push( n.replace( wd, '$1' ) );
