@@ -176,34 +176,42 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var i, time, classes, $header, $icon, $tfoot, $h,
+		var i, time, classes, $header, $icon, $tfoot, $h, oldtheme, oldremove,
 			themesAll = ts.themes,
 			$table = c.$table,
 			$headers = c.$headers,
 			theme = c.theme || 'jui',
 			themes = themesAll[theme] || themesAll.jui,
-			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc;
+			remove = [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' );
 		if (c.debug) { time = new Date(); }
 		// initialization code - run once
-		if (!$table.hasClass('tablesorter-' + theme) || c.theme === theme || !table.hasInitialized) {
+		if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !table.hasInitialized) {
+			oldtheme = themes[c.appliedTheme] || {};
+			oldremove = oldtheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
+			if (oldtheme) {
+				wo.zebra[0] = wo.zebra[0].replace(' ' + oldtheme.even, '');
+				wo.zebra[1] = wo.zebra[1].replace(' ' + oldtheme.odd, '');
+			}
 			// update zebra stripes
 			if (themes.even !== '') { wo.zebra[0] += ' ' + themes.even; }
 			if (themes.odd !== '') { wo.zebra[1] += ' ' + themes.odd; }
 			// add caption style
-			$table.children('caption').addClass(themes.caption);
+			$table.children('caption').removeClass(oldtheme.caption).addClass(themes.caption);
 			// add table/footer class names
 			$tfoot = $table
 				// remove other selected themes
-				.removeClass( c.theme === '' ? '' : 'tablesorter-' + c.theme )
+				.removeClass( c.appliedTheme ? 'tablesorter-' + ( c.appliedTheme || '' ) : '' )
 				.addClass('tablesorter-' + theme + ' ' + themes.table) // add theme widget class name
 				.children('tfoot');
 			if ($tfoot.length) {
 				$tfoot
-					.children('tr').addClass(themes.footerRow)
-					.children('th, td').addClass(themes.footerCells);
+					.children('tr').removeClass(oldtheme.footerRow).addClass(themes.footerRow)
+					.children('th, td').removeClass(oldtheme.footerCells).addClass(themes.footerCells);
 			}
 			// update header classes
 			$headers
+				.add(c.$extraHeaders)
+				.removeClass(oldtheme.header + ' ' + oldtheme.hover + ' ' + oldremove)
 				.addClass(themes.header)
 				.not('.sorter-false')
 				.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
@@ -216,11 +224,12 @@ ts.addWidget({
 			}
 			if (c.cssIcon) {
 				// if c.cssIcon is '', then no <i> is added to the header
-				$headers.find('.' + ts.css.icon).addClass(themes.icons);
+				$headers.find('.' + ts.css.icon).removeClass(oldtheme.icons + ' ' + oldremove).addClass(themes.icons);
 			}
 			if ($table.hasClass('hasFilters')) {
-				$table.children('thead').children('.' + ts.css.filterRow).addClass(themes.filterRow);
+				$table.children('thead').children('.' + ts.css.filterRow).removeClass(oldtheme.filterRow).addClass(themes.filterRow);
 			}
+			c.appliedTheme = c.theme;
 		}
 		for (i = 0; i < c.columns; i++) {
 			$header = c.$headers.add(c.$extraHeaders).filter('[data-column="' + i + '"]');
