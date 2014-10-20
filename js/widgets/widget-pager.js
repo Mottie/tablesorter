@@ -156,12 +156,12 @@ tsp = ts.pager = {
 		p.$goto = p.$container.find(s.gotoPage); // goto is a reserved word #657
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
-		p.totalRows = c.$tbodies.eq(0).children('tr').not( c.widgetOptions.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
+		p.totalRows = c.$tbodies.eq(0).children('tr').not( wo.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 			// get any default filter settings (data-value attribute) fixes #388
-			p.currentFilters = c.$table.data('lastSearch') || ts.filter.setDefaults(table, c, wo) || [];
+			p.currentFilters = c.$table.data('lastSearch') || [];
 			// set, but don't apply current filters
 			ts.setFilters(table, p.currentFilters, false);
 		}
@@ -259,7 +259,7 @@ tsp = ts.pager = {
 				// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 				if (!table || triggered) { return; }
 				var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
-				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
+				p.totalRows = $rows.length - ( wo.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 				p.totalPages = Math.ceil( p.totalRows / p.size );
 				if ($rows.length && c.rowsCopy && c.rowsCopy.length === 0) {
 					// make a copy of all table rows once the cache has been built
@@ -353,12 +353,13 @@ tsp = ts.pager = {
 	},
 
 	calcFilters: function(table, c) {
-		var p = c.pager,
+		var wo = c.widgetOptions,
+			p = c.pager,
 			hasFilters = c.$table.hasClass('hasFilters');
-		if (hasFilters && !p.ajaxUrl) {
+		if (hasFilters && !wo.pager_ajaxUrl) {
 			if ($.isEmptyObject(c.cache)) {
 				// delayInit: true so nothing is in the cache
-				p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( c.widgetOptions.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
+				p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( wo.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
 			} else {
 				p.filteredRows = 0;
 				$.each(c.cache[0].normalized, function(i, el) {
@@ -1014,7 +1015,7 @@ tsp = ts.pager = {
 			p = c.pager;
 		if ( !p.ajax ) {
 			c.rowsCopy = rows;
-			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
+			p.totalRows = wo.pager_countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size || wo.pager_size || 10;
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			tsp.moveToPage(table, p);
@@ -1032,7 +1033,8 @@ ts.showError = function(table, message){
 	$(table).each(function(){
 		var $row,
 			c = this.config,
-			errorRow = c.pager && c.pager.cssErrorRow || c.widgetOptions.pager_css && c.widgetOptions.pager_css.errorRow || 'tablesorter-errorRow';
+			wo = c.widgetOptions,
+			errorRow = c.pager && c.pager.cssErrorRow || wo.pager_css && wo.pager_css.errorRow || 'tablesorter-errorRow';
 		if (c) {
 			if (typeof message === 'undefined') {
 				c.$table.find('thead').find(c.selectorRemove).remove();
