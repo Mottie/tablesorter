@@ -1049,7 +1049,7 @@ ts.filter = {
 		// look for multiple columns "1-3,4-6,8" in data-column
 		var ranges, singles, indx,
 			columns = [],
-			val = ts.filter.getLatestSearch( $input ).attr('data-column');
+			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') );
 		// process column range
 		if ( /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
@@ -1069,7 +1069,7 @@ ts.filter = {
 		}
 		// process single columns
 		if ( /,/.test( val ) ) {
-			singles = val.split(',');
+			singles = val.split( /\s*,\s*/ );
 			$.each( singles, function(i,v) {
 				if (v !== '') {
 					indx = parseInt( v, 10 );
