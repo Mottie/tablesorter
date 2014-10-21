@@ -877,7 +877,7 @@ ts.filter = {
 			$ext = wo.filter_$externalFilters;
 		if (internal !== true) {
 			// save anyMatch element
-			wo.filter_$anyMatch = $el.filter('[data-column="all"]');
+			wo.filter_$anyMatch = $el.filter('[data-column="all"],[data-column*="-"],[data-column*=","]');
 			if ($ext && $ext.length) {
 				wo.filter_$externalFilters = wo.filter_$externalFilters.add( $el );
 			} else {
@@ -1040,6 +1040,52 @@ ts.filter = {
 		}
 		return val;
 	},
+	getLatestSearch: function( $input ) {
+		return $input.sort(function(a, b) {
+			return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
+		});
+	},
+	multipleColumns: function( c, $input ) {
+		// look for multiple columns "1-3,4-6,8" in data-column
+		var ranges, singles, indx,
+			columns = [],
+			val = ts.filter.getLatestSearch( $input ).attr('data-column');
+		// process column range
+		if ( /-/.test( val ) ) {
+			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
+			$.each(ranges, function(i,v){
+				var t,
+					range = v.split( /\s*-\s*/ ),
+					start = parseInt( range[0], 10 ) || 0,
+					end = parseInt( range[1], 10 ) || ( c.columns - 1 );
+				if ( start > end ) { t = start; start = end; end = t; } // swap
+				if ( end >= c.columns ) { end = c.columns - 1; }
+				for ( ; start <= end; start++ ) {
+					columns.push(start);
+				}
+				// remove processed range from val
+				val = val.replace( v, '' );
+			});
+		}
+		// process single columns
+		if ( /,/.test( val ) ) {
+			singles = val.split(',');
+			$.each( singles, function(i,v) {
+				if (v !== '') {
+					indx = parseInt( v, 10 );
+					if ( indx < c.columns ) {
+						columns.push( indx );
+					}
+				}
+			});
+		}
+		if (!columns.length) {
+			for ( indx = 0; indx < c.columns; indx++ ) {
+				columns.push( indx );
+			}
+		}
+		return columns;
+	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters || table.config.widgetOptions.filter_initializing) { return; }
 		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
@@ -1112,7 +1158,7 @@ ts.filter = {
 				}
 				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
 					data.anyMatchFlag = true;
-					data.anyMatchFilter = wo.filter_$anyMatch && wo.filter_$anyMatch.val() || filters[c.columns] || '';
+					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || filters[c.columns] || '';
 					if (c.sortLocaleCompare) {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
@@ -1142,20 +1188,23 @@ ts.filter = {
 					data.childRowText = (childRow.length && wo.filter_childRows) ? childRow.text() : '';
 					data.childRowText = wo.filter_ignoreCase ? data.childRowText.toLocaleLowerCase() : data.childRowText;
 					$cells = $rows.eq(rowIndex).children();
-
 					if (data.anyMatchFlag) {
+						// look for multiple columns "1-3,4-6,8"
+						columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
 						data.anyMatch = true;
 						data.rowArray = $cells.map(function(i){
-							var txt;
-							if (data.parsed[i]) {
-								txt = data.cacheArray[i];
-							} else {
-								txt = wo.filter_ignoreCase ? $(this).text().toLowerCase() : $(this).text();
-								if (c.sortLocaleCompare) {
-									txt = ts.replaceAccents(txt);
+							if ( $.inArray(i, columnIndex) > -1 ) {
+								var txt;
+								if (data.parsed[i]) {
+									txt = data.cacheArray[i];
+								} else {
+									txt = wo.filter_ignoreCase ? $(this).text().toLowerCase() : $(this).text();
+									if (c.sortLocaleCompare) {
+										txt = ts.replaceAccents(txt);
+									}
 								}
+								return txt;
 							}
-							return txt;
 						}).get();
 						data.filter = data.anyMatchFilter;
 						data.iFilter = data.iAnyMatchFilter;
@@ -1468,7 +1517,7 @@ ts.filter = {
 };
 
 ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
-	var i, $filters, $column,
+	var i, $filters, $column, cols,
 		filters = false,
 		c = table ? $(table)[0].config : '',
 		wo = c ? c.widgetOptions : '';
@@ -1485,19 +1534,24 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 		if ($filters && $filters.length) {
 			filters = setFilters || [];
 			for (i = 0; i < c.columns + 1; i++) {
-				$column = $filters.filter('[data-column="' + (i === c.columns ? 'all' : i) + '"]');
+				// "all" columns can now include a range or set of columms "0-2,4,6-7"
+				cols = '[data-column' + (i === c.columns ? '="all"],[data-column="any"],[data-column*="-"],[data-column*=",' : '="' + i) + '"]';
+				$column = $filters.filter(cols);
 				if ($column.length) {
 					// move the latest search to the first slot in the array
-					$column = $column.sort(function(a, b){
-						return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
-					});
+					$column = ts.filter.getLatestSearch( $column );
 					if ($.isArray(setFilters)) {
 						// skip first (latest input) to maintain cursor position while typing
 						(skipFirst ? $column.slice(1) : $column).val( setFilters[i] ).trigger('change.tsfilter');
 					} else {
 						filters[i] = $column.val() || '';
 						// don't change the first... it will move the cursor
-						$column.slice(1).val( filters[i] );
+						if (i === c.columns) {
+							// don't update range columns from "all" setting
+							$column.slice(1).filter('[data-column*="' + $column.attr('data-column') + '"]').val( filters[i] );
+						} else {
+							$column.slice(1).val( filters[i] );
+						}
 					}
 					// save any match input dynamically
 					if (i === c.columns && $column.length) {
