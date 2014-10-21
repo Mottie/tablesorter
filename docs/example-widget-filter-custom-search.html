@@ -30,9 +30,10 @@
 	</script>
 
 	<script id="js">// *** Filter search type function arguments ***
-// data.filter = filter input value for a column; iFilter = same as filter, except lowercase
+// data.filter = filter input value for a column;
+// iFilter = same as filter, except lowercase (if wo.filter_ignoreCase is true)
 // data.exact = table cell text (or parsed data, if column parser enabled)
-// data.iExact = same as exact, except lowercase
+// data.iExact = same as exact, except lowercase (if wo.filter_ignoreCase is true)
 
 // search for a match from the beginning of a string
 // "^l" matches "lion" but not "koala"
@@ -153,9 +154,9 @@ $(function() {
 					<li>The following arguments are passed to the filter function within the <code>data</code> parameter (changed in <span class="version updated">v2.17.8</span>):
 						<ul>
 							<li><code>data.filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
-							<li><code>data.iFilter</code> - The text from the filter in all lower case for case insensitive searches.</li>
+							<li><code>data.iFilter</code> - The text from the filter in all lower case for case insensitive searches, if <code>table.config.widgetOptions.filter_ignoreCase</code> is <code>true</code>.</li>
 							<li><code>data.exact</code> - The exact (or parsed) text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
-							<li><code>data.iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches.<br><br></li>
+							<li><code>data.iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches, if <code>table.config.widgetOptions.filter_ignoreCase</code> is <code>true</code>.<br><br></li>
 							<li><code>data.index</code> - The current column index (zero-based) being filtered. When performing an "any match", this index is equal to <code>config.columns</code> which is the last column of the table plus one.</li>
 							<li><code>data.cache</code> - The parsed text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>. This value will be in all lower case if <code>config.ignoreCase</code> is <code>true</code>.<br><br></li>
 
@@ -165,12 +166,15 @@ $(function() {
 							<li><code>data.cacheArray</code> - An array of parsed text from each table cell.</li>
 							<li><code>data.childRowText</code> - contains all text from any associated child rows.</li>
 
-							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.</li>
+							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.<br>
+								<span class="label label-info">Note</span> Be aware that the values in this array will all be in lower case if the <code>table.config.ignoreCase</code> option is <code>true</code>.
+							</li>
 						</ul>
 						<br>
 					</li>
 					<li>If your designator doesn't exist, you *must* return <code>null</code> to allow comparisons with other filter types.</li>
 				</ul>
+				<br>
 			</li>
 			<li>Here is a basic example with extensive comments:
 				<pre class="prettyprint lang-js">// search for a match from the beginning of a string

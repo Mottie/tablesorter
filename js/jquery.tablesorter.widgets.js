@@ -422,10 +422,11 @@ ts.filter = {
 	},
 		// function( c, data ) { }
 		// c = table.config
-		// data.filter = array of filter input values; data.iFilter = same array, except lowercase
+		// data.filter = array of filter input values;
+		// data.iFilter = same array, except lowercase (if wo.filter_ignoreCase is true)
 		// data.exact = table cell text (or parsed data if column parser enabled)
-		// data.iExact = same as data.exact, except lowercase
-		// data.cache = table cell text from cache, so it has been parsed
+		// data.iExact = same as data.exact, except lowercase (if wo.filter_ignoreCase is true)
+		// data.cache = table cell text from cache, so it has been parsed (& in all lower case if config.ignoreCase is true)
 		// data.index = column index; table = table element (DOM)
 		// data.parsed = array (by column) of boolean values (from filter_useParsedData or "filter-parsed" class)
 	types: {
@@ -1168,7 +1169,9 @@ ts.filter = {
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
-					data.iAnyMatchFilter = data.anyMatchFilter;
+					// make iAnyMatchFilter lowercase unless both filter widget & core ignoreCase options are true
+					// when c.ignoreCase is true, the cache contains all lower case data
+					data.iAnyMatchFilter = !(wo.filter_ignoreCase && c.ignoreCase) ? data.anyMatchFilter : data.anyMatchFilter.toLocaleLowerCase();
 				}
 
 				// loop through the rows
@@ -1209,7 +1212,7 @@ ts.filter = {
 						data.filter = data.anyMatchFilter;
 						data.iFilter = data.iAnyMatchFilter;
 						data.exact = data.rowArray.join(' ');
-						data.iExact = data.exact.toLowerCase();
+						data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
 						data.cache = data.cacheArray.slice(0,-1).join(' ');
 						filterMatched = null;
 						$.each(ts.filter.types, function(type, typeFunction) {
@@ -1272,7 +1275,7 @@ ts.filter = {
 								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
 								val = false;
 							}
-							// data.iFilter = case insensitive, data.filter = case sensitive
+							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
 							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
 							$cell = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
