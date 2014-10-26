@@ -3,7 +3,9 @@
 ;(function($){
 	"use strict";
 
-	var ts = $.tablesorter;
+	var ts = $.tablesorter,
+		ipv4Format,
+		ipv4Is;
 
 	/*! IPv6 Address parser (WIP)
 	* IPv6 Address (ffff:0000:0000:0000:0000:0000:0000:0000)
@@ -76,20 +78,30 @@
 
 	// ipv4 address
 	// moved here from jquery.tablesorter.js (core file)
+	ipv4Is = function(s) {
+		return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
+	};
+	ipv4Format = function(s, table) {
+		var i, a = s ? s.split('.') : '',
+		r = '',
+		l = a.length;
+		for (i = 0; i < l; i++) {
+			r += ('000' + a[i]).slice(-3);
+		}
+		return s ? ts.formatFloat(r, table) : s;
+	};
+
+	// duplicate "ipAddress" as "ipv4Address" (to maintain backwards compatility)
 	ts.addParser({
 		id: 'ipAddress',
-		is: function(s) {
-			return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
-		},
-		format: function(s, table) {
-			var i, a = s ? s.split('.') : '',
-			r = '',
-			l = a.length;
-			for (i = 0; i < l; i++) {
-				r += ('000' + a[i]).slice(-3);
-			}
-			return s ? ts.formatFloat(r, table) : s;
-		},
+		is: ipv4Is,
+		format: ipv4Format,
+		type: 'numeric'
+	});
+	ts.addParser({
+		id: 'ipv4Address',
+		is: ipv4Is,
+		format: ipv4Format,
 		type: 'numeric'
 	});
 
