@@ -596,6 +596,8 @@ ts.filter = {
 		wo.filter_formatterCount = 0;
 		wo.filter_formatterInit = [];
 		wo.filter_initializing = true;
+		wo.filter_anyColumnSelector = '[data-column="all"],[data-column="any"]';
+		wo.filter_multipleColumnSelector = '[data-column*="-"],[data-column*=","]';
 
 		txt = '\\{' + ts.filter.regex.query + '\\}';
 		$.extend( regex, {
@@ -727,7 +729,6 @@ ts.filter = {
 			if (filters.length) {
 				// prevent delayInit from triggering a cache build if filters are empty
 				if ( !(c.delayInit && filters.join('') === '') ) {
-
 					ts.setFilters(table, filters, true);
 				}
 			}
@@ -761,9 +762,10 @@ ts.filter = {
 		var wo = c.widgetOptions,
 			count = 0,
 			completed = function(){
-				wo.filter_initialized = true;
+				// set initializing false first so findRows will process
 				wo.filter_initializing = false;
 				ts.filter.findRows(c.table, c.$table.data('lastSearch'), null);
+				wo.filter_initialized = true;
 				c.$table.trigger('filterInit', c);
 			};
 		$.each( wo.filter_formatterInit, function(i, val) {
@@ -878,7 +880,7 @@ ts.filter = {
 			$ext = wo.filter_$externalFilters;
 		if (internal !== true) {
 			// save anyMatch element
-			wo.filter_$anyMatch = $el.filter('[data-column="all"],[data-column*="-"],[data-column*=","]');
+			wo.filter_$anyMatch = $el.filter(wo.filter_anyColumnSelector + ',' + wo.filter_multipleColumnSelector);
 			if ($ext && $ext.length) {
 				wo.filter_$externalFilters = wo.filter_$externalFilters.add( $el );
 			} else {
@@ -1049,10 +1051,14 @@ ts.filter = {
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns "1-3,4-6,8" in data-column
 		var ranges, singles, indx,
+			wo = c.widgetOptions,
+			// only target "all" column inputs on initialization
+			// & don't target "all" column inputs if they don't exist
+			targets = wo.filter_initialized || !$input.filter(wo.filter_anyColumnSelector).length,
 			columns = [],
 			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') );
 		// process column range
-		if ( /-/.test( val ) ) {
+		if ( targets && /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
 			$.each(ranges, function(i,v){
 				var t,
@@ -1069,7 +1075,7 @@ ts.filter = {
 			});
 		}
 		// process single columns
-		if ( /,/.test( val ) ) {
+		if ( targets && /,/.test( val ) ) {
 			singles = val.split( /\s*,\s*/ );
 			$.each( singles, function(i,v) {
 				if (v !== '') {
@@ -1080,6 +1086,7 @@ ts.filter = {
 				}
 			});
 		}
+		// return all columns
 		if (!columns.length) {
 			for ( indx = 0; indx < c.columns; indx++ ) {
 				columns.push( indx );
@@ -1520,7 +1527,7 @@ ts.filter = {
 };
 
 ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
-	var i, $filters, $column, cols,
+	var i, f, $filters, $column, cols,
 		filters = false,
 		c = table ? $(table)[0].config : '',
 		wo = c ? c.widgetOptions : '';
@@ -1537,15 +1544,25 @@ ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
 		if ($filters && $filters.length) {
 			filters = setFilters || [];
 			for (i = 0; i < c.columns + 1; i++) {
-				// "all" columns can now include a range or set of columms "0-2,4,6-7"
-				cols = '[data-column' + (i === c.columns ? '="all"],[data-column="any"],[data-column*="-"],[data-column*=",' : '="' + i) + '"]';
+				cols = ( i === c.columns ?
+					// "all" columns can now include a range or set of columms (data-column="0-2,4,6-7")
+					wo.filter_anyColumnSelector + ',' + wo.filter_multipleColumnSelector :
+					'[data-column="' + i + '"]' );
 				$column = $filters.filter(cols);
 				if ($column.length) {
 					// move the latest search to the first slot in the array
 					$column = ts.filter.getLatestSearch( $column );
 					if ($.isArray(setFilters)) {
 						// skip first (latest input) to maintain cursor position while typing
-						(skipFirst ? $column.slice(1) : $column).val( setFilters[i] ).trigger('change.tsfilter');
+						if (skipFirst) { $column.slice(1); }
+						if (i === c.columns) {
+							// prevent data-column="all" from filling data-column="0,1" (etc)
+							cols = $column.filter(wo.filter_anyColumnSelector);
+							$column = cols.length ? cols : $column;
+						}
+						$column
+							.val( setFilters[i] )
+							.trigger('change.tsfilter');
 					} else {
 						filters[i] = $column.val() || '';
 						// don't change the first... it will move the cursor
