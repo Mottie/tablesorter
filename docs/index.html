@@ -3478,7 +3478,7 @@ $.extend($.tablesorter.themes.jui, {
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxObject</code><br>
 					<br>
-					The <code>ajaxObject</code> is completely customizable, except for the <code>url</code> setting which is processed using the pager's <code>ajaxUrl</code> and <code>customAjaxUrl</code> options.<br>
+					The <code>ajaxObject</code> is completely customizable, except for the <code>url</code> setting which is processed using the pager's <code>ajaxUrl</code> and <code>customAjaxUrl</code> options. This means you can also add a <code>success</code> callback function which is called after the ajax has rendered.<br>
 					<br>
 					Your server does not need to return a JSON format, if you want to return pure HTML, set the dataType to <code>&quot;html&quot;</code> and modify the <code>ajaxProcessing</code> function to instead work with HTML; then return a jQuery object or apply the HTML to the table yourself.<br>
 					<br>
