@@ -40,6 +40,10 @@
 		"js/jquery.tablesorter.widgets.min.js",
 		"addons/pager/"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/Mottie/tablesorter.git"
+	},
 	"npmName": "tablesorter",
 	"npmFileMap": [{
 		"basePath": "./",
