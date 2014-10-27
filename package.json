@@ -46,7 +46,7 @@
 	},
 	"npmName": "tablesorter",
 	"npmFileMap": [{
-		"basePath": "./",
+		"basePath": "",
 		"files": [
 			"js/*",
 			"js/**/*",
@@ -55,5 +55,18 @@
 			"addons/pager/*",
 			"addons/pager/icons/*"
 		]
-	}]
+	}],
+	"autoupdate": {
+		"source": "git",
+		"target": "git://github.com/Mottie/tablesorter.git",
+		"basePath": "",
+		"files": [
+			"js/*",
+			"js/**/*",
+			"css/*",
+			"css/images/*",
+			"addons/pager/*",
+			"addons/pager/icons/*"
+		]
+	}
 }
