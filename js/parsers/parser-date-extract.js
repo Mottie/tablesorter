@@ -1,5 +1,6 @@
 /*!
  * Extract out date parsers
+ * 10/26/2014 (v2.18.0)
  */
 /*jshint jquery:true */
 ;(function($){
@@ -22,11 +23,11 @@
 	*/
 	$.tablesorter.addParser({
 		id: "extractUSLongDate",
-		is: function (s) {
+		is: function () {
 			// don't auto detect this parser
 			return false;
 		},
-		format: function (s, table) {
+		format: function (s) {
 			var date,
 				str = s ? s.match(regex.usLong) : s;
 			if (str) {
@@ -43,11 +44,11 @@
 	*/
 	$.tablesorter.addParser({
 		id: "extractMMDDYYYY",
-		is: function (s) {
+		is: function () {
 			// don't auto detect this parser
 			return false;
 		},
-		format: function (s, table) {
+		format: function (s) {
 			var date,
 				str = s ? s.replace(/\s+/g," ").replace(/[\-.,]/g, "/").match(regex.mdy) : s;
 			if (str) {
@@ -64,11 +65,11 @@
 	*/
 	$.tablesorter.addParser({
 		id: "extractDDMMYYYY",
-		is: function (s) {
+		is: function () {
 			// don't auto detect this parser
 			return false;
 		},
-		format: function (s, table) {
+		format: function (s) {
 			var date,
 				str = s ? s.replace(/\s+/g," ").replace(/[\-.,]/g, "/").match(regex.dmy) : s;
 			if (str) {
@@ -85,11 +86,11 @@
 	*/
 	$.tablesorter.addParser({
 		id: "extractYYYYMMDD",
-		is: function (s) {
+		is: function () {
 			// don't auto detect this parser
 			return false;
 		},
-		format: function (s, table) {
+		format: function (s) {
 			var date,
 				str = s ? s.replace(/\s+/g," ").replace(/[\-.,]/g, "/").match(regex.ymd) : s;
 			if (str) {

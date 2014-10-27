@@ -1,4 +1,4 @@
-/*! Network parsers - IPv4, IPv6 and MAC Addresses */
+/*! Network parsers - IPv4, IPv6 and MAC Addresses - 10/26/2014 (v2.18.0) */
 /*global jQuery: false */
 ;(function($){
 	"use strict";

@@ -1,5 +1,6 @@
 /*!
  * Extract dates using popular natural language date parsers
+ * 10/26/2014 (v2.18.0)
  */
 /*jshint jquery:true */
 ;(function($){

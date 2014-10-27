@@ -1,4 +1,4 @@
-/*! Month parser
+/*! Month parser - 10/26/2014 (v2.18.0)
  * Demo: http://jsfiddle.net/Mottie/abkNM/4169/
  */
 /*jshint jquery:true */
