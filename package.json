@@ -31,7 +31,8 @@
 		"sort",
 		"sorting",
 		"alphanumeric",
-		"natural"
+		"natural",
+		"jquery-plugin"
 	],
 	"main": "js/tablesorter.js",
 	"files": [
