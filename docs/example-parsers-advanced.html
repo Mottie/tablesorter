@@ -23,7 +23,7 @@ $(function(){
 	$.tablesorter.addParser({
 		// set a unique id
 		id: 'data',
-		is: function(s) {
+		is: function(s, table, cell, $cell) {
 			// return false so this parser is not auto detected
 			return false;
 		},

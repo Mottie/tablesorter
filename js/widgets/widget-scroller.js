@@ -10,7 +10,7 @@
 
 	Resizable scroller widget for the jQuery tablesorter plugin
 
-	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 6/28/2014 (v2.17.3)
+	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 10/26/2014 (v2.18.0)
 	Requires jQuery v1.7+
 	Requires the tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
 
@@ -24,7 +24,6 @@
 					scroller_height       : 300,  // height of scroll window
 					scroller_barWidth     : 18,   // scroll bar width
 					scroller_jumpToHeader : true, // header snap to browser top when scrolling the tbody
-					scroller_idPrefix     : 's_'  // cloned thead id prefix (random number added to end)
 				}
 			});
 
@@ -43,7 +42,7 @@ var ts = $.tablesorter;
 
 ts.window_resize = function(){
 	if (this.resize_timer) {
-		clearTimeout(this.resize_timer); 
+		clearTimeout(this.resize_timer);
 	}
 	this.resize_timer = setTimeout(function(){
 		$(this).trigger('resizeEnd');
@@ -73,28 +72,30 @@ ts.addWidget({
 		scroller_height : 300,
 		scroller_barWidth : 18,
 		scroller_jumpToHeader: true,
-		scroller_upAfterSort: true,
-		scroller_idPrefix : 's_'
+		scroller_upAfterSort: true
 	},
 	init: function(table, thisWidget, c, wo){
-		var $win = $(window);
+		var $win = $(window),
+			namespace = c.namespace + 'tsscroller';
 		// Setup window.resizeEnd event
 		$win
-			.bind('resize', ts.window_resize)
-			.bind('resizeEnd', function() {
+			.bind('resize' + namespace, ts.window_resize)
+			.bind('resizeEnd' + namespace, function() {
 				// init is run before format, so scroller_resizeWidth
 				// won't be defined within the "c" or "wo" parameters
 				if (typeof table.config.widgetOptions.scroller_resizeWidth === 'function') {
 					// IE calls resize when you modify content, so we have to unbind the resize event
 					// so we don't end up with an infinite loop. we can rebind after we're done.
-					$win.unbind('resize', ts.window_resize);
+					$win.unbind('resize' + namespace, ts.window_resize);
 					table.config.widgetOptions.scroller_resizeWidth();
-					$win.bind('resize', ts.window_resize);
+					$win.bind('resize' + namespace, ts.window_resize);
 				}
 			});
 	},
 	format: function(table, c, wo) {
-		var h, $hdr, id, t, resize, $cells,
+		var h, $hdr, t, resize, $cells,
+			// c.namespace contains a unique tablesorter ID, per table
+			id = c.namespace.slice(1) + 'tsscroller',
 			$win = $(window),
 			$tbl = c.$table;
 
@@ -102,7 +103,6 @@ ts.addWidget({
 			h = wo.scroller_height || 300;
 			t = $tbl.find('tbody').height();
 			if (t !== 0 && h > t) { h = t + 10; }  // Table is less than h px
-			id = wo.scroller_id = wo.scroller_idPrefix + Math.floor(Math.random() * 1001);
 
 			$hdr = $('<table class="' + $tbl.attr('class') + '" cellpadding=0 cellspacing=0><thead>' + $tbl.find('thead:first').html() + '</thead></table>');
 			$tbl
@@ -204,13 +204,15 @@ ts.addWidget({
 		}
 
 	},
-	remove : function(table, c, wo){
-		var $table = c.$table;
+	remove : function(table, c){
+		var $table = c.$table,
+			namespace = c.namespace + 'tsscroller';
 		$table.closest('.tablesorter-scroller').find('.tablesorter-scroller-header').remove();
 		$table
 				.unwrap()
 				.find('.tablesorter-filter-row').removeClass('hideme').end()
 				.find('thead').show().css('visibility', 'visible');
+		$(window).unbind('resize' + namespace + ' resizeEnd' + namespace);
 		c.isScrolling = false;
 	}
 });

@@ -60,6 +60,9 @@
 			// if you set this to false, make sure you perform a search using the second method below
 			filter_columnFilters : true,
 
+			// css class name added to the filter cell (string or array)
+			filter_cellFilter : '',
+
 			// extra css class name(s) applied to the table row containing the filters & the inputs within that row
 			// this option can either be a string (class applied to all filters) or an array (class applied to indexed filter)
 			filter_cssFilter : '', // or []
@@ -86,6 +89,9 @@
 			// see the filter widget custom demo for more specifics on how to use this option
 			filter_functions : null,
 
+			// hide filter row when table is empty
+			filter_hideEmpty : true,
+
 			// if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
 			// below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
 			filter_hideFilters : true,
@@ -99,6 +105,9 @@
 			// a header with a select dropdown & this class name will only show available (visible) options within that drop down.
 			filter_onlyAvail : 'filter-onlyAvail',
 
+			// default placeholder text (overridden by any header "data-placeholder" setting)
+			filter_placeholder : { search : '', select : '' },
+
 			// jQuery selector string of an element used to reset the filters
 			filter_reset : 'button.reset',
 
@@ -108,6 +117,12 @@
 			// Delay in milliseconds before the filter widget starts searching; This option prevents searching for
 			// every character while typing and should make searching large tables faster.
 			filter_searchDelay : 300,
+
+			// allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
+			filter_searchFiltered: true,
+
+			// include a function to return an array of values to be added to the column filter select
+			filter_selectSource  : null,
 
 			// if true, server-side filtering should be performed because client-side filtering will be disabled, but
 			// the ui and events will still be used.
@@ -122,7 +137,10 @@
 			filter_useParsedData : false,
 
 			// data attribute in the header cell that contains the default filter value
-			filter_defaultAttrib : 'data-value'
+			filter_defaultAttrib : 'data-value',
+
+			// filter_selectSource array text left of the separator is added to the option value, right into the option text
+			filter_selectSourceSeparator : '|'
 
 		}
 
@@ -209,6 +227,7 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
 				<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a "filter-match" class added.</li>
 				<li>In <span class="version">v2.17.1</span>, added a not exact match (<code>!=</code>) filter type.</li>
 				<li>In <span class="version updated">v2.16+</span>,
@@ -283,6 +302,16 @@ $(function(){
 						<td><span class="permalink">filter_columnFilters</span></td>
 						<td>true</td>
 						<td>if <code>true</code>, a filter will be added to the top of each table column.</td>
+					</tr>
+
+					<tr id="filter-cell-filter">
+						<td><a href="#" class="permalink">filter_cellFilter</a></td>
+						<td>''</td>
+						<td>Extra css class name added to the filter cell (string or array) (<span class="version">v2.18.0</span>)
+							<div class="collapsible">
+							<br>
+							The filter cell (<code>&lt;td&gt;</code>) is not to be confused with the <code>filter_cssFilter</code> option which adds an extra class name to the filter inputs (<code>&lt;input&gt;</code>).
+						</td>
 					</tr>
 
 					<tr id="filter-css-filter">
@@ -561,7 +590,13 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '', '11' ], true );<
 
 		<h3>Bind External filter</h3>
 		<blockquote>
-		Use this method to bind external search filters; include a data-attribute <code>data-column</code> with the column index to target, or use <code>data-column="all"</code> to preform an "any-match" search (<span class="version updated">v2.15</span>). If no <code>data-column</code> is added to the input, the input will be ignored.
+		Use this method to bind external search filters
+		<ul>
+			<li>Include a data-attribute <code>data-column</code> with the column index to target</li>
+			<li>Or, use <code>data-column="all"</code> to preform an "any-match" search on all of the table columns (<span class="version updated">v2.15</span>).</li>
+			<li>Or, add multiple columns <code>data-column="0-2,4,6-8"</code> to perform an "any-match" search on selected columns (<span class="version">v2.18.0</span>).</li>
+		</ul>
+		If no <code>data-column</code> is added to the input, the input will be ignored.
 		<pre class="prettyprint lang-html">&lt;!-- will perform an "any-match" type of search (matches any column) --&gt;
 &lt;input type="search" class="search" data-column="all"&gt;
 &lt;!-- will only search the first column (zero-based index) --&gt;

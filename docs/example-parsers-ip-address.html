@@ -17,18 +17,18 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-	<script src="../js/parsers/parser-ipv6.js"></script>
+	<script src="../js/parsers/parser-network.js"></script>
 
 	<script id="js">$(function() {
 
 	$('table').tablesorter({
 		theme: 'blue',
+		widthFixed: true,
 		widgets: ['zebra'],
 		sortList: [[2, 0]],
 		headers: {
-			2: {
-				sorter: 'ipv6Address'
-			}
+			1: { sorter: 'MAC' },
+			3: { sorter: 'ipv6Address' }
 		}
 	});
 
@@ -48,7 +48,7 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>This parser can be applied to the original plugin.</li>
-			<li>The default "ipAdress" parser (IPv4) is included with the original tablesorter.</li>
+			<li>The default "ipAdress" parser (IPv4) is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
 			<li>A parser for IPv6 was added in <span class="version">v2.12</span> and named "ipv6Address":
 				<ul>
 					<li>Unlike some other custom parsers, this one will auto-detect &amp; check for a valid IPv6 address since the same address can be represented in many different ways. Some examples are shown in the demo table below.</li>
@@ -60,9 +60,9 @@
 				<pre class="prettyprint lang-javascript">$(function(){
   $('table').tablesorter({
     headers: {
-      2: {
-        sorter: 'ipv6Address'
-      }
+      1: { sorter: 'MAC' },
+      // 2: { sorter: 'ipAddress' }, this parser is auto-detected
+      3: { sorter: 'ipv6Address' }
     }
   });
 });</pre>
@@ -77,21 +77,22 @@
 <table>
 	<thead>
 		<tr>
-			<td>Name</td>
-			<td>IPv4</td>
-			<td>IPv6</td>
+			<th>Name</th>
+			<th>MAC</th>
+			<th>IPv4</th>
+			<th>IPv6</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>Fred</td><td>1.2.3.4</td><td>f0f0::1</td></tr>
-		<tr><td>Ginger</td><td>1.1.1.1</td><td>f0::1</td></tr>
-		<tr><td>Mike</td><td>2.222.33.44</td><td>1:2:3:4:5::7:8</td></tr>
-		<tr><td>George</td><td>255.255.255.255</td><td>::2:3:4</td></tr>
-		<tr><td>Harry</td><td>251.2.33.4</td><td>f0f0:f::1</td></tr>
-		<tr><td>Frank</td><td>251.002.31.4</td><td>::</td></tr>
-		<tr><td>Kristy</td><td>2.221.003.4</td><td>0:0:0:0:0:0:0:0</td></tr>
-		<tr><td>Lily</td><td>251.02.32.4</td><td>f0f0::f:1</td></tr>
-		<tr><td>Maria</td><td>1.2.3.44</td><td>1:2:3:4:5:6:1.2.3.4</td></tr>
+		<tr><td>Fred</td><td>12:06:D2:8E:56:BF</td><td>1.2.3.4</td><td>f0f0::1</td></tr>
+		<tr><td>Ginger</td><td>546F.5903.3C9B</td><td>1.1.1.1</td><td>f0::1</td></tr>
+		<tr><td>Mike</td><td>3c-cf-44-cd-6e-d6</td><td>2.222.33.44</td><td>1:2:3:4:5::7:8</td></tr>
+		<tr><td>George</td><td>ff-68-3d-e8-b4-0d</td><td>255.255.255.255</td><td>::2:3:4</td></tr>
+		<tr><td>Harry</td><td>f566.6dfd.2df2</td><td>251.2.33.4</td><td>f0f0:f::1</td></tr>
+		<tr><td>Frank</td><td>12:69:13:D8:FA:61</td><td>251.002.31.4</td><td>::</td></tr>
+		<tr><td>Kristy</td><td>A031.5FED.43BC</td><td>2.221.003.4</td><td>0:0:0:0:0:0:0:0</td></tr>
+		<tr><td>Lily</td><td>82-2D-FF-FA-CD-6C</td><td>251.02.32.4</td><td>f0f0::f:1</td></tr>
+		<tr><td>Maria</td><td>125c395f08f2</td><td>1.2.3.44</td><td>1:2:3:4:5:6:1.2.3.4</td></tr>
 	</tbody>
 </table>
 
@@ -104,7 +105,7 @@
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
 
 &lt;!-- load ipv6 parser --&gt;
-&lt;script src=&quot;../js/parsers/parser-ipv6.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/parsers/parser-network.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 $(function() {
 
@@ -113,9 +114,9 @@ $(function() {
     widgets: ['zebra'],
     sortList: [[1, 0]],
     headers: {
-      1: {
-        sorter: 'ipv6Address'
-      }
+      1: { sorter: 'MAC' },
+      // 2: { sorter: 'ipAddress' }, this parser is auto-detected
+      3: { sorter: 'ipv6Address' }
     }
   });
 
@@ -128,7 +129,7 @@ $(function() {
 <script>
 $(function(){
 	// add parsed values to columns [0,1]
-	addParsedValues($('table'), [1,2]);
+	addParsedValues($('table'), [1,2,3]);
 });
 </script>
 

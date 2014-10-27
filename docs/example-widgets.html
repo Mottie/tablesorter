@@ -23,7 +23,8 @@
 	<script id="js">$(function() {
 
 	// add new widget called repeatHeaders
-	// ************************************
+	// updated v2.18.0 (works in nested tables)
+	// *****************************************
 	$.tablesorter.addWidget({
 
 		id: "repeatHeaders",
@@ -52,8 +53,9 @@
 			skip = wo && wo.rowsToSkip || 4;
 
 			// remove appended headers by classname
-			c.$table.find("tr.repeated-header").remove();
-			$tr = c.$tbodies.find('tr');
+			c.$tbodies.children("tr.repeated-header").remove();
+			// only find visible rows (may be filtered)
+			$tr = c.$tbodies.children('tr:visible');
 			l = $tr.length;
 			// loop all tr elements and insert a copy of the "headers"
 			for (i = skip; i < l; i += skip) {
@@ -64,7 +66,7 @@
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
 		remove: function(table, c){
-			c.$table.find("tr.repeated-header").remove();
+			c.$tbodies.children("tr.repeated-header").remove();
 		}
 
 	});

@@ -1,4 +1,4 @@
-/*! tablesorter Grouping widget - updated 3/7/2014 (core v2.15.6)
+/*! tablesorter Grouping widget - updated 10/26/2014 (v2.18.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -43,6 +43,7 @@ ts.grouping = {
 				hours = time.getHours();
 			return part === 'year' ? time.getFullYear() :
 				part === 'month' ? wo.group_months[time.getMonth()] :
+				part === 'monthyear' ?  wo.group_months[time.getMonth()] + ' ' + time.getFullYear() :
 				part === 'day' ? wo.group_months[time.getMonth()] + ' ' + time.getDate() :
 				part === 'week' ? wo.group_week[time.getDay()] :
 				part === 'time' ? ('00' + (hours > 12 ? hours - 12 : hours === 0 ? hours + 12 : hours)).slice(-2) + ':' +
@@ -53,7 +54,7 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, time, cache, saveName, direction,
+		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, cache, saveName, direction,
 			lang = wo.grouping_language,
 			group = '',
 			savedGroup = false,
@@ -66,7 +67,6 @@ ts.grouping = {
 			c.$table.data('pagerSavedHeight', 0);
 		}
 		if (column >= 0 && !c.$headers.filter('[data-column="' + column + '"]:last').hasClass('group-false')) {
-			if (c.debug){ time = new Date(); }
 			wo.group_currentGroup = ''; // save current groups
 			wo.group_currentGroups = {};
 
@@ -150,9 +150,6 @@ ts.grouping = {
 				}
 			});
 			c.$table.trigger(wo.group_complete);
-			if (c.debug) {
-				$.tablesorter.benchmark("Applying groups widget: ", time);
-			}
 		}
 	},
 

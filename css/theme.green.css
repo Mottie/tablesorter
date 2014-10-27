@@ -101,10 +101,10 @@
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-green tr.odd td {
+.tablesorter-green tr.odd > td {
 	background-color: #ebfaeb;
 }
-.tablesorter-green tr.even td {
+.tablesorter-green tr.even > td {
 	background-color: #fff;
 }
 

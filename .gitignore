@@ -45,6 +45,7 @@ local.properties
 # Build results
 [Dd]ebug/
 [Rr]elease/
+node_modules/
 *_i.c
 *_p.c
 *.ilk

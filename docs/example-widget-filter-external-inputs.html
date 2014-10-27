@@ -78,6 +78,18 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>As of <span class="version">v2.18.0</span>,
+				<ul>
+					<li>An external input <code>data-column</code> can now target multiple columns:
+						<ul>
+							<li>When designating a column for an external input, you can now set multiple columns and/or a range of columns (e.g. <code>data-column="0-2,4,6-7"</code>.</li>
+							<li>This type of search acts essentially the same as when the column is set to <code>"all"</code> in that "range", "notMatch" and "operators" searches are ignored.</li>
+							<li>The last search performed using either multiple columns or "all" columns will override all other queries; meaning the other inputs won't clear or update (e.g. performing a search for "foo" in an "all" column search input will override any previous searchs, and the input with a <code>data-column="0-2,4,6-7"</code> will not change its value) - this might be confusing to the user if multiple inputs are visible on the page (placeholder text won't help).</li>
+							<li>The selector in the demo below has two additional options: "Columns 0,3" and "Columns 1-2"; as you can see, switching the column to search between "all", "0,3" and "1-2" does not change the query.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
 			<li>As of <span class="version">v2.15</span>,
 				<ul>
 					<li>A new filter widget <a href="index.html#widget-filter-external"><code>filter_external</code> option</a> has been added that essentially does the same thing as the <a href="index.html#function-bindsearch"><code>$.tablesorter.bindSearch</code></a> function.</li>
@@ -106,6 +118,8 @@
 <!-- select to change data-column attribute of the above input -->
 <select class="change-input">
 	<option value="all">all</option>
+	<option value="0,3">Columns 0,3</option>
+	<option value="1-2">Columns 1-2</option>
 	<option value="0">Rank</option>
 	<option value="1">First Name</option>
 	<option value="2">Last Name</option>

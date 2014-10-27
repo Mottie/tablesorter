@@ -399,6 +399,10 @@ group_dateString : function(date) {
 						<td>Group the rows by month.</td>
 					</tr>
 					<tr>
+						<td><code>&quot;group-date-monthyear&quot;</code><span class="remark">*</span></td>
+						<td>Group the rows by month &amp; year.</td>
+					</tr>
+					<tr>
 						<td><code>&quot;group-date-week&quot;</code><span class="remark">*</span></td>
 						<td>Group the rows by day of the week.</td>
 					</tr>
@@ -505,7 +509,7 @@ group_dateString : function(date) {
 			numcol = 2,
 			letcol = 4,
 			datecol = 7,
-			dateGroups = [ '', 'year', 'month', 'day', 'week', 'time' ];
+			dateGroups = [ '', 'year', 'month', 'monthyear', 'day', 'week', 'time' ];
 		// Numeric column slider
 		$( "#slider0" ).slider({
 			value: startBlock,
@@ -550,7 +554,7 @@ group_dateString : function(date) {
 		$( "#slider2" ).slider({
 			value: curGroup,
 			min: 0,
-			max: 5,
+			max: dateGroups.length - 1,
 			step: 1,
 			create: function(){
 				$('.dateclass').html(' "group-date' + (curGroup > 0 ? '-' + dateGroups[curGroup] : '') + '"');

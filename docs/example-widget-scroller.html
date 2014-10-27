@@ -24,6 +24,7 @@
 	<link class="theme black-ice" rel="stylesheet" href="../css/theme.black-ice.css">
 	<link class="theme dark" rel="stylesheet" href="../css/theme.dark.css">
 	<link class="theme dropbox" rel="stylesheet" href="../css/theme.dropbox.css">
+	<link class="theme metro-dark" rel="stylesheet" href="../css/theme.metro-dark.css">
 
 	<!-- Tablesorter script: required -->
 	<script src="../js/jquery.tablesorter.js"></script>
@@ -64,7 +65,7 @@ $(function() {
 		themes = 'default blue green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
-		o += '<option>' + t[i] + '</option>';
+		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
 	}
 
 	$('select')
@@ -81,7 +82,7 @@ $(function() {
 			});
 			$('table')
 				.removeClass('tablesorter-' + t.join(' tablesorter-') + ' tablesorter-jui')
-				.addClass('tablesorter-' + theme.replace(/-/,''));
+				.addClass('tablesorter-' + (theme === 'black-ice' ? 'blackice' : theme) );
 			// make sure columns align
 			$(window).trigger('resize');
 		}).change();

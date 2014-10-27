@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter - Named Numbers Parser</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	th { width: 50%; }
+	</style>
+
+	<link href="../css/theme.blue.css" rel="stylesheet">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- load metric parser -->
+	<script src="../js/parsers/parser-named-numbers.js"></script>
+
+	<script id="js">$(function() {
+
+	$("table").tablesorter({
+		theme : 'blue',
+		widgets : ["zebra"]
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Named Numbers Parser</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This parser will convert named numbers into appropriate values so they are sorted correctly.</li>
+			<li>Named numbers include values:
+				<ul>
+					<li>zero to twenty; by one ("one", "two", "three", ..., "nineteen", "twenty")</li>
+					<li>twenty to hundred; by ten ("twenty", "thirty", "forty", ... "ninety", "hundred")</li>
+					<li>thousand (1e3) to duotrigintillion (1e99); by 10^(3n+3) value ("thousand", "million", "billion", ... "untrigintillion", "duotrigintillion")</li>
+					<li>googl (1e100)</li>
+				</ul>
+			</li>
+			<li>Even bigger named values will need to be manually added to the parser code; see <a href="http://en.wikipedia.org/wiki/Names_of_large_numbers">this wikipedia page</a> for more names.</li>
+		</ul>
+	<p>
+
+	<h1>Demo</h1>
+	<button type="button" class="toggleparsedvalue">Toggle parsed values</button>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="sorter-namedNumbers">Numbers</th>
+			<th class="sorter-namedNumbers">Large Numbers</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>5 hundred</td>
+			<td>one hundred and fifty two million</td>
+		</tr>
+		<tr>
+			<td>four hundred thousand five hundred fourty three</td>
+			<td>710,231,000</td>
+		</tr>
+		<tr>
+			<td>one hundred and fifty five</td>
+			<td>10 million three hundred sixty five thousand four hundred and ninety one</td>
+		</tr>
+		<tr>
+			<td>negative twelve</td>
+			<td>10 million and three</td>
+		</tr>
+		<tr>
+			<td>minus three hundred and fifty seven thousand four hundred and two</td>
+			<td>6 billion eight thousand</td>
+		</tr>
+		<tr>
+			<td>zero</td>
+			<td>3 hundred quadrillion</td>
+		</tr>
+		<tr>
+			<td>three hundred twenty</td>
+			<td>145 decillion</td>
+		</tr>
+		<tr>
+			<td>forty-two</td>
+			<td>700 thousand</td>
+		</tr>
+		<tr>
+			<td>ninety-nine thousand nine hundred and ninety-nine</td>
+			<td>2.3 million</td>
+		</tr>
+		<tr>
+			<td>2.3 thousand</td>
+			<td>2.3 googl</td>
+		</tr>
+		<tr>
+			<td>minus one</td>
+			<td>8 hundred thousand</td>
+		</tr>
+		<tr>
+			<td>seven hundred fifty two</td>
+			<td>9 hundred-million</td>
+		</tr>
+		<tr>
+			<td>one hundred and thirty-three</td>
+			<td>Twenty-three trillion</td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- blue theme stylesheet with additional css styles added in v2.0.17 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
+&lt;!-- tablesorter plugin --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- load metric parser --&gt;
+&lt;script src=&quot;../js/parsers/parser-named-numbers.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+<script>
+$(function(){
+	// add parsed values to columns [0,1]
+	addParsedValues($('table'), [0,1]);
+});
+</script>
+
+</body>
+</html>
+
