@@ -92,6 +92,7 @@
 				cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent 
 				cssIcon          : 'tablesorter-icon',     //  if this class exists, a <i> will be added to the header automatically
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
+				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
 
 				// *** selectors
 				selectorHeaders  : '> thead th, > thead td',
@@ -1286,7 +1287,9 @@
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
-						return /(input|select|button|textarea)/i.test(e.target.tagName) ? '' : !c.cancelSelection;
+						return /(input|select|button|textarea)/i.test(e.target.tagName) ||
+							// allow clicks to contents of selected cells
+							$(e.target).closest('td,th').hasClass(c.cssAllowClicks) ? '' : !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
