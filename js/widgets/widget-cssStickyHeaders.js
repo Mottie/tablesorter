@@ -19,6 +19,7 @@
 		},
 		init : function(table, thisWidget, c, wo) {
 			var isIE = 'ActiveXObject' in window, // target all versions of IE
+				isFF = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
 				$table = c.$table,
 				$attach = $(wo.cssStickyHeaders_attachTo),
 				namespace = c.namespace + 'cssstickyheader ',
@@ -26,44 +27,65 @@
 				$caption = $table.children('caption'),
 				$win = $attach.length ? $attach : $(window),
 				$parent = $table.parent().closest('table.' + ts.css.table),
-				$parentThead = $parent.length && ts.hasWidget($parent[0], 'cssStickyHeaders') ? $parent.children('thead') : [];
+				$parentThead = $parent.length && ts.hasWidget($parent[0], 'cssStickyHeaders') ? $parent.children('thead') : [],
+				lastCaptionSetting = wo.cssStickyHeaders_addCaption;
 
 			$win
 			.unbind('scroll resize '.split(' ').join(namespace))
 			.bind('scroll resize '.split(' ').join(namespace), function() {
+				// make sure "wo" is current otherwise changes to widgetOptions
+				// are not dynamic (like the add caption button in the demo)
+				wo = c.widgetOptions;
 				var top = $attach.length ? $attach.offset().top : $win.scrollTop(),
 				// add caption height; include table padding top & border-spacing or text may be above the fold (jQuery UI themes)
 				// border-spacing needed in Firefox, but not webkit... not sure if I should account for that
-				captionHeight = wo.cssStickyHeaders_addCaption ? ( $caption.outerHeight(true) || 0 ) +
-					( parseInt( $table.css('padding-top'), 10 ) || 0 ) + ( parseInt( $table.css('border-spacing'), 10 ) || 0 ) : 0,
+				captionHeight = ( $caption.outerHeight(true) || 0 ) +
+					( parseInt( $table.css('padding-top'), 10 ) || 0 ) +
+					( parseInt( $table.css('border-spacing'), 10 ) || 0 ),
 
-				bottom = $table.height() - $thead.height() - ( $table.children('tfoot').height() || 0 ) - captionHeight,
+				bottom = $table.height() - $thead.height() - ( $table.children('tfoot').height() || 0 ) - ( wo.cssStickyHeaders_addCaption ? captionHeight : 0 ),
+
+				parentTheadHeight = $parentThead.length ? $parentThead.height() : 0,
+
 				// get bottom of nested sticky headers
-				nestedStickyTop = $parentThead.length ? ( isIE ? $parent.data('cssStickyHeaderTop') : $parentThead.offset().top ) +
-					$parentThead.height() - $win.scrollTop() : 0,
+				nestedStickyBottom = $parentThead.length ? (
+						isIE ? $parent.data('cssStickyHeaderBottom') + parentTheadHeight :
+						$parentThead.offset().top + parentTheadHeight - $win.scrollTop()
+					) : 0,
 
 				// Detect nested tables - fixes #724
-				deltaY = top - $table.offset().top + nestedStickyTop + ( parseInt( $table.css('border-top-width'), 10 ) || 0 ) +
+				deltaY = top - $table.offset().top + nestedStickyBottom +
+					( parseInt( $table.css('border-top-width'), 10 ) || 0 ) +
+					( wo.cssStickyHeaders_offset || 0 ) +
 					// Again, I dislike browser sniffing... but I have no idea why I need to include a captionHeight
 					// for Firefox here and not for Chrome. Even IE behaves, sorta!
-					( wo.cssStickyHeaders_offset || 0 ) + ( navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ? captionHeight : 0 ),
+					( wo.cssStickyHeaders_addCaption ? ( isFF ? captionHeight : 0 ) : -captionHeight ),
 
 				finalY = deltaY > 0 && deltaY <= bottom ? deltaY : 0,
 
 				// All IE (even IE11) can only transform header cells - fixes #447 thanks to @gakreol!
 				$cells = isIE ? $thead.children().children() : $thead;
 
-				// more crazy IE stuff.. somehow the second nested table is completely ignored
+				// more crazy IE stuff...
 				if (isIE) {
-					c.$table.data('cssStickyHeaderTop', finalY - ( $parentThead.length ? $parentThead.height() : 0 ));
-					if ($parentThead.length) {
-						top = $parent.data('cssStickyHeaderTop') - $parentThead.height();
-						finalY = top > 0 && top <= bottom ? top : 0;
-					}
+					// I didn't bother testing 3 nested tables deep in IE, because I hate it
+					c.$table.data( 'cssStickyHeaderBottom', ( $parentThead.length ? parentTheadHeight : 0 ) -
+						( wo.cssStickyHeaders_addCaption ? captionHeight : 0 ) );
 				}
 
 				if (wo.cssStickyHeaders_addCaption) {
 					$cells = $cells.add($caption);
+				}
+				if (lastCaptionSetting !== wo.cssStickyHeaders_addCaption) {
+					lastCaptionSetting = wo.cssStickyHeaders_addCaption;
+					// reset caption position if addCaption option is dynamically changed to false
+					if (!lastCaptionSetting) {
+						$caption.css({
+							'transform' : '',
+							'-ms-transform' : '',
+							'-webkit-transform' : ''
+						});
+					}
 				}
 
 				$cells.css({
