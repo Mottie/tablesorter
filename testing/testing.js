@@ -685,7 +685,7 @@ $(function(){
 			} else {
 				tester.cacheCompare( table4, 3, [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 'sortResetKey' );
 				$table4.off('sortEnd');
-				start();
+				// start();
 			}
 		});
 		var e = $.Event('sort');
