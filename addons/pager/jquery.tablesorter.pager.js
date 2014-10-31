@@ -328,7 +328,7 @@
 						} else {
 							rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 							// don't count child rows
-							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'')) && !p.countChildRows ? 0 : 1;
+							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !p.countChildRows ? 0 : 1;
 							if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
 								lastIndex = i;
 							}
@@ -826,7 +826,7 @@
 				}
 
 				// skipped rows
-				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
+				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
 					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
@@ -988,7 +988,7 @@
 						})
 						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 						.appendTo( c.$table.find('thead:first') )
-						.addClass( errorRow + ' ' + c.selectorRemove.replace(/^(\w+\.)/g,'') )
+						.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
 						.attr({
 							role : 'alert',
 							'aria-live' : 'assertive'
