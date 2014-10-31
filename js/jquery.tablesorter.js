@@ -1160,13 +1160,11 @@
 				}
 				for (k in obj) {
 					if (typeof k === 'string') {
-						if (getCell) {
-							// get header cell
-							$h = c.$headers.eq(indx).filter(k);
-						} else {
-							// get column indexed cell
-							$h = c.$headers.filter('[data-column="' + indx + '"]:last').filter(k);
-						}
+						$h = c.$headers.filter('[data-column="' + indx + '"]:last')
+							// header cell with class/id
+							.filter(k)
+							// find elements within the header cell with cell/id
+							.add( c.$headers.filter('[data-column="' + indx + '"]:last').find(k) );
 						if ($h.length) {
 							return obj[k];
 						}
