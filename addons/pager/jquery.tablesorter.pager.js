@@ -604,7 +604,7 @@
 				}
 				ts.processTbody(table, $tb, false);
 			}
-			updatePageDisplay(table, p, false);
+			updatePageDisplay(table, p);
 			if (table.isUpdating) {
 				$t.trigger('updateComplete', [ table, true ]);
 			}

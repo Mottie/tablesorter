@@ -825,7 +825,7 @@ tsp = ts.pager = {
 			ts.processTbody(table, $tb, false);
 		}
 
-		tsp.updatePageDisplay(table, c, false);
+		tsp.updatePageDisplay(table, c);
 
 		wo.pager_startPage = p.page;
 		wo.pager_size = p.size;
