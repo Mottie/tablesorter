@@ -160,12 +160,6 @@ tsp = ts.pager = {
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		p.initializing = true;
-		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
-			// get any default filter settings (data-value attribute) fixes #388
-			p.currentFilters = c.$table.data('lastSearch') || [];
-			// set, but don't apply current filters
-			ts.setFilters(table, p.currentFilters, false);
-		}
 		if (wo.pager_savePages && ts.storage) {
 			t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
 			p.page = isNaN(t.page) ? p.page : t.page;
@@ -212,10 +206,11 @@ tsp = ts.pager = {
 		p.initialized = true;
 		p.initializing = false;
 		p.isInitializing = false;
-		c.$table
-			.trigger('pagerInitialized', c)
-			.trigger('pagerComplete', c);
-		tsp.updatePageDisplay(table, c);
+		c.$table.trigger('pagerInitialized', c);
+		// filter widget not initialized; it will update the output display & fire off the pagerComplete event
+		if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
+			tsp.updatePageDisplay(table, c, false);
+		}
 	},
 
 	bindEvents: function(table, c){
@@ -225,11 +220,11 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.off('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-			.on('filterStart.pager', function(e, filters) {
-				p.currentFilters = filters;
+			.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+			.on('filterInit.pager filterStart.pager', function() {
+				p.currentFilters = c.$table.data('lastSearch');
 				// don't change page is filters are the same (pager updating, etc)
-				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
+				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 					p.page = wo.pager_pageReset; // fixes #456 & #565
 				}
 			})
@@ -989,7 +984,7 @@ tsp = ts.pager = {
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
 		delete table.config.rowsCopy;
-		c.$table.off('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+		c.$table.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}

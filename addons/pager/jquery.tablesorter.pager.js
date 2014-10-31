@@ -751,7 +751,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+			$(table).unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -818,12 +818,6 @@
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
 				p.initializing = true;
-				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
-					// get any default filter settings (data-value attribute) fixes #388
-					p.currentFilters = c.$table.data('lastSearch') || ts.filter.setDefaults(table, c, c.widgetOptions) || [];
-					// set, but don't apply current filters
-					ts.setFilters(table, p.currentFilters, false);
-				}
 				if (p.savePages && ts.storage) {
 					t = ts.storage(table, p.storageKey) || {}; // fixes #387
 					p.page = isNaN(t.page) ? p.page : t.page;
@@ -835,11 +829,11 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-					.bind('filterStart.pager', function(e, filters) {
-						p.currentFilters = filters;
+					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+					.bind('filterInit.pager filterStart.pager', function() {
+						p.currentFilters = $t.data('lastSearch');
 						// don't change page is filters are the same (pager updating, etc)
-						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
+						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
 						}
 					})
@@ -971,10 +965,10 @@
 					p.initializing = false;
 					p.initialized = true;
 					moveToPage(table, p);
-					updatePageDisplay(table, p, false);
-					$(table)
-						.trigger('pagerInitialized', p)
-						.trigger('pagerComplete', p);
+					$(table).trigger('pagerInitialized', p);
+					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
+						tsp.updatePageDisplay(table, c, false);
+					}
 				}
 			});
 		};
