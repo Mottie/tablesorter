@@ -210,7 +210,9 @@ tsp = ts.pager = {
 		// pager initialized
 		p.initialized = true;
 		p.isInitializing = false;
-		c.$table.trigger('pagerInitialized', c);
+		c.$table
+			.trigger('pagerInitialized', c)
+			.trigger('pagerComplete', c);
 		tsp.updatePageDisplay(table, c);
 	},
 

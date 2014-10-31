@@ -4833,8 +4833,11 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 
 			<tr id="pagercomplete">
 				<td><a href="#" class="permalink">pagerComplete</a></td>
-				<td>This event fires when the pager plugin has completed its render of the table on the currently selected page. (v2.0.7).
+				<td>This event fires when the pager plugin has completed initialization (<span class="version">v2.18.1</span>), and its render of the table on the currently selected page. (v2.0.7).
 					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> In <span class="version">v2.18.1</span>, the "pagerComplete" event also fires off immediately after pager initialization.<br>
+						<br>
 						<pre class="prettyprint lang-js">$(function(){
 
   // initialize the sorter

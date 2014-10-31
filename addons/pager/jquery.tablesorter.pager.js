@@ -479,7 +479,8 @@
 				p.initialized = true;
 				$(table)
 					.trigger('applyWidgets')
-					.trigger('pagerInitialized', p);
+					.trigger('pagerInitialized', p)
+					.trigger('pagerComplete', p);
 			}
 		},
 
@@ -946,7 +947,6 @@
 				$t.trigger('pagerBeforeInitialized', p);
 
 				enablePager(table, p, false);
-
 				if ( typeof(p.ajaxUrl) === 'string' ) {
 					// ajax pager; interact with database
 					p.ajax = true;
@@ -964,8 +964,11 @@
 				// pager initialized
 				if (!p.ajax) {
 					p.initialized = true;
+					moveToPage(table, p);
 					updatePageDisplay(table, p, true);
-					$(table).trigger('pagerInitialized', p);
+					$(table)
+						.trigger('pagerInitialized', p)
+						.trigger('pagerComplete', p);
 				}
 			});
 		};
