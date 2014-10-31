@@ -206,8 +206,9 @@ ts.addWidget({
 				.children('tfoot');
 			if ($tfoot.length) {
 				$tfoot
-					.children('tr').removeClass(oldtheme.footerRow).addClass(themes.footerRow)
-					.children('th, td').removeClass(oldtheme.footerCells).addClass(themes.footerCells);
+					// if oldtheme.footerRow or oldtheme.footerCells are undefined, all class names are removed
+					.children('tr').removeClass(oldtheme.footerRow || '').addClass(themes.footerRow)
+					.children('th, td').removeClass(oldtheme.footerCells || '').addClass(themes.footerCells);
 			}
 			// update header classes
 			$headers
