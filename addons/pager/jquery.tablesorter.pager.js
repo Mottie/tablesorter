@@ -150,7 +150,7 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			if ( !p.initialized ) { return; }
+			if ( p.initializing ) { return; }
 			var s, t, $out,
 				c = table.config,
 				sz = p.size || 10; // don't allow dividing by zero
@@ -477,10 +477,11 @@
 			}
 			if (!p.initialized) {
 				p.initialized = true;
+				p.initializing = false;
 				$(table)
 					.trigger('applyWidgets')
-					.trigger('pagerInitialized', p)
-					.trigger('pagerComplete', p);
+					.trigger('pagerInitialized', p);
+				updatePageDisplay(table, p);
 			}
 		},
 
@@ -603,7 +604,7 @@
 				}
 				ts.processTbody(table, $tb, false);
 			}
-			updatePageDisplay(table, p, true);
+			updatePageDisplay(table, p, false);
 			if (table.isUpdating) {
 				$t.trigger('updateComplete', [ table, true ]);
 			}
@@ -660,10 +661,13 @@
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject(c.cache)) {
 				return updateCache(table);
 			}
+			// abort page move if the table has filters and has not been initialized
+			if (p.ajax && ts.hasWidget(table, 'filter') && !c.widgetOptions.filter_initialized) { return; }
 			calcFilters(table, p);
 			pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
+
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
 			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
 			l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
@@ -813,6 +817,7 @@
 				}
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
+				p.initializing = true;
 				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 					// get any default filter settings (data-value attribute) fixes #388
 					p.currentFilters = c.$table.data('lastSearch') || ts.filter.setDefaults(table, c, c.widgetOptions) || [];
@@ -839,8 +844,8 @@
 						}
 					})
 					// update pager after filter widget completes
-					.bind('filterEnd.pager sortEnd.pager', function() {
-						if (p.initialized) {
+					.bind('filterEnd.pager sortEnd.pager', function(e) {
+						if (p.initialized || p.initializing) {
 							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 								// make sure we have a copy of all table rows once the cache has been built
 								updateCache(table);
@@ -962,10 +967,11 @@
 				}
 
 				// pager initialized
-				if (!p.ajax) {
+				if (!p.ajax && !p.initialized) {
+					p.initializing = false;
 					p.initialized = true;
 					moveToPage(table, p);
-					updatePageDisplay(table, p, true);
+					updatePageDisplay(table, p, false);
 					$(table)
 						.trigger('pagerInitialized', p)
 						.trigger('pagerComplete', p);

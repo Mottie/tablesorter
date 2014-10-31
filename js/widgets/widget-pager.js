@@ -159,6 +159,7 @@ tsp = ts.pager = {
 		p.totalRows = c.$tbodies.eq(0).children('tr').not( wo.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
+		p.initializing = true;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
 			// get any default filter settings (data-value attribute) fixes #388
 			p.currentFilters = c.$table.data('lastSearch') || [];
@@ -209,6 +210,7 @@ tsp = ts.pager = {
 
 		// pager initialized
 		p.initialized = true;
+		p.initializing = false;
 		p.isInitializing = false;
 		c.$table
 			.trigger('pagerInitialized', c)
@@ -233,7 +235,7 @@ tsp = ts.pager = {
 			})
 			// update pager after filter widget completes
 			.on('filterEnd.pager sortEnd.pager', function() {
-				if (p.initialized) {
+				if (p.initialized || p.initializing) {
 					if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 						// make sure we have a copy of all table rows once the cache has been built
 						tsp.updateCache(table);
@@ -374,6 +376,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
+		if ( c.pager.initializing ) { return; }
 		var s, t, $out,
 			wo = c.widgetOptions,
 			p = c.pager,
@@ -684,6 +687,7 @@ tsp = ts.pager = {
 			p.last.totalRows = p.totalRows;
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
+			p.initializing = false;
 			tsp.updatePageDisplay(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
@@ -821,7 +825,7 @@ tsp = ts.pager = {
 			ts.processTbody(table, $tb, false);
 		}
 
-		tsp.updatePageDisplay(table, c);
+		tsp.updatePageDisplay(table, c, false);
 
 		wo.pager_startPage = p.page;
 		wo.pager_size = p.size;
@@ -889,10 +893,15 @@ tsp = ts.pager = {
 		var pg, c = table.config,
 			wo = c.widgetOptions,
 			l = p.last;
+
+		// abort page move if the table has filters and has not been initialized
+		if (p.ajax && !wo.filter_initialized && ts.hasWidget(table, 'filter')) { return; }
+
 		tsp.calcFilters(table, c);
 		pg = Math.min( p.totalPages, p.filteredPages );
 		if ( p.page < 0 ) { p.page = 0; }
 		if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
+
 		// fixes issue where one current filter is [] and the other is ['','',''],
 		// making the next if comparison think the filters as different. Fixes #202.
 		l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;

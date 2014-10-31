@@ -596,7 +596,6 @@ ts.filter = {
 		wo.filter_initTimer = null;
 		wo.filter_formatterCount = 0;
 		wo.filter_formatterInit = [];
-		wo.filter_initializing = true;
 		wo.filter_anyColumnSelector = '[data-column="all"],[data-column="any"]';
 		wo.filter_multipleColumnSelector = '[data-column*="-"],[data-column*=","]';
 
@@ -723,7 +722,7 @@ ts.filter = {
 		c.filteredRows = c.totalRows;
 
 		// add default values
-		c.$table.bind('tablesorter-initialized pagerInitialized', function() {
+		c.$table.bind('tablesorter-initialized pagerBeforeInitialized', function() {
 			// redefine "wo" as it does not update properly inside this callback
 			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];
@@ -763,11 +762,9 @@ ts.filter = {
 		var wo = c.widgetOptions,
 			count = 0,
 			completed = function(){
-				// set initializing false first so findRows will process
-				wo.filter_initializing = false;
-				ts.filter.findRows(c.table, c.$table.data('lastSearch'), null);
 				wo.filter_initialized = true;
 				c.$table.trigger('filterInit', c);
+				ts.filter.findRows(c.table, c.$table.data('lastSearch'), null);
 			};
 		$.each( wo.filter_formatterInit, function(i, val) {
 			if (val === 1) {
@@ -1096,7 +1093,7 @@ ts.filter = {
 		return columns;
 	},
 	findRows: function(table, filters, combinedFilters) {
-		if (table.config.lastCombinedFilter === combinedFilters || table.config.widgetOptions.filter_initializing) { return; }
+		if (table.config.lastCombinedFilter === combinedFilters || !table.config.widgetOptions.filter_initialized) { return; }
 		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
 			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
