@@ -120,7 +120,6 @@ tsColSel = ts.columnSelector = {
 		if (wo.columnSelector_mediaquery) {
 			// used by window resize function
 			colSel.lastIndex = -1;
-			wo.columnSelector_breakpoints.sort();
 			tsColSel.updateBreakpoints(c, wo);
 			c.$table
 				.off('updateAll' + namespace)
