@@ -501,6 +501,7 @@
 
 				counter = ++p.ajaxCounter;
 
+				p.last.ajaxUrl = url; // remember processed url
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 				p.ajaxObject.success = function(data, status, jqxhr) {
 					// Refuse to process old ajax commands that were overwritten by new ones - see #443
@@ -831,14 +832,15 @@
 				$t
 					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
 					.bind('filterInit.pager filterStart.pager', function() {
-						p.currentFilters = $t.data('lastSearch');
-						// don't change page is filters are the same (pager updating, etc)
+						p.currentFilters = c.$table.data('lastSearch');
+						// don't change page if filters are the same (pager updating, etc)
 						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
 						}
 					})
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function(e) {
+						p.currentFilters = c.$table.data('lastSearch');
 						if (p.initialized || p.initializing) {
 							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 								// make sure we have a copy of all table rows once the cache has been built
