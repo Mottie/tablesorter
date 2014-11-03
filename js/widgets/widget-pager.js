@@ -209,7 +209,8 @@ tsp = ts.pager = {
 		c.$table.trigger('pagerInitialized', c);
 		// filter widget not initialized; it will update the output display & fire off the pagerComplete event
 		if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
-			tsp.updatePageDisplay(table, c, false);
+			// if ajax, then don't fire off pagerComplete
+			tsp.updatePageDisplay(table, c, !p.ajax);
 		}
 	},
 
@@ -820,7 +821,6 @@ tsp = ts.pager = {
 			}
 			ts.processTbody(table, $tb, false);
 		}
-
 		tsp.updatePageDisplay(table, c);
 
 		wo.pager_startPage = p.page;

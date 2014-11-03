@@ -969,7 +969,7 @@
 					moveToPage(table, p);
 					$(table).trigger('pagerInitialized', p);
 					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
-						updatePageDisplay(table, c, false);
+						updatePageDisplay(table, p, false);
 					}
 				}
 			});
