@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/26/2014 (v2.18.0)
+ * updated 11/3/2014 (v2.18.1)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -150,7 +150,7 @@
 		},
 
 		updatePageDisplay = function(table, p, completed) {
-			if ( !p.initialized ) { return; }
+			if ( p.initializing ) { return; }
 			var s, t, $out,
 				c = table.config,
 				sz = p.size || 10; // don't allow dividing by zero
@@ -328,7 +328,7 @@
 						} else {
 							rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 							// don't count child rows
-							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'')) && !p.countChildRows ? 0 : 1;
+							j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !p.countChildRows ? 0 : 1;
 							if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
 								lastIndex = i;
 							}
@@ -477,9 +477,11 @@
 			}
 			if (!p.initialized) {
 				p.initialized = true;
+				p.initializing = false;
 				$(table)
 					.trigger('applyWidgets')
 					.trigger('pagerInitialized', p);
+				updatePageDisplay(table, p);
 			}
 		},
 
@@ -499,6 +501,7 @@
 
 				counter = ++p.ajaxCounter;
 
+				p.last.ajaxUrl = url; // remember processed url
 				p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 				p.ajaxObject.success = function(data, status, jqxhr) {
 					// Refuse to process old ajax commands that were overwritten by new ones - see #443
@@ -602,7 +605,7 @@
 				}
 				ts.processTbody(table, $tb, false);
 			}
-			updatePageDisplay(table, p, true);
+			updatePageDisplay(table, p);
 			if (table.isUpdating) {
 				$t.trigger('updateComplete', [ table, true ]);
 			}
@@ -659,10 +662,13 @@
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject(c.cache)) {
 				return updateCache(table);
 			}
+			// abort page move if the table has filters and has not been initialized
+			if (p.ajax && ts.hasWidget(table, 'filter') && !c.widgetOptions.filter_initialized) { return; }
 			calcFilters(table, p);
 			pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
+
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
 			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
 			l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
@@ -746,7 +752,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+			$(table).unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -812,12 +818,7 @@
 				}
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
-				if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
-					// get any default filter settings (data-value attribute) fixes #388
-					p.currentFilters = c.$table.data('lastSearch') || ts.filter.setDefaults(table, c, c.widgetOptions) || [];
-					// set, but don't apply current filters
-					ts.setFilters(table, p.currentFilters, false);
-				}
+				p.initializing = true;
 				if (p.savePages && ts.storage) {
 					t = ts.storage(table, p.storageKey) || {}; // fixes #387
 					p.page = isNaN(t.page) ? p.page : t.page;
@@ -826,20 +827,21 @@
 				}
 
 				// skipped rows
-				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
+				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-					.bind('filterStart.pager', function(e, filters) {
-						p.currentFilters = filters;
-						// don't change page is filters are the same (pager updating, etc)
-						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
+					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+					.bind('filterInit.pager filterStart.pager', function() {
+						p.currentFilters = c.$table.data('lastSearch');
+						// don't change page if filters are the same (pager updating, etc)
+						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
 						}
 					})
 					// update pager after filter widget completes
 					.bind('filterEnd.pager sortEnd.pager', function() {
-						if (p.initialized) {
+						p.currentFilters = c.$table.data('lastSearch');
+						if (p.initialized || p.initializing) {
 							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 								// make sure we have a copy of all table rows once the cache has been built
 								updateCache(table);
@@ -946,7 +948,6 @@
 				$t.trigger('pagerBeforeInitialized', p);
 
 				enablePager(table, p, false);
-
 				if ( typeof(p.ajaxUrl) === 'string' ) {
 					// ajax pager; interact with database
 					p.ajax = true;
@@ -962,10 +963,14 @@
 				}
 
 				// pager initialized
-				if (!p.ajax) {
+				if (!p.ajax && !p.initialized) {
+					p.initializing = false;
 					p.initialized = true;
-					updatePageDisplay(table, p, true);
+					moveToPage(table, p);
 					$(table).trigger('pagerInitialized', p);
+					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
+						updatePageDisplay(table, c, false);
+					}
 				}
 			});
 		};
@@ -988,7 +993,7 @@
 						})
 						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 						.appendTo( c.$table.find('thead:first') )
-						.addClass( errorRow + ' ' + c.selectorRemove.replace(/^(\w+\.)/g,'') )
+						.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
 						.attr({
 							role : 'alert',
 							'aria-live' : 'assertive'

@@ -21,14 +21,16 @@
 
 	// BONUS TIP: disable a column using jQuery data directly
 	// but do it before the table initializes
+	// this code disables the sort on the "Date" column
 	$("table thead th:eq(5)").data("sorter", false);
 
 	$("table").tablesorter({
 		theme : 'blue',
 
 		headers: {
-			// disable sorting of the first column (we can use zero or the header class name)
-			'.first-name' : {
+			// disable sorting of the first & second column - before we would have to had made two entries
+			// note that "first-name" is a class on the span INSIDE the first column th cell
+			'.first-name, .last-name' : {
 				// disable it by setting the property sorter to false
 				sorter: false
 			}
@@ -48,6 +50,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In tablesorter <span class="version">v2.18.1</span>, you can now target a column by the class name of an element inside of a header; note that the span has the targetted class name in the first name column.</li>
 			<li>In tablesorter v2.0.5 and older, only the metadata and headers options methods were available.</li>
 			<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
 				<ul>
@@ -64,8 +67,8 @@
 	<div id="demo"><table class="tablesorter">
 	<thead>
 		<tr>
-			<th class="first-name">First Name</th>
-			<th>Last Name</th>
+			<th><span class="first-name">First Name</span></th>
+			<th class="last-name">Last Name</th>
 			<th data-sorter="false">Age</th>
 			<th>Total</th>
 			<th class="sorter-false">Discount</th>

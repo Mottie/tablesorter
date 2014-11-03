@@ -96,6 +96,16 @@ $(function() {
 				.removeClass('tablesorter-' + t.join(' tablesorter-') + ' tablesorter-jui')
 				.addClass('tablesorter-' + (theme === 'black-ice' ? 'blackice' : theme) );
 		}).change();
+
+
+	var addCaption = true;
+	$('.caption').on('click', function(){
+		addCaption = !addCaption;
+		$(this).html( '' + addCaption );
+		$('#table1, #table2, #table3, .nested').each(function(){
+			this.config.widgetOptions.cssStickyHeaders_addCaption = addCaption;
+		});
+	});
 });
 </script>
 </head>
@@ -118,30 +128,23 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version">v2.18.0</span>
-				<ul>
-					<li>Nested tables with CSS sticky headers now stack; <strong class="results">except in Internet Explorer (IE)</strong>!
-						<ul>
-							<li>In IE, the widget only correctly calculates the sticky header position of the <em>first</em> nested table; it's an elusive bug and may take some time to fix it.</li>
-							<li>In IE, sometimes the entire nested table shrinks or expands when the sticky header becomes fixed.</li>
-							<li>Currently, <strong>I would <em>not</em> recommend using this css widget for <em>nested tables</em> in IE until this problem is resolved</strong>.<br></li>
-						</ul>
-					</li>
-					<li>Removed <code>cssStickyHeaders_zIndex</code> option since it's not doing anything anymore; the <code>position: relative</code> setting is not required (maybe even ignored) when the transform is applied.</li>
-				</ul>
-			</li>
-
-
+			<li>In <span class="version">v2.18.1</span>, <code>cssStickyHeaders_addCaption</code> issue fixed &amp; nested tables in IE now work properly.</li>
 			<li>This demo uses the CSS Sticky Headers widget which uses <em>CSS transforms</em> to reposition the table head.</li>
 			<li><a href="http://caniuse.com/#search=transform">CSS transforms</a> are supported by most modern browsers (<strong>not IE8 and older</strong>).</li>
 				<li>The jQuery UI themed table does not stick to the top of the page due to the extra padding. Adjust the <code>cssStickyHeaders_offset</code> option as desired. I didn't bother in this demo because it includes more than just the jQuery UI theme.<br><br></li>
-			<li>This widget <em>will not work</em> with the original tablesorter, but works optimally with tablesorter v2.8+ (Added <span class="version">v2.14.1</span>; Updated <span class="version updated">v2.18.0</span>)</li>
+			<li>This widget <em>will not work</em> with the original tablesorter, but works optimally with tablesorter v2.8+ (Added <span class="version">v2.14.1</span>; Updated <span class="version updated">v2.18.1</span>)</li>
 		</ul>
 		</div>
 
 		<h3><a href="#">Change log</a></h3>
 		<div>
 		<ul>
+			<li><span class="version">v2.18.1</span>:
+				<ul>
+					<li>Nested css sticky headers in IE now work as expected</li>
+					<li>Fixed an issue in Chrome where the height of the caption was still included even though the <code>cssStickyHeaders_addCaption</code> was set to <code>false</code>.</li>
+				</ul>
+			</li>
 			<li><span class="version">v2.18.0</span>:
 				<ul>
 					<li>Nested css sticky headers now stack; except in IE</li>
@@ -184,9 +187,10 @@ $(function() {
 	</div>
 
 	<h1>Demo</h1>
-	Choose Theme:
-	<select></select>
-	<br><br>
+	Choose Theme: <select></select>
+	<p></p>
+	Include Caption: <button type="button" class="caption">true</button>
+	<p></p>
 	<h1>Attach sticky header to browser window</h1>
 	<table id="table1" class="tablesorter">
 	<caption>Student Grades</caption>
@@ -293,6 +297,7 @@ $(function() {
 			</tr>
 			<tr>
 				<td>
+					Main table - row 3 (with nested table 1)
 					<table id="nested1" class="nested">
 						<thead>
 							<tr>
@@ -310,6 +315,7 @@ $(function() {
 							<tr><td>data in the nested table 1 - row 5</td></tr>
 							<tr>
 								<td>
+									data in the nested table 1 - row 6 (with nested table 2)
 									<table id="nested2" class="nested">
 										<caption class="dark-row">Nested table 2 caption</caption>
 										<thead>
@@ -345,7 +351,6 @@ $(function() {
 									</table>
 								</td>
 							</tr>
-							<tr><td>data in the nested table 1 - row 6</td></tr>
 							<tr><td>data in the nested table 1 - row 7</td></tr>
 							<tr><td>data in the nested table 1 - row 8</td></tr>
 							<tr><td>data in the nested table 1 - row 9</td></tr>
@@ -360,15 +365,17 @@ $(function() {
 							<tr><td>data in the nested table 1 - row 18</td></tr>
 							<tr><td>data in the nested table 1 - row 19</td></tr>
 							<tr><td>data in the nested table 1 - row 20</td></tr>
+							<tr><td>data in the nested table 1 - row 21</td></tr>
 						</tbody>
 					</table>
 				</td>
 			</tr>
 			<tr>
-				<td>Main table - row 3</td>
+				<td>Main table - row 4</td>
 			</tr>
 			<tr>
 				<td>
+					Main table - row 5 (with nested table 3)
 					<table id="nested3" class="nested">
 						<caption class="dark-row">Nested table 3 caption</caption>
 						<thead>
@@ -402,7 +409,7 @@ $(function() {
 				</td>
 			</tr>
 			<tr>
-				<td>Main table - row 4</td>
+				<td>Main table - row 6</td>
 			</tr>
 		</tbody>
 	</table>

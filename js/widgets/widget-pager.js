@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 10/26/2014 (v2.18.0) - requires jQuery 1.7+ */
+/* Pager widget for TableSorter 11/3/2014 (v2.18.1) - requires jQuery 1.7+ */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -159,12 +159,7 @@ tsp = ts.pager = {
 		p.totalRows = c.$tbodies.eq(0).children('tr').not( wo.pager_countChildRows ? '' : '.' + c.cssChildRow ).length;
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
-		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
-			// get any default filter settings (data-value attribute) fixes #388
-			p.currentFilters = c.$table.data('lastSearch') || [];
-			// set, but don't apply current filters
-			ts.setFilters(table, p.currentFilters, false);
-		}
+		p.initializing = true;
 		if (wo.pager_savePages && ts.storage) {
 			t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
 			p.page = isNaN(t.page) ? p.page : t.page;
@@ -173,7 +168,7 @@ tsp = ts.pager = {
 		}
 
 		// skipped rows
-		p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'') + '|' + c.cssChildRow + ')');
+		p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 		// clear initialized flag
 		p.initialized = false;
@@ -209,9 +204,13 @@ tsp = ts.pager = {
 
 		// pager initialized
 		p.initialized = true;
+		p.initializing = false;
 		p.isInitializing = false;
 		c.$table.trigger('pagerInitialized', c);
-		tsp.updatePageDisplay(table, c);
+		// filter widget not initialized; it will update the output display & fire off the pagerComplete event
+		if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
+			tsp.updatePageDisplay(table, c, false);
+		}
 	},
 
 	bindEvents: function(table, c){
@@ -221,23 +220,23 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.off('filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-			.on('filterStart.pager', function(e, filters) {
-				p.currentFilters = filters;
-				// don't change page is filters are the same (pager updating, etc)
-				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (filters || []).join('')) {
+			.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+			.on('filterInit.pager filterStart.pager', function() {
+				p.currentFilters = c.$table.data('lastSearch');
+				// don't change page if filters are the same (pager updating, etc)
+				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 					p.page = wo.pager_pageReset; // fixes #456 & #565
 				}
 			})
 			// update pager after filter widget completes
 			.on('filterEnd.pager sortEnd.pager', function() {
-				if (p.initialized) {
+				p.currentFilters = c.$table.data('lastSearch');
+				if (p.initialized || p.initializing) {
 					if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
 						// make sure we have a copy of all table rows once the cache has been built
 						tsp.updateCache(table);
 					}
 					// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
-					c.pager.last.page = -1;
 					c.$table.trigger('applyWidgets');
 					tsp.updatePageDisplay(table, c, false);
 				}
@@ -372,6 +371,7 @@ tsp = ts.pager = {
 	},
 
 	updatePageDisplay: function(table, c, completed) {
+		if ( c.pager.initializing ) { return; }
 		var s, t, $out,
 			wo = c.widgetOptions,
 			p = c.pager,
@@ -554,7 +554,7 @@ tsp = ts.pager = {
 					} else {
 						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
 						// don't count child rows
-						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.replace(/^(\w+\.)/g,'')) && !wo.pager_countChildRows ? 0 : 1;
+						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !wo.pager_countChildRows ? 0 : 1;
 						if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
 							lastIndex = i;
 						}
@@ -682,6 +682,7 @@ tsp = ts.pager = {
 			p.last.totalRows = p.totalRows;
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
+			p.initializing = false;
 			tsp.updatePageDisplay(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
@@ -714,6 +715,7 @@ tsp = ts.pager = {
 				$doc.off('ajaxError.pager');
 			});
 			counter = ++p.ajaxCounter;
+			p.last.ajaxUrl = url; // remember processed url
 			p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 			p.ajaxObject.success = function(data, status, jqxhr) {
 				// Refuse to process old ajax commands that were overwritten by new ones - see #443
@@ -887,10 +889,15 @@ tsp = ts.pager = {
 		var pg, c = table.config,
 			wo = c.widgetOptions,
 			l = p.last;
+
+		// abort page move if the table has filters and has not been initialized
+		if (p.ajax && !wo.filter_initialized && ts.hasWidget(table, 'filter')) { return; }
+
 		tsp.calcFilters(table, c);
 		pg = Math.min( p.totalPages, p.filteredPages );
 		if ( p.page < 0 ) { p.page = 0; }
 		if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
+
 		// fixes issue where one current filter is [] and the other is ['','',''],
 		// making the next if comparison think the filters as different. Fixes #202.
 		l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
@@ -978,7 +985,7 @@ tsp = ts.pager = {
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
 		delete table.config.rowsCopy;
-		c.$table.off('destroy.pager sortEnd.pager filterEnd.pager enable.pager disable.pager');
+		c.$table.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}
@@ -1045,7 +1052,7 @@ ts.showError = function(table, message){
 					})
 					// add error row to thead instead of tbody, or clicking on the header will result in a parser error
 					.appendTo( c.$table.find('thead:first') )
-					.addClass( errorRow + ' ' + c.selectorRemove.replace(/^(\w+\.)/g,'') )
+					.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
 					.attr({
 						role : 'alert',
 						'aria-live' : 'assertive'
