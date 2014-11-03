@@ -192,7 +192,6 @@ tsp = ts.pager = {
 			p.ajax = false;
 			// Regular pager; all rows stored in memory
 			c.$table.trigger("appendCache", [{}, true]);
-			tsp.hideRowsSetup(table, c);
 		}
 
 	},
@@ -202,6 +201,10 @@ tsp = ts.pager = {
 		tsp.bindEvents(table, c);
 		tsp.setPageSize(table, 0, c); // page size 0 is ignored
 
+		if (!p.ajax) {
+			tsp.hideRowsSetup(table, c);
+		}
+
 		// pager initialized
 		p.initialized = true;
 		p.initializing = false;
@@ -209,7 +212,8 @@ tsp = ts.pager = {
 		c.$table.trigger('pagerInitialized', c);
 		// filter widget not initialized; it will update the output display & fire off the pagerComplete event
 		if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
-			tsp.updatePageDisplay(table, c, false);
+			// if ajax, then don't fire off pagerComplete
+			tsp.updatePageDisplay(table, c, !p.ajax);
 		}
 	},
 
@@ -221,10 +225,10 @@ tsp = ts.pager = {
 
 		c.$table
 			.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-			.on('filterInit.pager filterStart.pager', function() {
+			.on('filterInit.pager filterStart.pager', function(e) {
 				p.currentFilters = c.$table.data('lastSearch');
 				// don't change page if filters are the same (pager updating, etc)
-				if (wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
+				if (e.type === 'filterStart' && wo.pager_pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 					p.page = wo.pager_pageReset; // fixes #456 & #565
 				}
 			})
@@ -384,7 +388,7 @@ tsp = ts.pager = {
 		c.filteredRows = p.filteredRows;
 		p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
-			t = (p.size * p.page > p.filteredRows);
+			t = (p.size * p.page > p.filteredRows) && completed;
 			p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
 			p.page = (t) ? 0 : p.page;
 			p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
@@ -820,7 +824,6 @@ tsp = ts.pager = {
 			}
 			ts.processTbody(table, $tb, false);
 		}
-
 		tsp.updatePageDisplay(table, c);
 
 		wo.pager_startPage = p.page;

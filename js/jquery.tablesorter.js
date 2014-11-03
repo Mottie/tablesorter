@@ -1,5 +1,5 @@
 /**!
-* TableSorter 2.18.1 - Client-side table sorting with ease!
+* TableSorter (FORK) 2.18.2 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -9,7 +9,7 @@
 * http://www.gnu.org/licenses/gpl.html
 *
 * @type jQuery
-* @name tablesorter
+* @name tablesorter (FORK)
 * @cat Plugins/Tablesorter
 * @author Christian Bach/christian.bach@polyester.se
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.18.1";
+			ts.version = "2.18.2";
 
 			ts.parsers = [];
 			ts.widgets = [];
