@@ -161,7 +161,7 @@
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
-				t = (p.size * p.page > p.filteredRows);
+				t = (p.size * p.page > p.filteredRows) && completed;
 				p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
 				p.page = (t) ? 0 : p.page;
 				p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
@@ -831,10 +831,10 @@
 
 				$t
 					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-					.bind('filterInit.pager filterStart.pager', function() {
+					.bind('filterInit.pager filterStart.pager', function(e) {
 						p.currentFilters = c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
-						if (p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
+						if (e.type === 'filterStart' && p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
 						}
 					})
