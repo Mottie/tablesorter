@@ -65,6 +65,36 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.18.1">Version 2.18.1</a> (11/3/2014)
+
+* Core
+  * Add `cssAllowClicks` option; setting "tablesorter-allowClicks" on a header cell will allow clicks to bubble up.
+  * A column can now be targetted using a class name within the header cell as well as the header cell itself; this only applies to previous options that could use a class name/id to target the header cell.
+
+* Docs
+  * Emphasize that this is a fork of tablesorter. Fixes [issue #758](https://github.com/Mottie/tablesorter/issues/758).
+  * Update jQuery UI to 1.11.2.
+  * Update to Bootstrap 3.3.0.
+  * Update QUnit & fixed testing errors.
+  * Various updates to version numbers & corrections.
+  
+* ColumnSelector widget:
+  * Remove breakpoint sorting. See [pull #759](https://github.com/Mottie/tablesorter/pull/759). Thanks [yelly](https://github.com/yelly)!
+
+* CssStickyHeaders widget:
+  * Fixed Chrome caption issue.
+  * Nested tables now work properly in IE.
+
+* Pager addon & widget
+  * Fix `selectorRemove` class name parseing.
+  * A `pagerComplete` event now fires off immediately after initialization & once again fires on non-ajax tables.
+  * Fix double `pagerComplete` events firing on init & initial filter settings.
+  * Fix pager initialization with filter widget & displaying page output. Fixes [issue #755](https://github.com/Mottie/tablesorter/issues/755) &amp; [issue #757](https://github.com/Mottie/tablesorter/issues/757).
+  * Current filters now update properly. See [issue #757](https://github.com/Mottie/tablesorter/issues/757).
+
+* UItheme widget:
+  * Fixed undefined removeClass selector which previously removed all classes.
+
 #### <a name="v2.18.0">Version 2.18.0</a> (10/26/2014)
 
 * Core
@@ -184,9 +214,3 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Select parser - Fix for IE10+ not allowing select options to be clicked.
   * IgnoreArticles parser - Added `ignoreArticlesExcept` option.
   * url parser - ensure it is used by the filter widget.
-
-#### <a name="v2.17.7">Version 2.17.7</a> (8/9/2014)
-
-* Core: Do not detach rows before appending to prevent ajax rows from disappearing. Fixes [issue #701](//github.com/Mottie/tablesorter/issues/701).
-* Docs: Fix change log links.
-* Filter: attached external select causing javascript errors. Fixes [issue #702](//github.com/Mottie/tablesorter/issues/702)

@@ -1,4 +1,4 @@
-/*! tableSorter 2.16+ widgets - updated 10/26/2014 (v2.18.0)
+/*! tableSorter 2.16+ widgets - updated 11/3/2014 (v2.18.1)
  *
  * Column Styles
  * Column Filters
@@ -1525,7 +1525,7 @@ ts.filter = {
 };
 
 ts.getFilters = function(table, getRaw, setFilters, skipFirst) {
-	var i, f, $filters, $column, cols,
+	var i, $filters, $column, cols,
 		filters = false,
 		c = table ? $(table)[0].config : '',
 		wo = c ? c.widgetOptions : '';

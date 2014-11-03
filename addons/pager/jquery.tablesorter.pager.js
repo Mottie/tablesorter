@@ -1,6 +1,6 @@
 /*!
  * tablesorter pager plugin
- * updated 10/26/2014 (v2.18.0)
+ * updated 11/3/2014 (v2.18.1)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -839,7 +839,7 @@
 						}
 					})
 					// update pager after filter widget completes
-					.bind('filterEnd.pager sortEnd.pager', function(e) {
+					.bind('filterEnd.pager sortEnd.pager', function() {
 						p.currentFilters = c.$table.data('lastSearch');
 						if (p.initialized || p.initializing) {
 							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
@@ -969,7 +969,7 @@
 					moveToPage(table, p);
 					$(table).trigger('pagerInitialized', p);
 					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
-						tsp.updatePageDisplay(table, c, false);
+						updatePageDisplay(table, c, false);
 					}
 				}
 			});
