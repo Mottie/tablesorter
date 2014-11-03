@@ -1,5 +1,5 @@
 /*! Filter widget select2 formatter function - updated 7/17/2014 (v2.17.5)
- * requires: jQuery 1.7.2+, tableSorter 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
+ * requires: jQuery 1.7.2+, tableSorter (FORK) 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */

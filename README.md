@@ -65,6 +65,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.18.2">Version 2.18.2</a> (11/3/2014)
+
+* Filter widget
+  * Fixed initialization intermittently stalling.
+
+* Pager addon & widget
+  * Fixed pager addon javascript error.
+  * Fixed pager widget not firing off "pagerComplete" in non-ajax tables.
+  * Fixed `savePages` being overwritten on initialization.
+  * Fixed pager widget updating the table content in non-ajax tables.
+
 #### <a name="v2.18.1">Version 2.18.1</a> (11/3/2014)
 
 * Core
