@@ -192,7 +192,6 @@ tsp = ts.pager = {
 			p.ajax = false;
 			// Regular pager; all rows stored in memory
 			c.$table.trigger("appendCache", [{}, true]);
-			tsp.hideRowsSetup(table, c);
 		}
 
 	},
@@ -201,6 +200,10 @@ tsp = ts.pager = {
 		var p = c.pager;
 		tsp.bindEvents(table, c);
 		tsp.setPageSize(table, 0, c); // page size 0 is ignored
+
+		if (!p.ajax) {
+			tsp.hideRowsSetup(table, c);
+		}
 
 		// pager initialized
 		p.initialized = true;
