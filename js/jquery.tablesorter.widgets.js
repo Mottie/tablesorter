@@ -657,7 +657,7 @@ ts.filter = {
 				$(document)
 				.undelegate(wo.filter_reset, 'click.tsfilter')
 				.delegate(wo.filter_reset, 'click.tsfilter', function() {
-					// trigger a reset event, so other functions (filterFormatter) know when to reset
+					// trigger a reset event, so other functions (filter_formatter) know when to reset
 					c.$table.trigger('filterReset');
 				});
 			}
@@ -764,23 +764,27 @@ ts.filter = {
 			completed = function(){
 				wo.filter_initialized = true;
 				c.$table.trigger('filterInit', c);
-				ts.filter.findRows(c.table, c.$table.data('lastSearch'), null);
+				ts.filter.findRows(c.table, c.$table.data('lastSearch') || []);
 			};
-		$.each( wo.filter_formatterInit, function(i, val) {
-			if (val === 1) {
-				count++;
-			}
-		});
-		clearTimeout(wo.filter_initTimer);
-		if (!wo.filter_initialized && count === wo.filter_formatterCount) {
-			// filter widget initialized
+		if ( $.isEmptyObject( wo.filter_formatter ) ) {
 			completed();
-		} else if (!wo.filter_initialized) {
-			// fall back in case a filter_formatter doesn't call
-			// $.tablesorter.filter.formatterUpdated($cell, column), and the count is off
-			wo.filter_initTimer = setTimeout(function(){
+		} else {
+			$.each( wo.filter_formatterInit, function(i, val) {
+				if (val === 1) {
+					count++;
+				}
+			});
+			clearTimeout(wo.filter_initTimer);
+			if (!wo.filter_initialized && count === wo.filter_formatterCount) {
+				// filter widget initialized
 				completed();
-			}, 500);
+			} else if (!wo.filter_initialized) {
+				// fall back in case a filter_formatter doesn't call
+				// $.tablesorter.filter.formatterUpdated($cell, column), and the count is off
+				wo.filter_initTimer = setTimeout(function(){
+					completed();
+				}, 500);
+			}
 		}
 	},
 
@@ -1114,10 +1118,16 @@ ts.filter = {
 				$(this).hasClass('filter-parsed');
 		}).get();
 
-		if (c.debug) { time = new Date(); }
+		if (c.debug) {
+			ts.log('Starting filter widget search', filters);
+			time = new Date();
+		}
 		// filtered rows count
 		c.filteredRows = 0;
 		c.totalRows = 0;
+		// combindedFilters are undefined on init
+		combinedFilters = (filters || []).join('');
+
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			if ($tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock || ts.css.info)) { continue; } // ignore info blocks, issue #264
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
