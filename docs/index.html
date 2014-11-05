@@ -724,6 +724,42 @@
 				<td></td>
 			</tr>
 
+			<tr id="cssiconasc">
+				<td><a href="#" class="permalink">cssIconAsc</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style added to the header cell icon when the column has an ascending sort (<span class="version">v2.18.3</span>).
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssicondesc">
+				<td><a href="#" class="permalink">cssIconDesc</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column has a descending sort (<span class="version">v2.18.3</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssiconnone">
+				<td><a href="#" class="permalink">cssIconNone</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column does not have a sort applied (<span class="version">v2.18.3</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="cssnone">
 				<td><a href="#" class="permalink">cssNone</a></td>
 				<td>String</td>
@@ -1708,11 +1744,11 @@ $(function(){
       // a selector in a header with this class name will only show selected options in the drop down
       filter_onlyAvail     : 'filter-onlyAvail',
       // default placeholder text (overridden by any header "data-placeholder" setting)
-      filter_placeholder   : { search : '', select : '' }, 
+      filter_placeholder   : { search : '', select : '' },
       // jQuery selector string of an element used to reset the filters.
       filter_reset         : null,
       // Use the $.tablesorter.storage utility to save the most recent filters
-      filter_saveFilters   : false,  
+      filter_saveFilters   : false,
       // typing delay in milliseconds before starting a search.
       filter_searchDelay   : 300,
       // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
@@ -4735,7 +4771,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
     .bind('filterInit', function(){
       $(this).find('tr.tablesorter-filter-row').addClass('fred');
     })
-    
+
      // initialize the sorter
     .tablesorter({
       widgets : ['filter']
