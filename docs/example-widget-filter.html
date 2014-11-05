@@ -605,7 +605,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '', '11' ], true );<
 // this binds to the search using "search" and "keyup" and allows using filter_liveSearch
 // or delayed search & pressing escape to cancel the search
 // pass an optional third parameter (false boolean) to force the inputs to update
-// this allows changing the data-column for an input dynamically 
+// this allows changing the data-column for an input dynamically
 $.tablesorter.filter.bindSearch( $table, $('.search'), false );</pre>
 		If you don't care about the enhanced search filter, then bind to both the &quot;keyup&quot; and &quot;search&quot; events
 		<pre class="prettyprint lang-javascript">// Basic search binding, alternate to the above
@@ -737,7 +737,7 @@ $.extend($.tablesorter.language, {
   line-height: 0;
   cursor: pointer;
 }
-.tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-filter-row.hideme * {
   height: 1px;
   min-height: 0;
   border: 0;

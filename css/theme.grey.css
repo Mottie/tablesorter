@@ -21,7 +21,7 @@
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#555), to(#3c3c3c));
 	background-image: -webkit-linear-gradient(top, #555, #3c3c3c);
 	background-image: -o-linear-gradient(top, #555, #3c3c3c);
-	background-image: linear-gradient(to bottom, #555,#3c3c3c); 
+	background-image: linear-gradient(to bottom, #555,#3c3c3c);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#3c3c3c',GradientType=0 );
 	background-repeat: repeat-x;
 	border-right: #555 1px solid;
@@ -205,7 +205,7 @@ caption {
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-grey .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-grey .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;
