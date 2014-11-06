@@ -130,7 +130,8 @@
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-jui .tablesorter-filter {
+.tablesorter-jui input.tablesorter-filter,
+.tablesorter-jui select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 0;

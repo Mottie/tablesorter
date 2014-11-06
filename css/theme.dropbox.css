@@ -183,7 +183,8 @@ caption {
 }
 
 /* filters */
-.tablesorter-dropbox .tablesorter-filter {
+.tablesorter-dropbox input.tablesorter-filter,
+.tablesorter-dropbox select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 4px;

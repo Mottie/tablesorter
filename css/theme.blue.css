@@ -192,7 +192,8 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-blue .tablesorter-filter {
+.tablesorter-blue input.tablesorter-filter,
+.tablesorter-blue select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 0;

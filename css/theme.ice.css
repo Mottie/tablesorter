@@ -172,7 +172,8 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-ice .tablesorter-filter {
+.tablesorter-ice input.tablesorter-filter,
+.tablesorter-ice select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 4px;

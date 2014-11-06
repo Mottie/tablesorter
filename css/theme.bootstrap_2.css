@@ -84,7 +84,8 @@ caption {
 }
 
 /* filter widget */
-.tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row input.tablesorter-filter,
+.tablesorter-bootstrap .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
 	margin: 0 auto;
 	padding: 4px 6px;

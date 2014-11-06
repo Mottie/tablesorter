@@ -216,7 +216,8 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-grey .tablesorter-filter {
+.tablesorter-grey input.tablesorter-filter,
+.tablesorter-grey select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 0;

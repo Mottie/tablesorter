@@ -160,7 +160,8 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-default .tablesorter-filter {
+.tablesorter-default input.tablesorter-filter,
+.tablesorter-default select.tablesorter-filter {
 	width: 95%;
 	height: auto;
 	margin: 4px;

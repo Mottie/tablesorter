@@ -158,7 +158,8 @@ caption {
 }
 
 /* filters */
-.tablesorter-dark .tablesorter-filter {
+.tablesorter-dark input.tablesorter-filter,
+.tablesorter-dark select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 4px;
