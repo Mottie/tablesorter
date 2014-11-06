@@ -96,6 +96,7 @@
 				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
+				cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
 
 				// *** selectors
 				selectorHeaders  : '> thead th, > thead td',
@@ -447,40 +448,44 @@
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
 				// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
-				c.$headers = $(table).find(c.selectorHeaders).each(function(index) {
-					$t = $(this);
+				c.$headers = $( $.map( $(table).find(c.selectorHeaders), function(elem, index) {
+					$t = $(elem);
+					// ignore cell (don't add it to c.$headers) if row has ignoreRow class
+					if ($t.parent().hasClass(c.cssIgnoreRow)) { return; }
 					// make sure to get header cell & not column indexed cell
 					ch = ts.getColumnData( table, c.headers, index, true );
 					// save original header content
-					c.headerContent[index] = $(this).html();
+					c.headerContent[index] = $t.html();
 					// if headerTemplate is empty, don't reformat the header cell
 					if ( c.headerTemplate !== '' ) {
 						// set up header template
-						t = c.headerTemplate.replace(/\{content\}/g, $(this).html()).replace(/\{icon\}/g, i);
+						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, i);
 						if (c.onRenderTemplate) {
 							h = c.onRenderTemplate.apply($t, [index, t]);
 							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
 						}
-						$(this).html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
+						$t.html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 					}
 					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index, c, c.$table]); }
 					// *** remove this.column value if no conflicts found
-					this.column = parseInt( $(this).attr('data-column'), 10);
-					this.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
-					this.count = -1; // set to -1 because clicking on the header automatically adds one
-					this.lockedOrder = false;
+					elem.column = parseInt( $t.attr('data-column'), 10);
+					elem.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
+					elem.count = -1; // set to -1 because clicking on the header automatically adds one
+					elem.lockedOrder = false;
 					lock = ts.getData($t, ch, 'lockedOrder') || false;
 					if (typeof lock !== 'undefined' && lock !== false) {
-						this.order = this.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
+						elem.order = elem.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
 					}
 					$t.addClass(ts.css.header + ' ' + c.cssHeader);
 					// add cell to headerList
-					c.headerList[index] = this;
+					c.headerList[index] = elem;
 					// add to parent in case there are multiple rows
 					$t.parent().addClass(ts.css.headerRow + ' ' + c.cssHeaderRow).attr('role', 'row');
 					// allow keyboard cursor to focus on element
 					if (c.tabIndex) { $t.attr("tabindex", 0); }
-				}).attr({
+					return elem;
+				}));
+				$(table).find(c.selectorHeaders).attr({
 					scope: 'col',
 					role : 'columnheader'
 				});
