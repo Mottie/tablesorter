@@ -1168,27 +1168,28 @@
 				if (typeof c.initialized === 'function') { c.initialized(table); }
 			};
 
-			ts.getColumnData = function(table, obj, indx, getCell){
+			ts.getColumnData = function(table, obj, indx, getCell, $headers){
 				if (typeof obj === 'undefined' || obj === null) { return; }
 				table = $(table)[0];
-				var result, $h, k,
-					c = table.config;
+				var $h, k,
+					c = table.config,
+					$cell = ( $headers || c.$headers );
 				if (obj[indx]) {
-					return getCell ? obj[indx] : obj[c.$headers.index( c.$headers.filter('[data-column="' + indx + '"]:last') )];
+					return getCell ? obj[indx] : obj[$cell.index( $cell.filter('[data-column="' + indx + '"]:last') )];
 				}
 				for (k in obj) {
 					if (typeof k === 'string') {
-						$h = c.$headers.filter('[data-column="' + indx + '"]:last')
+						$h = $cell.filter('[data-column="' + indx + '"]:last')
 							// header cell with class/id
 							.filter(k)
 							// find elements within the header cell with cell/id
-							.add( c.$headers.filter('[data-column="' + indx + '"]:last').find(k) );
+							.add( $cell.filter('[data-column="' + indx + '"]:last').find(k) );
 						if ($h.length) {
 							return obj[k];
 						}
 					}
 				}
-				return result;
+				return;
 			};
 
 			// computeTableHeaderCellIndexes from:
