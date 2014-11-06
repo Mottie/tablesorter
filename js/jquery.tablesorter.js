@@ -581,7 +581,7 @@
 			function fixColumnWidth(table) {
 				var colgroup, overallWidth,
 					c = table.config;
-				if (c.widthFixed && c.$table.find('colgroup').length === 0) {
+				if (c.widthFixed && c.$table.children('colgroup').length === 0) {
 					colgroup = $('<colgroup>');
 					overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371
