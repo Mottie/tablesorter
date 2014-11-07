@@ -18,17 +18,45 @@
 			cssStickyHeaders_filteredToTop : true
 		},
 		init : function(table, thisWidget, c, wo) {
-			var isIE = 'ActiveXObject' in window, // target all versions of IE
-				isFF = navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
+			var ht, offst, adjustY,
 				$table = c.$table,
 				$attach = $(wo.cssStickyHeaders_attachTo),
+				isIE = 'ActiveXObject' in window, // target all versions of IE
 				namespace = c.namespace + 'cssstickyheader ',
 				$thead = $table.children('thead'),
 				$caption = $table.children('caption'),
 				$win = $attach.length ? $attach : $(window),
 				$parent = $table.parent().closest('table.' + ts.css.table),
 				$parentThead = $parent.length && ts.hasWidget($parent[0], 'cssStickyHeaders') ? $parent.children('thead') : [],
-				lastCaptionSetting = wo.cssStickyHeaders_addCaption;
+				borderTopWidth = ( parseInt( $table.css('border-top-width'), 10 ) || 0 ),
+				lastCaptionSetting = wo.cssStickyHeaders_addCaption,
+				// table offset top changes while scrolling in FF
+				adjustOffsetTop = false,
+				addCaptionHeight = false,
+				setTransform = function( $elms, y ) {
+					var translate = y === 0 ? '' : 'translate(0px,' + y + 'px)';
+					$elms.css({
+						'transform' : translate,
+						'-ms-transform' : translate,
+						'-webkit-transform' : translate
+					});
+				};
+
+			// Firefox fixes
+			if ($caption.length) {
+				// Firefox does not include the caption height when getting the table height
+				// see https://bugzilla.mozilla.org/show_bug.cgi?id=820891, so lets detect it instead of browser sniff
+				ht = $table.height();
+				$caption.hide();
+				addCaptionHeight = $table.height() === ht;
+				$caption.show();
+
+				// Firefox changes the offset().top when translating the table caption
+				offst = $table.offset().top;
+				setTransform( $caption, 20 );
+				adjustOffsetTop = $table.offset().top !== offst;
+				setTransform( $caption, 0 );
+			}
 
 			$win
 			.unbind('scroll resize '.split(' ').join(namespace))
@@ -36,6 +64,13 @@
 				// make sure "wo" is current otherwise changes to widgetOptions
 				// are not dynamic (like the add caption button in the demo)
 				wo = c.widgetOptions;
+
+				if ( adjustOffsetTop ) {
+					// remove transform from caption to get the correct offset().top value
+					setTransform( $caption, 0 );
+					adjustY = $table.offset().top;
+				}
+
 				var top = $attach.length ? $attach.offset().top : $win.scrollTop(),
 				// add caption height; include table padding top & border-spacing or text may be above the fold (jQuery UI themes)
 				// border-spacing needed in Firefox, but not webkit... not sure if I should account for that
@@ -43,7 +78,9 @@
 					( parseInt( $table.css('padding-top'), 10 ) || 0 ) +
 					( parseInt( $table.css('border-spacing'), 10 ) || 0 ),
 
-				bottom = $table.height() - $thead.height() - ( $table.children('tfoot').height() || 0 ) - ( wo.cssStickyHeaders_addCaption ? captionHeight : 0 ),
+				bottom = $table.height() + ( addCaptionHeight && wo.cssStickyHeaders_addCaption ? captionHeight : 0 ) -
+					$thead.height() - ( $table.children('tfoot').height() || 0 ) -
+					( wo.cssStickyHeaders_addCaption ? captionHeight : ( addCaptionHeight ? 0 : captionHeight ) ),
 
 				parentTheadHeight = $parentThead.length ? $parentThead.height() : 0,
 
@@ -53,13 +90,15 @@
 						$parentThead.offset().top + parentTheadHeight - $win.scrollTop()
 					) : 0,
 
+				// in this case FF's offsetTop changes while scrolling, so we get a saved offsetTop before scrolling occurs
+				// but when the table is inside a wrapper ($attach) we need to continually update the offset top
+				tableOffsetTop = adjustOffsetTop ? adjustY : $table.offset().top,
+
+				offsetTop = addCaptionHeight ? tableOffsetTop - ( wo.cssStickyHeaders_addCaption ? captionHeight : 0 ) : tableOffsetTop,
+
 				// Detect nested tables - fixes #724
-				deltaY = top - $table.offset().top + nestedStickyBottom +
-					( parseInt( $table.css('border-top-width'), 10 ) || 0 ) +
-					( wo.cssStickyHeaders_offset || 0 ) +
-					// Again, I dislike browser sniffing... but I have no idea why I need to include a captionHeight
-					// for Firefox here and not for Chrome. Even IE behaves, sorta!
-					( wo.cssStickyHeaders_addCaption ? ( isFF ? captionHeight : 0 ) : -captionHeight ),
+				deltaY = top - offsetTop + nestedStickyBottom + borderTopWidth + ( wo.cssStickyHeaders_offset || 0 ) -
+					( wo.cssStickyHeaders_addCaption ? ( addCaptionHeight ? captionHeight : 0 ) : captionHeight ),
 
 				finalY = deltaY > 0 && deltaY <= bottom ? deltaY : 0,
 
@@ -80,19 +119,12 @@
 					lastCaptionSetting = wo.cssStickyHeaders_addCaption;
 					// reset caption position if addCaption option is dynamically changed to false
 					if (!lastCaptionSetting) {
-						$caption.css({
-							'transform' : '',
-							'-ms-transform' : '',
-							'-webkit-transform' : ''
-						});
+						setTransform( $caption, 0 );
 					}
 				}
 
-				$cells.css({
-					'transform' : finalY === 0 ? '' : 'translate(0px,' + finalY + 'px)',
-					'-ms-transform' : finalY === 0 ? '' : 'translate(0px,' + finalY + 'px)',
-					'-webkit-transform' : finalY === 0 ? '' : 'translate(0px,' + finalY + 'px)'
-				});
+				setTransform( $cells, finalY );
+
 			});
 			$table.unbind('filterEnd' + namespace).bind('filterEnd' + namespace, function() {
 				if (wo.cssStickyHeaders_filteredToTop) {
