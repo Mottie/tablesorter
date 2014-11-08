@@ -119,7 +119,7 @@ caption {
 	margin: 0;
 	line-height: 0;
 }
-.tablesorter-bootstrap .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;

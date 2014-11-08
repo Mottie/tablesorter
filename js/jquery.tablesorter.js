@@ -1,5 +1,5 @@
 /**!
-* TableSorter (FORK) 2.18.2 - Client-side table sorting with ease!
+* TableSorter (FORK) 2.18.3 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -24,7 +24,7 @@
 
 			var ts = this;
 
-			ts.version = "2.18.2";
+			ts.version = "2.18.3";
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -89,8 +89,11 @@
 				cssHeaderRow     : '',
 				cssProcessing    : '', // processing icon applied to header during sort/filter
 
-				cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent 
+				cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent
 				cssIcon          : 'tablesorter-icon',     //  if this class exists, a <i> will be added to the header automatically
+				cssIconNone      : '', // class name added to the icon when there is no column sort
+				cssIconAsc       : '', // class name added to the icon when the column has an ascending sort
+				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
 
@@ -528,13 +531,17 @@
 					len = list.length,
 					none = ts.css.sortNone + ' ' + c.cssNone,
 					css = [ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc],
+					cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
 					aria = ['ascending', 'descending'],
 					// find the footer
 					$t = $(table).find('tfoot tr').children().add(c.$extraHeaders).removeClass(css.join(' '));
 				// remove all header information
 				c.$headers
 					.removeClass(css.join(' '))
-					.addClass(none).attr('aria-sort', 'none');
+					.addClass(none).attr('aria-sort', 'none')
+					.find('.' + c.cssIcon)
+					.removeClass(cssIcon.join(' '))
+					.addClass(cssIcon[2]);
 				for (i = 0; i < len; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
@@ -543,7 +550,13 @@
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
-									f.eq(j).removeClass(none).addClass(css[list[i][1]]).attr('aria-sort', aria[list[i][1]]);
+									f.eq(j)
+										.removeClass(none)
+										.addClass(css[list[i][1]])
+										.attr('aria-sort', aria[list[i][1]])
+										.find('.' + c.cssIcon)
+										.removeClass(cssIcon[2])
+										.addClass(cssIcon[list[i][1]]);
 								}
 							}
 							// add sorted class to footer & extra headers, if they exist
@@ -568,7 +581,7 @@
 			function fixColumnWidth(table) {
 				var colgroup, overallWidth,
 					c = table.config;
-				if (c.widthFixed && c.$table.find('colgroup').length === 0) {
+				if (c.widthFixed && c.$table.children('colgroup').length === 0) {
 					colgroup = $('<colgroup>');
 					overallWidth = $(table).width();
 					// only add col for visible columns - fixes #371

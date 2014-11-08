@@ -161,7 +161,7 @@ caption {
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-ice .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-ice .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;

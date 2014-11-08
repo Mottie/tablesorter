@@ -65,6 +65,17 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.18.3">Version 2.18.3</a> (11/7/2014)
+
+* Core
+  * Add class names to the header icons: `cssIconNone`, `cssIconAsc` & `cssIconDesc` to indicate the sort status.
+  * The `widthFixed` option will no longer target nested table `colgroup` elements to determine if it needs to add a new `colgroup`.
+* Docs
+  * Updated Bootstrap theme example.
+  * Pager widget option comment corrections.
+* Themes: update all themes to hide all elements in the filter row when the `filter_hideFilters` option is `true`
+* CssStickyHeaders widget: tables with a caption now work properly in Firefox.
+
 #### <a name="v2.18.2">Version 2.18.2</a> (11/3/2014)
 
 * Filter widget
@@ -88,7 +99,7 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Update to Bootstrap 3.3.0.
   * Update QUnit & fixed testing errors.
   * Various updates to version numbers & corrections.
-  
+
 * ColumnSelector widget:
   * Remove breakpoint sorting. See [pull #759](https://github.com/Mottie/tablesorter/pull/759). Thanks [yelly](https://github.com/yelly)!
 
@@ -180,48 +191,3 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Ignore nested tables.
   * Add method to remove previous theme.
   * Fix multiple header row sort icons.
-
-#### <a name="v2.17.8">Version 2.17.8</a> (9/15/2014)
-
-* Core
-  * Fix `widthFixed` option to ignore info block tbodies.
-  * Make `emptyTo` & `stringTo` settings case insensitive.
-  * An empty string `headerTemplate` option will now prevent adding an inner div to the header.
-* Docs
-  * Fix setting active accordion from hash script.
-  * Add `emptyTo` clarification.
-  * Main readme: Add related projects section.
-* Editable
-  * Autoresort true no longer breaks the table.
-  * Update demo to use row id instead of index.
-  * Update validate function to allow setting it per column.
-  * Add `editable_focus`, `editable_blur` and `editable_selectAll` options. See [issue #708](//github.com/Mottie/tablesorter/issues/708).
-  * Add `editable_wrapContent` option.
-  * Add `editable_trimContent` option.
-  * Validate function now includes a contenteditable element parameter.
-  * All text callback parameters are now trimmed.
-  * Trim everything & revert widget changes.
-  * Refocus edited element after resort only.
-  * Switch form focus to focusout.
-* Filter
-  * Add `filter_defaultFilter` option.
-      * fix issue with using class selectors.
-      * Make happy with spaces within the query.
-      * Will override exact/partial select filters. Fixes [issue #721](//github.com/Mottie/tablesorter/issues/721).
-      * Fixes [issue #704](//github.com/Mottie/tablesorter/issues/704).
-  * Add `filter_excludeFilter` option; add multiple exclusions separated by spaces, not commas.
-  * Prevent multiple searches during initialization.
-  * Ensure initial filter settings get applied.
-  * Selects will exactly match the selected option unless "filter-match" class is set. Fixes [issue #721](//github.com/Mottie/tablesorter/issues/721).
-* Pager
-  * Update cache & rows copy. Fixes [issue #703](//github.com/Mottie/tablesorter/issues/703).
-  * Use native javascript to populate & set the goto select. Fixes [issue #711](//github.com/Mottie/tablesorter/issues/711).
-  * Custom pager controls. Fix control updates for multiple tables.
-  * Fix pager widget to be properly applied after a page move.
-* StickyHeaders: Fix issue so it works with jQuery v1.2.6 again.
-* Zebra: Apply style to one row. Fixes [issue #715](//github.com/Mottie/tablesorter/issues/715).
-* Parser
-  * Duration parser - added with [demo](//mottie.github.io/tablesorter/docs/example-parsers-duration.html).
-  * Select parser - Fix for IE10+ not allowing select options to be clicked.
-  * IgnoreArticles parser - Added `ignoreArticlesExcept` option.
-  * url parser - ensure it is used by the filter widget.

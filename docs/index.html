@@ -511,7 +511,7 @@
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.18.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.3</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.18.0</span>)</li>
-		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.18.1</span>).</li>
+		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.18.3</span>).</li>
 		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.18.0</span>):
 			<ul>
 				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
@@ -719,6 +719,42 @@
 						As of v2.4, an <code>&lt;i&gt;</code> element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an <code>&lt;i&gt;</code> element to the headers, set the <code>cssIcon</code> option to an empty string.<br>
 						<br>
 						In v2.7, the icon will only be added to the header if <strong>both</strong> the <code>cssIcon</code> option is set AND the <code>headerTemplate</code> option includes the icon tag (<code>{icon}</code>).
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssiconasc">
+				<td><a href="#" class="permalink">cssIconAsc</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style added to the header cell icon when the column has an ascending sort (<span class="version">v2.18.3</span>).
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssicondesc">
+				<td><a href="#" class="permalink">cssIconDesc</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column has a descending sort (<span class="version">v2.18.3</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssiconnone">
+				<td><a href="#" class="permalink">cssIconNone</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column does not have a sort applied (<span class="version">v2.18.3</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
 					</div>
 				</td>
 				<td></td>
@@ -1708,11 +1744,11 @@ $(function(){
       // a selector in a header with this class name will only show selected options in the drop down
       filter_onlyAvail     : 'filter-onlyAvail',
       // default placeholder text (overridden by any header "data-placeholder" setting)
-      filter_placeholder   : { search : '', select : '' }, 
+      filter_placeholder   : { search : '', select : '' },
       // jQuery selector string of an element used to reset the filters.
       filter_reset         : null,
       // Use the $.tablesorter.storage utility to save the most recent filters
-      filter_saveFilters   : false,  
+      filter_saveFilters   : false,
       // typing delay in milliseconds before starting a search.
       filter_searchDelay   : 300,
       // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
@@ -4735,7 +4771,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
     .bind('filterInit', function(){
       $(this).find('tr.tablesorter-filter-row').addClass('fred');
     })
-    
+
      // initialize the sorter
     .tablesorter({
       widgets : ['filter']

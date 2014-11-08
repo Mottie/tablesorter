@@ -91,10 +91,10 @@
 				// ]
 				pager_ajaxProcessing: function(ajax){ return [ 0, [], null ]; },
 
-				// css class names of pager arrows
+				// css class names that are added
 				pager_css: {
-					container   : 'tablesorter-pager',
-					errorRow    : 'tablesorter-errorRow', // error information row (don't include period at beginning)
+					container   : 'tablesorter-pager',    // class added to make included pager.css file work
+					errorRow    : 'tablesorter-errorRow', // error information row (don't include period at beginning); styled in theme file
 					disabled    : 'disabled'              // class added to arrows @ extremes (i.e. prev/first arrows "disabled" on first page)
 				},
 
@@ -173,7 +173,6 @@
 			if (/Destroy/.test( $t.text() )){
 				$('table')[0].config.widgets = ['zebra'];
 				$('table').trigger('refreshWidgets');
-				
 				//.trigger('destroy.pager');
 				$t.text('Restore Pager');
 			} else {
