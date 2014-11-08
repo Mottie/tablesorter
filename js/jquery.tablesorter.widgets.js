@@ -1,4 +1,4 @@
-/*! tableSorter (FORK) 2.16+ widgets - updated 11/3/2014 (v2.18.2)
+/*! tableSorter (FORK) 2.16+ widgets - updated 11/7/2014 (v2.18.3)
  *
  * Column Styles
  * Column Filters
@@ -821,7 +821,7 @@ ts.filter = {
 		for (column = 0; column < columns; column++) {
 			if (arry) {
 				buildFilter += '<td' + ( wo.filter_cellFilter[column] ? ' class="' + wo.filter_cellFilter[column] + '"' : '' ) + '></td>';
-			} else { 
+			} else {
 				buildFilter += '<td' + ( wo.filter_cellFilter !== '' ? ' class="' + wo.filter_cellFilter + '"' : '' ) + '></td>';
 			}
 		}
@@ -1732,7 +1732,7 @@ ts.addWidget({
 		// onRenderHeader is defined, we need to do something about it (fixes #641)
 		if (c.onRenderHeader) {
 			$stickyThead.children('tr').children().each(function(index){
-				// send second parameter 
+				// send second parameter
 				c.onRenderHeader.apply( $(this), [ index, c, $stickyTable ] );
 			});
 		}
