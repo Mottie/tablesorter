@@ -235,6 +235,7 @@ tsColSel = ts.columnSelector = {
 		if (wo.columnSelector_saveColumns && ts.storage) {
 			ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 		}
+		c.$table.trigger('columnUpdate');
 	},
 
 	attachTo : function(table, elm) {
