@@ -1489,10 +1489,15 @@ From the example function above, you'll end up with something similar to this HT
 				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.17.0</span>)
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name, id or column index).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name, id or column index) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">textExtraction : {
+    // 'jQuery thead cell selector' : function ( new method )
     '.styled' : function(node, table, cellIndex) {
         return $(node).find('strong').text();
+    },
+    // columnIndex : function ( original method )
+    2 : function(node, table, cellIndex) {
+        return $(node).find('img').attr('title');
     }
 }</pre>
 					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
@@ -2293,7 +2298,7 @@ $(function(){
 					Filter widget: This option allows you to add custom controls within the filter widget row (v2.7.7; <span class="version updated">v2.17.0</span>).<br>
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.17.0</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_formatter</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_formatter : {
     ".col-value" : function($cell, indx){
       return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
@@ -2356,7 +2361,7 @@ $(function(){
 					Filter widget: Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions (v2.3.6; <span class="version updated">v2.17.0</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_functions : {
     ".col-date" : {
         "&lt; 2004" : function (e, n, f, i) {
@@ -2721,7 +2726,7 @@ $('table').trigger('search', false);</pre></div>
 					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.17.2</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).<br>
+					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_selectSource : {
   ".model-number" : [ "abc", "def", "ghi", "xyz" ]
 }</pre>
