@@ -1655,7 +1655,7 @@ ts.addWidget({
 				.wrap('<div class="' + ts.css.stickyWrap + '">'),
 			$stickyWrap = $stickyTable.parent().css({
 				position   : $attach.length ? 'absolute' : 'fixed',
-				margin     : 0,
+				padding    : parseInt( $stickyTable.parent().parent().css('padding-left'), 10 ),
 				top        : stickyOffset + nestedStickyTop,
 				left       : 0,
 				visibility : 'hidden',
@@ -1709,9 +1709,7 @@ ts.addWidget({
 		// include caption & filter row (fixes #126 & #249) - don't remove cells to get correct cell indexing
 		$stickyTable.find('thead:gt(0), tr.sticky-false').hide();
 		$stickyTable.find('tbody, tfoot').remove();
-		if (!wo.stickyHeaders_includeCaption) {
-			$stickyTable.find('caption').remove();
-		}
+		$stickyTable.find('caption').toggle(wo.stickyHeaders_includeCaption);
 		// issue #172 - find td/th in sticky header
 		$stickyCells = $stickyThead.children().children();
 		$stickyTable.css({ height:0, width:0, margin: 0 });
@@ -1746,12 +1744,12 @@ ts.addWidget({
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
 			var prefix = 'tablesorter-sticky-',
 				offset = $table.offset(),
-				yWindow = $.isWindow( $yScroll[0] ),
+				yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
 				xWindow = $.isWindow( $xScroll[0] ),
 				// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
 				scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
 				tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
-				isVisible = ( scrollTop > offset.top) && (scrollTop < offset.top + tableHeight) ? 'visible' : 'hidden',
+				isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
 				cssSettings = { visibility : isVisible };
 
 			if ($attach.length) {

@@ -1960,7 +1960,7 @@ $(function(){
 			<tr><td>55</td><td>pager widget</td><td>v1.7</td><td>1.7 (on)</td></tr>
 			<tr><td>40</td><td>resizable</td><td>v1.4.1*</td><td>1.4 (isEmptyObject); 1.4.1 (parseJSON)*</td></tr>
 			<tr><td>20</td><td>saveSort</td><td>v1.4.1</td><td>1.4.1 (parseJSON)*</td></tr>
-			<tr><td>60</td><td>stickyHeaders</td><td>v1.2.6</td><td></td></tr>
+			<tr><td>60</td><td>stickyHeaders</td><td>v1.4.3</td><td>1.4.3 (isWindow)**</td></tr>
 			<tr><td>10</td><td>uitheme</td><td>v1.2.6</td><td></td></tr>
 			<tr><td>90</td><td>zebra</td><td>v1.2.6</td><td></td></tr>
 		</tbody>
@@ -1974,6 +1974,7 @@ $(function(){
 			<li>Widget priority values do not need to be unique. Any new widget without a defined priority will automatically have a priority of <code>10</code>.</li>
 			<li>The pager, being a plugin, is actually initialized after tablesorter has initialized and all selected widgets applied.</li>
 			<li>* The <code>saveSort</code> and <code>resizable</code> widgets use the <a href="#function-storage"><code>$.tablesorter.storage</code></a> function by default and thus need the <code>parseJSON</code> function which is available in jQuery 1.4.1+.</li>
+			<li>** The <code>stickyHeaders</code> widget was updated in v2.18.0 to use <code>$.isWindow</code> for the <code>xScroll</code> &amp; <code>yScroll</code> options; and therefore now requires jQuery 1.4.3+.</li>
 		</ul>
 
 		<br class="clear">
