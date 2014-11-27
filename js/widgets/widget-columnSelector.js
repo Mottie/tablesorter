@@ -103,6 +103,7 @@ tsColSel = ts.columnSelector = {
 					// input may not be wrapped within the layout template
 					.find('input').add( colSel.$wrapper[colId].filter('input') )
 					.attr('data-column', colId)
+					.toggleClass( wo.columnSelector_cssChecked, colSel.states[colId] )
 					.prop('checked', colSel.states[colId])
 					.on('change', function(){
 						colSel.states[colId] = this.checked;
@@ -138,6 +139,7 @@ tsColSel = ts.columnSelector = {
 					.find('input').add( colSel.$auto.filter('input') )
 					.attr('data-column', 'auto')
 					.prop('checked', colSel.auto)
+					.toggleClass( wo.columnSelector_cssChecked, colSel.auto )
 					.on('change', function(){
 						colSel.auto = this.checked;
 						$.each( colSel.$checkbox, function(i, $cb){
@@ -225,6 +227,7 @@ tsColSel = ts.columnSelector = {
 				styles.push(prefix + ' tr th:nth-child(' + column + ')');
 				styles.push(prefix + ' tr td:nth-child(' + column + ')');
 			}
+			$(this).toggleClass( wo.columnSelector_cssChecked, this.checked );
 		});
 		if (wo.columnSelector_mediaquery){
 			colSel.$breakpoints.prop('disabled', true);
@@ -253,12 +256,13 @@ tsColSel = ts.columnSelector = {
 			$popup.find('.tablesorter-column-selector')
 				.html( colSel.$container.html() )
 				.find('input').each(function(){
-					var indx = $(this).attr('data-column');
-					$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
+					var isChecked = indx === 'auto' ? colSel.auto : colSel.states[indx],
+						indx = $(this).toggleClass( wo.columnSelector_cssChecked, isChecked ).attr('data-column');
+					$(this).prop( 'checked', isChecked );
 				});
 			colSel.$popup = $popup.on('change', 'input', function(){
 				// data input
-				indx = $(this).attr('data-column');
+				indx = $(this).toggleClass( wo.columnSelector_cssChecked, this.checked ).attr('data-column');
 				// update original popup
 				colSel.$container.find('input[data-column="' + indx + '"]')
 					.prop('checked', this.checked)
@@ -300,7 +304,10 @@ ts.addWidget({
 		// data attribute containing column priority
 		// duplicates how jQuery mobile uses priorities:
 		// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
-		columnSelector_priority : 'data-priority'
+		columnSelector_priority : 'data-priority',
+		// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
+		// applied icons; use this class name (input.checked) instead of input:checked
+		columnSelector_cssChecked : 'checked'
 
 	},
 	init: function(table, thisWidget, c, wo) {
