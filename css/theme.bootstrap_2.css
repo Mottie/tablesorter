@@ -37,7 +37,7 @@
 }
 
 /* bootstrap uses <i> for icons */
-.tablesorter-bootstrap .tablesorter-header i {
+.tablesorter-bootstrap .tablesorter-header i.tablesorter-icon {
 	position: absolute;
 	right: 2px;
 	top: 50%;
