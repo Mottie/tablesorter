@@ -41,7 +41,7 @@
 	cursor: pointer;
 }
 .tablesorter-grey .header i,
-.tablesorter-grey .tablesorter-header i {
+.tablesorter-grey .tablesorter-header i.tablesorter-icon {
 	width: 18px;
 	height: 10px;
 	position: absolute;
@@ -69,22 +69,22 @@
 	background-image: linear-gradient(to bottom, #195c93, #0e4776);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#195c93', endColorstr='#0e4776',GradientType=0 );
 }
-.tablesorter-grey .headerSortUp i,
-.tablesorter-grey .tablesorter-headerSortUp i,
-.tablesorter-grey .tablesorter-headerAsc i {
+.tablesorter-grey .headerSortUp i.tablesorter-icon,
+.tablesorter-grey .tablesorter-headerSortUp i.tablesorter-icon,
+.tablesorter-grey .tablesorter-headerAsc i.tablesorter-icon {
 	/* white asc arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 }
-.tablesorter-grey .headerSortDown i,
-.tablesorter-grey .tablesorter-headerSortDown i,
-.tablesorter-grey .tablesorter-headerDesc i {
+.tablesorter-grey .headerSortDown i.tablesorter-icon,
+.tablesorter-grey .tablesorter-headerSortDown i.tablesorter-icon,
+.tablesorter-grey .tablesorter-headerDesc i.tablesorter-icon {
 	/* white desc arrow */
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 .tablesorter-grey thead .sorter-false {
 	cursor: default;
 }
-.tablesorter-grey thead .sorter-false i {
+.tablesorter-grey thead .sorter-false i.tablesorter-icon {
 	background-image: none;
 	padding: 4px;
 }
