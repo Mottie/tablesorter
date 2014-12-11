@@ -25,7 +25,7 @@
 }
 
 /* bootstrap uses <i> for icons */
-.tablesorter-bootstrap .tablesorter-header i {
+.tablesorter-bootstrap .tablesorter-header i.tablesorter-icon {
 	font-size: 11px;
 	position: absolute;
 	right: 2px;

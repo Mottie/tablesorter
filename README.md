@@ -91,7 +91,7 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
 
 * Core
   * Add `cssAllowClicks` option; setting "tablesorter-allowClicks" on a header cell will allow clicks to bubble up.
-  * A column can now be targetted using a class name within the header cell as well as the header cell itself; this only applies to previous options that could use a class name/id to target the header cell.
+  * A column can now be targeted using a class name within the header cell as well as the header cell itself; this only applies to previous options that could use a class name/id to target the header cell.
 
 * Docs
   * Emphasize that this is a fork of tablesorter. Fixes [issue #758](https://github.com/Mottie/tablesorter/issues/758).
@@ -108,7 +108,7 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Nested tables now work properly in IE.
 
 * Pager addon & widget
-  * Fix `selectorRemove` class name parseing.
+  * Fix `selectorRemove` class name parsing.
   * A `pagerComplete` event now fires off immediately after initialization & once again fires on non-ajax tables.
   * Fix double `pagerComplete` events firing on init & initial filter settings.
   * Fix pager initialization with filter widget & displaying page output. Fixes [issue #755](https://github.com/Mottie/tablesorter/issues/755) &amp; [issue #757](https://github.com/Mottie/tablesorter/issues/757).
@@ -161,7 +161,7 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
       * Add `maxOptionSize` option
       * Tweak code & fix problems introduces in [pull #711](https://github.com/Mottie/tablesorter/pull/711).
       * Thanks [camallen](https://github.com/camallen)!
-  * Fix ouput display not updating on initialization.
+  * Fix output display not updating on initialization.
   * Add url check to allow ajax updating of table. Fixes [issue #730](https://github.com/Mottie/tablesorter/issues/730).
   * Check for dynamically changing `ajaxUrl` option.
   * Add `ajaxObject` to the `table.config.pager` variable.
