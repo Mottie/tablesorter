@@ -56,7 +56,7 @@
 		<em>NOTE!</em>
 		<ul>
 			<li>This parser will convert a duration time "<code>####</code><span class="label label-info">y</span> <code>####</code><span class="label label-info">d</span> <code>####</code><span class="label label-info">h</span> <code>####</code><span class="label label-info">m</span> <code>####</code><span class="label label-info">s</span>" into a sortable value.</li>
-			<li>It is not designed to convert <code>365</code> days into <code>1</code> year, nor performo any other conversions.</li>
+			<li>It is not designed to convert <code>365</code> days into <code>1</code> year, nor perform any other conversions.</li>
 			<li>Options:
 				<ul>
 					<li><code>durationLabels</code>
@@ -124,7 +124,7 @@
 			regex = new RegExp('(\\d{' + len + '})', 'g');
 		// add parsed values to order & value column
 		addParsedValues( $table, [1], function(v){
-			var t = v.replace(regex, '$1|'); 
+			var t = v.replace(regex, '$1|');
 			return t.substring(0, t.length - 1);
 		});
 	});

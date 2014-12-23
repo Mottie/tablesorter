@@ -132,7 +132,11 @@
 			// data attribute containing column priority
 			// duplicates how jQuery mobile uses priorities:
 			// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
-			columnSelector_priority : 'data-priority'
+			columnSelector_priority : 'data-priority',
+
+			// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
+			// applied icons; use this class name (input.checked) instead of input:checked
+			columnSelector_cssChecked : 'checked'
 		}
 	});
 
@@ -178,6 +182,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.18.4</span>, added <code>columnSelector_cssChecked</code> option which contains the class name added to checked inputs. This helps fix an issue in Chrome that rears it's ugly head when trying to use <code>input:checked</code> to change a Font Awesome icon. See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.</li>
 			<li>
 				In <span class="version">v2.17.0</span>, a method to refresh the column selector was added.<br>
 				<br>
@@ -201,11 +206,11 @@
 		<div>
 			<h4>Column selector widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
 			<div>
-			<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			<span class="label label-info">TIP!</span> Click on the link in the "Option" column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
 			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
 				<thead>
-					<tr><th>Option</th><th class="sorter-false">Description</th></tr>
+					<tr><th width="5%">Option</th><th class="sorter-false">Description</th></tr>
 				</thead>
 				<tbody>
 
@@ -301,7 +306,7 @@
 								<li>If the header cell does not have this attribute defined, the column selector name will be taken from the header cell internal text.</li>
 								<li>If defined, the text contained within this attribute will replace the <code>{name}</code> string within the layout option above.</li>
 							</ul>
-							Default value: <code>&quot;data-selector-name&quot;</code>
+							Default value: <code>'data-selector-name'</code>
 							</div>
 						</td>
 					</tr>
@@ -323,7 +328,7 @@
 							<br>
 							Set as "Auto" to signify to the user that columns disappearing and/or reappearing is automatically done.<br>
 							<br>
-							Default value: <code>&quot;Auto: &quot;</code>
+							Default value: <code>'Auto: '</code>
 							</div>
 						</td>
 					</tr>
@@ -365,10 +370,26 @@
 								<li>Any named priority value, (e.g. "critical" or "persistent") will flag the widget to remove that column from the selector list.</li>
 								<li>Undefined priorities will default to a priority value of 1.</li>
 							</ul>
-							Default value: <code>&quot;data-priority&quot;</code>
+							Default value: <code>'data-priority'</code>
 							</div>
 						</td>
 					</tr>
+
+					<tr id="column-selector-css-checked">
+						<td><a href="#" class="permalink">columnSelector_cssChecked</a></td>
+						<td>
+							This class name is added to the input checkbox when it is checked
+							<div class="collapsible">
+							<br>
+							This was added because we found an issue in the latest version of Chrome where the css selector <code>input:checked</code> was not correctly modifying the displayed Font Awesome replacement icon when the checkbox was toggled.<br>
+							<br>
+							Use <code>input.checked</code> (or whatever value setting this class name option contains to get around this issue). See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.<br>
+							<br>
+							Default value: <code>'checked'</code>
+							</div>
+						</td>
+					</tr>
+
 
 				</tbody>
 			</table>

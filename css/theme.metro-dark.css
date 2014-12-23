@@ -163,7 +163,8 @@ Metro Dark Theme
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-metro-dark .tablesorter-filter {
+.tablesorter-metro-dark input.tablesorter-filter,
+.tablesorter-metro-dark select.tablesorter-filter {
 	width: 95%;
 	height: auto;
 	margin: 4px;

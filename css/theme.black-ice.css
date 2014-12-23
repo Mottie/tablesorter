@@ -157,7 +157,8 @@ caption {
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-blackice .tablesorter-filter {
+.tablesorter-blackice input.tablesorter-filter,
+.tablesorter-blackice select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 0;
