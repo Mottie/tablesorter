@@ -284,7 +284,7 @@
 				c = table.config,
 				$b = c.$tbodies.eq(0);
 			$b.find('tr.pagerSavedHeightSpacer').remove();
-			if (p.fixedHeight && !p.isDisabled) { 
+			if (p.fixedHeight && !p.isDisabled) {
 				h = $.data(table, 'pagerSavedHeight');
 				if (h) {
 					d = h - $b.height();
@@ -846,9 +846,9 @@
 								// make sure we have a copy of all table rows once the cache has been built
 								updateCache(table);
 							}
+							updatePageDisplay(table, p, false);
 							moveToPage(table, p, false);
 							c.$table.trigger('applyWidgets');
-							updatePageDisplay(table, p, false);
 						}
 					})
 					.bind('disable.pager', function(e){
