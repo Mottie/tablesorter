@@ -256,8 +256,8 @@ tsColSel = ts.columnSelector = {
 			$popup.find('.tablesorter-column-selector')
 				.html( colSel.$container.html() )
 				.find('input').each(function(){
-					var isChecked = indx === 'auto' ? colSel.auto : colSel.states[indx],
-						indx = $(this).toggleClass( wo.columnSelector_cssChecked, isChecked ).attr('data-column');
+					var indx = $(this).toggleClass( wo.columnSelector_cssChecked, isChecked ).attr('data-column'),
+						isChecked = indx === 'auto' ? colSel.auto : colSel.states[indx];
 					$(this).prop( 'checked', isChecked );
 				});
 			colSel.$popup = $popup.on('change', 'input', function(){
