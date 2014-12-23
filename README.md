@@ -61,9 +61,33 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Ask your question at [Stackoverflow](//stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
 * Please don't open a [new issue](//github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
-### Change Log
+### Recent Changes
 
-View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
+View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.18.4">Version 2.18.4</a> (12/22/2014)
+
+* Docs
+  * Add link to demo showing how to apply jQuery selectmenu widget to a filter
+  * Update theme switcher linked styles
+  * Add clarification on using jQuery selectors that target the header cell. Fixes [issue #766](https://github.com/Mottie/tablesorter/issues/766).
+  * Fix various typos. Thanks [seanhussey](https://github.com/seanhussey)!
+  * Add `cssIgnoreRow` docs.
+* Core
+  * Add `cssIgnoreRow` option. Added to a header row that is to be ignored & not added to the `config.$headers` variable.
+  * Allow passing alternate headers to `getColumnData` function.
+* ColumnSelector widget
+  * Add `columnUpdate` event when columnSelector is updated.
+  * Add `columnSelector_cssChecked` option - css class name added to checkboxes.
+* Pager (addon & widget)
+  * Ensure `filteredRows` variable gets updated before the move to page function is called. Fixes [issue #778](https://github.com/Mottie/tablesorter/issues/778).
+* StickyHeaders widget
+  * Make `includeCaption` option dynamic; add note of new jQuery requirement.
+  * Add popup window demo to sticky headers example.
+* Themes
+  * Style filter input & selects only.
+  * Only style `<i>` tags from tablesorter on theme Bootstrap v2 & less file. Thanks [frodrigo](https://github.com/frodrigo)!
+  * Modify theme Dropbox & grey to also only target icon class name for css styling.
 
 #### <a name="v2.18.3">Version 2.18.3</a> (11/7/2014)
 
@@ -86,108 +110,3 @@ View the [complete listing here](//github.com/Mottie/tablesorter/wiki/Changes).
   * Fixed pager widget not firing off "pagerComplete" in non-ajax tables.
   * Fixed `savePages` being overwritten on initialization.
   * Fixed pager widget updating the table content in non-ajax tables.
-
-#### <a name="v2.18.1">Version 2.18.1</a> (11/3/2014)
-
-* Core
-  * Add `cssAllowClicks` option; setting "tablesorter-allowClicks" on a header cell will allow clicks to bubble up.
-  * A column can now be targeted using a class name within the header cell as well as the header cell itself; this only applies to previous options that could use a class name/id to target the header cell.
-
-* Docs
-  * Emphasize that this is a fork of tablesorter. Fixes [issue #758](https://github.com/Mottie/tablesorter/issues/758).
-  * Update jQuery UI to 1.11.2.
-  * Update to Bootstrap 3.3.0.
-  * Update QUnit & fixed testing errors.
-  * Various updates to version numbers & corrections.
-
-* ColumnSelector widget:
-  * Remove breakpoint sorting. See [pull #759](https://github.com/Mottie/tablesorter/pull/759). Thanks [yelly](https://github.com/yelly)!
-
-* CssStickyHeaders widget:
-  * Fixed Chrome caption issue.
-  * Nested tables now work properly in IE.
-
-* Pager addon & widget
-  * Fix `selectorRemove` class name parsing.
-  * A `pagerComplete` event now fires off immediately after initialization & once again fires on non-ajax tables.
-  * Fix double `pagerComplete` events firing on init & initial filter settings.
-  * Fix pager initialization with filter widget & displaying page output. Fixes [issue #755](https://github.com/Mottie/tablesorter/issues/755) &amp; [issue #757](https://github.com/Mottie/tablesorter/issues/757).
-  * Current filters now update properly. See [issue #757](https://github.com/Mottie/tablesorter/issues/757).
-
-* UItheme widget:
-  * Fixed undefined removeClass selector which previously removed all classes.
-
-#### <a name="v2.18.0">Version 2.18.0</a> (10/26/2014)
-
-* Core
-  * Move "ipAddress" parser into `parser-network.js` parser file.
-  * Add "image" parser to core.
-  * Add `widgetClass` option
-      * Allows adding widgets to the table by adding a table class name.
-      * Fix debug logs for applying widgets.
-      * Fixes [issue #743](https://github.com/Mottie/tablesorter/issues/743).
-  * Add `$cell` parameter to parser detection `is` function (`is: function(s, table, cell, $cell) { /* ... */ }`).
-  * Add `$table` parameter to `onRenderHeader` function (`onRenderHeader: function (index, config, $table){ /* ... */ }`).
-  * Fix ARIA caption label reference.
-  * Get column index from data-attribute when sorting.
-  * The `aria-labelledby` attribute is no longer to all nested captions.
-  * Update `widgetClass` option matching. See [issue #743](https://github.com/Mottie/tablesorter/issues/743).
-* Themes
-  * Include caption element in metro theme; update various demo theme selectors to include the metro theme.
-  * Fix zebra striping in nested tables.
-* Parsers
-  * Created `parser-network.js` parser
-      * Removed "ipAddress" parser from core.
-      * Move "ipAddress" parser into this file; a duplicate of the parser named "ipv4Address" is included.
-      * Moved "ipv6Address" parser into this file.
-      * Added new MAC parser.
-  * Update all date parsers to ensure a valid date is being parsed.
-  * Add named number parser & demo.
-* Column Selector widget
-  * Prevent adding a media query when no priorities are set.
-  * `col` element will now be hidden along with the column. Fixes [issues #740](https://github.com/Mottie/tablesorter/issues/740).
-* Editable widget
-  * Make updatable so this widget works with the pager. Fixes [issue #732](https://github.com/Mottie/tablesorter/issues/732).
-* Filter widget
-  * Fix wildcard match logic to behave logically. Fixes [issue #727](https://github.com/Mottie/tablesorter/issues/727).
-  * Add `filter_cellFilter` option. Fixes [issue #731](https://github.com/Mottie/tablesorter/issues/731).
-  * External inputs can now target multiple columns (e.g. `data-column="0-2,4,6-7"`); see [this Stackoverflow question](http://stackoverflow.com/q/26470602/145346).
-  * Any match filters now properly uses `filter_ignoreCase`. Fixes [issue #748](https://github.com/Mottie/tablesorter/issues/748).
-  * Fix saved filter updates to multiple or "any" column inputs.
-* Grouping widget
-  * Add "monthyear" grouping to dates. Fixes [issue #744](https://github.com/Mottie/tablesorter/issues/744).
-* Pager addon & widget
-  * Use a sample of page number links for large collections.
-      * Add `maxOptionSize` option
-      * Tweak code & fix problems introduces in [pull #711](https://github.com/Mottie/tablesorter/pull/711).
-      * Thanks [camallen](https://github.com/camallen)!
-  * Fix output display not updating on initialization.
-  * Add url check to allow ajax updating of table. Fixes [issue #730](https://github.com/Mottie/tablesorter/issues/730).
-  * Check for dynamically changing `ajaxUrl` option.
-  * Add `ajaxObject` to the `table.config.pager` variable.
-  * IE requires a value attribute for every option. Fixes [issue #734](https://github.com/Mottie/tablesorter/issues/734).
-  * Revert some code modified for large collections to use jQuery instead of native javascript (more IE issues).
-  * Ensure `pager.filteredRows` is current on page move. See [issue #745](https://github.com/Mottie/tablesorter/issues/745).
-  * Fix empty table select showing 0 & 1 pages.
-  * The `fixedHeight` option is now working properly. Fixes [issue #742](https://github.com/Mottie/tablesorter/issues/742) & [issue #729](https://github.com/Mottie/tablesorter/issues/729).
-  * Widget cleanup & only use the last search data.
-  * Add note about including an ajax `success` function within the `ajaxObject` definition. See [issue #749](https://github.com/Mottie/tablesorter/issues/749).
-* RepeatHeaders widget
-  * Now works with filtered & nested tables.
-* Resizable widget
-  * Make it work inside of an overflow container. Fixes [issue #737](https://github.com/Mottie/tablesorter/issues/737).
-* Scroller widget
-  * Remove `scroller_idPrefix` in lieu of a unique namespace id.
-* StickyHeaders widget
-  * Now stacks when within a nested table.
-  * Wrapped sticky header components (`thead` & `caption`) in a sticky div.
-  * Added `stickyHeaders_xScroll` and `stickyHeaders_yScroll` options.
-  * Removed jQuery UI selection from the demo to allow the accordion to be properly themed.
-* CssStickyHeaders widget
-  * Now stacks when within a nested table.
-  * Removed `cssStickyHeaders_zIndex` option as the widget no longer uses relative positioning (it wasn't necessary)
-  * Please note that **using this widget on nested tables does not work properly in ALL versions of IE** (including IE11).
-* UITheme
-  * Ignore nested tables.
-  * Add method to remove previous theme.
-  * Fix multiple header row sort icons.

@@ -1,4 +1,4 @@
-/*! tableSorter (FORK) 2.16+ widgets - updated 11/7/2014 (v2.18.3)
+/*! tableSorter (FORK) 2.16+ widgets - updated 12/22/2014 (v2.18.4)
  *
  * Column Styles
  * Column Filters
