@@ -831,14 +831,21 @@
 				}
 			}
 
-			function checkResort($table, flag, callback) {
-				var sl = $table[0].config.sortList;
+			function checkResort($table, resort, callback) {
+				var sl = $.isArray(resort) ? resort : $table[0].config.sortList;
 				// don't try to resort if the table is still processing
 				// this will catch spamming of the updateCell method
-				if (flag !== false && !$table[0].isProcessing && sl.length) {
-					$table.trigger("sorton", [sl, function(){
-						resortComplete($table, callback);
-					}, true]);
+				if (resort !== false && !$table[0].isProcessing) {
+					if (sl.length) {
+						$table.trigger('sorton', [sl, function(){
+							resortComplete($table, callback);
+						}, true]);
+					} else {
+						$table.trigger('sortReset', [function(){
+							resortComplete($table, callback);
+							ts.applyWidget($table[0], false);
+						}]);
+					}
 				} else {
 					resortComplete($table, callback);
 					ts.applyWidget($table[0], false);

@@ -4218,7 +4218,7 @@ $.extend($.tablesorter.themes.jui, {
 
 			<tr id="addrows">
 				<td><a href="#" class="permalink">addRows</a></td>
-				<td>Use this method to add table rows (v2.0.16; <span class="version updated">v2.16.2</span>).
+				<td>Use this method to add table rows (v2.0.16; <span class="version updated">v2.18.5</span>).
 					<div class="collapsible">
 						<br>
 						It does not work the same as &quot;update&quot; in that it only adds rows, it does not remove them.<br>
@@ -4228,10 +4228,10 @@ $.extend($.tablesorter.themes.jui, {
   var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
     '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
     $row = $(row),
-    // resort table using the current sort; set to false to prevent resort, otherwise
-    // any other value in resort will automatically trigger the table resort.
+    // resort table using true to reapply the current sort; set to false to prevent resort
+    // as of v2.18.5, the resort variable can contain a new sortList to be applied
     // A callback method was added in 2.3.9.
-    resort = true,
+    resort = true, // or [[0,0],[1,0]] etc
     callback = function(table){
       alert('rows have been added!');
     };
@@ -4320,8 +4320,8 @@ $("table").trigger("sortReset", [callback]);</pre>
 $("table tbody").append(html);
 
 // let the plugin know that we made a update
-// the resort flag set to anything BUT false (no quotes) will trigger an automatic
-// table resort using the current sort
+// the resort flag set to true will trigger an automatic resort using the current sort
+// if set to false, no new sort will be applied; or set it to any sortList value (e.g. [[0,0]]; new v2.18.5)
 // A callback method was added in 2.3.9.
 var resort = true,
     callback = function(table){
@@ -4334,9 +4334,13 @@ $("table").trigger("update", [resort, callback]);
 
 // set sorting column and direction, this will sort on the first and third column
 var sorting = [[2,1],[0,0]];
-$("table")
-	.trigger("update", [ false ])
-	.trigger("sorton", [sorting]);</pre>
+// method to use prior to v2.18.5
+// $("table")
+//  .trigger("update", [ false ])
+//  .trigger("sorton", [sorting]);
+// After v2.18.5; do the following to apply a new sort after updating
+// if sorting is an empty array [], then the sort will be reset
+$('table').trigger('update', [ sorting ]);</pre>
 	<span class="label label-info">NOTE</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
 	</div>
 				</td>
@@ -4355,7 +4359,12 @@ $("table tbody").find('td:nth-child(3)').html(function(i,h){
   return Math.floor(Math.random()*10) + 1; // random number from 0 to 10
 });
 
-var resort = true, // re-apply the current sort
+// reapply the current sort if resort = true
+// do not reapply the current sort if resort = false
+// as of v2.18.5, apply a new sort if resort = [[0,0]] (or whatever)
+// or the sort is reset if resort = []
+var resort = true,
+  // add a callback, as desired
   callback = function(table){
     alert('table updated!');
   };
@@ -4409,7 +4418,8 @@ $("table")
 
   $("td.discount").click(function(){
 
-        // Do we want to reapply the current sort on the column?
+    // Do we want to reapply the current sort on the column?
+    // see updateRow for other resort settings as of v2.18.5
     var resort = false,
         // Do something after the cell update in this callback function
         callback = function(table){
@@ -4424,14 +4434,16 @@ $("table")
 
     // update the table, so the tablesorter plugin can update its value
     // set resort flag to false to prevent automatic resort (since we're using a different sort below)
-    // leave the resort flag as undefined, or with any other value, to automatically resort the table
+    // prior to v2.18.5, leave the resort flag as undefined, or with any other value, to automatically resort the table
+    // new resort values can be set as of v2.18.5 - please see the "updateRow" documentation for more details
     // $("table").trigger("updateCell", [this]); &lt; - resort is undefined so the table WILL resort
     $("table").trigger("updateCell", [this, resort, callback]);
 
     // As of version 2.0.14, the table will automatically resort (using the current sort selection)
     // after the update, so include the following if you want to specify a different sort
 
-    // set sorting column and direction, this will sort on the first and third column
+    // prior to v2.18.5, set sorting column and direction, this will sort on the first and third column
+    // after v2.18.5, add any new sort to the "resort" variable above
     var sorting = [[3,1]];
     $("table").trigger("sorton", [sorting]);
 
