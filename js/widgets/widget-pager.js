@@ -389,8 +389,8 @@ tsp = ts.pager = {
 		p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 		if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
 			t = (p.size * p.page > p.filteredRows) && completed;
-			p.startRow = (t) ? 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
-			p.page = (t) ? 0 : p.page;
+			p.page = (t) ? wo.pager_pageReset || 0 : p.page;
+			p.startRow = (t) ? p.size * p.page + 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
 			p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
 			$out = p.$container.find(wo.pager_selectors.pageDisplay);
 			// form the output string (can now get a new output string from the server)
