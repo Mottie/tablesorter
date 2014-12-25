@@ -831,8 +831,8 @@
 
 				$t
 					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
-					.bind('filterInit.pager filterStart.pager', function(e) {
-						p.currentFilters = c.$table.data('lastSearch');
+					.bind('filterInit.pager filterStart.pager', function(e, filters) {
+						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
 						if (e.type === 'filterStart' && p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
 							p.page = p.pageReset; // fixes #456 & #565
