@@ -4604,8 +4604,10 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td><a href="#" class="permalink">pageSet</a></td>
 				<td>Trigger the pager to change the current page (v2.7.7).
 					<div class="collapsible">
+						<br>
+						If no value is passed, the pager will reset to page 1; otherwise, pass a "one-based" index of the desired page
 						<pre class="prettyprint lang-js">$(function(){
-  $('table').trigger('pageSet', 3);
+  $('table').trigger('pageSet', 3); // pass a one-based index
 });</pre></div>
 				</td>
 				<td></td>
