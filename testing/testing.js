@@ -25,45 +25,6 @@ QUnit.testSkip = function( testName, callback ) {
 var tester = {
 
 	/************************************************
-		JSHint testing
-	************************************************/
-	jsHintTest : function(name, sourceFile, options) {
-		// Chrome & Opera don't allow ajax loading of script files
-		if (QUnit.isLocal && /Chrome|Opera/.test(navigator.userAgent)) {
-			return QUnit.testSkip(name, function(){
-				ok( true, 'test cannot be done locally' );
-			});
-		}
-		function validateFile(source) {
-			var i, len, err,
-			result = JSHINT(source, options),
-			errors = JSHINT.errors;
-			ok(result);
-			if (result) {
-				return;
-			}
-			for (i = 0, len = errors.length; i < len; i++) {
-				err = errors[i];
-				if (!err) {
-					continue;
-				}
-				ok(false, err.reason + " on line " + err.line +
-					", character " + err.character);
-			}
-		}
-		return asyncTest(name, function() {
-			$.ajax({
-				url: sourceFile,
-				dataType: 'script',
-				success: function(source) {
-					start();
-					validateFile(source);
-				}
-			});
-		});
-	},
-
-	/************************************************
 		test table data cache
 	************************************************/
 	cacheCompare : function(table, col, expected, txt, filtered){
@@ -198,17 +159,6 @@ $(function(){
 	});
 
 	$table5.tablesorter();
-
-	module('JSHint');
-	/************************************************
-		JSHint testing
-	************************************************/
-	// Run JSHint on main js files
-	tester.jsHintTest('JSHint core', 'js/jquery.tablesorter.js');
-	tester.jsHintTest('JSHint pager', 'addons/pager/jquery.tablesorter.pager.js');
-	tester.jsHintTest('JSHint widgets', 'js/jquery.tablesorter.widgets.js');
-	tester.jsHintTest('JSHint group widget', 'js/widgets/widget-grouping.js');
-	tester.jsHintTest('JSHint scroller widget', 'js/widgets/widget-scroller.js');
 
 	module('core');
 	/************************************************
