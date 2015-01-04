@@ -16,7 +16,15 @@
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 /*global console:false, alert:false */
-!(function($) {
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		factory(jQuery);
+	}
+}(function($) {
 	"use strict";
 	$.extend({
 		/*jshint supernew:true */
@@ -1947,4 +1955,5 @@
 		}
 	});
 
-})(jQuery);
+	return ts;
+}));

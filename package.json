@@ -34,10 +34,12 @@
 		"natural",
 		"jquery-plugin"
 	],
-	"main": "js/tablesorter.js",
+	"main": "js/jquery.tablesorter.js",
 	"files": [
 		"css/theme.default.css",
+		"js/jquery.tablesorter.js",
 		"js/jquery.tablesorter.min.js",
+		"js/jquery.tablesorter.widgets.js",
 		"js/jquery.tablesorter.widgets.min.js",
 		"addons/pager/"
 	],
