@@ -34,7 +34,7 @@
 		"natural",
 		"jquery-plugin"
 	],
-	"main": "js/tablesorter.js",
+	"main": "js/jquery.tablesorter.js",
 	"files": [
 		"css/theme.default.css",
 		"js/jquery.tablesorter.js",
