@@ -132,15 +132,18 @@
 		},
 
 		calcFilters = function(table, p) {
-			var c = table.config,
+			var tbodyIndex,
+				c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
 			if (hasFilters && !p.ajaxUrl) {
 				if ($.isEmptyObject(c.cache)) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
 				} else {
+					// just in case the pager tbody isn't the first tbody
+					tbodyIndex = c.$table.children('tbody').index( c.$tbodies.eq(0) );
 					p.filteredRows = 0;
-					$.each(c.cache[0].normalized, function(i, el) {
+					$.each(c.cache[tbodyIndex].normalized, function(i, el) {
 						p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 					});
 				}
@@ -644,7 +647,8 @@
 			c.$table.trigger('updateCache', [ function(){
 				var i,
 					rows = [],
-					n = table.config.cache[0].normalized;
+					tbodyIndex = c.$table.children('tbody').index( c.$tbodies.eq(0) ),
+					n = table.config.cache[tbodyIndex].normalized;
 				p.totalRows = n.length;
 				for (i = 0; i < p.totalRows; i++) {
 					rows.push(n[i][c.columns].$row);
