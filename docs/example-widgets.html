@@ -139,6 +139,13 @@
 			</li>
 			<li>The <code>remove</code> block (added v2.4):
 				<ul>
+					<li>In <span class="version">v2.18.5</span> the <code>temp</code> parameter was added:
+						<ul>
+							<li>It is a parameter used to indicate that the <a href="index.html#refreshwidgets"><code>refreshWidgets</code></a> method was triggered.</li>
+							<li>When widgets are refreshed, the <code>remove</code> method is called, then the widget <code>init</code> function is immediately called to reapply the widget.</li>
+							<li>In this update, this parameter is used by the filter widget to retain filtered rows and prevent a "flash" of showing all rows, then returning to its previous state after applying the filter again.</li>
+						</ul>
+					</li>
 					<li>This code is called when either the <a href="index.html#refreshwidgets"><code>refreshWidgets</code></a> or <a href="index.html#destroy"><code>destroy</code></a> methods are called.</li>
 					<li>The code contained within this block must remove all additional content/elements added by the widget. Also, any rows or content that is hidden must be restored.</li>
 					<li>If additional rows are added to the table, make sure to include the class name within the <a href="index.html#selectorremove"><code>selectorRemove</code></a> option.</li>
@@ -180,9 +187,11 @@ $.tablesorter.addWidget({
     // function above otherwise initFlag is undefined
     // * see the saveSort widget for a full example *
   },
-  remove: function(table, config, widgetOptions){
+  remove: function(table, config, widgetOptions, temp){
     // do what ever needs to be done to remove stuff added by your widget
     // unbind events, restore hidden content, etc.
+    // temp flag is true when the refreshWidgets method is triggered, meaning
+    // the widget will be removed, then immediately reapplied
   }
 });</pre>
 	</div>

@@ -256,15 +256,15 @@ ts.addWidget({
 			ts.benchmark("Applying " + theme + " theme", time);
 		}
 	},
-	remove: function(table, c) {
+	remove: function(table, c, wo, temp) {
 		var $table = c.$table,
 			theme = c.theme || 'jui',
 			themes = ts.themes[ theme ] || ts.themes.jui,
 			$headers = $table.children('thead').children(),
 			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc;
-		$table
-			.removeClass('tablesorter-' + theme + ' ' + themes.table)
-			.find(ts.css.header).removeClass(themes.header);
+		$table.removeClass('tablesorter-' + theme + ' ' + themes.table);
+		if (temp) { return; }
+		$table.find(ts.css.header).removeClass(themes.header);
 		$headers
 			.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
 			.removeClass(themes.hover + ' ' + remove + ' ' + themes.active)
@@ -388,7 +388,7 @@ ts.addWidget({
 			ts.filter.init(table, c, wo);
 		}
 	},
-	remove: function(table, c, wo) {
+	remove: function(table, c, wo, temp) {
 		var tbodyIndex, $tbody,
 			$table = c.$table,
 			$tbodies = c.$tbodies;
@@ -397,6 +397,7 @@ ts.addWidget({
 			// add .tsfilter namespace to all BUT search
 			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '))
 			.find('.' + ts.css.filterRow).remove();
+		if (temp) { return; }
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // remove tbody
 			$tbody.children().removeClass(wo.filter_filteredRow).show();

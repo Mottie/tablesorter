@@ -879,7 +879,7 @@
 				.bind("updateAll" + c.namespace, function(e, resort, callback){
 					e.stopPropagation();
 					table.isUpdating = true;
-					ts.refreshWidgets(table, true, true);
+					ts.refreshWidgets(table, true, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
 					ts.bindEvents(table, c.$headers, true);
@@ -1025,9 +1025,9 @@
 					// apply widgets
 					ts.applyWidget(table, init);
 				})
-				.bind("refreshWidgets" + c.namespace, function(e, all, dontapply){
+				.bind("refreshWidgets" + c.namespace, function(e, all, dontapply, temp){
 					e.stopPropagation();
-					ts.refreshWidgets(table, all, dontapply);
+					ts.refreshWidgets(table, all, dontapply, temp);
 				})
 				.bind("destroy" + c.namespace, function(e, c, cb){
 					e.stopPropagation();
@@ -1666,7 +1666,7 @@
 				}
 			};
 
-			ts.refreshWidgets = function(table, doAll, dontapply) {
+			ts.refreshWidgets = function(table, doAll, dontapply, temp) {
 				table = $(table)[0]; // see issue #243
 				var i, c = table.config,
 					cw = c.widgets,
@@ -1677,7 +1677,7 @@
 						if (c.debug) { log( 'Refeshing widgets: Removing "' + w[i].id + '"' ); }
 						// only remove widgets that have been initialized - fixes #442
 						if (w[i].hasOwnProperty('remove') && c.widgetInit[w[i].id]) {
-							w[i].remove(table, c, c.widgetOptions);
+							w[i].remove(table, c, c.widgetOptions, temp);
 							c.widgetInit[w[i].id] = false;
 						}
 					}
