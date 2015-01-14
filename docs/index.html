@@ -5304,6 +5304,20 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				<td></td>
 			</tr>
 
+			<tr id="variable-extra-tables">
+				<td><a href="#" class="permalink">config.$extraTables</a></td>
+				<td>jQuery Object</td>
+				<td>Internal list of <strong>all</strong> extra (cloned) table elements (<span class="version">v2.18.5</span>)
+					<div class="collapsible">
+						<br>
+						Some widgets need to duplicate parts of the original table to provide functionality (e.g. stickyHeaders, scroller). This saved variable will either not exist or contain a jQuery object pointing to the cloned table elements.<br>
+						<br>
+						This variable was added for the uitheme widget to allow dynamic updating of themes to the original table as well as all cloned parts.
+					</div>
+					</td>
+				<td></td>
+			</tr>
+
 			<tr id="variable-headers">
 				<td><a href="#" class="permalink">config.$headers</a></td>
 				<td>jQuery Object</td>

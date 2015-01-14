@@ -177,33 +177,40 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var i, time, classes, $header, $icon, $tfoot, $h, oldtheme, oldremove,
+		var i, time, classes, $header, $icon, $tfoot, $h, oldtheme, oldremove, hasOldTheme,
 			themesAll = ts.themes,
-			$table = c.$table,
-			$headers = c.$headers,
+			$table = c.$table.add( c.$extraTables ),
+			$headers = c.$headers.add( c.$extraHeaders ),
 			theme = c.theme || 'jui',
-			themes = themesAll[theme] || themesAll.jui,
-			remove = [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' );
+			themes = themesAll[theme] || {},
+			remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) );
 		if (c.debug) { time = new Date(); }
 		// initialization code - run once
-		if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !table.hasInitialized) {
-			oldtheme = themes[c.appliedTheme] || {};
-			oldremove = oldtheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
-			if (oldtheme) {
-				wo.zebra[0] = wo.zebra[0].replace(' ' + oldtheme.even, '');
-				wo.zebra[1] = wo.zebra[1].replace(' ' + oldtheme.odd, '');
+		if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !wo.uitheme_applied) {
+			wo.uitheme_applied = true;
+			oldtheme = themesAll[c.appliedTheme] || {};
+			hasOldTheme = !$.isEmptyObject(oldtheme);
+			oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
+			if (hasOldTheme) {
+				wo.zebra[0] = $.trim( ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '') );
+				wo.zebra[1] = $.trim( ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '') );
+				c.$tbodies.children().removeClass( oldtheme.even + ' ' + oldtheme.odd );
 			}
 			// update zebra stripes
-			if (themes.even !== '') { wo.zebra[0] += ' ' + themes.even; }
-			if (themes.odd !== '') { wo.zebra[1] += ' ' + themes.odd; }
+			if (themes.even) { wo.zebra[0] += ' ' + themes.even; }
+			if (themes.odd) { wo.zebra[1] += ' ' + themes.odd; }
 			// add caption style
-			$table.children('caption').removeClass(oldtheme.caption).addClass(themes.caption);
+			$table.children('caption')
+				.removeClass(oldtheme.caption || '')
+				.addClass(themes.caption);
 			// add table/footer class names
 			$tfoot = $table
 				// remove other selected themes
-				.removeClass( c.appliedTheme ? 'tablesorter-' + ( c.appliedTheme || '' ) : '' )
-				.addClass('tablesorter-' + theme + ' ' + themes.table) // add theme widget class name
+				.removeClass( ( c.appliedTheme ? 'tablesorter-' + ( c.appliedTheme || '' ) : '' ) + ' ' + (oldtheme.table || '') )
+				.addClass('tablesorter-' + theme + ' ' + ( themes.table || '' )) // add theme widget class name
 				.children('tfoot');
+			c.appliedTheme = c.theme;
+
 			if ($tfoot.length) {
 				$tfoot
 					// if oldtheme.footerRow or oldtheme.footerCells are undefined, all class names are removed
@@ -212,26 +219,30 @@ ts.addWidget({
 			}
 			// update header classes
 			$headers
-				.add(c.$extraHeaders)
-				.removeClass(oldtheme.header + ' ' + oldtheme.hover + ' ' + oldremove)
+				.removeClass( ( hasOldTheme ? oldtheme.header + ' ' + oldtheme.hover + ' ' + oldremove : '' ) || '' )
 				.addClass(themes.header)
 				.not('.sorter-false')
 				.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
 					// toggleClass with switch added in jQuery 1.3
-					$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover);
+					$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 				});
+
 			if (!$headers.find('.' + ts.css.wrapper).length) {
 				// Firefox needs this inner div to position the resizer correctly
 				$headers.wrapInner('<div class="' + ts.css.wrapper + '" style="position:relative;height:100%;width:100%"></div>');
 			}
 			if (c.cssIcon) {
 				// if c.cssIcon is '', then no <i> is added to the header
-				$headers.find('.' + ts.css.icon).removeClass(oldtheme.icons + ' ' + oldremove).addClass(themes.icons);
+				$headers
+					.find('.' + ts.css.icon)
+					.removeClass( hasOldTheme ? oldtheme.icons + ' ' + oldremove : '' )
+					.addClass(themes.icons || '');
 			}
 			if ($table.hasClass('hasFilters')) {
-				$table.children('thead').children('.' + ts.css.filterRow).removeClass(oldtheme.filterRow).addClass(themes.filterRow);
+				$table.children('thead').children('.' + ts.css.filterRow)
+					.removeClass( hasOldTheme ? oldtheme.filterRow : '' )
+					.addClass(themes.filterRow || '');
 			}
-			c.appliedTheme = c.theme;
 		}
 		for (i = 0; i < c.columns; i++) {
 			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
@@ -247,7 +258,7 @@ ts.addWidget({
 						themes.sortAsc :
 						($header.hasClass(ts.css.sortDesc)) ? themes.sortDesc :
 							$header.hasClass(ts.css.header) ? themes.sortNone : '';
-					$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active);
+					$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active || '');
 					$icon.removeClass(remove).addClass(classes);
 				}
 			}
@@ -622,7 +633,7 @@ ts.filter = {
 
 		txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter ');
 		c.$table.bind(txt, function(event, filter) {
-			val = !(wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache'));
+			val = (wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache'));
 			// hide filter row using the "filtered" class name
 			c.$table.find('.' + ts.css.filterRow).toggleClass(wo.filter_filteredRow, val ); // fixes #450
 			if ( !/(search|filter)/.test(event.type) ) {
@@ -1707,6 +1718,13 @@ ts.addWidget({
 				setWidth( $table, $stickyTable );
 				setWidth( $header, $stickyCells );
 			};
+		// save stickyTable element to config
+		// it is also saved to wo.$sticky
+		if (c.$extraTables && c.$extraTables.length) {
+			c.$extraTables.add($stickyTable);
+		} else {
+			c.$extraTables = $stickyTable;
+		}
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
