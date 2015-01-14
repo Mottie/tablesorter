@@ -8,6 +8,8 @@
 	<script src="js/jquery-1.4.4.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -41,28 +43,40 @@
 
 	<script id="js">$(function(){
 
-	$("table").tablesorter({
+	$('.tablesorter').tablesorter({
+		theme: 'jui',
 		widthFixed : true,
 		showProcessing: true,
 		headerTemplate : '{content} {icon}',
 		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
 		widgetOptions : {
 			scroller_height : 300,
-			scroller_barWidth : 18,
 			scroller_upAfterSort: true,
 			scroller_jumpToHeader: true,
-			scroller_idPrefix : 's_'
+			// In tablesorter v2.18.5 the scroll bar width is auto-detected
+			// add a value here to override the auto-detected setting
+			scroller_barWidth : null
+			// scroll_idPrefix was removed in v2.18.0
+			// scroller_idPrefix : 's_'
 		}
 	});
 
 });</script>
 <script>
 $(function() {
-	$('link.theme, link.ui-theme').each(function(){ this.disabled = true; });
+
+	$('.options').tablesorter({
+		theme: 'jui',
+		headerTemplate : '{content} {icon}',
+		widthFixed: true,
+		widgets: ['uitheme','stickyHeaders']
+	});
+
+	$('link.theme').each(function(){ this.disabled = true; });
 
 	var b = true, $tbl,
 		$c = $('#case'),
-		themes = 'default blue green grey ice black-ice dark dropbox',
+		themes = 'default blue green grey ice black-ice dark dropbox metro-dark',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
 		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
@@ -70,19 +84,26 @@ $(function() {
 
 	$('select')
 		.append(o)
+		.val('jui')
 		.change(function(){
 			var theme = $(this).val().toLowerCase(),
 				name = theme === 'jui' ? 'ui-theme' : theme,
 				// ui-theme is added by the themeswitcher
-				files = $('link.theme, link.ui-theme').each(function(){
+				files = $('link.theme').each(function(){
 					this.disabled = true;
 				});
 			files.filter('.' + name).each(function(){
 				this.disabled = false;
 			});
-			$('table')
-				.removeClass('tablesorter-' + t.join(' tablesorter-') + ' tablesorter-jui')
-				.addClass('tablesorter-' + (theme === 'black-ice' ? 'blackice' : theme) );
+
+			// refresh uitheme widget class names
+			$('.tablesorter').each(function(){
+				if (this.config) {
+					this.config.theme = theme === 'black-ice' ? 'blackice' : theme;
+				}
+			});
+			$('table').trigger('applyWidgets');
+
 			// make sure columns align
 			$(window).trigger('resize');
 		}).change();
@@ -111,32 +132,96 @@ $(function() {
 
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version">v2.17+</span>
-				<ul>
-					<li>The scroller widget will now work properly with predefined column widths.</li>
-					<li>Shrinking the browser window will now hide the header overflow.</li>
-					<li>Horizontal scrolling of the table body will now properly horizontally scroll the header.</li>
-					<li>Changed the default scroll bar width from <code>17</code> to <code>18</code>.</li>
-					<li>Added <code>scroller_upAfterSort</code> option.</li>
-				</ul>
-			</li>
-			<li>This widget can not be applied to the original plugin and requires jQuery version 1.4+ to function properly; if you need to make it work with older versions of jQuery and the plugin, please use <a href="http://tconnell.com/samples/scroller/">this version</a> of the widget.</li>
-			<li>This widget was originally written by <a href="http://tconnell.com/samples/scroller/">Connell & Associates, Inc.</a> and is dual-licensed under the MIT and GPL licenses. It has been modified to work with tablesorter version 2.9+.</li>
-			<li>Scroller widget options include:
-				<ul>
-					<li><code>scroller_height</code> - Set the height of the scroll window in pixels (default is <code>300</code>).</li>
-					<li><code>scroller_barWidth</code> - Set the width (default is <code>17</code>) of the scroll bar in pixels. This will need to be changed if using a custom scroll bar plugin.</li>
-					<li><code>scroller_idPrefix</code> - This option contains a prefix string which is added to a random number. This id is then assigned to the wrapping scroll element. Modification is not necessary unless the prefix interferes with ID's already on your page.</li>
-					<li><code>scroller_upAfterSort</code> - when <code>true</code> (default), the scroller automatically scrolls the inner window back to the top after sorting. Set this option to <code>false</code> to prevent this, or stop the window from scrolling after interacting with a table cell (e.g. clicking on a checkbox); new in <span class="version">v2.17.3</span>.</li>
-					<li><code>scroller_jumpToHeader</code> - When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.<br>
-					<span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em></li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	<p></p>
+	<br>
+	<div class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>In <span class="version">v2.17+</span>
+					<ul>
+						<li>The scroller widget will now work properly with predefined column widths.</li>
+						<li>Shrinking the browser window will now hide the header overflow.</li>
+						<li>Horizontal scrolling of the table body will now properly horizontally scroll the header.</li>
+						<li>Changed the default scroll bar width from <code>17</code> to <code>18</code>.</li>
+						<li>Added <code>scroller_upAfterSort</code> option.</li>
+					</ul>
+				</li>
+				<li>This widget can not be applied to the original plugin and requires jQuery version 1.4+ to function properly; if you need to make it work with older versions of jQuery and the plugin, please use <a href="http://tconnell.com/samples/scroller/">this version</a> of the widget.</li>
+				<li>This widget was originally written by <a href="http://tconnell.com/samples/scroller/">Connell & Associates, Inc.</a> and is dual-licensed under the MIT and GPL licenses. It has been modified to work with tablesorter version 2.9+.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h4>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-jui" data-sortlist="[[0,0]]">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="scroller-height">
+						<td><span class="permalink">scroller_height</span></td>
+						<td>300</td>
+						<td>Set the height of the scroll window in pixels.</td>
+					</tr>
+
+					<tr id="scroller-bar-width">
+						<td><a href="#" class="permalink">scroller_barWidth</a></td>
+						<td>null</td>
+						<td>Set the width of the scroll bar in pixels (<span class="version">v2.18.5</span>)
+							<div class="collapsible">
+							<br>
+							As of <span class="version">v2.18.5</span>, this option's default was changed to <code>null</code> because internal code was added to detect the scroll bar width which changes dramatically depending on the browser window zoom level.<br>
+							<br>
+							If you are using a custom scroll bar plugin, this option will still accept a scroll bar width value which overrides the scroll bar width auto-detection.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="scroller-id-prefix">
+						<td><a href="#" class="permalink alert">scroller_idPrefix</a></td>
+						<td>"s_"</td>
+						<td>This option contains a prefix string which is added to a random number (<span class="alert">Removed</span>).
+							<div class="collapsible">
+							<br>
+							This option was been completely removed in <span class="version alert">v2.18.0</span> as the id is now obtained from the unique namespace.
+						</td>
+					</tr>
+
+					<tr id="scroller-up-after-sort">
+						<td><a href="#" class="permalink">scroller_upAfterSort</a></td>
+						<td>true</td>
+						<td>
+							<div class="collapsible">
+							<br>
+							When <code>true</code>, the scroller automatically scrolls the inner window back to the top after sorting.<br>
+							<br>
+							Set this option to <code>false</code> to prevent this behaviour, or to stop the window from scrolling after interacting with a table cell (e.g. clicking on a checkbox); new in <span class="version">v2.17.3</span>
+						</td>
+					</tr>
+
+					<tr id="scroller-jump-to-header">
+						<td><a href="#" class="permalink">scroller_jumpToHeader</a></td>
+						<td>true</td>
+						<td>
+							<div class="collapsible">
+							<br>
+							When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.<br>
+							<br>
+							<span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 	<h1>Javascript</h1>
 	<div id="javascript">
@@ -150,7 +235,7 @@ $(function() {
 	</select><br>
 	<br>
 	<button type="button">Toggle</button> scroller_jumpToHeader : <span id="case">true</span> (see the note above)<span class="remark">*</span>
-	<br>
+	<p></p>
 
 	<table class="tablesorter">
 	<thead>
