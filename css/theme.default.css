@@ -122,6 +122,9 @@ caption {
 }
 
 /* filter widget */
+.tablesorter-default .tablesorter-filter-row {
+	background: #eee;
+}
 .tablesorter-default .tablesorter-filter-row td {
 	background: #eee;
 	border-bottom: #ccc 1px solid;

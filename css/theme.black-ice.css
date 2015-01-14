@@ -120,6 +120,9 @@ caption {
 }
 
 /* filter widget */
+.tablesorter-blackice .tablesorter-filter-row {
+	background: #222;
+}
 .tablesorter-blackice .tablesorter-filter-row td {
 	background: #222;
 	line-height: normal;

@@ -155,6 +155,9 @@ caption {
 }
 
 /* filter widget */
+.tablesorter-blue .tablesorter-filter-row {
+	background: #eee;
+}
 .tablesorter-blue .tablesorter-filter-row td {
 	background: #eee;
 	line-height: normal;
