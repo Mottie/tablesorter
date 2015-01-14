@@ -5542,6 +5542,28 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 
 		<tbody>
 
+			<tr id="function-fixcolumnwidth">
+				<td><a href="#" class="permalink">fixColumnWidth</a></td>
+				<td>This function adds a <code>colgroup</code> element to the table when <a href="#widthfixed"><code>widthFixed</code></a> is <code>true</code>.
+					<div class="collapsible"><br>
+						A new <code>colgroup</code> with <code>col</code> elements is only added if:
+						<ul>
+							<li><a href="#widthfixed"><code>widthFixed</code></a> is <code>true</code>.</li>
+							<li>A predefined <code>colgroup</code> element does not already exist in the table *.</li>
+						</ul>
+						* <span class="label label-info">Note</span> If a <code>colgroup</code> was added by the plugin, calling this function additional times will refresh the set widths<br>
+						<br>
+						Also, the <code>col</code> elements within the <code>colgroup</code> are set with a percentage width to dynamically maintain the fixed column width ratios.<br>
+						<br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.fixColumnWidth( table );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+
 			<tr id="function-processtbody">
 				<td><a href="#" class="permalink">processTbody</a></td>
 				<td>

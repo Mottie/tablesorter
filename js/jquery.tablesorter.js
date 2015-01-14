@@ -131,6 +131,7 @@
 				table      : 'tablesorter',
 				cssHasChild: 'tablesorter-hasChildRow',
 				childRow   : 'tablesorter-childRow',
+				colgroup   : 'tablesorter-colgroup',
 				header     : 'tablesorter-header',
 				headerRow  : 'tablesorter-headerRow',
 				headerIn   : 'tablesorter-header-inner',
@@ -588,21 +589,6 @@
 							ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 					$this.attr('aria-label', txt );
 				});
-			}
-
-			// automatically add col group, and column sizes if set
-			function fixColumnWidth(table) {
-				var colgroup, overallWidth,
-					c = table.config;
-				if (c.widthFixed && c.$table.children('colgroup').length === 0) {
-					colgroup = $('<colgroup>');
-					overallWidth = $(table).width();
-					// only add col for visible columns - fixes #371
-					$(table.tBodies).not('.' + c.cssInfoBlock).find("tr:first").children(":visible").each(function() {
-						colgroup.append($('<col>').css('width', parseInt(($(this).width()/overallWidth)*1000, 10)/10 + '%'));
-					});
-					c.$table.prepend(colgroup);
-				}
 			}
 
 			function updateHeaderSortCount(table, list) {
@@ -1127,7 +1113,7 @@
 				buildHeaders(table);
 				// fixate columns if the users supplies the fixedWidth option
 				// do this after theme has been applied
-				fixColumnWidth(table);
+				ts.fixColumnWidth(table);
 				// try to auto detect column type, and store in tables config
 				buildParserCache(table);
 				// start total row count at zero
@@ -1181,6 +1167,28 @@
 				}
 				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
+			};
+
+			// automatically add a colgroup with col elements set to a percentage width
+			ts.fixColumnWidth = function(table) {
+				table = $(table)[0];
+				var overallWidth, percent,
+					c = table.config,
+					colgroup = c.$table.children('colgroup');
+				// remove plugin-added colgroup, in case we need to refresh the widths
+				if (colgroup.length && colgroup.hasClass(ts.css.colgroup)) {
+					colgroup.remove();
+				}
+				if (c.widthFixed && c.$table.children('colgroup').length === 0) {
+					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
+					overallWidth = c.$table.width();
+					// only add col for visible columns - fixes #371
+					$(table.tBodies).not('.' + c.cssInfoBlock).find('tr:first').children(':visible').each(function() {
+						percent = parseInt( ( $(this).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
+						colgroup.append( $('<col>').css('width', percent) );
+					});
+					c.$table.prepend(colgroup);
+				}
 			};
 
 			ts.getColumnData = function(table, obj, indx, getCell, $headers){
