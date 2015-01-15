@@ -1527,6 +1527,8 @@ $.extend($.tablesorter.themes.jui, {
   $("table").tablesorter({
     // set the new theme name from $.tablesorter.themes here
     theme   : 'custom',
+    // add {icon} to template (if needed)
+    headerTemplate: '{content}{icon}',
     // make sure to initialize uitheme widget
     widgets : ["uitheme"]
   });
