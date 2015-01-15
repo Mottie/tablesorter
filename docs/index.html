@@ -1478,6 +1478,59 @@ From the example function above, you'll end up with something similar to this HT
 						<br>When changing this theme option, make sure that the appropriate css theme file has also been loaded. Included theme files include:
 						<a href="themes.html" target="_blank" title="open themes in a new window">see all themes</a><br>
 						<iframe style="width:100%;height:300px;" src="themes.html"></iframe>
+
+						<hr>
+						<h3>uitheme widget</h3>
+						<p>You will need to use the uitheme widget to extend the theme to apply css from jQuery UI, Bootstrap or other css libraries.</p>
+						<h4>Modify a theme</h4>
+						<p>If you want to modify the existing themes ("jui" and "bootstrap"), it can be done as follows:</p>
+						<p>Modify the class names by extending from the <a href="#variable-themes"><code>$.tablesorter.themes</code></a> variable</p>
+						<p><span class="label label-info">Note</span> there is no need to extend from the entire list of class names, just include the key:value pairs that are being changed:</p>
+						<pre class="prettyprint lang-js">// Extend a theme to modify any of the default class names
+$.extend($.tablesorter.themes.jui, {
+  // change default jQuery uitheme icons - find the full list of icons
+  // here: http://jqueryui.com/themeroller/ (hover over them for their name)
+  table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+  header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'ui-icon', // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'ui-icon-carat-2-n-s',
+  sortAsc    : 'ui-icon-carat-1-n',
+  sortDesc   : 'ui-icon-carat-1-s',
+  active     : 'ui-state-active', // applied when column is sorted
+  hover      : 'ui-state-hover',  // hover class
+  filterRow  : '',
+  even       : 'ui-widget-content', // even row zebra striping
+  odd        : 'ui-state-default'   // odd row zebra striping
+});</pre>
+
+					<h4>Custom theme</h4>
+					To add a new uitheme, define it as follows (replace "custom" with the name of your theme):
+					<pre class="prettyprint lang-js">$.tablesorter.themes.custom = {
+  table      : 'table',       // table classes
+  header     : 'header',      // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'icon',        // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'sort-none',   // unsorted header
+  sortAsc    : 'sort-asc',    // ascending sorted header
+  sortDesc   : 'sort-desc',   // descending sorted header
+  active     : 'sort-active', // applied when column is sorted
+  hover      : 'hover',       // hover class
+  filterRow  : 'filters',     // class added to the filter row
+  even       : 'even',        // even row zebra striping
+  odd        : 'odd'          // odd row zebra striping
+}</pre>
+					Then use it by adding the name of your theme to the <code>theme</code> option:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    // set the new theme name from $.tablesorter.themes here
+    theme   : 'custom',
+    // make sure to initialize uitheme widget
+    widgets : ["uitheme"]
+  });
+});</pre>
 					</div>
 				</td>
 				<td><a href="themes.html">Example</a></td>
@@ -1821,14 +1874,14 @@ $(function(){
       // if false, the sort will not be saved for next page reload
       saveSort : true,
 
-      // *** uitheme widget ***
-      // include the name of the theme to use current options are
-      // "jui" (default) and "bootstrap"
-      uitheme : "jui",
-
       // *** zebra widget ***
       // class names to add, default is [ "even", "odd" ]
       zebra : ["ui-widget-content even", "ui-state-default odd"]
+
+      // *** uitheme widget ***
+      // include the name of the theme to use current options are
+      // "jui" (default) and "bootstrap"
+      // uitheme : "jui", // REMOVED OPTION; use "theme" instead
 
     }
 
@@ -3295,72 +3348,6 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-savesort.html">Example</a></td>
 			</tr>
 
-			<tr id="widget-uitheme">
-				<td><a href="#" class="permalink">uitheme</a></td>
-				<td>String</td>
-				<td>&quot;jui&quot;</td>
-				<td>
-					This option contains the name of the theme. Currently jQuery UI (&quot;jui&quot;) and Bootstrap (&quot;bootstrap&quot;) themes are supported (updated v2.4)
-					<div class="collapsible">
-					<p>To modify the class names used, extend from the <a href="#variable-themes"><code>$.tablesorter.themes</code></a> variable as follows:</p>
-					<pre class="prettyprint lang-js">// Extend the themes to change any of the default class names ** NEW **
-$.extend($.tablesorter.themes.jui, {
-  // change default jQuery uitheme icons - find the full list of icons
-  // here: http://jqueryui.com/themeroller/ (hover over them for their name)
-  table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
-  header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-  footerRow  : '',
-  footerCells: '',
-  icons      : 'ui-icon', // icon class added to the &lt;i&gt; in the header
-  sortNone   : 'ui-icon-carat-2-n-s',
-  sortAsc    : 'ui-icon-carat-1-n',
-  sortDesc   : 'ui-icon-carat-1-s',
-  active     : 'ui-state-active', // applied when column is sorted
-  hover      : 'ui-state-hover',  // hover class
-  filterRow  : '',
-  even       : 'ui-widget-content', // even row zebra striping
-  odd        : 'ui-state-default'   // odd row zebra striping
-});</pre>
-
-					This widget option replaces the previous <a href="#widgetuitheme">widgetUitheme</a>. All theme css names are now contained within the <code>$.tablesorter.themes</code> variable. Extend the default theme as seen above.<br>
-					<br>
-
-					The class names from the <code>$.tablesorter.themes.{name}</code> variable are applied to the table as indicated.<br>
-					<br>
-
-					As before the jQuery UI theme applies the default class names of <code>&quot;ui-icon-arrowthick-2-n-s&quot;</code> for the unsorted column, <code>&quot;ui-icon-arrowthick-1-s&quot;</code> for the descending sort and <code>&quot;ui-icon-arrowthick-1-n&quot;</code> for the ascending sort. (Modified v2.1; Updated in v2.4). Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
-					<br>
-					Use the <a href="#widget-uitheme"><code>&quot;uitheme&quot;</code></a> option to change the css class name as follows:
-					<pre class="prettyprint lang-js">$(function(){
-  $("table").tablesorter({
-    theme     : 'jui',       // set theme name from $.tablesorter.themes here
-    widgets   : ["uitheme"], // initialize ui theme styling widget of the table
-    widgetOptions: {
-      uitheme : "jui"        // this is now optional in v2.7, it is overridden by the theme option
-    }
-  });
-});</pre>
-
-					To add a new theme, define it as follows; replace "custom" with the name of your theme:
-					<pre class="prettyprint lang-js">$.tablesorter.themes.custom = {
-  table      : 'table',       // table classes
-  header     : 'header',      // header classes
-  footerRow  : '',
-  footerCells: '',
-  icons      : 'icon',        // icon class added to the &lt;i&gt; in the header
-  sortNone   : 'sort-none',   // unsorted header
-  sortAsc    : 'sort-asc',    // ascending sorted header
-  sortDesc   : 'sort-desc',   // descending sorted header
-  active     : 'sort-active', // applied when column is sorted
-  hover      : 'hover',       // hover class
-  filterRow  : 'filters',     // class added to the filter row
-  even       : 'even',        // even row zebra striping
-  odd        : 'odd'          // odd row zebra striping
-}</pre></div>
-				</td>
-				<td><a href="example-widget-ui-theme.html">Example</a></td>
-			</tr>
-
 			<tr id="widget-zebra">
 				<td><a href="#" class="permalink">zebra</a></td>
 				<td>Array</td>
@@ -4153,6 +4140,75 @@ $.extend($.tablesorter.themes.jui, {
 });</pre></div>
 				</td>
 				<td></td>
+			</tr>
+
+			<tr id="widget-uitheme">
+				<td><a href="#" class="permalink alert">uitheme</a></td>
+				<td>String</td>
+				<td>&quot;jui&quot;</td>
+				<td>
+					This option contains the name of the theme. Currently jQuery UI (&quot;jui&quot;) and Bootstrap (&quot;bootstrap&quot;) themes are supported (updated v2.4)
+					<div class="collapsible">
+					<p>
+						<span class="label label-warning">* NOTE *</span> only the <code>uitheme</code> widget option was removed. All of the information below is still pertinent and portions have been copied to the core <a href="#theme"><code>theme</code></a> option.
+					</p>
+					<p>To modify the class names used, extend from the <a href="#variable-themes"><code>$.tablesorter.themes</code></a> variable as follows:</p>
+					<pre class="prettyprint lang-js">// Extend the themes to change any of the default class names ** NEW **
+$.extend($.tablesorter.themes.jui, {
+  // change default jQuery uitheme icons - find the full list of icons
+  // here: http://jqueryui.com/themeroller/ (hover over them for their name)
+  table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
+  header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'ui-icon', // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'ui-icon-carat-2-n-s',
+  sortAsc    : 'ui-icon-carat-1-n',
+  sortDesc   : 'ui-icon-carat-1-s',
+  active     : 'ui-state-active', // applied when column is sorted
+  hover      : 'ui-state-hover',  // hover class
+  filterRow  : '',
+  even       : 'ui-widget-content', // even row zebra striping
+  odd        : 'ui-state-default'   // odd row zebra striping
+});</pre>
+
+					This widget option replaces the previous <a href="#widgetuitheme">widgetUitheme</a>. All theme css names are now contained within the <code>$.tablesorter.themes</code> variable. Extend the default theme as seen above.<br>
+					<br>
+
+					The class names from the <code>$.tablesorter.themes.{name}</code> variable are applied to the table as indicated.<br>
+					<br>
+
+					As before the jQuery UI theme applies the default class names of <code>&quot;ui-icon-arrowthick-2-n-s&quot;</code> for the unsorted column, <code>&quot;ui-icon-arrowthick-1-s&quot;</code> for the descending sort and <code>&quot;ui-icon-arrowthick-1-n&quot;</code> for the ascending sort. (Modified v2.1; Updated in v2.4). Find more jQuery UI class names by hovering over the Framework icons on this page: <a class="external" href="http://jqueryui.com/themeroller/">http://jqueryui.com/themeroller/</a><br>
+					<br>
+					Use the <a href="#widget-uitheme"><code>&quot;uitheme&quot;</code></a> option to change the css class name as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    theme     : 'jui',       // set theme name from $.tablesorter.themes here
+    widgets   : ["uitheme"], // initialize ui theme styling widget of the table
+    widgetOptions: {
+      uitheme : "jui"        // this is now optional in v2.7, it is overridden by the theme option
+    }
+  });
+});</pre>
+
+					To add a new theme, define it as follows; replace "custom" with the name of your theme:
+					<pre class="prettyprint lang-js">$.tablesorter.themes.custom = {
+  table      : 'table',       // table classes
+  header     : 'header',      // header classes
+  footerRow  : '',
+  footerCells: '',
+  icons      : 'icon',        // icon class added to the &lt;i&gt; in the header
+  sortNone   : 'sort-none',   // unsorted header
+  sortAsc    : 'sort-asc',    // ascending sorted header
+  sortDesc   : 'sort-desc',   // descending sorted header
+  active     : 'sort-active', // applied when column is sorted
+  hover      : 'hover',       // hover class
+  filterRow  : 'filters',     // class added to the filter row
+  even       : 'even',        // even row zebra striping
+  odd        : 'odd'          // odd row zebra striping
+}</pre></div>
+				</td>
+				<td><a href="example-widget-ui-theme.html">Example</a></td>
 			</tr>
 
 			<tr id="pager-offset">

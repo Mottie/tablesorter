@@ -70,10 +70,10 @@
 				sortReset        : false,      // third click on the header will reset column to default - unsorted
 				sortRestart      : false,      // restart sort to "sortInitialOrder" when clicking on previously unsorted columns
 
-				emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero
+				emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero, emptyMax, emptyMin
 				stringTo         : 'max',      // sort strings in numerical column as max, min, top, bottom, zero
 				textExtraction   : 'basic',    // text extraction method/function - function(node, table, cellIndex){}
-				textAttribute    : 'data-text',// data-attribute that contains alternate cell text (used in textExtraction function)
+				textAttribute    : 'data-text',// data-attribute that contains alternate cell text (used in default textExtraction function)
 				textSorter       : null,       // choose overall or specific column sorter function(a, b, direction, table, columnIndex) [alt: ts.sortText]
 				numberSorter     : null,       // choose overall numeric sorter function(a, b, direction, maxColumnValue)
 
@@ -98,7 +98,7 @@
 				cssProcessing    : '', // processing icon applied to header during sort/filter
 
 				cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent
-				cssIcon          : 'tablesorter-icon',     //  if this class exists, a <i> will be added to the header automatically
+				cssIcon          : 'tablesorter-icon', // if this class does not exist, the {icon} will not be added from the headerTemplate
 				cssIconNone      : '', // class name added to the icon when there is no column sort
 				cssIconAsc       : '', // class name added to the icon when the column has an ascending sort
 				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
@@ -120,8 +120,7 @@
 				strings: {},
 				parsers: []
 
-				// deprecated; but retained for backwards compatibility
-				// widgetZebra: { css: ["even", "odd"] }
+				// removed: widgetZebra: { css: ["even", "odd"] }
 
 			};
 
