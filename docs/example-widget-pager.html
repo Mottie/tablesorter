@@ -196,6 +196,21 @@
 			$('.toggle').text('Disable Pager');
 		});
 
+		// clear storage (page & size)
+		$('.clear-pager-data').click(function(){
+			// clears user set page & size from local storage, so on page
+			// reload the page & size resets to the original settings
+			$.tablesorter.storage( $('table'), 'tablesorter-pager', '' );
+		});
+
+		// go to page 1 showing 10 rows
+		$('.goto').click(function(){
+			// triggering "pageAndSize" without parameters will reset the
+			// pager to page 1 and the original set size (10 by default)
+			// $('table').trigger('pageAndSize')
+			$('table').trigger('pageAndSize', [1, 10]);
+		});
+
 });</script>
 </head>
 <body id="pager-demo">
@@ -211,6 +226,9 @@
 		<p class="tip">
 			<em>NOTE!</em>
 			<ul>
+				<li>In <span class="version">v2.18.5</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
+				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.<p></p></li>
+
 				<li>This pager WIDGET <em>can not</em> be applied to the original tablesorter.</li>
 				<li>Do not use this widget along with the pager plugin.</li>
 				<li>The pager.css file also works with this pager widget.</li>
@@ -225,7 +243,6 @@
 						<li>See the Javascript code below for a full example.</li>
 					</ul>
 				</li>
-				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
 			</ul>
 		<p>
 
@@ -239,7 +256,7 @@
 	<h1>Demo</h1>
 	<br>
 	<button type="button">Add Rows</button> <button type="button" class="toggle">Disable Pager</button> <button type="button">Destroy Pager</button>
-	<br><br>
+	<p><button type="button" class="clear-pager-data">Clear saved pager data</button> <button type="button" class="goto">Set page 1 &amp; size 10</button></p>
 	<div class="pager">
 		<img src="../addons/pager/icons/first.png" class="first" alt="First" />
 		<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />

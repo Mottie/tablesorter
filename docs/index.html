@@ -471,7 +471,7 @@
 		<li><a href="example-widget-build-table.html">Build Table Widget</a> (<span class="version">v2.11</span>; <span class="version updated">v2.16</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns Highlight widget</a> (v2.0.17)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.18.1</span>).</li>
+		<li><span class="label label-info">Beta</span> <a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.18.5</span>).</li>
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.18.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.17.4</span>):
 			<ul>
@@ -497,9 +497,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.18.1</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.18.5</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.18.1</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.18.5</span>).<br>
 			<br>
 		</li>
 
@@ -512,7 +512,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.3</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.18.0</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.18.3</span>).</li>
-		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.18.0</span>):
+		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.18.5</span>):
 			<ul>
 				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
 				<li><a href="example-widget-bootstrap-theme.html">Bootstrap</a> (v2.4)</li>
@@ -4667,6 +4667,18 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 						If no value is passed, the pager will reset to page 1; otherwise, pass a "one-based" index of the desired page
 						<pre class="prettyprint lang-js">$(function(){
   $('table').trigger('pageSet', 3); // pass a one-based index
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+			<tr id="pageandsize">
+				<td><a href="#" class="permalink">pageAndSize</a></td>
+				<td>Trigger the pager to change the current page &amp; size (<span class="version">v2.18.5</span>).
+					<div class="collapsible">
+						<br>
+						If no value is passed, the pager will reset to page 1 with the original pager size setting; otherwise, pass a "one-based" index of the desired page and the pager size as an array
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').trigger('pageAndSize', [ 2, 20 ]); // pass a one-based page index & page size
 });</pre></div>
 				</td>
 				<td></td>

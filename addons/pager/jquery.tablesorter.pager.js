@@ -892,13 +892,19 @@
 						setPageSize(table, parseInt(v, 10) || p.settings.size || 10, p);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
-						if (p.$size.length) { p.$size.val(p.size); } // twice?
 					})
 					.bind('pageSet.pager', function(e,v){
 						e.stopPropagation();
 						p.page = (parseInt(v, 10) || 1) - 1;
-						if (p.$goto.length) { p.$goto.val(p.size); } // twice?
 						moveToPage(table, p, true);
+						updatePageDisplay(table, p, false);
+					})
+					.bind('pageAndSize.pager', function(e, page, size){
+						e.stopPropagation();
+						p.page = (parseInt(page, 10) || 1) - 1;
+						setPageSize(table, parseInt(size, 10) || p.settings.size || 10, p);
+						moveToPage(table, p, true);
+						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					});
 

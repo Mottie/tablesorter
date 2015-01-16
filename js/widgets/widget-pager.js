@@ -284,13 +284,19 @@ tsp = ts.pager = {
 				tsp.setPageSize(table, parseInt(v, 10) || p.setSize || 10, c);
 				tsp.hideRows(table, c);
 				tsp.updatePageDisplay(table, c, false);
-				if (p.$size.length) { p.$size.val(p.size); } // twice?
 			})
 			.on('pageSet.pager', function(e,v){
 				e.stopPropagation();
 				p.page = (parseInt(v, 10) || 1) - 1;
-				if (p.$goto.length) { p.$goto.val(c.size); } // twice?
 				tsp.moveToPage(table, p, true);
+				tsp.updatePageDisplay(table, c, false);
+			})
+			.on('pageAndSize.pager', function(e, page, size){
+				e.stopPropagation();
+				p.page = (parseInt(page, 10) || 1) - 1;
+				tsp.setPageSize(table, parseInt(size, 10) || p.setSize || 10, c);
+				tsp.moveToPage(table, p, true);
+				tsp.hideRows(table, c);
 				tsp.updatePageDisplay(table, c, false);
 			});
 
