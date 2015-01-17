@@ -28,14 +28,14 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 	wo = c.widgetOptions,
 	// Add a hidden input to hold the range values
 	$input = $('<input class="filter" type="hidden">')
-	.appendTo($cell)
-	// hidden filter update namespace trigger by filter widget
-	.bind('change' + c.namespace + 'filter', function(){
-		var val = this.value;
-		val = val.replace(/[/()$^]/g, '').split('|');
-		$cell.find('.select2').select2('val', val);
-		updateSelect2();
-	}),
+		.appendTo($cell)
+		// hidden filter update namespace trigger by filter widget
+		.bind('change' + c.namespace + 'filter', function(){
+			var val = this.value;
+			val = val.replace(/[/()$^]/g, '').split('|');
+			$cell.find('.select2').select2('val', val);
+			updateSelect2();
+		}),
 	$header = c.$headers.filter('[data-column="' + indx + '"]:last'),
 	onlyAvail = $header.hasClass(wo.filter_onlyAvail),
 	$shcell = [],
@@ -58,8 +58,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 			.find('.select2').select2('val', v);
 		// update sticky header cell
 		if ($shcell.length) {
-			$shcell
-			.find('.select2').select2('val', v);
+			$shcell.find('.select2').select2('val', v);
 		}
 	},
 
@@ -94,12 +93,12 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 
 	// add a select2 hidden input!
 	$('<input class="select2 select2-' + indx + '" type="hidden" />')
-	.val(o.value)
-	.appendTo($cell)
-	.select2(o)
-	.bind('change', function(){
-		updateSelect2();
-	});
+		.val(o.value)
+		.appendTo($cell)
+		.select2(o)
+		.bind('change', function(){
+			updateSelect2();
+		});
 
 	// update select2 from filter hidden input, in case of saved filters
 	c.$table.bind('filterFomatterUpdate', function(){
@@ -116,13 +115,13 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 		// add a select2!
 		$('<input class="select2 select2-' + indx + '" type="hidden">')
-		.val(o.value)
-		.appendTo($shcell)
-		.select2(o)
-		.bind('change', function(){
-			$cell.find('.select2').select2('val', $shcell.find('.select2').select2('val') );
-			updateSelect2();
-		});
+			.val(o.value)
+			.appendTo($shcell)
+			.select2(o)
+			.bind('change', function(){
+				$cell.find('.select2').select2('val', $shcell.find('.select2').select2('val') );
+				updateSelect2();
+			});
 		if (o.cellText) {
 			$shcell.prepend('<label>' + o.cellText + '</label>');
 		}
