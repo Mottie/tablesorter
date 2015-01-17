@@ -44,13 +44,19 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 
 	// this function updates the hidden input and adds the current values to the header cell text
 	updateSelect2 = function() {
-		var v = $cell.find('.select2').select2('val') || o.value || '';
+		var arry = false,
+			v = $cell.find('.select2').select2('val') || o.value || '';
 		// convert array to string
-		if ($.isArray(v)) { v = v.join('\u0000'); }
+		if ($.isArray(v)) {
+			arry = true;
+			v = v.join('\u0000');
+		}
 		// escape special regex characters (http://stackoverflow.com/a/9310752/145346)
 		v = v.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 		// convert string back into an array
-		if (v.indexOf('\u0000')) { v = v.split('\u0000'); }
+		if (arry) {
+			v = v.split('\u0000');
+		}
 		$input
 			// add regex, so we filter exact numbers
 			.val( $.isArray(v) && v.length && v.join('') !== '' ? '/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' : '' )
