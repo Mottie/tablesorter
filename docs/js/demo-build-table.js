@@ -43,7 +43,7 @@ $(function(){
 				var rows = data.split(';');
 				return $.each(rows, function(i,cells) {
 					// similar to using rows[i] = cells.split(',') but the splitCSV script
-					// doesn't split the cell if the separator (comma) is within quotes 
+					// doesn't split the cell if the separator (comma) is within quotes
 					rows[i] = $.tablesorter.buildTable.splitCSV(cells, ',');
 				});
 			}
@@ -94,7 +94,7 @@ $(function(){
 		widgetOptions: {
 			// *** build widget core ***
 			build_type      : 'csv',
-			build_source    : { url: 'assets/build.txt', dataType: 'html' },
+			build_source    : { url: 'assets/build.txt', dataType: 'text' },
 			build_headers   : {
 				widths : ['30%', '50%', '20%'] // set header cell widths
 			}

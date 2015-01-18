@@ -34,7 +34,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 					return bt.html( table, d, wo );
 				}
 				try {
-					d = $.parseJSON(d);
+					d = $.parseJSON(d || 'null');
 					if (d) {
 						// valid JSON!
 						return bt.object( table, d, wo );

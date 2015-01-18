@@ -110,13 +110,13 @@ ts.storage = function(table, key, value, options) {
 	// *** get value ***
 	if ($.parseJSON) {
 		if (hasLocalStorage) {
-			values = $.parseJSON(localStorage[key] || '{}');
+			values = $.parseJSON(localStorage[key] || 'null') || {};
 		} else {
 			// old browser, using cookies
 			cookies = document.cookie.split(/[;\s|=]/);
 			// add one to get from the key to the value
 			cookieIndex = $.inArray(key, cookies) + 1;
-			values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || '{}') : {};
+			values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || 'null') || {} : {};
 		}
 	}
 	// allow value to be an empty string too
