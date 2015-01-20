@@ -1,4 +1,4 @@
-/* Column Selector/Responsive table widget (beta) for TableSorter - 12/22/2014 (v2.18.4)
+/* Column Selector/Responsive table widget (beta) for TableSorter - 1/20/2015 (v2.18.5)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -49,11 +49,28 @@ tsColSel = ts.columnSelector = {
 
 		c.$table
 			.off('refreshColumnSelector' + namespace)
-			.on('refreshColumnSelector' + namespace, function(){
+			.on('refreshColumnSelector' + namespace, function(e, arry){
 				// make sure we're using current config settings
-				var c = this.config;
-				tsColSel.updateBreakpoints(c, c.widgetOptions);
-				tsColSel.updateCols(c, c.widgetOptions);
+				var i,
+					c = this.config,
+					wo = c.widgetOptions;
+				// see #798
+				if ($.isArray(arry) && c.selector.$container.length) {
+					// make sure array contains numbers
+					$.each(arry, function(i,v){
+						arry[i] = parseInt(v, 10);
+					});
+					for (i = 0; i < c.columns; i++) {
+						c.selector.$container
+							.find('input[data-column=' + i + ']')
+							.prop('checked', $.inArray( i, arry ) >= 0 );
+					}
+					// set auto to false to allow manual column selection & update columns
+					tsColSel.updateAuto( c, wo, colSel.$container.find('input[data-column="auto"]').prop('checked', false) );
+				} else {
+					tsColSel.updateBreakpoints(c, wo);
+					tsColSel.updateCols(c, wo);
+				}
 			});
 
 	},
@@ -91,7 +108,7 @@ tsColSel = ts.columnSelector = {
 			// set default state; storage takes priority
 			colSel.states[colId] = saved && typeof(saved[colId]) !== 'undefined' ?
 				saved[colId] : typeof(wo.columnSelector_columns[colId]) !== 'undefined' ?
-				wo.columnSelector_columns[colId] : (state === 'true' || !(state === 'false'));
+				wo.columnSelector_columns[colId] : (state === 'true' || state !== 'false');
 			colSel.$column[colId] = $(this);
 
 			// set default col title
@@ -141,35 +158,40 @@ tsColSel = ts.columnSelector = {
 					.prop('checked', colSel.auto)
 					.toggleClass( wo.columnSelector_cssChecked, colSel.auto )
 					.on('change', function(){
-						colSel.auto = this.checked;
-						$.each( colSel.$checkbox, function(i, $cb){
-							if ($cb) {
-								$cb[0].disabled = colSel.auto;
-								colSel.$wrapper[i].toggleClass('disabled', colSel.auto);
-							}
-						});
-						if (wo.columnSelector_mediaquery) {
-							tsColSel.updateBreakpoints(c, wo);
-						}
-						tsColSel.updateCols(c, wo);
-						// copy the column selector to a popup/tooltip
-						if (c.selector.$popup) {
-							c.selector.$popup.find('.tablesorter-column-selector')
-								.html( colSel.$container.html() )
-								.find('input').each(function(){
-									var indx = $(this).attr('data-column');
-									$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
-								});
-						}
-						if (wo.columnSelector_saveColumns && ts.storage) {
-							ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
-						}
+						tsColSel.updateAuto(c, wo, $(this));
 					}).change();
 			}
 			// Add a bind on update to re-run col setup
 			c.$table.off('update' + namespace).on('update' + namespace, function() {
 				tsColSel.updateCols(c, wo);
 			});
+		}
+	},
+
+	updateAuto: function(c, wo, $el) {
+		var colSel = c.selector;
+		colSel.auto = $el.prop('checked') || false;
+		$.each( colSel.$checkbox, function(i, $cb){
+			if ($cb) {
+				$cb[0].disabled = colSel.auto;
+				colSel.$wrapper[i].toggleClass('disabled', colSel.auto);
+			}
+		});
+		if (wo.columnSelector_mediaquery) {
+			tsColSel.updateBreakpoints(c, wo);
+		}
+		tsColSel.updateCols(c, wo);
+		// copy the column selector to a popup/tooltip
+		if (c.selector.$popup) {
+			c.selector.$popup.find('.tablesorter-column-selector')
+				.html( colSel.$container.html() )
+				.find('input').each(function(){
+					var indx = $(this).attr('data-column');
+					$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
+				});
+		}
+		if (wo.columnSelector_saveColumns && ts.storage) {
+			ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
 		}
 	},
 

@@ -182,6 +182,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version updated">v2.18.5</span>, the <code>refreshColumnSelector</code> method has been updated to allow passing an array of zero-based column indexes of columns to show.</li>
 			<li>In <span class="version">v2.18.4</span>, added <code>columnSelector_cssChecked</code> option which contains the class name added to checked inputs. This helps fix an issue in Chrome that rears it's ugly head when trying to use <code>input:checked</code> to change a Font Awesome icon. See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.</li>
 			<li>
 				In <span class="version">v2.17.0</span>, a method to refresh the column selector was added.<br>
@@ -398,9 +399,18 @@
 
 		<h3><a href="#">Methods</a></h3>
 		<div>
-			Refresh the breakpoints and selected columns using this method (<span class="version">v2.17.0</span>):<br>
-			<br>
+			Refresh the breakpoints and selected columns using this method (<span class="version">v2.17.0</span>):
+			<p></p>
 			<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector');</pre>
+			<br>
+			In <span class="version">v2.18.5</span>, this method will now accept an array of zero-based column indexes to toggle columns on and off.
+			<p></p>
+			<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ [2,3,4] ]);</pre>
+			<span class="label label-info">Note</span>
+			<ul>
+				<li>Make sure to wrap the array inside another array.</li>
+				<li>Columns marked as "critical" or "disable" will never get toggled off using this method.</li>
+			</ul>
 		</div>
 
 		<h3><a href="#">Removing a column from the selector</a></h3>
@@ -418,7 +428,7 @@
 					</ul>
 				</li>
 			</ul>
-			*  Prior to v2.15.6, setting these methods to "false" would remove it from the selector. Now, they must be set to "disable" to remove the column from the selector, this was done to make it more consistent with the <code>columnSelector_columns</code> setting.
+			* <span class="label label-warning">*NOTE*</span> Prior to v2.15.6, setting these methods to "false" would remove it from the selector. Now, they must be set to "disable" to remove the column from the selector, this was done to make it more consistent with the <code>columnSelector_columns</code> setting.
 		</div>
 	</div>
 
