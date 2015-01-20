@@ -180,24 +180,23 @@
 			}
 
 			function getElementText(table, node, cellIndex) {
-				if (!node) { return ""; }
-				var te, c = table.config,
-					t = c.textExtraction || '',
-					text = "";
-				if (t === "basic") {
-					// check data-attribute first
-					text = $(node).attr(c.textAttribute) || node.textContent || node.innerText || $(node).text() || "";
+				if (!node) { return ''; }
+				var te,
+					$node = $(node),
+					c = table.config,
+					t = c.textExtraction || '';
+				if (typeof(t) === 'string') {
+					// check data-attribute first when set to "basic"; don't use node.innerText - it's really slow!
+					return $.trim( (t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
 				} else {
-					if (typeof(t) === "function") {
-						text = t(node, table, cellIndex);
+					if (typeof(t) === 'function') {
+						return $.trim( t(node, table, cellIndex) );
 					} else if (typeof (te = ts.getColumnData( table, t, cellIndex )) === 'function') {
-						text = te(node, table, cellIndex);
-					} else {
-						// previous "simple" method
-						text = node.textContent || node.innerText || $(node).text() || "";
+						return $.trim( te(node, table, cellIndex) );
 					}
 				}
-				return $.trim(text);
+				// fallback
+				return $.trim( node.textContent || $node.text() || '' );
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {

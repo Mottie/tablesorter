@@ -1555,11 +1555,15 @@ $.extend($.tablesorter.themes.jui, {
 
 			<tr id="textextraction">
 				<td><a href="#" class="permalink">textExtraction</a></td>
-				<td>String Or Function</td>
+				<td>Multiple*</td>
 				<td>&quot;basic&quot;</td>
-				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.17.0</span>)
+				<td>Defines which method is used to extract data from a table cell for sorting (<span class="version updated">v2.18.5</span>)
 					<div class="collapsible">
 					<br>
+					* <span class="label label-info">Note</span> This option accepts multiple types (String, Object or Function); see below for further details.
+					<p></p>
+					In <span class="version updated">v2.18.5</span>, the code was further optimized. When set to <code>"basic"</code> (the default), the textExtraction code will check for data-attributes, otherwise, any other string value setting will skip the data-attribute value check; because of this change, there is a noticable lessening of initialization time in Internet Explorer.
+					<p></p>
 					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name, id or column index) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">textExtraction : {
     // 'jQuery thead cell selector' : function ( new method )
