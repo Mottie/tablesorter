@@ -114,7 +114,10 @@
 
 		};
 
-		var $this = this,
+		var pagerEvents = 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
+			'pageSize pageSet pageAndSize pagerUpdate ',
+
+		$this = this,
 
 		// hide arrows at extremes
 		pagerArrows = function(p, disable) {
@@ -756,7 +759,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
+			$(table).unbind(pagerEvents.split(' ').join('.pager '));
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -836,7 +839,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+					.unbind(pagerEvents.split(' ').join('.pager '))
 					.bind('filterInit.pager filterStart.pager', function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
@@ -893,9 +896,11 @@
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					})
-					.bind('pageSet.pager', function(e,v){
+					.bind('pageSet.pager pagerUpdate.pager', function(e,v){
 						e.stopPropagation();
 						p.page = (parseInt(v, 10) || 1) - 1;
+						// force pager refresh
+						if (e.type === 'pagerUpdate') { p.last.page = true; }
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					})

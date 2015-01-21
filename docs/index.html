@@ -4687,6 +4687,18 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				</td>
 				<td></td>
 			</tr>
+			<tr id="pagerupdate">
+				<td><a href="#" class="permalink">pagerUpdate</a></td>
+				<td>Force the pager to update the table with the current settings (<span class="version">v2.18.5</span>).
+					<div class="collapsible">
+						<br>
+						If there is a need, this method will force the (ajax and non-ajax) pager to update. Use it as follows:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').trigger('pagerUpdate');
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
 
 			<tr id="destroypager">
 				<td><a href="#" class="permalink">destroy.pager</a></td>

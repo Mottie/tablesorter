@@ -141,6 +141,8 @@ tsp = ts.pager = {
 				last: {},
 				// save original pager size
 				setSize: wo.pager_size
+				events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
+					'pageSize pageSet pageAndSize pagerUpdate '
 			}, c.pager);
 
 		// pager initializes multiple times before table has completed initialization
@@ -226,7 +228,7 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '))
+			.off(p.events.split(' ').join('.pager '))
 			.on('filterInit.pager filterStart.pager', function(e, filters) {
 				p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 				// don't change page if filters are the same (pager updating, etc)
@@ -285,9 +287,11 @@ tsp = ts.pager = {
 				tsp.hideRows(table, c);
 				tsp.updatePageDisplay(table, c, false);
 			})
-			.on('pageSet.pager', function(e,v){
+			.on('pageSet.pager pagerUpdate.pager', function(e,v){
 				e.stopPropagation();
 				p.page = (parseInt(v, 10) || 1) - 1;
+				// force pager refresh
+				if (e.type === 'pagerUpdate') { p.last.page = true; }
 				tsp.moveToPage(table, p, true);
 				tsp.updatePageDisplay(table, c, false);
 			})
@@ -1000,7 +1004,7 @@ tsp = ts.pager = {
 		c.appender = null; // remove pager appender function
 		p.initialized = false;
 		delete table.config.rowsCopy;
-		c.$table.off('filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete pageSize pageSet '.split(' ').join('.pager '));
+		c.$table.off(p.events.split(' ').join('.pager '));
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}
