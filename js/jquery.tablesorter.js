@@ -15,7 +15,7 @@
 * @contributor Rob Garrison/https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false, alert:false */
+/*global console:false, alert:false, require:false, define:false, module:false */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);
@@ -512,7 +512,7 @@
 				buildParserCache(table);
 				// rebuild the cache map
 				buildCache(table);
-				checkResort(c.$table, resort, callback);
+				checkResort(c, resort, callback);
 			}
 
 			function updateHeader(table) {
@@ -813,34 +813,33 @@
 				if (c.debug) { benchmark("Sorting on " + sortList.toString() + " and dir " + order + " time", sortTime); }
 			}
 
-			function resortComplete($table, callback){
-				var table = $table[0];
-				if (table.isUpdating) {
-					$table.trigger('updateComplete', table);
+			function resortComplete(c, callback){
+				if (c.table.isUpdating) {
+					c.$table.trigger('updateComplete', c.table);
 				}
 				if ($.isFunction(callback)) {
-					callback($table[0]);
+					callback(c.table);
 				}
 			}
 
-			function checkResort($table, resort, callback) {
-				var sl = $.isArray(resort) ? resort : $table[0].config.sortList;
+			function checkResort(c, resort, callback) {
+				var sl = $.isArray(resort) ? resort : c.sortList;
 				// don't try to resort if the table is still processing
 				// this will catch spamming of the updateCell method
-				if (resort !== false && !$table[0].isProcessing) {
+				if (resort !== false && !c.serverSideSorting && !c.table.isProcessing) {
 					if (sl.length) {
-						$table.trigger('sorton', [sl, function(){
-							resortComplete($table, callback);
+						c.$table.trigger('sorton', [sl, function(){
+							resortComplete(c, callback);
 						}, true]);
 					} else {
-						$table.trigger('sortReset', [function(){
-							resortComplete($table, callback);
-							ts.applyWidget($table[0], false);
+						c.$table.trigger('sortReset', [function(){
+							resortComplete(c, callback);
+							ts.applyWidget(c.table, false);
 						}]);
 					}
 				} else {
-					resortComplete($table, callback);
-					ts.applyWidget($table[0], false);
+					resortComplete(c, callback);
+					ts.applyWidget(c.table, false);
 				}
 			}
 
@@ -907,7 +906,7 @@
 							// update column max value (ignore sign)
 							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
 						}
-						checkResort($table, resort, callback);
+						checkResort(c, resort, callback);
 					}
 				})
 				.bind("addRows" + c.namespace, function(e, $row, resort, callback) {
@@ -956,7 +955,7 @@
 							c.cache[tbdy].normalized.push(cells);
 						}
 						// resort using current settings
-						checkResort($table, resort, callback);
+						checkResort(c, resort, callback);
 					}
 				})
 				.bind("updateComplete" + c.namespace, function(){
