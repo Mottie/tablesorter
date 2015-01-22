@@ -49,24 +49,27 @@ tsColSel = ts.columnSelector = {
 
 		c.$table
 			.off('refreshColumnSelector' + namespace)
-			.on('refreshColumnSelector' + namespace, function(e, arry){
+			.on('refreshColumnSelector' + namespace, function(e, opt){
 				// make sure we're using current config settings
 				var i,
+					isArry = $.isArray(opt),
 					c = this.config,
 					wo = c.widgetOptions;
 				// see #798
-				if ($.isArray(arry) && c.selector.$container.length) {
-					// make sure array contains numbers
-					$.each(arry, function(i,v){
-						arry[i] = parseInt(v, 10);
-					});
-					for (i = 0; i < c.columns; i++) {
-						c.selector.$container
-							.find('input[data-column=' + i + ']')
-							.prop('checked', $.inArray( i, arry ) >= 0 );
+				if (opt && c.selector.$container.length) {
+					if (isArry) {
+						// make sure array contains numbers
+						$.each(opt, function(i,v){
+							opt[i] = parseInt(v, 10);
+						});
+						for (i = 0; i < c.columns; i++) {
+							c.selector.$container
+								.find('input[data-column=' + i + ']')
+								.prop('checked', $.inArray( i, opt ) >= 0 );
+						}
 					}
-					// set auto to false to allow manual column selection & update columns
-					tsColSel.updateAuto( c, wo, colSel.$container.find('input[data-column="auto"]').prop('checked', false) );
+					// if passing an array, set auto to false to allow manual column selection & update columns
+					tsColSel.updateAuto( c, wo, colSel.$container.find('input[data-column="auto"]').prop('checked', !isArry) );
 				} else {
 					tsColSel.updateBreakpoints(c, wo);
 					tsColSel.updateCols(c, wo);
