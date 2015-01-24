@@ -111,8 +111,8 @@ ts.addWidget({
 		}
 		tsp.moveToPage(table, c.pager, false);
 	},
-	remove: function(table, c){
-		tsp.destroyPager(table, c);
+	remove: function(table, c, wo, temp){
+		tsp.destroyPager(table, c, temp);
 	}
 });
 
@@ -257,9 +257,9 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				tsp.enablePager(table, c, true);
 			})
-			.on('destroy.pager', function(e){
+			.on('destroy.pager', function(e, tmp){
 				e.stopPropagation();
-				tsp.destroyPager(table, c);
+				tsp.destroyPager(table, c, tmp);
 			})
 			.on('updateComplete.pager', function(e, table, triggered){
 				e.stopPropagation();
@@ -281,7 +281,7 @@ tsp = ts.pager = {
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');
 			})
-			.on('pageSize.pager', function(e,v){
+			.on('pageSize.pager refreshComplete.pager', function(e,v){
 				e.stopPropagation();
 				tsp.setPageSize(table, parseInt(v, 10) || p.setSize || 10, c);
 				tsp.hideRows(table, c);
@@ -997,12 +997,13 @@ tsp = ts.pager = {
 		tsp.moveToPage(table, p, true);
 	},
 
-	destroyPager: function(table, c){
+	destroyPager: function(table, c, tmp){
 		var p = c.pager;
 		tsp.showAllRows(table, c);
+		p.initialized = false;
+		if (tmp) { return; }
 		p.$container.hide(); // hide pager
 		c.appender = null; // remove pager appender function
-		p.initialized = false;
 		delete table.config.rowsCopy;
 		c.$table.off(p.events.split(' ').join('.pager '));
 		if (ts.storage) {

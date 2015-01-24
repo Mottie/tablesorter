@@ -2018,7 +2018,7 @@ ts.resizableReset = function(table, nosave) {
 		if (table && c) {
 			c.$headers.each(function(i){
 				$t = $(this);
-				if (wo.resizable_widths[i]) {
+				if (wo.resizable_widths && wo.resizable_widths[i]) {
 					$t.css('width', wo.resizable_widths[i]);
 				} else if (!$t.hasClass('resizable-false')) {
 					// don't clear the width of any column that is not resizable

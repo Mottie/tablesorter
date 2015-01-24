@@ -1597,7 +1597,7 @@
 				}
 			};
 
-			ts.applyWidget = function(table, init) {
+			ts.applyWidget = function(table, init, callback) {
 				table = $(table)[0]; // in case this is called externally
 				var c = table.config,
 					wo = c.widgetOptions,
@@ -1660,6 +1660,10 @@
 							}
 						}
 					});
+					// callback executed on init only
+					if (!init && typeof callback === 'function') {
+						callback(table);
+					}
 				}
 				setTimeout(function(){
 					table.isApplyingWidgets = false;
@@ -1671,24 +1675,53 @@
 				}
 			};
 
-			ts.refreshWidgets = function(table, doAll, dontapply, temp) {
-				table = $(table)[0]; // see issue #243
-				var i, c = table.config,
-					cw = c.widgets,
-					w = ts.widgets, l = w.length;
-				// remove previous widgets
-				for (i = 0; i < l; i++){
-					if ( w[i] && w[i].id && (doAll || $.inArray( w[i].id, cw ) < 0) ) {
-						if (c.debug) { log( 'Refeshing widgets: Removing "' + w[i].id + '"' ); }
-						// only remove widgets that have been initialized - fixes #442
-						if (w[i].hasOwnProperty('remove') && c.widgetInit[w[i].id]) {
-							w[i].remove(table, c, c.widgetOptions, temp);
-							c.widgetInit[w[i].id] = false;
-						}
+			ts.removeWidget = function(table, name, refresh, temp){
+				table = $(table)[0];
+				// name can be either an array of widgets names,
+				// or a space/comma separated list of widget names
+				name = ( $.isArray(name) ? name.join(',') : name || '' ).toLowerCase().split( /[\s,]+/ );
+				var i, widget, indx,
+					c = table.config,
+					len = name.length;
+				for (i = 0; i < len; i++) {
+					widget = ts.getWidgetById(name[i]);
+					indx = $.inArray( name[i], c.widgets );
+					if ( widget && 'remove' in widget ) {
+						if (c.debug && indx >= 0) { log( 'Removing "' + name[i] + '" widget' ); }
+						widget.remove(table, c, c.widgetOptions, temp);
+						c.widgetInit[name[i]] = false;
+					}
+					// don't remove the widget from config.widget if refreshing
+					if (indx >= 0 && refresh !== true) {
+						c.widgets.splice( indx, 1 );
 					}
 				}
+			};
+
+			ts.refreshWidgets = function(table, doAll, dontapply, temp) {
+				table = $(table)[0]; // see issue #243
+				var c = table.config,
+					cw = c.widgets,
+					list = [],
+					callback = function(table){
+						$(table).trigger('refreshComplete');
+					};
+				// remove widgets not defined in config.widgets, unless doAll is true
+				$.each( ts.widgets, function(i, w){
+					if (w && w.id && (doAll || $.inArray( w.id, cw ) < 0)) {
+						list.push( w.id );
+					}
+				});
+				ts.removeWidget( table, list.join(','), true, temp );
 				if (dontapply !== true) {
-					ts.applyWidget(table, doAll);
+					// call widget init if
+					ts.applyWidget(table, doAll || false, callback );
+					if (doAll) {
+						// apply widget format
+						ts.applyWidget(table, false, callback);
+					}
+				} else {
+					callback(table);
 				}
 			};
 

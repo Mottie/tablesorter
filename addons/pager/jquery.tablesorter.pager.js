@@ -890,7 +890,7 @@
 						changeHeight(table, p);
 						updatePageDisplay(table, p, true);
 					})
-					.bind('pageSize.pager', function(e,v){
+					.bind('pageSize.pager refreshComplete.pager', function(e,v){
 						e.stopPropagation();
 						setPageSize(table, parseInt(v, 10) || p.settings.size || 10, p);
 						hideRows(table, p);
