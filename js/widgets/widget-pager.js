@@ -140,7 +140,7 @@ tsp = ts.pager = {
 				$size: null,
 				last: {},
 				// save original pager size
-				setSize: wo.pager_size
+				setSize: wo.pager_size,
 				events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
 					'pageSize pageSet pageAndSize pagerUpdate '
 			}, c.pager);
