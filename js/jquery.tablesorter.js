@@ -862,7 +862,7 @@
 				.bind("updateAll" + c.namespace, function(e, resort, callback){
 					e.stopPropagation();
 					table.isUpdating = true;
-					ts.refreshWidgets(table, true, true, true);
+					ts.refreshWidgets(table, true, true);
 					ts.restoreHeaders(table);
 					buildHeaders(table);
 					ts.bindEvents(table, c.$headers, true);
@@ -1008,9 +1008,9 @@
 					// apply widgets
 					ts.applyWidget(table, init);
 				})
-				.bind("refreshWidgets" + c.namespace, function(e, all, dontapply, temp){
+				.bind("refreshWidgets" + c.namespace, function(e, all, dontapply){
 					e.stopPropagation();
-					ts.refreshWidgets(table, all, dontapply, temp);
+					ts.refreshWidgets(table, all, dontapply);
 				})
 				.bind("destroy" + c.namespace, function(e, c, cb){
 					e.stopPropagation();
@@ -1018,7 +1018,7 @@
 				})
 				.bind("resetToLoadState" + c.namespace, function(){
 					// remove all widgets
-					ts.refreshWidgets(table, true, true);
+					ts.removeWidget(table, true, false);
 					// restore original settings; this clears out current settings, but does not clear
 					// values saved to storage.
 					c = $.extend(true, ts.defaults, c.originalSettings);
@@ -1366,7 +1366,7 @@
 				table = $(table)[0];
 				if (!table.hasInitialized) { return; }
 				// remove all widgets
-				ts.refreshWidgets(table, true, true);
+				ts.removeWidget(table, true, false);
 				var $t = $(table), c = table.config,
 				$h = $t.find('thead:first'),
 				$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
@@ -1675,11 +1675,21 @@
 				}
 			};
 
-			ts.removeWidget = function(table, name, refresh, temp){
+			ts.removeWidget = function(table, name, refreshing){
 				table = $(table)[0];
-				// name can be either an array of widgets names,
-				// or a space/comma separated list of widget names
-				name = ( $.isArray(name) ? name.join(',') : name || '' ).toLowerCase().split( /[\s,]+/ );
+				// if name === true, add all widgets from $.tablesorter.widgets
+				if (name === true) {
+					name = [];
+					$.each( ts.widgets, function(i, w){
+						if (w && w.id) {
+							name.push( w.id );
+						}
+					});
+				} else {
+					// name can be either an array of widgets names,
+					// or a space/comma separated list of widget names
+					name = ( $.isArray(name) ? name.join(',') : name || '' ).toLowerCase().split( /[\s,]+/ );
+				}
 				var i, widget, indx,
 					c = table.config,
 					len = name.length;
@@ -1688,17 +1698,17 @@
 					indx = $.inArray( name[i], c.widgets );
 					if ( widget && 'remove' in widget ) {
 						if (c.debug && indx >= 0) { log( 'Removing "' + name[i] + '" widget' ); }
-						widget.remove(table, c, c.widgetOptions, temp);
+						widget.remove(table, c, c.widgetOptions, refreshing);
 						c.widgetInit[name[i]] = false;
 					}
 					// don't remove the widget from config.widget if refreshing
-					if (indx >= 0 && refresh !== true) {
+					if (indx >= 0 && refreshing !== true) {
 						c.widgets.splice( indx, 1 );
 					}
 				}
 			};
 
-			ts.refreshWidgets = function(table, doAll, dontapply, temp) {
+			ts.refreshWidgets = function(table, doAll, dontapply) {
 				table = $(table)[0]; // see issue #243
 				var c = table.config,
 					cw = c.widgets,
@@ -1712,7 +1722,7 @@
 						list.push( w.id );
 					}
 				});
-				ts.removeWidget( table, list.join(','), true, temp );
+				ts.removeWidget( table, list.join(','), true );
 				if (dontapply !== true) {
 					// call widget init if
 					ts.applyWidget(table, doAll || false, callback );
@@ -1981,7 +1991,8 @@
 				});
 			}
 		},
-		remove: function(table, c, wo){
+		remove: function(table, c, wo, refreshing){
+			if (refreshing) { return; }
 			var k, $tb,
 				b = c.$tbodies,
 				rmv = (wo.zebra || [ "even", "odd" ]).join(' ');

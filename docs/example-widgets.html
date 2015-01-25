@@ -139,7 +139,7 @@
 			</li>
 			<li>The <code>remove</code> block (added v2.4):
 				<ul>
-					<li>In <span class="version">v2.18.5</span> the <code>temp</code> parameter was added:
+					<li>In <span class="version">v2.18.5</span> the <code>refreshing</code> parameter was added:
 						<ul>
 							<li>It is a parameter used to indicate that the <a href="index.html#refreshwidgets"><code>refreshWidgets</code></a> method was triggered.</li>
 							<li>When widgets are refreshed, the <code>remove</code> method is called, then the widget <code>init</code> function is immediately called to reapply the widget.</li>
@@ -187,10 +187,10 @@ $.tablesorter.addWidget({
     // function above otherwise initFlag is undefined
     // * see the saveSort widget for a full example *
   },
-  remove: function(table, config, widgetOptions, temp){
+  remove: function(table, config, widgetOptions, refreshing){
     // do what ever needs to be done to remove stuff added by your widget
     // unbind events, restore hidden content, etc.
-    // temp flag is true when the refreshWidgets method is triggered, meaning
+    // refreshing flag is true when the refreshWidgets method is triggered, meaning
     // the widget will be removed, then immediately reapplied
   }
 });</pre>

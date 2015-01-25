@@ -288,15 +288,17 @@ ts.addWidget({
 			ts.benchmark("Applying " + theme + " theme", time);
 		}
 	},
-	remove: function(table, c, wo, temp) {
+	remove: function(table, c, wo, refreshing) {
+		if (!wo.uitheme_applied) { return; }
 		var $table = c.$table,
-			theme = c.theme || 'jui',
+			theme = c.appliedTheme || 'jui',
 			themes = ts.themes[ theme ] || ts.themes.jui,
 			$headers = $table.children('thead').children(),
 			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc,
 			iconRmv = themes.iconSortNone + ' ' + themes.iconSortDesc + ' ' + themes.iconSortAsc;
 		$table.removeClass('tablesorter-' + theme + ' ' + themes.table);
-		if (temp) { return; }
+		wo.uitheme_applied = false;
+		if (refreshing) { return; }
 		$table.find(ts.css.header).removeClass(themes.header);
 		$headers
 			.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
@@ -421,7 +423,7 @@ ts.addWidget({
 			ts.filter.init(table, c, wo);
 		}
 	},
-	remove: function(table, c, wo, temp) {
+	remove: function(table, c, wo, refreshing) {
 		var tbodyIndex, $tbody,
 			$table = c.$table,
 			$tbodies = c.$tbodies;
@@ -429,8 +431,9 @@ ts.addWidget({
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
 			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '))
+			// remove the filter row even if refreshing, because the column might have been moved
 			.find('.' + ts.css.filterRow).remove();
-		if (temp) { return; }
+		if (refreshing) { return; }
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // remove tbody
 			$tbody.children().removeClass(wo.filter_filteredRow).show();

@@ -4568,7 +4568,7 @@ $("table").trigger("destroy", [false, callback]);</pre></div>
 
 			<tr id="refreshwidgets">
 				<td><a href="#" class="permalink">refreshWidgets</a></td>
-				<td>Refresh the currently applied widgets. Depending on the options, it will completely remove all widgets, then re-initialize the current widgets or just remove all non-current widgets (v2.4).
+				<td>Refresh the currently applied widgets. Depending on the options, it will completely remove all widgets, then re-initialize the current widgets or just remove all non-current widgets (v2.4; <span class="verison updated">v2.18.5</span>).
 					<div class="collapsible"><br>
 						Trigger this method using either of the following methods (they are equivalent):
 						<pre class="prettyprint lang-js">// trigger a refresh widget event
@@ -5946,7 +5946,7 @@ $.tablesorter.isValueInArray(2, sortList);</pre>
 				<td>This function allows the adding of custom widget scripts to the tablesorter core (<span class="version updated">v2.18.5</span>).
 					<div class="collapsible">
 						<br>
-						In <span class="version updated">v2.18.5</span>, a <code>"temp"</code> parameter was added to the <code>remove</code> widget function to indicate that the widget will be refreshed so it will only be temporarily removed (see <a href="example-widgets.html">this demo</a> for more details).<br>
+						In <span class="version updated">v2.18.5</span>, a <code>"refreshing"</code> parameter was added to the <code>remove</code> widget function to indicate that the widget will be refreshed so it will only be temporarily removed (see <a href="example-widgets.html">this demo</a> for more details).<br>
 						<br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.addWidget(myWidget);</pre>
@@ -6002,7 +6002,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 				<td>This function removes, then reapplies all currently selected widgets on a table (v2.4; <span class="version updated">v2.18.5</span>).
 					<div class="collapsible">
 						<br>
-						In <span class="version updated">v2.18.5</span>, this function was modified to internally use the <a href="#function-removewidget">removeWidget</a> function &amp; a <a href="#refreshcomplete"><code>"refreshComplete"</code></a> event is now triggered after the refresh is complete.<br>
+						In <span class="version updated">v2.18.5</span>, this function was modified to internally use the <a href="#function-removewidget">removeWidget</a> function &amp; a <a href="#refreshcomplete"><code>"refreshComplete"</code></a> event is now triggered upon completion.<br>
 						<br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.refreshWidgets( table, doAll, dontapply );</pre>
@@ -6012,6 +6012,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 							<li><code>dontapply</code> - optional, boolean flag.</li>
 						</ul>
 						The <code>doAll</code> flag is set to <code>true</code> if all widgets contained with the global <a href="#variable-widgets"><code>$.tablesorter.widgets</code></a> array are to be removed.<br>
+						When <code>doAll</code> is <code>false</code>, only widgets <em>not contained</em> within the <code>config.widget</code> option are removed; then if the <code>dontapply</code> flag is <code>false</code>, the widgets named in that option are reapplied (without removing them).<br>
 						<br>
 						This function is called when the <a href="#refreshwidgets">refreshWidgets</a> method is triggered.
 					</div>
@@ -6023,12 +6024,13 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 				<td>This function removes selected widgets (<span class="version">v2.18.5</span>).
 					<div class="collapsible"><br>
 						Use it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.removeWidget( table, names );</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.removeWidget( table, names, refreshing );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
-							<li><code>names</code> - string (space or comma separated widget names) or an array of widget names.</li>
+							<li><code>names</code> - string (space or comma separated widget names), an array of widget names, or if <code>true</code> all installed widgets are removed.</li>
+							<li><code>refreshing</code> - if <code>true</code>, the widget name will not be removed from the <a href="#widgets"><code>widgets</code></a> option; any other setting and the name will be removed.</li>
 						</ul>
-						This function is used by the <a href="#function-refreshwidgets">refreshWidgets</a> function.
+						This function is used by the <a href="#function-refreshwidgets">refreshWidgets</a> function (<span class="version">v2.18.5</span>).
 					</div>
 				</td>
 			</tr>
