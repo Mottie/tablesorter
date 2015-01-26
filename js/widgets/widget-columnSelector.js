@@ -196,6 +196,10 @@ tsColSel = ts.columnSelector = {
 		if (wo.columnSelector_saveColumns && ts.storage) {
 			ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
 		}
+		// trigger columnUpdate if auto is true (it gets skipped in updateCols()
+		if (colSel.auto) {
+			c.$table.trigger('columnUpdate');
+		}
 	},
 
 	updateBreakpoints: function(c, wo) {
