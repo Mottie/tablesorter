@@ -564,7 +564,9 @@ tsp = ts.pager = {
 				s = ( p.page * p.size ),
 				e =  s + p.size,
 				f = wo && wo.filter_filteredRow || 'filtered',
+				last = 0, // for cache indexing
 				j = 0; // size counter
+			p.cacheIndex = [];
 			for ( i = 0; i < l; i++ ){
 				if ( !rows[i].className.match(f) ) {
 					if (j === s && rows[i].className.match(c.cssChildRow)) {
@@ -572,6 +574,10 @@ tsp = ts.pager = {
 						rows[i].style.display = 'none';
 					} else {
 						rows[i].style.display = ( j >= s && j < e ) ? '' : 'none';
+						if ( last !== j && j >= s && j < e ) {
+							p.cacheIndex.push(i);
+							last = j;
+						}
 						// don't count child rows
 						j += rows[i].className.match(c.cssChildRow + '|' + c.selectorRemove.slice(1)) && !wo.pager_countChildRows ? 0 : 1;
 						if ( j === e && rows[i].style.display !== 'none' && rows[i].className.match(ts.css.cssHasChild) ) {
@@ -815,6 +821,7 @@ tsp = ts.pager = {
 			// lets not render the table more than once
 			return tsp.moveToLastPage(table, p);
 		}
+		p.cacheIndex = [];
 		p.isDisabled = false; // needed because sorting will change the page and re-enable the pager
 		if (p.initialized) { c.$table.trigger('pagerChange', c); }
 		if ( !wo.pager_removeRows ) {
@@ -832,6 +839,7 @@ tsp = ts.pager = {
 					count++;
 					if (count > s && added <= e) {
 						added++;
+						p.cacheIndex.push(index);
 						$tb.append(rows[index]);
 					}
 				}

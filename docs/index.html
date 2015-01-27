@@ -5562,6 +5562,7 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 			</tr>
 		</tbody>
 
+		<tbody>
 			<tr id="variable-any-match">
 				<td><a href="#" class="permalink">wo.filter_$anyMatch</a></td>
 				<td>jQuery Object</td>
@@ -5642,6 +5643,211 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 				</td>
 				<td></td>
 			</tr>
+
+		</tbody>
+
+		<!-- non-sorting tbody -->
+		<tbody class="tablesorter-infoOnly">
+			<tr id="pager-variables">
+				<th class="nobold"><a href="#" class="permalink">pager</a></th>
+				<th></th>
+				<th class="nobold">Access the pager options<sup><strong>&dagger;</strong></sup> (<code>p</code>) using any of these methods:
+					<div class="collapsible">
+						<br>
+						<pre class="prettyprint lang-js">// pure js, get the first table (zero index)
+var p = document.getElementsByTagName('table')[0].config.pager;
+// or by table ID
+var p = document.getElementById('mytable').config.pager;
+
+// using jQuery, get first table (zero index)
+var p = $('table')[0].config.pager;
+// or from the jQuery data
+var p = $('#mytable').data('tablesorter').pager;
+</pre>
+<strong>&dagger;</strong> These methods are the same for both the pager addon and the pager widget.
+<p></p>
+<span class="label label-info">*NOTE*</span> This pager variable also contains all of the default pager option settings.
+<p></p>
+<span class="label label-warning">*NOTE*</span> When using the pager widget, changing a value within the <code>widgetOptions</code> for the pager may not update the pager as expected. The pager widget uses most of the values within <code>config.pager</code> instead of the pager <code>widgetOptions</code> after initialization.
+					</div>
+				</th>
+				<th></th>
+			</tr>
+		</tbody>
+
+		<tbody>
+
+			<tr id="variable-pager-container">
+				<td><a href="#" class="permalink">p.$container</a></td>
+				<td>jQuery Object</td>
+				<td>Contains a jQuery object pointing to a pager block(s).
+					<div class="collapsible">
+					<br>
+					The <code>table.config.pager.$container</code> variable is targeted using the pager <a href="#pager-container"><code>container</code></a> option and will have a class name of <code>&quot;tablesorter-pager&quot;</code> applied.<br>
+					<br>
+					The container(s) may include the pager navigation arrows, page size selector, page selector and/or output block; the contents are completely customizable and all components are optional.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-goto">
+				<td><a href="#" class="permalink">p.$goto</a></td>
+				<td>jQuery Object</td>
+				<td>Contains a jQuery object pointing to an empty select within the pager block(s).
+					<div class="collapsible">
+					<br>
+					The <code>table.config.pager.$goto</code> variable is targeted using the pager <a href="#pager-cssgoto"><code>cssGoto</code></a> option.<br>
+					<br>
+					The contents of this select element are dynamically updated if the page size is changed or if the table gets filtered.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-size">
+				<td><a href="#" class="permalink">p.$size</a></td>
+				<td>jQuery Object</td>
+				<td>Contains a jQuery object pointing to a select with the desired page size settings already in place.
+					<div class="collapsible">
+					<br>
+					The <code>table.config.pager.$size</code> variable is targeted using the pager <a href="#pager-csspagesize"><code>cssPageSize</code></a> option.<br>
+					<br>
+					The contents of this select element must be set up with the desired page size settings before initializing tablesorter.<br>
+					<br>
+					Also, because Internet Explorer does not appear to get the select value from the option text, please include a value attribute with all options. For example:
+					<pre class="prettyprint lang-html">&lt;select class=&quot;pagesize&quot;&gt;
+  &lt;option value=&quot;10&quot;&gt;10&lt;/option&gt;
+  &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
+  &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
+  &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
+&lt;/select&gt;</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-cache-index">
+				<td><a href="#" class="permalink">p.cacheIndex</a></td>
+				<td>Array</td>
+				<td>Contains an array of zero-based row indexes of rows that currently displayed within the table.
+					<div class="collapsible">
+					<br>
+					For example, if you want to get the parsed values for the rows currently displayed within the pager, use the <code>table.config.pager.cacheIndex</code> variable as follows:
+					<pre class="prettyprint lang-js">var c = $('table')[0].config,
+	p = c.pager,
+	// the cache may not have a zero index if there are any "info-only" tbodies above the main tbody
+	cache = c.cache[0].normalized,
+	cachedValues = [];
+$.each( p.cacheIndex, function(i, v) {
+	// cache[v] will be an array of parsed values for each cell in selected row
+	cachedValues.push( cache[v] );
+});</pre>
+					the <code>p.cacheIndex</code> variable get updated whenever the table is sorted, filtered or the pager changes pages or page size.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-startrow">
+				<td><a href="#" class="permalink">p.startRow</a></td>
+				<td>Numeric</td>
+				<td>Contains a one-based index of the first row visible in the pager.
+					<div class="collapsible">
+					<br>
+					The <code>{startRow}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value; and it does not correspond to the row index within the cache.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-endrow">
+				<td><a href="#" class="permalink">p.endRow</a></td>
+				<td>Numeric</td>
+				<td>Contains a one-based index of the last row visible in the pager.
+					<div class="collapsible">
+					<br>
+					The <code>{endRow}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value; and it does not correspond to the row index within the cache.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-filteredpages">
+				<td><a href="#" class="permalink">p.filteredPages</a></td>
+				<td>Numeric</td>
+				<td>Contains the page count, determined by the page size setting, after the table is filtered. It equals the <code>totalPages</code> if no filters are applied.
+					<div class="collapsible">
+					<br>
+					The <code>{filteredPages}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-filteredrows">
+				<td><a href="#" class="permalink">p.filteredRows</a></td>
+				<td>Numeric</td>
+				<td>Contains the number of rows accessible by the pager after the table is filtered. It equals the <code>totalRows</code> if no filters are applied.
+					<div class="collapsible">
+					<br>
+					The <code>{filteredRows}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-page">
+				<td><a href="#" class="permalink">p.page</a></td>
+				<td>Numeric</td>
+				<td>Contains a one-based index of the current page visible in the pager.
+					<div class="collapsible">
+					<br>
+					The <code>{page}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.<br>
+					<br>
+					Initially, this value is set by either the pager <a href="#pager-page"><code>page</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the page selector (targetted by the <a href="#pager-cssgoto"><code>cssGoto</code></a> option or programmically by the <a href="#pageset"><code>pageSet</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-size">
+				<td><a href="#" class="permalink">p.size</a></td>
+				<td>Numeric</td>
+				<td>Contains the currently selected page size.
+					<div class="collapsible">
+					<br>
+					Initially, this value is set by either the pager <a href="#pager-size"><code>size</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the size selector (targetted by the <a href="#pager-csspagesize"><code>cssPageSize</code></a> option or programmically by the <a href="#pagesize"><code>pageSize</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-totalpages">
+				<td><a href="#" class="permalink">p.totalPages</a></td>
+				<td>Numeric</td>
+				<td>Contains the total page count as determined by the page size setting.
+					<div class="collapsible">
+					<br>
+					The <code>{totalPages}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-pager-totalrows">
+				<td><a href="#" class="permalink">p.totalRows</a></td>
+				<td>Numeric</td>
+				<td>Contains the total number of rows within the table
+					<div class="collapsible">
+					<br>
+					The <code>{totalRows}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+		</tbody>
 
 	</table>
 
