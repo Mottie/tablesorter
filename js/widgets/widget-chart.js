@@ -87,7 +87,7 @@ chart = ts.chart = {
 		// the cache may not have a zero index if there are any
 		// "info-only" tbodies above the main tbody
 		var cache = c.cache[0].normalized;
-		var rows = {};
+		var rows = [];
 		chart.rows = [];
 
 		$.each(cache, function(k, v) {
@@ -107,22 +107,26 @@ chart = ts.chart = {
 					}
 				}
 
-				rows[row[wo.chart_sort[0][0]]] = row;
+				rows.push(row);
 			}
 		});
 
-		var order = Object.keys(rows);
-		if (wo.chart_sort[0][1] == 1) {
-			order.reverse();
-		}
+		// sort based on chart_sort
+		rows.sort(function(a, b) {
+			if (wo.chart_sort[0][1] == 1) {
+				return $.tablesorter.sortNatural(b[wo.chart_sort[0][0]], a[wo.chart_sort[0][0]]);
+			}
 
-		$.each(order, function(kk, rowkey) {
+			return $.tablesorter.sortNatural(a[wo.chart_sort[0][0]], b[wo.chart_sort[0][0]]);
+		});
+
+		$.each(rows, function(kk, vv) {
 			var row = [];
-			var label = rows[rowkey][wo.chart_labelCol];
+			var label = vv[wo.chart_labelCol];
 
 			row.push(String(label));
 
-			$.each(rows[rowkey], function(k, cell) {
+			$.each(vv, function(k, cell) {
 				if (k == wo.chart_labelCol) {
 					return true;
 				}
