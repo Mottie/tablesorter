@@ -95,7 +95,7 @@ chart = ts.chart = {
 			var cells = $tr.find('td');
 			var row = [];
 			if ((wo.chart_incRows == 'visible' && $tr.is(':visible')) ||
-			    (wo.chart_incRows == 'filtered' && $tr.hasClass(wo.filter_filteredRow || 'filtered')) ||
+			    (wo.chart_incRows == 'filtered' && !$tr.hasClass(wo.filter_filteredRow || 'filtered')) ||
 			    (wo.chart_incRows != 'visible' && wo.chart_incRows != 'filtered')
 			) {
 				// Add all cols (don't mess up indx for sorting)
