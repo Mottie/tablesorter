@@ -56,6 +56,7 @@
 				usNumberFormat   : true,       // false for German "1.234.567,89" or French "1 234 567,89"
 				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 				serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
+				resort           : true,       // default setting to trigger a resort after an "update", "addRows", "updateCell", etc has completed
 
 				// *** sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -823,10 +824,12 @@
 			}
 
 			function checkResort(c, resort, callback) {
-				var sl = $.isArray(resort) ? resort : c.sortList;
+				var sl = $.isArray(resort) ? resort : c.sortList,
+					// if no resort parameter is passed, fallback to config.resort (true by default)
+					resrt = typeof resort === 'undefined' ? c.resort : resort;
 				// don't try to resort if the table is still processing
 				// this will catch spamming of the updateCell method
-				if (resort !== false && !c.serverSideSorting && !c.table.isProcessing) {
+				if (resrt !== false && !c.serverSideSorting && !c.table.isProcessing) {
 					if (sl.length) {
 						c.$table.trigger('sorton', [sl, function(){
 							resortComplete(c, callback);
@@ -906,7 +909,18 @@
 							// update column max value (ignore sign)
 							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
 						}
-						checkResort(c, resort, callback);
+						v = resort !== 'undefined' ? resort : c.resort;
+						if (v !== false) {
+							// widgets will be reapplied
+							checkResort(c, v, callback);
+						} else {
+							// don't reapply widgets is resort is false, just in case it causes
+							// problems with element focus
+							if ($.isFunction(callback)) {
+								callback(table);
+							}
+							c.$table.trigger('updateComplete', c.table);
+						}
 					}
 				})
 				.bind("addRows" + c.namespace, function(e, $row, resort, callback) {

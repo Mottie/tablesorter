@@ -527,7 +527,7 @@
 		<li><a href="example-parsers-duration.html">Duration parser</a> (<span class="version">v2.17.8</span>).</li>
 		<li><a href="example-parsers-file-type.html">File type parser</a> (<span class="version">v2.13</span>).</li>
 		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore &quot;A&quot;, &quot;An&quot; and &quot;The&quot; in titles) (<span class="version">v2.8</span>).</li>
-		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.17.5</span>).</li>
+		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.18.5</span>).</li>
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-metric.html">Metric parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-named-numbers.html">Named Numbers parser</a> (<span class="version">v2.18.0</span>).</li>
@@ -1213,6 +1213,25 @@ From the example function above, you'll end up with something similar to this HT
 				<td>&quot;th, td&quot;</td>
 				<td>jQuery selector of content within <a href="#selectorheaders"><code>selectorHeaders</code></a> that is clickable to trigger a sort (v2.4).</td>
 				<td><a href="example-option-selectorsort.html">Example</a></td>
+			</tr>
+
+			<tr id="resort">
+				<td><a href="#" class="permalink">resort</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>When this option is <code>true</code> any applied sort on the table will be reapplied after an update method (<span class="version">v2.18.5</span>).
+					<div class="collapsible">
+					<br>
+					Specifically, this option applies to the "updateAll", "update", "addRows" and "updateCell" methods and is checked after the method has completed updating the internal cache.<br>
+					<br>
+					If <code>false</code>, the widgets will still be refreshed for all but the "updateCell" method - this "updateCell" behavior was added in v2.18.5.<br>
+					<br>
+					<span class="label label-info">Note</span> when triggering one of the above methods, and passing a defined <code>resort</code> parameter, it will override this setting.<br>
+					<br>
+					<span class="label label-warning">Note</span> if a sort is not reapplied, problems with some widgets may occur namely the grouping widget.
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="serversidesorting">
@@ -4292,7 +4311,8 @@ $.extend($.tablesorter.themes.jui, {
     '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
     $row = $(row),
     // resort table using true to reapply the current sort; set to false to prevent resort
-    // as of v2.18.5, the resort variable can contain a new sortList to be applied
+    // if undefined, the resort value will be obtained from config.resort (added v2.18.5)
+    // As of v2.18.5, the resort variable can contain a new sortList to be applied
     // A callback method was added in 2.3.9.
     resort = true, // or [[0,0],[1,0]] etc
     callback = function(table){
@@ -4377,7 +4397,7 @@ $("table").trigger("sortReset", [callback]);</pre>
 
 			<tr id="update">
 				<td><a href="#" class="permalink">update</a> / <a href="#" class="permalink">updateRows</a></td>
-				<td>Update the <code>tbody</code>'s stored data (<code>update</code> &amp; <code>updateRows</code> do exactly the same thing)
+				<td>Update the <code>tbody</code>'s stored data (<code>update</code> &amp; <code>updateRows</code> do exactly the same thing; <span class="version updated">v2.18.5</span>)
 					<div class="collapsible"><br>
 						<pre class="prettyprint lang-js">// Add new content
 $("table tbody").append(html);
@@ -4391,6 +4411,8 @@ var resort = true,
         alert('new sort applied');
     };
 $("table").trigger("update", [resort, callback]);
+
+// As of version 2.18.5, if the resort parameter is undefined, the setting from the config.resort will be used
 
 // As of version 2.0.14, the table will automatically resort after the update (if the "resort" flag is true
 // &amp; will use the current sort selection), so include the following if you want to specify a different sort
@@ -4412,7 +4434,7 @@ $('table').trigger('update', [ sorting ]);</pre>
 
 			<tr id="updateall">
 				<td><a href="#" class="permalink">updateAll</a></td>
-				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) (<span class="version">v2.8</span>).
+				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) (<span class="version">v2.8</span>; <span class="version updated">v2.18.5</span>).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">// Change thead & tbody column of cells
 // remember, "eq()" is zero based & "nth-child()" is 1 based
@@ -4424,6 +4446,7 @@ $("table tbody").find('td:nth-child(3)').html(function(i,h){
 
 // reapply the current sort if resort = true
 // do not reapply the current sort if resort = false
+// if undefined, resort will be obtained from config.resort (added v2.18.5)
 // as of v2.18.5, apply a new sort if resort = [[0,0]] (or whatever)
 // or the sort is reset if resort = []
 var resort = true,
@@ -4474,7 +4497,7 @@ $("table")
 
 			<tr id="updatecell">
 				<td><a href="#" class="permalink">updateCell</a></td>
-				<td>Update a table cell in the tablesorter data.
+				<td>Update a table cell in the tablesorter data (<span class="version updated">v2.18.5</span>).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">$(function() {
   $("table").tablesorter();
@@ -4483,6 +4506,7 @@ $("table")
 
     // Do we want to reapply the current sort on the column?
     // see updateRow for other resort settings as of v2.18.5
+    // if resort is undefined, the value from config.resort (added v2.18.5) will be used
     var resort = false,
         // Do something after the cell update in this callback function
         callback = function(table){
