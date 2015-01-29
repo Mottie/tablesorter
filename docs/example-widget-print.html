@@ -27,10 +27,13 @@
 	.options th.narrow {
 		width: 150px;
 	}
-	.columnSelectorWrapper {
+	.button {
 		position: relative;
 		padding: 1px 6px;
 		display: inline-block;
+		cursor: pointer;
+		border: #000 1px solid;
+		border-radius: 5px;
 	}
 	.columnSelector, .hidden {
 		display: none;
@@ -267,15 +270,15 @@ print_callback : function( config, $table, printStyle ) {
 	<p>
 
 	<h1>Demo</h1>
-	<div id="demo"><button type="button" class="print">Print</button>
+	<div id="demo"><div class="print button">Print</div>
 
-<button class="columnSelectorWrapper">
+<div class="columnSelectorWrapper button">
 	<input id="colSelect1" type="checkbox" class="hidden">
 	<label class="columnSelectorButton" for="colSelect1">Column</label>
 	<div id="columnSelector" class="columnSelector">
 		<!-- this div is where the column selector is added -->
 	</div>
-</button>
+</div>
 <table class="tablesorter">
 	<thead>
 		<tr>
