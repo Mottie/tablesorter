@@ -142,7 +142,7 @@ ts.storage = function(table, key, value, options) {
 // Add a resize event to table headers
 // **************************
 ts.addHeaderResizeEvent = function(table, disable, settings) {
-	table = $(table)[0]; // make sure we're usig a dom element
+	table = $(table)[0]; // make sure we're using a dom element
 	var headers,
 		defaults = {
 			timer : 250
@@ -1397,6 +1397,7 @@ ts.filter = {
 		}, 0);
 	},
 	getOptionSource: function(table, column, onlyAvail) {
+		table = $(table)[0];
 		var cts,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1473,6 +1474,7 @@ ts.filter = {
 		}
 	},
 	getOptions: function(table, column, onlyAvail) {
+		table = $(table)[0];
 		var rowIndex, tbodyIndex, len, row, cache, cell,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1642,7 +1644,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
 		c.lastSearch = [];
-		ts.filter.searching(c.$table[0], filter, skipFirst);
+		ts.filter.searching(c.table, filter, skipFirst);
 		c.$table.trigger('filterFomatterUpdate');
 	}
 	return !!valid;
