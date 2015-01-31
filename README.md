@@ -42,7 +42,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 ### Related Projects
 
 * [Plugin for Rails](//github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](//github.com/themilkman).
-* [PHP templating engine for tablesorter](//alexweissman.github.io/bootsole/) by [alexweissman](//github.com/alexweissman).
+* [Bootsole](//alexweissman.github.io/bootsole/) (OOP templating engine using tablesorter) by [alexweissman](//github.com/alexweissman).
 
 ### Special Thanks
 
