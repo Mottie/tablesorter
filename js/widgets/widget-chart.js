@@ -60,11 +60,11 @@ chart = ts.chart = {
 		chart.chartdata = [
 			chart.headers
 		];
- 
+
 		$.each(chart.rows, function(k, row) {
 			chart.chartdata.push(row);
 		});
- 
+
 		c.chart = {
 			data: chart.chartdata
 		};
@@ -81,7 +81,7 @@ chart = ts.chart = {
 			chart.headers.push(c.headerContent[col]);
 		});
 	},
- 
+
 	getRows: function(c, wo) {
 		var $table = c.$table;
 		// the cache may not have a zero index if there are any
