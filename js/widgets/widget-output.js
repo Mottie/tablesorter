@@ -20,7 +20,7 @@ output = ts.output = {
 	regexBR    : /(<br([\s\/])?>|\n)/g, // replace
 	regexIMG   : /<img[^>]+alt\s*=\s*['"]([^'"]+)['"][^>]*>/i, // match
 	regexHTML  : /<[^<]+>/g, // replace
-	
+
 	replaceCR  : '\\n',
 	replaceTab : '\\t',
 
@@ -192,7 +192,11 @@ output = ts.output = {
 			// replace " with “ if undefined
 			result = input.replace(/\"/g, wo.output_replaceQuote || '\u201c');
 		// replace line breaks with \\n & tabs with \\t
-		result = result.replace(output.regexBR, output.replaceCR).replace(/\t/g, output.replaceTab);
+		if (!wo.output_trimSpaces) {
+			result = result.replace(output.regexBR, output.replaceCR).replace(/\t/g, output.replaceTab);
+		} else {
+			result = result.replace(output.regexBR, '');
+		}
 		// extract img alt text
 		txt = result.match(output.regexIMG);
 		if (!wo.output_includeHTML && txt !== null) {
