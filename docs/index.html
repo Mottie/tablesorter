@@ -902,7 +902,7 @@
 				<td>String</td>
 				<td>&quot;bottom&quot;</td>
 				<td>
-					Boolean flag indicating how tablesorter should deal with empty table cells. (Modified v2.1.16, <span class="version updated">v2.16.2</span>).
+					Option indicating how tablesorter should deal with empty table cells. (Modified v2.1.16, <span class="version updated">v2.16.2</span>).
 					<div class="collapsible">
 					<ul>
 						<li><code>bottom</code> - sort empty table cells to the bottom.</li>
@@ -2535,7 +2535,7 @@ $(function(){
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					Filter widget: Set this option to <code>false</code> to make the column content search case-insensitive, so typing in &quot;a&quot; will not find &quot;Albert&quot;. (v2.3.4)
+					Filter widget: Set this option to <code>false</code> to make the column content search case-sensitive, so typing in &quot;a&quot; will not find &quot;Albert&quot;. (v2.3.4)
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-ignorecase"><code>filter_ignorecase</code></a> option as follows:
@@ -2652,7 +2652,7 @@ $(function(){
 					Filter widget: If the storage utility is available (included with <code>jquery.tablesorter.widgets.js</code> file, the last applied filter is saved to storage (<span class="version">v2.14</span>).
 					<div class="collapsible">
 					<br>
-					Filters saved to local storage (or cookies) will over-ride any default filters within the header data-attribute (set by the <a href="#widget-filter-defaultattrib"><code>filter_defaultAttrib</code> option</a> and be available to the pager before any ajax calls are made.<br>
+					Filters saved to local storage (or cookies) will override any default filters within the header data-attribute (set by the <a href="#widget-filter-defaultattrib"><code>filter_defaultAttrib</code> option</a> and be available to the pager before any ajax calls are made.<br>
 					<br>
 					To bypass this behavior, clear out the saved filters as follows:
 					<pre class="prettyprint lang-js">$.tablesorter.storage( $('table'), 'tablesorter-filters', '' );</pre>
