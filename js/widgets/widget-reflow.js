@@ -73,7 +73,7 @@ tablereflow = {
 			});
 		c.$headers.each(function(){
 			$this = $(this);
-			headers.push( $this.attr(header) || $this.text() );
+			headers.push( $.trim( $this.attr(header) || $this.text() ) );
 		});
 		c.$tbodies.children().each(function(){
 			$(this).children().each(function(i){
