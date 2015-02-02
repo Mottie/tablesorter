@@ -134,7 +134,8 @@
 			});
 
 		},
-		remove: function(table, c, wo){
+		remove: function(table, c, wo, refreshing) {
+			if (refreshing) { return; }
 			var namespace = c.namespace + 'cssstickyheader ';
 			$(window).unbind('scroll resize '.split(' ').join(namespace));
 			c.$table

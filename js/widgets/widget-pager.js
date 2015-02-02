@@ -111,8 +111,8 @@ ts.addWidget({
 		}
 		tsp.moveToPage(table, c.pager, false);
 	},
-	remove: function(table, c, wo, temp){
-		tsp.destroyPager(table, c, temp);
+	remove: function(table, c, wo, refreshing){
+		tsp.destroyPager(table, c, refreshing);
 	}
 });
 
@@ -141,6 +141,7 @@ tsp = ts.pager = {
 				last: {},
 				// save original pager size
 				setSize: wo.pager_size,
+				setPage: wo.pager_startPage,
 				events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
 					'pageSize pageSet pageAndSize pagerUpdate '
 			}, c.pager);
@@ -166,7 +167,7 @@ tsp = ts.pager = {
 		p.initializing = true;
 		if (wo.pager_savePages && ts.storage) {
 			t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
-			p.page = isNaN(t.page) ? p.page : t.page;
+			p.page = ( isNaN(t.page) ? p.page : t.page ) || p.setPage || 1;
 			p.size = ( isNaN(t.size) ? p.size : t.size ) || p.setSize || 10;
 			$.data(table, 'pagerLastSize', p.size);
 		}
@@ -257,9 +258,9 @@ tsp = ts.pager = {
 				e.stopPropagation();
 				tsp.enablePager(table, c, true);
 			})
-			.on('destroy.pager', function(e, tmp){
+			.on('destroy.pager', function(e, refreshing){
 				e.stopPropagation();
-				tsp.destroyPager(table, c, tmp);
+				tsp.destroyPager(table, c, refreshing);
 			})
 			.on('updateComplete.pager', function(e, table, triggered){
 				e.stopPropagation();
@@ -1005,15 +1006,15 @@ tsp = ts.pager = {
 		tsp.moveToPage(table, p, true);
 	},
 
-	destroyPager: function(table, c, tmp){
+	destroyPager: function(table, c, refreshing){
 		var p = c.pager;
-		tsp.showAllRows(table, c);
 		p.initialized = false;
-		if (tmp) { return; }
+		c.$table.off(p.events.split(' ').join('.pager '));
+		if (refreshing) { return; }
+		tsp.showAllRows(table, c);
 		p.$container.hide(); // hide pager
 		c.appender = null; // remove pager appender function
 		delete table.config.rowsCopy;
-		c.$table.off(p.events.split(' ').join('.pager '));
 		if (ts.storage) {
 			ts.storage(table, c.widgetOptions.pager_storageKey, '');
 		}

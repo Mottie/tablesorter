@@ -1859,11 +1859,11 @@ ts.addWidget({
 			.unbind( 'pagerComplete filterEnd '.split(' ').join(namespace) )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
-		// don't unbind if any table on the page still has stickyheaders applied
-		if (!$('.hasStickyHeaders').length) {
-			$(window).add(wo.stickyHeaders_xScroll).add(wo.stickyHeaders_yScroll).add(wo.stickyHeaders_attachTo)
-				.unbind( 'scroll resize '.split(' ').join(namespace) );
-		}
+		$(window)
+			.add(wo.stickyHeaders_xScroll)
+			.add(wo.stickyHeaders_yScroll)
+			.add(wo.stickyHeaders_attachTo)
+			.unbind( 'scroll resize '.split(' ').join(namespace) );
 		ts.addHeaderResizeEvent(table, false);
 	}
 });
@@ -2091,7 +2091,8 @@ ts.addWidget({
 			}
 		}
 	},
-	remove: function(table) {
+	remove: function(table, c) {
+		c.$table.removeClass('hasSaveSort');
 		// clear storage
 		if (ts.storage) { ts.storage( table, 'tablesorter-savesort', '' ); }
 	}

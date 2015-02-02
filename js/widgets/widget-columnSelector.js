@@ -344,7 +344,8 @@ ts.addWidget({
 	init: function(table, thisWidget, c, wo) {
 		tsColSel.init(table, c, wo);
 	},
-	remove: function(table, c){
+	remove: function(table, c, wo, refreshing) {
+		if (refreshing) { return; }
 		var csel = c.selector;
 		csel.$container.empty();
 		if (csel.$popup) { csel.$popup.empty(); }
