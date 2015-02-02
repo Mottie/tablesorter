@@ -465,7 +465,7 @@
 					// save original header content
 					c.headerContent[index] = $t.html();
 					// if headerTemplate is empty, don't reformat the header cell
-					if ( c.headerTemplate !== '' ) {
+					if ( c.headerTemplate !== '' && !$t.find('.' + ts.css.headerIn).length ) {
 						// set up header template
 						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, $t.find('.' + ts.css.icon).length ? '' : i);
 						if (c.onRenderTemplate) {
@@ -866,7 +866,6 @@
 					e.stopPropagation();
 					table.isUpdating = true;
 					ts.refreshWidgets(table, true, true);
-					ts.restoreHeaders(table);
 					buildHeaders(table);
 					ts.bindEvents(table, c.$headers, true);
 					bindMethods(table);
@@ -1365,13 +1364,15 @@
 
 			// restore headers
 			ts.restoreHeaders = function(table){
-				var c = $(table)[0].config;
+				var $cell,
+					c = $(table)[0].config;
 				// don't use c.$headers here in case header cells were swapped
 				c.$table.find(c.selectorHeaders).each(function(i){
+					$cell = $(this);
 					// only restore header cells if it is wrapped
 					// because this is also used by the updateAll method
-					if ($(this).find('.' + ts.css.headerIn).length){
-						$(this).html( c.headerContent[i] );
+					if ($cell.find('.' + ts.css.headerIn).length){
+						$cell.html( c.headerContent[i] );
 					}
 				});
 			};
