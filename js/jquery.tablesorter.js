@@ -583,7 +583,7 @@
 				c.$headers.not('.sorter-false').each(function(){
 					var $this = $(this),
 						nextSort = this.order[(this.count + 1) % (c.sortReset ? 3 : 2)],
-						txt = $this.text() + ': ' +
+						txt = $.trim( $this.text() ) + ': ' +
 							ts.language[ $this.hasClass(ts.css.sortAsc) ? 'sortAsc' : $this.hasClass(ts.css.sortDesc) ? 'sortDesc' : 'sortNone' ] +
 							ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 					$this.attr('aria-label', txt );
