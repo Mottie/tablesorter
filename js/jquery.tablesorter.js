@@ -467,7 +467,7 @@
 					// if headerTemplate is empty, don't reformat the header cell
 					if ( c.headerTemplate !== '' ) {
 						// set up header template
-						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, i);
+						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, $t.find('.' + ts.css.icon).length ? '' : i);
 						if (c.onRenderTemplate) {
 							h = c.onRenderTemplate.apply($t, [index, t]);
 							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
