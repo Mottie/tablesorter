@@ -240,10 +240,13 @@ ts.addWidget({
 					$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 				});
 
-			if (!$headers.find('.' + ts.css.wrapper).length) {
-				// Firefox needs this inner div to position the icon & resizer correctly
-				$headers.wrapInner('<div class="' + ts.css.wrapper + '" style="position:relative;height:100%;width:100%"></div>');
-			}
+			$headers.each(function(){
+				var $this = $(this);
+				if (!$this.find('.' + ts.css.wrapper).length) {
+					// Firefox needs this inner div to position the icon & resizer correctly
+					$this.wrapInner('<div class="' + ts.css.wrapper + '" style="position:relative;height:100%;width:100%"></div>');
+				}
+			});
 			if (c.cssIcon) {
 				// if c.cssIcon is '', then no <i> is added to the header
 				$headers
