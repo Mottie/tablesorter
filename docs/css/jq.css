@@ -83,6 +83,8 @@ span.alert { padding: 1px 3px; }
 .fade { opacity: 0.5; }
 .results { color: red; }
 .clear { clear: both; }
+.good { color: #080; }
+.bad { color: #800; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }
 #main .ui-accordion-header a, #main .ui-accordion-content { font-size: 14px; }
 #banner small { font-size: 16px; vertical-align: super; }

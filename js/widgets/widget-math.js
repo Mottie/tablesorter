@@ -8,6 +8,8 @@
 	"use strict";
 
 	var ts = $.tablesorter,
+	events = ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
+		'filterReset filterEnd recalculate ' ).split(' ').join('.tsmath '),
 	math = {
 
 		// get all of the row numerical values in an arry
@@ -183,7 +185,7 @@
 	* (c)2011 ecava
 	* Dual licensed under the MIT or GPL Version 2 licenses.
 	*/
-	ts.formatMask = function(m, v, tmpPrefix, tmpSuffix){
+	ts.formatMask = function(m, v, tmpPrefix, tmpSuffix) {
 		if ( !m || isNaN(+v) ) {
 			return v; // return as it is.
 		}
@@ -388,9 +390,13 @@
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table
-				.bind('tablesorter-initialized update updateRows addRows updateCell filterReset filterEnd '.split(' ').join('.tsmath '), function(e){
+				.unbind(events + ' updateComplete.tsmath')
+				.bind(events, function(e){
 					var init = e.type === 'tablesorter-initialized';
-					if (!wo.math_isUpdating || init) {
+					if (e.type === 'updateAll') {
+						// redo data-column indexes in case columns were rearranged
+						ts.computeColumnIndex( c.$table.children('tbody').children() );
+					} else if (!wo.math_isUpdating || init) {
 						math.recalculate( table, c, wo, init );
 					}
 				})
@@ -403,9 +409,10 @@
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo){
+		remove: function(table, c, wo, refreshing){
+			if (refreshing) { return; }
 			$(table)
-				.unbind('tablesorter-initialized update updateRows addRows updateCell filterReset filterEnd '.split(' ').join('.tsmath '))
+				.unbind(events + ' updateComplete.tsmath')
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});

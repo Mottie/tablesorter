@@ -1,7 +1,211 @@
+/*! Dragtable Mod for TableSorter - 1/14/2015 (v2.18.5) *//*
+ * Requires
+ *   tablesorter v2.8+
+ *   jQuery 1.7+
+ *   jQuery UI (Core, Widget, Mouse & Sortable)
+ *   Dragtable by Akottr (https://github.com/akottr) modified by Rob Garrison
+ */
+/*jshint browser:true, jquery:true, unused:false */
+/*global jQuery: false */
+;(function( $ ) {
+'use strict';
+  var undef,
+    ts = $.tablesorter;
+
+  ts.dragtable = {
+    create : function( _this ) {
+      var hasAccept,
+        $table = _this.originalTable.el,
+        handle = _this.options.dragHandle.replace('.', '');
+      $table.children('thead').children().children('th,td').each(function(){
+        var $this = $(this);
+        if ( !$this.find( _this.options.dragHandle + ',.' + handle + '-disabled' ).length ) {
+          hasAccept = _this.options.dragaccept ? $this.hasClass( _this.options.dragaccept.replace('.', '') ) : true;
+          $this
+            // sortClass includes a "." to match the tablesorter selectorSort option - for consistency
+            .wrapInner('<div class="' + _this.options.sortClass.replace('.', '') + '"/>')
+            // add handle class + "-disabled" to drag-disabled columns
+            .prepend('<div class="' + handle + ( hasAccept ? '' : '-disabled' ) + '"></div>');
+        }
+      });
+    },
+    start : function( table ) {
+      table = $( table )[0];
+      if ( table && table.config ) {
+        table.config.widgetOptions.dragtableLast = {
+          search : $( table ).data( 'lastSearch' ),
+          order : ts.dragtable.getOrder( table )
+        };
+      }
+    },
+    update : function( _this ) {
+      var t, list, val,
+        dragTable = _this.originalTable,
+        table = dragTable.el[ 0 ],
+        $table = $( table ),
+        c = table.config,
+        wo = c && c.widgetOptions,
+        startIndex = dragTable.startIndex - 1,
+        endIndex = dragTable.endIndex - 1,
+        columnOrder = ts.dragtable.getOrder( table ) || [],
+        hasFilters = ts.hasWidget( $table, 'filter' ) || false,
+        last = wo && wo.dragtableLast || {},
+        // update moved filters
+        filters = [];
+
+      // only trigger updateAll if column order changed
+      if ( ( last.order || [] ).join( '' ) !== columnOrder.join( '' ) ) {
+
+        if ( c.sortList.length ) {
+          // must deep extend (nested arrays) to prevent list from changing with c.sortList
+          list = $.extend( true, [], c.sortList );
+          $.each( columnOrder, function( indx, value ) {
+            val = ts.isValueInArray( parseInt( value, 10 ), list );
+            if ( value !== last.order[ indx ] && val >= 0 ) {
+              c.sortList[ val ][ 0 ] = indx;
+            }
+          });
+        }
+
+        // update filter widget
+        if ( hasFilters ) {
+          $.each( last.search || [], function( indx ) {
+            filters[ indx ] = last.search[ columnOrder[ indx ] ];
+          });
+        }
+
+        // update preset editable widget columns
+        t = ( ts.hasWidget( c.$table, 'editable' ) || false ) ? wo.editable_columnsArray : false;
+        if ( t ) {
+          c.widgetOptions.editable_columnsArray = ts.dragtable.reindexArrayItem( t, startIndex, endIndex );
+        }
+        // update ignore math columns
+        t = ( ts.hasWidget( c.$table, 'math' ) || false ) ? wo.math_ignore : false;
+        if ( t ) {
+          c.widgetOptions.math_ignore = ts.dragtable.reindexArrayItem( t, startIndex, endIndex );
+        }
+        // update preset resizable widget widths
+        t = ( ts.hasWidget( c.$table, 'resizable' ) || false ) ? wo.resizable_widths : false;
+        if ( t ) {
+          // use zero-based indexes in the array
+          wo.resizable_widths = ts.dragtable.moveArrayItem( t, startIndex, endIndex );
+        }
+        /*
+        // chart widget WIP - there are other options that need to be rearranged!
+        t = ( ts.hasWidget( c.$table, 'chart' ) || false ) ? wo.chart_ignoreColumns : false;
+        if ( t ) {
+          // use zero-based indexes in the array
+          wo.chart_ignoreColumns = ts.dragtable.moveArrayItem( t, startIndex, endIndex );
+        }
+        */
+
+        $table.trigger('updateAll', [ false, function() {
+          if ( hasFilters ) {
+            setTimeout( function() {
+              // just update the filter values
+              c.lastCombinedFilter = null;
+              c.$table.data('lastSearch', filters);
+              ts.setFilters( $table, filters );
+              if ($.isFunction(_this.options.tablesorterComplete)) {
+                _this.options.tablesorterComplete( c.table );
+              }
+            }, 10 );
+          }
+        } ]);
+      }
+    },
+    getOrder : function( table ) {
+      return $( table ).children( 'thead' ).children( '.' + ts.css.headerRow ).children().map( function() {
+        return $( this ).attr( 'data-column' );
+      }).get() || [];
+    },
+    // bubble the moved col left or right
+    startColumnMove : function( dragTable ) {
+      var $cols,
+        c = dragTable.el[ 0 ].config,
+        startIndex = dragTable.startIndex - 1,
+        endIndex = dragTable.endIndex - 1,
+        cols = c.columns - 1,
+        pos = endIndex === cols ? false : endIndex <= startIndex,
+        $rows = c.$table.children().children( 'tr' );
+      if ( c.debug ) {
+        ts.log( 'Inserting column ' + startIndex + ( pos ? ' before' : ' after' ) + ' column ' + endIndex );
+      }
+      $rows.each( function() {
+        $cols = $( this ).children();
+        $cols.eq( startIndex )[ pos ? 'insertBefore' : 'insertAfter' ]( $cols.eq( endIndex ) );
+      });
+      // rearrange col in colgroup
+      $cols = c.$table.children( 'colgroup' ).children();
+      $cols.eq( startIndex )[ pos ? 'insertBefore' : 'insertAfter' ]( $cols.eq( endIndex ) );
+    },
+    swapNodes : function( a, b ) {
+      var indx, aparent, asibling,
+        len = a.length;
+      for ( indx = 0; indx < len; indx++ ) {
+        aparent = a[ indx ].parentNode;
+        asibling = a[ indx ].nextSibling === b[ indx ] ? a[ indx ] : a[ indx ].nextSibling;
+        b[ indx ].parentNode.insertBefore( a[ indx ], b[ indx ] );
+        aparent.insertBefore( b[ indx ], asibling );
+      }
+    },
+    // http://stackoverflow.com/a/5306832/145346
+    moveArrayItem : function( array, oldIndex, newIndex ) {
+      var indx, len = array.length;
+      if ( newIndex >= len ) {
+        indx = newIndex - len;
+        while ( ( indx-- ) + 1 ) {
+          array.push( undef );
+        }
+      }
+      array.splice( newIndex, 0, array.splice( oldIndex, 1 )[ 0 ] );
+      return array;
+    },
+    reindexArrayItem : function( array, oldIndex, newIndex ) {
+      var nIndx = $.inArray( newIndex, array ),
+        oIndx = $.inArray( oldIndex, array ),
+        max = Math.max.apply( Math, array ),
+        arry = [];
+      // columns in the array were swapped so return original array
+      if ( nIndx >= 0 && oIndx >= 0 ) {
+       return array;
+      }
+      // columns not in the array were moved
+      $.each( array, function( indx, value ) {
+        // column (not in array) inserted between indexes
+        if ( newIndex < oldIndex ) {
+          // ( [ 0,1,2,3 ], 5, 1 ) -> column inserted between 0 & 1 => [ 0,2,3,4 ]
+          if ( value >= newIndex ) {
+            // 5 -> 1  [ 0, 2, 3 ] then 1 -> 0 [ 1, 2, 3 ]
+            arry.push( value + ( value < oldIndex ? 1 : 0 ) );
+          } else {
+            arry.push( value );
+          }
+        } else if ( newIndex > oldIndex ) {
+          // ( [ 0,1,2,3 ], 1, 5 ) -> column in array moved outside => [ 0,1,2,5 ]
+          if ( value === oldIndex ) {
+            arry.push( newIndex );
+          } else if ( value < newIndex && value >= oldIndex ) {
+            arry.push( value - 1 );
+          } else if ( value <= newIndex ) {
+            arry.push( value );
+          } else if ( value > oldIndex ) {
+            arry.push( value + ( value < newIndex ? 0 : 1 ) );
+          }
+        }
+      });
+      return arry.sort();
+    }
+  };
+
 /*!
  * dragtable
+ *  _____       _
+ * |     |___ _| |
+ * | | | | . | . |
+ * |_|_|_|___|___|
  *
- * @Version 2.0.14
+ * @Version 2.0.14 MOD
  *
  * Copyright (c) 2010-2013, Andres akottr@gmail.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -52,7 +256,6 @@
  * Special thx to all pull requests comitters
  */
 
-(function($) {
   $.widget("akottr.dragtable", {
     options: {
       revert: false,               // smooth revert
@@ -74,7 +277,10 @@
       beforeStart: $.noop,         // returning FALSE will stop the execution chain.
       beforeMoving: $.noop,
       beforeReorganize: $.noop,
-      beforeStop: $.noop
+      beforeStop: $.noop,
+      // new options
+      tablesorterComplete: null,
+      sortClass : '.sorter'
     },
     originalTable: {
       el: null,
@@ -108,44 +314,16 @@
      */
     _restoreState: function(persistObj) {
       for (var n in persistObj) {
-        this.originalTable.startIndex = $('#' + n).closest('th').prevAll().size() + 1;
-        this.originalTable.endIndex = parseInt(persistObj[n], 10) + 1;
-        this._bubbleCols();
+        if (n in persistObj) {
+          this.originalTable.startIndex = $('#' + n).closest('th').prevAll().length + 1;
+          this.originalTable.endIndex = parseInt(persistObj[n], 10) + 1;
+          this._bubbleCols();
+        }
       }
     },
     // bubble the moved col left or right
     _bubbleCols: function() {
-      var i, j, col1, col2;
-      var from = this.originalTable.startIndex;
-      var to = this.originalTable.endIndex;
-      /* Find children thead and tbody.
-       * Only to process the immediate tr-children. Bugfix for inner tables
-       */
-      var thtb = this.originalTable.el.children();
-      if (this.options.excludeFooter) {
-        thtb = thtb.not('tfoot');
-      }
-      if (from < to) {
-        for (i = from; i < to; i++) {
-          col1 = thtb.find('> tr > td:nth-child(' + i + ')')
-            .add(thtb.find('> tr > th:nth-child(' + i + ')'));
-          col2 = thtb.find('> tr > td:nth-child(' + (i + 1) + ')')
-            .add(thtb.find('> tr > th:nth-child(' + (i + 1) + ')'));
-          for (j = 0; j < col1.length; j++) {
-            swapNodes(col1[j], col2[j]);
-          }
-        }
-      } else {
-        for (i = from; i > to; i--) {
-          col1 = thtb.find('> tr > td:nth-child(' + i + ')')
-            .add(thtb.find('> tr > th:nth-child(' + i + ')'));
-          col2 = thtb.find('> tr > td:nth-child(' + (i - 1) + ')')
-            .add(thtb.find('> tr > th:nth-child(' + (i - 1) + ')'));
-          for (j = 0; j < col1.length; j++) {
-            swapNodes(col1[j], col2[j]);
-          }
-        }
-      }
+      ts.dragtable.startColumnMove(this.originalTable);
     },
     _rearrangeTableBackroundProcessing: function() {
       var _this = this;
@@ -154,10 +332,14 @@
         _this.options.beforeStop(_this.originalTable);
         _this.sortableTable.el.remove();
         restoreTextSelection();
+        ts.dragtable.update(_this);
         // persist state if necessary
-        if (_this.options.persistState !== null) {
-          $.isFunction(_this.options.persistState) ? _this.options.persistState(_this.originalTable) : _this.persistState();
+        if ($.isFunction(_this.options.persistState)) {
+          _this.options.persistState(_this.originalTable);
+        } else {
+          _this.persistState();
         }
+
       };
     },
     _rearrangeTable: function() {
@@ -171,7 +353,7 @@
         _this.options.beforeReorganize(_this.originalTable, _this.sortableTable);
         // do reorganisation asynchronous
         // for chrome a little bit more than 1 ms because we want to force a rerender
-        _this.originalTable.endIndex = _this.sortableTable.movingRow.prevAll().size() + 1;
+        _this.originalTable.endIndex = _this.sortableTable.movingRow.prevAll().length + 1;
         setTimeout(_this._rearrangeTableBackroundProcessing(), 50);
       };
     },
@@ -181,28 +363,33 @@
      * each li with a separate table representig a single col of the original table.
      */
     _generateSortable: function(e) {
-      !e.cancelBubble && (e.cancelBubble = true);
+      if (e.cancelBubble) {
+        e.cancelBubble = true;
+      } else {
+        e.stopPropagation();
+      }
       var _this = this;
       // table attributes
       var attrs = this.originalTable.el[0].attributes;
-      var attrsString = '';
+      var tableAttrsString = '';
       for (var i = 0; i < attrs.length; i++) {
-        if (attrs[i].nodeValue && attrs[i].nodeName != 'id' && attrs[i].nodeName != 'width') {
-          attrsString += attrs[i].nodeName + '="' + attrs[i].nodeValue + '" ';
+        if ( (attrs[i].value || attrs[i].nodeValue) && attrs[i].nodeName != 'id' && attrs[i].nodeName != 'width') {
+          tableAttrsString += attrs[i].nodeName + '="' + ( attrs[i].value || attrs[i].nodeValue ) + '" ';
         }
       }
-
       // row attributes
       var rowAttrsArr = [];
       //compute height, special handling for ie needed :-(
       var heightArr = [];
-      this.originalTable.el.find('tr').slice(0, this.options.maxMovingRows).each(function(i, v) {
+
+      // don't save tfoot attributes because it messes up indexing
+      _this.originalTable.el.children('thead, tbody').children('tr:visible').slice(0, _this.options.maxMovingRow).each(function() {
         // row attributes
         var attrs = this.attributes;
-        var attrsString = "";
+        var attrsString = '';
         for (var j = 0; j < attrs.length; j++) {
-          if (attrs[j].nodeValue && attrs[j].nodeName != 'id') {
-            attrsString += " " + attrs[j].nodeName + '="' + attrs[j].nodeValue + '"';
+          if ( (attrs[j].value || attrs[j].nodeValue ) && attrs[j].nodeName != 'id') {
+            attrsString += ' ' + attrs[j].nodeName + '="' + ( attrs[j].value || attrs[j].nodeValue ) + '"';
           }
         }
         rowAttrsArr.push(attrsString);
@@ -217,47 +404,72 @@
        * Only to process the immediate tr-children. Bugfix for inner tables
        */
       var thtb = _this.originalTable.el.children();
-      if (this.options.excludeFooter) {
-        thtb = thtb.not('tfoot');
-      }
-      thtb.find('> tr > th').each(function(i, v) {
+      var headerRows = thtb.filter('thead').children('tr:visible');
+      var visibleRows = thtb.filter('tbody').children('tr:visible');
+
+      headerRows.eq(0).children('th, td').filter(':visible').each(function() {
         var w = $(this).outerWidth();
         widthArr.push(w);
         totalWidth += w;
       });
       if(_this.options.exact) {
-          var difference = totalWidth - _this.originalTable.el.outerWidth();
-          widthArr[0] -= difference;
+        var difference = totalWidth - _this.originalTable.el.outerWidth();
+        widthArr[0] -= difference;
       }
       // one extra px on right and left side
-      totalWidth += 2
+      totalWidth += 2;
+
+      var captionHeight = 0;
+      thtb.filter('caption').each(function(){
+        captionHeight += $(this).outerHeight();
+      });
 
       var sortableHtml = '<ul class="dragtable-sortable" style="position:absolute; width:' + totalWidth + 'px;">';
+      var sortableColumn = [];
       // assemble the needed html
-      thtb.find('> tr > th').each(function(i, v) {
-        var width_li = $(this).outerWidth();
-        sortableHtml += '<li style="width:' + width_li + 'px;">';
-        sortableHtml += '<table ' + attrsString + '>';
-        var row = thtb.find('> tr > th:nth-child(' + (i + 1) + ')');
-        if (_this.options.maxMovingRows > 1) {
-          row = row.add(thtb.find('> tr > td:nth-child(' + (i + 1) + ')').slice(0, _this.options.maxMovingRows - 1));
+      // build list
+      var rowIndex,
+        columns = headerRows.eq(0).children('th, td').length;
+      /*jshint loopfunc:true */
+      for (i = 0; i < columns; i++) {
+        var row = headerRows.children(':nth-child(' + (i + 1) + ')');
+        if (row.is(':visible')) {
+          rowIndex = 0;
+          sortableColumn[i] = '<li style="width:' + row.outerWidth() + 'px;">' +
+            '<table ' + tableAttrsString + '>' +
+            ( captionHeight ? '<caption style="height:' + captionHeight + 'px;"></caption>' : '' ) +
+            '<thead>';
+          // thead
+          headerRows.each(function(j){
+            sortableColumn[i] += '<tr ' + rowAttrsArr[rowIndex++] +
+              ( heightArr[j] ? ' style="height:' + heightArr[j] + 'px;"' : '' ) + '>' +
+              row[j].outerHTML + '</tr>';
+          });
+          sortableColumn[i] += '</thead><tbody>';
+          // tbody
+          row = visibleRows.children(':nth-child(' + (i + 1) + ')');
+          if (_this.options.maxMovingRows > 1) {
+            row = row.add(visibleRows.children(':nth-child(' + (i + 1) + ')').slice(0, _this.options.maxMovingRows - 1));
+          }
+          row.each(function(j) {
+            sortableColumn[i] += '<tr ' + rowAttrsArr[rowIndex++] +
+              ( heightArr[j] ? ' style="height:' + heightArr[j] + 'px;"' : '' ) + '>' +
+              this.outerHTML + '</tr>';
+          });
+          sortableColumn[i] += '</tbody>';
+
+          // add footer to end of max Rows
+          if (!_this.options.excludeFooter) {
+            sortableColumn[i] += '<tfoot><tr ' + rowAttrsArr[rowIndex++] + '>' +
+              thtb.filter('tfoot').children('tr:visible').children()[i].outerHTML + '</tr></tfoot>';
+          }
+          sortableColumn[i] += '</table></li>';
         }
-        row.each(function(j) {
-          // TODO: May cause duplicate style-Attribute
-          var row_content = $(this).clone().wrap('<div></div>').parent().html();
-          if (row_content.toLowerCase().indexOf('<th') === 0) sortableHtml += "<thead>";
-          sortableHtml += '<tr ' + rowAttrsArr[j] + '" style="height:' + heightArr[j] + 'px;">';
-          sortableHtml += row_content;
-          if (row_content.toLowerCase().indexOf('<th') === 0) sortableHtml += "</thead>";
-          sortableHtml += '</tr>';
-        });
-        sortableHtml += '</table>';
-        sortableHtml += '</li>';
-      });
-      sortableHtml += '</ul>';
+      }
+      sortableHtml += sortableColumn.join('') + '</ul>';
       this.sortableTable.el = this.originalTable.el.before(sortableHtml).prev();
       // set width if necessary
-      this.sortableTable.el.find('> li > table').each(function(i, v) {
+      this.sortableTable.el.find('> li > table').each(function(i) {
         $(this).css('width', widthArr[i] + 'px');
       });
 
@@ -279,11 +491,10 @@
       });
 
       // assign start index
-      this.originalTable.startIndex = $(e.target).closest('th').prevAll().size() + 1;
-
+      this.originalTable.startIndex = $(e.target).closest('th,td').prevAll().length + 1;
       this.options.beforeMoving(this.originalTable, this.sortableTable);
       // Start moving by delegating the original event to the new sortable table
-      this.sortableTable.movingRow = this.sortableTable.el.find('> li:nth-child(' + this.originalTable.startIndex + ')');
+      this.sortableTable.movingRow = this.sortableTable.el.children('li:nth-child(' + this.originalTable.startIndex + ')');
 
       // prevent the user from drag selecting "highlighting" surrounding page elements
       disableTextSelection();
@@ -300,7 +511,7 @@
 
       // Some inner divs to deliver the posibillity to style the placeholder more sophisticated
       var placeholder = this.sortableTable.el.find('.ui-sortable-placeholder');
-      if(!placeholder.height()  <= 0) {
+      if(placeholder.height() > 0) {
         placeholder.css('height', this.sortableTable.el.find('.ui-sortable-helper').height());
       }
 
@@ -308,42 +519,42 @@
     },
     bindTo: {},
     _create: function() {
-      this.originalTable = {
-        el: this.element,
+      var _this = this;
+      _this.originalTable = {
+        el: _this.element,
         selectedHandle: $(),
         sortOrder: {},
         startIndex: 0,
         endIndex: 0
       };
-      // bind draggable to 'th' by default
-      this.bindTo = this.originalTable.el.find('th');
+      ts.dragtable.create( _this );
       // filter only the cols that are accepted
-      if (this.options.dragaccept) {
-        this.bindTo = this.bindTo.filter(this.options.dragaccept);
-      }
+      _this.bindTo = '> thead > tr > ' + ( _this.options.dragaccept || 'th, td' );
       // bind draggable to handle if exists
-      if (this.bindTo.find(this.options.dragHandle).size() > 0) {
-        this.bindTo = this.bindTo.find(this.options.dragHandle);
+      if (_this.element.find(_this.bindTo).find(_this.options.dragHandle).length) {
+        _this.bindTo += ' ' + _this.options.dragHandle;
       }
       // restore state if necessary
-      if (this.options.restoreState !== null) {
-        $.isFunction(this.options.restoreState) ? this.options.restoreState(this.originalTable) : this._restoreState(this.options.restoreState);
+      if ($.isFunction(_this.options.restoreState)) {
+        _this.options.restoreState(_this.originalTable);
+      } else {
+        _this._restoreState(_this.options.restoreState);
       }
-      var _this = this;
-      this.bindTo.mousedown(function(evt) {
+      _this.originalTable.el.on( 'mousedown.dragtable', _this.bindTo, function(evt) {
         // listen only to left mouse click
-        if(evt.which!==1) return;
+        if (evt.which!==1) return;
+        ts.dragtable.start( _this.originalTable.el );
         if (_this.options.beforeStart(_this.originalTable) === false) {
           return;
         }
-        clearTimeout(this.downTimer);
-        this.downTimer = setTimeout(function() {
-          _this.originalTable.selectedHandle = $(this);
+        clearTimeout(_this.downTimer);
+        _this.downTimer = setTimeout(function() {
+          _this.originalTable.selectedHandle = $(_this);
           _this.originalTable.selectedHandle.addClass('dragtable-handle-selected');
           _this._generateSortable(evt);
         }, _this.options.clickDelay);
-      }).mouseup(function(evt) {
-        clearTimeout(this.downTimer);
+      }).on( 'mouseup.dragtable', _this.options.dragHandle,function() {
+        clearTimeout(_this.downTimer);
       });
     },
     redraw: function(){
@@ -351,20 +562,18 @@
       this._create();
     },
     destroy: function() {
-      this.bindTo.unbind('mousedown');
+      _this.originalTable.el.off('mousedown.dragtable mouseup.dragtable', _this.bindTo);
       $.Widget.prototype.destroy.apply(this, arguments); // default destroy
       // now do other stuff particular to this widget
     }
   });
 
   /** closure-scoped "private" functions **/
-
   var body_onselectstart_save = $(document.body).attr('onselectstart'),
-    body_unselectable_save = $(document.body).attr('unselectable');
+  body_unselectable_save = $(document.body).attr('unselectable');
 
   // css properties to disable user-select on the body tag by appending a <style> tag to the <head>
   // remove any current document selections
-
   function disableTextSelection() {
     // jQuery doesn't support the element.text attribute in MSIE 8
     // http://stackoverflow.com/questions/2692770/style-style-textcss-appendtohead-does-not-work-in-ie
@@ -379,7 +588,6 @@
   }
 
   // remove the <style> tag, and restore the original <body> onselectstart attribute
-
   function restoreTextSelection() {
     $('#__dragtable_disable_text_selection__').remove();
     if (body_onselectstart_save) {
@@ -394,10 +602,4 @@
     }
   }
 
-  function swapNodes(a, b) {
-    var aparent = a.parentNode;
-    var asibling = a.nextSibling === b ? a : a.nextSibling;
-    b.parentNode.insertBefore(a, b);
-    aparent.insertBefore(b, asibling);
-  }
 })(jQuery);

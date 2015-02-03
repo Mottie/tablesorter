@@ -35,9 +35,9 @@ var tse = $.tablesorter.editable = {
 
 	update: function( c, wo ) {
 		var indx, tmp, $t,
+			colIndex = [],
 			cols = [];
-
-		if ( $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
+		if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
 			// editable_columns can contain a range string ( i.e. '2-4' )
 			tmp = wo.editable_columns.split( /\s*-\s*/ );
 			indx = parseInt( tmp[ 0 ], 10 ) || 0;
@@ -46,14 +46,20 @@ var tse = $.tablesorter.editable = {
 				tmp = c.columns - 1;
 			}
 			for ( ; indx <= tmp; indx++ ) {
+				colIndex.push( indx );
 				cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
 			}
 		} else if ( $.isArray( wo.editable_columns ) ) {
-			$.each( wo.editable_columns, function( i, col ) {
+			$.each( wo.editable_columnsArray || wo.editable_columns, function( i, col ) {
 				if ( col < c.columns ) {
+					colIndex.push( col );
 					cols.push( 'td:nth-child(' + ( col + 1 ) + ')' );
 				}
 			});
+		}
+		if ( !wo.editable_columnsArray ) {
+			wo.editable_columnsArray = colIndex;
+			wo.editable_columnsArray.sort(function(a,b){ return a - b; });
 		}
 		tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent );
 		// IE does not allow making TR/TH/TD cells directly editable ( issue #404 )
@@ -91,7 +97,7 @@ var tse = $.tablesorter.editable = {
 		c.$table
 			.off( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ) )
 			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ), function() {
-				tse.update( c, wo );
+				tse.update( c, c.widgetOptions );
 			});
 
 		c.$tbodies
