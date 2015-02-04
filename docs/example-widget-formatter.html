@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Formatter Widget</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<script>
+	// tweak "Added" column to keep recent dates
+	$(function(){
+		var d, t,
+			tweaks = [ 9e5, 8e8, 2e7, 0, 6e10, 1e11 ],
+			$t = $('#demo tbody'),
+			date = new Date().getTime();
+		$t.find('tr td:nth-child(4)').each(function(i){
+			d = new Date( date - tweaks[i] );
+			t = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear() + ' ' +
+				d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+			$(this).html( t );
+		});
+	});
+	</script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<link rel="stylesheet" href="../css/theme.ice.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<script src="../js/widgets/widget-formatter.js"></script>
+
+	<style id="css">/* demo styling */
+#table strong {
+	color: #a00;
+}</style>
+	<script id="js">$(function() {
+
+	$('.tablesorter').tablesorter({
+		theme: 'blue',
+		widgets: ['formatter'],
+		widgetOptions: {
+			formatter_column: {
+				'.emphasize' : function( text, data ) {
+					return '<strong>' + text + '</strong>';
+				},
+				'.supercar' : function( text, data ) {
+					if ( text === '' ) { return ''; }
+					// replace table cell with a link
+					return '<a href="https://www.google.com/search?tbm=isch&q=' + text.replace(/\s/g, '+') + '">' + text + '</a>';
+				},
+				'.date' : function( text, data ) {
+					var date = new Date( text );
+					if ( date instanceof Date && isFinite( date ) ) {
+						data.$cell.attr( data.config.textAttribute, text );
+						return '<em>' + prettyDate( date ) + '</em>';
+					}
+					return text;
+				},
+				'.duckify' : function( text, data ) {
+					if ( text === '' ) { return ''; }
+					// add text to data-attribute; this overrides the parser
+					data.$cell.attr( data.config.textAttribute, text );
+					// replace table cell with a link
+					return '<a href="https://duckduckgo.com/?ia=images&q=' + text + '">Search The Duck</a>';
+				},
+				'.blue' : function( text, data ) {
+					return '<span class="blue">' + text + '</span>';
+				}
+			}
+		}
+	});
+
+});
+
+/*
+ * JavaScript Pretty Date (MODIFIED)
+ * Copyright (c) 2011 John Resig (ejohn.org)
+ * Licensed under the MIT and GPL licenses.
+ */
+function prettyDate(date){
+	var diff = (((new Date()).getTime() - date.getTime()) / 1000),
+		day_diff = Math.floor(diff / 86400);
+	if ( isNaN(day_diff) || day_diff < 0 ) { return ''; }
+	return day_diff == 0 && (
+		diff < 60 && 'just now' ||
+		diff < 120 && '1 minute ago' ||
+		diff < 3600 && Math.floor( diff / 60 ) + ' minutes ago' ||
+		diff < 7200 && '1 hour ago' ||
+		diff < 86400 && Math.floor( diff / 3600 ) + ' hours ago') ||
+		day_diff == 1 && 'Yesterday' ||
+		day_diff < 7 && day_diff + ' days ago' ||
+		day_diff < 61 && Math.ceil( day_diff / 7 ) + ' weeks ago' ||
+		day_diff < 730 && Math.floor( day_diff / 30 ) + ' months ago' ||
+		Math.floor( day_diff / 365 ) + ' years ago';
+}</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Formatter Widget</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+		<ul>
+			<li>This widget will only work in tablesorter version 2.16+ and jQuery version 1.7+.</li>
+			<li>It allows you to add custom formatting to table columns.</li>
+			<li>You have the option of storing the original cell text within the table cell data-attribute to maintain the sort order.</li>
+			<li>This widget is not optimized for large tables; but it only runs on initialization and after any updates have occurred.</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h4>Formatter widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<!--
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			-->
+			<table class="tablesorter-blue">
+				<thead>
+					<tr><th class="option">Option</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="formatter-column">
+						<td><a href="#" class="permalink">formatter_column</a></td>
+						<td>Assign a formatting function by column index or column header class name; these functions only apply to the <code>tbody</code> cells.
+							<div> <!-- class="collapsible"> -->
+							<br>
+							Set up the formatter to return the HTML for the table cell.
+							<pre class="prettyprint lang-js">formatter_column: {
+	'.emphasize' : function( text, data ) {
+		return '<strong>' + text + '</strong>';
+	}
+}</pre>
+							If the text in the cell is to be changed, but you don't want the sort to be effected, then add the original text into the data-attribute as follows:
+							<pre class="prettyprint lang-js">formatter_column: {
+	'.makesearch' : function( text, data ) {
+		// don't make a link if there is no text in the cell
+		if ( text === '' ) { return ''; }
+		// add text to data-attribute; this overrides the parser
+		data.$cell.attr( data.config.textAttribute, text );
+		// then replace text with a link
+		return '<a href="http://mysite.com?query=' + encodeURIComponent(text) + '">Get Definition</a>';
+	}
+}</pre>
+							The <code>data</code> parameter provided to the <code>formatter_column</code> function contains the following information:
+<pre class="prettyprint lang-js">data = {
+	config      : table.config,
+	wo          : table.config.widgetOptions,
+	$header     : $('th'),  // the header cell of the current column
+	$row        : $('tr'),  // jQuery object of the row currently being processed
+	$cell       : $('td'),  // jQuery object of the cell currently being processed
+	text        : 'Batman', // the text from the current cell
+	columnIndex : 0         // the column index of the current cell
+}</pre>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+	<p></p>
+	<h1>Demo</h1>
+
+	<div id="demo"><table id="table" class="tablesorter">
+	<thead>
+		<tr>
+			<th class="emphasize">Super Hero</th>
+			<th class="supercar">Super Car</th>
+			<th class="duckify">Image Links</th>
+			<th class="date">Added</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- Added column dates are dynamically updated for this demo -->
+		<tr><td>Superman</td><td>Bugatti Veyron</td><td>Duckie</td><td>1/1/2015</td></tr>
+		<tr><td>Flash</td><td>Hennessey Venom</td><td>Horse</td><td>12/22/2014</td></td></tr>
+		<tr><td>Batman</td><td>Koenigsegg Agera</td><td>Elephant</td><td>3/10/2010</td></tr>
+		<tr><td>Green Lantern</td><td>SSC Ultimate Aero</td><td>Cow</td><td>5/5/2012</td></tr>
+		<tr><td>Howard the Duck</td><td>Koenigsegg CCX</td><td>Pizza</td><td>1/1/2005</td></tr>
+		<tr><td>Wonder Woman</td><td>McLaren F1</td><td>Tiger</td><td>3/1/2013</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
