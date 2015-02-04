@@ -250,7 +250,7 @@
 				};
 				while (j < len) {
 					rows = tb[j].rows;
-					if (rows[j]) {
+					if (rows.length) {
 						l = c.columns; // rows[j].cells.length;
 						for (i = 0; i < l; i++) {
 							h = c.$headers.filter('[data-column="' + i + '"]:last');
