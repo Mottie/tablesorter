@@ -193,16 +193,16 @@
 						}
 						return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
 					});
+				if ( p.$goto.length ) {
+					t = '';
+					$.each(buildPageSelect(p), function(i, opt){
+						t += '<option value="' + opt + '">' + opt + '</option>';
+					});
+					// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
+					p.$goto.html(t).val( p.page + 1 );
+				}
 				if ($out.length) {
 					$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
-					if ( p.$goto.length ) {
-						t = '';
-						$.each(buildPageSelect(p), function(i, opt){
-							t += '<option value="' + opt + '">' + opt + '</option>';
-						});
-						// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
-						p.$goto.html(t).val( p.page + 1 );
-					}
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
 						var v = $(this).val(),
