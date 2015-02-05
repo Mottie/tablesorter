@@ -20,10 +20,11 @@
 		setup : function( c ) {
 			// do nothing for empty tables
 			if ( $.isEmptyObject( c.cache ) ) { return; }
-			var tbodyIndex, rowIndex, rows, len, column, formatter,
+			var $tbody, tbodyIndex, rowIndex, rows, len, column, formatter,
 				wo = c.widgetOptions,
 				data = { config: c, wo: wo };
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ){
+				$tbody = ts.processTbody( c.table, c.$tbodies.eq( tbodyIndex ), true ); // detach tbody
 				rows = c.cache[ tbodyIndex ];
 				len = rows.normalized.length;
 				for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
@@ -40,6 +41,7 @@
 						}
 					}
 				}
+				ts.processTbody( c.table, $tbody, false); // restore tbody
 			}
 		}
 	};
