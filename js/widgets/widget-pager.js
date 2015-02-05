@@ -278,6 +278,8 @@ tsp = ts.pager = {
 				}
 				tsp.hideRows(table, c);
 				tsp.changeHeight(table, c);
+				// update without triggering pagerComplete
+				tsp.updatePageDisplay(table, c, false);
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');
 				tsp.updatePageDisplay(table, c);
@@ -708,6 +710,8 @@ tsp = ts.pager = {
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
 			p.initializing = false;
+			// update display without triggering pager complete... before updating cache
+			tsp.updatePageDisplay(table, c, false);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
 					// apply widgets after table has rendered & after a delay to prevent
