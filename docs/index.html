@@ -5831,7 +5831,7 @@ $.each( p.cacheIndex, function(i, v) {
 					<br>
 					The <code>{page}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.<br>
 					<br>
-					Initially, this value is set by either the pager <a href="#pager-page"><code>page</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the page selector (targetted by the <a href="#pager-cssgoto"><code>cssGoto</code></a> option or programmically by the <a href="#pageset"><code>pageSet</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
+					Initially, this value is set by either the pager <a href="#pager-page"><code>page</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the page selector (targeted by the <a href="#pager-cssgoto"><code>cssGoto</code></a> option or programmically by the <a href="#pageset"><code>pageSet</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
 					</div>
 				</td>
 				<td></td>
@@ -5843,7 +5843,7 @@ $.each( p.cacheIndex, function(i, v) {
 				<td>Contains the currently selected page size.
 					<div class="collapsible">
 					<br>
-					Initially, this value is set by either the pager <a href="#pager-size"><code>size</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the size selector (targetted by the <a href="#pager-csspagesize"><code>cssPageSize</code></a> option or programmically by the <a href="#pagesize"><code>pageSize</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
+					Initially, this value is set by either the pager <a href="#pager-size"><code>size</code></a> option or from local storage if the <a href="#save-pages"><code>savePages</code></a> option is <code>true</code>. It is then updated by user interaction with the size selector (targeted by the <a href="#pager-csspagesize"><code>cssPageSize</code></a> option or programmically by the <a href="#pagesize"><code>pageSize</code></a> or <a href="#pageandsize"><code>pageAndSize</code></a> method.
 					</div>
 				</td>
 				<td></td>
@@ -5958,7 +5958,7 @@ for (tbodyIndex = 0; tbodyIndex &lt; tbodies.length; tbodyIndex++) {
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>toggle</code> - Boolean flag.</li>
-							<li><code>$ths</code> - jQuery object of targetted header cells (optional; if excluded all header cells are targetted).</li>
+							<li><code>$ths</code> - jQuery object of targeted header cells (optional; if excluded all header cells are targeted).</li>
 						</ul>
 						When calling the function, set the <code>toggle</code> option to add (<code>true</code>) or remove (<code>false</code>) process indicators. Include any specific header cells within the <code>$ths</code> variable with which to add the process indicator. When <code>$ths</code> is not defined and a sort is applied, the currently sorted header cells will show process indicators.<br>
 						<br>
@@ -5996,7 +5996,7 @@ for (tbodyIndex = 0; tbodyIndex &lt; tbodies.length; tbodyIndex++) {
 						<pre class="prettyprint lang-js">$.tablesorter.bindEvents( table, $headers );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
-							<li><code>$headers</code> - jQuery object of targetted cells.</li>
+							<li><code>$headers</code> - jQuery object of targeted cells.</li>
 						</ul>
 						This function allows you to bind the same header event listeners to external headers cells (usually clones of the original table). This includes the triggered <code>sort</code> event, left click (only) to sort, ignoring long clicks (&gt; 250ms), pressing enter to trigger a sort (must have focus and a <code>tabindex</code> attribute) and cancelling selection of text (if the option is set).<br>
 						<br>
@@ -6267,6 +6267,28 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 				</td>
 			</tr>
 
+			<tr id="function-getcolumndata">
+				<td><a href="#" class="permalink">getColumnData</a></td>
+				<td>This function returns the column data from an object based on a column index or classname/id.
+					<div class="collapsible">
+					<br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.getColumnData( table, object, key );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object).</li>
+							<li><code>object</code> - object containing zero-based column indexes or column class names as a key (e.g. <code>table.config.headers</code> or <code>table.config.widgetOptions.filter_functions</code>; any data found as the value (of the <code>key : value</code> pair) will be returned.</li>
+							<li><code>key</code> - key to be Object key; this can be a zero-based column index or header class name/id.</li>
+						</ul>
+						As a full example, say you have a header cell with a class name of <code>"event"</code>. And you want to use the <code>textExtraction</code> function for that column, then you would use this function as follows:
+						<pre class="prettyprint lang-js">var table = $('table')[0],
+textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textExtraction, &quot;.event&quot; );</pre>
+						The <code>&quot;.event&quot;</code> key can be replaces with a zero-based column index, if the <code>textExtraction</code> option is set up using indexes.
+						<p></p>
+						This function is sometimes used in conjunction with the <code>getData</code> function. This function is called first because the getData function uses the result in the <code>configHeaders</code> parameter - the <code>config.headers</code> option result from this function would be an object and not a function.
+					</div>
+				</td>
+			</tr>
+
 			<tr id="function-getdata">
 				<td><a href="#" class="permalink">getData</a></td>
 				<td>This functions gets the sorter, string, empty, etc options for each column from jQuery data, metadata, header option or header class name ("sorter-false") (v2.1.16).
@@ -6276,7 +6298,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.getData(headerCell, configHeaders, key);</pre>
 						<ul>
-							<li><code>headerCell</code> - table DOM element (or jQuery object) of targetted header cell.</li>
+							<li><code>headerCell</code> - table DOM element (or jQuery object) of targeted header cell.</li>
 							<li><code>configHeaders</code> - table.config.headers option for the current column.</li>
 							<li><code>key</code> - get value for this option name, e.g. "sorter".</li>
 						</ul>
@@ -6422,7 +6444,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>column</code> - zero-based column index.</li>
-							<li><code>options</code> - array of options, jQuery object of option elements, or HTML string of option elements to apply to the targetted select.</li>
+							<li><code>options</code> - array of options, jQuery object of option elements, or HTML string of option elements to apply to the targeted select.</li>
 							<li><code>replace</code> - a boolean value, which if <code>true</code> all options will be replaced; if <code>false</code> the options will be appended to the current list of options.</li>
 							<li><code>onlyAvail</code> - an optional boolean flag, which will be ignored if the <code>options</code> parameter is defined or is an empty string; otherwise it is the value passed to the function which finds all table column values; if <code>true</code>, only the available options will be diplayed.</li>
 						</ul>
@@ -6510,7 +6532,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true ); // 
 						<pre class="prettyprint lang-js">$.tablesorter.addHeaderResizeEvent(table, disable, { timer : 250 });</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
-							<li><code>disable</code> - boolean flag, if <code>false</code> events for the targetted table are disabled.</li>
+							<li><code>disable</code> - boolean flag, if <code>false</code> events for the targeted table are disabled.</li>
 							<li><code>timer</code> - currently only the timer option is available for modification.</li>
 						</ul>
 						Enable these triggered events as follows:
