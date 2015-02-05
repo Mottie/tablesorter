@@ -20,24 +20,33 @@
 		setup : function( c ) {
 			// do nothing for empty tables
 			if ( $.isEmptyObject( c.cache ) ) { return; }
-			var $tbody, tbodyIndex, rowIndex, rows, len, column, formatter,
+			var $tbody, tbodyIndex, rowIndex, rows, cell, len, column,
 				wo = c.widgetOptions,
-				data = { config: c, wo: wo };
+				data = { config: c, wo: wo },
+				formatter = [],
+				$headers = [];
+			// set up variables
+			for ( column = 0; column < c.columns; column++ ) {
+				$headers[ column ] = c.$headers.filter('[data-column="' + column + '"]:last');
+				formatter[ column ] = ts.getColumnData( c.table, wo.formatter_column, column ) || false;
+			}
+			// main loop
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ){
 				$tbody = ts.processTbody( c.table, c.$tbodies.eq( tbodyIndex ), true ); // detach tbody
 				rows = c.cache[ tbodyIndex ];
 				len = rows.normalized.length;
 				for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
 					data.$row = rows.normalized[ rowIndex ][ c.columns ].$row;
+					data.$cells = data.$row.children( 'th, td' );
 					for ( column = 0; column < c.columns; column++ ) {
-						formatter = ts.getColumnData( c.table, wo.formatter_column, column );
-						if ( typeof formatter === 'function' ) {
+						if ( formatter[ column ] ) {
 							data.columnIndex = column;
-							data.$header = c.$headers.filter('[data-column="' + column + '"]:last');
-							data.$cell = data.$row.children( 'th, td' ).eq( column );
+							data.$header = $headers[ column ];
+							data.$cell = data.$cells.eq( column );
+							cell = data.$cell[0];
 							// get text from attribute first, just in case we're updating
-							data.text = data.$cell.attr( c.textAttribute ) || data.$cell[0].textContent || data.$cell.text();
-							data.$cell.html( formatter( data.text, data ) );
+							data.text = cell.getAttribute( c.textAttribute ) || cell.textContent || data.$cell.text();
+							cell.innerHTML = formatter[ column ]( data.text, data );
 						}
 					}
 				}
