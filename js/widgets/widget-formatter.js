@@ -10,7 +10,9 @@
 
 	ts.formatter = {
 		init : function( c ) {
-			c.$table.on( 'updateComplete.tsformatter', function() {
+			var events = $.trim( c.widgetOptions.formatter_event ) + ' pagerComplete updateComplete '
+				.split(' ').join('.tsformatter ');
+			c.$table.on( events, function() {
 				ts.formatter.setup( c );
 			});
 			ts.formatter.setup( c );
@@ -46,7 +48,8 @@
 		id: 'formatter',
 		priority: 100,
 		options: {
-			formatter_column: {}
+			formatter_column : {},
+			formatter_event  : 'applyFormatter'
 		},
 		init: function( table ) {
 			ts.formatter.init( table.config );

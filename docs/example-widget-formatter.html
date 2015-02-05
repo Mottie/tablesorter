@@ -130,12 +130,10 @@ function prettyDate(date){
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h4>Formatter widget default options (added inside of tablesorter <code>widgetOptions</code>)</h4>
-			<!--
 			<div>
 				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
-			-->
-			<table class="tablesorter-blue">
+			<table class="options tablesorter-blue">
 				<thead>
 					<tr><th class="option">Option</th><th class="sorter-false">Description</th></tr>
 				</thead>
@@ -144,7 +142,7 @@ function prettyDate(date){
 					<tr id="formatter-column">
 						<td><a href="#" class="permalink">formatter_column</a></td>
 						<td>Assign a formatting function by column index or column header class name; these functions only apply to the <code>tbody</code> cells.
-							<div> <!-- class="collapsible"> -->
+							<div class="collapsible">
 							<br>
 							Set up the formatter to return the HTML for the table cell.
 							<pre class="prettyprint lang-js">formatter_column: {
@@ -173,6 +171,23 @@ function prettyDate(date){
 	text        : 'Batman', // the text from the current cell
 	columnIndex : 0         // the column index of the current cell
 }</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="formatter-event">
+						<td><a href="#" class="permalink">formatter_event</a></td>
+						<td>The formatter will update when this event is triggered on the table.
+							<div class="collapsible">
+							<br>
+							The default setting is <code>'applyFormatter'</code>
+							<p></p>
+							The formatter is set up to run again after an "updateComplete" or "pagerComplete" event fires; this option allows setting a custom-named event to force the formatter to update in addition to the complete events.
+							<p></p>
+							<span class="label warning">* NOTE *</span> So, if the text in the cell gets modified by the formatter, make sure your code saves the original text into the data-attribute or it will get lost.
+							<p></p>
+							Force an update as follows:
+							<pre class="prettyprint lang-js">$('table').trigger('applyFormatter');</pre>
 							</div>
 						</td>
 					</tr>
@@ -220,6 +235,15 @@ function prettyDate(date){
 	</div>
 
 </div>
+
+<script>
+$(function(){
+	$('.options').tablesorter({
+		widthFixed: true,
+		widgets: ['stickyHeaders']
+	});
+});
+</script>
 
 </body>
 </html>
