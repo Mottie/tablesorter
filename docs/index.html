@@ -6282,7 +6282,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 						As a full example, say you have a header cell with a class name of <code>"event"</code>. And you want to use the <code>textExtraction</code> function for that column, then you would use this function as follows:
 						<pre class="prettyprint lang-js">var table = $('table')[0],
 textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textExtraction, &quot;.event&quot; );</pre>
-						The <code>&quot;.event&quot;</code> key can be replaces with a zero-based column index, if the <code>textExtraction</code> option is set up using indexes.
+						The <code>&quot;.event&quot;</code> key can be replaced with a zero-based column index, if the <code>textExtraction</code> option is set up using indexes.
 						<p></p>
 						This function is sometimes used in conjunction with the <code>getData</code> function. This function is called first because the getData function uses the result in the <code>configHeaders</code> parameter - the <code>config.headers</code> option result from this function would be an object and not a function.
 					</div>

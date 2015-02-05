@@ -278,9 +278,9 @@ tsp = ts.pager = {
 				}
 				tsp.hideRows(table, c);
 				tsp.changeHeight(table, c);
-				tsp.updatePageDisplay(table, c);
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');
+				tsp.updatePageDisplay(table, c);
 			})
 			.on('pageSize.pager refreshComplete.pager', function(e,v){
 				e.stopPropagation();
@@ -708,7 +708,6 @@ tsp = ts.pager = {
 			p.last.currentFilters = p.currentFilters;
 			p.last.sortList = (c.sortList || []).join(',');
 			p.initializing = false;
-			tsp.updatePageDisplay(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
 					// apply widgets after table has rendered & after a delay to prevent
@@ -717,6 +716,7 @@ tsp = ts.pager = {
 						$t
 							.trigger('applyWidgets')
 							.trigger('pagerChange', p);
+						tsp.updatePageDisplay(table, c);
 					}, 0);
 				}
 			}]);
