@@ -1499,7 +1499,7 @@ ts.filter = {
 					} else {
 						cell = row.cells[column];
 						if (cell) {
-							arry.push( $.trim( cell.textContent || cell.innerText || $(cell).text() ) );
+							arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
 						}
 					}
 				}
