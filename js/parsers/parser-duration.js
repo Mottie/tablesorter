@@ -37,7 +37,7 @@
 	});
 
 	/*! Countdown parser ( hh:mm:ss ) */
-	// http://stackoverflow.com/a/27023733/145346
+	/* Added 2/7/2015 (v2.19.0) - see http://stackoverflow.com/a/27023733/145346 */
 	$.tablesorter.addParser({
 		id: 'countdown',
 		is: function () {

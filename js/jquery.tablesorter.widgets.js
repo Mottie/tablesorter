@@ -1,4 +1,4 @@
-/*! tableSorter (FORK) 2.16+ widgets - updated 12/22/2014 (v2.18.4)
+/*! tableSorter (FORK) 2.16+ widgets - updated 2/7/2015 (v2.19.0)
  *
  * Column Styles
  * Column Filters
@@ -187,7 +187,7 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var i, hdr, icon, time, hdrClass, iconClass, $header, $icon, $tfoot, $h, oldtheme, oldremove, oldIconRmv, hasOldTheme,
+		var i, hdr, icon, time, $header, $icon, $tfoot, $h, oldtheme, oldremove, oldIconRmv, hasOldTheme,
 			themesAll = ts.themes,
 			$table = c.$table.add( c.$extraTables ),
 			$headers = c.$headers.add( c.$extraHeaders ),

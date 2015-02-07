@@ -1,4 +1,4 @@
-/*! Build Table widget for tableSorter v2.16.0 (4/23/2014)
+/*! Build Table widget for tableSorter v2.16.0; updated 2/7/2015 (v2.19.0)
  * by Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */

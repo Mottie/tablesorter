@@ -1,4 +1,4 @@
-/*! Dragtable Mod for TableSorter - 1/14/2015 (v2.18.5) *//*
+/*! Dragtable Mod for TableSorter - 2/7/2015 (v2.19.0) *//*
  * Requires
  *   tablesorter v2.8+
  *   jQuery 1.7+
@@ -562,7 +562,7 @@
       this._create();
     },
     destroy: function() {
-      _this.originalTable.el.off('mousedown.dragtable mouseup.dragtable', _this.bindTo);
+      this.originalTable.el.off('mousedown.dragtable mouseup.dragtable', this.bindTo);
       $.Widget.prototype.destroy.apply(this, arguments); // default destroy
       // now do other stuff particular to this widget
     }

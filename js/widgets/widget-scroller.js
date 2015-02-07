@@ -10,7 +10,7 @@
 
 	Resizable scroller widget for the jQuery tablesorter plugin
 
-	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 1/15/2015 (v2.18.5)
+	Version 2.0 - modified by Rob Garrison 4/12/2013; updated 2/7/2015 (v2.19.0)
 	Requires jQuery v1.7+
 	Requires the tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
 
@@ -151,7 +151,7 @@ ts.addWidget({
 
 				$tbl.children('thead').show();
 				// only remove colgroup if it was added by the plugin
-				// the $.tablesorter.fixColumnWidth() function already does this (v2.18.5)
+				// the $.tablesorter.fixColumnWidth() function already does this (v2.19.0)
 				// but we need to get "accurate" resized measurements here - see issue #680
 				$tbl.children('colgroup.tablesorter-colgroup').remove();
 				$hdr.children('colgroup').remove();

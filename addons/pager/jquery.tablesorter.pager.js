@@ -1,6 +1,6 @@
 /*!
  * tablesorter (FORK) pager plugin
- * updated 12/22/2014 (v2.18.4)
+ * updated 2/7/2015 (v2.19.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
