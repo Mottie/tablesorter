@@ -1259,7 +1259,8 @@ ts.filter = {
 								if (data.parsed[i]) {
 									txt = data.cacheArray[i];
 								} else {
-									txt = wo.filter_ignoreCase ? $(this).text().toLowerCase() : $(this).text();
+									txt = this.getAttribute( c.textAttribute ) || this.textContent || $(this).text();
+									txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
 									if (c.sortLocaleCompare) {
 										txt = ts.replaceAccents(txt);
 									}
@@ -1314,8 +1315,9 @@ ts.filter = {
 								data.exact = data.cache;
 							} else {
 							// using older or original tablesorter
-								data.exact = $.trim( $cells.eq(columnIndex).text() );
-								data.exact = c.sortLocaleCompare ? ts.replaceAccents(data.exact) : data.exact; // issue #405
+								val = $cells[columnIndex];
+								result = $.trim( val.getAttribute( c.textAttribute ) || val.textContent || $cells.eq(columnIndex).text() );
+								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405
 							}
 							data.iExact = !regex.type.test(typeof data.exact) && wo.filter_ignoreCase ? data.exact.toLocaleLowerCase() : data.exact;
 							result = showRow; // if showRow is true, show that row
@@ -1323,9 +1325,10 @@ ts.filter = {
 							// in case select filter option has a different value vs text "a - z|A through Z"
 							ffxn = wo.filter_columnFilters ?
 								c.$filters.add(c.$externalFilters).filter('[data-column="'+ columnIndex + '"]').find('select option:selected').attr('data-function-name') || '' : '';
-
 							// replace accents - see #357
-							data.filter = c.sortLocaleCompare ? ts.replaceAccents(data.filter) : data.filter;
+							if (c.sortLocaleCompare) {
+								data.filter = ts.replaceAccents(data.filter);
+							}
 
 							val = true;
 							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
