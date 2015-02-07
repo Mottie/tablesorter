@@ -1314,7 +1314,6 @@ ts.filter = {
 							if (wo.filter_useParsedData || data.parsed[columnIndex]) {
 								data.exact = data.cache;
 							} else {
-							// using older or original tablesorter
 								val = $cells[columnIndex];
 								result = $.trim( val.getAttribute( c.textAttribute ) || val.textContent || $cells.eq(columnIndex).text() );
 								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405

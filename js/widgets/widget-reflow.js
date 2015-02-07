@@ -1,4 +1,4 @@
-/* table reflow widget (beta) for TableSorter 3/22/2014 (v2.16.0)
+/* table reflow widget for TableSorter 3/22/2014 (v2.16.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Also, this widget requires the following default css (modify as desired)
 

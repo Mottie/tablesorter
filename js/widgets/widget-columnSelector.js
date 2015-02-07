@@ -1,4 +1,4 @@
-/* Column Selector/Responsive table widget (beta) for TableSorter - 1/20/2015 (v2.18.5)
+/* Column Selector/Responsive table widget for TableSorter - 1/20/2015 (v2.18.5)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */

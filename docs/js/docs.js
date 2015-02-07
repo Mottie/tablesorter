@@ -154,6 +154,12 @@
 					}
 				}
 			});
+
+			$t.find('table.options').not('.tablesorter-jui').tablesorter({
+				widthFixed: true,
+				widgets: ['stickyHeaders']
+			});
+
 		}
 
 	});
@@ -170,7 +176,7 @@
 				// move below sticky header; added delay as there could be some lag
 				setTimeout(function(){
 					$t = prop.closest('table');
-					if ($t.length) {
+					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
 						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? 27 : 0;
 						if ($t.hasClass('options') || $t.hasClass('api')) {

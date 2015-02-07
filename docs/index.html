@@ -467,12 +467,12 @@
 	</h4>
 
 	<ul>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-align-character.html">Align Character Widget</a> (<span class="version">v2.15.8</span>).</li>
+		<li><a href="example-widget-align-character.html">Align Character Widget</a> (<span class="version">v2.15.8</span>).</li>
 		<li><a href="example-widget-build-table.html">Build Table Widget</a> (<span class="version">v2.11</span>; <span class="version updated">v2.16</span>).</li>
 
 		<li><span class="label label-info">Beta</span> <a href="example-widget-chart.html">Chart Widget</a> (<span class="version">v2.18.5</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns Highlight widget</a> (v2.0.17)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.18.5</span>).</li>
+		<li><a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.18.5</span>).</li>
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.18.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.18.5</span>).</li>
 		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.17.4</span>):
@@ -494,9 +494,9 @@
 			</ul>
 		</li>
 		<li><a href="example-widget-header-titles.html">Header titles widget</a> (v2.15.6; <span class="version updated">2.15.7</span>)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.0</span>).</li>
+		<li><a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.0</span>).</li>
 		<li>
-			<span class="label label-info">Beta</span> <a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.5</span>)
+			<a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.5</span>)
 			<br><br>
 		</li>
 
@@ -506,13 +506,13 @@
 			<br>
 		</li>
 
-		<li><span class="label label-info">Beta</span> <a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.18.5</span>)</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>)</li>
+		<li><a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.18.5</span>)</li>
+		<li><a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>)</li>
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.18.0</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.18.0</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.18.5</span>).</li>
-		<li><span class="label label-info">Beta</span> <a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.3</span>).</li>
+		<li><a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.17.3</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.18.0</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.18.3</span>).</li>
 		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.18.5</span>):
@@ -6324,9 +6324,10 @@ $.tablesorter.getData( headerCell, config.headers[column], &quot;sorter&quot; );
 						<pre class="prettyprint lang-js">$.tablesorter.formatFloat(string, table);</pre>
 						<ul>
 							<li><code>string</code> - a string possibly containing a number.</li>
-							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>table</code> - table DOM element (or jQuery object) of table (optional; required for non U.S. formatting).</li>
 						</ul>
 						If <code>string</code> is empty, not a string type, or not a number (after processing), the string itself is returned.<br>
+						If <code>table</code> is not provided, the format float function will default to U.S. number formatting. The reason a <code>table</code> parameter is needed is to check the value of the <a href="#usnumberformat"><code>usNumberFormat</code></a> option.<br>
 						<br>
 						This function uses the <a href="#usnumberformat"><code>usNumberFormat</code></a> option to determine if either commas or decimals are removed before converting the value within the <code>string</code> parameter into a number type variable. This function does not use the <a href="#function-isdigit"><code>$.tablesorter.isDigit</code></a> function.<br>
 						<br>
