@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Align Character Widget (beta)</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Align Character Widget</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -75,7 +75,7 @@ td:nth-child(3) .ts-align-right i {
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Align Character Widget (beta)</h2>
+	<h2>Align Character Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -90,8 +90,8 @@ td:nth-child(3) .ts-align-right i {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.19.0</span>, if there is nothing to the right of the set align character, then the align character will not be added; this prevents hanging decimals like <code>3000.</code>.<p></p></li>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
-			<li>The widget is still in "beta", so options &amp; functionality may change without warning; and, it has not been thoroughly tested!</li>
 			<li>Make sure to include the CSS shown below to maintain the alignment.</li>
 			<li><span class="label warning">*NOTE*</span> if the table cell becomes too narrow, the alignment <strong>will not</strong> be maintained &amp; some content may overflow into the next/previous cell (the widget css does include <code>overflow:hidden</code> on the wrapper, so some content will be hidden instead of overflowing).</li>
 			<li>Until the day that <code>text-align: '.';</code> becomes standard (<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/text-align">ref</a>), if ever, this widget might prove useful.</li>
@@ -101,6 +101,9 @@ td:nth-child(3) .ts-align-right i {
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h3>Align Character (alignChar) widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the Option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
 			<table class="tablesorter-blue">
 				<colgroup><col style="width:135px"></colgroup>
 				<thead>
@@ -280,7 +283,7 @@ td:nth-child(3) .ts-align-right i {
 		</tr>
 		<tr>
 			<td>zyx 12</td>
-			<td>0.2</td>
+			<td>.2</td>
 			<td>Llama = llove it</td>
 			<td>http://aliens.nasa.gov/</td>
 		</tr>

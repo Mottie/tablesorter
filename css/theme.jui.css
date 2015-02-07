@@ -93,6 +93,9 @@
 }
 
 /* filter widget */
+.tablesorter-jui .tablesorter-filter-row {
+	background: transparent;
+}
 .tablesorter-jui .tablesorter-filter-row td {
 	background: transparent;
 	line-height: normal;

@@ -126,6 +126,9 @@ Metro Dark Theme
 }
 
 /* filter widget */
+.tablesorter-metro-dark .tablesorter-filter-row {
+	background: #eee;
+}
 .tablesorter-metro-dark .tablesorter-filter-row td {
 	background: #eee;
 	line-height: normal;

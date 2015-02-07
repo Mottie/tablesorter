@@ -281,7 +281,7 @@
 					<ul>
 						<li>(<code>build_headers</code> &amp; <code>build_footers</code>) have been added allowing customizing the headers and/or footers.</li>
 						<li>The <code>rows</code> option sets the number of headers rows to include from the data source. <strong>Zero is not an option</strong> since tablesorter requires a thead in place before it will initialize.</li>
-						<li>The <code>classes</code> array sets each header cell (<code>th</code>) class name.</li> 
+						<li>The <code>classes</code> array sets each header cell (<code>th</code>) class name.</li>
 						<li>The <code>text</code> array within these options will override any text obtained from the data source.</li>
 						<li>The <code>widths</code> array, only in the <code>build_headers</code> option, sets column widths by building <code>&lt;col&gt;</code> elements within a <code>&lt;colgroup</code>.</li>
 						<li>Adding class names to the tbody rows or cells isn't easily accomplished, but you can bind to the build complete event (<code>'tablesorter-build-complete'</code>) and add them yourself.</li>
@@ -383,7 +383,7 @@
 							<ul>
 								<li>(<code>build_headers</code> &amp; <code>build_footers</code>) have been added allowing customizing the headers and/or footers.</li>
 								<li>The <code>rows</code> option sets the number of headers rows to include from the data source. <strong>Zero is not an option</strong> since tablesorter requires a thead in place before it will initialize.</li>
-								<li>The <code>classes</code> array sets each header cell (<code>th</code>) class name.</li> 
+								<li>The <code>classes</code> array sets each header cell (<code>th</code>) class name.</li>
 								<li>The <code>text</code> array within these options will override any text obtained from the data source.</li>
 								<li>The <code>widths</code> array, only in the <code>build_headers</code> option, sets column widths by building <code>&lt;col&gt;</code> elements within a <code>&lt;colgroup</code>.</li>
 								<li>Adding class names to the tbody rows or cells isn't easily accomplished, but you can bind to the build complete event (<code>'tablesorter-build-complete'</code>) and add them yourself.</li>
@@ -502,7 +502,7 @@ Album,Artist,Price ($)</pre>
 		widgetOptions: {
 			// *** build widget core ***
 			build_type      : 'csv',
-			build_source    : { url: 'assets/csv.txt', dataType: 'html' },
+			build_source    : { url: 'assets/csv.txt', dataType: 'text' },
 			build_headers   : {
 				widths  : ['30%', '50%', '20%'] // set header cell widths
 			}

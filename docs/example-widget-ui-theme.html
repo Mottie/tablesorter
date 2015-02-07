@@ -24,6 +24,7 @@
 	<!-- Tablesorter: required; also include any of the jQuery UI themes -->
 	<link id="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link href="../css/theme.jui.css" rel="stylesheet">
+	<link href="../css/theme.grey.css" rel="stylesheet">
 
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
@@ -33,23 +34,29 @@
 
 	<script id="js">$(function() {
 
-	// Extend the themes to change any of the default class names ** NEW **
+	// Extend the themes to change any of the default class names
 	$.extend($.tablesorter.themes.jui, {
-		// change default jQuery uitheme icons - find the full list of icons here: http://jqueryui.com/themeroller/ (hover over them for their name)
-		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
-		caption    : 'ui-widget-content ui-corner-all',
-		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-		footerRow  : '',
-		footerCells: '',
-		icons      : 'ui-icon', // icon class added to the <i> in the header
-		sortNone   : 'ui-icon-carat-2-n-s',
-		sortAsc    : 'ui-icon-carat-1-n',
-		sortDesc   : 'ui-icon-carat-1-s',
-		active     : 'ui-state-active', // applied when column is sorted
-		hover      : 'ui-state-hover',  // hover class
-		filterRow  : '',
-		even       : 'ui-widget-content', // odd row zebra striping
-		odd        : 'ui-state-default'   // even row zebra striping
+		// change default jQuery uitheme icons - find the full list of icons at
+		// http://jqueryui.com/themeroller/ (hover over them for their name)
+		table        : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		caption      : 'ui-widget-content',
+		// header class names
+		header       : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+		sortNone     : '',
+		sortAsc      : '',
+		sortDesc     : '',
+		active       : 'ui-state-active', // applied when column is sorted
+		hover        : 'ui-state-hover',  // hover class
+		// icon class names
+		icons        : 'ui-icon', // icon class added to the <i> in the header
+		iconSortNone : 'ui-icon-carat-2-n-s', // class name added to icon when column is not sorted
+		iconSortAsc  : 'ui-icon-carat-1-n', // class name added to icon when column has ascending sort
+		iconSortDesc : 'ui-icon-carat-1-s', // class name added to icon when column has descending sort
+		filterRow    : '',
+		footerRow    : '',
+		footerCells  : '',
+		even         : 'ui-widget-content', // even row zebra striping
+		odd          : 'ui-state-default'   // odd row zebra striping
 	});
 
 	// call the tablesorter plugin and apply the ui theme widget
@@ -100,6 +107,13 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version">v2.19.0</span>, this widget allows dynamic changing of themes; including switching from jQuery UI or Bootstrap to any other theme. To change a theme, do the following:
+				<pre class="prettyprint lang-js">var $table = $('table');
+$table[0].config.theme = 'grey';
+$table.trigger('applyWidgets');</pre>
+				To see this work, check out the <a href="example-widget-scroller.html">scroller widget demo</a>.
+			</li>
+			</li>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
 			<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code (v2.7).</li>
 			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details (v2.1).</li>
@@ -220,4 +234,3 @@
 
 </body>
 </html>
-

@@ -80,17 +80,22 @@
 			$t.html($.tablesorter.version);
 		}
 
-		// add high visibility tags for newest versions (just grab the major revision number 2.10.0 -> 10
+		// add high visibility tags for newest versions
 		t = $.tablesorter.version.replace(/(v|version|\+)/g, '').split('.');
-		v = [ parseInt(t[0], 10) || 1, parseInt(t[1], 10) || 0 ];
+		v = [ parseInt(t[0], 10) || 1, parseInt(t[1], 10) || 0, parseInt(t[2], 10) || 0 ];
 		$('.version').each(function(){
 			var i;
 			$t = $(this);
 			i = $t.text().replace(/(v|version|\+)/g, '').split('.');
-			t = [ parseInt(i[0], 10) || 1, parseInt(i[1], 10) || 0 ];
+			t = [ parseInt(i[0], 10) || 1, parseInt(i[1], 10) || 0, parseInt(i[2], 10) || 0 ];
 			if (t[0] === v[0] && t[1] >= v[1] - 1 ) {
 				$t.prepend('<span class="label ' + ( t[0] === v[0] && t[1] < v[1] ? ' label-default' : ' label-success' ) +
 					'">'+ ($t.hasClass('updated') ? 'Updated' : 'New') + '</span> ');
+				// updates for current version are brighter
+				if (t[2] <= v[2] - 1) {
+					// new labels for revisions > 1 back are lighter
+					$t.addClass('older');
+				}
 			}
 		});
 
@@ -149,6 +154,12 @@
 					}
 				}
 			});
+
+			$t.find('table.options').not('.tablesorter-jui').tablesorter({
+				widthFixed: true,
+				widgets: ['stickyHeaders']
+			});
+
 		}
 
 	});
@@ -165,7 +176,7 @@
 				// move below sticky header; added delay as there could be some lag
 				setTimeout(function(){
 					$t = prop.closest('table');
-					if ($t.length) {
+					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
 						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? 27 : 0;
 						if ($t.hasClass('options') || $t.hasClass('api')) {

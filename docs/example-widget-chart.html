@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Chart Widget</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+	<script src="js/jquery-ui-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<link rel="stylesheet" href="css/jq.css">
+	<link rel="stylesheet" href="css/prettify.css">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/bootstrap.min.js"></script>
+
+	<!-- Google charts -->
+	<script src="http://www.google.com/jsapi"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<script src="../js/widgets/widget-cssStickyHeaders.js"></script>
+	<script src="../js/widgets/widget-columnSelector.js"></script>
+	<script src="../js/widgets/widget-pager.js"></script>
+	<script src="../js/widgets/widget-chart.js"></script>
+
+	<style>
+	h1 { font-size: 28px; }
+	/* override jQuery UI overriding Bootstrap */
+	.accordion .ui-widget-content a {
+		color: #337ab7;
+	}
+	/* .spacer in docs css is set to height:800px for stickyHeader demo */
+	#pager .spacer { height: auto; }
+	.wrapper { padding: 5px; }
+	</style>
+
+	<style id="css">#pager div {
+	display: inline-block;
+}
+
+#pager-container .spacer {
+	padding: 0 5px;
+}
+
+#pager-container,
+#chart-container {
+	text-align: center;
+}
+
+#chart-container > div {
+	display: inline-block;
+}
+
+#chartbar {
+	text-align: center;
+}
+
+#chartbar i.clickable {
+	padding: 0 5px;
+}
+
+i.clickable {
+	cursor: pointer;
+	color: #999;
+}
+
+i.clickable.disabled,
+i.clickable.disabled:hover {
+	cursor: not-allowed;
+	color: #ccc;
+}
+
+i.active.clickable,
+i.clickable:hover {
+	color: #000;
+}
+
+/*** custom css only popup ***/
+.columnSelector, .hidden, #chart-container {
+	display: none;
+}
+#colSelect:checked + label {
+	background: #5797d7;
+	border-color: #555;
+}
+#colSelect:checked ~ #columnSelector {
+	display: block;
+}
+#chartSelect:checked + label {
+	background: #5797d7;
+	border-color: #555;
+}
+.columnSelector {
+	width: 120px;
+	position: absolute;
+	margin-top: 5px;
+	padding: 10px;
+	background: #fff;
+	border: #ccc 1px solid;
+	border-radius: 5px;
+}
+.columnSelector label {
+	display: block;
+	text-align: left;
+}
+.columnSelector label:nth-child(1) {
+	border-bottom: #99bfe6 solid 1px;
+	margin-bottom: 5px;
+}
+.columnSelector input {
+	margin-right: 5px;
+}
+.columnSelector .disabled {
+	color: #ddd;
+}</style>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Chart Widget (beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+	<p></p>
+	<br>
+	<div id="root" class="accordion">
+
+		<h3 id="notes"><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>This widget will <strong>only work</strong> in tablesorter version 2.16+ and jQuery version 1.7+.</li>
+				<li>It only provides data for charts.</li>
+				<li>Currently it provides data for the following chart libraries:
+					<ul>
+						<li><a href="https://developers.google.com/chart/">Google charts</a></li>
+						<li><a href="http://www.highcharts.com/">Highcharts</a></li>
+						<li><a href="http://www.fusioncharts.com/">FusionCharts</a></li>
+					</ul>
+					More details are available within the named "Setup" sections below.
+				</li>
+			</ul>
+		</div>
+
+		<h3 id="options"><a href="#">Options</a></h3>
+		<div>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+
+			<table class="options tablesorter-blue">
+				<thead>
+					<tr><th class="option">Option</th><th class="defaults">Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="chart-inc-rows">
+						<td><a href="#" class="permalink">chart_incRows</a></td>
+						<td>'filtered' <span class="results">*</span></td>
+						<td>Select which rows to include in the chart.
+							<div class="collapsible">
+								<p></p>
+								This option allows you to select which rows to include in the chart data:
+								<ul>
+									<li><code>'a'</code> - Include <em>all</em> rows, even if the table has been filtered or partially hidden by the pager.</li>
+									<li><code>'v'</code> - Include only <em>visible</em> rows, whether they are hidden by the pager or filter.</li>
+									<li><code>'f'</code> - Include only <em>filtered</em> rows, even if the pager is only showing a select few rows.</li>
+								</ul>
+								<span class="results">*</span> Only the first letter is required, but the option will accept the full word (e.g. 'filtered' instead of 'f')
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-use-selector">
+						<td><a href="#" class="permalink">chart_useSelector</a></td>
+						<td>false</td>
+						<td>Use the columnSelector widget in place of the <code>chart_ignoreColumns</code> option.
+							<div class="collapsible">
+								<p></p>
+								Set this option to <code>true</code> if using the columnSelector widget.
+								<p></p>
+								If using a custom column selector, then set this option to <code>false</code> and use the custom selector to update the <code>chart_ignoreColumns</code> option dynamically.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-ignore-columns">
+						<td><a href="#" class="permalink">chart_ignoreColumns</a></td>
+						<td>[ ]</td>
+						<td>Array of zero-based column indexes of columns to ignore.
+							<div class="collapsible">
+								<p></p>
+								This option is used when the <code>chart_useSelector</code> option is <code>false</code> or if the columnSelector is set to "auto" mode.
+								<p></p>
+								Update this option dynamically, if using a custom method to hide/indicate which columns are to be ignored when gathering data for the chart.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-parsed">
+						<td><a href="#" class="permalink">chart_parsed</a></td>
+						<td>[ ]</td>
+						<td>Array of zero-based column indexes of columns that must used parsed data for charting.
+							<div class="collapsible">
+								<p></p>
+								Parsed data is gathered from the table cache, which is parsed the designated parser for that column.
+								<p></p>
+								This option can be updated dynamically.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-layout">
+						<td><a href="#" class="permalink">chart_layout</a></td>
+						<td>{&nbsp;0:&nbsp;'string'&nbsp;}</td>
+						<td>Object containing the format needed by the chart for each column.
+							<div class="collapsible">
+								<p></p>
+								By default, all columns will have their values converted to numbers. Prior to sending the value to tablesorter's <a href="index.html#function-formatfloat"><code>formatFloat</code></a> function, the value will have all non-digit characters stripped out.
+								<p></p>
+								Set the zero-based column index of the desired column to <code>'s'</code> (only the first letter is needed) to pass the cell value to the chart as a string.
+								<p></p>
+								This option can be updated dynamically.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-label-col">
+						<td><a href="#" class="permalink">chart_labelCol</a></td>
+						<td>0</td>
+						<td>Set a zero-based column index for the column to be used as a chart label.
+							<div class="collapsible">
+							<p></p>
+							The chart label (independent variable) is usually the first array value in each nested array (at least for Google charts). In this demo, it is the Year.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-sort">
+						<td><a href="#" class="permalink">chart_sort</a></td>
+						<td>[&nbsp;[&nbsp;0,0&nbsp;]&nbsp;]</td>
+						<td>Sort a specific column of data using the same format as tablesorter's <code>sortList</code> option; but for a single column.
+							<div class="collapsible">
+							<p></p>
+							Set this value to be an array contained within an array using the following format: <code>[[ column, direction ]]</code>
+							<p></p>
+							<span class="label label-info">* Note *</span> It would be best to sort the same column as the <code>chart_labelCol</code> to keep the axis ordered properly; but that is up to you ;)
+							<p></p>
+							<ul>
+								<li><code>column</code> - zero-based index of the column to sort.</li>
+								<li><code>direction</code> - sort direction; <code>0</code> indicates an ascending sort, and <code>1</code> indicates a descending sort is to be used.</li>
+							</ul>
+							<span class="label warning">* Note *</span> Anything other than <code>1</code> as the sort direction will set an ascending sort.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="chart-event">
+						<td><a href="#" class="permalink">chart_event</a></td>
+						<td>'chartData'</td>
+						<td>The chart data will be updated when this event is triggered on the table.
+							<div class="collapsible">
+							<p></p>
+							Trigger a chart data update, then get the data as follows:
+							<pre class="prettyprint lang-js">var $table = $('table').trigger('chartData'),
+	data = $table[0].config.chart.data;
+chartData( data ); // custom function to chart the data</pre>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<h3 id="google"><a href="#">Setup - Google Charts</a></h3>
+		<div>
+			The data used by Google charts is an array of arrays in this format:
+			<pre class="prettyprint lang-js">[
+	[ "Year", "Sales", "Expenses" ],
+	[ "2004", 1000, 400  ],
+	[ "2005", 1170, 460  ],
+	[ "2006", 660,  1120 ],
+	[ "2007", 1030, 540  ]
+]</pre>
+			Access the data as follows:
+			<pre class="prettyprint lang-js">var $table = $('table').trigger('chartData'),
+	options = { /* set up options here */ },
+	rawdata = $table[0].config.chart.data,
+	data = google.visualization.arrayToDataTable( rawdata ),
+	// bar chart example
+	chart = new google.visualization.BarChart( $('#chart')[0] );
+chart.draw(data, options);
+</pre>
+		</div>
+
+		<h3 id="highcharts"><a href="#">Setup - Highcharts</a></h3>
+		<div>
+			The data used by Highcharts is an array of objects in this format:
+			<pre class="prettyprint lang-js">// categories
+[ '2004', '2005', '2006', '2007' ]
+
+// series
+[{
+	name: 'Sales',
+	data: [ 1000, 1170, 660, 1030 ]
+}, {
+	name: 'Expenses',
+	data: [ 400, 460, 1120, 540 ]
+}]</pre>
+			Access the data as follows:
+			<pre class="prettyprint lang-js">var $table = $('table').trigger('chartData');
+
+$('#chart').highcharts({
+	chart: { type: 'column' },
+	xAxis: { categories: $table[0].config.chart.categories },
+	series: $table[0].config.chart.series
+});
+</pre>
+		</div>
+
+		<h3 id="fusioncharts"><a href="#">Setup - FusionCharts</a></h3>
+		<div>
+			The data used by FusionCharts is an array of objects in this format:
+			<pre class="prettyprint lang-js">// category
+[
+	{"label": "2004"},
+	{"label": "2005"},
+	{"label": "2006"},
+	{"label": "2007"}
+]
+// dataset
+[{
+	"seriesname": "Sales",
+	"data": [
+		{"value": "1000"},
+		{"value": "1170"},
+		{"value": "660"},
+		{"value": "1030"}
+	]
+},{
+	"seriesname": "Expenses",
+	"data": [
+		{"value": "400"},
+		{"value": "600"},
+		{"value": "1120"},
+		{"value": "540"}
+	]
+}]</pre>
+			Access the data as follows:
+<pre class="prettyprint lang-js">var $table = $('table');
+$table.trigger('chartData');
+
+FusionCharts.ready(function () {
+	var analysisChart = new FusionCharts({
+		dataFormat: 'json',
+		dataSource: {
+			"chart": {
+				// ...
+			},
+			"categories": [{
+				"category": $table[0].config.chart.category
+			}],
+			"dataset": $table[0].config.chart.dataset,
+		},
+		// other options
+	}).render();
+});</pre>
+		</div>
+
+	</div>
+	<p></p>
+
+	<h1>Google Charts Demo</h1>
+	<div id="demo"><div id="chart-container">
+		<div id="chart"></div>
+		<p></p>
+		<div id="chartbar">
+			<i class="fa fa-cube active clickable toolti" title="3D Pie Chart" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-pie-chart clickable" title="Pie Chart" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-line-chart clickable" title="Line Graph" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-area-chart clickable" title="Area Graph" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-bar-chart clickable" title="Vertical Bar Chart" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-tasks fa-rotate-90 clickable" title="Stacking Vertical Bar Chart" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-align-left clickable" title="Horizontal Bar Chart" data-toggle="tooltip" data-placement="top"></i>
+			<i class="fa fa-tasks fa-rotate-180 clickable" title="Stacking Horizontal Bar Chart" data-toggle="tooltip" data-placement="top"></i>
+		</div>
+		<p></p>
+	</div>
+
+<!-- ColumnSelector -->
+<label for="colSelect" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Toggle visible columns">
+	<input id="colSelect" type="checkbox" class="hidden">
+	<i class="fa fa-table"></i> Column
+	<div id="columnSelector" class="columnSelector"></div>
+</label>
+<!-- Chart -->
+<label for="chartSelect" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="Toggle chart visibility">
+	<input id="chartSelect" type="checkbox" class="hidden">
+	<i class="fa fa-pie-chart"></i> Chart
+</label>
+<!-- row selector -->
+<span class="wrapper" data-toggle="tooltip" data-placement="top" title="Chart filtered, visible or all rows">
+<div class="btn-group chart-filter-all" data-toggle="buttons">
+	<label class="btn btn-default btn-sm active">
+		<input type="radio" name="getrows" data-type="filter" checked="checked"> Filtered
+	</label>
+	<label class="btn btn-default btn-sm">
+		<input type="radio" name="getrows" data-type="visible"> Visible
+	</label>
+	<label class="btn btn-default btn-sm">
+		<input type="radio" name="getrows" data-type="all"> All
+	</label>
+</div>
+</span>
+
+<table id="table" class="tablesorter">
+	<thead>
+		<tr>
+			<th>Year</th>
+			<th>Sales</th>
+			<th>Expenses</th>
+			<th>Profit</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>2004</td><td>$ 1,000</td><td>$ 400</td><td>$ 600</td></tr>
+		<tr><td>2005</td><td>$ 1,170</td><td>$ 460</td><td>$ 710</td></tr>
+		<tr><td>2006</td><td>$ 660</td><td>$ 1,120</td><td>($ 460)</td></tr>
+		<tr><td>2007</td><td>$ 1,030</td><td>$ 540</td><td>$ 490</td></tr>
+	</tbody>
+</table>
+
+<!-- pager -->
+<div id="pager-container">
+	<div id="pager">
+		<form>
+			<select class="pagesize" title="Select rows per page" data-toggle="tooltip" data-placement="left">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="5">5</option>
+			</select>
+			<div class="spacer"><div class="separator"></div></div>
+			<i class="fa fa-step-backward first clickable" title="First page"></i>
+			<i class="fa fa-backward prev clickable" title="Previous page"></i>
+			<div class="spacer"><div class="separator"></div></div>
+			<span class="pagedisplay"></span>
+			<div class="spacer"><div class="separator"></div></div>
+			<i class="fa fa-forward next clickable" title="Next page"></i>
+			<i class="fa fa-step-forward last clickable" title="Last page"></i>
+			<div class="spacer"><div class="separator"></div></div>
+			<select class="gotoPage" title="Select page" data-toggle="tooltip" data-placement="right"></select>
+		</form>
+	</div>
+</div>
+</div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- Google charts --&gt;
+&lt;script src=&quot;//www.google.com/jsapi&quot;&gt;&lt;/script&gt;
+
+&lt;!-- jQuery --&gt;
+&lt;script src=&quot;js/jquery-latest.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Demo stuff --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css&quot;&gt;
+&lt;!-- buttons --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+&lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: required --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-chart.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: optional --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-cssStickyHeaders.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-columnSelector.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-pager.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+<script id="js">google.load("visualization", "1.1", {
+	packages: ["bar", "corechart", "line"]
+});
+
+$(function(){
+	/* Initial settings */
+	var $table = $('#table'),
+		$chart = $('#chart'),
+		$bar = $('#chartbar'),
+		$rowType = $('[name=getrows]'),
+		$icons = $('#chart-container i'),
+		initType = 'pie', // graph types ('pie', 'pie3D', 'line', 'area', 'vbar', 'vstack', 'hbar' or 'hstack')
+		chartTitle = 'Company Performance',
+		axisTitle = 'Year',
+		width = 900,
+		height = 500,
+		// extra data processing
+		processor = function(data) {
+			// console.log(data);
+			return data;
+		}
+
+	// don't change anything below, unless you want to remove some types; modify styles and/or font-awesome icons
+	types = {
+		pie3D  : { in3D: true,  maxCol: 2, stack: false, type: 'pie',  titleStyle: { color: '#333' }, icon: 'fa-cube' },
+		pie    : { in3D: false, maxCol: 2, stack: false, type: 'pie',  titleStyle: { color: '#333' }, icon: 'fa-pie-chart' },
+		line   : { in3D: false, maxCol: 99,stack: false, type: 'line', titleStyle: { color: '#333' }, icon: 'fa-line-chart' },
+		area   : { in3D: false, maxCol: 5, stack: false, type: 'area', titleStyle: { color: '#333' }, icon: 'fa-area-chart' },
+		vbar   : { in3D: false, maxCol: 5, stack: false, type: 'vbar', titleStyle: { color: '#333' }, icon: 'fa-bar-chart' },
+		vstack : { in3D: false, maxCol: 5, stack: true,  type: 'vbar', titleStyle: { color: '#333' }, icon: 'fa-tasks fa-rotate-90' },
+		hbar   : { in3D: false, maxCol: 5, stack: false, type: 'hbar', titleStyle: { color: '#333' }, icon: 'fa-align-left' },
+		hstack : { in3D: false, maxCol: 5, stack: true,  type: 'hbar', titleStyle: { color: '#333' }, icon: 'fa-tasks fa-rotate-180' }
+	},
+	/* internal variables */
+	settings = {
+		table : $table,
+		chart : $chart[0],
+		chartTitle : chartTitle,
+		axisTitle : axisTitle,
+		type : initType,
+		processor : processor
+	},
+	drawChart = function() {
+		if (!$table[0].config) { return; }
+		var options, chart, numofcols, data,
+			s = settings,
+			t = types[s.type],
+			obj = s.chart,
+			rawdata = $table[0].config.chart.data;
+		if ( $.isFunction( s.processor ) ) {
+			rawdata = s.processor( rawdata );
+		}
+		if ( rawdata.length < 2 ) {
+			return;
+		}
+		data = google.visualization.arrayToDataTable( rawdata );
+
+		numofcols = rawdata[1].length;
+		if (numofcols > t.maxCol) {
+			// default to line chart if too many columns selected
+			t = types['line'];
+		}
+
+		options = {
+			title: s.chartTitle,
+			chart: {
+				title: s.chartTitle
+			},
+			hAxis: {
+				title: s.axisTitle,
+				titleTextStyle: t.titleStyle
+			},
+			vAxis: {},
+			is3D: t.in3D,
+			isStacked: t.stack,
+			width: width,
+			height: height
+		};
+
+		if (t.type == 'vbar' && !t.stack) {
+			chart = new google.charts.Bar(obj);
+		} else if (t.type == 'vbar') {
+			chart = new google.visualization.ColumnChart(obj);
+		} else if (t.type == 'hbar') {
+			options.hAxis = {};
+			options.vAxis = {
+				title: s.axisTitle,
+				titleTextStyle: t.titleStyle,
+				minValue: 0
+			};
+			chart = new google.visualization.BarChart(obj);
+		} else if (t.type == 'area') {
+			chart = new google.visualization.AreaChart(obj);
+		} else if (t.type == 'line') {
+			chart = new google.charts.Line(obj);
+		} else {
+			chart = new google.visualization.PieChart(obj);
+		}
+		chart.draw(data, options);
+	};
+
+	$('#chartSelect').change(function() {
+		$('#chart-container').slideToggle( $(this).is(':checked') );
+		drawChart();
+	});
+
+	$icons.click(function(e) {
+		if ( $(e.target).hasClass('disabled') ) {
+			return true;
+		}
+		$icons.removeClass('active');
+		var $t = $(this).addClass('active');
+		$.each(types, function(i, v){
+			if ($t.hasClass(v.icon)) {
+				settings.type = i;
+			}
+		});
+		drawChart();
+	});
+
+	$rowType.on('change', function(){
+		$table[0].config.widgetOptions.chart_incRows = $rowType.filter(':checked').attr('data-type');
+		// update data, then draw new chart
+		$table.trigger('chartData');
+		drawChart();
+	});
+
+	$table.on('columnUpdate pagerComplete', function(e) {
+		var table = this,
+			c = table.config,
+			t = types['pie'],
+			max = t && t.maxCol || 2;
+		setTimeout(function() {
+			if (table.hasInitialized) {
+				$table.trigger('chartData');
+				drawChart();
+				// update chart icons
+				if (typeof c.chart !== 'undefined') {
+					var cols =  c.chart.data[0].length;
+					if (cols > max) {
+						$bar.find('.fa-cube, .fa-pie-chart').addClass('disabled');
+						if ($bar.find('.fa-cube, .fa-pie-chart').hasClass('active')) {
+							$bar.find('.fa-cube, .fa-pie-chart').removeClass('active');
+							$bar.find('.fa-line-chart').addClass('active');
+						}
+					} else {
+						$bar.find('.fa-cube, .fa-pie-chart').removeClass('disabled');
+						if (settings.type == 'pie') {
+							$bar.find('.active').removeClass('active');
+							$bar.find( settings.in3D ? '.fa-cube' : '.fa-pie-chart' ).addClass('active');
+						}
+					}
+				}
+			}
+		}, 10);
+	});
+
+	$table
+		.tablesorter({
+			theme: 'blue',
+			sortList: [[0, 0]],
+			widgets: ['pager', 'zebra', 'filter', 'cssStickyHeaders', 'columnSelector', 'chart'],
+			widgetOptions: {
+				columnSelector_container: '#columnSelector',
+				cssStickyHeaders_filteredToTop: false,
+				pager_selectors: { container: '#pager' },
+				pager_output: 'Showing {startRow} to {endRow} of {filteredRows} results',
+				pager_size: 5,
+				chart_incRows: 'f',
+				chart_useSelector: true,
+				chart_hideTable: false
+			}
+		});
+
+});</script>
+
+<script>
+$(function(){
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+</body>
+</html>
+

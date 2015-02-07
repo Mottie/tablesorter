@@ -1,4 +1,4 @@
-/*! tablesorter CSS Sticky Headers widget - updated 11/7/2014 (v2.18.3)
+/*! tablesorter CSS Sticky Headers widget - updated 2/7/2015 (v2.19.0)
 * Requires a modern browser, tablesorter v2.8+
 */
 /*jshint jquery:true, unused:false */
@@ -134,7 +134,8 @@
 			});
 
 		},
-		remove: function(table, c, wo){
+		remove: function(table, c, wo, refreshing) {
+			if (refreshing) { return; }
 			var namespace = c.namespace + 'cssstickyheader ';
 			$(window).unbind('scroll resize '.split(' ').join(namespace));
 			c.$table

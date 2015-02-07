@@ -1,4 +1,4 @@
-/*! tablesorter Align Character widget - updated 3/12/2014 (core v2.15.8)
+/*! tablesorter Align Character widget - updated 2/7/2015 (v2.19.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -83,10 +83,10 @@ ts.alignChar = {
 			for (rowIndex = 0; rowIndex < len; rowIndex++) {
 				alignChar = $(wo.alignChar_wrap).length ? $(wo.alignChar_wrap).html(v.align)[0].outerHTML : v.align;
 				$row = rows.row ? rows.row[rowIndex] : rows.normalized[rowIndex][c.columns].$row;
+				last = right[rowIndex].slice(v.align.length);
 				$row.find('td').eq(v.column).html(
 					'<span class="ts-align-wrap"><span class="ts-align-left" style="' + wLeft + '">' + left[rowIndex] + '</span>' +
-					'<span class="ts-align-right" style="' + wRight + '">' + alignChar +
-					right[rowIndex].slice(v.align.length) + '</span></span>'
+					'<span class="ts-align-right" style="' + wRight + '">' + ( last.length ? alignChar + last : '' ) + '</span></span>'
 				);
 			}
 		}
@@ -134,7 +134,8 @@ ts.addWidget({
 			c.$table.trigger('refreshAlign');
 		}
 	},
-	remove : function(table, c, wo){
+	remove : function(table, c, wo, refreshing){
+		if (refreshing) { return; }
 		c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function(){
 			ts.alignChar.remove(table, c, this.column);
 		});

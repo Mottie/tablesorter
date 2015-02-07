@@ -1,4 +1,4 @@
-/*! Filter widget select2 formatter function - updated 7/17/2014 (v2.17.5)
+/*! Filter widget select2 formatter function - updated 2/7/2015 (v2.19.0)
  * requires: jQuery 1.7.2+, tableSorter (FORK) 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -28,14 +28,14 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 	wo = c.widgetOptions,
 	// Add a hidden input to hold the range values
 	$input = $('<input class="filter" type="hidden">')
-	.appendTo($cell)
-	// hidden filter update namespace trigger by filter widget
-	.bind('change' + c.namespace + 'filter', function(){
-		var val = this.value;
-		val = val.replace(/[/()$^]/g, '').split('|');
-		$cell.find('.select2').select2('val', val);
-		updateSelect2();
-	}),
+		.appendTo($cell)
+		// hidden filter update namespace trigger by filter widget
+		.bind('change' + c.namespace + 'filter', function(){
+			var val = this.value;
+			val = val.replace(/[/()$^]/g, '').split('|');
+			$cell.find('.select2').select2('val', val);
+			updateSelect2();
+		}),
 	$header = c.$headers.filter('[data-column="' + indx + '"]:last'),
 	onlyAvail = $header.hasClass(wo.filter_onlyAvail),
 	$shcell = [],
@@ -44,16 +44,27 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 
 	// this function updates the hidden input and adds the current values to the header cell text
 	updateSelect2 = function() {
-		var v = $cell.find('.select2').select2('val') || o.value || '';
+		var arry = false,
+			v = $cell.find('.select2').select2('val') || o.value || '';
+		// convert array to string
+		if ($.isArray(v)) {
+			arry = true;
+			v = v.join('\u0000');
+		}
+		// escape special regex characters (http://stackoverflow.com/a/9310752/145346)
+		v = v.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+		// convert string back into an array
+		if (arry) {
+			v = v.split('\u0000');
+		}
 		$input
-		// add regex, so we filter exact numbers
-		.val( $.isArray(v) && v.length && v.join('') !== '' ? '/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' : '' )
-		.trigger('search').end()
-		.find('.select2').select2('val', v);
+			// add regex, so we filter exact numbers
+			.val( $.isArray(v) && v.length && v.join('') !== '' ? '/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' : '' )
+			.trigger('search').end()
+			.find('.select2').select2('val', v);
 		// update sticky header cell
 		if ($shcell.length) {
-			$shcell
-			.find('.select2').select2('val', v);
+			$shcell.find('.select2').select2('val', v);
 		}
 	},
 
@@ -88,18 +99,18 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 
 	// add a select2 hidden input!
 	$('<input class="select2 select2-' + indx + '" type="hidden" />')
-	.val(o.value)
-	.appendTo($cell)
-	.select2(o)
-	.bind('change', function(){
-		updateSelect2();
-	});
+		.val(o.value)
+		.appendTo($cell)
+		.select2(o)
+		.bind('change', function(){
+			updateSelect2();
+		});
 
 	// update select2 from filter hidden input, in case of saved filters
 	c.$table.bind('filterFomatterUpdate', function(){
 		// value = '/(^x$|^y$)/' => 'x,y'
 		var val = c.$table.data('lastSearch')[indx] || '';
-		val = val.replace(/[/()$^]/g, '').split('|');
+		val = val.replace(/^\/\(\^?/,'').replace(/\$\|\^/g, '|').replace(/\$?\)\/$/g,'').split('|');
 		$cell.find('.select2').select2('val', val);
 		updateSelect2();
 		ts.filter.formatterUpdated($cell, indx);
@@ -110,13 +121,13 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 		$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 		// add a select2!
 		$('<input class="select2 select2-' + indx + '" type="hidden">')
-		.val(o.value)
-		.appendTo($shcell)
-		.select2(o)
-		.bind('change', function(){
-			$cell.find('.select2').select2('val', $shcell.find('.select2').select2('val') );
-			updateSelect2();
-		});
+			.val(o.value)
+			.appendTo($shcell)
+			.select2(o)
+			.bind('change', function(){
+				$cell.find('.select2').select2('val', $shcell.find('.select2').select2('val') );
+				updateSelect2();
+			});
 		if (o.cellText) {
 			$shcell.prepend('<label>' + o.cellText + '</label>');
 		}

@@ -179,6 +179,9 @@ caption {
 }
 
 /* filter widget */
+.tablesorter-grey .tablesorter-filter-row {
+	background: #3c3c3c;
+}
 .tablesorter-grey .tablesorter-filter-row td {
 	background: #3c3c3c;
 	line-height: normal;

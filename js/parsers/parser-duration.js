@@ -1,13 +1,12 @@
-/*! Duration parser
- */
+/*! Duration parser */
 /*jshint jquery:true, unused:false */
 ;(function($){
-"use strict";
+'use strict';
 
 	// If any number > 9999, then set table.config.durationLength = 5
 	// The below regex matches this duration example: 1y 23d 12h 44m 9s
 	$.tablesorter.addParser({
-		id: "duration",
+		id: 'duration',
 		is: function() {
 			return false;
 		},
@@ -34,7 +33,35 @@
 			}
 			return duration;
 		},
-		type: "text"
+		type: 'text'
+	});
+
+	/*! Countdown parser ( hh:mm:ss ) */
+	/* Added 2/7/2015 (v2.19.0) - see http://stackoverflow.com/a/27023733/145346 */
+	$.tablesorter.addParser({
+		id: 'countdown',
+		is: function () {
+			return false;
+		},
+		format: function ( text, table ) {
+			// change maxDigits to 4, if values go > 999
+			// or to 5 for values > 9999, etc.
+			var maxDigits = table.config.durationLength || 4,
+				// prefix contains leading zeros that are tacked
+				prefix = new Array( maxDigits + 1 ).join( '0' ),
+				// split time into blocks
+				blocks = text.split( /\s*:\s*/ ),
+				len = blocks.length,
+				result = [];
+			// add values in reverse, so if there is only one block
+			// ( e.g. '10' ), then it would be the time in seconds
+			while ( len ) {
+				result.push( ( prefix + ( blocks[ --len ] || 0 ) ).slice( -maxDigits ) );
+			}
+			// reverse the results and join them
+			return result.length ? result.reverse().join( '' ) : text;
+		},
+		type: 'text'
 	});
 
 })(jQuery);

@@ -103,6 +103,9 @@ caption {
 	background: #eee;
 	cursor: not-allowed;
 }
+.tablesorter-bootstrap .tablesorter-filter-row {
+	background: #eee;
+}
 .tablesorter-bootstrap .tablesorter-filter-row td {
 	background: #eee;
 	line-height: normal;

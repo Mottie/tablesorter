@@ -1,4 +1,4 @@
-/* table reflow widget (beta) for TableSorter 3/22/2014 (v2.16.0)
+/* table reflow widget for TableSorter 2/7/2015 (v2.19.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Also, this widget requires the following default css (modify as desired)
 
@@ -73,7 +73,7 @@ tablereflow = {
 			});
 		c.$headers.each(function(){
 			$this = $(this);
-			headers.push( $this.attr(header) || $this.text() );
+			headers.push( $.trim( $this.attr(header) || $this.text() ) );
 		});
 		c.$tbodies.children().each(function(){
 			$(this).children().each(function(i){
@@ -100,6 +100,7 @@ tablereflow = {
 			$hdr = c.$headers.filter('[data-column="' + i + '"]');
 			if ($hdr.length > 1) {
 				txt = [];
+				/*jshint loopfunc:true */
 				$hdr.each(function(){
 					$this = $(this);
 					if (!$this.hasClass(wo.reflow2_classIgnore)) {
@@ -117,7 +118,7 @@ tablereflow = {
 			$tbody = ts.processTbody(table, $(this), true);
 			$tbody.children().each(function(j){
 				$this = $(this);
-				len = headers[j].length
+				len = headers[j].length;
 				i = len - 1;
 				while (i >= 0) {
 					$this.prepend(txt + (i === 0 && len > 1 ? ' ' + wo.reflow2_labelTop : '') + '">' + headers[j][i] + '</b>');

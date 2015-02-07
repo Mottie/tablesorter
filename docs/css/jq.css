@@ -22,6 +22,8 @@ table.options .property, .setwidth {width:115px;}
 table.options .type {width:100px; }
 table.options .defaults {width:160px;}
 table.options .examples {width:60px;}
+table.options thead th:nth-child(1) { width: 10%; }
+table.options thead .defaults { width: 1%; }
 table.compatibility { width: 50%; float: right; font-size: .8em; margin-left: 20px; }
 table.compatibility th,table.compatibility td { text-align: center; padding: 2px; }
 pre,#display {overflow-x:auto;padding:15px;border:1px solid #ddd;border-left-width:5px;}
@@ -61,8 +63,8 @@ p.small {padding-left: 25px;}
 .xsmall {font-size:11px;}
 p.tip em, div.tip em,.label-info {padding: 2px; background-color: #5bc0de; color: #fff; border-radius: .25em;}
 .label { padding: 0.1em 0.6em 0.1em; font-size: 75%; color: #fff; border-radius: .25em; }
-span.tip em, .label-success { background-color: #5cb85c; }
-.updated .label-success { background-color: #8eCe8e; }
+span.tip em, .label-success, .version .label-success { background-color: #2b7e7e; } /*5cb85c*/
+.older .label-success { background-color: #8eCe8e; }
 span.tip.old em, .label-default { background-color: #999; }
 span.warning { background-color: #f0ad4e; } /* orange */
 span.warn em, .label.alert { background-color: #d9534f; } /* red */
@@ -83,6 +85,8 @@ span.alert { padding: 1px 3px; }
 .fade { opacity: 0.5; }
 .results { color: red; }
 .clear { clear: both; }
+.good { color: #080; }
+.bad { color: #800; }
 .bootstrap_buttons button { margin: 5px 0 0 0; }
 #main .ui-accordion-header a, #main .ui-accordion-content { font-size: 14px; }
 #banner small { font-size: 16px; vertical-align: super; }

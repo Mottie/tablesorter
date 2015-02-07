@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Column Selector Widget (beta)</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Column Selector Widget</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -28,14 +28,6 @@
 	.popover.right { text-align: left; }
 	.ui-widget-content a { color: #428bca; }
 	</style>
-	<script>
-	$(function(){
-		$('.options').tablesorter({
-			widthFixed: true,
-			widgets: ['stickyHeaders']
-		});
-	});
-	</script>
 
 <style id="css">/*** custom css only popup ***/
 .columnSelectorWrapper {
@@ -167,7 +159,7 @@
 
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Column Selector Widget (beta)</h2>
+	<h2>Column Selector Widget</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -182,14 +174,15 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version updated">v2.19.0</span>, the <code>refreshColumnSelector</code> method has been updated to allow passing a parameter. Pass an array of zero-based column indexes of columns to show, or any non-array to enable auto mode (if available).</li>
 			<li>In <span class="version">v2.18.4</span>, added <code>columnSelector_cssChecked</code> option which contains the class name added to checked inputs. This helps fix an issue in Chrome that rears it's ugly head when trying to use <code>input:checked</code> to change a Font Awesome icon. See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.</li>
 			<li>
 				In <span class="version">v2.17.0</span>, a method to refresh the column selector was added.<br>
 				<br>
 			</li>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
-			<li>This widget may not work properly if the table header includes rows with row or column spans.</li>
-			<li>The responsive part of this widget
+			<li>This widget may not work properly if the table contains rows with <code>rowspan</code> or <code>colspan</code> settings.</li>
+			<li>The responsive part of this widget:
 				<ul>
 					<li>Uses similar parameters as those used by jQuery mobile to set <a href="http://view.jquerymobile.com/1.4.0/demos/table-column-toggle/">column priority</a>.</li>
 					<li>The column priorities range from 1 to 6, with 1 having the highest priority. As the browser window shrinks, lower priority (higher numbers) columns will be hidden first until all numbered priority columns are hidden.</li>
@@ -289,7 +282,7 @@
 							<br>
 							 The only available parameter is the <code>{name}</code> string which will be replaced with the appropriate column name/title.<br>
 							<br>
-							An <code>&lt;input type=&quot;checkbox&quot;&gt;</code> is required within this setting!<br>
+							An <code>&lt;input type=&quot;checkbox&quot;&gt;</code> is required within this setting! The label element is optional.<br>
 							<br>
 							Default value: <code>'&lt;label&gt;&lt;input type=&quot;checkbox&quot;&gt;{name}&lt;/label&gt;'</code>
 							</div>
@@ -316,6 +309,11 @@
 						<td>Set this option to add (<code>true</code>) or not add (<code>false</code>) the media query functionality of this widget.
 							<div class="collapsible">
 							<br>
+							When <code>true</code>, an "auto" checkbox is included along with the column checkboxes:
+							<ul>
+								<li>When the "auto" checkbox is checked, all column checkboxes are disabled and media queries are active (columns will hide or show based on the browser width).</li>
+								<li>If "auto" is unchecked, media queries are disabled and column (non-critial/not disabled) visibility is based on the column checkbox setting.</li>
+							</ul>
 							Default value: <code>true</code>
 							</div>
 						</td>
@@ -398,9 +396,29 @@
 
 		<h3><a href="#">Methods</a></h3>
 		<div>
-			Refresh the breakpoints and selected columns using this method (<span class="version">v2.17.0</span>):<br>
-			<br>
+			Refresh the breakpoints and selected columns using this method (<span class="version">v2.17.0</span>):
+			<p></p>
 			<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector');</pre>
+			<br>
+			In <span class="version">v2.19.0</span>, this method will now accept a parameter.
+			<p></p>
+			<ul>
+				<li>
+					The parameter can be either an array of zero-based column indexes to toggle columns on and off:
+					<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ [2,3,4] ]);</pre>
+					<span class="label label-info">Note</span>
+					<ul>
+						<li>Passing an array will turn "auto" mode off.</li>
+						<li>Make sure to wrap the array inside another array.</li>
+						<li>Columns marked as "critical" or "disable" will never get toggled off using this method.</li>
+					</ul>
+					<p></p>
+				</li>
+				<li>
+					Or, set the parameter to any non-array value to turn the "auto" mode on - this only works if the <code>columnSelector_mediaquery</code> is set to <code>true</code>:
+					<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', true);</pre>
+				</li>
+			</ul>
 		</div>
 
 		<h3><a href="#">Removing a column from the selector</a></h3>
@@ -418,7 +436,7 @@
 					</ul>
 				</li>
 			</ul>
-			*  Prior to v2.15.6, setting these methods to "false" would remove it from the selector. Now, they must be set to "disable" to remove the column from the selector, this was done to make it more consistent with the <code>columnSelector_columns</code> setting.
+			* <span class="label label-warning">*NOTE*</span> Prior to v2.15.6, setting these methods to "false" would remove it from the selector. Now, they must be set to "disable" to remove the column from the selector, this was done to make it more consistent with the <code>columnSelector_columns</code> setting.
 		</div>
 	</div>
 

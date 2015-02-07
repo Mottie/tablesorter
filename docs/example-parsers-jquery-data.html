@@ -2,7 +2,7 @@
 <html>
 <head>
  <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable or set the column parser using jQuery data</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Disable or set the column parser using data</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -18,13 +18,19 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script id="js">$(function(){
-	$("table").tablesorter({ theme: 'blue' });
+	// set Discount column parser using jQuery data (either 'digit' or 'percent' will work)
+	$('th.discount').data('sorter', 'digit');
+	// set an initial sort on the table using jQuery data
+	$('table').data('sortlist', [[4,0]]);
+
+	// the rest of the parsers are set using the header cell data-attribute
+	$('table').tablesorter({ theme: 'blue' });
 });</script>
 </head>
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable or set the column parser using jQuery data</h2>
+	<h2>Disable or set the column parser using data</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -42,7 +48,7 @@
 			<th data-sorter="text">Last Name</th>
 			<th data-sorter="false">Age</th>
 			<th data-sorter="currency" data-string="min">Total</th> <!-- data-string="min" treats strings in this numeric column as a large negative number -->
-			<th data-sorter="percent" data-empty="top">Discount</th> <!-- data-empty="top" sorts empty cells to the top -->
+			<th class="discount" data-empty="top">Discount</th> <!-- data-empty="top" sorts empty cells to the top -->
 			<th data-sorter="usLongDate">Date</th>
 		</tr>
 	</thead>

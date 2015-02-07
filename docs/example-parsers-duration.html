@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter - Duration parser</title>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter - Duration &amp; countdown parsers</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -46,39 +48,66 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Duration parser</h2>
+	<h2>Duration &amp; countdown parsers</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
+	<p></p>
+	<br>
 
-	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li>This parser will convert a duration time "<code>####</code><span class="label label-info">y</span> <code>####</code><span class="label label-info">d</span> <code>####</code><span class="label label-info">h</span> <code>####</code><span class="label label-info">m</span> <code>####</code><span class="label label-info">s</span>" into a sortable value.</li>
-			<li>It is not designed to convert <code>365</code> days into <code>1</code> year, nor perform any other conversions.</li>
-			<li>Options:
-				<ul>
-					<li><code>durationLabels</code>
-						<ul>
-							<li>Default: <code>'(?:years|year|y),(?:days|day|d),(?:hours|hour|h),(?:minutes|minute|min|m),(?:seconds|second|sec|s)'</code></li>
-							<li>Add more or change the duration labels by modifying this option; separate the labels with a comma.</li>
-							<li>The label doesn't need to include regex. If you are only using one letter, change the label to <code>'y,d,h,m,s'</code></li>
-						</ul>
-					</li>
-					<li><code>durationLength</code>
-						<ul>
-							<li>Default: <code>4</code></li>
-							<li>Modify this value so that the <em>max length</em> of values is included.</li>
-							<li>The default value of <code>4</code> will include values up to <code>9,999</code></li>
-							<li>Values less than or equal to <code>99,999</code> will require this option to be set to <code>5</code></li>
-							<li>Values less than or equal to <code>999,999</code> need this value set to <code>6</code>, etc.</li>
-						</ul>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	<div id="root" class="accordion">
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>Both the duration &amp; countdown parsers are contained in the <code>parser-duration.js</code> file.</li>
+				<li>Neither parser checks for valid time settings, all it does is parse the values to make them sortable.</li>
+			</ul>
+		</div>
+		<h3><a href="#">Duration Parser</a></h3>
+		<div>
+			<ul>
+				<li>The duration parser will convert a duration time "<code>####</code><span class="label label-info">y</span> <code>####</code><span class="label label-info">d</span> <code>####</code><span class="label label-info">h</span> <code>####</code><span class="label label-info">m</span> <code>####</code><span class="label label-info">s</span>" into a sortable value.</li>
+				<li>It is not designed to convert <code>365</code> days into <code>1</code> year, nor perform any other conversions.</li>
+				<li>Options:
+					<ul>
+						<li><code>durationLabels</code>
+							<ul>
+								<li>Default: <code>'(?:years|year|y),(?:days|day|d),(?:hours|hour|h),(?:minutes|minute|min|m),(?:seconds|second|sec|s)'</code></li>
+								<li>Add more or change the duration labels by modifying this option; separate the labels with a comma.</li>
+								<li>The label doesn't need to include regex. If you are only using one letter, change the label to <code>'y,d,h,m,s'</code></li>
+							</ul>
+						</li>
+						<li><code>durationLength</code>
+							<ul>
+								<li>Default: <code>4</code></li>
+								<li>Modify this value so that the <em>max length</em> of values is included.</li>
+								<li>The default value of <code>4</code> will include values up to <code>9,999</code></li>
+								<li>Values less than or equal to <code>99,999</code> will require this option to be set to <code>5</code></li>
+								<li>Values less than or equal to <code>999,999</code> need this value set to <code>6</code>, etc.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<h3><a href="#">Countdown Parser</a></h3>
+		<div>
+			<ul>
+				<li>The countdown parser will convert a countdown time "<code>####</code><span class="label label-info">:</span><code>####</code><span class="label label-info">:</span><code>####</code>" into a sortable value.</li>
+				<li>It is not designed to deal with invalid times like <code>65:99</code> (65 minutes &amp; 99 seconds).</li>
+				<li>This parser also uses the <code>durantionLength</code> value to set the maximum length of each value used in the countdown.
+					<ul>
+						<li>Default: <code>4</code></li>
+						<li>Modify this value so that the <em>max length</em> of values is included.</li>
+						<li>The default value of <code>4</code> will include values up to <code>9,999</code></li>
+						<li>Values less than or equal to <code>99,999</code> will require this option to be set to <code>5</code></li>
+						<li>Values less than or equal to <code>999,999</code> need this value set to <code>6</code>, etc.</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
 
 	<h1>Demo</h1>
 
@@ -89,21 +118,22 @@
 		<tr>
 			<th>Name</th>
 			<th class="sorter-duration">Duration</th>
+			<th class="sorter-countdown">Countdown</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>Frank</td><td>1y 23d 12h 44m 9s</td></tr>
-		<tr><td>Fred</td><td>12d 12h 14m 20s</td></tr>
-		<tr><td>Albert</td><td>12h 14m 3s</td></tr>
-		<tr><td>Aaron</td><td>3d 11h 13m 22s</td></tr>
-		<tr><td>Oliver</td><td>3d 11h 14s</td></tr>
-		<tr><td>Xavier</td><td>11m 41s</td></tr>
-		<tr><td>Henry</td><td>12m</td></tr>
-		<tr><td>Lucy</td><td>23d 12h 44m 10s</td></tr>
-		<tr><td>Marsha</td><td>1y 1h 1m 1s</td></tr>
-		<tr><td>Pat</td><td>12 days 12hours 44minutes 50 seconds</td></tr>
-		<tr><td>George</td><td>33s</td></tr>
-		<tr><td>Oscar</td><td>24d 12h 11m 11s</td></tr>
+		<tr><td>Frank</td><td>1y 23d 12h 44m 9s</td><td>2:21:16</td></tr>
+		<tr><td>Fred</td><td>12d 12h 14m 20s</td><td>44:25</td></tr>
+		<tr><td>Albert</td><td>12h 14m 3s</td><td>1:9:2</td></tr>
+		<tr><td>Aaron</td><td>3d 11h 13m 22s</td><td>1:5:5</td></tr>
+		<tr><td>Oliver</td><td>3d 11h 14s</td><td>4:33:33</td></tr>
+		<tr><td>Xavier</td><td>11m 41s</td><td>59:59</td></tr>
+		<tr><td>Henry</td><td>12m</td><td>10:22:32</td></tr>
+		<tr><td>Lucy</td><td>23d 12h 44m 10s</td><td>2:43:52</td></tr>
+		<tr><td>Marsha</td><td>1y 1h 1m 1s</td><td>3:12:18</td></tr>
+		<tr><td>Pat</td><td>12 days 12hours 44minutes 50 seconds</td><td>22:51</td></tr>
+		<tr><td>George</td><td>33s</td><td>1:53:21</td></tr>
+		<tr><td>Oscar</td><td>24d 12h 11m 11s</td><td>51:12</td></tr>
 	</tbody>
 </table></div>
 
@@ -123,7 +153,7 @@
 			len = $table[0].config.durationLength,
 			regex = new RegExp('(\\d{' + len + '})', 'g');
 		// add parsed values to order & value column
-		addParsedValues( $table, [1], function(v){
+		addParsedValues( $table, [1,2], function(v){
 			var t = v.replace(regex, '$1|');
 			return t.substring(0, t.length - 1);
 		});

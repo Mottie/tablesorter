@@ -101,6 +101,9 @@
 	box-sizing: border-box;
 	transition: height 0.1s ease;
 }
+.tablesorter-bootstrap .tablesorter-filter-row {
+	background: #efefef;
+}
 .tablesorter-bootstrap .tablesorter-filter-row td {
 	background: #efefef;
 	line-height: normal;

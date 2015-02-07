@@ -144,6 +144,9 @@ caption {
 }
 
 /* Filter Widget */
+.tablesorter-dropbox .tablesorter-filter-row {
+	background: #fff;
+}
 .tablesorter-dropbox .tablesorter-filter-row td {
 	background: #fff;
 	line-height: normal;

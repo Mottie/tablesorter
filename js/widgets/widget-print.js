@@ -1,4 +1,4 @@
-/* Print widget (beta) for TableSorter 6/18/2014 (v2.17.2)
+/* Print widget for TableSorter 2/7/2015 (v2.19.0)
  * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -55,7 +55,7 @@ printTable = ts.printTable = {
 		// add the definition to the wo.print_extraCSS option
 		if (/s/i.test(wo.print_columns) && c.selector && c.widgets.indexOf('columnSelector') >= 0) {
 			// show selected (visible) columns; make a copy of the columnSelector widget css (not media queries)
-			printStyle += c.selector.auto ? '' : c.selector.$style.text();
+			printStyle += wo.columnSelector_mediaquery && c.selector.auto ? '' : c.selector.$style.text();
 		} else if (/a/i.test(wo.print_columns)) {
 			// force show all cells
 			printStyle += 'td, th { display: table-cell !important; }';

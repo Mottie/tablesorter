@@ -119,6 +119,9 @@ caption {
 }
 
 /* filter widget */
+.tablesorter-dark .tablesorter-filter-row {
+	background: #202020;
+}
 .tablesorter-dark .tablesorter-filter-row td {
 	background: #202020;
 	line-height: normal;

@@ -1,4 +1,4 @@
-/*! tableSorter (FORK) 2.16+ widgets - updated 12/22/2014 (v2.18.4)
+/*! tableSorter (FORK) 2.16+ widgets - updated 2/7/2015 (v2.19.0)
  *
  * Column Styles
  * Column Filters
@@ -11,41 +11,51 @@
 /*jshint browser:true, jquery:true, unused:false, loopfunc:true */
 /*global jQuery: false, localStorage: false */
 ;(function ($, window) {
-"use strict";
+'use strict';
 var ts = $.tablesorter = $.tablesorter || {};
 
 ts.themes = {
-	"bootstrap" : {
-		table      : 'table table-bordered table-striped',
-		caption    : 'caption',
-		header     : 'bootstrap-header', // give the header a gradient background
-		footerRow  : '',
-		footerCells: '',
-		icons      : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
-		sortNone   : 'bootstrap-icon-unsorted',
-		sortAsc    : 'icon-chevron-up glyphicon glyphicon-chevron-up',
-		sortDesc   : 'icon-chevron-down glyphicon glyphicon-chevron-down',
-		active     : '', // applied when column is sorted
-		hover      : '', // use custom css here - bootstrap class may not override it
-		filterRow  : '', // filter row class
-		even       : '', // even row zebra striping
-		odd        : ''  // odd row zebra striping
+	'bootstrap' : {
+		table        : 'table table-bordered table-striped',
+		caption      : 'caption',
+		// header class names
+		header       : 'bootstrap-header', // give the header a gradient background (theme.bootstrap_2.css)
+		sortNone     : '',
+		sortAsc      : '',
+		sortDesc     : '',
+		active       : '', // applied when column is sorted
+		hover        : '', // custom css required - a defined bootstrap style may not override other classes
+		// icon class names
+		icons        : '', // add "icon-white" to make them white; this icon class is added to the <i> in the header
+		iconSortNone : 'bootstrap-icon-unsorted', // class name added to icon when column is not sorted
+		iconSortAsc  : 'icon-chevron-up glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
+		iconSortDesc : 'icon-chevron-down glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
+		filterRow    : '', // filter row class
+		footerRow    : '',
+		footerCells  : '',
+		even         : '', // even row zebra striping
+		odd          : ''  // odd row zebra striping
 	},
-	"jui" : {
-		table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
-		caption    : 'ui-widget-content',
-		header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-		footerRow  : '',
-		footerCells: '',
-		icons      : 'ui-icon', // icon class added to the <i> in the header
-		sortNone   : 'ui-icon-carat-2-n-s',
-		sortAsc    : 'ui-icon-carat-1-n',
-		sortDesc   : 'ui-icon-carat-1-s',
-		active     : 'ui-state-active', // applied when column is sorted
-		hover      : 'ui-state-hover',  // hover class
-		filterRow  : '',
-		even       : 'ui-widget-content', // even row zebra striping
-		odd        : 'ui-state-default'   // odd row zebra striping
+	'jui' : {
+		table        : 'ui-widget ui-widget-content ui-corner-all', // table classes
+		caption      : 'ui-widget-content',
+		// header class names
+		header       : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+		sortNone     : '',
+		sortAsc      : '',
+		sortDesc     : '',
+		active       : 'ui-state-active', // applied when column is sorted
+		hover        : 'ui-state-hover',  // hover class
+		// icon class names
+		icons        : 'ui-icon', // icon class added to the <i> in the header
+		iconSortNone : 'ui-icon-carat-2-n-s', // class name added to icon when column is not sorted
+		iconSortAsc  : 'ui-icon-carat-1-n', // class name added to icon when column has ascending sort
+		iconSortDesc : 'ui-icon-carat-1-s', // class name added to icon when column has descending sort
+		filterRow    : '',
+		footerRow    : '',
+		footerCells  : '',
+		even         : 'ui-widget-content', // even row zebra striping
+		odd          : 'ui-state-default'   // odd row zebra striping
 	}
 };
 
@@ -100,13 +110,13 @@ ts.storage = function(table, key, value, options) {
 	// *** get value ***
 	if ($.parseJSON) {
 		if (hasLocalStorage) {
-			values = $.parseJSON(localStorage[key] || '{}');
+			values = $.parseJSON(localStorage[key] || 'null') || {};
 		} else {
 			// old browser, using cookies
 			cookies = document.cookie.split(/[;\s|=]/);
 			// add one to get from the key to the value
 			cookieIndex = $.inArray(key, cookies) + 1;
-			values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || '{}') : {};
+			values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || 'null') || {} : {};
 		}
 	}
 	// allow value to be an empty string too
@@ -132,7 +142,7 @@ ts.storage = function(table, key, value, options) {
 // Add a resize event to table headers
 // **************************
 ts.addHeaderResizeEvent = function(table, disable, settings) {
-	table = $(table)[0]; // make sure we're usig a dom element
+	table = $(table)[0]; // make sure we're using a dom element
 	var headers,
 		defaults = {
 			timer : 250
@@ -177,33 +187,42 @@ ts.addWidget({
 	id: "uitheme",
 	priority: 10,
 	format: function(table, c, wo) {
-		var i, time, classes, $header, $icon, $tfoot, $h, oldtheme, oldremove,
+		var i, hdr, icon, time, $header, $icon, $tfoot, $h, oldtheme, oldremove, oldIconRmv, hasOldTheme,
 			themesAll = ts.themes,
-			$table = c.$table,
-			$headers = c.$headers,
+			$table = c.$table.add( c.$extraTables ),
+			$headers = c.$headers.add( c.$extraHeaders ),
 			theme = c.theme || 'jui',
-			themes = themesAll[theme] || themesAll.jui,
-			remove = [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' );
+			themes = themesAll[theme] || {},
+			remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
+			iconRmv = $.trim( [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ) );
 		if (c.debug) { time = new Date(); }
 		// initialization code - run once
-		if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !table.hasInitialized) {
-			oldtheme = themes[c.appliedTheme] || {};
-			oldremove = oldtheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
-			if (oldtheme) {
-				wo.zebra[0] = wo.zebra[0].replace(' ' + oldtheme.even, '');
-				wo.zebra[1] = wo.zebra[1].replace(' ' + oldtheme.odd, '');
+		if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !wo.uitheme_applied) {
+			wo.uitheme_applied = true;
+			oldtheme = themesAll[c.appliedTheme] || {};
+			hasOldTheme = !$.isEmptyObject(oldtheme);
+			oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '',
+			oldIconRmv = hasOldTheme ? [ oldtheme.iconSortNone, oldtheme.iconSortDesc, oldtheme.iconSortAsc ].join( ' ' ) : '';
+			if (hasOldTheme) {
+				wo.zebra[0] = $.trim( ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '') );
+				wo.zebra[1] = $.trim( ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '') );
+				c.$tbodies.children().removeClass( [oldtheme.even, oldtheme.odd].join(' ') );
 			}
 			// update zebra stripes
-			if (themes.even !== '') { wo.zebra[0] += ' ' + themes.even; }
-			if (themes.odd !== '') { wo.zebra[1] += ' ' + themes.odd; }
+			if (themes.even) { wo.zebra[0] += ' ' + themes.even; }
+			if (themes.odd) { wo.zebra[1] += ' ' + themes.odd; }
 			// add caption style
-			$table.children('caption').removeClass(oldtheme.caption).addClass(themes.caption);
+			$table.children('caption')
+				.removeClass(oldtheme.caption || '')
+				.addClass(themes.caption);
 			// add table/footer class names
 			$tfoot = $table
 				// remove other selected themes
-				.removeClass( c.appliedTheme ? 'tablesorter-' + ( c.appliedTheme || '' ) : '' )
-				.addClass('tablesorter-' + theme + ' ' + themes.table) // add theme widget class name
+				.removeClass( (c.appliedTheme ? 'tablesorter-' + (c.appliedTheme || '') : '') + ' ' + (oldtheme.table || '') )
+				.addClass('tablesorter-' + theme + ' ' + (themes.table || '')) // add theme widget class name
 				.children('tfoot');
+			c.appliedTheme = c.theme;
+
 			if ($tfoot.length) {
 				$tfoot
 					// if oldtheme.footerRow or oldtheme.footerCells are undefined, all class names are removed
@@ -212,43 +231,59 @@ ts.addWidget({
 			}
 			// update header classes
 			$headers
-				.add(c.$extraHeaders)
-				.removeClass(oldtheme.header + ' ' + oldtheme.hover + ' ' + oldremove)
+				.removeClass( (hasOldTheme ? [oldtheme.header, oldtheme.hover, oldremove].join(' ') : '') || '' )
 				.addClass(themes.header)
 				.not('.sorter-false')
+				.unbind('mouseenter.tsuitheme mouseleave.tsuitheme')
 				.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
 					// toggleClass with switch added in jQuery 1.3
-					$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover);
+					$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 				});
-			if (!$headers.find('.' + ts.css.wrapper).length) {
-				// Firefox needs this inner div to position the resizer correctly
-				$headers.wrapInner('<div class="' + ts.css.wrapper + '" style="position:relative;height:100%;width:100%"></div>');
-			}
+
+			$headers.each(function(){
+				var $this = $(this);
+				if (!$this.find('.' + ts.css.wrapper).length) {
+					// Firefox needs this inner div to position the icon & resizer correctly
+					$this.wrapInner('<div class="' + ts.css.wrapper + '" style="position:relative;height:100%;width:100%"></div>');
+				}
+			});
 			if (c.cssIcon) {
 				// if c.cssIcon is '', then no <i> is added to the header
-				$headers.find('.' + ts.css.icon).removeClass(oldtheme.icons + ' ' + oldremove).addClass(themes.icons);
+				$headers
+					.find('.' + ts.css.icon)
+					.removeClass(hasOldTheme ? [oldtheme.icons, oldIconRmv].join(' ') : '')
+					.addClass(themes.icons || '');
 			}
 			if ($table.hasClass('hasFilters')) {
-				$table.children('thead').children('.' + ts.css.filterRow).removeClass(oldtheme.filterRow).addClass(themes.filterRow);
+				$table.children('thead').children('.' + ts.css.filterRow)
+					.removeClass(hasOldTheme ? oldtheme.filterRow || '' : '')
+					.addClass(themes.filterRow || '');
 			}
-			c.appliedTheme = c.theme;
 		}
 		for (i = 0; i < c.columns; i++) {
 			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
-			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $header;
+			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $();
 			$h = $headers.not('.sorter-false').filter('[data-column="' + i + '"]:last');
 			if ($h.length) {
+				$header.removeClass(remove);
+				$icon.removeClass(iconRmv);
 				if ($h[0].sortDisabled) {
 					// no sort arrows for disabled columns!
-					$header.removeClass(remove);
-					$icon.removeClass(remove + ' ' + themes.icons);
+					$icon.removeClass(themes.icons || '');
 				} else {
-					classes = ($header.hasClass(ts.css.sortAsc)) ?
-						themes.sortAsc :
-						($header.hasClass(ts.css.sortDesc)) ? themes.sortDesc :
-							$header.hasClass(ts.css.header) ? themes.sortNone : '';
-					$header[classes === themes.sortNone ? 'removeClass' : 'addClass'](themes.active);
-					$icon.removeClass(remove).addClass(classes);
+					hdr = themes.sortNone;
+					icon = themes.iconSortNone;
+					if ($h.hasClass(ts.css.sortAsc)) {
+						hdr = [themes.sortAsc, themes.active].join(' ');
+						icon = themes.iconSortAsc;
+					} else if ($h.hasClass(ts.css.sortDesc)) {
+						hdr = [themes.sortDesc, themes.active].join(' ');
+						icon = themes.iconSortDesc;
+					}
+					$h
+						.addClass(hdr)
+						.find('.' + ts.css.icon)
+						.addClass(icon || '');
 				}
 			}
 		}
@@ -256,21 +291,24 @@ ts.addWidget({
 			ts.benchmark("Applying " + theme + " theme", time);
 		}
 	},
-	remove: function(table, c) {
+	remove: function(table, c, wo, refreshing) {
+		if (!wo.uitheme_applied) { return; }
 		var $table = c.$table,
-			theme = c.theme || 'jui',
+			theme = c.appliedTheme || 'jui',
 			themes = ts.themes[ theme ] || ts.themes.jui,
 			$headers = $table.children('thead').children(),
-			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc;
-		$table
-			.removeClass('tablesorter-' + theme + ' ' + themes.table)
-			.find(ts.css.header).removeClass(themes.header);
+			remove = themes.sortNone + ' ' + themes.sortDesc + ' ' + themes.sortAsc,
+			iconRmv = themes.iconSortNone + ' ' + themes.iconSortDesc + ' ' + themes.iconSortAsc;
+		$table.removeClass('tablesorter-' + theme + ' ' + themes.table);
+		wo.uitheme_applied = false;
+		if (refreshing) { return; }
+		$table.find(ts.css.header).removeClass(themes.header);
 		$headers
 			.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
 			.removeClass(themes.hover + ' ' + remove + ' ' + themes.active)
-			.find('.' + ts.css.filterRow)
+			.filter('.' + ts.css.filterRow)
 			.removeClass(themes.filterRow);
-		$headers.find('.' + ts.css.icon).removeClass(themes.icons);
+		$headers.find('.' + ts.css.icon).removeClass(themes.icons + ' ' + iconRmv);
 	}
 });
 
@@ -388,7 +426,7 @@ ts.addWidget({
 			ts.filter.init(table, c, wo);
 		}
 	},
-	remove: function(table, c, wo) {
+	remove: function(table, c, wo, refreshing) {
 		var tbodyIndex, $tbody,
 			$table = c.$table,
 			$tbodies = c.$tbodies;
@@ -396,7 +434,9 @@ ts.addWidget({
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
 			.unbind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '))
+			// remove the filter row even if refreshing, because the column might have been moved
 			.find('.' + ts.css.filterRow).remove();
+		if (refreshing) { return; }
 		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true); // remove tbody
 			$tbody.children().removeClass(wo.filter_filteredRow).show();
@@ -619,8 +659,11 @@ ts.filter = {
 			ts.filter.buildRow(table, c, wo);
 		}
 
-		c.$table.bind('addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter '), function(event, filter) {
-			c.$table.find('.' + ts.css.filterRow).toggle( !(wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache')) ); // fixes #450
+		txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter ');
+		c.$table.bind(txt, function(event, filter) {
+			val = (wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache'));
+			// hide filter row using the "filtered" class name
+			c.$table.find('.' + ts.css.filterRow).toggleClass(wo.filter_filteredRow, val ); // fixes #450
 			if ( !/(search|filter)/.test(event.type) ) {
 				event.stopPropagation();
 				ts.filter.buildDefault(table, true);
@@ -1216,7 +1259,8 @@ ts.filter = {
 								if (data.parsed[i]) {
 									txt = data.cacheArray[i];
 								} else {
-									txt = wo.filter_ignoreCase ? $(this).text().toLowerCase() : $(this).text();
+									txt = this.getAttribute( c.textAttribute ) || this.textContent || $(this).text();
+									txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
 									if (c.sortLocaleCompare) {
 										txt = ts.replaceAccents(txt);
 									}
@@ -1270,9 +1314,9 @@ ts.filter = {
 							if (wo.filter_useParsedData || data.parsed[columnIndex]) {
 								data.exact = data.cache;
 							} else {
-							// using older or original tablesorter
-								data.exact = $.trim( $cells.eq(columnIndex).text() );
-								data.exact = c.sortLocaleCompare ? ts.replaceAccents(data.exact) : data.exact; // issue #405
+								val = $cells[columnIndex];
+								result = $.trim( val.getAttribute( c.textAttribute ) || val.textContent || $cells.eq(columnIndex).text() );
+								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405
 							}
 							data.iExact = !regex.type.test(typeof data.exact) && wo.filter_ignoreCase ? data.exact.toLocaleLowerCase() : data.exact;
 							result = showRow; // if showRow is true, show that row
@@ -1280,9 +1324,10 @@ ts.filter = {
 							// in case select filter option has a different value vs text "a - z|A through Z"
 							ffxn = wo.filter_columnFilters ?
 								c.$filters.add(c.$externalFilters).filter('[data-column="'+ columnIndex + '"]').find('select option:selected').attr('data-function-name') || '' : '';
-
 							// replace accents - see #357
-							data.filter = c.sortLocaleCompare ? ts.replaceAccents(data.filter) : data.filter;
+							if (c.sortLocaleCompare) {
+								data.filter = ts.replaceAccents(data.filter);
+							}
 
 							val = true;
 							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
@@ -1357,6 +1402,7 @@ ts.filter = {
 		}, 0);
 	},
 	getOptionSource: function(table, column, onlyAvail) {
+		table = $(table)[0];
 		var cts,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1433,6 +1479,7 @@ ts.filter = {
 		}
 	},
 	getOptions: function(table, column, onlyAvail) {
+		table = $(table)[0];
 		var rowIndex, tbodyIndex, len, row, cache, cell,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1454,7 +1501,7 @@ ts.filter = {
 					} else {
 						cell = row.cells[column];
 						if (cell) {
-							arry.push( $.trim( cell.textContent || cell.innerText || $(cell).text() ) );
+							arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
 						}
 					}
 				}
@@ -1602,7 +1649,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 		// ensure new set filters are applied, even if the search is the same
 		c.lastCombinedFilter = null;
 		c.lastSearch = [];
-		ts.filter.searching(c.$table[0], filter, skipFirst);
+		ts.filter.searching(c.table, filter, skipFirst);
 		c.$table.trigger('filterFomatterUpdate');
 	}
 	return !!valid;
@@ -1703,6 +1750,13 @@ ts.addWidget({
 				setWidth( $table, $stickyTable );
 				setWidth( $header, $stickyCells );
 			};
+		// save stickyTable element to config
+		// it is also saved to wo.$sticky
+		if (c.$extraTables && c.$extraTables.length) {
+			c.$extraTables.add($stickyTable);
+		} else {
+			c.$extraTables = $stickyTable;
+		}
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
@@ -1810,11 +1864,11 @@ ts.addWidget({
 			.unbind( 'pagerComplete filterEnd '.split(' ').join(namespace) )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
-		// don't unbind if any table on the page still has stickyheaders applied
-		if (!$('.hasStickyHeaders').length) {
-			$(window).add(wo.stickyHeaders_xScroll).add(wo.stickyHeaders_yScroll).add(wo.stickyHeaders_attachTo)
-				.unbind( 'scroll resize '.split(' ').join(namespace) );
-		}
+		$(window)
+			.add(wo.stickyHeaders_xScroll)
+			.add(wo.stickyHeaders_yScroll)
+			.add(wo.stickyHeaders_attachTo)
+			.unbind( 'scroll resize '.split(' ').join(namespace) );
 		ts.addHeaderResizeEvent(table, false);
 	}
 });
@@ -1974,7 +2028,7 @@ ts.resizableReset = function(table, nosave) {
 		if (table && c) {
 			c.$headers.each(function(i){
 				$t = $(this);
-				if (wo.resizable_widths[i]) {
+				if (wo.resizable_widths && wo.resizable_widths[i]) {
 					$t.css('width', wo.resizable_widths[i]);
 				} else if (!$t.hasClass('resizable-false')) {
 					// don't clear the width of any column that is not resizable
@@ -2042,7 +2096,8 @@ ts.addWidget({
 			}
 		}
 	},
-	remove: function(table) {
+	remove: function(table, c) {
+		c.$table.removeClass('hasSaveSort');
 		// clear storage
 		if (ts.storage) { ts.storage( table, 'tablesorter-savesort', '' ); }
 	}
