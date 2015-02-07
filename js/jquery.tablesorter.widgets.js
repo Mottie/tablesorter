@@ -422,7 +422,7 @@ ts.addWidget({
 		filter_selectSourceSeparator : '|' // filter_selectSource array text left of the separator is added to the option value, right into the option text
 	},
 	format: function(table, c, wo) {
-		if (!c.$table.hasClass('hasFilters')) {
+		if (c.$table.hasClass('hasFilters')) {
 			ts.filter.init(table, c, wo);
 		}
 	},
