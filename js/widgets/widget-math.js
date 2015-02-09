@@ -8,7 +8,7 @@
 	"use strict";
 
 	var ts = $.tablesorter,
-	events = ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
+	events = $.trim( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
 		'filterReset filterEnd recalculate ' ).split(' ').join('.tsmath '),
 	math = {
 
@@ -389,26 +389,18 @@
 			math_suffix   : ''
 		},
 		init : function(table, thisWidget, c, wo){
-			var init;
-
 			c.$table
-				.off('update.tsmath init.tsmath')
-				.on(events, function(e){
-					init = e.type === 'tablesorter-initialized';
+				.unbind(events + ' updateComplete.tsmath')
+				.bind(events, function(e){
+					var init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
-						c.$table.trigger('update.tsmath');
+						ts.computeColumnIndex( c.$table.children('tbody').children() );
 					} else if (!wo.math_isUpdating || init) {
-						c.$table.trigger('init.tsmath');
+						math.recalculate( table, c, wo, init );
 					}
 				})
-				.on('init.tsmath', function(){
-					math.recalculate( table, c, wo, init );
-				})
-				.on('update.tsmath', function(){
-					ts.computeColumnIndex( c.$table.children('tbody').children() );
-				})
-				.on('updateComplete.tsmath', function(){
+				.bind('updateComplete.tsmath', function(){
 					setTimeout(function(){
 						wo.math_isUpdating = false;
 					}, 500);
@@ -420,7 +412,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.unbind('update.tsmath init.tsmath updateComplete.tsmath')
+				.unbind(events + ' updateComplete.tsmath')
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});
