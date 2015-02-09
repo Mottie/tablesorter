@@ -12,7 +12,7 @@
 	math = {
 
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
-			'filterReset filterEnd recalculate ' ).split(' ').join('.tsmath '),
+			'filterReset filterEnd ' ).split(' ').join('.tsmath '),
 
 		// get all of the row numerical values in an arry
 		getRow : function(table, wo, $el, dataAttrib) {
@@ -388,12 +388,13 @@
 			// template for or just prepend the mask prefix & suffix with this HTML
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
-			math_suffix   : ''
+			math_suffix   : '',
+			math_event    : 'recalculate'
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table
-				.off( $.trim(math.events) + ' updateComplete.tsmath' )
-				.on( $.trim(math.events), function(e){
+				.off( $.trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
+				.on( $.trim(math.events) + ' ' + wo.math_event, function(e){
 					var init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
@@ -414,7 +415,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.off( $trim(math.events) + ' updateComplete.tsmath' )
+				.off( $trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});
