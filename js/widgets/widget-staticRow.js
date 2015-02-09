@@ -1,6 +1,5 @@
-/*
- * StaticRow widget for jQuery TableSorter 2.0
- * Version 1.2 - modified by Rob Garrison (6/28/2014 for tablesorter v2.16.1-beta+)
+/* StaticRow widget for jQuery TableSorter 2.0 - updated 2/9/2015 (v2.19.1)
+ * Version 1.2 mod by Rob Garrison (requires tablesorter v2.16+)
  * Requires:
  *  jQuery v1.4+
  *  tablesorter plugin, v2.8+, available at http://mottie.github.com/tablesorter/docs/
@@ -15,9 +14,6 @@
 ;(function($){
 "use strict";
 var ts = $.tablesorter,
-
-// events triggered on the table that update this widget
-events = $.trim( 'staticRowsRefresh updateComplete '.split(' ').join('.tsstaticrows ') ),
 
 // add/refresh row indexes
 addIndexes = function(table){
@@ -55,15 +51,16 @@ ts.addWidget({
 	options: {
 		staticRow_class : '.static',
 		staticRow_data  : 'static-index',
-		staticRow_index : 'row-index'
+		staticRow_index : 'row-index',
+		staticRow_event : 'staticRowsRefresh'
 	},
 
 	init: function(table, thisWidget, c, wo){
 		addIndexes(table);
 		// refresh static rows after updates
 		c.$table
-			.unbind(events)
-			.bind(events, function(){
+			.unbind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event) )
+			.bind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event), function(){
 				addIndexes(table);
 				c.$table.trigger('applyWidgets');
 			});
@@ -116,7 +113,7 @@ ts.addWidget({
 	},
 
 	remove : function(table, c, wo){
-		c.$table.unbind(events);
+		c.$table.unbind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event) );
 	}
 
 });
