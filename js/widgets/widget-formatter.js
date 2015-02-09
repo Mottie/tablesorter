@@ -10,11 +10,13 @@
 
 	ts.formatter = {
 		init : function( c ) {
-			var events = $.trim( c.widgetOptions.formatter_event ) + ' pagerComplete updateComplete '
-				.split(' ').join('.tsformatter ');
-			c.$table.on( events, function() {
-				ts.formatter.setup( c );
-			});
+			var events = $.trim( c.widgetOptions.formatter_event ) +
+				' pagerComplete updateComplete '.split(' ').join('.tsformatter ');
+			c.$table
+				.off( $.trim(events) )
+				.on( $.trim(events), function() {
+					ts.formatter.setup( c );
+				});
 			ts.formatter.setup( c );
 		},
 		setup : function( c ) {

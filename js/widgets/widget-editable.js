@@ -95,13 +95,13 @@ var tse = $.tablesorter.editable = {
 
 	bindEvents: function( c, wo ) {
 		c.$table
-			.off( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ) )
-			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ), function() {
+			.off( $.trim( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ) ) )
+			.on( $.trim( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ) ), function() {
 				tse.update( c, c.widgetOptions );
 			});
 
 		c.$tbodies
-			.off( 'mouseleave focus blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) )
+			.off( $.trim( 'mouseleave focus blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) ) )
 			.on( 'mouseleave.tseditable', function() {
 				if ( c.$table.data( 'contentFocused' ) ) {
 					// change to 'true' instead of element to allow focusout to process
@@ -140,7 +140,7 @@ var tse = $.tablesorter.editable = {
 					}
 				}
 			})
-			.on( 'blur focusout keydown '.split( ' ' ).join( '.tseditable ' ), '[contenteditable]', function( e ) {
+			.on( $.trim( 'blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) ), '[contenteditable]', function( e ) {
 				if ( !c.$table.data( 'contentFocused' ) ) { return; }
 				var t, validate,
 					valid = false,

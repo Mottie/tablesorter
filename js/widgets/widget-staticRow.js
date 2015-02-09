@@ -17,7 +17,7 @@
 var ts = $.tablesorter,
 
 // events triggered on the table that update this widget
-events = 'staticRowsRefresh updateComplete '.split(' ').join('.tsstaticrows '),
+events = $.trim( 'staticRowsRefresh updateComplete '.split(' ').join('.tsstaticrows ') ),
 
 // add/refresh row indexes
 addIndexes = function(table){

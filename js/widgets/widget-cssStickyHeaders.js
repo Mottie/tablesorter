@@ -59,8 +59,8 @@
 			}
 
 			$win
-			.unbind('scroll resize '.split(' ').join(namespace))
-			.bind('scroll resize '.split(' ').join(namespace), function() {
+			.unbind( $.trim('scroll resize '.split(' ').join(namespace)) )
+			.bind( $.trim('scroll resize '.split(' ').join(namespace)), function() {
 				// make sure "wo" is current otherwise changes to widgetOptions
 				// are not dynamic (like the add caption button in the demo)
 				wo = c.widgetOptions;
@@ -126,7 +126,7 @@
 				setTransform( $cells, finalY );
 
 			});
-			$table.unbind('filterEnd' + namespace).bind('filterEnd' + namespace, function() {
+			$table.unbind( $.trim('filterEnd' + namespace) ).bind( $.trim('filterEnd' + namespace), function() {
 				if (wo.cssStickyHeaders_filteredToTop) {
 					// scroll top of table into view
 					window.scrollTo(0, $table.position().top);
@@ -137,9 +137,9 @@
 		remove: function(table, c, wo, refreshing) {
 			if (refreshing) { return; }
 			var namespace = c.namespace + 'cssstickyheader ';
-			$(window).unbind('scroll resize '.split(' ').join(namespace));
+			$(window).unbind( $.trim('scroll resize '.split(' ').join(namespace)) );
 			c.$table
-				.unbind('filterEnd scroll resize '.split(' ').join(namespace))
+				.unbind( $.trim('filterEnd scroll resize '.split(' ').join(namespace)) )
 				.add( c.$table.children('thead').children().children() )
 				.children('thead, caption').css({
 					'transform' : '',

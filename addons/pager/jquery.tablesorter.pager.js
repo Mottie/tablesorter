@@ -204,7 +204,7 @@
 				if ($out.length) {
 					$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 					// rebind startRow/page inputs
-					$out.find('.ts-startRow, .ts-page').unbind('change').bind('change', function(){
+					$out.find('.ts-startRow, .ts-page').unbind('change.pager').bind('change.pager', function(){
 						var v = $(this).val(),
 							pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
 						c.$table.trigger('pageSet.pager', [ pg ]);
@@ -768,7 +768,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind(pagerEvents.split(' ').join('.pager '));
+			$(table).unbind( $.trim(pagerEvents.split(' ').join('.pager ')) );
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -848,7 +848,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind(pagerEvents.split(' ').join('.pager '))
+					.unbind( $.trim(pagerEvents.split(' ').join('.pager ')) )
 					.bind('filterInit.pager filterStart.pager', function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
@@ -945,8 +945,8 @@
 				p.$goto = pager.find(p.cssGoto);
 				if ( p.$goto.length ) {
 					p.$goto
-						.unbind('change')
-						.bind('change', function(){
+						.unbind('change.pager')
+						.bind('change.pager', function(){
 							p.page = $(this).val() - 1;
 							moveToPage(table, p, true);
 							updatePageDisplay(table, p, false);

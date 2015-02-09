@@ -851,12 +851,12 @@
 			function bindMethods(table){
 				var c = table.config,
 					$table = c.$table,
-					events = 'sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache' +
+					events = 'sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
 						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ')
 						.join(c.namespace + ' ');
 				// apply easy methods that trigger bound events
 				$table
-				.unbind( $.trim( events ) )
+				.unbind( $.trim(events) )
 				.bind('sortReset' + c.namespace, function(e, callback){
 					e.stopPropagation();
 					c.sortList = [];
@@ -1330,8 +1330,8 @@
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '))
-				.bind('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
+				.unbind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')) )
+				.bind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')), function(e, external) {
 					var cell, type = e.type;
 					// only recognize left clicks or enter
 					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
@@ -1387,10 +1387,12 @@
 				if (!table.hasInitialized) { return; }
 				// remove all widgets
 				ts.removeWidget(table, true, false);
-				var $t = $(table), c = table.config,
-				$h = $t.find('thead:first'),
-				$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
-				$f = $t.find('tfoot:first > tr').children('th, td');
+				var events,
+					$t = $(table),
+					c = table.config,
+					$h = $t.find('thead:first'),
+					$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
+					$f = $t.find('tfoot:first > tr').children('th, td');
 				if (removeClasses === false && $.inArray('uitheme', c.widgets) >= 0) {
 					// reapply uitheme classes, in case we want to maintain appearance
 					$t.trigger('applyWidgetId', ['uitheme']);
@@ -1399,15 +1401,18 @@
 				// remove widget added rows, just in case
 				$h.find('tr').not($r).remove();
 				// disable tablesorter
+				events = 'sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache ' +
+					'applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd resetToLoadState '.split(' ')
+					.join(c.namespace + ' ');
 				$t
 					.removeData('tablesorter')
-					.unbind('sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd resetToLoadState '.split(' ').join(c.namespace + ' '));
+					.unbind( $.trim(events) );
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
 					.removeAttr('data-column')
 					.removeAttr('aria-label')
 					.attr('aria-disabled', 'true');
-				$r.find(c.selectorSort).unbind('mousedown mouseup keypress '.split(' ').join(c.namespace + ' '));
+				$r.find(c.selectorSort).unbind( $.trim('mousedown mouseup keypress '.split(' ').join(c.namespace + ' ')) );
 				ts.restoreHeaders(table);
 				$t.toggleClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false);
 				// clear flag in case the plugin is initialized again
