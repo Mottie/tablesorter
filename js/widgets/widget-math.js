@@ -390,17 +390,23 @@
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table
-				.unbind(events + ' updateComplete.tsmath')
-				.bind(events, function(e){
+				.off('update.tsmath init.tsmath')
+				.on(events, function(e){
 					var init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
-						ts.computeColumnIndex( c.$table.children('tbody').children() );
+						c.$table.trigger('update.tsmath');
 					} else if (!wo.math_isUpdating || init) {
-						math.recalculate( table, c, wo, init );
+						c.$table.trigger('init.tsmath');
 					}
 				})
-				.bind('updateComplete.tsmath', function(){
+				.on('init.tsmath', function(){
+					math.recalculate( table, c, wo, init );
+				})
+				.on('update.tsmath', function(){
+					ts.computeColumnIndex( c.$table.children('tbody').children() );
+				})
+				.on('updateComplete.tsmath', function(){
 					setTimeout(function(){
 						wo.math_isUpdating = false;
 					}, 500);
@@ -412,7 +418,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.unbind(events + ' updateComplete.tsmath')
+				.unbind('update.tsmath init.tsmath updateComplete.tsmath')
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});
