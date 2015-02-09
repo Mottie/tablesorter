@@ -8,8 +8,8 @@
 	"use strict";
 
 	var ts = $.tablesorter,
-	events = $.trim( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
-		'filterReset filterEnd recalculate ' ).split(' ').join('.tsmath '),
+	events = $.trim( ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
+		'filterReset filterEnd recalculate ' ).split(' ').join('.tsmath ') ),
 	math = {
 
 		// get all of the row numerical values in an arry
@@ -390,8 +390,8 @@
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table
-				.unbind(events + ' updateComplete.tsmath')
-				.bind(events, function(e){
+				.off(events + ' updateComplete.tsmath')
+				.on(events, function(e){
 					var init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
@@ -400,7 +400,7 @@
 						math.recalculate( table, c, wo, init );
 					}
 				})
-				.bind('updateComplete.tsmath', function(){
+				.on('updateComplete.tsmath', function(){
 					setTimeout(function(){
 						wo.math_isUpdating = false;
 					}, 500);
@@ -412,7 +412,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.unbind(events + ' updateComplete.tsmath')
+				.off(events + ' updateComplete.tsmath')
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});
