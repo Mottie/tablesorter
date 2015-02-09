@@ -389,10 +389,12 @@
 			math_suffix   : ''
 		},
 		init : function(table, thisWidget, c, wo){
+			var init;
+
 			c.$table
 				.off('update.tsmath init.tsmath')
 				.on(events, function(e){
-					var init = e.type === 'tablesorter-initialized';
+					init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
 						c.$table.trigger('update.tsmath');
