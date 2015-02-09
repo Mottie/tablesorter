@@ -326,7 +326,8 @@
 							rowData = {
 								// order: original row order #
 								// $row : jQuery Object[]
-								child: [] // child row text (filter widget)
+								child: [], // child row text (filter widget)
+								raw: []    // original row text
 							};
 							/** Add the table data to main data array */
 							$row = $($tb[k].rows[i]);
@@ -356,6 +357,7 @@
 									continue;
 								}
 								t = getElementText(table, $row[0].cells[j], j);
+								rowData.raw.push(t); // save original row text
 								// do extract before parsing if there is one
 								if (typeof extractors[j].id === 'undefined') {
 									tx = t;

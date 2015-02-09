@@ -5301,7 +5301,7 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.16.0</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.1</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
@@ -5331,6 +5331,8 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 /* result: ["a1", "bruce", "almighty", 45, 153.19, 44.7, 77, 979830720000, {
     $row  : jQuery.fn.jQuery.init[1], // row (jQuery object)
     child : [], // child row raw html, if any
+    // raw unparsed data from the table cells - added v2.19.1
+    raw   : ["A1", "Bruce", "Almighty", "45", "$153.19", "44.7%", "+77", "Jan 18, 2001 9:12 AM"],
     order : 3   // original row index (unsorted)
 }]
 */</pre>
