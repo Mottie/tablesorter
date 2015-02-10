@@ -1160,6 +1160,28 @@ ts.filter = {
 				// filter out child rows
 				$rows = $rows.not('.' + c.cssChildRow);
 				len = $rows.length;
+
+				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
+					data.anyMatchFlag = true;
+					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || filters[c.columns] || '';
+
+					// specific columns search
+					var query = data.anyMatchFilter.split( ts.filter.regex.andSplit );
+					console.log(query);
+					for (var i = 0; i<query.length; i++) {
+						var res = query[i].split(":");
+						if (res.length>1) {
+							var id = res[0];
+							if (Math.floor(id) == id && $.isNumeric(id)) { // if id is an integer
+								filters[res[0]] = res[1];
+								query.splice(i, 1);
+								i--;
+							}
+						}
+					}
+					data.anyMatchFilter = query.join(" && ");
+				}
+
 				// optimize searching only through already filtered rows - see #313
 				searchFiltered = wo.filter_searchFiltered;
 				lastSearch = c.lastSearch || c.$table.data('lastSearch') || [];
@@ -1189,9 +1211,8 @@ ts.filter = {
 				if (c.debug) {
 					ts.log( "Searching through " + ( searchFiltered && notFiltered < len ? notFiltered : "all" ) + " rows" );
 				}
-				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
-					data.anyMatchFlag = true;
-					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ('' + filters[c.columns]) || '';
+				if (data.anyMatchFlag) {
+					data.anyMatchFilter.search();
 					if (c.sortLocaleCompare) {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
@@ -1205,7 +1226,6 @@ ts.filter = {
 					// when c.ignoreCase is true, the cache contains all lower case data
 					data.iAnyMatchFilter = !(wo.filter_ignoreCase && c.ignoreCase) ? data.anyMatchFilter : data.anyMatchFilter.toLocaleLowerCase();
 				}
-
 				// loop through the rows
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 
