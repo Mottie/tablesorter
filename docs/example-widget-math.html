@@ -176,6 +176,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.19.1</span>, added <code>math_event</code> option &amp; fixed an issue with event unbinding in jQuery version &lt; 1.9.</li>
 			<li>In <span class="version">v2.17.1</span>,
 				<ul>
 					<li>Values added to the data-attribute set by the <a href="../#textattribute"><code>textAttribute</code> option</a> will now be used in the calculation instead of the actual cell content.</li>
@@ -220,6 +221,14 @@
 						<td><code>'math'</code></td>
 						<td>
 							Set this option to point to the named data-attribute. For example, when set to <code>'math'</code>, the widget looks for settings within the <code>data-math</code> attribute.
+						</td>
+					</tr>
+
+					<tr id="math_event">
+						<td><span class="permalink">math_event</span></td>
+						<td><code>'recalculate'</code></td>
+						<td>
+							Set this option change the name of the event that the widget listens for to perform an update.
 						</td>
 					</tr>
 

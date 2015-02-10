@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 2/7/2015 (v2.19.0) - requires jQuery 1.7+ */
+/* Pager widget for TableSorter 2/9/2015 (v2.19.1) - requires jQuery 1.7+ */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -229,7 +229,7 @@ tsp = ts.pager = {
 			s = wo.pager_selectors;
 
 		c.$table
-			.off(p.events.split(' ').join('.pager '))
+			.off( $.trim(p.events.split(' ').join('.pager ')) )
 			.on('filterInit.pager filterStart.pager', function(e, filters) {
 				p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 				// don't change page if filters are the same (pager updating, etc)
@@ -330,8 +330,8 @@ tsp = ts.pager = {
 
 		if ( p.$goto.length ) {
 			p.$goto
-				.off('change')
-				.on('change', function(){
+				.off('change.pager')
+				.on('change.pager', function(){
 					p.page = $(this).val() - 1;
 					tsp.moveToPage(table, p, true);
 					tsp.updatePageDisplay(table, c, false);
@@ -443,7 +443,7 @@ tsp = ts.pager = {
 			if ($out.length) {
 				$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
 				// rebind startRow/page inputs
-				$out.find('.ts-startRow, .ts-page').off('change').on('change', function(){
+				$out.find('.ts-startRow, .ts-page').off('change.pager').on('change.pager', function(){
 					var v = $(this).val(),
 						pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
 					c.$table.trigger('pageSet.pager', [ pg ]);
@@ -1012,7 +1012,7 @@ tsp = ts.pager = {
 	destroyPager: function(table, c, refreshing){
 		var p = c.pager;
 		p.initialized = false;
-		c.$table.off(p.events.split(' ').join('.pager '));
+		c.$table.off( $.trim(p.events.split(' ').join('.pager ')) );
 		if (refreshing) { return; }
 		tsp.showAllRows(table, c);
 		p.$container.hide(); // hide pager

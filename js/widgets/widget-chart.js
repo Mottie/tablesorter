@@ -234,8 +234,8 @@
 			});
 		},
 
-		remove: function(c) {
-			c.$table.off(chart.event);
+		remove: function(c, wo) {
+			c.$table.off(wo.chart_event);
 		}
 
 	};
@@ -269,7 +269,7 @@
 		},
 
 		remove: function(table, c, wo) {
-			chart.remove(c);
+			chart.remove(c, wo);
 		}
 	});
 
