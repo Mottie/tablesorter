@@ -1167,7 +1167,7 @@ ts.filter = {
 
 					// specific columns search
 					var query = data.anyMatchFilter.split( ts.filter.regex.andSplit );
-					console.log(query);
+					var injected = false;
 					for (var i = 0; i<query.length; i++) {
 						var res = query[i].split(":");
 						if (res.length>1) {
@@ -1176,10 +1176,13 @@ ts.filter = {
 								filters[res[0]] = res[1];
 								query.splice(i, 1);
 								i--;
+								injected = true;
 							}
 						}
 					}
-					data.anyMatchFilter = query.join(" && ");
+					if (injected) {
+						data.anyMatchFilter = query.join(" && ");
+					}
 				}
 
 				// optimize searching only through already filtered rows - see #313
