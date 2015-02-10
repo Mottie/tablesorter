@@ -167,7 +167,7 @@ tsp = ts.pager = {
 		p.initializing = true;
 		if (wo.pager_savePages && ts.storage) {
 			t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
-			p.page = ( isNaN(t.page) ? p.page : t.page ) || p.setPage || 1;
+			p.page = ( isNaN(t.page) ? p.page : t.page ) || p.setPage || 0;
 			p.size = ( isNaN(t.size) ? p.size : t.size ) || p.setSize || 10;
 			$.data(table, 'pagerLastSize', p.size);
 		}
