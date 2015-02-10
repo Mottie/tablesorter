@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Search Type - Example 2</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui-latest.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	/* override the vertical-align top in the blue theme */
+	.notes.tablesorter-blue tbody td { vertical-align: middle; }
+	</style>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<script id="js">$(function() {
+
+	// Add insideRange filter type
+	// ============================
+	// This allows you to enter a number (e.g. 8) and show the
+	// resulting rows that will have that query within it's range
+	var ts = $.tablesorter,
+		isDigit = /\d+/,
+		nondigit = /[^\d,.\-()]/g,
+		range = /\s+-\s+/;
+
+	ts.filter.types.insideRange = function( c, data ) {
+		if ( isDigit.test( data.iFilter ) && range.test( data.iExact ) ) {
+			var t, val, low, high,
+				parts = data.iExact.replace( nondigit, '' ).split( '-' );
+			// the cell does not contain a range
+			if ( isNaN( parts[0] ) || isNaN( parts[1] ) ) {
+				return null;
+			}
+			low = ts.formatFloat( parts[0], c.table );
+			high = ts.formatFloat( parts[1], c.table );
+			val = ts.formatFloat( data.iFilter.replace( nondigit, '' ), c.table );
+			if ( high < low ) {
+				// swap high & low
+				t = high; high = low; low = t;
+			}
+			return low <= val && val <= high;
+		}
+		return null;
+	};
+
+	// call the tablesorter plugin
+	$("#table").tablesorter({
+		theme: 'blue',
+		widthFixed : true,
+		widgets: ["zebra", "filter"],
+		widgetOptions : {
+			// set to false because it is difficult to determine if a filtered
+			// row is already showing when looking at ranges
+			filter_searchFiltered : false
+		}
+	});
+
+});</script>
+
+<script>
+$(function(){
+	$('button').on('click', function(){
+		var $this = $(this),
+			filters = [],
+			col = $(this).data('column'),
+			query = $(this).text();
+		filters[col] = query;
+		$('table').trigger('search', [ filters ]);
+	});
+});
+
+</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Custom Filter Widget Search Type - Example 2</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>This is another example of how to add a custom filter search type - see <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">this page</a> for details on how to add your own.</li>
+			<li>This "insideRange" search type does the following:
+				<ul>
+					<li>This search type was not included with the other <a href="example-widget-filter-custom-search.html#builtin_filters">built-in search types</a> as it might be a little slower than the other search types because it has a bit more calculation to do than the others.</li>
+					<li>It looks for a dash surrounded by spaces (<code> - </code>) within the filter before activating.</li>
+					<li>So if you look for just <button type="button" data-column="2">4</button> in the "Delivery" column, the exact match of 4 will still be included.</li>
+					<li>To test the example below, try <button type="button" data-column="2">7</button> or <button type="button" data-column="2">8</button> in the Delivery column, or <button type="button" data-column="3">$15.45</button> in the "Price Range" column.</li>
+				</ul>
+				<li>Entering a range (e.g. <button type="button" data-column="2">4 - 7</button> will switch the query to the <a href="example-widget-filter-custom-search.html#builtin_filters">range search type</a> which will <em>only look at the first number</em> of the range within each cell.</li>
+			</li>
+
+		</ul>
+	</p>
+
+	<h1>Demo</h1>
+
+<table id="table" class="tablesorter">
+	<thead>
+		<tr>
+			<th>Rank</th>
+			<th>Name</th>
+			<th>Delivery (days)</th>
+			<th>Price Range</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>1</td><td>Widget</td><td>2 - 10</td><td>$5.95 - $13.20</td></tr>
+		<tr><td>11</td><td>Doodad</td><td>1 - 4</td><td>$2.99 - $8.40</td></tr>
+		<tr><td>12</td><td>Whatchamacallit</td><td>3 - 7</td><td>$4.29 - $15.99</td></tr>
+		<tr><td>15</td><td>Thingy</td><td>5 - 6</td><td>$9.99 - $13.20</td></tr>
+		<tr><td>21</td><td>Cube</td><td>2 - 7</td><td>$6.99 - $14.99</td></tr>
+		<tr><td>13</td><td>It</td><td>5 - 12</td><td>$15.89 - $18.22</td></tr>
+		<tr><td>5</td><td>Fred</td><td>20 - 30</td><td>$13.19 - $15.54</td></tr>
+		<tr><td>10</td><td>FuBar</td><td>4</td><td>$5.50</td></tr>
+		<tr><td>16</td><td>Otto</td><td>2 - 4</td><td>$6.30 - $14.19</td></tr>
+		<tr><td>21</td><td>Betsy</td><td>7</td><td>$5.67 - $8.25</td></tr>
+		<tr><td>18</td><td>Cylde</td><td>5 - 10</td><td>$11.20 - $15.45</td></tr>
+		<tr><td>7</td><td>Brick</td><td>5 - 7</td><td>$12.00 - $14.30</td></tr>
+		<tr><td>9</td><td>Gadget</td><td>10 - 20</td><td>$7.09 - $13.20</td></tr>
+	</tbody>
+</table>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

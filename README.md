@@ -65,6 +65,25 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.19.1">Version 2.19.1</a> (2/9/2015)
+
+* Core
+  * Replace all double quote with a single - OCD made me do it!
+  * Save raw table cell text (unparsed) into the cache.
+* Core/Widgets
+  * Fix a problem with event unbinding when using jQuery versions 1.7 &amp; 1.8.
+  * When an `unbind` (or `off`) event string contains an untrimmed or central double space, **all** events on the element become unbound.
+  * See [jQuery bug](http://bugs.jquery.com/ticket/10705) or [this demo](http://jsfiddle.net/Mottie/zL6uory0/1/).
+  * Updated the core, and the cssStickyHeaders, editable, filter, formatter, math, pager (addon & widget), staticRow widgets and stickyHeaders widgets.
+* Chart
+  * Add more data points.
+* Filter
+  * Add a [second custom filter search type example](http://mottie.github.io/tablesorter/docs/example-widget-filter-custom-search2.html) which allows finding if the query number is within a range.
+* Math
+  * Add `math_event` option.
+* StaticRow
+  * Add `staticRow_event` option.
+
 #### <a name="v2.19.0">Version 2.19.0</a> (2/7/2015)
 
 * Core
@@ -199,14 +218,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Style filter input & selects only.
   * Only style `<i>` tags from tablesorter on theme Bootstrap v2 & less file. Thanks [frodrigo](https://github.com/frodrigo)!
   * Modify theme Dropbox & grey to also only target icon class name for css styling.
-
-#### <a name="v2.18.3">Version 2.18.3</a> (11/7/2014)
-
-* Core
-  * Add class names to the header icons: `cssIconNone`, `cssIconAsc` & `cssIconDesc` to indicate the sort status.
-  * The `widthFixed` option will no longer target nested table `colgroup` elements to determine if it needs to add a new `colgroup`.
-* Docs
-  * Updated Bootstrap theme example.
-  * Pager widget option comment corrections.
-* Themes: update all themes to hide all elements in the filter row when the `filter_hideFilters` option is `true`
-* CssStickyHeaders widget: tables with a caption now work properly in Firefox.

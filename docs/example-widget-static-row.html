@@ -88,6 +88,10 @@
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>
+					In <span class="version">v2.19.1</span>, the <code>staticRow_event</code> option was added.
+					<p></p>
+				</li>
 				<li>This widget will only work in tablesorter version 2.8+.</li>
 				<li>The widget was modified from <a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin">Tablesorter-Static-Row-Plugin</a> by <a href="https://github.com/ascii-soup">ascii-soup</a> (<a href="https://github.com/ascii-soup/Tablesorter-Static-Row-Plugin/blob/master/LICENSE">MIT license</a>).</li>
 				<li>It has been updated to work in tables with multiple tbodies, but not within information-only tbodies.</li>
@@ -114,11 +118,20 @@
 							Set a class name to use to lock a row in place, include a period.
 						</td>
 					</tr>
+
 					<tr id="staticrow_data">
 						<td><span class="permalink">staticRow_data</span></td>
 						<td><code>&quot;static-index&quot;</code></td>
 						<td>
 							Set the jQuery data name to use with the row element. This data name saves the row index, and is only available as an option to avoid conflicts.
+						</td>
+					</tr>
+
+					<tr id="staticrow_event">
+						<td><span class="permalink">staticRow_event</span></td>
+						<td><code>&quot;staticRowsRefresh&quot;</code></td>
+						<td>
+							Set the event that the widget listens for to perform a refresh.
 						</td>
 					</tr>
 
