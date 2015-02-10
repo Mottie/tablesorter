@@ -1,4 +1,4 @@
-/* Pager widget for TableSorter 2/7/2015 (v2.19.0) - requires jQuery 1.7+ */
+/* Pager widget for TableSorter 2/9/2015 (v2.19.1) - requires jQuery 1.7+ */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";

@@ -1,4 +1,4 @@
-/*! tablesorter math widget - updated 2/7/2015 (v2.19.0)
+/*! tablesorter math widget - updated 2/9/2015 (v2.19.1)
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -415,7 +415,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.off( $trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
+				.off( $.trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});

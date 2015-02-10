@@ -1,4 +1,4 @@
-/*! tableSorter (FORK) 2.16+ widgets - updated 2/7/2015 (v2.19.0)
+/*! tableSorter (FORK) 2.16+ widgets - updated 2/9/2015 (v2.19.1)
  *
  * Column Styles
  * Column Filters
@@ -201,7 +201,7 @@ ts.addWidget({
 			wo.uitheme_applied = true;
 			oldtheme = themesAll[c.appliedTheme] || {};
 			hasOldTheme = !$.isEmptyObject(oldtheme);
-			oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '',
+			oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
 			oldIconRmv = hasOldTheme ? [ oldtheme.iconSortNone, oldtheme.iconSortDesc, oldtheme.iconSortAsc ].join( ' ' ) : '';
 			if (hasOldTheme) {
 				wo.zebra[0] = $.trim( ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '') );

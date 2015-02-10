@@ -1,4 +1,4 @@
-/*! tablesorter Formatter widget - 2/7/2015 (v2.19.0)
+/*! tablesorter Formatter widget - 2/9/2015 (v2.19.1)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

@@ -1,5 +1,5 @@
 /**!
-* TableSorter (FORK) 2.19.0 - Client-side table sorting with ease!
+* TableSorter (FORK) 2.19.1 - Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
@@ -32,7 +32,7 @@
 
 			var ts = this;
 
-			ts.version = '2.19.0';
+			ts.version = '2.19.1';
 
 			ts.parsers = [];
 			ts.widgets = [];
