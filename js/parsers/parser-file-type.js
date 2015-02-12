@@ -49,7 +49,7 @@
 				types = $.tablesorter.fileTypes.equivalents;
 			if (!m) {
 				// make a string to "quick" match the existing equivalents
-				var t = [];
+				t = [];
 				$.each(types, function(i,v){
 					t.push(v);
 				});

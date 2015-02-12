@@ -141,7 +141,7 @@
 						return restoreValue();
 					}
 					// ignore change event if nothing changed
-					if ($tar.val() !== $tar.data('ts-original-value')) {
+					if ($tar.val() !== $tar.data('ts-original-value') || e.target.type === 'checkbox') {
 						$tar.data('ts-original-value', $tar.val());
 						// pass undefined resort value so it falls back to config.resort setting
 						$table.trigger('updateCell', [ $tar.closest('td'), undef, function(){
