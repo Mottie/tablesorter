@@ -1260,11 +1260,12 @@ ts.filter = {
 						data.anyMatch = true;
 						data.rowArray = $cells.map(function(i){
 							if ( $.inArray(i, columnIndex) > -1 ) {
-								var txt;
+								var txt, $this;
 								if (data.parsed[i]) {
 									txt = data.cacheArray[i];
 								} else {
-									txt = this.getAttribute( c.textAttribute ) || this.textContent || $(this).text();
+									$this = $(this);
+									txt = $this.length ? $this.attr( c.textAttribute ) || this.textContent || $this.text() : '';
 									txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
 									if (c.sortLocaleCompare) {
 										txt = ts.replaceAccents(txt);
@@ -1319,8 +1320,8 @@ ts.filter = {
 							if (wo.filter_useParsedData || data.parsed[columnIndex]) {
 								data.exact = data.cache;
 							} else {
-								val = $cells[columnIndex];
-								result = $.trim( val.getAttribute( c.textAttribute ) || val.textContent || $cells.eq(columnIndex).text() );
+								val = $cells.eq(columnIndex);
+								result = val.length ? $.trim( val.attr( c.textAttribute ) || val[0].textContent || val.text() ) : '';
 								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405
 							}
 							data.iExact = !regex.type.test(typeof data.exact) && wo.filter_ignoreCase ? data.exact.toLocaleLowerCase() : data.exact;
@@ -1506,7 +1507,7 @@ ts.filter = {
 					} else {
 						cell = row.cells[column];
 						if (cell) {
-							arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
+							arry.push( $.trim( $(cell).attr( c.textAttribute ) || cell.textContent || $(cell).text() ) );
 						}
 					}
 				}
