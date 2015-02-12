@@ -851,8 +851,8 @@
 			function bindMethods(table){
 				var c = table.config,
 					$table = c.$table,
-					events = 'sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
-						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave '.split(' ')
+					events = ('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
+						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave ').split(' ')
 						.join(c.namespace + ' ');
 				// apply easy methods that trigger bound events
 				$table
