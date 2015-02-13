@@ -74,8 +74,8 @@ module.exports = function( grunt ) {
 			build: {
 				src: [ 'dist/**/**/**/*', 'dist/**/**/*', 'dist/**/*', 'dist' ]
 			},
-			cleancss: {
-				src: [ 'dist/temp/*', 'dist/temp', 'dist/css/*.css', '!dist/css/*.min.css' ]
+			css: {
+				src: [ 'dist/css/*.css', '!dist/css/*.min.css' ]
 			}
 		},
 
@@ -96,10 +96,7 @@ module.exports = function( grunt ) {
 					dot: true,
 					flatten: true,
 					src: ['css/*.css', 'addons/pager/*.css'],
-					dest: 'dist/temp/',
-					rename: function(dest, src) {
-						return dest + src.replace( /\./g, '+' ).replace( /\+css/g, '.css' );
-					}
+					dest: 'dist/css/'
 				}]
 			},
 			less: {
@@ -113,18 +110,6 @@ module.exports = function( grunt ) {
 				flatten: true,
 				src:  [ 'addons/pager/icons/*', 'css/images/*' ],
 				dest: 'dist/css/images/'
-			},
-			fixnames: {
-				files : [{
-					expand: true,
-					dot: true,
-					flatten: true,
-					src: ['dist/temp/*.css'],
-					dest: 'dist/css/',
-					rename: function(dest, src) {
-						return dest + src.replace( /\+/g, '.' );
-					}
-				}]
 			}
 		},
 
@@ -186,23 +171,21 @@ module.exports = function( grunt ) {
 				report: 'gzip'
 			},
 			allFiles: {
-				files: [
-					{
-						expand: true,
-						cwd: './js/', // Src matches are relative to this path.
-						src: [
-							'*.js',
-							'**/*.js',
-							'!_test-*.js',
-							'!**/_test-*.js',
-							'!*.min.js',
-							'!**/semver.js'
-						],
-						dest: 'dist/js/',
-						ext: '.min.js', // Dist files will have this extension.
-						extDot: 'last'  // Extensions in filenames begin after the first dot
-					}
-				]
+				files: [{
+					expand: true,
+					cwd: './js/', // Src matches are relative to this path.
+					src: [
+						'*.js',
+						'**/*.js',
+						'!_test-*.js',
+						'!**/_test-*.js',
+						'!*.min.js',
+						'!**/semver.js'
+					],
+					dest: 'dist/js/',
+					ext: '.min.js', // Dist files will have this extension.
+					extDot: 'last'  // Extensions in filenames begin after the first dot
+				}]
 			},
 			pageraddon: {
 				files: {
@@ -216,10 +199,11 @@ module.exports = function( grunt ) {
 				files: [{
 					expand: true,
 					flatten: true,
-					cwd: 'dist/temp',
+					cwd: 'dist/css',
 					src: ['*.css'],
-					dest: 'dist/temp',
-					ext: '.min.css'
+					dest: 'dist/css',
+					ext: '.min.css',
+					extDot: 'last'
 				}]
 			}
 		},
@@ -253,24 +237,14 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
 
-	/* grunt-contrib-cssmin does not work with multiple periods in the file name.
-	 * see https://github.com/gruntjs/grunt-contrib-cssmin/issues/175
-	 * Css files are copied to 'dist/temp' folder & '.' are replaced with '+'.
-	 * Css files are minified & copied to 'dist/css'.
-	 * 'dist/temp' is deleted.
-	 */
 	tasks = [
 		'clean:build',
-		'copy:main',
-		'copy:css',
-		'copy:less',
-		'copy:images',
+		'copy',
 		'concat',
 		'jshint',
 		'uglify',
 		'cssmin',
-		'copy:fixnames',
-		'clean:cleancss',
+		'clean:css',
 		'updateManifest'
 	];
 
@@ -296,7 +270,7 @@ module.exports = function( grunt ) {
 				temp = temp.widgets.split(/\s+/);
 			}
 		} catch (err) {
-			grunt.log.error('Custom build json not found - Use "grunt custom:{filename}" (no .json ending)');
+			grunt.log.error('Custom build json not found - Use "grunt custom:{filename}"');
 			temp = defaults.standardWidgets;
 		}
 
