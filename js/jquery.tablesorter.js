@@ -11,8 +11,8 @@
 * @type jQuery
 * @name tablesorter (FORK)
 * @cat Plugins/Tablesorter
-* @author Christian Bach/christian.bach@polyester.se
-* @contributor Rob Garrison/https://github.com/Mottie/tablesorter
+* @author Christian Bach - christian.bach@polyester.se
+* @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 /*global console:false, alert:false, require:false, define:false, module:false */
@@ -1342,9 +1342,10 @@
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
+						cell = $.fn.closest ? $(e.target).closest('td,th') : $(e.target).parents('td,th').filter(':first');
 						return /(input|select|button|textarea)/i.test(e.target.tagName) ||
 							// allow clicks to contents of selected cells
-							$(e.target).closest('td,th').hasClass(c.cssAllowClicks) ? '' : !c.cancelSelection;
+							cell.hasClass(c.cssAllowClicks) ? '' : !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
