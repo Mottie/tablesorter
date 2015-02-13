@@ -49,6 +49,7 @@ node_modules/
 *_i.c
 *_p.c
 *.ilk
+*.log
 *.meta
 *.obj
 *.pch

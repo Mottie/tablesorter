@@ -4,5 +4,8 @@
   "dependencies": {
     "jquery": ">=1.2.6"
   },
-  "main": "js/jquery.tablesorter.js"
+  "main": [
+    "js/jquery.tablesorter.js",
+    "js/jquery.tablesorter.widgets.js"
+  ]
 }

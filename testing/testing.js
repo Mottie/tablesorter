@@ -625,6 +625,7 @@ $(function(){
 		tester.cacheCompare( table4, 3, [ 2, 1, 7, 6, 5, 3, 4, 8, 9, 10 ], 'force x2 + sorted x2 + append x2, ascending' );
 		$table4.on('sortEnd', function(){
 			count++;
+			console.log(count);
 			if (count === 1) {
 				tester.cacheCompare( table4, 3, [ 2, 1, 6, 7, 5, 4, 3, 8, 10, 9 ], 'force x2 + sorted x2 + append x2, descending' );
 				c4.sortResetKey = 'shiftKey';
@@ -632,9 +633,9 @@ $(function(){
 				e.which = 1;
 				e.shiftKey = true; // testing sortResetKey
 				c4.$headers.eq(0).trigger(e);
-			} else {
+			} else if (count === 2) {
 				tester.cacheCompare( table4, 3, [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 'sortResetKey' );
-				$table4.off('sortEnd');
+				// $table4.off('sortEnd');
 				// start();
 			}
 		});

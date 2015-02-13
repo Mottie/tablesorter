@@ -2421,7 +2421,7 @@ $(function(){
 }</pre>
 					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
 					<br>
-					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
+					A new file has been included named "widget-filter-formatter-jui.js" &amp; "widget-filter-formatter-html5.js". The files include code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
 					Most of the formatter functions have an option named <code>valueToHeader</code> which, when <code>true</code> adds a span to the header cell above the filter row and updates it with the current control's value (see <a href="example-widget-filter-formatter-2.html">example 2</a>). If the option exists and is set to <code>false</code>, then the current value is added to the control's handle and css can be used to create a popup to show the current value (see <a href="example-widget-filter-formatter-1.html">example 1</a>).<br>
 					<br>
@@ -2698,7 +2698,7 @@ $(function(){
 					</ul>
 					The <code>filter_placeholder.select</code> setting adds the text to the first select option (default option to show all rows).<br>
 					<br>
-					<span class="label label-info">Note:</span> The <code>jquery.tablesorter.widgets-filter-formatter.js</code> jQuery UI Datepicker Range Selector creates two inputs, so this option then includes two additional settings:<br>
+					<span class="label label-info">Note:</span> The <code>widget-filter-formatter-jui.js</code> jQuery UI Datepicker Range Selector creates two inputs, so this option then includes two additional settings:<br>
 					<br>
 					<pre class="prettyprint lang-js">filter_placeholder : {
 	search : '',

@@ -92,6 +92,7 @@ $.extend({
 
 			if ( data.indexOf( '{' ) <0 ) { data = "{" + data + "}"; }
 
+			/*jshint evil:true */
 			data = eval("(" + data + ")");
 
 			$.data( elem, settings.single, data );

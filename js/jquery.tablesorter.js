@@ -1,8 +1,10 @@
-/**!
-* TableSorter (FORK) 2.19.1 - Client-side table sorting with ease!
+/*! TableSorter (FORK) v2.19.1 *//*
+* Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
+* fork maintained by Rob Garrison
+*
 * Examples and docs at: http://tablesorter.com
 * Dual licensed under the MIT and GPL licenses:
 * http://www.opensource.org/licenses/mit-license.php
