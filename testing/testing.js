@@ -31,7 +31,7 @@ var tester = {
 		var i, j = 0, k, l,
 			c = table.config,
 			result = [],
-			b = table.tBodies,
+			b = c.$tbodies,
 			l2 = c.columns;
 		for (k = 0; k < b.length; k++){
 			l = b[k].rows.length;
@@ -423,7 +423,8 @@ $(function(){
 		expect(4);
 
 		$table1.trigger('sorton', [[[ 0,0 ]]]);
-		tester.cacheCompare( table1, 0, [ 'test1', 'test2', 'test3', '', 'testa', 'testb', 'testc' ], 'from data-attribute' );
+		tester.cacheCompare( table1, 0, [ 'test1', 'test2', 'test3',
+		                                  'testa', 'testb', 'testc' ], 'from data-attribute' );
 
 		$table3.trigger('sorton', [[[ 0,1 ]]]);
 		tester.cacheCompare( table3, 0, [ '', 'a255', 'a102', 'a87', 'a55', 'a43', 'a33', 'a10', 'a02', 'a1' ], 'ignore data-attribute' );
@@ -442,13 +443,16 @@ $(function(){
 		$table1.trigger('sortReset');
 
 		// lower case because table was parsed before c1.ignoreCase was changed
-		tester.cacheCompare( table1, 'all', [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1', '', '', 'testb', 'x5', 'testc', 'x4', 'testa', 'x6' ], 'unsorted' );
+		tester.cacheCompare( table1, 'all', [ 'test2', 'x2', 'test1', 'x3', 'test3', 'x1',
+		                                      'testb', 'x5', 'testc', 'x4', 'testa', 'x6' ], 'unsorted' );
 
 		$table1.trigger('sorton', [[[ 0,0 ]]]);
-		tester.cacheCompare( table1, 'all', [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1', '', '', 'testa', 'x6', 'testb', 'x5', 'testc', 'x4' ], 'ascending sort' );
+		tester.cacheCompare( table1, 'all', [ 'test1', 'x3', 'test2', 'x2', 'test3', 'x1',
+		                                      'testa', 'x6', 'testb', 'x5', 'testc', 'x4' ], 'ascending sort' );
 
 		$table1.trigger('sorton', [[[ 0,1 ]]]);
-		tester.cacheCompare( table1, 'all', [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3', '', '', 'testc', 'x4', 'testb', 'x5', 'testa', 'x6' ], 'descending sort' );
+		tester.cacheCompare( table1, 'all', [ 'test3', 'x1', 'test2', 'x2', 'test1', 'x3',
+		                                      'testc', 'x4', 'testb', 'x5', 'testa', 'x6' ], 'descending sort' );
 
 		// empty cell position
 		$table3.trigger('sorton', [[[ 0,0 ]]]);
@@ -569,36 +573,40 @@ $(function(){
 				hl = c1.headerList[1] === nw,
 				p1 = c1.parsers[1].id === 'digit';
 			equal(hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
-			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
+			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
+			                                      'testc', 4, 'testb', 5, 'testa', 6 ], 'updateAll - tbody' );
 		}]);
 
 		// addRows
 		t = $('<tr class="temp"><td>testd</td><td>7</td></tr>');
 		$table1.find('tbody:last').prepend(t);
-		oldColMax = c1.cache[2].colMax[1];
+		oldColMax = c1.cache[1].colMax[1];
 		$table1.trigger('addRows', [t, true, function(){
 			updateCallback++;
-			equal( oldColMax === 6 && c1.cache[2].colMax[1] === 7, true, 'addRows includes updating colMax value');
-			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
+			equal( oldColMax === 6 && c1.cache[1].colMax[1] === 7, true, 'addRows includes updating colMax value');
+			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
+			                                      'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6 ], 'addRows method' );
 		}]);
 
 		// updateCell
 		t = $table1.find('td:contains("7")');
 		t.html('-8');
-		oldColMax = c1.cache[2].colMax[1];
+		oldColMax = c1.cache[1].colMax[1];
 		$table1.trigger('updateCell', [t[0], true, function(){
 			updateCallback++;
-			equal( oldColMax === 7 && c1.cache[2].colMax[1] === 8, true, 'updateCell includes updating colMax value');
-			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testd', -8, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
+			equal( oldColMax === 7 && c1.cache[1].colMax[1] === 8, true, 'updateCell includes updating colMax value');
+			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
+			                                      'testd', -8, 'testc', 4, 'testb', 5, 'testa', 6 ], 'updateCell method' );
 		}]);
 
 		// update
 		$table1.find('tr.temp').remove();
-		oldColMax = c1.cache[2].colMax[1];
+		oldColMax = c1.cache[1].colMax[1];
 		$table1.trigger('update', [true, function(){
 			updateCallback++;
-			equal( oldColMax === 8 && c1.cache[2].colMax[1] === 6, true, 'update includes updating colMax value');
-			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3, '', '', 'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
+			equal( oldColMax === 8 && c1.cache[1].colMax[1] === 6, true, 'update includes updating colMax value');
+			tester.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
+			                                      'testc', 4, 'testb', 5, 'testa', 6 ], 'update method' );
 		}]);
 
 		$table5

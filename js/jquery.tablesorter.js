@@ -136,7 +136,6 @@
 				headerRow  : 'tablesorter-headerRow',
 				headerIn   : 'tablesorter-header-inner',
 				icon       : 'tablesorter-icon',
-				info       : 'tablesorter-infoOnly',
 				processing : 'tablesorter-processing',
 				sortAsc    : 'tablesorter-headerAsc',
 				sortDesc   : 'tablesorter-headerDesc',
@@ -295,10 +294,10 @@
 
 			/* utils */
 			function buildCache(table) {
-				var cc, t, tx, v, i, j, k, $row, rows, cols, cacheTime,
+				var cc, t, tx, v, i, j, k, $row, cols, cacheTime,
 					totalRows, rowData, colMax,
 					c = table.config,
-					$tb = c.$table.children('tbody'),
+					$tb = c.$tbodies,
 					extractors = c.extractors,
 					parsers = c.parsers;
 				c.cache = {};
@@ -321,68 +320,65 @@
 						// colMax: #   // added at the end
 					};
 
-					// ignore tbodies with class name from c.cssInfoBlock
-					if (!$tb.eq(k).hasClass(c.cssInfoBlock)) {
-						totalRows = ($tb[k] && $tb[k].rows.length) || 0;
-						for (i = 0; i < totalRows; ++i) {
-							rowData = {
-								// order: original row order #
-								// $row : jQuery Object[]
-								child: [], // child row text (filter widget)
-								raw: []    // original row text
-							};
-							/** Add the table data to main data array */
-							$row = $($tb[k].rows[i]);
-							rows = [ new Array(c.columns) ];
-							cols = [];
-							// if this is a child row, add it to the last row's children and continue to the next row
-							// ignore child row class, if it is the first row
-							if ($row.hasClass(c.cssChildRow) && i !== 0) {
-								t = cc.normalized.length - 1;
-								cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
-								// add 'hasChild' class name to parent row
-								if (!$row.prev().hasClass(c.cssChildRow)) {
-									$row.prev().addClass(ts.css.cssHasChild);
+					totalRows = ($tb[k] && $tb[k].rows.length) || 0;
+					for (i = 0; i < totalRows; ++i) {
+						rowData = {
+							// order: original row order #
+							// $row : jQuery Object[]
+							child: [], // child row text (filter widget)
+							raw: []    // original row text
+						};
+						/** Add the table data to main data array */
+						$row = $($tb[k].rows[i]);
+						cols = [];
+						// if this is a child row, add it to the last row's children and continue to the next row
+						// ignore child row class, if it is the first row
+						if ($row.hasClass(c.cssChildRow) && i !== 0) {
+							t = cc.normalized.length - 1;
+							cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
+							// add 'hasChild' class name to parent row
+							if (!$row.prev().hasClass(c.cssChildRow)) {
+								$row.prev().addClass(ts.css.cssHasChild);
+							}
+							// save child row content (un-parsed!)
+							rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
+							// go to the next for loop
+							continue;
+						}
+						rowData.$row = $row;
+						rowData.order = i; // add original row position to rowCache
+						for (j = 0; j < c.columns; ++j) {
+							if (typeof parsers[j] === 'undefined') {
+								if (c.debug) {
+									log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
 								}
-								// save child row content (un-parsed!)
-								rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
-								// go to the next for loop
 								continue;
 							}
-							rowData.$row = $row;
-							rowData.order = i; // add original row position to rowCache
-							for (j = 0; j < c.columns; ++j) {
-								if (typeof parsers[j] === 'undefined') {
-									if (c.debug) {
-										log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
-									}
-									continue;
-								}
-								t = ts.getElementText(c, $row[0].cells[j], j);
-								rowData.raw.push(t); // save original row text
-								// do extract before parsing if there is one
-								if (typeof extractors[j].id === 'undefined') {
-									tx = t;
-								} else {
-									tx = extractors[j].format(t, table, $row[0].cells[j], j);
-								}
-								// allow parsing if the string is empty, previously parsing would change it to zero,
-								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
-								cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
-								if ((parsers[j].type || '').toLowerCase() === 'numeric') {
-									// determine column max value (ignore sign)
-									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
-								}
+							t = ts.getElementText(c, $row[0].cells[j], j);
+							rowData.raw.push(t); // save original row text
+							// do extract before parsing if there is one
+							if (typeof extractors[j].id === 'undefined') {
+								tx = t;
+							} else {
+								tx = extractors[j].format(t, table, $row[0].cells[j], j);
 							}
-							// ensure rowData is always in the same location (after the last column)
-							cols[c.columns] = rowData;
-							cc.normalized.push(cols);
+							// allow parsing if the string is empty, previously parsing would change it to zero,
+							// in case the parser needs to extract data from the table cell attributes
+							v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
+							cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
+							if ((parsers[j].type || '').toLowerCase() === 'numeric') {
+								// determine column max value (ignore sign)
+								colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
+							}
 						}
-						cc.colMax = colMax;
-						// total up rows, not including child rows
-						c.totalRows += cc.normalized.length;
+						// ensure rowData is always in the same location (after the last column)
+						cols[c.columns] = rowData;
+						cc.normalized.push(cols);
 					}
+					cc.colMax = colMax;
+					// total up rows, not including child rows
+					c.totalRows += cc.normalized.length;
+
 				}
 				if (c.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
@@ -396,7 +392,7 @@
 			function appendToTable(table, init) {
 				var c = table.config,
 					wo = c.widgetOptions,
-					b = table.tBodies,
+					b = c.$tbodies,
 					rows = [],
 					cc = c.cache,
 					n, totalRows, $bk, $tb,
@@ -412,7 +408,7 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					$bk = $(b[k]);
-					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
+					if ($bk.length) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
 						n = cc[k].normalized;
@@ -754,23 +750,23 @@
 			// sort multiple columns
 			function multisort(table) { /*jshint loopfunc:true */
 				var i, k, num, col, sortTime, colMax,
-					cache, order, sort, x, y,
+					rows, order, sort, x, y,
 					dir = 0,
 					c = table.config,
 					cts = c.textSorter || '',
 					sortList = c.sortList,
 					l = sortList.length,
-					bl = table.tBodies.length;
+					bl = c.$tbodies.length;
 				if (c.serverSideSorting || isEmptyObject(c.cache)) { // empty table - fixes #206/#346
 					return;
 				}
 				if (c.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
 					colMax = c.cache[k].colMax;
-					cache = c.cache[k].normalized;
+					rows = c.cache[k].normalized;
 
-					cache.sort(function(a, b) {
-						// cache is undefined here in IE, so don't use it!
+					rows.sort(function(a, b) {
+						// rows is undefined here in IE, so don't use it!
 						for (i = 0; i < l; i++) {
 							col = sortList[i][0];
 							order = sortList[i][1];
@@ -891,7 +887,7 @@
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
 					var v, t, row, icell,
-					$tb = $table.find('tbody'),
+					$tb = c.$tbodies,
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
@@ -940,7 +936,7 @@
 						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
 						var i, j, l, t, v, rowData, cells,
 						rows = $row.filter('tr').length,
-						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
+						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!(c.parsers && c.parsers.length)) {
 							buildParserCache(table);
@@ -1200,7 +1196,7 @@
 					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
 					overallWidth = c.$table.width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies).not('.' + c.cssInfoBlock).find('tr:first').children(':visible').each(function() {
+					c.$tbodies.find('tr:first').children(':visible').each(function() {
 						percent = parseInt( ( $(this).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
 						colgroup.append( $('<col>').css('width', percent) );
 					});
