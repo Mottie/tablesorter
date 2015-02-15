@@ -180,37 +180,39 @@
 				return true;
 			}
 
-			function getElementText(table, node, cellIndex) {
+			ts.getElementText = function(c, node, cellIndex) {
 				if (!node) { return ''; }
 				var te,
-					$node = $(node),
-					c = table.config,
-					t = c.textExtraction || '';
+					t = c.textExtraction || '',
+					// node could be a jquery object
+					// http://jsperf.com/jquery-vs-instanceof-jquery/2
+					$node = node.jquery ? node : $(node);
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
-					return $.trim( (t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
+					return $.trim( ( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
 				} else {
 					if (typeof(t) === 'function') {
-						return $.trim( t(node, table, cellIndex) );
-					} else if (typeof (te = ts.getColumnData( table, t, cellIndex )) === 'function') {
-						return $.trim( te(node, table, cellIndex) );
+						return $.trim( t($node[0], table, cellIndex) );
+					} else if (typeof (te = ts.getColumnData( c.table, t, cellIndex )) === 'function') {
+						return $.trim( te($node[0], c.table, cellIndex) );
 					}
 				}
 				// fallback
-				return $.trim( node.textContent || $node.text() || '' );
+				return $.trim( $node[0].textContent || $node.text() || '' );
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
 				var cur, $node,
-				i = ts.parsers.length,
-				node = false,
-				nodeValue = '',
-				keepLooking = true;
+					c = table.config,
+					i = ts.parsers.length,
+					node = false,
+					nodeValue = '',
+					keepLooking = true;
 				while (nodeValue === '' && keepLooking) {
 					rowIndex++;
 					if (rows[rowIndex]) {
 						node = rows[rowIndex].cells[cellIndex];
-						nodeValue = getElementText(table, node, cellIndex);
+						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
@@ -356,7 +358,7 @@
 									}
 									continue;
 								}
-								t = getElementText(table, $row[0].cells[j], j);
+								t = ts.getElementText(c, $row[0].cells[j], j);
 								rowData.raw.push(t); // save original row text
 								// do extract before parsing if there is one
 								if (typeof extractors[j].id === 'undefined') {
@@ -902,9 +904,9 @@
 						icell = $cell.index();
 						c.cache[tbdy].normalized[row][c.columns].$row = $row;
 						if (typeof c.extractors[icell].id === 'undefined') {
-							t = getElementText(table, cell, icell);
+							t = ts.getElementText(c, cell, icell);
 						} else {
-							t = c.extractors[icell].format( getElementText(table, cell, icell), table, cell, icell );
+							t = c.extractors[icell].format( ts.getElementText(c, cell, icell), table, cell, icell );
 						}
 						v = c.parsers[icell].id === 'no-parser' ? '' :
 							c.parsers[icell].format( t, table, cell, icell );
@@ -955,9 +957,9 @@
 							// add each cell
 							for (j = 0; j < l; j++) {
 								if (typeof c.extractors[j].id === 'undefined') {
-									t = getElementText(table, $row[i].cells[j], j);
+									t = ts.getElementText(c, $row[i].cells[j], j);
 								} else {
-									t = c.extractors[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+									t = c.extractors[j].format( ts.getElementText(c, $row[i].cells[j], j), table, $row[i].cells[j], j );
 								}
 								v = c.parsers[j].id === 'no-parser' ? '' :
 									c.parsers[j].format( t, table, $row[i].cells[j], j );
