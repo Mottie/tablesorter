@@ -1335,7 +1335,9 @@
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
 				.unbind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')) )
 				.bind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')), function(e, external) {
-					var cell, type = e.type;
+					var cell,
+						$target = $(e.target),
+						type = e.type;
 					// only recognize left clicks or enter
 					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
 						return;
@@ -1347,9 +1349,13 @@
 						downTime = new Date().getTime();
 						return;
 					}
-					cell = $.fn.closest ? $(e.target).closest('td,th') : $(e.target).parents('td,th').filter(':first');
-					// allow clicks to contents of selected cells
-					if ( /(input|select|button|textarea)/i.test(e.target.tagName) || ( cell.hasClass(c.cssAllowClicks) ) || $(e.target).hasClass(c.cssNoSort) ) {
+					cell = $.fn.closest ? $(e.target).closest('td,th') : $target.parents('td,th').filter(':first');
+					// prevent sort being triggered on form elements
+					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
+						// nosort class name, or elements within a nosort container
+						$target.hasClass(c.cssNoSort) || $target.parents(c.cssNoSort).length > 0 ||
+						// elements within a button
+						$target.parents('button').length > 0 ) {
 						return !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
