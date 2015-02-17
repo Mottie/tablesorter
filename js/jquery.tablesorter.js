@@ -104,7 +104,6 @@
 				cssIconAsc       : '', // class name added to the icon when the column has an ascending sort
 				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
-				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
 				cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
 				cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
 
@@ -1349,7 +1348,7 @@
 						downTime = new Date().getTime();
 						return;
 					}
-					cell = $.fn.closest ? $(e.target).closest('td,th') : $target.parents('td,th').filter(':first');
+					cell = $.fn.closest ? $target.closest('td,th') : $target.parents('td,th').filter(':first');
 					// prevent sort being triggered on form elements
 					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
 						// nosort class name, or elements within a nosort container
