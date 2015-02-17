@@ -1352,7 +1352,7 @@
 					// prevent sort being triggered on form elements
 					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
 						// nosort class name, or elements within a nosort container
-						$target.hasClass(c.cssNoSort) || $target.parents(c.cssNoSort).length > 0 ||
+						$target.hasClass(c.cssNoSort) || $target.parents('.' + c.cssNoSort).length > 0 ||
 						// elements within a button
 						$target.parents('button').length > 0 ) {
 						return !c.cancelSelection;
