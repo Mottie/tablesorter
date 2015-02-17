@@ -105,6 +105,7 @@
 				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
+				cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
 				cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
 
 				// *** selectors
@@ -1344,10 +1345,12 @@
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
-						cell = $.fn.closest ? $(e.target).closest('td,th') : $(e.target).parents('td,th').filter(':first');
-						return /(input|select|button|textarea)/i.test(e.target.tagName) ||
-							// allow clicks to contents of selected cells
-							cell.hasClass(c.cssAllowClicks) ? '' : !c.cancelSelection;
+						return;
+					}
+					cell = $.fn.closest ? $(e.target).closest('td,th') : $(e.target).parents('td,th').filter(':first');
+					// allow clicks to contents of selected cells
+					if ( /(input|select|button|textarea)/i.test(e.target.tagName) || ( cell.hasClass(c.cssAllowClicks) ) || $(e.target).hasClass(c.cssNoSort) ) {
+						return !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
