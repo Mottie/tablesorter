@@ -192,7 +192,7 @@
 					return $.trim( ( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
 				} else {
 					if (typeof(t) === 'function') {
-						return $.trim( t($node[0], table, cellIndex) );
+						return $.trim( t($node[0], c.table, cellIndex) );
 					} else if (typeof (te = ts.getColumnData( c.table, t, cellIndex )) === 'function') {
 						return $.trim( te($node[0], c.table, cellIndex) );
 					}
