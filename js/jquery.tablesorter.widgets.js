@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 02-12-2015 (v2.19.1)*/
+/*! tablesorter (FORK) widgets - updated 02-20-2015 (v2.19.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 /*! Widget: storage */
 ;(function ($, window, document) {
@@ -401,7 +401,7 @@ ts.addWidget({
 		$table
 			.removeClass('hasFilters')
 			// add .tsfilter namespace to all BUT search
-			.unbind( $.trim(events) )
+			.unbind( events.replace(/\s+/g, ' ') )
 			// remove the filter row even if refreshing, because the column might have been moved
 			.find('.' + ts.css.filterRow).remove();
 		if (refreshing) { return; }
@@ -628,7 +628,7 @@ ts.filter = {
 		}
 
 		txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '.split(' ').join(c.namespace + 'filter ');
-		c.$table.bind( $.trim(txt), function(event, filter) {
+		c.$table.bind( txt, function(event, filter) {
 			val = (wo.filter_hideEmpty && $.isEmptyObject(c.cache) && !(c.delayInit && event.type === 'appendCache'));
 			// hide filter row using the "filtered" class name
 			c.$table.find('.' + ts.css.filterRow).toggleClass(wo.filter_filteredRow, val ); // fixes #450
@@ -721,8 +721,8 @@ ts.filter = {
 		// show processing icon
 		if (c.showProcessing) {
 			c.$table
-				.unbind( $.trim('filterStart filterEnd '.split(' ').join(c.namespace + 'filter ')) )
-				.bind( $.trim('filterStart filterEnd '.split(' ').join(c.namespace + 'filter ')), function(event, columns) {
+				.unbind( ('filterStart filterEnd '.split(' ').join(c.namespace + 'filter ')).replace(/\s+/g, ' ') )
+				.bind( 'filterStart filterEnd '.split(' ').join(c.namespace + 'filter '), function(event, columns) {
 				// only add processing to certain columns to all columns
 				$header = (columns) ? c.$table.find('.' + ts.css.header).filter('[data-column]').filter(function() {
 					return columns[$(this).data('column')] !== '';
@@ -736,8 +736,8 @@ ts.filter = {
 
 		// add default values
 		c.$table
-		.unbind( $.trim('tablesorter-initialized pagerBeforeInitialized '.split(' ').join(c.namespace + 'filter ')) )
-		.bind( $.trim('tablesorter-initialized pagerBeforeInitialized '.split(' ').join(c.namespace + 'filter ')), function() {
+		.unbind( ('tablesorter-initialized pagerBeforeInitialized '.split(' ').join(c.namespace + 'filter ')).replace(/\s+/g, ' ') )
+		.bind( 'tablesorter-initialized pagerBeforeInitialized '.split(' ').join(c.namespace + 'filter '), function() {
 			// redefine "wo" as it does not update properly inside this callback
 			var wo = this.config.widgetOptions;
 			filters = ts.filter.setDefaults(table, c, wo) || [];
@@ -909,7 +909,7 @@ ts.filter = {
 		$el
 		// use data attribute instead of jQuery data since the head is cloned without including the data/binding
 		.attr('data-lastSearchTime', new Date().getTime())
-		.unbind( $.trim('keypress keyup search change '.split(' ').join(c.namespace + 'filter ')) )
+		.unbind( ('keypress keyup search change '.split(' ').join(c.namespace + 'filter ')).replace(/\s+/g, ' ') )
 		// include change for select - fixes #473
 		.bind('keyup' + c.namespace + 'filter', function(event) {
 			$(this).attr('data-lastSearchTime', new Date().getTime());
@@ -930,7 +930,7 @@ ts.filter = {
 			// change event = no delay; last true flag tells getFilters to skip newest timed input
 			ts.filter.searching( table, true, true );
 		})
-		.bind( $.trim('search change keypress '.split(' ').join(c.namespace + 'filter ')), function(event){
+		.bind( 'search change keypress '.split(' ').join(c.namespace + 'filter '), function(event){
 			var column = $(this).data('column');
 			// don't allow "change" event to process if the input value is the same - fixes #685
 			if (event.which === 13 || event.type === 'search' || event.type === 'change' && this.value !== c.lastSearch[column]) {
@@ -1061,9 +1061,12 @@ ts.filter = {
 		return val;
 	},
 	getLatestSearch: function( $input ) {
-		return $input.sort(function(a, b) {
-			return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
-		});
+		if ($input) {
+			return $input.sort(function(a, b) {
+				return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
+			});
+		}
+		return $();
 	},
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns "1-3,4-6,8" in data-column
@@ -1073,7 +1076,7 @@ ts.filter = {
 			// & don't target "all" column inputs if they don't exist
 			targets = wo.filter_initialized || !$input.filter(wo.filter_anyColumnSelector).length,
 			columns = [],
-			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') );
+			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') || '' );
 		// process column range
 		if ( targets && /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
@@ -1188,7 +1191,7 @@ ts.filter = {
 				}
 				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
 					data.anyMatchFlag = true;
-					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || filters[c.columns] || '';
+					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ('' + filters[c.columns]) || '';
 					if (c.sortLocaleCompare) {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
@@ -1792,7 +1795,7 @@ ts.addWidget({
 		// update sticky header class names to match real header after sorting
 		$table
 			.addClass('hasStickyHeaders')
-			.bind( $.trim('pagerComplete' + namespace), function() {
+			.bind('pagerComplete' + namespace, function() {
 				resizeHeader();
 			});
 
@@ -1811,8 +1814,8 @@ ts.addWidget({
 
 		// make it sticky!
 		$xScroll.add($yScroll)
-		.unbind( $.trim('scroll resize '.split(' ').join( namespace )) )
-		.bind( $.trim('scroll resize '.split(' ').join( namespace )), function(event) {
+		.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+		.bind('scroll resize '.split(' ').join( namespace ), function(event) {
 			if (!$table.is(':visible')) { return; } // fixes #278
 			// Detect nested tables - fixes #724
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
@@ -1853,7 +1856,7 @@ ts.addWidget({
 		// look for filter widget
 		if ($table.hasClass('hasFilters') && wo.filter_columnFilters) {
 			// scroll table into view after filtering, if sticky header is active - #482
-			$table.bind( $.trim('filterEnd' + namespace), function() {
+			$table.bind('filterEnd' + namespace, function() {
 				// $(':focus') needs jQuery 1.6+
 				var $td = $(document.activeElement).closest('td'),
 					column = $td.parent().children().index($td);
@@ -1881,14 +1884,14 @@ ts.addWidget({
 		var namespace = c.namespace + 'stickyheaders ';
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind( $.trim('pagerComplete filterEnd '.split(' ').join(namespace)) )
+			.unbind( ('pagerComplete filterEnd '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		$(window)
 			.add(wo.stickyHeaders_xScroll)
 			.add(wo.stickyHeaders_yScroll)
 			.add(wo.stickyHeaders_attachTo)
-			.unbind( $.trim('scroll resize '.split(' ').join(namespace)) );
+			.unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
 		ts.addHeaderResizeEvent(table, false);
 	}
 });
