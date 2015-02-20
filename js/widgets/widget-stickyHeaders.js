@@ -165,7 +165,7 @@ ts.addWidget({
 		// update sticky header class names to match real header after sorting
 		$table
 			.addClass('hasStickyHeaders')
-			.bind( $.trim('pagerComplete' + namespace), function() {
+			.bind('pagerComplete' + namespace, function() {
 				resizeHeader();
 			});
 
@@ -184,8 +184,8 @@ ts.addWidget({
 
 		// make it sticky!
 		$xScroll.add($yScroll)
-		.unbind( $.trim('scroll resize '.split(' ').join( namespace )) )
-		.bind( $.trim('scroll resize '.split(' ').join( namespace )), function(event) {
+		.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+		.bind('scroll resize '.split(' ').join( namespace ), function(event) {
 			if (!$table.is(':visible')) { return; } // fixes #278
 			// Detect nested tables - fixes #724
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
@@ -226,7 +226,7 @@ ts.addWidget({
 		// look for filter widget
 		if ($table.hasClass('hasFilters') && wo.filter_columnFilters) {
 			// scroll table into view after filtering, if sticky header is active - #482
-			$table.bind( $.trim('filterEnd' + namespace), function() {
+			$table.bind('filterEnd' + namespace, function() {
 				// $(':focus') needs jQuery 1.6+
 				var $td = $(document.activeElement).closest('td'),
 					column = $td.parent().children().index($td);
@@ -254,14 +254,14 @@ ts.addWidget({
 		var namespace = c.namespace + 'stickyheaders ';
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind( $.trim('pagerComplete filterEnd '.split(' ').join(namespace)) )
+			.unbind( ('pagerComplete filterEnd '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		$(window)
 			.add(wo.stickyHeaders_xScroll)
 			.add(wo.stickyHeaders_yScroll)
 			.add(wo.stickyHeaders_attachTo)
-			.unbind( $.trim('scroll resize '.split(' ').join(namespace)) );
+			.unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
 		ts.addHeaderResizeEvent(table, false);
 	}
 });

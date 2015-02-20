@@ -764,7 +764,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind( $.trim(pagerEvents.split(' ').join('.pager ')) );
+			$(table).unbind( pagerEvents.split(' ').join('.pager ').replace(/\s+/g, ' ') );
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -844,7 +844,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind( $.trim(pagerEvents.split(' ').join('.pager ')) )
+					.unbind( pagerEvents.split(' ').join('.pager ').replace(/\s+/g, ' ') )
 					.bind('filterInit.pager filterStart.pager', function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)

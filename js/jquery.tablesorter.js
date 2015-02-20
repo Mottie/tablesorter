@@ -856,7 +856,7 @@
 						.join(c.namespace + ' ');
 				// apply easy methods that trigger bound events
 				$table
-				.unbind( $.trim(events) )
+				.unbind( events.replace(/\s+/g, ' ') )
 				.bind('sortReset' + c.namespace, function(e, callback){
 					e.stopPropagation();
 					c.sortList = [];
@@ -1330,8 +1330,8 @@
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')) )
-				.bind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')), function(e, external) {
+				.unbind( ('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
+				.bind( 'mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
 					var cell,
 						$target = $(e.target),
 						type = e.type;
@@ -1415,13 +1415,13 @@
 					.join(c.namespace + ' ');
 				$t
 					.removeData('tablesorter')
-					.unbind( $.trim(events) );
+					.unbind( events.replace(/\s+/g, ' ') );
 				c.$headers.add($f)
 					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
 					.removeAttr('data-column')
 					.removeAttr('aria-label')
 					.attr('aria-disabled', 'true');
-				$r.find(c.selectorSort).unbind( $.trim('mousedown mouseup keypress '.split(' ').join(c.namespace + ' ')) );
+				$r.find(c.selectorSort).unbind( ('mousedown mouseup keypress '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') );
 				ts.restoreHeaders(table);
 				$t.toggleClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false);
 				// clear flag in case the plugin is initialized again

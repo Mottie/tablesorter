@@ -393,8 +393,8 @@
 		},
 		init : function(table, thisWidget, c, wo){
 			c.$table
-				.off( $.trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
-				.on( $.trim(math.events) + ' ' + wo.math_event, function(e){
+				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
+				.on(math.events + ' ' + wo.math_event, function(e){
 					var init = e.type === 'tablesorter-initialized';
 					if (e.type === 'updateAll') {
 						// redo data-column indexes in case columns were rearranged
@@ -415,7 +415,7 @@
 		remove: function(table, c, wo, refreshing){
 			if (refreshing) { return; }
 			$(table)
-				.off( $.trim(math.events) + ' ' + $.trim('updateComplete.tsmath ' + wo.math_event) )
+				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
 				.find('[data-' + wo.math_data + ']').empty();
 		}
 	});
