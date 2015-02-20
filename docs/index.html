@@ -5325,12 +5325,12 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.1</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.2</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
 						<ul>
-							<li>tbody index
+							<li>tbody index (non-info block only, numeration is the same as for <a href="#variable-tbodies"><code>config.$tbodies</code></a> <span class="version updated">v2.19.2</span>)
 								<ul>
 									<li><code>colMax</code>
 										<ul>
@@ -5796,7 +5796,6 @@ var p = $('#mytable').data('tablesorter').pager;
 					For example, if you want to get the parsed values for the rows currently displayed within the pager, use the <code>table.config.pager.cacheIndex</code> variable as follows:
 					<pre class="prettyprint lang-js">var c = $('table')[0].config,
 	p = c.pager,
-	// the cache may not have a zero index if there are any "info-only" tbodies above the main tbody
 	cache = c.cache[0].normalized,
 	cachedValues = [];
 $.each( p.cacheIndex, function(i, v) {
