@@ -363,6 +363,7 @@ ts.addWidget({
 	options : {
 		filter_childRows     : false, // if true, filter includes child row content in the search
 		filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
+		filter_columnAnyMatch: true,  // if true, allows using "#:{query}" in AnyMatch searches (column:query)
 		filter_cellFilter    : '',    // css class name added to the filter cell (string or array)
 		filter_cssFilter     : '',    // css class name added to the filter row & each input in the row (tablesorter-filter is ALWAYS added)
 		filter_defaultFilter : {},    // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
@@ -1119,6 +1120,7 @@ ts.filter = {
 		var len, norm_rows, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
 			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
+			query, injected, res, id,
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -1160,28 +1162,29 @@ ts.filter = {
 				// filter out child rows
 				$rows = $rows.not('.' + c.cssChildRow);
 				len = $rows.length;
-
-				if ((wo.filter_$anyMatch && wo.filter_$anyMatch.length) || filters[c.columns]) {
+				if ( (wo.filter_$anyMatch && wo.filter_$anyMatch.length) || ('' + filters[c.columns]) ) {
 					data.anyMatchFlag = true;
-					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || filters[c.columns] || '';
-
-					// specific columns search
-					var query = data.anyMatchFilter.split( ts.filter.regex.andSplit );
-					var injected = false;
-					for (var i = 0; i<query.length; i++) {
-						var res = query[i].split(":");
-						if (res.length>1) {
-							var id = res[0];
-							if (Math.floor(id) == id && $.isNumeric(id)) { // if id is an integer
-								filters[res[0]] = res[1];
-								query.splice(i, 1);
-								i--;
-								injected = true;
+					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ( '' + filters[c.columns] ) || '';
+					if (wo.filter_columnAnyMatch) {
+						// specific columns search
+						query = data.anyMatchFilter.split( ts.filter.regex.andSplit );
+						injected = false;
+						for (indx = 0; indx < query.length; indx++) {
+							res = query[indx].split(':');
+							if ( res.length > 1 ) {
+								// make the column a one-based index ( non-developers start counting from one :P )
+								id = parseInt( res[0], 10 ) - 1;
+								if ( id >= 0 && id < c.columns ) { // if id is an integer
+									filters[id] = res[1];
+									query.splice(indx, 1);
+									indx--;
+									injected = true;
+								}
 							}
 						}
-					}
-					if (injected) {
-						data.anyMatchFilter = query.join(" && ");
+						if (injected) {
+							data.anyMatchFilter = query.join(' && ');
+						}
 					}
 				}
 
@@ -1215,7 +1218,6 @@ ts.filter = {
 					ts.log( "Searching through " + ( searchFiltered && notFiltered < len ? notFiltered : "all" ) + " rows" );
 				}
 				if (data.anyMatchFlag) {
-					data.anyMatchFilter.search();
 					if (c.sortLocaleCompare) {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);

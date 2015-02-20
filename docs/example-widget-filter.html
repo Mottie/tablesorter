@@ -52,6 +52,9 @@
 			// if you set this to false, make sure you perform a search using the second method below
 			filter_columnFilters : true,
 
+			// if true, allows using "#:{query}" in AnyMatch searches (column:query; added v2.20.0)
+			filter_columnAnyMatch: true,
+
 			// css class name added to the filter cell (string or array)
 			filter_cellFilter : '',
 
@@ -294,6 +297,21 @@ $(function(){
 						<td><span class="permalink">filter_columnFilters</span></td>
 						<td>true</td>
 						<td>if <code>true</code>, a filter will be added to the top of each table column.</td>
+					</tr>
+
+					<tr id="filter-column-anymatch">
+						<td><a href="#" class="permalink">filter_columnAnyMatch</a></td>
+						<td>true</td>
+						<td>if <code>true</code>, allows using "#:{query}" in anyMatch searches (<span class="version">v2.20.0</span>).
+							<div class="collapsible">
+							<br>
+							Users can use the anymatch input to target a specific column, using a one-based index.
+							<p></p>
+							For example: In the table below, searching for <code>2:aa</code> in an anymatch filter will result in "Phillip Aaron Wong" and "Aaron" showing in the First Name column.
+							<p></p>
+							See live examples in the <a href="example-widget-filter-any-match.html#anymatch_searches">Filter Widget External Search</a> demo.
+							</div>
+						</td>
 					</tr>
 
 					<tr id="filter-cell-filter">
