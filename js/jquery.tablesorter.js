@@ -394,7 +394,7 @@
 			function appendToTable(table, init) {
 				var c = table.config,
 					wo = c.widgetOptions,
-					b = c.$tbodies,
+					$tbodies = c.$tbodies,
 					rows = [],
 					cc = c.cache,
 					n, totalRows, $bk, $tb,
@@ -408,8 +408,8 @@
 				if (c.debug) {
 					appendTime = new Date();
 				}
-				for (k = 0; k < b.length; k++) {
-					$bk = $(b[k]);
+				for (k = 0; k < $tbodies.length; k++) {
+					$bk = $tbodies.eq(k);
 					if ($bk.length) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
