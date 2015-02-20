@@ -96,7 +96,13 @@ module.exports = function( grunt ) {
 					dot: true,
 					flatten: true,
 					src: ['css/*.css', 'addons/pager/*.css'],
-					dest: 'dist/css/'
+					dest: 'dist/css/',
+					rename: function(dest, src) {
+						if (/black-ice/.test(src)) {
+							src = src.replace(/-/, '');
+						}
+						return dest + src;
+					}
 				}]
 			},
 			less: {

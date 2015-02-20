@@ -828,7 +828,7 @@
 				<td><span class="permalink">cssNoSort</span></td>
 				<td>String</td>
 				<td>&quot;tablesorter-noSort&quot;</td>
-				<td>Class name added to element inside header. Clicking on that element, or any elements within it won't cause a sort. (<span class="version">v2.19.2</span>).</td>
+				<td>Class name added to element inside header. Clicking on that element, or any elements within it won't cause a sort. (<span class="version">v2.20.0</span>).</td>
 				<td></td>
 			</tr>
 
@@ -1988,7 +1988,7 @@ $(function(){
 					<div class="collapsible">
 					<p>This option was not working as intended, so it was completely removed - sorry for the lack of notice.</p>
 					<p>Previous default was <code>&quot;tablesorter-allowClicks&quot;</code></p>
-					Class name added to table header which allows clicks to bubble up. (added v2.18.1; removed in v2.19.2).
+					Class name added to table header which allows clicks to bubble up. (added v2.18.1; removed in v2.20.0).
 					</div>
 				</td>
 				<td></td>
@@ -5325,12 +5325,12 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.2</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.20.0</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
 						<ul>
-							<li>tbody index (non-info block only, numeration is the same as for <a href="#variable-tbodies"><code>config.$tbodies</code></a> <span class="version updated">v2.19.2</span>)
+							<li>tbody index (<strong>non-info block only</strong>, indexing now matches the <a href="#variable-tbodies"><code>config.$tbodies</code></a> variable; <span class="version updated">v2.20.0</span>)
 								<ul>
 									<li><code>colMax</code>
 										<ul>
@@ -5348,6 +5348,7 @@ $('.tablesorter')[0].config.cache[0].colMax;
 											<li>This contains an array of indexed table rows.</li>
 											<li>Within each row is an array of extracted, then parsed table contents for each column (plus one extra value; see the next comment).</li>
 											<li>It is important to note that the last value in the column array is <del>the original row index value</del>. This is used when resetting a column sort to its original unsorted order.</li>
+											<li>In <span class="version updated">v2.19.1</span>, the <code>raw</code> unparsed data was added to the row data.</li>
 											<li>In <span class="version updated">v2.16.0</span>, the last value in the column array is now an object which contains a jquery object of the row, index of the original unsorted order and a child array which contains raw html from any associated child row
 												<pre class="prettyprint lang-js">// $('table')[0].config.cache[tbodyIndex].normalized[row][column]
 // try this in the console for this page:
