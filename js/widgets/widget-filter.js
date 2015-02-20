@@ -767,13 +767,12 @@ ts.filter = {
 	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters || !table.config.widgetOptions.filter_initialized) { return; }
-		var len, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
+		var len, norm_rows, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
 			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
-			$tbodies = c.$table.children('tbody'), // target all tbodies #568
 			// data object passed to filters; anyMatch is a flag for the filters
 			data = { anyMatch: false },
 			// anyMatch really screws up with these types of filters
@@ -797,14 +796,14 @@ ts.filter = {
 		// combindedFilters are undefined on init
 		combinedFilters = (filters || []).join('');
 
-		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
-			if ($tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock || ts.css.info)) { continue; } // ignore info blocks, issue #264
-			$tbody = ts.processTbody(table, $tbodies.eq(tbodyIndex), true);
+		for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
+			$tbody = ts.processTbody(table, c.$tbodies.eq(tbodyIndex), true);
 			// skip child rows & widget added (removable) rows - fixes #448 thanks to @hempel!
 			// $rows = $tbody.children('tr').not(c.selectorRemove);
 			columnIndex = c.columns;
 			// convert stored rows into a jQuery object
-			$rows = $( $.map(c.cache[tbodyIndex].normalized, function(el){ return el[columnIndex].$row.get(); }) );
+			norm_rows = c.cache[tbodyIndex].normalized;
+			$rows = $( $.map(norm_rows, function(el){ return el[columnIndex].$row.get(); }) );
 
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
 				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
@@ -861,7 +860,7 @@ ts.filter = {
 				// loop through the rows
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 
-					data.cacheArray = c.cache[tbodyIndex].normalized[rowIndex];
+					data.cacheArray = norm_rows[rowIndex];
 
 					childRow = $rows[rowIndex].className;
 					// skip child rows & already filtered rows
@@ -1109,26 +1108,23 @@ ts.filter = {
 		var rowIndex, tbodyIndex, len, row, cache, cell,
 			c = table.config,
 			wo = c.widgetOptions,
-			$tbodies = c.$table.children('tbody'),
 			arry = [];
-		for (tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
-			if (!$tbodies.eq(tbodyIndex).hasClass(c.cssInfoBlock)) {
-				cache = c.cache[tbodyIndex];
-				len = c.cache[tbodyIndex].normalized.length;
-				// loop through the rows
-				for (rowIndex = 0; rowIndex < len; rowIndex++) {
-					// get cached row from cache.row (old) or row data object (new; last item in normalized array)
-					row = cache.row ? cache.row[rowIndex] : cache.normalized[rowIndex][c.columns].$row[0];
-					// check if has class filtered
-					if (onlyAvail && row.className.match(wo.filter_filteredRow)) { continue; }
-					// get non-normalized cell content
-					if (wo.filter_useParsedData || c.parsers[column].parsed || c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-parsed')) {
-						arry.push( '' + cache.normalized[rowIndex][column] );
-					} else {
-						cell = row.cells[column];
-						if (cell) {
-							arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
-						}
+		for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
+			cache = c.cache[tbodyIndex];
+			len = c.cache[tbodyIndex].normalized.length;
+			// loop through the rows
+			for (rowIndex = 0; rowIndex < len; rowIndex++) {
+				// get cached row from cache.row (old) or row data object (new; last item in normalized array)
+				row = cache.row ? cache.row[rowIndex] : cache.normalized[rowIndex][c.columns].$row[0];
+				// check if has class filtered
+				if (onlyAvail && row.className.match(wo.filter_filteredRow)) { continue; }
+				// get non-normalized cell content
+				if (wo.filter_useParsedData || c.parsers[column].parsed || c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-parsed')) {
+					arry.push( '' + cache.normalized[rowIndex][column] );
+				} else {
+					cell = row.cells[column];
+					if (cell) {
+						arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
 					}
 				}
 			}
