@@ -1162,6 +1162,7 @@ ts.filter = {
 				// filter out child rows
 				$rows = $rows.not('.' + c.cssChildRow);
 				len = $rows.length;
+
 				if ( (wo.filter_$anyMatch && wo.filter_$anyMatch.length) || ('' + filters[c.columns]) ) {
 					data.anyMatchFlag = true;
 					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ( '' + filters[c.columns] ) || '';
@@ -1231,6 +1232,7 @@ ts.filter = {
 					// when c.ignoreCase is true, the cache contains all lower case data
 					data.iAnyMatchFilter = !(wo.filter_ignoreCase && c.ignoreCase) ? data.anyMatchFilter : data.anyMatchFilter.toLocaleLowerCase();
 				}
+
 				// loop through the rows
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 
