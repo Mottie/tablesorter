@@ -200,7 +200,7 @@
 				}
 				// fallback
 				return $.trim( $node[0].textContent || $node.text() || '' );
-			}
+			};
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
 				var cur, $node,
