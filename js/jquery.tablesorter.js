@@ -106,7 +106,7 @@
 				cssIconAsc       : '', // class name added to the icon when the column has an ascending sort
 				cssIconDesc      : '', // class name added to the icon when the column has a descending sort
 				cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
-				cssAllowClicks   : 'tablesorter-allowClicks', // class name added to table header which allows clicks to bubble up
+				cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
 				cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
 
 				// *** selectors
@@ -138,7 +138,6 @@
 				headerRow  : 'tablesorter-headerRow',
 				headerIn   : 'tablesorter-header-inner',
 				icon       : 'tablesorter-icon',
-				info       : 'tablesorter-infoOnly',
 				processing : 'tablesorter-processing',
 				sortAsc    : 'tablesorter-headerAsc',
 				sortDesc   : 'tablesorter-headerDesc',
@@ -182,37 +181,39 @@
 				return true;
 			}
 
-			function getElementText(table, node, cellIndex) {
+			ts.getElementText = function(c, node, cellIndex) {
 				if (!node) { return ''; }
 				var te,
-					$node = $(node),
-					c = table.config,
-					t = c.textExtraction || '';
+					t = c.textExtraction || '',
+					// node could be a jquery object
+					// http://jsperf.com/jquery-vs-instanceof-jquery/2
+					$node = node.jquery ? node : $(node);
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
-					return $.trim( (t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
+					return $.trim( ( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
 				} else {
 					if (typeof(t) === 'function') {
-						return $.trim( t(node, table, cellIndex) );
-					} else if (typeof (te = ts.getColumnData( table, t, cellIndex )) === 'function') {
-						return $.trim( te(node, table, cellIndex) );
+						return $.trim( t($node[0], c.table, cellIndex) );
+					} else if (typeof (te = ts.getColumnData( c.table, t, cellIndex )) === 'function') {
+						return $.trim( te($node[0], c.table, cellIndex) );
 					}
 				}
 				// fallback
-				return $.trim( node.textContent || $node.text() || '' );
+				return $.trim( $node[0].textContent || $node.text() || '' );
 			}
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
 				var cur, $node,
-				i = ts.parsers.length,
-				node = false,
-				nodeValue = '',
-				keepLooking = true;
+					c = table.config,
+					i = ts.parsers.length,
+					node = false,
+					nodeValue = '',
+					keepLooking = true;
 				while (nodeValue === '' && keepLooking) {
 					rowIndex++;
 					if (rows[rowIndex]) {
 						node = rows[rowIndex].cells[cellIndex];
-						nodeValue = getElementText(table, node, cellIndex);
+						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
 						if (table.config.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
@@ -295,10 +296,10 @@
 
 			/* utils */
 			function buildCache(table) {
-				var cc, t, tx, v, i, j, k, $row, rows, cols, cacheTime,
+				var cc, t, tx, v, i, j, k, $row, cols, cacheTime,
 					totalRows, rowData, colMax,
 					c = table.config,
-					$tb = c.$table.children('tbody'),
+					$tb = c.$tbodies,
 					extractors = c.extractors,
 					parsers = c.parsers;
 				c.cache = {};
@@ -321,68 +322,65 @@
 						// colMax: #   // added at the end
 					};
 
-					// ignore tbodies with class name from c.cssInfoBlock
-					if (!$tb.eq(k).hasClass(c.cssInfoBlock)) {
-						totalRows = ($tb[k] && $tb[k].rows.length) || 0;
-						for (i = 0; i < totalRows; ++i) {
-							rowData = {
-								// order: original row order #
-								// $row : jQuery Object[]
-								child: [], // child row text (filter widget)
-								raw: []    // original row text
-							};
-							/** Add the table data to main data array */
-							$row = $($tb[k].rows[i]);
-							rows = [ new Array(c.columns) ];
-							cols = [];
-							// if this is a child row, add it to the last row's children and continue to the next row
-							// ignore child row class, if it is the first row
-							if ($row.hasClass(c.cssChildRow) && i !== 0) {
-								t = cc.normalized.length - 1;
-								cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
-								// add 'hasChild' class name to parent row
-								if (!$row.prev().hasClass(c.cssChildRow)) {
-									$row.prev().addClass(ts.css.cssHasChild);
+					totalRows = ($tb[k] && $tb[k].rows.length) || 0;
+					for (i = 0; i < totalRows; ++i) {
+						rowData = {
+							// order: original row order #
+							// $row : jQuery Object[]
+							child: [], // child row text (filter widget)
+							raw: []    // original row text
+						};
+						/** Add the table data to main data array */
+						$row = $($tb[k].rows[i]);
+						cols = [];
+						// if this is a child row, add it to the last row's children and continue to the next row
+						// ignore child row class, if it is the first row
+						if ($row.hasClass(c.cssChildRow) && i !== 0) {
+							t = cc.normalized.length - 1;
+							cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
+							// add 'hasChild' class name to parent row
+							if (!$row.prev().hasClass(c.cssChildRow)) {
+								$row.prev().addClass(ts.css.cssHasChild);
+							}
+							// save child row content (un-parsed!)
+							rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
+							// go to the next for loop
+							continue;
+						}
+						rowData.$row = $row;
+						rowData.order = i; // add original row position to rowCache
+						for (j = 0; j < c.columns; ++j) {
+							if (typeof parsers[j] === 'undefined') {
+								if (c.debug) {
+									log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
 								}
-								// save child row content (un-parsed!)
-								rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
-								// go to the next for loop
 								continue;
 							}
-							rowData.$row = $row;
-							rowData.order = i; // add original row position to rowCache
-							for (j = 0; j < c.columns; ++j) {
-								if (typeof parsers[j] === 'undefined') {
-									if (c.debug) {
-										log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
-									}
-									continue;
-								}
-								t = getElementText(table, $row[0].cells[j], j);
-								rowData.raw.push(t); // save original row text
-								// do extract before parsing if there is one
-								if (typeof extractors[j].id === 'undefined') {
-									tx = t;
-								} else {
-									tx = extractors[j].format(t, table, $row[0].cells[j], j);
-								}
-								// allow parsing if the string is empty, previously parsing would change it to zero,
-								// in case the parser needs to extract data from the table cell attributes
-								v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
-								cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
-								if ((parsers[j].type || '').toLowerCase() === 'numeric') {
-									// determine column max value (ignore sign)
-									colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
-								}
+							t = ts.getElementText(c, $row[0].cells[j], j);
+							rowData.raw.push(t); // save original row text
+							// do extract before parsing if there is one
+							if (typeof extractors[j].id === 'undefined') {
+								tx = t;
+							} else {
+								tx = extractors[j].format(t, table, $row[0].cells[j], j);
 							}
-							// ensure rowData is always in the same location (after the last column)
-							cols[c.columns] = rowData;
-							cc.normalized.push(cols);
+							// allow parsing if the string is empty, previously parsing would change it to zero,
+							// in case the parser needs to extract data from the table cell attributes
+							v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
+							cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
+							if ((parsers[j].type || '').toLowerCase() === 'numeric') {
+								// determine column max value (ignore sign)
+								colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
+							}
 						}
-						cc.colMax = colMax;
-						// total up rows, not including child rows
-						c.totalRows += cc.normalized.length;
+						// ensure rowData is always in the same location (after the last column)
+						cols[c.columns] = rowData;
+						cc.normalized.push(cols);
 					}
+					cc.colMax = colMax;
+					// total up rows, not including child rows
+					c.totalRows += cc.normalized.length;
+
 				}
 				if (c.showProcessing) {
 					ts.isProcessing(table); // remove processing icon
@@ -396,7 +394,7 @@
 			function appendToTable(table, init) {
 				var c = table.config,
 					wo = c.widgetOptions,
-					b = table.tBodies,
+					b = c.$tbodies,
 					rows = [],
 					cc = c.cache,
 					n, totalRows, $bk, $tb,
@@ -412,7 +410,7 @@
 				}
 				for (k = 0; k < b.length; k++) {
 					$bk = $(b[k]);
-					if ($bk.length && !$bk.hasClass(c.cssInfoBlock)) {
+					if ($bk.length) {
 						// get tbody
 						$tb = ts.processTbody(table, $bk, true);
 						n = cc[k].normalized;
@@ -754,23 +752,23 @@
 			// sort multiple columns
 			function multisort(table) { /*jshint loopfunc:true */
 				var i, k, num, col, sortTime, colMax,
-					cache, order, sort, x, y,
+					rows, order, sort, x, y,
 					dir = 0,
 					c = table.config,
 					cts = c.textSorter || '',
 					sortList = c.sortList,
 					l = sortList.length,
-					bl = table.tBodies.length;
+					bl = c.$tbodies.length;
 				if (c.serverSideSorting || isEmptyObject(c.cache)) { // empty table - fixes #206/#346
 					return;
 				}
 				if (c.debug) { sortTime = new Date(); }
 				for (k = 0; k < bl; k++) {
 					colMax = c.cache[k].colMax;
-					cache = c.cache[k].normalized;
+					rows = c.cache[k].normalized;
 
-					cache.sort(function(a, b) {
-						// cache is undefined here in IE, so don't use it!
+					rows.sort(function(a, b) {
+						// rows is undefined here in IE, so don't use it!
 						for (i = 0; i < l; i++) {
 							col = sortList[i][0];
 							order = sortList[i][1];
@@ -891,7 +889,7 @@
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
 					var v, t, row, icell,
-					$tb = $table.find('tbody'),
+					$tb = c.$tbodies,
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
@@ -904,9 +902,9 @@
 						icell = $cell.index();
 						c.cache[tbdy].normalized[row][c.columns].$row = $row;
 						if (typeof c.extractors[icell].id === 'undefined') {
-							t = getElementText(table, cell, icell);
+							t = ts.getElementText(c, cell, icell);
 						} else {
-							t = c.extractors[icell].format( getElementText(table, cell, icell), table, cell, icell );
+							t = c.extractors[icell].format( ts.getElementText(c, cell, icell), table, cell, icell );
 						}
 						v = c.parsers[icell].id === 'no-parser' ? '' :
 							c.parsers[icell].format( t, table, cell, icell );
@@ -940,7 +938,7 @@
 						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
 						var i, j, l, t, v, rowData, cells,
 						rows = $row.filter('tr').length,
-						tbdy = $table.find('tbody').index( $row.parents('tbody').filter(':first') );
+						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!(c.parsers && c.parsers.length)) {
 							buildParserCache(table);
@@ -957,9 +955,9 @@
 							// add each cell
 							for (j = 0; j < l; j++) {
 								if (typeof c.extractors[j].id === 'undefined') {
-									t = getElementText(table, $row[i].cells[j], j);
+									t = ts.getElementText(c, $row[i].cells[j], j);
 								} else {
-									t = c.extractors[j].format( getElementText(table, $row[i].cells[j], j), table, $row[i].cells[j], j );
+									t = c.extractors[j].format( ts.getElementText(c, $row[i].cells[j], j), table, $row[i].cells[j], j );
 								}
 								v = c.parsers[j].id === 'no-parser' ? '' :
 									c.parsers[j].format( t, table, $row[i].cells[j], j );
@@ -1200,7 +1198,7 @@
 					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
 					overallWidth = c.$table.width();
 					// only add col for visible columns - fixes #371
-					$(table.tBodies).not('.' + c.cssInfoBlock).find('tr:first').children(':visible').each(function() {
+					c.$tbodies.find('tr:first').children(':visible').each(function() {
 						percent = parseInt( ( $(this).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
 						colgroup.append( $('<col>').css('width', percent) );
 					});
@@ -1334,7 +1332,9 @@
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
 				.unbind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')) )
 				.bind( $.trim('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')), function(e, external) {
-					var cell, type = e.type;
+					var cell,
+						$target = $(e.target),
+						type = e.type;
 					// only recognize left clicks or enter
 					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
 						return;
@@ -1344,10 +1344,16 @@
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
-						cell = $.fn.closest ? $(e.target).closest('td,th') : $(e.target).parents('td,th').filter(':first');
-						return /(input|select|button|textarea)/i.test(e.target.tagName) ||
-							// allow clicks to contents of selected cells
-							cell.hasClass(c.cssAllowClicks) ? '' : !c.cancelSelection;
+						return;
+					}
+					cell = $.fn.closest ? $target.closest('td,th') : $target.parents('td,th').filter(':first');
+					// prevent sort being triggered on form elements
+					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
+						// nosort class name, or elements within a nosort container
+						$target.hasClass(c.cssNoSort) || $target.parents('.' + c.cssNoSort).length > 0 ||
+						// elements within a button
+						$target.parents('button').length > 0 ) {
+						return !c.cancelSelection;
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()

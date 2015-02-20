@@ -824,11 +824,11 @@
 				<td></td>
 			</tr>
 
-			<tr id="cssallowclicks">
-				<td><span class="permalink">cssAllowClicks</span></td>
+			<tr id="cssnosort">
+				<td><span class="permalink">cssNoSort</span></td>
 				<td>String</td>
-				<td>&quot;tablesorter-allowClicks&quot;</td>
-				<td>Class name added to table header which allows clicks to bubble up. (<span class="version">v2.18.1</span>).</td>
+				<td>&quot;tablesorter-noSort&quot;</td>
+				<td>Class name added to element inside header. Clicking on that element, or any elements within it won't cause a sort. (<span class="version">v2.19.2</span>).</td>
 				<td></td>
 			</tr>
 
@@ -1974,10 +1974,26 @@ $(function(){
 
 		<!-- non-sorting tbody -->
 		<tbody id="deprecated" class="tablesorter-infoOnly">
-			<tr><th colspan="5">Deprecated Options</th></tr>
+			<tr><th colspan="5">Deprecated/Removed Options</th></tr>
 		</tbody>
 
 		<tbody>
+
+			<tr id="cssallowclicks">
+				<td><a href="#" class="permalink alert">cssAllowClicks</a></td>
+				<td>String</td>
+				<td></td>
+				<td>This option was <span class="label label-danger">removed</span>!
+					It has been replaced by <a href="#cssnosort">cssNoSort</a> which does the opposite of what this class name was supposed to do.
+					<div class="collapsible">
+					<p>This option was not working as intended, so it was completely removed - sorry for the lack of notice.</p>
+					<p>Previous default was <code>&quot;tablesorter-allowClicks&quot;</code></p>
+					Class name added to table header which allows clicks to bubble up. (added v2.18.1; removed in v2.19.2).
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widgetcolumns">
 				<td><a href="#" class="permalink alert">widgetColumns</a></td>
 				<td></td>
@@ -5309,12 +5325,12 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.1</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.2</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
 						<ul>
-							<li>tbody index
+							<li>tbody index (non-info block only, numeration is the same as for <a href="#variable-tbodies"><code>config.$tbodies</code></a> <span class="version updated">v2.19.2</span>)
 								<ul>
 									<li><code>colMax</code>
 										<ul>
@@ -5780,7 +5796,6 @@ var p = $('#mytable').data('tablesorter').pager;
 					For example, if you want to get the parsed values for the rows currently displayed within the pager, use the <code>table.config.pager.cacheIndex</code> variable as follows:
 					<pre class="prettyprint lang-js">var c = $('table')[0].config,
 	p = c.pager,
-	// the cache may not have a zero index if there are any "info-only" tbodies above the main tbody
 	cache = c.cache[0].normalized,
 	cachedValues = [];
 $.each( p.cacheIndex, function(i, v) {

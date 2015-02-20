@@ -149,14 +149,13 @@
 		},
 
 		getRows: function(c, wo) {
-			// the cache may not have a zero index if there are any "info-only" tbodies above the main tbody
-			var cache = c.cache[0].normalized,
+			var norm_rows = c.cache[0].normalized,
 				rows = [];
 			chart_rows = [];
 			chart_categories = [];
 			chart_category = [];
 
-			$.each(cache, function(indx, rowVal) {
+			$.each(norm_rows, function(indx, rowVal) {
 				var i, txt,
 					$tr = rowVal[c.columns].$row,
 					$cells = $tr.children('th,td'),

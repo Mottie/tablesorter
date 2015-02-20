@@ -54,7 +54,7 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, cache, saveName, direction,
+		var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, norm_rows, saveName, direction,
 			lang = wo.grouping_language,
 			group = '',
 			savedGroup = false,
@@ -89,15 +89,15 @@ ts.grouping = {
 				}
 			}
 			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
-				cache = c.cache[tbodyIndex].normalized;
+				norm_rows = c.cache[tbodyIndex].normalized;
 				group = ''; // clear grouping across tbodies
 				$rows = c.$tbodies.eq(tbodyIndex).children('tr').not('.' + c.cssChildRow);
 				for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
 					if ( $rows.eq(rowIndex).is(':visible') ) {
 						// fixes #438
 						if (ts.grouping.types[grouping[1]]) {
-							currentGroup = cache[rowIndex] ? 
-								ts.grouping.types[grouping[1]]( c, c.$headers.filter('[data-column="' + column + '"]:last'), cache[rowIndex][column], /date/.test(groupClass) ?
+							currentGroup = norm_rows[rowIndex] ? 
+								ts.grouping.types[grouping[1]]( c, c.$headers.filter('[data-column="' + column + '"]:last'), norm_rows[rowIndex][column], /date/.test(groupClass) ?
 								grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group, lang ) : currentGroup;
 							if (group !== currentGroup) {
 								group = currentGroup;
