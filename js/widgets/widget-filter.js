@@ -712,9 +712,12 @@ ts.filter = {
 		return val;
 	},
 	getLatestSearch: function( $input ) {
-		return $input.sort(function(a, b) {
-			return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
-		});
+		if ($input) {
+			return $input.sort(function(a, b) {
+				return $(b).attr('data-lastSearchTime') - $(a).attr('data-lastSearchTime');
+			});
+		}
+		return $();
 	},
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns "1-3,4-6,8" in data-column
@@ -724,7 +727,7 @@ ts.filter = {
 			// & don't target "all" column inputs if they don't exist
 			targets = wo.filter_initialized || !$input.filter(wo.filter_anyColumnSelector).length,
 			columns = [],
-			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') );
+			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') || '' );
 		// process column range
 		if ( targets && /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
