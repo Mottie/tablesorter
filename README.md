@@ -1,4 +1,4 @@
-tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
+tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
 ### Notice!
@@ -43,6 +43,15 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 * [Plugin for Rails](//github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](//github.com/themilkman).
 * [Bootsole](//alexweissman.github.io/bootsole/) (OOP templating engine using tablesorter) by [alexweissman](//github.com/alexweissman).
+
+### Contributing
+
+If you would like to contribute, please...
+
+1. Fork.
+2. Make changes in a branch & add unit tests.
+3. Run `grunt test` (if qunit fails, run it again - it's fickle).
+4. Create a pull request.
 
 ### Special Thanks
 
