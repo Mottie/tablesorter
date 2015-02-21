@@ -198,14 +198,11 @@
     }
   };
 
-/*!
- * dragtable
+/*! dragtable v2.0.14 Mod *//*
  *  _____       _
  * |     |___ _| |
  * | | | | . | . |
  * |_|_|_|___|___|
- *
- * @Version 2.0.14 MOD
  *
  * Copyright (c) 2010-2013, Andres akottr@gmail.com
  * Dual licensed under the MIT (MIT-LICENSE.txt)

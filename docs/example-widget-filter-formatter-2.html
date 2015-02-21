@@ -9,7 +9,7 @@
 
 	<!-- Demo stuff -->
 	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
-	<script src="js/jquery-ui-latest.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -20,7 +20,7 @@
 	<link href="../css/filter.formatter.css" rel="stylesheet">
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
-	<script src="../js/jquery.tablesorter.widgets-filter-formatter.js"></script>
+	<script src="../js/widgets/widget-filter-formatter-html5.js"></script>
 
 	<style id="css">/* css needed to get compare selector & slider in-line */
 .compare-select-wrapper { width: 60%; float: right; }</style>
@@ -140,7 +140,7 @@
 			<ul>
 				<li>In <span class="version">v2.15.0</span> the <code>compare</code> option was updated to allow adding a selector along with the input. The <code>selected</code> option allows choosing the default setting.</li>
 				<li>This example shows how you can add an HTML5 range input slider to filter column content.</li>
-				<li>The <code>filter_formatter</code> function provided in the extra "jquery.tablesorter.widgets-filter-formatter.js" file is used to add this custom control within the filter row.</li>
+				<li>The <code>filter_formatter</code> function provided in the extra "widget-filter-formatter-html5.js" file is used to add this custom control within the filter row.</li>
 				<li>Make sure to include all values within the selected range, otherwise rows outside of this range will be forever hidden.</li>
 				<li>Add the following code to apply an HTML5 range slider to the filter row:<pre class="prettyprint lang-javascript">$(function() {
 
@@ -238,7 +238,7 @@
 			<ul>
 				<li>In <span class="version">v2.15.0</span> the <code>compare</code> option was updated to allow adding a selector along with the input. The <code>selected</code> option allows choosing the default setting.</li>
 				<li>This example shows how you can add an HTML5 number spinner to the filter column content.</li>
-				<li>The <code>filter_formatter</code> function provided in the extra "jquery.tablesorter.widgets-filter-formatter.js" file is used to add this custom control within the filter row.</li>
+				<li>The <code>filter_formatter</code> function provided in the extra "widget-filter-formatter-html5.js" file is used to add this custom control within the filter row.</li>
 				<li>Add the following code to apply an HTML spinner to filter a column:<pre class="prettyprint lang-javascript">$(function() {
 
   $("table").tablesorter({
@@ -319,7 +319,7 @@
 	<div>
 		<pre class="prettyprint lang-html">&lt;!-- jQuery UI for range slider --&gt;
 &lt;link rel="stylesheet" href="css/jquery-ui.min.css"&gt;
-&lt;script src="js/jquery-ui-latest.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/jquery-ui.min.js"&gt;&lt;/script&gt;
 
 &lt;!-- tablesorter plugin --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
@@ -328,7 +328,7 @@
 
 &lt;!-- filter formatter code --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/filter.formatter.css&quot;&gt;
-&lt;script src=&quot;../js/jquery.tablesorter.widgets-filter-formatter.js&quot;&gt;&lt;/script&gt;</pre>
+&lt;script src=&quot;../js/widgets/widget-filter-formatter-html5.js&quot;&gt;&lt;/script&gt;</pre>
 	</div>
 
 	<h1>Javascript</h1>
@@ -350,4 +350,3 @@
 
 </body>
 </html>
-

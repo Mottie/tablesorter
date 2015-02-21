@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
-<script src="js/jquery-ui-latest.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/prettify.js"></script>
 <script src="js/docs.js"></script>
 <script src="js/search.js"></script>
@@ -24,8 +24,8 @@
 
 <!-- Tablesorter: required -->
 <link href="../css/theme.blue.css" rel="stylesheet">
-<script src="../js/jquery.tablesorter.js"></script>
-<script src="../js/jquery.tablesorter.widgets.js"></script>
+<script src="../dist/js/jquery.tablesorter.js"></script>
+<script src="../dist/js/jquery.tablesorter.widgets.js"></script>
 <script>
 	$(function() {
 		$.extend( $.tablesorter.defaults, {
@@ -378,7 +378,7 @@
 	<ul>
 		<li>The <a href="example-widget-bootstrap-theme.html">Bootstrap</a> &amp; <a href="example-widget-ui-theme.html">jQuery UI</a> themes require the uitheme widget.</li>
 		<li>Set up a <a href="example-option-theme-metro-style.html">Metro style theme</a> (<span class="version">v2.16.4</span>)</li>
-		<li>Use css to <a href="example-css-highlighting.html">highlight rows &amp; columns</a> (<span class="version">v2.19.2</span>)</li>
+		<li>Use css to <a href="example-css-highlighting.html">highlight rows &amp; columns</a> (<span class="version">v2.20.0</span>)</li>
 	</ul>
 	<p></p>
 
@@ -482,10 +482,10 @@
 		<li><a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.19.0</span>).</li>
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.19.1</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.19.0</span>):
+		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.20.0</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.18.1</span>)</li>
-				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.18.0</span>)</li>
+				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.20.0</span>)</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.10.1</span>)</li>
 				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.17.8</span>)</li>
@@ -824,11 +824,11 @@
 				<td></td>
 			</tr>
 
-			<tr id="cssallowclicks">
-				<td><span class="permalink">cssAllowClicks</span></td>
+			<tr id="cssnosort">
+				<td><span class="permalink">cssNoSort</span></td>
 				<td>String</td>
-				<td>&quot;tablesorter-allowClicks&quot;</td>
-				<td>Class name added to table header which allows clicks to bubble up. (<span class="version">v2.18.1</span>).</td>
+				<td>&quot;tablesorter-noSort&quot;</td>
+				<td>Class name added to element inside header. Clicking on that element, or any elements within it won't cause a sort. (<span class="version">v2.20.0</span>).</td>
 				<td></td>
 			</tr>
 
@@ -1974,10 +1974,26 @@ $(function(){
 
 		<!-- non-sorting tbody -->
 		<tbody id="deprecated" class="tablesorter-infoOnly">
-			<tr><th colspan="5">Deprecated Options</th></tr>
+			<tr><th colspan="5">Deprecated/Removed Options</th></tr>
 		</tbody>
 
 		<tbody>
+
+			<tr id="cssallowclicks">
+				<td><a href="#" class="permalink alert">cssAllowClicks</a></td>
+				<td>String</td>
+				<td></td>
+				<td>This option was <span class="label label-danger">removed</span>!
+					It has been replaced by <a href="#cssnosort">cssNoSort</a> which does the opposite of what this class name was supposed to do.
+					<div class="collapsible">
+					<p>This option was not working as intended, so it was completely removed - sorry for the lack of notice.</p>
+					<p>Previous default was <code>&quot;tablesorter-allowClicks&quot;</code></p>
+					Class name added to table header which allows clicks to bubble up. (added v2.18.1; removed in v2.20.0).
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widgetcolumns">
 				<td><a href="#" class="permalink alert">widgetColumns</a></td>
 				<td></td>
@@ -2421,7 +2437,7 @@ $(function(){
 }</pre>
 					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
 					<br>
-					A new file has been included named "jquery.tablesorter.widgets-filter-formatter.js". It includes code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
+					A new file has been included named "widget-filter-formatter-jui.js" &amp; "widget-filter-formatter-html5.js". The files include code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
 					Most of the formatter functions have an option named <code>valueToHeader</code> which, when <code>true</code> adds a span to the header cell above the filter row and updates it with the current control's value (see <a href="example-widget-filter-formatter-2.html">example 2</a>). If the option exists and is set to <code>false</code>, then the current value is added to the control's handle and css can be used to create a popup to show the current value (see <a href="example-widget-filter-formatter-1.html">example 1</a>).<br>
 					<br>
@@ -2698,7 +2714,7 @@ $(function(){
 					</ul>
 					The <code>filter_placeholder.select</code> setting adds the text to the first select option (default option to show all rows).<br>
 					<br>
-					<span class="label label-info">Note:</span> The <code>jquery.tablesorter.widgets-filter-formatter.js</code> jQuery UI Datepicker Range Selector creates two inputs, so this option then includes two additional settings:<br>
+					<span class="label label-info">Note:</span> The <code>widget-filter-formatter-jui.js</code> jQuery UI Datepicker Range Selector creates two inputs, so this option then includes two additional settings:<br>
 					<br>
 					<pre class="prettyprint lang-js">filter_placeholder : {
 	search : '',
@@ -5309,12 +5325,12 @@ var config = $('#mytable').data('tablesorter');
 			<tr id="variable-cache">
 				<td><a href="#" class="permalink">config.cache</a></td>
 				<td>Object</td>
-				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.19.1</span> )
+				<td>Internal list of table contents (<span class="version">v2.0.18</span>; <span class="version updated">v2.20.0</span> )
 					<div class="collapsible">
 						<br>
 						This object contains the following:<br>
 						<ul>
-							<li>tbody index
+							<li>tbody index (<strong>non-info block only</strong>, indexing now matches the <a href="#variable-tbodies"><code>config.$tbodies</code></a> variable; <span class="version updated">v2.20.0</span>)
 								<ul>
 									<li><code>colMax</code>
 										<ul>
@@ -5332,6 +5348,7 @@ $('.tablesorter')[0].config.cache[0].colMax;
 											<li>This contains an array of indexed table rows.</li>
 											<li>Within each row is an array of extracted, then parsed table contents for each column (plus one extra value; see the next comment).</li>
 											<li>It is important to note that the last value in the column array is <del>the original row index value</del>. This is used when resetting a column sort to its original unsorted order.</li>
+											<li>In <span class="version updated">v2.19.1</span>, the <code>raw</code> unparsed data was added to the row data.</li>
 											<li>In <span class="version updated">v2.16.0</span>, the last value in the column array is now an object which contains a jquery object of the row, index of the original unsorted order and a child array which contains raw html from any associated child row
 												<pre class="prettyprint lang-js">// $('table')[0].config.cache[tbodyIndex].normalized[row][column]
 // try this in the console for this page:
@@ -5780,7 +5797,6 @@ var p = $('#mytable').data('tablesorter').pager;
 					For example, if you want to get the parsed values for the rows currently displayed within the pager, use the <code>table.config.pager.cacheIndex</code> variable as follows:
 					<pre class="prettyprint lang-js">var c = $('table')[0].config,
 	p = c.pager,
-	// the cache may not have a zero index if there are any "info-only" tbodies above the main tbody
 	cache = c.cache[0].normalized,
 	cachedValues = [];
 $.each( p.cacheIndex, function(i, v) {

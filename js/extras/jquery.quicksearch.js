@@ -32,7 +32,7 @@
 			prepareQuery: function (val) {
 				return val.toLowerCase().split(' ');
 			},
-			testQuery: function (query, txt, _row) {
+			testQuery: function (query, txt) {
 				for (var i = 0; i < query.length; i += 1) {
 					if (txt.indexOf(query[i]) === -1) {
 						return false;
@@ -44,13 +44,13 @@
 
 		this.go = function () {
 
-			var i = 0,
+			var len, i = 0,
 			numMatchedRows = 0,
 			noresults = true,
 			query = options.prepareQuery(val),
 			val_empty = (val.replace(' ', '').length === 0);
 
-			for (var i = 0, len = rowcache.length; i < len; i++) {
+			for (i = 0, len = rowcache.length; i < len; i++) {
 				if (val_empty || options.testQuery(query, cache[i], rowcache[i]) ||
 					($(rowcache[i]).hasClass(options.childRow) && $(rowcache[i > 1 ? i - 1 : 0]).is(':visible'))) {
 					options.show.apply(rowcache[i]);
@@ -125,7 +125,11 @@
 
 		this.loader = function (bool) {
 			if (typeof options.loader === "string" && options.loader !== "") {
-				(bool) ? $(options.loader).show() : $(options.loader).hide();
+				if (bool) {
+					$(options.loader).show();
+				} else {
+					$(options.loader).hide();
+				}
 			}
 			return this;
 		};

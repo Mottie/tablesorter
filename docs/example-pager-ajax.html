@@ -11,7 +11,7 @@
 	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link href="css/jq.css" rel="stylesheet">
 	<link href="css/prettify.css" rel="stylesheet">
-	<script src="js/jquery-ui-latest.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 
@@ -92,11 +92,13 @@
 			// return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
 			ajaxProcessing: function(data){
 				if (data && data.hasOwnProperty('rows')) {
-					var r, row, c, d = data.rows,
+					var indx, r, row, c, d = data.rows,
 					// total number of rows (required)
 					total = data.total_rows,
 					// array of header names (optional)
 					headers = data.headers,
+					// cross-reference to match JSON key within data (no spaces)
+					headerXref = headers.join(',').replace(/\s+/g,'').split(','),
 					// all rows: array of arrays; each internal array has the table cell data for that row
 					rows = [],
 					// len should match pager set size (c.size)
@@ -108,7 +110,12 @@
 						// cells
 						for ( c in d[r] ) {
 							if (typeof(c) === "string") {
-								row.push(d[r][c]); // add each table cell data to row array
+								// match the key with the header to get the proper column index
+								indx = $.inArray( c, headerXref );
+								// add each table cell data to row array
+								if (indx >= 0) {
+									row[indx] = d[r][c];
+								}
 							}
 						}
 						rows.push(row); // add new row array to rows array

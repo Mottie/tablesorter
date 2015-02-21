@@ -59,8 +59,8 @@ ts.addWidget({
 		addIndexes(table);
 		// refresh static rows after updates
 		c.$table
-			.unbind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event) )
-			.bind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event), function(){
+			.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') )
+			.bind('updateComplete.tsstaticrows ' + wo.staticRow_event, function(){
 				addIndexes(table);
 				c.$table.trigger('applyWidgets');
 			});
@@ -113,7 +113,7 @@ ts.addWidget({
 	},
 
 	remove : function(table, c, wo){
-		c.$table.unbind( $.trim('updateComplete.tsstaticrows ' + wo.staticRow_event) );
+		c.$table.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') );
 	}
 
 });

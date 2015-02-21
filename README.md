@@ -65,6 +65,64 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.20.0">Version 2.20.0</a> (2/20/2015)
+
+* Grunt build process
+  * Added code to use npm & grunt to build a custom widget file.
+  * An `example.json` file has been added as an example of how to set up a custom build file.
+  * With each build, the following occurs:
+    * `jquery.tablesorter.js` is copied to the `dist/js` folder.
+    * All `less` files are copied to the `dist/css/less` folder.
+    * All images, including the pager icons, is copied into the `dist/css/images` folder.
+    * A `jquery.tablesorter.widgets.js` file is created from the selected widgets into the `dist/js` folder, then copied back to the `js` folder to allow jsFiddle demos to continue working.
+    * A `.min.js` file is created for the core & widget file in the `dist/js` folder, then all parsers & widgets are compressed separately in the `dist/js/parsers` and `dist/js/widgets` folder, respectively.
+    * A `.min.css` file is created for all themes, dragtable, filter-formatter & pager styles.
+    * The black-ice theme within the distribution folder is renamed to `theme.blackice.min.css` (no dash). See [issue #785](https://github.com/Mottie/tablesorter/issues/785).
+  * Files - the following changes to files have been made for the Grunt build process (this might break a few jsFiddle demos):
+    * `jquery.metadata.js` has been moved into the `js/extras` folder.
+    * `jquery.tablesorter.widgets-filter-formatter.js`
+      * moved to the `js/widgets` folder
+      * Broken into two files, and renamed to `widget-filter-formatter-html5.js` and `widget-filter-formatter-jui.js`.
+    * `jquery.tablesorter.widgets-filter-formatter-select2.js`
+      * Moved into the `js/widgets` folder.
+      * Renamed to `widget-filter-formatter-select2.js`
+    * `jquery.tablesorter.widgets.js`
+      * Has been broken up into separate widget files: `widget-column.js`, `widget-filter.js`, `widget-resizable.js`, `widget-saveSort.js`, `widget-stickyHeaders.js`, `widget-storage.js` and `widget-uitheme.js`.
+      * A default build creates a file of the above widgets combined in the `dist/js` folder.
+      * A copy of this newly created combined widget file is then copied back to the `js/` folder to allow external demos (jsFiddle) to still work.
+* Resolve jQuery unbinding issue
+  * When unbinding events in jQuery versions 1.7 to 1.8, if an event list contains double spaces
+
+    ```js
+    $('table').unbind('a  b');
+    ```
+
+    all events will be removed from that element (see [this demo](http://jsfiddle.net/Mottie/zL6uory0/3/))!
+  * Unbinding of events updated in the Core plugin & pager addon, and the following widgets: cssStickHeaders, editable, filter, formatter, math, staticRow & stickyHeaders.
+* Modified `config.cache` to only include non-info only tbodies.
+  * This modification effects the core &amp; the following widgets: chart, filter, grouping, pager (widget &amp; addon).
+  * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for working on this change.
+  * See [pull request #822](https://github.com/Mottie/tablesorter/pull/822) for more details.
+* Core
+  * Add `cssNoSort` option. Add the class name from that option to any element within a header will prevent a click on that element and any containing elements from causing a sort.
+  * Remove `cssAllowClicks` option. It wasn't working as intended and actually prevented sorting. It was replaced by it's opposite, the `cssNoSort` option.
+  * Make core work with jQuery v1.2.6, again.
+  * Make `getElementText` function public; with a bug fix from [prijutme4ty](https://github.com/prijutme4ty) in [pull](https://github.com/Mottie/tablesorter/pull/823).
+* Docs
+  * Add a [css column &amp; row highlighting demo](http://mottie.github.io/tablesorter/docs/example-css-highlighting.html).
+  * Update jQuery UI & remove "latest" from the file name.
+* Filter
+  * Prevent javascript error when empty rows (`<tr></tr>`) are included in the tbody. Fixes [issue #819](https://github.com/Mottie/tablesorter/issues/819).
+  * Prevent javascript error when performing an "any-match" search triggered on the table without an included external `data-column="all"` input.
+  * Ensure that an "any-match" search is a string value.
+  * Added "any-match" specific column search by using `#:{query}` where `#` is a one-based column index and `{query}` is the query. Thanks to [MaksimProgr](https://github.com/MaksimProgr) for providing the code in [pull request #817](https://github.com/Mottie/tablesorter/pull/817). This also fixes [issue #747](https://github.com/Mottie/tablesorter/issues/747).
+  * Added `filter_columnAnyMatch` option to allow disabling the "any-match" specific column search.
+* Pager
+  * Fix initial start page default for the widget only.
+  * Update pager `ajaxProcessing` code demo to prevent unordered JSON keys from adding content to incorrect columns. Fixes [issue #818](https://github.com/Mottie/tablesorter/issues/818).
+* Parsers
+  * Fix checkbox parser, in the `parser-input-select.js` file, so that it now properly updates when changed.
+
 #### <a name="v2.19.1">Version 2.19.1</a> (2/9/2015)
 
 * Core
@@ -194,27 +252,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Testing
   * Update QUnit.
   * Remove jsHint checks.
-
-#### <a name="v2.18.4">Version 2.18.4</a> (12/22/2014)
-
-* Docs
-  * Add link to demo showing how to apply jQuery selectmenu widget to a filter
-  * Update theme switcher linked styles
-  * Add clarification on using jQuery selectors that target the header cell. Fixes [issue #766](https://github.com/Mottie/tablesorter/issues/766).
-  * Fix various typos. Thanks [seanhussey](https://github.com/seanhussey)!
-  * Add `cssIgnoreRow` docs.
-* Core
-  * Add `cssIgnoreRow` option. Added to a header row that is to be ignored & not added to the `config.$headers` variable.
-  * Allow passing alternate headers to `getColumnData` function.
-* ColumnSelector widget
-  * Add `columnUpdate` event when columnSelector is updated.
-  * Add `columnSelector_cssChecked` option - css class name added to checkboxes.
-* Pager (addon & widget)
-  * Ensure `filteredRows` variable gets updated before the move to page function is called. Fixes [issue #778](https://github.com/Mottie/tablesorter/issues/778).
-* StickyHeaders widget
-  * Make `includeCaption` option dynamic; add note of new jQuery requirement.
-  * Add popup window demo to sticky headers example.
-* Themes
-  * Style filter input & selects only.
-  * Only style `<i>` tags from tablesorter on theme Bootstrap v2 & less file. Thanks [frodrigo](https://github.com/frodrigo)!
-  * Modify theme Dropbox & grey to also only target icon class name for css styling.

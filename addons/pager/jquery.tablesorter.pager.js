@@ -135,18 +135,15 @@
 		},
 
 		calcFilters = function(table, p) {
-			var tbodyIndex,
-				c = table.config,
+			var c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
 			if (hasFilters && !p.ajaxUrl) {
 				if ($.isEmptyObject(c.cache)) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
 				} else {
-					// just in case the pager tbody isn't the first tbody
-					tbodyIndex = c.$table.children('tbody').index( c.$tbodies.eq(0) );
 					p.filteredRows = 0;
-					$.each(c.cache[tbodyIndex].normalized, function(i, el) {
+					$.each(c.cache[0].normalized, function(i, el) {
 						p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
 					});
 				}
@@ -659,8 +656,7 @@
 			c.$table.trigger('updateCache', [ function(){
 				var i,
 					rows = [],
-					tbodyIndex = c.$table.children('tbody').index( c.$tbodies.eq(0) ),
-					n = table.config.cache[tbodyIndex].normalized;
+					n = table.config.cache[0].normalized;
 				p.totalRows = n.length;
 				for (i = 0; i < p.totalRows; i++) {
 					rows.push(n[i][c.columns].$row);
@@ -768,7 +764,7 @@
 			table.config.appender = null; // remove pager appender function
 			p.initialized = false;
 			delete table.config.rowsCopy;
-			$(table).unbind( $.trim(pagerEvents.split(' ').join('.pager ')) );
+			$(table).unbind( pagerEvents.split(' ').join('.pager ').replace(/\s+/g, ' ') );
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
@@ -848,7 +844,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
-					.unbind( $.trim(pagerEvents.split(' ').join('.pager ')) )
+					.unbind( pagerEvents.split(' ').join('.pager ').replace(/\s+/g, ' ') )
 					.bind('filterInit.pager filterStart.pager', function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
