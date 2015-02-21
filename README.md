@@ -73,7 +73,7 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 
 * Grunt build process
   * Added code to use npm & grunt to build a custom widget file.
-  * An `example.json` file has been added as an example of how to set up a custom build file.
+  * An `example.json` file has been added as an example of how to set up a custom build file; see the [Customize](https://github.com/Mottie/tablesorter/wiki/Customize) wiki page for more details.
   * With each build, the following occurs:
     * `jquery.tablesorter.js` is copied to the `dist/js` folder.
     * All `less` files are copied to the `dist/css/less` folder.
