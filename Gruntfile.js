@@ -57,7 +57,7 @@ module.exports = function( grunt ) {
 			console.info( 'Creating a widgets file with: ' + pkg.selectedWidgets.join(', ') );
 		};
 
-	// minified banner template - updated 2/9/2015 (v2.19.1)
+	// minified banner template - updated ##/##/20## (v2.##.##)
 	pkg.banner = '/*! <%= pkg.name %> (FORK) widgets - updated ' +
 		'<%= grunt.template.today("mm-dd-yyyy") %> (v<%= pkg.version %>)*/\n';
 
@@ -200,6 +200,20 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		'string-replace': {
+			dist: {
+				files: {
+					'dist/js/': ['dist/js/*.js']
+				},
+				options: {
+					replacements: [{
+						pattern: /\{\{version\}\}/ig,
+						replacement: '<%= pkg.version %>'
+					}]
+				}
+			}
+		},
+
 		cssmin: {
 			target: {
 				files: [{
@@ -240,6 +254,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
+	grunt.loadNpmTasks('grunt-string-replace');
 
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
 
@@ -251,6 +266,7 @@ module.exports = function( grunt ) {
 		'uglify',
 		'cssmin',
 		'clean:css',
+		'string-replace',
 		'updateManifest'
 	];
 
