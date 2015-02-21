@@ -65,6 +65,10 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.20.1">Version 2.20.1</a> (2/20/2015)
+
+* Filter: Fixed a major issue with the filter widget not working properly.
+
 #### <a name="v2.20.0">Version 2.20.0</a> (2/20/2015)
 
 * Grunt build process
