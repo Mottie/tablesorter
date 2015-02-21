@@ -1163,7 +1163,7 @@ ts.filter = {
 				$rows = $rows.not('.' + c.cssChildRow);
 				len = $rows.length;
 
-				if ( (wo.filter_$anyMatch && wo.filter_$anyMatch.length) || ('' + filters[c.columns]) ) {
+				if ( (wo.filter_$anyMatch && wo.filter_$anyMatch.length) || typeof filters[c.columns] !== 'undefined' ) {
 					data.anyMatchFlag = true;
 					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ( '' + filters[c.columns] ) || '';
 					if (wo.filter_columnAnyMatch) {
