@@ -262,7 +262,6 @@ module.exports = function( grunt ) {
 		'clean:build',
 		'copy',
 		'concat',
-		'jshint',
 		'uglify',
 		'cssmin',
 		'clean:css',
