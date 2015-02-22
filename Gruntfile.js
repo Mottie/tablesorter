@@ -200,20 +200,6 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		'string-replace': {
-			dist: {
-				files: {
-					'dist/js/': ['dist/js/*.js']
-				},
-				options: {
-					replacements: [{
-						pattern: /\{\{version\}\}/ig,
-						replacement: '<%= pkg.version %>'
-					}]
-				}
-			}
-		},
-
 		cssmin: {
 			target: {
 				files: [{
@@ -254,7 +240,6 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-	grunt.loadNpmTasks('grunt-string-replace');
 
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
 
@@ -262,11 +247,9 @@ module.exports = function( grunt ) {
 		'clean:build',
 		'copy',
 		'concat',
-		'jshint',
 		'uglify',
 		'cssmin',
 		'clean:css',
-		'string-replace',
 		'updateManifest'
 	];
 

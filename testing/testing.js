@@ -641,9 +641,9 @@ $(function(){
 				e.which = 1;
 				e.shiftKey = true; // testing sortResetKey
 				c4.$headers.eq(0).trigger(e);
-			} else if (count === 2) {
+			} else {
 				tester.cacheCompare( table4, 3, [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ], 'sortResetKey' );
-				// $table4.off('sortEnd');
+				$table4.off('sortEnd');
 				// start();
 			}
 		});

@@ -1,4 +1,4 @@
-tablesorter is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
+tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 tablesorter can successfully parse and sort many types of data including linked data in a cell.
 
 ### Notice!
@@ -44,6 +44,15 @@ tablesorter can successfully parse and sort many types of data including linked 
 * [Plugin for Rails](//github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](//github.com/themilkman).
 * [Bootsole](//alexweissman.github.io/bootsole/) (OOP templating engine using tablesorter) by [alexweissman](//github.com/alexweissman).
 
+### Contributing
+
+If you would like to contribute, please...
+
+1. Fork.
+2. Make changes in a branch & add unit tests.
+3. Run `grunt test` (if qunit fails, run it again - it's fickle).
+4. Create a pull request.
+
 ### Special Thanks
 
 * Big shout-out to [Nick Craver](//github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
@@ -73,7 +82,7 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 
 * Grunt build process
   * Added code to use npm & grunt to build a custom widget file.
-  * An `example.json` file has been added as an example of how to set up a custom build file.
+  * An `example.json` file has been added as an example of how to set up a custom build file; see the [Customize](https://github.com/Mottie/tablesorter/wiki/Customize) wiki page for more details.
   * With each build, the following occurs:
     * `jquery.tablesorter.js` is copied to the `dist/js` folder.
     * All `less` files are copied to the `dist/css/less` folder.
