@@ -209,7 +209,7 @@ ts.filter = {
 					parsed = data.parsed[index],
 					query = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.orReplace, "|"), index, parsed);
 				// look for an exact match with the "or" unless the "filter-match" class is found
-				if (!c.$headers.filter('[data-column="' + index + '"]:last').hasClass('filter-match') && /\|/.test(query)) {
+				if (!c.$columnHeader(index).hasClass('filter-match') && /\|/.test(query)) {
 					// show all results while using filter match. Fixes #727
 					if (query[ query.length - 1 ] === '|') { query += '*'; }
 					query = data.anyMatch && $.isArray(data.rowArray) ? '(' + query + ')' : '^(' + query + ')$';
@@ -330,7 +330,7 @@ ts.filter = {
 				fxn = ts.getColumnData( table, wo.filter_functions, column );
 				if (fxn) {
 					// remove "filter-select" from header otherwise the options added here are replaced with all options
-					$header = c.$headers.filter('[data-column="' + column + '"]:last').removeClass('filter-select');
+					$header = c.$columnHeader(column).removeClass('filter-select');
 					// don't build select if "filter-false" or "parser-false" set
 					noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 					options = '';
@@ -468,7 +468,7 @@ ts.filter = {
 		// if no filters saved, then check default settings
 		if (filters.join('') === '') {
 			for (indx = 0; indx < c.columns; indx++) {
-				filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+				filters[indx] = c.$columnHeader(indx).attr(wo.filter_defaultAttrib) || filters[indx];
 			}
 		}
 		c.$table.data('lastSearch', filters);
@@ -497,7 +497,7 @@ ts.filter = {
 		for (column = 0; column < columns; column++) {
 			disabled = false;
 			// assuming last cell of a column is the main column
-			$header = c.$headers.filter('[data-column="' + column + '"]:last');
+			$header = c.$columnHeader(column);
 			ffxn = ts.getColumnData( table, wo.filter_functions, column );
 			buildSelect = (wo.filter_functions && ffxn && typeof ffxn !== "function" ) ||
 				$header.hasClass('filter-select');
@@ -784,7 +784,7 @@ ts.filter = {
 		data.parsed = c.$headers.map(function(columnIndex) {
 			return c.parsers && c.parsers[columnIndex] && c.parsers[columnIndex].parsed ||
 				// getData won't return "parsed" if other "filter-" class names exist (e.g. <th class="filter-select filter-parsed">)
-				ts.getData && ts.getData(c.$headers.filter('[data-column="' + columnIndex + '"]:last'), ts.getColumnData( table, c.headers, columnIndex ), 'filter') === 'parsed' ||
+				ts.getData && ts.getData(c.$columnHeader(columnIndex), ts.getColumnData( table, c.headers, columnIndex ), 'filter') === 'parsed' ||
 				$(this).hasClass('filter-parsed');
 		}).get();
 
@@ -860,7 +860,7 @@ ts.filter = {
 							// don't search only filtered if the value is negative ('> -10' => '> -100' will ignore hidden rows)
 							!(/(>=?\s*-\d)/.test(val) || /(<=?\s*\d)/.test(val)) &&
 							// if filtering using a select without a "filter-match" class (exact match) - fixes #593
-							!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$headers.filter('[data-column="' + indx + '"]:last').hasClass('filter-match') );
+							!( val !== '' && c.$filters && c.$filters.eq(indx).find('select').length && !c.$columnHeader(indx).hasClass('filter-match') );
 					}
 				}
 				notFiltered = $rows.not('.' + wo.filter_filteredRow).length;
@@ -990,7 +990,7 @@ ts.filter = {
 							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
 							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
-							$cell = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
+							$cell = c.$columnHeader(columnIndex);
 							hasSelect = $cell.hasClass('filter-select');
 							if ( fxn || ( hasSelect && val ) ) {
 								if (fxn === true || hasSelect) {
@@ -1093,7 +1093,7 @@ ts.filter = {
 			return $.inArray(value, arry) === indx;
 		});
 
-		if (c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-select-nosort')) {
+		if (c.$columnHeader(column).hasClass('filter-select-nosort')) {
 			// unsorted select options
 			return arry;
 		} else {
@@ -1146,7 +1146,7 @@ ts.filter = {
 				// check if has class filtered
 				if (onlyAvail && row.className.match(wo.filter_filteredRow)) { continue; }
 				// get non-normalized cell content
-				if (wo.filter_useParsedData || c.parsers[column].parsed || c.$headers.filter('[data-column="' + column + '"]:last').hasClass('filter-parsed')) {
+				if (wo.filter_useParsedData || c.parsers[column].parsed || c.$columnHeader(column).hasClass('filter-parsed')) {
 					arry.push( '' + cache.normalized[rowIndex][column] );
 				} else {
 					cell = row.cells[column];
@@ -1165,7 +1165,7 @@ ts.filter = {
 		var indx, val, txt, t, $filters, $filter,
 			c = table.config,
 			wo = c.widgetOptions,
-			node = c.$headers.filter('[data-column="' + column + '"]:last'),
+			node = c.$columnHeader(column),
 			// t.data('placeholder') won't work in jQuery older than 1.4.3
 			options = '<option value="">' + ( node.data('placeholder') || node.attr('data-placeholder') || wo.filter_placeholder.select || '' ) + '</option>',
 			// Get curent filter value
@@ -1220,7 +1220,7 @@ ts.filter = {
 			columns = c.columns;
 		// build default select dropdown
 		for (columnIndex = 0; columnIndex < columns; columnIndex++) {
-			$header = c.$headers.filter('[data-column="' + columnIndex + '"]:last');
+			$header = c.$columnHeader(columnIndex);
 			noSelect = !($header.hasClass('filter-false') || $header.hasClass('parser-false'));
 			// look for the filter-select class; build/update it if found
 			if (($header.hasClass('filter-select') || ts.getColumnData( table, wo.filter_functions, columnIndex ) === true) && noSelect) {

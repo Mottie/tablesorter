@@ -109,7 +109,7 @@ ts.addWidget({
 		.bind('mousedown', function(event) {
 			// save header cell and mouse position
 			$target = $(event.target).closest('th');
-			var $header = c.$headers.filter('[data-column="' + $target.attr('data-column') + '"]');
+			var $header = c.$columnHeader($target.attr('data-column'), {lastOnly: false});
 			if ($header.length > 1) { $target = $target.add($header); }
 			// if table is not as wide as it's parent, then resize the table
 			$next = event.shiftKey ? $target.parent().find('th').not('.resizable-false').filter(':last') : $target.nextAll(':not(.resizable-false)').eq(0);

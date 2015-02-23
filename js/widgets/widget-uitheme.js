@@ -130,9 +130,9 @@ ts.addWidget({
 			}
 		}
 		for (i = 0; i < c.columns; i++) {
-			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
+			$header = c.$columnHeader(i, {headers: c.$headers.add(c.$extraHeaders), lastOnly: false}).not('.sorter-false');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $();
-			$h = $headers.not('.sorter-false').filter('[data-column="' + i + '"]:last');
+			$h = c.$columnHeader(i, {headers: $headers}).not('.sorter-false');
 			if ($h.length) {
 				$header.removeClass(remove);
 				$icon.removeClass(iconRmv);

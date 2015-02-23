@@ -97,7 +97,7 @@ tablereflow = {
 
 		// add <b> to every table cell with thead cell contents
 		for (i = 0; i < cols; i++) {
-			$hdr = c.$headers.filter('[data-column="' + i + '"]');
+			$hdr = c.$columnHeader(i, {lastOnly: false});
 			if ($hdr.length > 1) {
 				txt = [];
 				/*jshint loopfunc:true */

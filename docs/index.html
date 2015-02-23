@@ -5294,6 +5294,43 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				</td>
 				<td></td>
 			</tr>
+			<tr id="variable-instanceMethods">
+				<td><a href="#" class="permalink">$.tablesorter.instanceMethods</a></td>
+				<td>Object</td>
+				<td>This is an object of all instance methods of config object. They can be added using the <a href="#function-addInstanceMethods"><code>addInstanceMethods</code></a> function before table initialization.
+					<div class="collapsible">
+						<pre class="prettyprint lang-js">
+$.tablesorter.addInstanceMethods({
+  columnSum: function(colNumber) {
+    var sum = 0, tbodyIndex, normalizedRows, rowIndex;
+    // `this` refer to config object
+    for (tbodyIndex = 0; tbodyIndex &lt; this.$tbodies.length; ++tbodyIndex){
+      normalizedRows = this.cache[tbodyIndex].normalized;
+      for (rowIndex = 0; rowIndex &lt; normalizedRows.length; ++rowIndex) {
+        sum += normalizedRows[rowIndex][colNumber];
+      }
+    }
+    return sum;
+  },
+  columnMean: function(colNumber) {
+    return this.columnSum(colNumber) / this.totalRows;
+  },
+});
+
+$('table').tablesorter();
+c = $('table')[0].config;
+console.log('sum of third column: ' + c.columnSum(2));
+console.log('mean of third column: ' + c.columnMean(2));
+            </pre>
+						Some predefined instance methods are already defined:
+						<ul>
+							<li><code>c.$columnHeader(n, options)</code> returns n-th header cell.</li>
+						</ul>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 		</tbody>
 
 		<!-- non-sorting tbody -->
@@ -6169,6 +6206,20 @@ $.tablesorter.isValueInArray(2, sortList);</pre>
 							<li><code>myParser</code> - object containing parser code.</li>
 						</ul>
 						The <code>myParser</code> object must contain a proper template. The template must include an <code>id</code>, <code>is</code>, <code>format</code> and <code>type</code> blocks. Please refer to the <a href="example-parsers.html">writing custom parsers</a> demo page for more details &amp; an example.
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-addInstanceMethods">
+				<td><a href="#" class="permalink">addInstanceMethods</a></td>
+				<td>This function allows to add custom methods for config object.
+					<div class="collapsible"><br>
+						Access it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.addInstanceMethods(methods);</pre>
+						<ul>
+							<li><code>methods</code> - an object containing methods to be added, indexed by method names. These methods can use config object by refering <code>this</code></li>
+						</ul>
+						Take a look at <a href="#variable-instanceMethods">instanceMethods</a> variable description for more details.
 					</div>
 				</td>
 			</tr>
