@@ -74,7 +74,8 @@ ts.addWidget({
 			return;
 		}
 		var $table = c.$table,
-			$attach = $(wo.stickyHeaders_attachTo),
+			// add position: relative to attach element, hopefully it won't cause trouble.
+			$attach = $(wo.stickyHeaders_attachTo).css('position', 'relative'),
 			namespace = c.namespace + 'stickyheaders ',
 			// element to watch for the scroll event
 			$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
@@ -200,7 +201,7 @@ ts.addWidget({
 				cssSettings = { visibility : isVisible };
 
 			if ($attach.length) {
-				cssSettings.top = yWindow ? scrollTop : $attach.scrollTop();
+				cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 			}
 			if (xWindow) {
 				// adjust when scrolling horizontally - fixes issue #143
