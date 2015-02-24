@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 02-20-2015 (v2.20.1)*/
+/*! tablesorter (FORK) widgets - updated 02-24-2015 (v2.20.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 /*! Widget: storage */
 ;(function ($, window, document) {
@@ -1347,10 +1347,10 @@ ts.filter = {
 									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex));
+									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex));
+									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								}
 							} else {
 								filterMatched = null;
@@ -1731,7 +1731,8 @@ ts.addWidget({
 			return;
 		}
 		var $table = c.$table,
-			$attach = $(wo.stickyHeaders_attachTo),
+			// add position: relative to attach element, hopefully it won't cause trouble.
+			$attach = $(wo.stickyHeaders_attachTo).css('position', 'relative'),
 			namespace = c.namespace + 'stickyheaders ',
 			// element to watch for the scroll event
 			$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
@@ -1857,7 +1858,7 @@ ts.addWidget({
 				cssSettings = { visibility : isVisible };
 
 			if ($attach.length) {
-				cssSettings.top = yWindow ? scrollTop : $attach.scrollTop();
+				cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 			}
 			if (xWindow) {
 				// adjust when scrolling horizontally - fixes issue #143
