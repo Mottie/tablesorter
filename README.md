@@ -39,6 +39,13 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Original examples and docs at: [http://tablesorter.com](//tablesorter.com).
 * Dual licensed under the [MIT](//www.opensource.org/licenses/mit-license.php) and [GPL](//www.gnu.org/licenses/gpl.html) licenses.
 
+### Download
+
+* Get [all files](https://github.com/Mottie/tablesorter/archive/master.zip)
+* Use [bower](http://bower.io/): `bower install jquery.tablesorter`
+* Use [node.js](http://nodejs.org/): `npm install tablesorter`
+* CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter)
+
 ### Related Projects
 
 * [Plugin for Rails](//github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](//github.com/themilkman).
