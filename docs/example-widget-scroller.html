@@ -45,7 +45,7 @@
 
 	$('.tablesorter').tablesorter({
 		theme: 'jui',
-		widthFixed : true,
+		// widthFixed: true, // <- now automatically set by the scroller widget
 		showProcessing: true,
 		headerTemplate : '{content} {icon}',
 		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
@@ -139,6 +139,18 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.20.2</span>
+					<ul>
+						<li>This widget was updated to include the <code>tfoot</code> rows.</li>
+						<li>To maintain the column widths across all copied tables:
+							<ul>
+								<li>The <code>widthFixed</code> options is now forcibly set to <code>true</code>; I apologize if this causes any inconvience.</li>
+								<li>This option adds a <code>&lt;colgroup&gt;</code> containing percentage width <code>&lt;col&gt;</code> elements to each section of the scroller.</li>
+								<li>If this option does cause issues, use css to set each column width as a percentage.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.17+</span>
 					<ul>
 						<li>The scroller widget will now work properly with predefined column widths.</li>

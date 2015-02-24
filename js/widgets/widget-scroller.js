@@ -57,10 +57,11 @@ $(function(){
 		'.tablesorter-scroller { text-align: left; overflow: hidden;  }' +
 		'.tablesorter-scroller-header { overflow: hidden; }' +
 		'.tablesorter-scroller-header table.tablesorter { margin-bottom: 0; }' +
+		'.tablesorter-scroller-footer table.tablesorter thead { visibility: hidden, height: 0; overflow: hidden; }' +
 		'.tablesorter-scroller-table { overflow-y: scroll; }' +
-		'.tablesorter-scroller-table table.tablesorter { margin-top: 0; overflow: scroll; } ' +
-		'.tablesorter-scroller-table .tablesorter-filter-row, .tablesorter-scroller-table tfoot { display: none; }' +
-		'.tablesorter-scroller-table table.tablesorter thead tr.tablesorter-headerRow * {' +
+		'.tablesorter-scroller-table table.tablesorter { margin-top: 0; margin-bottom: 0; overflow: scroll; } ' +
+		'.tablesorter-scroller-table .tablesorter-filter-row,.tablesorter-scroller-footer .tablesorter-filter-row,.tablesorter-scroller-table tfoot { display: none; }' +
+		'.tablesorter-scroller-table table.tablesorter thead tr.tablesorter-headerRow *,.tablesorter-scroller-footer table.tablesorter thead * {' +
 			'line-height:0;height:0;border:none;background-image:none;padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;overflow:hidden;' +
 		'}</style>';
 	$(s).appendTo('body');
@@ -95,24 +96,37 @@ ts.addWidget({
 			});
 	},
 	format: function(table, c, wo) {
-		var maxHt, tbHt, $hdr, resize, getBarWidth, $cells,
+		var maxHt, tbHt, $hdr, $t, resize, getBarWidth, $hCells, $fCells,
+			$ft = [],
 			// c.namespace contains a unique tablesorter ID, per table
 			id = c.namespace.slice(1) + 'tsscroller',
 			$win = $(window),
 			$tbl = c.$table;
 
 		if (!c.isScrolling) {
+			// force developer to set fixedWidth to maintain column widths
+			c.widthFixed = true;
 			maxHt = wo.scroller_height || 300;
 			tbHt = $tbl.children('tbody').height();
 			if (tbHt !== 0 && maxHt > tbHt) { maxHt = tbHt + 10; }  // Table is less than h px
 
 			$hdr = $('<table class="' + $tbl.attr('class') + '" cellpadding=0 cellspacing=0>' +
-				'<thead>' + $tbl.find('thead:first').html() + '</thead>' +
+				$tbl.children('thead')[0].outerHTML +
 				'</table>');
+
+			$t = $tbl.children('tfoot');
+			if ($t.length) {
+				$ft = $('<table class="' + $tbl.attr('class') + '" cellpadding=0 cellspacing=0 style="margin-top:0"></table>')
+					.append( $t.clone(true) ) // maintain any bindings on the tfoot cells
+					.append( $tbl.children('thead')[0].outerHTML )
+					.wrap('<div class="tablesorter-scroller-footer"/>');
+				$fCells = $ft.children('tfoot').eq(0).children('tr').children();
+			}
+
 			if (c.$extraTables && c.$extraTables.length) {
-				c.$extraTables = c.$extraTables.add($hdr);
+				c.$extraTables = c.$extraTables.add($hdr).add($ft);
 			} else {
-				c.$extraTables = $hdr;
+				c.$extraTables = $hdr.add($ft);
 			}
 			$tbl
 				.wrap('<div id="' + id + '" class="tablesorter-scroller" />')
@@ -120,15 +134,20 @@ ts.addWidget({
 				// shrink filter row but don't completely hide it because the inputs/selectors may distort the columns
 				.find('.tablesorter-filter-row').addClass('hideme');
 
-			$cells = $hdr
-				.wrap('<div class="tablesorter-scroller-header" style="width:' + $tbl.width() + ';" />')
+			if ($ft.length) {
+				// $ft.parent() to include <div> wrapper
+				$tbl.after( $ft.parent() );
+			}
+
+			$hCells = $hdr
+				.wrap('<div class="tablesorter-scroller-header" />')
 				.find('.' + ts.css.header);
 
 			// use max-height, so the height resizes dynamically while filtering
-			$tbl.wrap('<div class="tablesorter-scroller-table" style="max-height:' + maxHt + 'px;width:' + $tbl.width() + ';" />');
+			$tbl.wrap('<div class="tablesorter-scroller-table" style="max-height:' + maxHt + 'px;" />');
 
 			// make scroller header sortable
-			ts.bindEvents(table, $cells);
+			ts.bindEvents(table, $hCells);
 
 			// look for filter widget
 			if ($tbl.hasClass('hasFilters')) {
@@ -145,7 +164,7 @@ ts.addWidget({
 			};
 
 			resize = function(){
-				var d, b, $h, $th, w,
+				var d, b, $h, w,
 					// Hide other scrollers so we can resize
 					$div = $('div.tablesorter-scroller[id != "' + id + '"]').hide();
 
@@ -153,8 +172,7 @@ ts.addWidget({
 				// only remove colgroup if it was added by the plugin
 				// the $.tablesorter.fixColumnWidth() function already does this (v2.19.0)
 				// but we need to get "accurate" resized measurements here - see issue #680
-				$tbl.children('colgroup.tablesorter-colgroup').remove();
-				$hdr.children('colgroup').remove();
+				$tbl.add( $hdr ).add( $ft ).children('colgroup').remove();
 
 				// Reset sizes so parent can resize.
 				$tbl
@@ -172,43 +190,24 @@ ts.addWidget({
 
 				// Shrink a bit to accommodate scrollbar
 				w = ( wo.scroller_barWidth || getBarWidth() ) + b;
-
 				d.width( d.parent().innerWidth() - ( d.parent().hasScrollBar() ? w : 0 ) );
 				w = d.innerWidth() - ( d.hasScrollBar() ? w : 0 );
-				$tbl.width( w );
-				$hdr.width( w );
-				$hdr.parent().width( w );
+				$tbl.add( $hdr ).add( $hdr.parent() ).add( $ft ).width( w );
 
 				$tbl
 					.closest('.tablesorter-scroller')
 					.find('.tablesorter-scroller-reset')
 					.removeClass('tablesorter-scroller-reset');
 
-				$h = $hdr.find('thead').children().children();
-
-				// adjust cloned header to match original table width - includes wrappers, headers, and header inner div
-				$tbl.children('thead').children().children().each(function(i, c){
-					$th = $(c).find('.tablesorter-header-inner');
-					if ($th.length) {
-						// I have no idea why this is in here anymore LOL
-						w = parseInt( $th.css('min-width').replace('auto', '0').replace(/(px|em)/, ''), 10 );
-						if ( $th.width() < w ) {
-							$th.width(w);
-						} else {
-							w = $th.width();
-						}
-
-						$h.eq(i)
-							.parent()
-							.width( $th.parent().width() - b );
-					}
-				});
-
 				// refresh colgroup & copy to cloned header
 				$.tablesorter.fixColumnWidth( table );
-				$h = $tbl.children('colgroup').clone();
+				$h = $tbl.children('colgroup');
 				if ($h.length) {
-					$hdr.prepend($h);
+					b = $h[0].outerHTML;
+					$hdr.prepend(b);
+					if ($ft.length) {
+						$ft.prepend(b);
+					}
 				}
 
 				// hide filter row because filterEnd event fires
@@ -250,6 +249,7 @@ ts.addWidget({
 		var $table = c.$table,
 			namespace = c.namespace + 'tsscroller';
 		$table.closest('.tablesorter-scroller').find('.tablesorter-scroller-header').remove();
+		$table.closest('.tablesorter-scroller').find('.tablesorter-scroller-footer').remove();
 		$table
 				.unwrap()
 				.find('.tablesorter-filter-row').removeClass('hideme').end()
