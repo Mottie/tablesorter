@@ -23,38 +23,10 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-filter-type-insideRange.js"></script>
+	<script src="../js/parsers/parser-date-range.js"></script>
 
 	<script id="js">$(function() {
-
-	// Add insideRange filter type
-	// ============================
-	// This allows you to enter a number (e.g. 8) and show the
-	// resulting rows that will have that query within it's range
-	var ts = $.tablesorter,
-		isDigit = /\d+/,
-		nondigit = /[^\d,.\-()]/g,
-		range = /\s+-\s+/;
-
-	ts.filter.types.insideRange = function( c, data ) {
-		if ( isDigit.test( data.iFilter ) && range.test( data.iExact ) ) {
-			var t, val, low, high,
-				parts = data.iExact.replace( nondigit, '' ).split( '-' );
-			// the cell does not contain a range
-			if ( isNaN( parts[0] ) || isNaN( parts[1] ) ) {
-				return null;
-			}
-			low = ts.formatFloat( parts[0], c.table );
-			high = ts.formatFloat( parts[1], c.table );
-			// use parser for the column
-			val = c.parsers[data.index].format( data.iFilter, c.table );
-			if ( high < low ) {
-				// swap high & low
-				t = high; high = low; low = t;
-			}
-			return low <= val && val <= high;
-		}
-		return null;
-	};
 
 	// call the tablesorter plugin
 	$("#table").tablesorter({
@@ -62,6 +34,7 @@
 		widthFixed : true,
 		widgets: ["zebra", "filter"],
 		widgetOptions : {
+			filter_reset : '.reset',
 			// set to false because it is difficult to determine if a filtered
 			// row is already showing when looking at ranges
 			filter_searchFiltered : false
@@ -97,23 +70,33 @@ $(function(){
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
-			<li>In <span class="version updated">v2.20.2</span>, the "insideRange" function was updated to use the column parser; this change would allow the sorting of dates, if using the <a href="example-parsers-date-range.html">date-range parsers</a> also added in v2.20.2.</li>
+			<li>In <span class="version updated">v2.20.2</span>
+				<ul>
+					<li>The "insideRange" function was updated to use the column parser and moved into a separate file "widget-filter-type-insideRange.js"</li>
+					<li>This change would allow the sorting of dates, if using it along with one of the <a href="example-parsers-date-range.html">date-range parsers</a> (added v2.20.2).</li>
+				</ul>
+			</li>
 			<li>This is another example of how to add a custom filter search type - see <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">this page</a> for details on how to add your own.</li>
 			<li>This "insideRange" search type does the following:
 				<ul>
 					<li>This search type was not included with the other <a href="example-widget-filter-custom-search.html#builtin_filters">built-in search types</a> as it might be a little slower than the other search types because it has a bit more calculation to do than the others.</li>
 					<li>It looks for a dash surrounded by spaces (<code> - </code>) within the filter before activating.</li>
 					<li>So if you look for just <button type="button" data-column="2">4</button> in the "Delivery" column, the exact match of 4 will still be included.</li>
-					<li>To test the example below, try <button type="button" data-column="2">7</button> or <button type="button" data-column="2">8</button> in the Delivery column, or <button type="button" data-column="3">$15.45</button> in the "Price Range" column.</li>
+					<li>Test out some more examples:
+						<ul>
+							<li>Try <button type="button" data-column="2">7</button> or <button type="button" data-column="2">8</button> in the Delivery column</li>
+							<li><button type="button" data-column="3">$15.45</button> in the "Price Range" column.</li>
+							<li><button type="button" data-column="4">7/12/2014</button> in the "Date Range" column; this column is processed using the "date-range-mdy" parser (added <span class="version">v2.20.2</span>).</li>
+						</ul>
+					</li>
 				</ul>
-				<li>Entering a range (e.g. <button type="button" data-column="2">4 - 7</button> will switch the query to the <a href="example-widget-filter-custom-search.html#builtin_filters">range search type</a> which will <em>only look at the first number</em> of the range within each cell.</li>
 			</li>
-
+			<li>Entering a range (e.g. <button type="button" data-column="2">4 - 7</button> will switch the query to the <a href="example-widget-filter-custom-search.html#builtin_filters">range search type</a> which will <em>only look at the first number</em> of the range within each cell.</li>
 		</ul>
 	</p>
 
 	<h1>Demo</h1>
-
+Filters: <button type="button">Reset</button>
 <table id="table" class="tablesorter">
 	<thead>
 		<tr>
@@ -121,24 +104,42 @@ $(function(){
 			<th>Name</th>
 			<th>Delivery (days)</th>
 			<th>Price Range</th>
+			<th class="sorter-date-range-mdy">Date Range</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>1</td><td>Widget</td><td>2 - 10</td><td>$5.95 - $13.20</td></tr>
-		<tr><td>11</td><td>Doodad</td><td>1 - 4</td><td>$2.99 - $8.40</td></tr>
-		<tr><td>12</td><td>Whatchamacallit</td><td>3 - 7</td><td>$4.29 - $15.99</td></tr>
-		<tr><td>15</td><td>Thingy</td><td>5 - 6</td><td>$9.99 - $13.20</td></tr>
-		<tr><td>21</td><td>Cube</td><td>2 - 7</td><td>$6.99 - $14.99</td></tr>
-		<tr><td>13</td><td>It</td><td>5 - 12</td><td>$15.89 - $18.22</td></tr>
-		<tr><td>5</td><td>Fred</td><td>20 - 30</td><td>$13.19 - $15.54</td></tr>
-		<tr><td>10</td><td>FuBar</td><td>4</td><td>$5.50</td></tr>
-		<tr><td>16</td><td>Otto</td><td>2 - 4</td><td>$6.30 - $14.19</td></tr>
-		<tr><td>21</td><td>Betsy</td><td>7</td><td>$5.67 - $8.25</td></tr>
-		<tr><td>18</td><td>Clyde</td><td>5 - 10</td><td>$11.20 - $15.45</td></tr>
-		<tr><td>7</td><td>Brick</td><td>5 - 7</td><td>$12.00 - $14.30</td></tr>
-		<tr><td>9</td><td>Gadget</td><td>10 - 20</td><td>$7.09 - $13.20</td></tr>
+		<tr><td>1</td><td>Widget</td><td>2 - 10</td><td>$5.95 - $13.20</td><td>04/28/2014 - 07/13/2014</td></tr>
+		<tr><td>11</td><td>Doodad</td><td>1 - 4</td><td>$2.99 - $8.40</td><td>04/28/2014 - 05/13/2014</td></tr>
+		<tr><td>12</td><td>Whatchamacallit</td><td>3 - 7</td><td>$4.29 - $15.99</td><td>7/15/2014</td></tr>
+		<tr><td>15</td><td>Thingy</td><td>5 - 6</td><td>$9.99 - $13.20</td><td>07/12/2014 - 07/23/2014</td></tr>
+		<tr><td>21</td><td>Cube</td><td>2 - 7</td><td>$6.99 - $14.99</td><td>05/22/2014 - 05/23/2014</td></tr>
+		<tr><td>13</td><td>It</td><td>5 - 12</td><td>$15.89 - $18.22</td><td>8/12/2014 - 7/10/2014</td></tr>
+
+		<tr><td>5</td><td>Fred</td><td>20 - 30</td><td>$13.19 - $15.54</td><td>6/12/2014 - 6/14/2014</td></tr>
+		<tr><td>10</td><td>FuBar</td><td>4</td><td>$5.50</td><td>6/13/2014 - 6/22/2014</td></tr>
+		<tr><td>16</td><td>Otto</td><td>2 - 4</td><td>$6.30 - $14.19</td><td>5/10/2014 - 5/20/2014</td></tr>
+		<tr><td>21</td><td>Betsy</td><td>7</td><td>$5.67 - $8.25</td><td>6/2/2014 - 6/13/2014</td></tr>
+		<tr><td>18</td><td>Clyde</td><td>5 - 10</td><td>$11.20 - $15.45</td><td>6/13/2014</td></tr>
+		<tr><td>7</td><td>Brick</td><td>5 - 7</td><td>$12.00 - $14.30</td><td>7/2/2014 - 7/25/2014</td></tr>
+		<tr><td>9</td><td>Gadget</td><td>10 - 20</td><td>$7.09 - $13.20</td><td>5/23/2014 - 6/12/2014</td></tr>
 	</tbody>
 </table>
+
+	<h1>Page Head</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html">&lt;!-- jQuery --&gt;
+&lt;script src=&quot;js/jquery-latest.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- tablesorter --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+&lt;!-- inside range filter type --&gt;
+&lt;script src=&quot;../js/widgets/widget-filter-type-insideRange.js&quot;&gt;&lt;/script&gt;
+&lt;!-- parse date ranges --&gt;
+&lt;script src=&quot;../js/parsers/parser-date-range.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
 
 	<h1>Javascript</h1>
 	<div id="javascript">
