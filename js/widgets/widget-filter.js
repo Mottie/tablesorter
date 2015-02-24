@@ -998,10 +998,10 @@ ts.filter = {
 									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex));
+									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex));
+									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								}
 							} else {
 								filterMatched = null;

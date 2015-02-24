@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Search Type - Example 2</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Custom Filter Widget Search Type (example 2)</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -45,7 +45,8 @@
 			}
 			low = ts.formatFloat( parts[0], c.table );
 			high = ts.formatFloat( parts[1], c.table );
-			val = ts.formatFloat( data.iFilter.replace( nondigit, '' ), c.table );
+			// use parser for the column
+			val = c.parsers[data.index].format( data.iFilter, c.table );
 			if ( high < low ) {
 				// swap high & low
 				t = high; high = low; low = t;
@@ -87,7 +88,7 @@ $(function(){
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Custom Filter Widget Search Type - Example 2</h2>
+	<h2>Custom Filter Widget Search Type (example 2)</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -96,6 +97,7 @@ $(function(){
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version updated">v2.20.2</span>, the "insideRange" function was updated to use the column parser; this change would allow the sorting of dates, if using the <a href="example-parsers-date-range.html">date-range parsers</a> also added in v2.20.2.</li>
 			<li>This is another example of how to add a custom filter search type - see <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">this page</a> for details on how to add your own.</li>
 			<li>This "insideRange" search type does the following:
 				<ul>
@@ -142,6 +144,11 @@ $(function(){
 	<div id="javascript">
 		<pre class="prettyprint lang-javascript"></pre>
 	</div>
+
+<div class="next-up">
+	<hr />
+	Next up: <a href="example-widget-filter-formatter-1.html">jQuery custom filter widget formatter (jQuery UI widgets) &rsaquo;&rsaquo;</a>
+</div>
 
 </div>
 
