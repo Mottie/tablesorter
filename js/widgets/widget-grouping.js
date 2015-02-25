@@ -29,6 +29,9 @@ ts.grouping = {
 			var word = (txt + '').split(c.widgetOptions.group_separator);
 			return $.trim(word[num - 1] || '');
 		},
+		text : function(c, $column, txt, num){
+			return txt;
+		},
 		word : function(c, $column, txt, num){
 			var word = (txt + ' ').match(/\w+/g) || [];
 			return word[num - 1] || '';
