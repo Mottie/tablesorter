@@ -120,6 +120,13 @@ output = ts.output = {
 
 		// all tbody rows
 		$rows = $el.children('tbody').children('tr');
+
+		if (wo.output_includeFooter) {
+			// clone, to force the tfoot rows to the end of this selection of rows
+			// otherwise they appear after the thead (the order in the HTML)
+			$rows = $rows.add( $el.children('tfoot').children('tr').clone() );
+		}
+
 		// get (f)iltered, (v)isible or all rows (look for the first letter only)
 		$rows = /f/.test(wo.output_saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
 			/v/.test(wo.output_saveRows) ? $rows.filter(':visible') : $rows;
@@ -287,6 +294,7 @@ ts.addWidget({
 	options: {
 		output_separator     : ',',         // set to "json", "array" or any separator
 		output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+		output_includeFooter : false,       // include footer rows in the output
 		output_dataAttrib    : 'data-name', // header attrib containing modified header name
 		output_headerRows    : false,       // if true, include multiple header rows (JSON only)
 		output_delivery      : 'popup',     // popup, download

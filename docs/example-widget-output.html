@@ -116,6 +116,7 @@
 				filter_reset        : demos[groupIndex] + ' .reset',
 				output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ',')
 				output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+				output_includeFooter : true,        // include footer rows in the output
 				output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
 				output_headerRows    : true,        // output all header rows (multiple rows)
 				output_delivery      : 'p',         // (p)opup, (d)ownload
@@ -221,6 +222,7 @@
 
 			<h4>Changes</h4>
 			<ul>
+				<li>IN <span class="version">v2.20.2</span>, added the <code>output_includeFooter</code> option.</li>
 				<li>In <span class="version">v2.17.5</span>, the need to modify the server's content disposition no longer exists.</li>
 				<li>In <span class="version">v2.17.0</span>,
 					<ul>
@@ -314,7 +316,7 @@
 		<h3><a href="#">Setup Example (php)</a></h3>
 		<div>
 			Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for sharing this setup which includes the necessary php to allow file download with the proper filename and extension (<a href="https://gist.github.com/TheSin-/3303c23f033bd973bf34">original Gist</a>)
-			<p>
+			<p></p>
 			<script src="https://gist.github.com/TheSin-/3303c23f033bd973bf34.js"></script>
 		</div>
 
@@ -445,6 +447,13 @@ line,value1,value2,value3
 							<br>
 							<span class="label label-info">Note</span> This option will work properly with tables that contain rowspans &amp; colspans.
 							</div>
+						</td>
+					</tr>
+					<tr id="output_includefooter">
+						<td><span class="permalink">output_includeFooter</span></td>
+						<td><code>false</code></td>
+						<td>
+							Change this option to <code>true</code> to include the <code>&lt;tfoot&gt;</code> rows in the output (<span class="version">v2.20.2</span>)
 						</td>
 					</tr>
 					<tr id="output_dataattrib">
@@ -782,6 +791,17 @@ $.tablesorter.output.replaceTab = '\\t';</pre>
 				<th>Date</th>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<th>Rank</th>
+				<th data-name="First & middle">First Name</th>
+				<th data-name="Last & Title">Last Name</th>
+				<th>Age</th>
+				<th>Total</th>
+				<th>Discount</th>
+				<th>Date</th>
+			</tr>
+		</tfoot>
 		<tbody>
 			<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
 			<tr><td>11</td><td>Aaron</td><td>"doc" Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
