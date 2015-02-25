@@ -633,7 +633,6 @@ $(function(){
 		tester.cacheCompare( table4, 3, [ 2, 1, 7, 6, 5, 3, 4, 8, 9, 10 ], 'force x2 + sorted x2 + append x2, ascending' );
 		$table4.on('sortEnd', function(){
 			count++;
-			console.log(count);
 			if (count === 1) {
 				tester.cacheCompare( table4, 3, [ 2, 1, 6, 7, 5, 4, 3, 8, 10, 9 ], 'force x2 + sorted x2 + append x2, descending' );
 				c4.sortResetKey = 'shiftKey';
