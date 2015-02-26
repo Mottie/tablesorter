@@ -9,55 +9,45 @@
 var ts = $.tablesorter;
 
 ts.grouping = {
-
-	types : {
-		number : function(c, $column, txt, num){
-			var value, word, result;
-			if (num > 1 && txt !== '') {
-				if ($column.hasClass(ts.css.sortAsc)) {
-					result = Math.floor(parseFloat(txt)/num) * num;
-				} else {
-					result = Math.ceil(parseFloat(txt)/num) * num;
-				}
-				result += ' - ' + (result + (num - 1) * ($column.hasClass(ts.css.sortAsc) ? 1 : -1));
-			} else {
-				result = parseFloat(txt) || txt;
-			}
-			return result;
-		},
-		separator : function(c, $column, txt, num){
-			var word = (txt + '').split(c.widgetOptions.group_separator);
-			return $.trim(word[num - 1] || '');
-		},
-		text : function(c, $column, txt, num){
-			return txt;
-		},
-		word : function(c, $column, txt, num){
-			var word = (txt + ' ').match(/\w+/g) || [];
-			return word[num - 1] || '';
-		},
-		letter : function(c, $column, txt, num){
-			return txt ? (txt + ' ').substring(0, num) : '';
-		},
-		date : function(c, $column, txt, part){
-			var hours, hours12, minutes, ampm,
-			    wo = c.widgetOptions,
-			    time = new Date(txt || '');
-			switch (part) {
-				case 'year':	return time.getFullYear();
-				case 'month':	return wo.group_months[time.getMonth()];
-				case 'monthyear':	return wo.group_months[time.getMonth()] + ' ' + time.getFullYear();
-				case 'day':	return wo.group_months[time.getMonth()] + ' ' + time.getDate();
-				case 'week':	return wo.group_week[time.getDay()];
-				case 'time':
-					hours = time.getHours();
-					hours12 = ('00' + (hours > 12 ? hours - 12 : (hours === 0 ? hours + 12 : hours))).slice(-2);
-					minutes = ('00' + time.getMinutes()).slice(-2);
-					ampm = ('00' + wo.group_time[hours >= 12 ? 1 : 0]).slice(-2);
-					return hours12 + ':' + minutes + ' ' + ampm;
-				default:	return wo.group_dateString(time);
-			};
+	_columnDirection: function($column){
+		if ($column.hasClass(ts.css.sortAsc)) {
+			return 0;
+		} else if ($column.hasClass(ts.css.sortDesc)) {
+			return 1;
+		} else {
+			return 2;
 		}
+	},
+
+	grouperConstructors: {
+
+	},
+
+	// grouper is a:
+	// {
+	// 	grouperId: function(){ return <grouper saving key>; },
+	// 	rowGroup: function(normRow){ return <group name>; },
+	// }
+	//
+	// grouperConstructor is a function of arbitrary arguments, returning a grouper.
+	// If it has such an arglist: function(c, $column, groupingParameter),
+	// then grouper can be instantiated automatically from column by columnGrouper.
+	// All you need is to specify header class group-<grouperType>-<groupingPrameter>
+	addGrouperConstructor: function(grouperType, grouperConstructor) {
+		var grouperHash = {};
+		grouperHash[grouperType] = grouperConstructor;
+		$.extend(this.grouperConstructors, grouperHash);
+	},
+
+	columnGrouper: function(c, $column) {
+		// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
+		var groupClass = ($column.attr('class') || '').match(/(group-\w+(-\w+)?)/g),
+		    // grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
+		    grouping = groupClass ? groupClass[0].split('-') : ['group','letter',1], // default to letter 1
+		    groupingType = grouping[1],
+		    groupingParameter = (groupingType === 'date') ? grouping[2] : (parseInt(grouping[2] || 1, 10) || 1),
+		    grouperConstructor = this.grouperConstructors[groupingType];
+		return grouperConstructor && grouperConstructor(c, $column, groupingParameter);
 	},
 
 	groupHeaderHTML: function(c, wo, currentGroup) {
@@ -69,7 +59,7 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $row, groupClass, grouping, norm_rows, saveName, direction, grouper, groupingParameter,
+		var rowIndex, tbodyIndex, currentGroup, $row, norm_rows, saveName, grouper,
 			group = '',
 			savedGroup = false,
 			column = c.sortList[0] ? c.sortList[0][0] : -1,
@@ -85,19 +75,13 @@ ts.grouping = {
 			wo.group_currentGroup = ''; // save current groups
 			wo.group_collapsedGroups = {};
 
-			// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
-			groupClass = ($header.attr('class') || '').match(/(group-\w+(-\w+)?)/g);
-			// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
-			grouping = groupClass ? groupClass[0].split('-') : ['group','letter',1]; // default to letter 1
-			grouper = this.types[grouping[1]];
+			grouper = this.columnGrouper(c, $header);
 
 			// save current grouping
 			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
 				wo.group_collapsedGroups = ts.storage( table, 'tablesorter-groups' ) || {};
-				// include direction when grouping numbers > 1 (reversed direction shows different range values)
-				direction = (grouping[1] === 'number' && grouping[2] > 1) ? 'dir' + c.sortList[0][1] : '';
 				// combine column, sort direction & grouping as save key
-				saveName = wo.group_currentGroup = '' + column + direction + grouping.join('');
+				saveName = wo.group_currentGroup = grouper.grouperId();
 				if (!wo.group_collapsedGroups[saveName]) {
 					wo.group_collapsedGroups[saveName] = [];
 				} else {
@@ -110,13 +94,10 @@ ts.grouping = {
 				for (rowIndex = 0; rowIndex < norm_rows.length; rowIndex++) {
 					$row = norm_rows[rowIndex][c.columns].$row.eq(0);
 					if ( $row.is(':visible') ) {
-						// fixes #438
-						if (grouper) {
-							groupingParameter = /date/.test(groupClass) ? grouping[2] : (parseInt(grouping[2] || 1, 10) || 1);
-							currentGroup = grouper(c, $header, norm_rows[rowIndex][column], groupingParameter);
+						if (grouper) {	// fixes #438
+							currentGroup = grouper.rowGroup(norm_rows[rowIndex]);
 							if (group !== currentGroup) {
 								group = currentGroup;
-								// show range if number > 1
 								if ($.isFunction(wo.group_formatter)) {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 								}
@@ -209,9 +190,112 @@ ts.grouping = {
 			ts.storage(table, 'tablesorter-groups', '');
 			this.update(table, table.config, table.config.widgetOptions);
 		}
-	}
-
+	},
 };
+
+ts.grouping.addGrouperConstructor('number', function(c, $column, num){
+	var colIndex = $column.data('column');
+	num = num || 1;
+	if (num == 1) {
+		return {
+			rowGroup: function(normRow) {
+				var txt = normRow[colIndex];
+				return parseFloat(txt) || txt;
+			},
+			grouperId: function() { return '' + colIndex + 'groupnumber1'; },
+		};
+	} else {
+		return {
+			rowGroup: function(normRow) {
+				var result,
+				    txt = normRow[colIndex];;
+				if (txt === '') { return ''; }
+				if ($column.hasClass(ts.css.sortAsc)) {
+					result = Math.floor(parseFloat(txt)/num) * num;
+				} else {
+					result = Math.ceil(parseFloat(txt)/num) * num;
+				}
+				// show range if number > 1
+				return result + ' - ' + (result + (num - 1) * ($column.hasClass(ts.css.sortAsc) ? 1 : -1));
+			},
+			// include direction in ID when grouping numbers > 1 (so reversed direction shows different range values)
+			grouperId: function() { return '' + colIndex + 'dir' + ts.grouping._columnDirection($column) +'groupnumber' + num;	},
+		};
+	}
+});
+
+ts.grouping.addGrouperConstructor('separator', function(c, $column, num){
+	var colIndex = $column.data('column');
+	num = num || 1;
+	return {
+		rowGroup: function(normRow) {
+			var word = (normRow[colIndex] + '').split(c.widgetOptions.group_separator);
+			return $.trim(word[num - 1] || '');
+		},
+		grouperId: function() { return '' + colIndex + 'groupseparator' + num; }
+	};
+});
+
+ts.grouping.addGrouperConstructor('text', function(c, $column){
+	var colIndex = $column.data('column');
+	return {
+		rowGroup: function(normRow) { return normRow[colIndex] + ''; },
+		grouperId: function() { return '' + colIndex + 'grouptext'; }
+	};
+});
+
+ts.grouping.addGrouperConstructor('word', function(c, $column, num){
+	var colIndex = $column.data('column');
+	num = num || 1;
+	return {
+		rowGroup: function(normRow) {
+			var txt = normRow[colIndex],
+					word = (txt + ' ').match(/\w+/g) || [];
+			return word[num - 1] || '';
+		},
+		grouperId: function() { return '' + colIndex + 'groupword' + num; }
+	};
+});
+
+ts.grouping.addGrouperConstructor('letter', function(c, $column, num){
+	var colIndex = $column.data('column');
+	num = num || 1;
+	return {
+		rowGroup: function(normRow) {
+			var txt = normRow[colIndex];
+			return txt ? (txt + ' ').substring(0, num) : '';
+		},
+		grouperId: function() { return '' + colIndex + 'groupletter' + num; }
+	};
+});
+
+ts.grouping.addGrouperConstructor('date', function(c, $column, part){
+	var wo = c.widgetOptions,
+			colIndex = $column.data('column');
+	return {
+		rowGroup: function(normRow) {
+			var hours, hours12, minutes, ampm,
+					txt = normRow[colIndex],
+					time = new Date(txt || '');
+			switch (part) {
+				case 'year':	return time.getFullYear();
+				case 'month':	return wo.group_months[time.getMonth()];
+				case 'monthyear':	return wo.group_months[time.getMonth()] + ' ' + time.getFullYear();
+				case 'day':	return wo.group_months[time.getMonth()] + ' ' + time.getDate();
+				case 'week':	return wo.group_week[time.getDay()];
+				case 'time':
+					hours = time.getHours();
+					hours12 = ('00' + (hours > 12 ? hours - 12 : (hours === 0 ? hours + 12 : hours))).slice(-2);
+					minutes = ('00' + time.getMinutes()).slice(-2);
+					ampm = ('00' + wo.group_time[hours >= 12 ? 1 : 0]).slice(-2);
+					return hours12 + ':' + minutes + ' ' + ampm;
+				default:					return wo.group_dateString(time);
+			};
+		},
+		grouperId: function() { return '' + colIndex + 'groupdate' + part; }
+	};
+});
+
 
 ts.addWidget({
 	id: 'group',
