@@ -135,7 +135,8 @@
 		},
 
 		calcFilters = function(table, p) {
-			var c = table.config,
+			var normalized, indx, len,
+				c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
 			if (hasFilters && !p.ajaxUrl) {
 				if ($.isEmptyObject(c.cache)) {
@@ -143,9 +144,11 @@
 					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
 				} else {
 					p.filteredRows = 0;
-					$.each(c.cache[0].normalized, function(i, el) {
-						p.filteredRows += p.regexRows.test(el[c.columns].$row[0].className) ? 0 : 1;
-					});
+					normalized = c.cache[0].normalized;
+					len = normalized.length;
+					for (indx = 0; indx < len; indx++) {
+						p.filteredRows += p.regexRows.test(normalized[indx][c.columns].$row[0].className) ? 0 : 1;
+					}
 				}
 			} else if (!hasFilters) {
 				p.filteredRows = p.totalRows;
@@ -154,7 +157,7 @@
 
 		updatePageDisplay = function(table, p, completed) {
 			if ( p.initializing ) { return; }
-			var s, t, $out,
+			var s, t, $out, indx, len, options,
 				c = table.config,
 				sz = p.size || p.settings.size || 10; // don't allow dividing by zero
 			if (p.countChildRows) { t.push(c.cssChildRow); }
@@ -192,9 +195,11 @@
 					});
 				if ( p.$goto.length ) {
 					t = '';
-					$.each(buildPageSelect(p), function(i, opt){
-						t += '<option value="' + opt + '">' + opt + '</option>';
-					});
+					options = buildPageSelect(p);
+					len = options.length;
+					for (indx = 0; indx < len; indx++) {
+						t += '<option value="' + options[indx] + '">' + options[indx] + '</option>';
+					}
 					// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
 					p.$goto.html(t).val( p.page + 1 );
 				}
@@ -532,35 +537,38 @@
 		},
 
 		getAjaxUrl = function(table, p) {
-			var c = table.config,
+			var indx, len,
+				c = table.config,
 				url = (p.ajaxUrl) ? p.ajaxUrl
 				// allow using "{page+1}" in the url string to switch to a non-zero based index
 				.replace(/\{page([\-+]\d+)?\}/, function(s,n){ return p.page + (n ? parseInt(n, 10) : 0); })
 				.replace(/\{size\}/g, p.size) : '',
-			sl = c.sortList,
-			fl = p.currentFilters || $(table).data('lastSearch') || [],
+			sortList = c.sortList,
+			filterList = p.currentFilters || $(table).data('lastSearch') || [],
 			sortCol = url.match(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/),
 			filterCol = url.match(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/),
 			arry = [];
 			if (sortCol) {
 				sortCol = sortCol[1];
-				$.each(sl, function(i,v){
-					arry.push(sortCol + '[' + v[0] + ']=' + v[1]);
-				});
+				len = sortList.length;
+				for (indx = 0; indx < len; indx++) {
+					arry.push(sortCol + '[' + sortList[indx][0] + ']=' + sortList[indx][1]);
+				}
 				// if the arry is empty, just add the col parameter... "&{sortList:col}" becomes "&col"
 				url = url.replace(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join('&') : sortCol );
 				arry = [];
 			}
 			if (filterCol) {
 				filterCol = filterCol[1];
-				$.each(fl, function(i,v){
-					if (v) {
-						arry.push(filterCol + '[' + i + ']=' + encodeURIComponent(v));
+				len = filterList.length;
+				for (indx = 0; indx < len; indx++) {
+					if (filterList[indx]) {
+						arry.push(filterCol + '[' + indx + ']=' + encodeURIComponent(filterList[indx]));
 					}
-				});
+				}
 				// if the arry is empty, just add the fcol parameter... "&{filterList:fcol}" becomes "&fcol"
 				url = url.replace(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join('&') : filterCol );
-				p.currentFilters = fl;
+				p.currentFilters = filterList;
 			}
 			if ( typeof(p.customAjaxUrl) === "function" ) {
 				url = p.customAjaxUrl(table, url);

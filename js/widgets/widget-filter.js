@@ -426,7 +426,8 @@ ts.filter = {
 		}
 	},
 	filterInitComplete: function(c){
-		var wo = c.widgetOptions,
+		var indx, len,
+			wo = c.widgetOptions,
 			count = 0,
 			completed = function(){
 				wo.filter_initialized = true;
@@ -436,11 +437,12 @@ ts.filter = {
 		if ( $.isEmptyObject( wo.filter_formatter ) ) {
 			completed();
 		} else {
-			$.each( wo.filter_formatterInit, function(i, val) {
-				if (val === 1) {
+			len = wo.filter_formatterInit.length;
+			for (indx = 0; indx < len; indx++) {
+				if (wo.filter_formatterInit[indx] === 1) {
 					count++;
 				}
-			});
+			}
 			clearTimeout(wo.filter_initTimer);
 			if (!wo.filter_initialized && count === wo.filter_formatterCount) {
 				// filter widget initialized
@@ -722,7 +724,7 @@ ts.filter = {
 	},
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns "1-3,4-6,8" in data-column
-		var ranges, singles, indx,
+		var temp, ranges, range, start, end, singles, i, indx, len,
 			wo = c.widgetOptions,
 			// only target "all" column inputs on initialization
 			// & don't target "all" column inputs if they don't exist
@@ -732,31 +734,32 @@ ts.filter = {
 		// process column range
 		if ( targets && /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
-			$.each(ranges, function(i,v){
-				var t,
-					range = v.split( /\s*-\s*/ ),
-					start = parseInt( range[0], 10 ) || 0,
-					end = parseInt( range[1], 10 ) || ( c.columns - 1 );
-				if ( start > end ) { t = start; start = end; end = t; } // swap
+			len = ranges.length;
+			for (indx = 0; indx < len; indx++) {
+				range = ranges[indx].split( /\s*-\s*/ );
+				start = parseInt( range[0], 10 ) || 0;
+				end = parseInt( range[1], 10 ) || ( c.columns - 1 );
+				if ( start > end ) { temp = start; start = end; end = temp; } // swap
 				if ( end >= c.columns ) { end = c.columns - 1; }
 				for ( ; start <= end; start++ ) {
 					columns.push(start);
 				}
 				// remove processed range from val
-				val = val.replace( v, '' );
-			});
+				val = val.replace( ranges[indx], '' );
+			}
 		}
 		// process single columns
 		if ( targets && /,/.test( val ) ) {
 			singles = val.split( /\s*,\s*/ );
-			$.each( singles, function(i,v) {
-				if (v !== '') {
-					indx = parseInt( v, 10 );
+			len = singles.length;
+			for (i = 0; i < len; i++) {
+				if (singles[i] !== '') {
+					indx = parseInt( singles[i], 10 );
 					if ( indx < c.columns ) {
 						columns.push( indx );
 					}
 				}
-			});
+			}
 		}
 		// return all columns
 		if (!columns.length) {
@@ -1055,7 +1058,7 @@ ts.filter = {
 	},
 	getOptionSource: function(table, column, onlyAvail) {
 		table = $(table)[0];
-		var cts,
+		var cts, indx, len,
 			c = table.config,
 			wo = c.widgetOptions,
 			parsed = [],
@@ -1097,12 +1100,13 @@ ts.filter = {
 			// unsorted select options
 			return arry;
 		} else {
+			len = arry.length;
 			// parse select option values
-			$.each(arry, function(i, v){
+			for (indx = 0; indx < len; indx++) {
 				// parse array data using set column parser; this DOES NOT pass the original
 				// table cell to the parser format function
-				parsed.push({ t : v, p : c.parsers && c.parsers[column].format( v, table, [], column ) });
-			});
+				parsed.push({ t : arry[indx], p : c.parsers && c.parsers[column].format( arry[indx], table, [], column ) });
+			}
 
 			// sort parsed select options
 			cts = c.textSorter || '';
@@ -1124,9 +1128,10 @@ ts.filter = {
 			});
 			// rebuild arry from sorted parsed data
 			arry = [];
-			$.each(parsed, function(i, v){
-				arry.push(v.t);
-			});
+			len = parsed.length;
+			for (indx = 0; indx < len; indx++) {
+				arry.push( parsed[indx].t );
+			}
 			return arry;
 		}
 	},
