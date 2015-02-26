@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 02-25-2015 (v2.20.1)*/
+/*! tablesorter (FORK) widgets - updated 02-26-2015 (v2.20.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 /*! Widget: storage */
 ;(function ($, window, document) {
@@ -807,7 +807,7 @@ ts.filter = {
 	},
 
 	setDefaults: function(table, c, wo) {
-		var isArray, saved, indx,
+		var isArray, saved, indx, col, $filters,
 			// get current (default) filters
 			filters = ts.getFilters(table) || [];
 		if (wo.filter_saveFilters && ts.storage) {
@@ -818,8 +818,12 @@ ts.filter = {
 		}
 		// if no filters saved, then check default settings
 		if (filters.join('') === '') {
-			for (indx = 0; indx < c.columns; indx++) {
-				filters[indx] = c.$headers.filter('[data-column="' + indx + '"]:last').attr(wo.filter_defaultAttrib) || filters[indx];
+			// allow adding default setting to external filters
+			$filters = c.$headers.add( wo.filter_$externalFilters ).filter('[' + wo.filter_defaultAttrib + ']');
+			for (indx = 0; indx <= c.columns; indx++) {
+				// include data-column="all" external filters
+				col = indx === c.columns ? 'all' : indx;
+				filters[indx] = $filters.filter('[data-column="' + col + '"]').attr(wo.filter_defaultAttrib) || filters[indx] || '';
 			}
 		}
 		c.$table.data('lastSearch', filters);
