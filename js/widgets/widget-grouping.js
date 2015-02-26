@@ -57,12 +57,89 @@ ts.grouping = {
 						currentGroup + '</span><span class="group-count"></span></td></tr>';
 	},
 
+	_insertGroupHeaders: function(table, c, wo, grouper, column) {
+		var rowIndex, tbodyIndex, currentGroup, $row, norm_rows,
+			group = '',
+			savedGroup = false;
+
+		wo.group_currentGroup = ''; // save current groups
+		wo.group_collapsedGroups = {};
+
+		// save current grouping
+		if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
+			wo.group_collapsedGroups = ts.storage( table, 'tablesorter-groups' ) || {};
+			// combine column, sort direction & grouping as save key
+			wo.group_currentGroup = grouper.grouperId();
+			if (!wo.group_collapsedGroups[wo.group_currentGroup]) {
+				wo.group_collapsedGroups[wo.group_currentGroup] = [];
+			} else {
+				savedGroup = true;
+			}
+		}
+
+		for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
+			norm_rows = c.cache[tbodyIndex].normalized;
+			group = ''; // clear grouping across tbodies
+			for (rowIndex = 0; rowIndex < norm_rows.length; rowIndex++) {
+				$row = norm_rows[rowIndex][c.columns].$row.eq(0);
+				if ( !$row.is(':visible') ) { continue; }
+
+				currentGroup = grouper.rowGroup(norm_rows[rowIndex]);
+				if (group !== currentGroup) {
+					group = currentGroup;
+					if ($.isFunction(wo.group_formatter)) {
+						currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
+					}
+					$row.before(this.groupHeaderHTML(c, wo, currentGroup));
+					if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
+						// all groups start collapsed (when saveGroup is false it is processed in _collapseGroupHeaderIfNecessary separately)
+						wo.group_collapsedGroups[wo.group_currentGroup].push(currentGroup);
+					}
+				}
+			}
+		}
+	},
+
+	_markupGroupHeader: function(table, wo, column, $headerRow, $groupRows) {
+		var $label;
+		if (wo.group_count || $.isFunction(wo.group_callback)) {
+			$label = $headerRow.find('.group-count');
+			if ($label.length) {
+				if (wo.group_count) {
+					$label.html( wo.group_count.replace(/\{num\}/g, $groupRows.length) );
+				}
+				if ($.isFunction(wo.group_callback)) {
+					wo.group_callback($headerRow.find('td'), $groupRows, column, table);
+				}
+			}
+		}
+	},
+	_collapseGroupHeaderIfNecessary: function(table, wo, $headerRow, $groupRows) {
+		var isHidden, name;
+		if (wo.group_saveGroups && wo.group_collapsedGroups[wo.group_currentGroup].length) {
+			name = $headerRow.find('.group-name').text().toLowerCase();
+			isHidden = $.inArray( name, wo.group_collapsedGroups[wo.group_currentGroup] ) > -1;
+			$headerRow.toggleClass('collapsed', isHidden);
+			$groupRows.toggleClass('group-hidden', isHidden);
+		} else if (wo.group_collapsed && wo.group_collapsible) {
+			$headerRow.addClass('collapsed');
+			$groupRows.addClass('group-hidden');
+		}
+	},
+	_processGroupHeaders: function(table, c, wo, column) {
+		c.$table.find('tr.group-header')
+		.bind('selectstart', false)
+		.each(function(){
+			var $headerRow = $(this),
+			    $groupRows = $headerRow.nextUntil('tr.group-header').filter(':visible');
+			ts.grouping._markupGroupHeader(table, wo, column, $headerRow, $groupRows);
+			ts.grouping._collapseGroupHeaderIfNecessary(table, wo, $headerRow, $groupRows);
+		});
+	},
+
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $row, norm_rows, saveName,
-			group = '',
-			savedGroup = false,
-			column = c.sortList[0] ? c.sortList[0][0] : -1,
+		var column = c.sortList[0] ? c.sortList[0][0] : -1,
 			$header = c.$headers.filter('[data-column="' + column + '"]:last'),
 			grouper = this.columnGrouper(c, $header);
 		c.$table
@@ -73,68 +150,8 @@ ts.grouping = {
 			c.$table.data('pagerSavedHeight', 0);
 		}
 		if (column >= 0 && !$header.hasClass('group-false') && grouper) {
-			wo.group_currentGroup = ''; // save current groups
-			wo.group_collapsedGroups = {};
-
-			// save current grouping
-			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
-				wo.group_collapsedGroups = ts.storage( table, 'tablesorter-groups' ) || {};
-				// combine column, sort direction & grouping as save key
-				saveName = wo.group_currentGroup = grouper.grouperId();
-				if (!wo.group_collapsedGroups[saveName]) {
-					wo.group_collapsedGroups[saveName] = [];
-				} else {
-					savedGroup = true;
-				}
-			}
-			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
-				norm_rows = c.cache[tbodyIndex].normalized;
-				group = ''; // clear grouping across tbodies
-				for (rowIndex = 0; rowIndex < norm_rows.length; rowIndex++) {
-					$row = norm_rows[rowIndex][c.columns].$row.eq(0);
-					if ( !$row.is(':visible') ) { continue; }
-
-					currentGroup = grouper.rowGroup(norm_rows[rowIndex]);
-					if (group !== currentGroup) {
-						group = currentGroup;
-						if ($.isFunction(wo.group_formatter)) {
-							currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
-						}
-						$row.before(this.groupHeaderHTML(c, wo, currentGroup));
-						if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
-							// all groups start collapsed
-							wo.group_collapsedGroups[wo.group_currentGroup].push(currentGroup);
-						}
-					}
-				}
-			}
-			c.$table.find('tr.group-header')
-			.bind('selectstart', false)
-			.each(function(){
-				var isHidden, $label, name,
-					$row = $(this),
-					$rows = $row.nextUntil('tr.group-header').filter(':visible');
-				if (wo.group_count || $.isFunction(wo.group_callback)) {
-					$label = $row.find('.group-count');
-					if ($label.length) {
-						if (wo.group_count) {
-							$label.html( wo.group_count.replace(/\{num\}/g, $rows.length) );
-						}
-						if ($.isFunction(wo.group_callback)) {
-							wo.group_callback($row.find('td'), $rows, column, table);
-						}
-					}
-				}
-				if (wo.group_saveGroups && wo.group_collapsedGroups[wo.group_currentGroup].length) {
-					name = $row.find('.group-name').text().toLowerCase();
-					isHidden = $.inArray( name, wo.group_collapsedGroups[wo.group_currentGroup] ) > -1;
-					$row.toggleClass('collapsed', isHidden);
-					$rows.toggleClass('group-hidden', isHidden);
-				} else if (wo.group_collapsed && wo.group_collapsible) {
-					$row.addClass('collapsed');
-					$rows.addClass('group-hidden');
-				}
-			});
+			this._insertGroupHeaders(table, c, wo, grouper, column);
+			this._processGroupHeaders(table, c, wo, column);
 			c.$table.trigger(wo.group_complete);
 		}
 	},
@@ -205,7 +222,7 @@ ts.grouping.addGrouperConstructor('number', function(c, $column, num){
 		return {
 			rowGroup: function(normRow) {
 				var result,
-				    txt = normRow[colIndex];;
+				    txt = normRow[colIndex];
 				if (txt === '') { return ''; }
 				if ($column.hasClass(ts.css.sortAsc)) {
 					result = Math.floor(parseFloat(txt)/num) * num;
@@ -287,7 +304,7 @@ ts.grouping.addGrouperConstructor('date', function(c, $column, part){
 					ampm = ('00' + wo.group_time[hours >= 12 ? 1 : 0]).slice(-2);
 					return hours12 + ':' + minutes + ' ' + ampm;
 				default:					return wo.group_dateString(time);
-			};
+			}
 		},
 		grouperId: function() { return '' + colIndex + 'groupdate' + part; }
 	};
