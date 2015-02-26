@@ -1666,6 +1666,7 @@ var ts = $.tablesorter = $.tablesorter || {};
 $.extend(ts.css, {
 	sticky    : 'tablesorter-stickyHeader', // stickyHeader
 	stickyVis : 'tablesorter-sticky-visible',
+	stickyHide: 'tablesorter-sticky-hidden',
 	stickyWrap: 'tablesorter-sticky-wrapper'
 });
 
@@ -1735,7 +1736,7 @@ ts.addWidget({
 		}
 		var $table = c.$table,
 			// add position: relative to attach element, hopefully it won't cause trouble.
-			$attach = $(wo.stickyHeaders_attachTo).css('position', 'relative'),
+			$attach = $(wo.stickyHeaders_attachTo),
 			namespace = c.namespace + 'stickyheaders ',
 			// element to watch for the scroll event
 			$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
@@ -1744,8 +1745,7 @@ ts.addWidget({
 			$header = $thead.children('tr').not('.sticky-false').children(),
 			$tfoot = $table.children('tfoot'),
 			$stickyOffset = isNaN(wo.stickyHeaders_offset) ? $(wo.stickyHeaders_offset) : '',
-			stickyOffset = $attach.length ? 0 : $stickyOffset.length ?
-				$stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
+			stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0,
 			// is this table nested? If so, find parent sticky header wrapper (div, not table)
 			$nestedSticky = $table.parent().closest('.' + ts.css.table).hasClass('hasStickyHeaders') ?
 				$table.parent().closest('table.tablesorter')[0].config.widgetOptions.$sticky.parent() : [],
@@ -1754,14 +1754,16 @@ ts.addWidget({
 			$stickyTable = wo.$sticky = $table.clone()
 				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders)
 				.wrap('<div class="' + ts.css.stickyWrap + '">'),
-			$stickyWrap = $stickyTable.parent().css({
-				position   : $attach.length ? 'absolute' : 'fixed',
-				padding    : parseInt( $stickyTable.parent().parent().css('padding-left'), 10 ),
-				top        : stickyOffset + nestedStickyTop,
-				left       : 0,
-				visibility : 'hidden',
-				zIndex     : wo.stickyHeaders_zIndex || 2
-			}),
+			$stickyWrap = $stickyTable.parent()
+				.addClass(ts.css.stickyHide)
+				.css({
+					position   : $attach.length ? 'absolute' : 'fixed',
+					padding    : parseInt( $stickyTable.parent().parent().css('padding-left'), 10 ),
+					top        : stickyOffset + nestedStickyTop,
+					left       : 0,
+					visibility : 'hidden',
+					zIndex     : wo.stickyHeaders_zIndex || 2
+				}),
 			$stickyThead = $stickyTable.children('thead:first'),
 			$stickyCells,
 			laststate = '',
@@ -1804,6 +1806,10 @@ ts.addWidget({
 				setWidth( $table, $stickyTable );
 				setWidth( $header, $stickyCells );
 			};
+		// only add a position relative if a position isn't already defined
+		if ($attach.length && !$attach.css('position')) {
+			$attach.css('position', 'relative');
+		}
 		// save stickyTable element to config
 		// it is also saved to wo.$sticky
 		if (c.$extraTables && c.$extraTables.length) {
@@ -1850,8 +1856,7 @@ ts.addWidget({
 			if (!$table.is(':visible')) { return; } // fixes #278
 			// Detect nested tables - fixes #724
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
-			var prefix = 'tablesorter-sticky-',
-				offset = $table.offset(),
+			var offset = $table.offset(),
 				yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
 				xWindow = $.isWindow( $xScroll[0] ),
 				// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
@@ -1871,8 +1876,8 @@ ts.addWidget({
 				cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
 			}
 			$stickyWrap
-				.removeClass(prefix + 'visible ' + prefix + 'hidden')
-				.addClass(prefix + isVisible)
+				.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
+				.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
 				.css(cssSettings);
 			if (isVisible !== laststate || event.type === 'resize') {
 				// make sure the column widths match
