@@ -59,11 +59,12 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var rowIndex, tbodyIndex, currentGroup, $row, norm_rows, saveName, grouper,
+		var rowIndex, tbodyIndex, currentGroup, $row, norm_rows, saveName,
 			group = '',
 			savedGroup = false,
 			column = c.sortList[0] ? c.sortList[0][0] : -1,
-			$header = c.$headers.filter('[data-column="' + column + '"]:last');
+			$header = c.$headers.filter('[data-column="' + column + '"]:last'),
+			grouper = this.columnGrouper(c, $header);
 		c.$table
 			.find('tr.group-hidden').removeClass('group-hidden').end()
 			.find('tr.group-header').remove();
@@ -71,11 +72,9 @@ ts.grouping = {
 			// clear pager saved spacer height (in case the rows are collapsed)
 			c.$table.data('pagerSavedHeight', 0);
 		}
-		if (column >= 0 && !$header.hasClass('group-false')) {
+		if (column >= 0 && !$header.hasClass('group-false') && grouper) {
 			wo.group_currentGroup = ''; // save current groups
 			wo.group_collapsedGroups = {};
-
-			grouper = this.columnGrouper(c, $header);
 
 			// save current grouping
 			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
@@ -93,20 +92,18 @@ ts.grouping = {
 				group = ''; // clear grouping across tbodies
 				for (rowIndex = 0; rowIndex < norm_rows.length; rowIndex++) {
 					$row = norm_rows[rowIndex][c.columns].$row.eq(0);
-					if ( $row.is(':visible') ) {
-						if (grouper) {	// fixes #438
-							currentGroup = grouper.rowGroup(norm_rows[rowIndex]);
-							if (group !== currentGroup) {
-								group = currentGroup;
-								if ($.isFunction(wo.group_formatter)) {
-									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
-								}
-								$row.before(this.groupHeaderHTML(c, wo, currentGroup));
-								if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
-									// all groups start collapsed
-									wo.group_collapsedGroups[wo.group_currentGroup].push(currentGroup);
-								}
-							}
+					if ( !$row.is(':visible') ) { continue; }
+
+					currentGroup = grouper.rowGroup(norm_rows[rowIndex]);
+					if (group !== currentGroup) {
+						group = currentGroup;
+						if ($.isFunction(wo.group_formatter)) {
+							currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
+						}
+						$row.before(this.groupHeaderHTML(c, wo, currentGroup));
+						if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
+							// all groups start collapsed
+							wo.group_collapsedGroups[wo.group_currentGroup].push(currentGroup);
 						}
 					}
 				}
