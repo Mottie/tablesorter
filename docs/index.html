@@ -5304,14 +5304,14 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 			<tr id="variable-instanceMethods">
 				<td><a href="#" class="permalink">$.tablesorter.instanceMethods</a></td>
 				<td>Object</td>
-				<td>This is an object of all instance methods of config object. They can be added using the <a href="#function-addInstanceMethods"><code>addInstanceMethods</code></a> function before table initialization.
+				<td>This variable contains all instance methods of the config object. Added using <a href="#function-addInstanceMethods"><code>addInstanceMethods</code></a> function before table initialization (<span class="version">v2.20.2</span>).
 					<div class="collapsible">
-						<pre class="prettyprint lang-js">
-$.tablesorter.addInstanceMethods({
+						<br>
+						<pre class="prettyprint lang-js">$.tablesorter.addInstanceMethods({
   columnSum: function(colNumber) {
     var sum = 0, tbodyIndex, normalizedRows, rowIndex;
-    // `this` refer to config object
-    for (tbodyIndex = 0; tbodyIndex &lt; this.$tbodies.length; ++tbodyIndex){
+    // `this` refers to config object
+    for (tbodyIndex = 0; tbodyIndex &lt; this.$tbodies.length; ++tbodyIndex) {
       normalizedRows = this.cache[tbodyIndex].normalized;
       for (rowIndex = 0; rowIndex &lt; normalizedRows.length; ++rowIndex) {
         sum += normalizedRows[rowIndex][colNumber];
@@ -5327,12 +5327,7 @@ $.tablesorter.addInstanceMethods({
 $('table').tablesorter();
 c = $('table')[0].config;
 console.log('sum of third column: ' + c.columnSum(2));
-console.log('mean of third column: ' + c.columnMean(2));
-            </pre>
-						Some predefined instance methods are already defined:
-						<ul>
-							<li><code>c.$columnHeader(n, options)</code> returns n-th header cell.</li>
-						</ul>
+console.log('mean of third column: ' + c.columnMean(2));</pre>
 					</div>
 				</td>
 				<td></td>
@@ -5531,6 +5526,39 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				<td></td>
 			</tr>
 
+			<tr id="variable-header-indexed">
+				<td><a href="#" class="permalink">config.$headerIndexed</a></td>
+				<td>Array</td>
+				<td>Internally stored Array of headers that represent each column (<span class="version">v2.20.2</span>)
+					<div class="collapsible">
+					<br>
+					The <code>table.config.$headers</code> variable contains ALL header cells, not all of which contain sorting information (data-attributes, class names or sorting information).
+					<p></p>
+					This variable targets the <em>last sortable header cell</em> in a particular column; unless an entire column is completely unsortable (checkbox column), then it just picks the last cell in that column.
+					<p></p>
+					To make that description less confusing, look at the HTML in the <a href="#variable-headers"><code>config.$headers</code></a> documentation, only the four middle rows (header-index 1-4) will be contained within this variable:
+					<pre class="prettyprint lang-js">// the resulting config.$headerIndexed for the HTML example in config.$headers will look like this:
+console.log( table.config.$headerIndexed );
+/* outputs : [
+  $('&lt;th data-column="0"&gt;header-index 1&lt;/th&gt;'),
+  $('&lt;th data-column="1"&gt;header-index 2&lt;/th&gt;'),
+  $('&lt;th data-column="2"&gt;header-index 3&lt;/th&gt;'),
+  $('&lt;th data-column="3"&gt;header-index 4&lt;/th&gt;')
+] */</pre>
+					<p></p>
+					<span class="label label-warning">* NOTE *</span> This variable contains an array of jQuery objects, it is <em>not</em> a collection of jQuery objects, i.e.
+					<pre class="prettyprint lang-js">var $column = table.config.$headerIndexed[ 0 ]; // jQuery object returned
+console.log( $column.hasClass('foo') ); // how to access information
+
+var $headers = $( table.config.$headerIndexed ); // make a collection of jQuery objects
+// then use collection manipulation functions
+$headers.each(function(){
+  console.log( $(this).text() );
+});</pre></div>
+					</td>
+				<td></td>
+			</tr>
+
 			<tr id="variable-headers">
 				<td><a href="#" class="permalink">config.$headers</a></td>
 				<td>jQuery Object</td>
@@ -5542,7 +5570,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 					Please note that the headers cells are simply an array of all header cells and should not be targeted using a column index. For example, given the following table <code>thead</code> markup, the <code>header-index</code> counts the header <code>th</code> cells and does not actually match the <code>data-column</code> index when extra rows and/or <code>colspan</code> or <code>rowspan</code> are included in any of the header cells:
 					<pre class="prettyprint lang-html">&lt;thead&gt;
 	&lt;tr&gt;
-		&lt;th colspan=&quot;4&quot; data-column=&quot;0&quot;&gt;header-index 0&lt;/th&gt;
+		&lt;th colspan=&quot;4&quot; data-column=&quot;0&quot; class=&quot;sorter-false&quot;&gt;header-index 0&lt;/th&gt;
 	&lt;/tr&gt;
 	&lt;tr&gt;
 		&lt;th data-column=&quot;0&quot;&gt;header-index 1&lt;/th&gt;
@@ -5551,8 +5579,8 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 		&lt;th data-column=&quot;3&quot;&gt;header-index 4&lt;/th&gt;
 	&lt;/tr&gt;
 	&lt;tr&gt;
-		&lt;th colspan=&quot;2&quot; data-column=&quot;0&quot;&gt;header-index 5&lt;/th&gt;
-		&lt;th colspan=&quot;2&quot; data-column=&quot;2&quot;&gt;header-index 6&lt;/th&gt;
+		&lt;th colspan=&quot;2&quot; data-column=&quot;0&quot; class=&quot;sorter-false&quot;&gt;header-index 5&lt;/th&gt;
+		&lt;th colspan=&quot;2&quot; data-column=&quot;2&quot; class=&quot;sorter-false&quot;&gt;header-index 6&lt;/th&gt;
 	&lt;/tr&gt;
 &lt;/thead&gt;</pre>
 						So, in the above example, to target the header cell in the second table column (<code>data-column</code> index of 1), use the following code: <code>table.config.$headers.filter('[data-column=&quot;1&quot;]')</code> or <code>table.config.$headers.eq(2)</code>.<br>
@@ -6219,12 +6247,12 @@ $.tablesorter.isValueInArray(2, sortList);</pre>
 
 			<tr id="function-addInstanceMethods">
 				<td><a href="#" class="permalink">addInstanceMethods</a></td>
-				<td>This function allows to add custom methods for config object.
+				<td>This function allows to add custom methods for config object (<span class="version">v2.20.2</span>).
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.addInstanceMethods(methods);</pre>
 						<ul>
-							<li><code>methods</code> - an object containing methods to be added, indexed by method names. These methods can use config object by refering <code>this</code></li>
+							<li><code>methods</code> - an object containing methods to be added, indexed by method names. These methods can use config object by refering <code>this</code>.</li>
 						</ul>
 						Take a look at <a href="#variable-instanceMethods">instanceMethods</a> variable description for more details.
 					</div>

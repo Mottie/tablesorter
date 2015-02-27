@@ -29,7 +29,7 @@
 				$headers = [];
 			// set up variables
 			for ( column = 0; column < c.columns; column++ ) {
-				$headers[ column ] = c.$columnHeader(column);
+				$headers[ column ] = c.$headerIndexed[ column ];
 				formatter[ column ] = ts.getColumnData( c.table, wo.formatter_column, column ) || false;
 			}
 			// main loop

@@ -36,7 +36,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 			$cell.find('.select2').select2('val', val);
 			updateSelect2();
 		}),
-	$header = c.$columnHeader(indx),
+	$header = c.$headerIndexed[indx],
 	onlyAvail = $header.hasClass(wo.filter_onlyAvail),
 	$shcell = [],
 	matchPrefix = o.match ? '' : '^',
