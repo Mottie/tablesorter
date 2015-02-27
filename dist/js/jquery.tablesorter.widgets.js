@@ -1139,7 +1139,7 @@ ts.filter = {
 		}).get();
 
 		if (c.debug) {
-			ts.log('Starting filter widget search', filters);
+			ts.log('Filter: Starting filter widget search', filters);
 			time = new Date();
 		}
 		// filtered rows count
@@ -1217,7 +1217,7 @@ ts.filter = {
 				// can't search when all rows are hidden - this happens when looking for exact matches
 				if (searchFiltered && notFiltered === 0) { searchFiltered = false; }
 				if (c.debug) {
-					ts.log( "Searching through " + ( searchFiltered && notFiltered < len ? notFiltered : "all" ) + " rows" );
+					ts.log( 'Filter: Searching through ' + ( searchFiltered && notFiltered < len ? notFiltered : 'all' ) + ' rows' );
 				}
 				if (data.anyMatchFlag) {
 					if (c.sortLocaleCompare) {
