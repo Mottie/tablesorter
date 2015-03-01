@@ -139,9 +139,8 @@ ts.grouping = {
 
 	update : function(table, c, wo){
 		if ($.isEmptyObject(c.cache)) { return; }
-		var column = c.sortList[0] ? c.sortList[0][0] : -1,
-			$header = c.$headers.filter('[data-column="' + column + '"]:last'),
-			grouper = this.columnGrouper(c, $header);
+		var $header, grouper,
+		    column = c.sortList[0] ? c.sortList[0][0] : -1;
 		c.$table
 			.find('tr.group-hidden').removeClass('group-hidden').end()
 			.find('tr.group-header').remove();
@@ -149,6 +148,11 @@ ts.grouping = {
 			// clear pager saved spacer height (in case the rows are collapsed)
 			c.$table.data('pagerSavedHeight', 0);
 		}
+		if (column < 0) { return; }
+
+		$header = c.$headerIndexed[column];
+		grouper = this.columnGrouper(c, $header);
+
 		if (column >= 0 && !$header.hasClass('group-false') && grouper) {
 			this._insertGroupHeaders(table, c, wo, grouper, column);
 			this._processGroupHeaders(table, c, wo, column);

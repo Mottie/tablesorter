@@ -154,6 +154,9 @@
 				nextNone : 'activate to remove the sort'
 			};
 
+			// These methods can be applied on table.config instance
+			ts.instanceMethods = {};
+
 			/* debuging utils */
 			function log() {
 				var a = arguments[0],
@@ -256,7 +259,7 @@
 					if (rows.length) {
 						l = c.columns; // rows[j].cells.length;
 						for (i = 0; i < l; i++) {
-							h = c.$headers.filter('[data-column="' + i + '"]:last');
+							h = c.$headerIndexed[i];
 							// get column indexed table cell
 							ch = ts.getColumnData( table, c.headers, i );
 							// get column parser/extractor
@@ -445,8 +448,7 @@
 			}
 
 			function buildHeaders(table) {
-				var ch, $t,
-					h, i, t, lock, time,
+				var ch, $t, h, i, t, lock, time, indx,
 					c = table.config;
 				c.headerList = [];
 				c.headerContent = [];
@@ -495,6 +497,13 @@
 					if (c.tabIndex) { $t.attr('tabindex', 0); }
 					return elem;
 				}));
+				// cache headers per column
+				c.$headerIndexed = [];
+				for (indx = 0; indx < c.columns; indx++) {
+					$t = c.$headers.filter('[data-column="' + indx + '"]');
+					// target sortable column cells, unless there are none, then use non-sortable cells
+					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').last() : $t.last();
+				}
 				$(table).find(c.selectorHeaders).attr({
 					scope: 'col',
 					role : 'columnheader'
@@ -603,8 +612,9 @@
 					// ensure all sortList values are numeric - fixes #127
 					col = parseInt(val[0], 10);
 					// make sure header exists
-					header = c.$headers.filter('[data-column="' + col + '"]:last')[0];
+					header = c.$headerIndexed[col][0];
 					if (header) { // prevents error if sorton array is wrong
+						// o.count = o.count + 1;
 						dir = ('' + val[1]).match(/^(1|d|s|o|n)/);
 						dir = dir ? dir[0] : '';
 						// 0/(a)sc (default), 1/(d)esc, (s)ame, (o)pposite, (n)ext
@@ -706,7 +716,7 @@
 						// reverse the sorting direction
 						for (col = 0; col < c.sortList.length; col++) {
 							s = c.sortList[col];
-							order = c.$headers.filter('[data-column="' + s[0] + '"]:last')[0];
+							order = c.$headerIndexed[ s[0] ][0];
 							if (s[0] === indx) {
 								// order.count seems to be incorrect when compared to cell.count
 								s[1] = order.order[cell.count];
@@ -1052,7 +1062,7 @@
 				return this.each(function() {
 					var table = this,
 						// merge & extend config options
-						c = $.extend(true, {}, ts.defaults, settings);
+						c = $.extend(true, {}, ts.defaults, settings, ts.instanceMethods);
 						// save initial settings
 						c.originalSettings = settings;
 					// create a table from data (build table widget)
@@ -1601,6 +1611,12 @@
 				}
 			};
 
+			// Use it to add a set of methods to table.config which will be available for all tables.
+			// This should be done before table initialization
+			ts.addInstanceMethods = function(methods) {
+				$.extend(ts.instanceMethods, methods);
+			};
+
 			ts.getParserById = function(name) {
 				/*jshint eqeqeq:false */
 				if (name == 'false') { return false; }
@@ -1966,7 +1982,7 @@
 			if (s) {
 				var date, d,
 					c = table.config,
-					ci = c.$headers.filter('[data-column="' + cellIndex + '"]:last'),
+					ci = c.$headerIndexed[ cellIndex ],
 					format = ci.length && ci[0].dateFormat || ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') || c.dateFormat;
 				d = s.replace(/\s+/g, ' ').replace(/[\-.,]/g, '/'); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === 'mmddyyyy') {
