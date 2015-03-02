@@ -17,8 +17,7 @@ var ts = $.tablesorter || {},
 // compare option selector class name (jQuery selector)
 compareSelect = '.compare-select',
 
-
-tsff = ts.filterFormatter = {
+tsff = $.extend( {}, ts.filterFormatter, {
 
 	addCompare: function($cell, indx, options){
 		if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
@@ -760,6 +759,6 @@ tsff = ts.filterFormatter = {
 		return $input.val( o.from ? ( o.to ? o.from + ' - ' + o.to : '>=' + o.from ) : (o.to ? '<=' + o.to : '') );
 	}
 
-};
+});
 
 })(jQuery);

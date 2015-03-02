@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) widgets - updated 02-27-2015 (v2.20.1)*/
+/*! tablesorter (FORK) widgets - updated 03-02-2015 (v2.20.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 /*! Widget: storage */
 ;(function ($, window, document) {

@@ -16,7 +16,7 @@ var ts = $.tablesorter || {},
 compareSelect = '.compare-select',
 
 
-tsff = ts.filterFormatter = {
+tsff = $.extend( {}, ts.filterFormatter, {
 
 	addCompare: function($cell, indx, options){
 		if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
@@ -424,6 +424,6 @@ tsff = ts.filterFormatter = {
 		return colorSupported ? $cell.find('input[type="hidden"]') : $('<input type="search">');
 	}
 
-};
+});
 
 })(jQuery);
