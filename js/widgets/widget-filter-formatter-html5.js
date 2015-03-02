@@ -16,7 +16,7 @@ var ts = $.tablesorter || {},
 compareSelect = '.compare-select',
 
 
-tsff = $.extend( {}, ts.filterFormatter, {
+tsff = ts.filterFormatter = $.extend( {}, ts.filterFormatter, {
 
 	addCompare: function($cell, indx, options){
 		if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
