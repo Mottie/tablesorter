@@ -1,4 +1,4 @@
-/*! tablesorter Grouping widget - updated 10/26/2014 (v2.18.0)
+/*! tablesorter Grouping widget - updated 3/5/2015 (v2.21.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -66,12 +66,12 @@ ts.grouping = {
 			// clear pager saved spacer height (in case the rows are collapsed)
 			c.$table.data('pagerSavedHeight', 0);
 		}
-		if (column >= 0 && !c.$headers.filter('[data-column="' + column + '"]:last').hasClass('group-false')) {
+		if (column >= 0 && !c.$headerIndexed[column].hasClass('group-false')) {
 			wo.group_currentGroup = ''; // save current groups
 			wo.group_currentGroups = {};
 
 			// group class finds "group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}"
-			groupClass = (c.$headers.filter('[data-column="' + column + '"]:last').attr('class') || '').match(/(group-\w+(-\w+)?)/g);
+			groupClass = (c.$headerIndexed[column].attr('class') || '').match(/(group-\w+(-\w+)?)/g);
 			// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
 			grouping = groupClass ? groupClass[0].split('-') : ['group','letter',1]; // default to letter 1
 
@@ -96,15 +96,15 @@ ts.grouping = {
 					if ( $rows.eq(rowIndex).is(':visible') ) {
 						// fixes #438
 						if (ts.grouping.types[grouping[1]]) {
-							currentGroup = norm_rows[rowIndex] ? 
-								ts.grouping.types[grouping[1]]( c, c.$headers.filter('[data-column="' + column + '"]:last'), norm_rows[rowIndex][column], /date/.test(groupClass) ?
+							currentGroup = norm_rows[rowIndex] ?
+								ts.grouping.types[grouping[1]]( c, c.$headerIndexed[column], norm_rows[rowIndex][column], /date/.test(groupClass) ?
 								grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group, lang ) : currentGroup;
 							if (group !== currentGroup) {
 								group = currentGroup;
 								// show range if number > 1
 								if (grouping[1] === 'number' && grouping[2] > 1 && currentGroup !== '') {
 									currentGroup += ' - ' + (parseInt(currentGroup, 10) +
-										((parseInt(grouping[2],10) - 1) * (c.$headers.filter('[data-column="' + column + '"]:last').hasClass(ts.css.sortAsc) ? 1 : -1)));
+										((parseInt(grouping[2],10) - 1) * (c.$headerIndexed[column].hasClass(ts.css.sortAsc) ? 1 : -1)));
 								}
 								if ($.isFunction(wo.group_formatter)) {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
@@ -139,7 +139,7 @@ ts.grouping = {
 						}
 					}
 				}
-				if (wo.group_saveGroups && wo.group_currentGroups[wo.group_currentGroup].length) {
+				if (wo.group_saveGroups && wo.group_currentGroups.length && wo.group_currentGroups[wo.group_currentGroup].length) {
 					name = $row.find('.group-name').text().toLowerCase();
 					isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
 					$row.toggleClass('collapsed', isHidden);
@@ -219,6 +219,8 @@ ts.addWidget({
 		group_callback    : null, // function($cell, $rows, column, table){}, callback allowing modification of the group header labels
 		group_complete    : 'groupingComplete', // event triggered on the table when the grouping widget has finished work
 
+		// checkbox parser text used for checked/unchecked values
+		group_checkbox    : [ 'checked', 'unchecked' ],
 		// change these default date names based on your language preferences
 		group_months      : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
 		group_week        : [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter - Date range parsers</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	th { width: 20%; }
+	</style>
+
+	<link href="../css/theme.blue.css" rel="stylesheet">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-filter-type-insideRange.js"></script>
+	<script src="../js/parsers/parser-date-range.js"></script>
+
+	<script id="js">$(function() {
+
+	// call the tablesorter plugin
+	$('table').tablesorter({
+		theme : 'blue',
+		widgets : ['zebra', 'filter'],
+		widgetOptions: {
+			filter_reset: '.reset'
+		}
+	});
+
+	// filter buttons
+	$('button').on('click', function(){
+		var $this = $(this),
+			filter = [],
+			column = $this.attr('data-column');
+		filter[column] = $this.text();
+		$('table').trigger('search', [ filter ]);
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Date range parsers</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>Added <span class="version">v2.21.0</span>, this parser will allow sorting &amp; filtering a date range.</li>
+			<li>While processing, the parser will rearrange the range so that it is always saved to the cache as "low - high" (note that the "8/12/2014 - 7/10/2014" row sorts correctly, eventhough the later date is first)</li>
+			<li>This is almost exactly the same demo as <a href="example-widget-filter-custom-search2.html">Custom Filter Widget Search Type (example 2)</a>, but it was added to demonstrate the other supported date formats.</li>
+			<li>Click on any of the buttons below to test it out.</li>
+		</ul>
+	</p>
+
+	<h1>Demo</h1>
+	<div id="demo">Find:<br>
+<button type="button" data-column="0">5/4/2014</button> (mm/dd/yyyy) column<br>
+<button type="button" data-column="1">15/7/2014</button> (dd/mm/yyyy) column<br>
+<button type="button" data-column="2">2014/5/20</button> (yyy/mm/dd) column
+<p><button type="button" class="reset">Reset</button></p>
+<table>
+	<thead>
+		<tr>
+			<th class="sorter-date-range-mdy">Date range (mm/dd/yyyy - mm/dd/yyyy)</th>
+			<th class="sorter-date-range-dmy">Date range (dd/mm/yyyy - dd/mm/yyyy)</th>
+			<th class="sorter-date-range-ymd">Date range (yyyy/mm/dd - yyyy/mm/dd)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>04/28/2014 - 07/18/2014</td>
+			<td>28/04/2014 - 18/07/2014</td>
+			<td>2014/04/28 - 2014/07/18</td>
+		</tr>
+		<tr>
+			<td>04/30/2014 - 05/21/2014</td>
+			<td>30/04/2014 - 21/05/2014</td>
+			<td>2014/04/30 - 2014/05/21</td>
+		</tr>
+		<tr>
+			<td>7/15/2014</td>
+			<td>15/7/2014</td>
+			<td>2014/7/15</td>
+		</tr>
+		<tr>
+			<td>07/12/2014 - 07/23/2014</td>
+			<td>12/07/2014 - 23/07/2014</td>
+			<td>2014/07/12 - 2014/07/23</td>
+		</tr>
+		<tr>
+			<td>05/20/2014 - 05/23/2014</td>
+			<td>20/05/2014 - 23/05/2014</td>
+			<td>2014/05/20 - 2014/05/23</td>
+		</tr>
+		<tr>
+			<td>8/12/2014 - 7/10/2014</td>
+			<td>12/8/2014 - 10/7/2014</td>
+			<td>2014/8/12 - 2014/7/10</td>
+		</tr>
+	</tbody>
+</table></div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

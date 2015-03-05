@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.20.1 *//*
+/*! TableSorter (FORK) v2.21.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 
 			var ts = this;
 
-			ts.version = '2.20.1';
+			ts.version = '2.21.0';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -154,6 +154,9 @@
 				nextNone : 'activate to remove the sort'
 			};
 
+			// These methods can be applied on table.config instance
+			ts.instanceMethods = {};
+
 			/* debuging utils */
 			function log() {
 				var a = arguments[0],
@@ -256,7 +259,7 @@
 					if (rows.length) {
 						l = c.columns; // rows[j].cells.length;
 						for (i = 0; i < l; i++) {
-							h = c.$headers.filter('[data-column="' + i + '"]:last');
+							h = c.$headerIndexed[i];
 							// get column indexed table cell
 							ch = ts.getColumnData( table, c.headers, i );
 							// get column parser/extractor
@@ -445,8 +448,7 @@
 			}
 
 			function buildHeaders(table) {
-				var ch, $t,
-					h, i, t, lock, time,
+				var ch, $t, h, i, t, lock, time, indx,
 					c = table.config;
 				c.headerList = [];
 				c.headerContent = [];
@@ -495,6 +497,13 @@
 					if (c.tabIndex) { $t.attr('tabindex', 0); }
 					return elem;
 				}));
+				// cache headers per column
+				c.$headerIndexed = [];
+				for (indx = 0; indx < c.columns; indx++) {
+					$t = c.$headers.filter('[data-column="' + indx + '"]');
+					// target sortable column cells, unless there are none, then use non-sortable cells
+					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').last() : $t.last();
+				}
 				$(table).find(c.selectorHeaders).attr({
 					scope: 'col',
 					role : 'columnheader'
@@ -592,49 +601,51 @@
 				});
 			}
 
-			function updateHeaderSortCount(table, list) {
-				var s, t, o, col, primary,
+			function updateHeaderSortCount( table, list ) {
+				var col, dir, group, header, indx, primary, temp, val,
 					c = table.config,
-					sl = list || c.sortList;
+					sortList = list || c.sortList,
+					len = sortList.length;
 				c.sortList = [];
-				$.each(sl, function(i,v){
+				for (indx = 0; indx < len; indx++) {
+					val = sortList[indx];
 					// ensure all sortList values are numeric - fixes #127
-					col = parseInt(v[0], 10);
+					col = parseInt(val[0], 10);
 					// make sure header exists
-					o = c.$headers.filter('[data-column="' + col + '"]:last')[0];
-					if (o) { // prevents error if sorton array is wrong
+					header = c.$headerIndexed[col][0];
+					if (header) { // prevents error if sorton array is wrong
 						// o.count = o.count + 1;
-						t = ('' + v[1]).match(/^(1|d|s|o|n)/);
-						t = t ? t[0] : '';
+						dir = ('' + val[1]).match(/^(1|d|s|o|n)/);
+						dir = dir ? dir[0] : '';
 						// 0/(a)sc (default), 1/(d)esc, (s)ame, (o)pposite, (n)ext
-						switch(t) {
+						switch(dir) {
 							case '1': case 'd': // descending
-								t = 1;
+								dir = 1;
 								break;
 							case 's': // same direction (as primary column)
 								// if primary sort is set to 's', make it ascending
-								t = primary || 0;
+								dir = primary || 0;
 								break;
 							case 'o':
-								s = o.order[(primary || 0) % (c.sortReset ? 3 : 2)];
+								temp = header.order[(primary || 0) % (c.sortReset ? 3 : 2)];
 								// opposite of primary column; but resets if primary resets
-								t = s === 0 ? 1 : s === 1 ? 0 : 2;
+								dir = temp === 0 ? 1 : temp === 1 ? 0 : 2;
 								break;
 							case 'n':
-								o.count = o.count + 1;
-								t = o.order[(o.count) % (c.sortReset ? 3 : 2)];
+								header.count = header.count + 1;
+								dir = header.order[(header.count) % (c.sortReset ? 3 : 2)];
 								break;
 							default: // ascending
-								t = 0;
+								dir = 0;
 								break;
 						}
-						primary = i === 0 ? t : primary;
-						s = [ col, parseInt(t, 10) || 0 ];
-						c.sortList.push(s);
-						t = $.inArray(s[1], o.order); // fixes issue #167
-						o.count = t >= 0 ? t : s[1] % (c.sortReset ? 3 : 2);
+						primary = indx === 0 ? dir : primary;
+						group = [ col, parseInt(dir, 10) || 0 ];
+						c.sortList.push(group);
+						dir = $.inArray(group[1], header.order); // fixes issue #167
+						header.count = dir >= 0 ? dir : group[1] % (c.sortReset ? 3 : 2);
 					}
-				});
+				}
 			}
 
 			function getCachedSortType(parsers, i) {
@@ -705,7 +716,7 @@
 						// reverse the sorting direction
 						for (col = 0; col < c.sortList.length; col++) {
 							s = c.sortList[col];
-							order = c.$headers.filter('[data-column="' + s[0] + '"]:last')[0];
+							order = c.$headerIndexed[ s[0] ][0];
 							if (s[0] === indx) {
 								// order.count seems to be incorrect when compared to cell.count
 								s[1] = order.order[cell.count];
@@ -1051,7 +1062,7 @@
 				return this.each(function() {
 					var table = this,
 						// merge & extend config options
-						c = $.extend(true, {}, ts.defaults, settings);
+						c = $.extend(true, {}, ts.defaults, settings, ts.instanceMethods);
 						// save initial settings
 						c.originalSettings = settings;
 					// create a table from data (build table widget)
@@ -1129,6 +1140,8 @@
 				// fixate columns if the users supplies the fixedWidth option
 				// do this after theme has been applied
 				ts.fixColumnWidth(table);
+				// add widget options before parsing (e.g. grouping widget has parser settings)
+				ts.applyWidgetOptions(table, c);
 				// try to auto detect column type, and store in tables config
 				buildParserCache(table);
 				// start total row count at zero
@@ -1600,6 +1613,12 @@
 				}
 			};
 
+			// Use it to add a set of methods to table.config which will be available for all tables.
+			// This should be done before table initialization
+			ts.addInstanceMethods = function(methods) {
+				$.extend(ts.instanceMethods, methods);
+			};
+
 			ts.getParserById = function(name) {
 				/*jshint eqeqeq:false */
 				if (name == 'false') { return false; }
@@ -1631,9 +1650,24 @@
 				}
 			};
 
+			ts.applyWidgetOptions = function( table, c ){
+				var indx, widget,
+					len = c.widgets.length,
+					wo = c.widgetOptions;
+				if (len) {
+					for (indx = 0; indx < len; indx++) {
+						widget = ts.getWidgetById( c.widgets[indx] );
+						if ( widget && 'options' in widget ) {
+							wo = table.config.widgetOptions = $.extend( true, {}, widget.options, wo );
+						}
+					}
+				}
+			};
+
 			ts.applyWidget = function(table, init, callback) {
 				table = $(table)[0]; // in case this is called externally
-				var c = table.config,
+				var indx, len, name,
+					c = table.config,
 					wo = c.widgetOptions,
 					tableClass = ' ' + c.table.className + ' ',
 					widgets = [],
@@ -1648,9 +1682,10 @@
 					// extract out the widget id from the table class (widget id's can include dashes)
 					w = tableClass.match( wd );
 					if ( w ) {
-						$.each( w, function( i,n ){
-							c.widgets.push( n.replace( wd, '$1' ) );
-						});
+						len = w.length;
+						for (indx = 0; indx < len; indx++) {
+							c.widgets.push( w[indx].replace( wd, '$1' ) );
+						}
 					}
 				}
 				if (c.widgets.length) {
@@ -1659,41 +1694,45 @@
 					c.widgets = $.grep(c.widgets, function(v, k){
 						return $.inArray(v, c.widgets) === k;
 					});
+					name = c.widgets || [];
+					len = name.length;
 					// build widget array & add priority as needed
-					$.each(c.widgets || [], function(i,n){
-						wd = ts.getWidgetById(n);
+					for (indx = 0; indx < len; indx++) {
+						wd = ts.getWidgetById(name[indx]);
 						if (wd && wd.id) {
 							// set priority to 10 if not defined
 							if (!wd.priority) { wd.priority = 10; }
-							widgets[i] = wd;
+							widgets[indx] = wd;
 						}
-					});
+					}
 					// sort widgets by priority
 					widgets.sort(function(a, b){
 						return a.priority < b.priority ? -1 : a.priority === b.priority ? 0 : 1;
 					});
 					// add/update selected widgets
-					$.each(widgets, function(i,w){
-						if (w) {
-							if (init || !(c.widgetInit[w.id])) {
+					len = widgets.length;
+					for (indx = 0; indx < len; indx++) {
+						if (widgets[indx]) {
+							if ( init || !( c.widgetInit[ widgets[indx].id ] ) ) {
 								// set init flag first to prevent calling init more than once (e.g. pager)
-								c.widgetInit[w.id] = true;
-								if (w.hasOwnProperty('options')) {
-									wo = table.config.widgetOptions = $.extend( true, {}, w.options, wo );
+								c.widgetInit[ widgets[indx].id ] = true;
+								if (table.hasInitialized) {
+									// don't reapply widget options on tablesorter init
+									ts.applyWidgetOptions( table, c );
 								}
-								if (w.hasOwnProperty('init')) {
+								if ( 'init' in widgets[indx] ) {
 									if (c.debug) { time2 = new Date(); }
-									w.init(table, w, c, wo);
-									if (c.debug) { ts.benchmark('Initializing ' + w.id + ' widget', time2); }
+									widgets[indx].init(table, widgets[indx], c, wo);
+									if (c.debug) { ts.benchmark('Initializing ' + widgets[indx].id + ' widget', time2); }
 								}
 							}
-							if (!init && w.hasOwnProperty('format')) {
+							if ( !init && 'format' in widgets[indx] ) {
 								if (c.debug) { time2 = new Date(); }
-								w.format(table, c, wo, false);
-								if (c.debug) { ts.benchmark( ( init ? 'Initializing ' : 'Applying ' ) + w.id + ' widget', time2); }
+								widgets[indx].format(table, c, wo, false);
+								if (c.debug) { ts.benchmark( ( init ? 'Initializing ' : 'Applying ' ) + widgets[indx].id + ' widget', time2); }
 							}
 						}
-					});
+					}
 					// callback executed on init only
 					if (!init && typeof callback === 'function') {
 						callback(table);
@@ -1711,29 +1750,31 @@
 
 			ts.removeWidget = function(table, name, refreshing){
 				table = $(table)[0];
+				var i, widget, indx, len,
+					c = table.config;
 				// if name === true, add all widgets from $.tablesorter.widgets
 				if (name === true) {
 					name = [];
-					$.each( ts.widgets, function(i, w){
-						if (w && w.id) {
-							name.push( w.id );
+					len = ts.widgets.length;
+					for (indx = 0; indx < len; indx++) {
+						widget = ts.widgets[indx];
+						if (widget && widget.id) {
+							name.push( widget.id );
 						}
-					});
+					}
 				} else {
 					// name can be either an array of widgets names,
 					// or a space/comma separated list of widget names
 					name = ( $.isArray(name) ? name.join(',') : name || '' ).toLowerCase().split( /[\s,]+/ );
 				}
-				var i, widget, indx,
-					c = table.config,
-					len = name.length;
+				len = name.length;
 				for (i = 0; i < len; i++) {
 					widget = ts.getWidgetById(name[i]);
 					indx = $.inArray( name[i], c.widgets );
 					if ( widget && 'remove' in widget ) {
 						if (c.debug && indx >= 0) { log( 'Removing "' + name[i] + '" widget' ); }
 						widget.remove(table, c, c.widgetOptions, refreshing);
-						c.widgetInit[name[i]] = false;
+						c.widgetInit[ name[i] ] = false;
 					}
 					// don't remove the widget from config.widget if refreshing
 					if (indx >= 0 && refreshing !== true) {
@@ -1744,18 +1785,21 @@
 
 			ts.refreshWidgets = function(table, doAll, dontapply) {
 				table = $(table)[0]; // see issue #243
-				var c = table.config,
+				var indx,
+					c = table.config,
 					cw = c.widgets,
+					widgets = ts.widgets,
+					len = widgets.length,
 					list = [],
 					callback = function(table){
 						$(table).trigger('refreshComplete');
 					};
 				// remove widgets not defined in config.widgets, unless doAll is true
-				$.each( ts.widgets, function(i, w){
-					if (w && w.id && (doAll || $.inArray( w.id, cw ) < 0)) {
-						list.push( w.id );
+				for (indx = 0; indx < len; indx++) {
+					if (widgets[indx] && widgets[indx].id && (doAll || $.inArray( widgets[indx].id, cw ) < 0)) {
+						list.push( widgets[indx].id );
 					}
-				});
+				}
 				ts.removeWidget( table, list.join(','), true );
 				if (dontapply !== true) {
 					// call widget init if
@@ -1955,7 +1999,7 @@
 			if (s) {
 				var date, d,
 					c = table.config,
-					ci = c.$headers.filter('[data-column="' + cellIndex + '"]:last'),
+					ci = c.$headerIndexed[ cellIndex ],
 					format = ci.length && ci[0].dateFormat || ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') || c.dateFormat;
 				d = s.replace(/\s+/g, ' ').replace(/[\-.,]/g, '/'); // escaped - because JSHint in Firefox was showing it as an error
 				if (format === 'mmddyyyy') {

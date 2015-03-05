@@ -1,4 +1,4 @@
-/* Column Selector/Responsive table widget for TableSorter - 2/7/2015 (v2.19.0)
+/* Column Selector/Responsive table widget for TableSorter - 3/5/2015 (v2.21.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -21,7 +21,7 @@ tsColSel = ts.columnSelector = {
 		$t = $(wo.columnSelector_layout);
 		if (!$t.find('input').add( $t.filter('input') ).length) {
 			if (c.debug) {
-				ts.log('*** ERROR: Column Selector aborting, no input found in the layout! ***');
+				ts.log('ColumnSelector: >> ERROR: Column Selector aborting, no input found in the layout! ***');
 			}
 			return;
 		}
@@ -45,6 +45,8 @@ tsColSel = ts.columnSelector = {
 		colSel.isInitializing = false;
 		if (colSel.$container.length) {
 			tsColSel.updateCols(c, wo);
+		} else if (c.debug) {
+			ts.log('ColumnSelector: >> container not found');
 		}
 
 		c.$table
