@@ -139,7 +139,7 @@ ts.grouping = {
 						}
 					}
 				}
-				if (wo.group_saveGroups && wo.group_currentGroups[wo.group_currentGroup].length) {
+				if (wo.group_saveGroups && wo.group_currentGroups.length && wo.group_currentGroups[wo.group_currentGroup].length) {
 					name = $row.find('.group-name').text().toLowerCase();
 					isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
 					$row.toggleClass('collapsed', isHidden);
