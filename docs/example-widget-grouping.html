@@ -78,13 +78,16 @@ tr.group-header.collapsed td i {
 			3: { sorter: "select" },
 			6: { sorter: "inputs" }
 		},
-		widgets: [ "group", "columns", "zebra" ],
+		widgets: [ "group", "columns", "filter", "zebra" ],
 		widgetOptions: {
 			group_collapsible : true,  // make the group header clickable and collapse the rows below it.
 			group_collapsed   : false, // start with all groups collapsed (if true)
 			group_saveGroups  : true,  // remember collapsed groups
 			group_saveReset   : '.group_reset', // element to clear saved collapsed groups
 			group_count       : " ({num})", // if not false, the "{num}" string is replaced with the number of rows in the group
+
+			// checkbox parser text used for checked/unchecked values
+			group_checkbox    : [ 'checked', 'unchecked' ],
 
 			// change these default date names based on your language preferences
 			group_months      : [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ],
@@ -148,6 +151,12 @@ tr.group-header.collapsed td i {
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.</li>
+			<li>In <span class="version">v2.20.2</span>
+				<ul>
+					<li>Added <code>group_checkbox</code> option to allow setting the parsed text from the "parser-input-select.js" checkbox parser.</li>
+					<li>Fixed an issue with the filter widget overriding the "group-hidden" class name.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.15.6</span>, added <code>group_saveGroups</code> &amp; <code>group_saveReset</code> options. More details are included in the "Options" section.</li>
 			<li>In <span class="version">v2.14</span>, added <code>group_dateString</code> option. More details are included in the "Options" section.</li>
 			<li>In <span class="version">v2.13</span>, added <code>group_separator</code> option &amp; <code>group-separator-#</code> header class name. To see this in action, check out the <a href="example-parsers-file-type.html">file type parser demo</a>.</li>
@@ -288,6 +297,21 @@ group_separator : /[/.]/</pre>
   $(this).find('.group-header:contains("Empty")').trigger('toggleGroup');
 });</pre>
 							</div>
+						</td>
+					</tr>
+
+
+					<tr id="group_checkbox">
+						<td><a href="#" class="permalink">group_checkbox</a></td>
+						<td>see description)</td>
+						<td>
+							Set checkbox parser text (<span class="version">v2.20.2</span>)
+							<div class="collapsible">
+							<br>
+							The checkbox parser in the "parser-input-select.js" file will use this option to set the group header text displayed for a checkbox state.
+							<p></p>
+							Defaults are: <code>[ &quot;checked&quot;, &quot;unchecked&quot; ]</code>
+						</div>
 						</td>
 					</tr>
 

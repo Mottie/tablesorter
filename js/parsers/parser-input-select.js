@@ -36,14 +36,16 @@
 		},
 		format: function(s, table, cell, cellIndex) {
 			var $c = $(cell),
+				wo = table.config.widgetOptions,
+				// returning plain language here because this is what is shown in the
+				// group headers - change it as desired
+				txt = wo.group_checkbox ? wo.group_checkbox : [ 'checked', 'unchecked' ],
 				$input = $c.find('input[type="checkbox"]'),
 				isChecked = $input.length ? $input[0].checked : '';
 			// adding class to row, indicating that a checkbox is checked; includes
 			// a column index in case more than one checkbox happens to be in a row
 			$c.closest('tr').toggleClass('checked-' + cellIndex, isChecked);
-			// returning plain language here because this is what is shown in the
-			// group headers - change it as desired
-			return $input.length ? isChecked ? 'checked' : 'unchecked' : s;
+			return $input.length ? txt[ isChecked ? 0 : 1 ] : s;
 		},
 		parsed : true, // filter widget flag
 		type: "text"

@@ -219,6 +219,8 @@ ts.addWidget({
 		group_callback    : null, // function($cell, $rows, column, table){}, callback allowing modification of the group header labels
 		group_complete    : 'groupingComplete', // event triggered on the table when the grouping widget has finished work
 
+		// checkbox parser text used for checked/unchecked values
+		group_checkbox    : [ 'checked', 'unchecked' ],
 		// change these default date names based on your language preferences
 		group_months      : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
 		group_week        : [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
