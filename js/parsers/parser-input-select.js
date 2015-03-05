@@ -1,5 +1,5 @@
 /*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
- * Updated 2/7/2015 (v2.19.0)
+ * Updated 3/5/2015 (v2.21.0)
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */

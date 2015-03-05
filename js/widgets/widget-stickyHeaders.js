@@ -1,4 +1,7 @@
-/*! Widget: stickyHeaders */
+/*! Widget: stickyHeaders - updated 3/5/2015 (v2.21.0) *//*
+ * Requires tablesorter v2.8+ and jQuery 1.4.3+
+ * by Rob Garrison
+ */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};

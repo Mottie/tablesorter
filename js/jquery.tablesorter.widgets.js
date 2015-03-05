@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 03-02-2015 (v2.20.1)*/
+/*! tablesorter (FORK) widgets - updated 03-05-2015 (v2.21.0)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 /*! Widget: storage */
 ;(function ($, window, document) {
@@ -347,7 +347,10 @@ ts.addWidget({
 
 })(jQuery);
 
-/*! Widget: filter */
+/*! Widget: filter - updated 3/5/2015 (v2.21.0) *//*
+ * Requires tablesorter v2.8+ and jQuery 1.7+
+ * by Rob Garrison
+ */
 ;(function ($) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};
@@ -1164,7 +1167,7 @@ ts.filter = {
 			$rows = $( $.map(norm_rows, function(el){ return el[columnIndex].$row.get(); }) );
 
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
+				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).css('display', '');
 			} else {
 				// filter out child rows
 				$rows = $rows.not('.' + c.cssChildRow);
@@ -1384,8 +1387,8 @@ ts.filter = {
 						}
 					}
 					$rows.eq(rowIndex)
-						.toggle(showRow)
-						.toggleClass(wo.filter_filteredRow, !showRow);
+						.toggleClass(wo.filter_filteredRow, !showRow)[0]
+						.display = showRow ? '' : 'none';
 					if (childRow.length) {
 						childRow.toggleClass(wo.filter_filteredRow, !showRow);
 					}
@@ -1664,7 +1667,10 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 
 })(jQuery);
 
-/*! Widget: stickyHeaders */
+/*! Widget: stickyHeaders - updated 3/5/2015 (v2.21.0) *//*
+ * Requires tablesorter v2.8+ and jQuery 1.4.3+
+ * by Rob Garrison
+ */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};

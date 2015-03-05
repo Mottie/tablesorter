@@ -1,6 +1,6 @@
 /*!
  * Range date parsers
- * 2/23/2015 (v2.20.2)
+ * 2/23/2015 (v2.21.0)
  */
 /* Include the widget-filter-type-insideRange.js to filter ranges */
 /*jshint jquery:true */

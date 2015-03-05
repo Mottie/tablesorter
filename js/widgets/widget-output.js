@@ -1,4 +1,4 @@
-/* Output widget for TableSorter 2/9/2015 (v2.19.1)
+/* Output widget for TableSorter 3/5/2015 (v2.21.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)

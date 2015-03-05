@@ -1,6 +1,6 @@
 /*!
  * insideRange filter type
- * 2/23/2015 (v2.20.2)
+ * 2/23/2015 (v2.21.0)
  */
 ;(function($){
 'use strict';

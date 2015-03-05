@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.20.1 *//*
+/*! TableSorter (FORK) v2.21.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 
 			var ts = this;
 
-			ts.version = '2.20.1';
+			ts.version = '2.21.0';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -1140,6 +1140,8 @@
 				// fixate columns if the users supplies the fixedWidth option
 				// do this after theme has been applied
 				ts.fixColumnWidth(table);
+				// add widget options before parsing (e.g. grouping widget has parser settings)
+				ts.applyWidgetOptions(table, c);
 				// try to auto detect column type, and store in tables config
 				buildParserCache(table);
 				// start total row count at zero
@@ -1648,6 +1650,20 @@
 				}
 			};
 
+			ts.applyWidgetOptions = function( table, c ){
+				var indx, widget,
+					len = c.widgets.length,
+					wo = c.widgetOptions;
+				if (len) {
+					for (indx = 0; indx < len; indx++) {
+						widget = ts.getWidgetById( c.widgets[indx] );
+						if ( widget && 'options' in widget ) {
+							wo = table.config.widgetOptions = $.extend( true, {}, widget.options, wo );
+						}
+					}
+				}
+			};
+
 			ts.applyWidget = function(table, init, callback) {
 				table = $(table)[0]; // in case this is called externally
 				var indx, len, name,
@@ -1700,8 +1716,9 @@
 							if ( init || !( c.widgetInit[ widgets[indx].id ] ) ) {
 								// set init flag first to prevent calling init more than once (e.g. pager)
 								c.widgetInit[ widgets[indx].id ] = true;
-								if ( 'options' in widgets[indx] ) {
-									wo = table.config.widgetOptions = $.extend( true, {}, widgets[indx].options, wo );
+								if (table.hasInitialized) {
+									// don't reapply widget options on tablesorter init
+									ts.applyWidgetOptions( table, c );
 								}
 								if ( 'init' in widgets[indx] ) {
 									if (c.debug) { time2 = new Date(); }

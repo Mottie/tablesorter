@@ -65,6 +65,7 @@ If you would like to contribute, please...
 * Big shout-out to [Nick Craver](//github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
 * Big thanks to [thezoggy](//github.com/thezoggy) for helping with code, themes and providing valuable feedback.
 * Big thanks to [ThsSin-](//github.com/TheSin-) for taking over for a while and also providing valuable feedback.
+* Thanks to [prijutme4ty](https://github.com/prijutme4ty) for numerous contributions!
 * Also extra thanks to [christhomas](//github.com/christhomas) and [Lynesth](//github.com/Lynesth) for help with code.
 * And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
 
@@ -80,6 +81,41 @@ If you would like to contribute, please...
 ### Recent Changes
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.21.0">Version 2.21.0</a> (3/5/2015)
+
+* Core
+  * Plan to manually update vesion number.
+  * Optimizations: replace arrays using `$.each` with for loops. Fixes [issue #827](https://github.com/Mottie/tablesorter/issues/827).
+  * Add `$.tablesorter.addInstanceMethods` function.
+    * This allows one to define config object instance methods ([docs](http://mottie.github.io/tablesorter/docs/#variable-instanceMethods)).
+    * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for contributing!
+  * Add `config.$headerIndexed` option ([docs](http://mottie.github.io/tablesorter/docs/#variable-header-indexed)).
+* Docs
+  * Update link in readme.
+  * Add contributing information.
+  * Update download method information.
+* Build/Testing
+  * Move jshint to "grunt test" task.
+  * Attempt to make nested callbacks more stable.
+  * Clean up testing & made more stable, by [prijutme4ty](https://github.com/prijutme4ty).
+* ColumnSelector
+  * Add more debug logging.
+* Filter
+  * Add more debug logging.
+  * Add `config` parameter to `filter_functions`.
+  * Add "widget-filter-type-insideRange.js" filter type; this filter type allows searching for a value that is within a range ([demo](http://mottie.github.io/tablesorter/docs/example-parsers-date-range.html)).
+  * External filters can now set initial values; this includes match-any-column inputs.
+  * Extend filterFormatter functions - fixes an issue where HTML5 &amp; jQuery ui filterFormatters override the function definitions.
+* Output
+  * Add `output_includeFooter` option.
+* Pager
+  * Add more debug logging.
+* Scroller
+  * Add missing `tfoot` rows. Fixes [issue #825](https://github.com/Mottie/tablesorter/issues/825).
+* StickyHeaders
+  * Now works properly with a full-height wrapper. Fixes [issue #564](https://github.com/Mottie/tablesorter/issues/564).
+  * Add stickyHeader hidden class name & modal demo links. Fixes [issue #832](https://github.com/Mottie/tablesorter/issues/832).
 
 #### <a name="v2.20.1">Version 2.20.1</a> (2/20/2015)
 
