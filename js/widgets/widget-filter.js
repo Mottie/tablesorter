@@ -815,7 +815,7 @@ ts.filter = {
 			$rows = $( $.map(norm_rows, function(el){ return el[columnIndex].$row.get(); }) );
 
 			if (combinedFilters === '' || wo.filter_serversideFiltering) {
-				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).show();
+				$rows.removeClass(wo.filter_filteredRow).not('.' + c.cssChildRow).css('display', '');
 			} else {
 				// filter out child rows
 				$rows = $rows.not('.' + c.cssChildRow);
@@ -1035,8 +1035,8 @@ ts.filter = {
 						}
 					}
 					$rows.eq(rowIndex)
-						.toggle(showRow)
-						.toggleClass(wo.filter_filteredRow, !showRow);
+						.toggleClass(wo.filter_filteredRow, !showRow)[0]
+						.display = showRow ? '' : 'none';
 					if (childRow.length) {
 						childRow.toggleClass(wo.filter_filteredRow, !showRow);
 					}
