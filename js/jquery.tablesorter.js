@@ -502,7 +502,8 @@
 				for (indx = 0; indx < c.columns; indx++) {
 					$t = c.$headers.filter('[data-column="' + indx + '"]');
 					// target sortable column cells, unless there are none, then use non-sortable cells
-					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').last() : $t.last();
+					// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
+					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').filter(':last') : $t.filter(':last');
 				}
 				$(table).find(c.selectorHeaders).attr({
 					scope: 'col',
