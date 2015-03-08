@@ -1224,17 +1224,19 @@
 				table = $(table)[0];
 				var $h, k,
 					c = table.config,
-					$cell = ( $headers || c.$headers );
+					$cells = ( $headers || c.$headers ),
+					// c.$headerIndexed is not defined initially
+					$cell = c.$headerIndexed && c.$headerIndexed[indx] || $cells.filter('[data-column="' + indx + '"]:last');
 				if (obj[indx]) {
-					return getCell ? obj[indx] : obj[$cell.index( $cell.filter('[data-column="' + indx + '"]:last') )];
+					return getCell ? obj[indx] : obj[$cells.index( $cell )];
 				}
 				for (k in obj) {
 					if (typeof k === 'string') {
-						$h = $cell.filter('[data-column="' + indx + '"]:last')
+						$h = $cell
 							// header cell with class/id
 							.filter(k)
 							// find elements within the header cell with cell/id
-							.add( $cell.filter('[data-column="' + indx + '"]:last').find(k) );
+							.add( $cell.find(k) );
 						if ($h.length) {
 							return obj[k];
 						}
