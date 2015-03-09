@@ -564,7 +564,7 @@
 				c.$headers
 					.removeClass(css.join(' '))
 					.addClass(none).attr('aria-sort', 'none')
-					.find('.' + c.cssIcon)
+					.find('.' + ts.css.icon)
 					.removeClass(cssIcon.join(' '))
 					.addClass(cssIcon[2]);
 				for (i = 0; i < len; i++) {
