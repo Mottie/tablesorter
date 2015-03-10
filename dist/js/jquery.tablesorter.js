@@ -502,7 +502,8 @@
 				for (indx = 0; indx < c.columns; indx++) {
 					$t = c.$headers.filter('[data-column="' + indx + '"]');
 					// target sortable column cells, unless there are none, then use non-sortable cells
-					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').last() : $t.last();
+					// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
+					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').filter(':last') : $t.filter(':last');
 				}
 				$(table).find(c.selectorHeaders).attr({
 					scope: 'col',
@@ -563,7 +564,7 @@
 				c.$headers
 					.removeClass(css.join(' '))
 					.addClass(none).attr('aria-sort', 'none')
-					.find('.' + c.cssIcon)
+					.find('.' + ts.css.icon)
 					.removeClass(cssIcon.join(' '))
 					.addClass(cssIcon[2]);
 				for (i = 0; i < len; i++) {
@@ -1224,17 +1225,19 @@
 				table = $(table)[0];
 				var $h, k,
 					c = table.config,
-					$cell = ( $headers || c.$headers );
+					$cells = ( $headers || c.$headers ),
+					// c.$headerIndexed is not defined initially
+					$cell = c.$headerIndexed && c.$headerIndexed[indx] || $cells.filter('[data-column="' + indx + '"]:last');
 				if (obj[indx]) {
-					return getCell ? obj[indx] : obj[$cell.index( $cell.filter('[data-column="' + indx + '"]:last') )];
+					return getCell ? obj[indx] : obj[$cells.index( $cell )];
 				}
 				for (k in obj) {
 					if (typeof k === 'string') {
-						$h = $cell.filter('[data-column="' + indx + '"]:last')
+						$h = $cell
 							// header cell with class/id
 							.filter(k)
 							// find elements within the header cell with cell/id
-							.add( $cell.filter('[data-column="' + indx + '"]:last').find(k) );
+							.add( $cell.find(k) );
 						if ($h.length) {
 							return obj[k];
 						}

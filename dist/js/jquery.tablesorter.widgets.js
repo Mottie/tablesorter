@@ -1,5 +1,15 @@
-/*! tablesorter (FORK) widgets - updated 03-05-2015 (v2.21.0)*/
+/*! tablesorter (FORK) widgets - updated 03-09-2015 (v2.21.0)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
+(function(factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && typeof module.exports === 'object') {
+        module.exports = factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
+}(function($, window, document) {
+
 /*! Widget: storage */
 ;(function ($, window, document) {
 'use strict';
@@ -2185,3 +2195,7 @@ ts.addWidget({
 });
 
 })(jQuery);
+
+
+  return $.tablesorter;
+}));
