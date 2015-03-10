@@ -55,7 +55,7 @@ $(function(){
 		'.tablesorter-scrollbar-measure { width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px; } ' +
 		'.tablesorter-scroller-reset { width: auto !important; } ' +
 		'.tablesorter-scroller { text-align: left; overflow: hidden;  }' +
-		'.tablesorter-scroller-header { overflow: hidden; }' +
+		'.tablesorter-scroller-header, .tablesorter-scroller-footer { overflow: hidden; }' +
 		'.tablesorter-scroller-header table.tablesorter { margin-bottom: 0; }' +
 		'.tablesorter-scroller-footer table.tablesorter thead { visibility: hidden, height: 0; overflow: hidden; }' +
 		'.tablesorter-scroller-table { overflow-y: scroll; }' +
@@ -96,8 +96,8 @@ ts.addWidget({
 			});
 	},
 	format: function(table, c, wo) {
-		var maxHt, tbHt, $hdr, $t, resize, getBarWidth, $hCells, $fCells,
-			$ft = [],
+		var maxHt, tbHt, $hdr, $t, resize, getBarWidth, $hCells, $fCells, $tblWrap,
+			$ft = $(),
 			// c.namespace contains a unique tablesorter ID, per table
 			id = c.namespace.slice(1) + 'tsscroller',
 			$win = $(window),
@@ -145,6 +145,7 @@ ts.addWidget({
 
 			// use max-height, so the height resizes dynamically while filtering
 			$tbl.wrap('<div class="tablesorter-scroller-table" style="max-height:' + maxHt + 'px;" />');
+			$tblWrap = $tbl.parent();
 
 			// make scroller header sortable
 			ts.bindEvents(table, $hCells);
@@ -164,7 +165,7 @@ ts.addWidget({
 			};
 
 			resize = function(){
-				var d, b, $h, w,
+				var b, $h, $f, w,
 					// Hide other scrollers so we can resize
 					$div = $('div.tablesorter-scroller[id != "' + id + '"]').hide();
 
@@ -180,19 +181,48 @@ ts.addWidget({
 					.children('thead')
 					.find('.tablesorter-header-inner').addClass('tablesorter-scroller-reset').end()
 					.find('.tablesorter-filter-row').show();
-				d = $tbl.parent();
-				d.addClass('tablesorter-scroller-reset');
+				$tblWrap.addClass('tablesorter-scroller-reset');
 
-				d.parent().trigger('resize');
+				$tblWrap.parent().trigger('resize');
 
 				// include left & right border widths
 				b = parseInt( $tbl.css('border-left-width'), 10 ) + parseInt( $tbl.css('border-right-width'), 10 );
 
 				// Shrink a bit to accommodate scrollbar
 				w = ( wo.scroller_barWidth || getBarWidth() ) + b;
-				d.width( d.parent().innerWidth() - ( d.parent().hasScrollBar() ? w : 0 ) );
-				w = d.innerWidth() - ( d.hasScrollBar() ? w : 0 );
-				$tbl.add( $hdr ).add( $hdr.parent() ).add( $ft ).width( w );
+
+				$tblWrap.width( $tblWrap.parent().innerWidth() - ( $tblWrap.parent().hasScrollBar() ? w : 0 ) );
+				w = $tblWrap.innerWidth() - ( $tblWrap.hasScrollBar() ? w : 0 );
+				$hdr.parent().add( $ft.parent() ).width( w );
+
+				w = $tbl.width();
+
+				$h = $hdr.children('thead').children().children('th, td').filter(':visible');
+				$f = $ft.children('tfoot').children().children('th, td').filter(':visible');
+				$tbl.children('thead').children().eq(0).children('th, td').each(function(indx, el) {
+					var width, border,
+						$this = $(this);
+					// code from https://github.com/jmosbech/StickyTableHeaders
+					if ($this.css('box-sizing') === 'border-box') {
+						width = $this.outerWidth();
+					} else {
+						if ($h.eq(indx).css('border-collapse') === 'collapse') {
+							if (window.getComputedStyle) {
+								width = parseFloat( window.getComputedStyle(this, null).width );
+							} else {
+								// ie8 only
+								border = parseFloat( $this.css('border-width') );
+								width = $this.outerWidth() - parseFloat( $this.css('padding-left') ) - parseFloat( $this.css('padding-right') ) - border;
+							}
+						} else {
+							width = $this.width();
+						}
+					}
+					$h.eq(indx).add( $f.eq(indx) ).css({
+						'min-width': width,
+						'max-width': width
+					});
+				});
 
 				$tbl
 					.closest('.tablesorter-scroller')
@@ -224,17 +254,17 @@ ts.addWidget({
 			$tbl.find('thead').css('visibility', 'hidden');
 			c.isScrolling = true;
 
-			tbHt = $tbl.parent().parent().height();
+			tbHt = $tblWrap.parent().height();
 
 			// The header will always jump into view if scrolling the table body
-			$tbl.parent().bind('scroll', function(){
+			$tblWrap.bind('scroll', function(){
 				if (wo.scroller_jumpToHeader) {
 					var pos = $win.scrollTop() - $hdr.offset().top;
 					if ($(this).scrollTop() !== 0 && pos < tbHt && pos > 0) {
 						$win.scrollTop( $hdr.offset().top );
 					}
 				}
-				$hdr.parent().scrollLeft( $(this).scrollLeft() );
+				$hdr.parent().add( $ft.parent() ).scrollLeft( $(this).scrollLeft() );
 			});
 
 		}

@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.21.0 *//*
+/*! TableSorter (FORK) v2.21.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 
 			var ts = this;
 
-			ts.version = '2.21.0';
+			ts.version = '2.21.1';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -564,7 +564,7 @@
 				c.$headers
 					.removeClass(css.join(' '))
 					.addClass(none).attr('aria-sort', 'none')
-					.find('.' + c.cssIcon)
+					.find('.' + ts.css.icon)
 					.removeClass(cssIcon.join(' '))
 					.addClass(cssIcon[2]);
 				for (i = 0; i < len; i++) {
