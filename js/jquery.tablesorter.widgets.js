@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 03-09-2015 (v2.21.0)*/
+/*! tablesorter (FORK) widgets - updated 03-10-2015 (v2.21.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 (function(factory) {
   if (typeof define === 'function' && define.amd) {

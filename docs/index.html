@@ -519,7 +519,7 @@
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.19.0</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.19.0</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
-		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.21.0</span>).</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.21.1</span>).</li>
 		<li><a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.19.1</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.21.0</span>)</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.19.1</span>).</li>
@@ -728,11 +728,13 @@
 				<td><a href="#" class="permalink">cssIcon</a></td>
 				<td>String</td>
 				<td>&quot;tablesorter-icon&quot;</td>
-				<td>The CSS style used to style the header cell icon (modified v2.7).
+				<td>The CSS style used to style the header cell icon (modified v2.7; <span class="version updated">v2.21.1</span>).
 					<div class="collapsible"><br>
-						As of v2.4, an <code>&lt;i&gt;</code> element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an <code>&lt;i&gt;</code> element to the headers, set the <code>cssIcon</code> option to an empty string.<br>
+						In <span class="version updated">v2.21.1</span>, adding multiple class names to this option is now properly supported.<br>
 						<br>
-						In v2.7, the icon will only be added to the header if <strong>both</strong> the <code>cssIcon</code> option is set AND the <code>headerTemplate</code> option includes the icon tag (<code>{icon}</code>).
+						As of v2.7, the icon will only be added to the header if <strong>both</strong> the <code>cssIcon</code> option is set AND the <a href="#headertemplate"><code>headerTemplate</code></a> option includes the icon tag (<code>{icon}</code>).<br>
+						<br>
+						In v2.4, an <code>&lt;i&gt;</code> element, with this class name, is automatically appended to the header cells. To prevent the plugin from adding an <code>&lt;i&gt;</code> element to the headers, set the <code>cssIcon</code> option to an empty string.<br>
 					</div>
 				</td>
 				<td></td>
@@ -6389,7 +6391,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 
 			<tr id="function-getcolumndata">
 				<td><a href="#" class="permalink">getColumnData</a></td>
-				<td>This function returns the column data from an object based on a column index or classname/id.
+				<td>This function returns the column data from an object based on a column index or classname/id (<span class="version updated">v2.21.1</span>).
 					<div class="collapsible">
 					<br>
 						Use it as follows:
