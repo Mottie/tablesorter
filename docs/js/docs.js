@@ -149,7 +149,7 @@
 					t.find('.collapsible').show();
 					if (t.closest('table').hasClass('hasStickyHeaders')) {
 						setTimeout(function(){
-							window.scrollTo( 0, t.offset().top - 27 );
+							window.scrollTo( 0, t.offset().top - t.parents('table')[0].config.widgetOptions.$sticky.outerHeight() );
 						}, 200);
 					}
 				}
@@ -165,7 +165,8 @@
 	});
 
 	function showProperty(){
-		var prop, $t, wo, h = window.location.hash;
+		var prop, $t, wo, stickyHt,
+			h = window.location.hash;
 		if (h) {
 			prop = $(h);
 			if (prop.length && !/h3|a|table/i.test(prop[0].tagName)) {
@@ -178,7 +179,8 @@
 					$t = prop.closest('table');
 					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
-						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? 27 : 0;
+						stickyHt =  $t[0].config.widgetOptions.$sticky.outerHeight();
+						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? stickyHt : 0;
 						if ($t.hasClass('options') || $t.hasClass('api')) {
 							window.scrollTo( 0, prop.offset().top - h );
 						}

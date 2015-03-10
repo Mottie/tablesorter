@@ -33,14 +33,6 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-scroller.js"></script>
 
-	<style id="css">.name { width: 20%; }
-.major { width: 35%; }
-.sex { width: 16%; }
-.english{ width: 8%; }
-.japanese { width: 8%; }
-.calculus { width: 8%; }
-.geometry { width: 100px; }</style>
-
 	<script id="js">$(function(){
 
 	$('.tablesorter').tablesorter({
@@ -51,7 +43,9 @@
 		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
 		widgetOptions : {
 			scroller_height : 300,
+			// scroll tbody to top after sorting
 			scroller_upAfterSort: true,
+			// pop table header into view while scrolling up the page
 			scroller_jumpToHeader: true,
 			// In tablesorter v2.19.0 the scroll bar width is auto-detected
 			// add a value here to override the auto-detected setting
@@ -74,8 +68,9 @@ $(function() {
 
 	$('link.theme').each(function(){ this.disabled = true; });
 
-	var b = true, $tbl,
-		$c = $('#case'),
+	var $tbl,
+		$jth = $('#jth'),
+		$uas = $('#uas'),
 		themes = 'default blue green grey ice black-ice dark dropbox metro-dark',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
@@ -110,10 +105,18 @@ $(function() {
 
 	$tbl = $('.tablesorter-scroller-table table');
 	$('button').click(function(){
-		b = !b;
+		var jth = $jth.text() === 'true',
+			uas = $uas.text() === 'true';
+		if (this.id === 'jthb') {
+			jth = !jth;
+		} else {
+			uas = !uas;
+		}
 		$tbl.each(function(){
-			this.config.widgetOptions.scroller_jumpToHeader = b;
-			$c.html(b + '');
+			this.config.widgetOptions.scroller_jumpToHeader = jth;
+			this.config.widgetOptions.scroller_upAfterSort = uas;
+			$jth.html(jth + '');
+			$uas.html(uas + '');
 		});
 		return false;
 	});
@@ -134,11 +137,12 @@ $(function() {
 
 	<p></p>
 	<br>
-	<div class="accordion">
+	<div id="root" class="accordion">
 
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.21.1</span>, columns now line up, especially while scrolling horizontally. It may not be pixel perfect, but it looks pretty good if table css "box-sizing" is set to "border-box".</li>
 				<li>In <span class="version">v2.21.0</span>
 					<ul>
 						<li>This widget was updated to include the <code>tfoot</code> rows.</li>
@@ -173,7 +177,7 @@ $(function() {
 			</div>
 			<table class="options tablesorter-jui" data-sortlist="[[0,0]]">
 				<thead>
-					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+					<tr><th>Option</th><th class="defaults">Default</th><th class="sorter-false">Description</th></tr>
 				</thead>
 				<tbody>
 
@@ -203,6 +207,7 @@ $(function() {
 							<div class="collapsible">
 							<br>
 							This option was been completely removed in <span class="version alert">v2.18.0</span> as the id is now obtained from the unique namespace.
+							</div>
 						</td>
 					</tr>
 
@@ -215,6 +220,7 @@ $(function() {
 							When <code>true</code>, the scroller automatically scrolls the inner window back to the top after sorting.<br>
 							<br>
 							Set this option to <code>false</code> to prevent this behaviour, or to stop the window from scrolling after interacting with a table cell (e.g. clicking on a checkbox); new in <span class="version">v2.17.3</span>
+							</div>
 						</td>
 					</tr>
 
@@ -227,6 +233,7 @@ $(function() {
 							When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.<br>
 							<br>
 							<span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em>
+							</div>
 						</td>
 					</tr>
 
@@ -246,7 +253,9 @@ $(function() {
 		<option value="jui">Jquery UI</option>
 	</select><br>
 	<br>
-	<button type="button">Toggle</button> scroller_jumpToHeader : <span id="case">true</span> (see the note above)<span class="remark">*</span>
+	<button id="jthb" type="button">Toggle</button> scroller_jumpToHeader : <span id="jth">true</span> (see the note above)<span class="remark">*</span>
+	<br>
+	<button type="button">Toggle</button> scroller_upAfterSort  : <span id="uas">true</span>
 	<p></p>
 
 	<table class="tablesorter">
