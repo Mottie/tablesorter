@@ -123,17 +123,16 @@ module.exports = function( grunt ) {
 			widgets: {
 				options: {
 					banner: '<%= pkg.banner %>/* Includes: <%= pkg.selectedWidgets %> */\n' +
-                                        "(function(factory) {\n" +
-                                        "    if (typeof define === 'function' && define.amd) {\n" +
-                                        "        define(['jquery'], factory);\n" +
-                                        "    } else if (typeof module === 'object' && typeof module.exports === 'object') {\n" +
-                                        "        module.exports = factory(require('jquery'));\n" +
-                                        "    } else {\n" +
-                                        "        factory(jQuery);\n" +
-                                        "    }\n" +
-                                        "}(function($, window, document) {\n\n",
-
-                                        footer: "\n\n  return $.tablesorter;\n}));\n"
+						"(function(factory) {\n" +
+						"  if (typeof define === 'function' && define.amd) {\n" +
+						"    define(['jquery'], factory);\n" +
+						"  } else if (typeof module === 'object' && typeof module.exports === 'object') {\n" +
+						"    module.exports = factory(require('jquery'));\n" +
+						"  } else {\n" +
+						"    factory(jQuery);\n" +
+						"  }\n" +
+						"}(function($) {\n\n",
+					footer: "\n\n  return $.tablesorter;\n}));\n"
 				},
 				src: [
 					'<%= pkg.processedWidgets %>',
