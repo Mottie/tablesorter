@@ -95,8 +95,8 @@ var tse = $.tablesorter.editable = {
 
 	bindEvents: function( c, wo ) {
 		c.$table
-			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable' ), function() {
+			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
+			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ), function() {
 				tse.update( c, c.widgetOptions );
 			});
 
