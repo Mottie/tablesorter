@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 03-11-2015 (v2.21.1)*/
+/*! tablesorter (FORK) widgets - updated 03-12-2015 (v2.21.1)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
@@ -244,10 +244,8 @@ ts.addWidget({
 						hdr = [themes.sortDesc, themes.active].join(' ');
 						icon = themes.iconSortDesc;
 					}
-					$h
-						.addClass(hdr)
-						.find('.' + ts.css.icon)
-						.addClass(icon || '');
+					$header.addClass(hdr);
+					$icon.addClass(icon || '');
 				}
 			}
 		}
