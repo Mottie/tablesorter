@@ -268,7 +268,8 @@ tsp = ts.pager = {
 			.on('updateComplete.pager', function(e, table, triggered){
 				e.stopPropagation();
 				// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
-				if (!table || triggered) { return; }
+				// don't recalculate total rows/pages if using ajax
+				if (!table || triggered || p.ajax) { return; }
 				var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 				p.totalRows = $rows.length - ( wo.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 				p.totalPages = Math.ceil( p.totalRows / p.size );

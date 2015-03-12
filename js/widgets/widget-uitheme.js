@@ -149,10 +149,8 @@ ts.addWidget({
 						hdr = [themes.sortDesc, themes.active].join(' ');
 						icon = themes.iconSortDesc;
 					}
-					$h
-						.addClass(hdr)
-						.find('.' + ts.css.icon)
-						.addClass(icon || '');
+					$header.addClass(hdr);
+					$icon.addClass(icon || '');
 				}
 			}
 		}

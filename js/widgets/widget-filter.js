@@ -142,7 +142,7 @@ ts.filter = {
 		notMatch: function( c, data ) {
 			if ( /^\!/.test(data.iFilter) ) {
 				var indx,
-					filter = ts.filter.parseFilter(c, data.iFilter.replace('!', ''), data.index, data.parsed[data.index]);
+					filter = ts.filter.parseFilter(c, data.iFilter.replace('!', ''), data.index, data.parsed[data.index]) || '';
 				if (ts.filter.regex.exact.test(filter)) {
 					// look for exact not matches - see #628
 					filter = filter.replace(ts.filter.regex.exact, '');
@@ -158,7 +158,7 @@ ts.filter = {
 		exact: function( c, data ) {
 			/*jshint eqeqeq:false */
 			if (ts.filter.regex.exact.test(data.iFilter)) {
-				var filter = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.exact, ''), data.index, data.parsed[data.index]);
+				var filter = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.exact, ''), data.index, data.parsed[data.index]) || '';
 				return data.anyMatch ? $.inArray(filter, data.rowArray) >= 0 : filter == data.iExact;
 			}
 			return null;
@@ -188,8 +188,8 @@ ts.filter = {
 					parsed = data.parsed[index],
 					// make sure the dash is for a range and not indicating a negative number
 					query = data.iFilter.split( ts.filter.regex.toSplit ),
-					range1 = ts.formatFloat( ts.filter.parseFilter(c, query[0].replace(ts.filter.regex.nondigit, ''), index, parsed), table ),
-					range2 = ts.formatFloat( ts.filter.parseFilter(c, query[1].replace(ts.filter.regex.nondigit, ''), index, parsed), table );
+					range1 = ts.formatFloat( ts.filter.parseFilter(c, query[0].replace(ts.filter.regex.nondigit, '') || '', index, parsed), table ),
+					range2 = ts.formatFloat( ts.filter.parseFilter(c, query[1].replace(ts.filter.regex.nondigit, '') || '', index, parsed), table );
 					// parse filter value in case we're comparing numbers (dates)
 				if (parsed || c.parsers[index].type === 'numeric') {
 					result = c.parsers[index].format('' + query[0], table, c.$headers.eq(index), index);
@@ -210,7 +210,7 @@ ts.filter = {
 			if ( /[\?\*\|]/.test(data.iFilter) || ts.filter.regex.orReplace.test(data.filter) ) {
 				var index = data.index,
 					parsed = data.parsed[index],
-					query = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.orReplace, "|"), index, parsed);
+					query = ts.filter.parseFilter(c, data.iFilter.replace(ts.filter.regex.orReplace, "|"), index, parsed) || '';
 				// look for an exact match with the "or" unless the "filter-match" class is found
 				if (!c.$headerIndexed[index].hasClass('filter-match') && /\|/.test(query)) {
 					// show all results while using filter match. Fixes #727
@@ -228,7 +228,7 @@ ts.filter = {
 				var indx,
 					patternIndx = 0,
 					len = data.iExact.length,
-					pattern = ts.filter.parseFilter(c, data.iFilter.slice(1), data.index, data.parsed[data.index]);
+					pattern = ts.filter.parseFilter(c, data.iFilter.slice(1), data.index, data.parsed[data.index]) || '';
 				for (indx = 0; indx < len; indx++) {
 					if (data.iExact[indx] === pattern[patternIndx]) {
 						patternIndx += 1;
