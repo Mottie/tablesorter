@@ -705,7 +705,6 @@
 			pg = Math.min( p.totalPages, p.filteredPages );
 			if ( p.page < 0 ) { p.page = 0; }
 			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
-
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
 			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
 			l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
@@ -911,7 +910,8 @@
 					.bind('updateComplete.pager', function(e, table, triggered){
 						e.stopPropagation();
 						// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
-						if ( !table || triggered ) { return; }
+						// don't recalculate total rows/pages if using ajax
+						if ( !table || triggered || p.ajax ) { return; }
 						var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
 						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
 						p.totalPages = Math.ceil( p.totalRows / p.size );
