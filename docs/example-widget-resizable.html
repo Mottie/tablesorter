@@ -71,6 +71,7 @@
 		<em>NOTE!</em>
 		<ul>
 			<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
+			<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).</li>
 			<li>In <span class="version">v2.17.4</span>, modified the bindings so the mouse move will now work on the document instead of only within the table header; this makes interaction consistent with what the user expects.</li>
 			<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
 			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
