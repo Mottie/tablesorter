@@ -16,13 +16,13 @@ output = ts.output = {
 	event      : 'outputTable',
 
 	// wrap line breaks & tabs in quotes
-	regexQuote : /([\n\t]|<[^<]+>)/,    // test
+	regexQuote : /([\n\t\x09\x0d\x0a]|<[^<]+>)/, // test if cell needs wrapping quotes
 	regexBR    : /(<br([\s\/])?>|\n)/g, // replace
 	regexIMG   : /<img[^>]+alt\s*=\s*['"]([^'"]+)['"][^>]*>/i, // match
 	regexHTML  : /<[^<]+>/g, // replace
 
-	replaceCR  : '\\n',
-	replaceTab : '\\t',
+	replaceCR  : '\x0d\x0a',
+	replaceTab : '\x09',
 
 	popupTitle : 'Output',
 	popupStyle : 'width:100%;height:100%;', // for textarea
