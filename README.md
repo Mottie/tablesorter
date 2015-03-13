@@ -82,6 +82,20 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.21.2">Version 2.21.2</a> (3/13/2015)
+
+* Core: get accurate column count. Fixes [issue #840](https://github.com/Mottie/tablesorter/issues/840).
+* Docs
+  * Update to use jQuery UI v1.11.4.
+  * Add note about resizable widget needing a non-breaking space in an empty cell. Fixes [issue #844](https://github.com/Mottie/tablesorter/issues/844).
+* Editable: fix editable not updating properly on update/pager complete.
+* Filter: prevent error if `parseFilter` returns `NaN` - this depends on what custom parsers return.
+* Output: change carriage returns & tabs to unicode equivalent so it works in Excel. Fixes [issue #845](https://github.com/Mottie/tablesorter/issues/845).
+* Pager
+  * Don't recalculate total rows/pages if using ajax.
+  * Remove outdated pager.min file in the `addons` folder; it is now available in the `dist/js/extras` folder.
+* Uitheme: add icon classes while using stickyHeaders. See [issue #842](https://github.com/Mottie/tablesorter/issues/842).
+
 #### <a name="v2.21.1">Version 2.21.1</a> (3/10/2015)
 
 * Core:
@@ -130,7 +144,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * StickyHeaders
   * Now works properly with a full-height wrapper. Fixes [issue #564](https://github.com/Mottie/tablesorter/issues/564).
   * Add stickyHeader hidden class name & modal demo links. Fixes [issue #832](https://github.com/Mottie/tablesorter/issues/832).
-
-#### <a name="v2.20.1">Version 2.20.1</a> (2/20/2015)
-
-* Filter: Fixed a major issue with the filter widget not working properly.
