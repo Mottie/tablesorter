@@ -160,7 +160,7 @@ output = ts.output = {
 		// callback; if true returned, continue processing
 		if ($.isFunction(wo.output_callback) && !wo.output_callback(c, mydata)) { return; }
 
-		if ( /p/.test( (wo.output_delivery || '').toLowerCase() ) ) {
+		if ( /p/i.test( wo.output_delivery || '' ) ) {
 			output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);
 		} else {
 			output.download(wo, mydata);
@@ -314,7 +314,6 @@ ts.addWidget({
 		output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 		// the need to modify this for Excel no longer exists
 		output_encoding      : 'data:application/octet-stream;charset=utf8,'
-
 	},
 	init: function(table, thisWidget, c) {
 		output.init(c);
