@@ -579,7 +579,7 @@
 										.removeClass(none)
 										.addClass(css[list[i][1]])
 										.attr('aria-sort', aria[list[i][1]])
-										.find('.' + c.cssIcon)
+										.find('.' + ts.css.icon)
 										.removeClass(cssIcon[2])
 										.addClass(cssIcon[list[i][1]]);
 								}
