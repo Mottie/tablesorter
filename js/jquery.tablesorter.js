@@ -59,7 +59,6 @@
 				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 				serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
 				resort           : true,       // default setting to trigger a resort after an 'update', 'addRows', 'updateCell', etc has completed
-				ignoreLongClick  : true,       // if true, ignore clicks longer than 250ms in case of column resizing widget, disable for sorting on slower devices
 
 				// *** sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -1335,7 +1334,7 @@
 
 			ts.bindEvents = function(table, $headers, core){
 				table = $(table)[0];
-				var downTime,
+				var downTarget = null,
 					c = table.config;
 				if (core !== true) {
 					c.$extraHeaders = c.$extraHeaders ? c.$extraHeaders.add($headers) : $headers;
@@ -1344,23 +1343,27 @@
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind( ('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
-				.bind( 'mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
+				.unbind( ('mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
+				.bind( 'mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
 					var cell,
 						$target = $(e.target),
 						type = e.type;
-					// only recognize left clicks or enter
-					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
+					// only recognize left clicks
+					if ( ( ( e.which || e.button ) !== 1 && !/sort|keyup|click/.test(type) ) ||
+						// allow pressing enter
+						( type === 'keyup' && e.which !== 13 ) ||
+						// allow triggering a click event (e.which is undefined) & ignore physical clicks
+						( type === 'click' && typeof e.which !== 'undefined' ) ) {
 						return;
 					}
-					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250) && c.ignoreLongClick) { return; }
+					// ignore mouseup if mousedown wasn't on the same target
+					if ( type === 'mouseup' && downTarget !== e.target && external !== true ) { return; }
 					// set timer on mousedown
-					if (type === 'mousedown') {
-						downTime = new Date().getTime();
+					if ( type === 'mousedown' ) {
+						downTarget = e.target;
 						return;
 					}
-					cell = $.fn.closest ? $target.closest('td,th') : $target.parents('td,th').filter(':first');
+					downTarget = null;
 					// prevent sort being triggered on form elements
 					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
 						// nosort class name, or elements within a nosort container
