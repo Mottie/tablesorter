@@ -59,6 +59,7 @@
 				delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 				serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
 				resort           : true,       // default setting to trigger a resort after an 'update', 'addRows', 'updateCell', etc has completed
+				ignoreLongClick  : true,       // if true, ignore clicks longer than 250ms in case of column resizing widget, disable for sorting on slower devices
 
 				// *** sort options
 				headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -1353,7 +1354,7 @@
 						return;
 					}
 					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return; }
+					if (type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250) && c.ignoreLongClick) { return; }
 					// set timer on mousedown
 					if (type === 'mousedown') {
 						downTime = new Date().getTime();
