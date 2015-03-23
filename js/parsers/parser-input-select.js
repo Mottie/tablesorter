@@ -111,7 +111,7 @@
 			// bind to .tablesorter (default class name)
 			$(this).children('tbody')
 			.on('mouseleave', function(e){
-				restoreValue(e.target.tagName === 'TBODY');
+				restoreValue(e.target.nodeName === 'TBODY');
 			})
 			.on('focus', 'select, input, textarea', function(){
 				$(this).data('ts-original-value', this.value);
@@ -129,7 +129,7 @@
 				}
 				// Update cell cache using... select: change, input: enter or textarea: alt + enter
 				if ( ( e.type === 'change' ) ||
-					( e.type === 'keyup' && e.which === 13 && ( e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' && e.altKey ) ) ) {
+					( e.type === 'keyup' && e.which === 13 && ( e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA' && e.altKey ) ) ) {
 					var undef,
 						$tar = $(e.target),
 						$cell = $tar.closest('td'),

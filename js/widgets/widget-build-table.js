@@ -12,7 +12,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 	// data.rows contains an array of rows which contains an array of cells
 	bt = ts.buildTable = function(tar, c){
 		// add table if one doesn't exist
-		var $tbl = tar.tagName === 'TABLE' ? $(tar) : $('<table>').appendTo(tar),
+		var $tbl = tar.nodeName === 'TABLE' ? $(tar) : $('<table>').appendTo(tar),
 			table = $tbl[0],
 			wo = c.widgetOptions = $.extend( true, {}, bt.defaults, c.widgetOptions ),
 			p = wo.build_processing,

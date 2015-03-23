@@ -88,7 +88,7 @@ $.tablesorter.customPagerControls = function(settings) {
 	if (options.addKeyboard) {
 		$(document).on('keydown', function(events){
 			// ignore arrows inside form elements
-			if (/input|select|textarea/i.test(events.target.tagName)) { return; }
+			if (/input|select|textarea/i.test(events.target.nodeName)) { return; }
 			if (events.which === 37) {
 				// left
 				$pager.find(options.currentPage).filter('.' + options.currentClass).prevAll(':not(span):first').click();

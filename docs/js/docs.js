@@ -169,7 +169,7 @@
 			h = window.location.hash;
 		if (h) {
 			prop = $(h);
-			if (prop.length && !/h3|a|table/i.test(prop[0].tagName)) {
+			if (prop.length && !/h3|a|table/i.test(prop[0].nodeName)) {
 				prop.find('.collapsible').show();
 				if (h === '#csschildrow') {
 					$('#root .tablesorter-childRow').show();

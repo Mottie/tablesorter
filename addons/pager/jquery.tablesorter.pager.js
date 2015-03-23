@@ -204,7 +204,7 @@
 					p.$goto.html(t).val( p.page + 1 );
 				}
 				if ($out.length) {
-					$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+					$out[ ($out[0].nodeName === 'INPUT') ? 'val' : 'html' ](s);
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change.pager').bind('change.pager', function(){
 						var v = $(this).val(),

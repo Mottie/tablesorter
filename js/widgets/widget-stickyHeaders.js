@@ -179,7 +179,7 @@ ts.addWidget({
 				resizeHeader();
 			});
 
-		ts.bindEvents(table, $stickyThead.children().children('.tablesorter-header'));
+		ts.bindEvents(table, $stickyThead.children().children('.' + ts.css.header));
 
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$table.after( $stickyWrap );
