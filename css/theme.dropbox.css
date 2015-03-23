@@ -96,6 +96,7 @@
 }
 
 /* hovered row colors */
+.tablesorter-dropbox tbody > tr.hover > td,
 .tablesorter-dropbox tbody > tr:hover > td,
 .tablesorter-dropbox tbody > tr.even:hover > td,
 .tablesorter-dropbox tbody > tr.odd:hover > td {

@@ -68,6 +68,7 @@ Metro Dark Theme
 }
 
 /* hovered row colors */
+.tablesorter-metro-dark tbody > tr.hover > td,
 .tablesorter-metro-dark tbody > tr:hover > td,
 .tablesorter-metro-dark tbody > tr.even:hover > td,
 .tablesorter-metro-dark tbody > tr.odd:hover > td {

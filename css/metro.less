@@ -238,14 +238,17 @@ Test out these custom less files live
 	you'll need to add additional lines for
 	rows with more than 2 child rows
 	*/
-	tbody > tr:hover td,
+	tbody > tr.hover > td,
+	tbody > tr:hover > td,
 	tbody > tr:hover + tr.tablesorter-childRow > td,
 	tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
+	tbody > tr.even.hover > td,
 	tbody > tr.even:hover > td,
 	tbody > tr.even:hover + tr.tablesorter-childRow > td,
 	tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
 		.evenHovered;
 	}
+	tbody > tr.odd.hover > td,
 	tbody > tr.odd:hover > td,
 	tbody > tr.odd:hover + tr.tablesorter-childRow > td,
 	tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {

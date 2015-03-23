@@ -70,6 +70,7 @@ Default Theme
 }
 
 /* hovered row colors */
+.tablesorter-default tbody > tr.hover > td,
 .tablesorter-default tbody > tr:hover > td,
 .tablesorter-default tbody > tr.even:hover > td,
 .tablesorter-default tbody > tr.odd:hover > td {

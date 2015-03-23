@@ -53,6 +53,7 @@
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
 	background-color: #f9f9f9;
 }
+.tablesorter-bootstrap > tbody > tr.hover > td,
 .tablesorter-bootstrap > tbody > tr.odd:hover > td,
 .tablesorter-bootstrap > tbody > tr.even:hover > td,
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
