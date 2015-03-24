@@ -64,7 +64,7 @@ module.exports = function( grunt ) {
 	widgetFilePrefix = 'js/widgets/widget-';
 	widgetFileSuffix = '.js';
 
-	pkg.buildWidget = 'dist/js/jquery.tablesorter.widgets.js';
+	pkg.buildWidget = 'jquery.tablesorter.widgets.js';
 
 	// Project configuration.
 	grunt.initConfig({
@@ -139,7 +139,7 @@ module.exports = function( grunt ) {
 					'!js/widgets/_test-*.js',
 					'!js/widgets/*.min.js'
 				],
-				dest: '<%= pkg.buildWidget %>'
+				dest: 'dist/js/<%= pkg.buildWidget %>'
 			},
 			// keep all the existing jsFiddle demos from breaking
 			copyback: {
@@ -150,8 +150,8 @@ module.exports = function( grunt ) {
 					'██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██\n' +
 					'█████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀\n*/\n'
 				},
-				src : ['<%= pkg.buildWidget %>'],
-				dest: 'js/jquery.tablesorter.widgets.js'
+				src : ['dist/js/<%= pkg.buildWidget %>'],
+				dest: 'js/<%= pkg.buildWidget %>'
 			}
 		},
 
@@ -275,20 +275,29 @@ module.exports = function( grunt ) {
 	// the expected JSON format is (with custom widgets in a string):
 	// { "widgets" : "columnHighlight filter resizable saveSort stickyHeaders uitheme" }
 	grunt.registerTask( 'custom', 'Custom build', function(file){
-		var temp, deps = true;
+		var temp, widgets, deps = true;
 
 		/* Allow developer to set up a custom widget build (json file will have settings)*/
 		try {
 			temp = grunt.file.readJSON( file );
 			if (temp) {
+				// include dependencies?
 				deps = ('includeDependencies' in temp) ? temp.includeDependencies : true;
-				temp = temp.widgets.split(/\s+/);
+				// custom file name?
+				pkg.buildWidget = ('destFileName' in temp) ? temp.destFileName : "jquery.tablesorter.custom-widgets.js";
+				// widgets to include
+				widgets = (temp.widgets || '');
+				if (widgets.replace(/\s+/g,'') === '') {
+					grunt.fail.warn('Aborting... No widgets found in custom build file.');
+				} else {
+					temp = widgets.split(/\s+/);
+				}
 			}
 		} catch (err) {
 			grunt.log.error('Custom build json not found - Use "grunt custom:{filename}"');
+			console.info('Continuing build with default settings');
 			temp = defaults.standardWidgets;
 		}
-
 		// add dependencies
 		pkg.selectedWidgets = deps ? addWidgetDependencies( temp ) : temp;
 		formFileNames();
