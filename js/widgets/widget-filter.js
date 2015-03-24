@@ -8,9 +8,10 @@ var ts = $.tablesorter = $.tablesorter || {},
 	tscss = ts.css;
 
 $.extend(tscss, {
-	filterRow     : 'tablesorter-filter-row',
-	filter        : 'tablesorter-filter',
-	filterRowHide : 'hideme'
+	filterRow      : 'tablesorter-filter-row',
+	filter         : 'tablesorter-filter',
+	filterDisabled : 'disabled',
+	filterRowHide  : 'hideme'
 });
 
 ts.addWidget({
@@ -546,7 +547,7 @@ ts.filter = {
 					wo.filter_cssFilter ) || '';
 				buildFilter.addClass( tscss.filter + ' ' + name ).attr('data-column', column);
 				if (disabled) {
-					buildFilter.attr('placeholder', '').addClass('disabled')[0].disabled = true; // disabled!
+					buildFilter.attr('placeholder', '').addClass(tscss.filterDisabled)[0].disabled = true; // disabled!
 				}
 			}
 		}
