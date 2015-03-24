@@ -52,7 +52,7 @@ ts.filterFormatter.select2 = function($cell, indx, select2Def) {
 			v = v.join('\u0000');
 		}
 		// escape special regex characters (http://stackoverflow.com/a/9310752/145346)
-		v = v.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+		v = v.replace(/[-[\]{}()*+?.,/\\^$|#\s]/g, '\\$&');
 		// convert string back into an array
 		if (arry) {
 			v = v.split('\u0000');
