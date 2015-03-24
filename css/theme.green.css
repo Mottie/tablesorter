@@ -184,7 +184,7 @@ caption {
 .tablesorter-green select.tablesorter-filter {
 	width: 98%;
 	height: auto;
-	margin: 4px;
+	margin: 0;
 	padding: 4px;
 	background-color: #fff;
 	border: 1px solid #bbb;
