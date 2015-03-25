@@ -143,7 +143,7 @@ tsp = ts.pager = {
 				setSize: wo.pager_size,
 				setPage: wo.pager_startPage,
 				events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
-					'pageSize pageSet pageAndSize pagerUpdate '
+					'pageSize pageSet pageAndSize pagerUpdate refreshComplete '
 			}, c.pager);
 
 		// pager initializes multiple times before table has completed initialization

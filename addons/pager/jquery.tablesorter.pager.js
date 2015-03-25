@@ -115,7 +115,7 @@
 		};
 
 		var pagerEvents = 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
-			'pageSize pageSet pageAndSize pagerUpdate ',
+			'pageSize pageSet pageAndSize pagerUpdate refreshComplete ',
 
 		$this = this,
 
@@ -987,7 +987,6 @@
 				} else if (c.debug) {
 					ts.log('Pager: >> Goto selector not found');
 				}
-
 				// page size selector
 				p.$size = pager.find(p.cssPageSize);
 				if ( p.$size.length ) {
