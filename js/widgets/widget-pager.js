@@ -296,9 +296,12 @@ tsp = ts.pager = {
 			})
 			.on('pageSet.pager pagerUpdate.pager', function(e,v){
 				e.stopPropagation();
-				p.page = (parseInt(v, 10) || 1) - 1;
 				// force pager refresh
-				if (e.type === 'pagerUpdate') { p.last.page = true; }
+				if (e.type === 'pagerUpdate') {
+					v = typeof v === 'undefined' ? p.page + 1 : v;
+					p.last.page = true;
+				}
+				p.page = (parseInt(v, 10) || 1) - 1;
 				tsp.moveToPage(table, p, true);
 				tsp.updatePageDisplay(table, c, false);
 			})

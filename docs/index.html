@@ -4762,7 +4762,12 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 						If there is a need, this method will force the (ajax and non-ajax) pager to update. Use it as follows:
 						<pre class="prettyprint lang-js">$(function(){
   $('table').trigger('pagerUpdate');
-});</pre></div>
+});</pre>
+						Or, if you need, you can optionally pass a new page number:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').trigger('pagerUpdate', 3); // update and set to page 3
+});</pre>
+					</div>
 				</td>
 				<td></td>
 			</tr>

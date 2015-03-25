@@ -934,9 +934,12 @@
 					})
 					.bind('pageSet.pager pagerUpdate.pager', function(e,v){
 						e.stopPropagation();
-						p.page = (parseInt(v, 10) || 1) - 1;
 						// force pager refresh
-						if (e.type === 'pagerUpdate') { p.last.page = true; }
+						if (e.type === 'pagerUpdate') {
+							v = typeof v === 'undefined' ? p.page + 1 : v;
+							p.last.page = true;
+						}
+						p.page = (parseInt(v, 10) || 1) - 1;
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					})
