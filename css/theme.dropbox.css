@@ -141,15 +141,15 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* Filter Widget */
 .tablesorter-dropbox .tablesorter-filter-row {
-	background: #fff;
+	background-color: #fff;
 }
 .tablesorter-dropbox .tablesorter-filter-row td {
-	background: #fff;
+	background-color: #fff;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

@@ -52,24 +52,24 @@ Test out these custom less files live
 
 /* zebra striping */
 .allRows {
-	background: @bodyBackground;
+	background-color: @bodyBackground;
 	color: @bodyTextColor;
 }
 .evenRows {
-	background: lighten(@headerBackground, 40%);
+	background-color: lighten(@headerBackground, 40%);
 	color: @bodyTextColor;
 }
 .oddRows {
-	background: lighten(@headerBackground, 20%);
+	background-color: lighten(@headerBackground, 20%);
 }
 
 /* hovered rows */
 .oddHovered {
-	background: desaturate(@headerBackground, 60%);
+	background-color: desaturate(@headerBackground, 60%);
 	color: @bodyTextColor;
 }
 .evenHovered {
-	background: lighten( desaturate(@headerBackground, 60%), 10% );
+	background-color: lighten( desaturate(@headerBackground, 60%), 10% );
 	color: @bodyTextColor;
 }
 
@@ -269,7 +269,7 @@ Test out these custom less files live
 
 	/* caption (non-theme matching) */
 	caption {
-		background: @captionBackground ;
+		background-color: @captionBackground ;
 	}
 
 	/* filter widget */
@@ -280,7 +280,7 @@ Test out these custom less files live
 		margin: 0;
 		padding: @overallPadding;
 		color: @filterElementTextColor;
-		background: @filterElementBkgd;
+		background-color: @filterElementBkgd;
 		border: @filterElementBorder;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
@@ -288,11 +288,11 @@ Test out these custom less files live
 		.filterWidgetTransition;
 	}
 	.tablesorter-filter-row {
-		background: @filterCellBackground;
+		background-color: @filterCellBackground;
 	}
 	.tablesorter-filter-row td {
 		text-align: center;
-		background: @filterCellBackground;
+		background-color: @filterCellBackground;
 		line-height: normal;
 		text-align: center; /* center the input */
 		.filterWidgetTransition;

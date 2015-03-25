@@ -95,10 +95,10 @@
 
 /* filter widget */
 .tablesorter-jui .tablesorter-filter-row {
-	background: transparent;
+	background-color: transparent;
 }
 .tablesorter-jui .tablesorter-filter-row td {
-	background: transparent;
+	background-color: transparent;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

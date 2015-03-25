@@ -72,7 +72,7 @@ Metro Dark Theme
 .tablesorter-metro-dark tbody > tr:hover > td,
 .tablesorter-metro-dark tbody > tr.even:hover > td,
 .tablesorter-metro-dark tbody > tr.odd:hover > td {
-	background: #bbb;
+	background-color: #bbb;
 	color: #000;
 }
 
@@ -128,10 +128,10 @@ Metro Dark Theme
 
 /* filter widget */
 .tablesorter-metro-dark .tablesorter-filter-row {
-	background: #eee;
+	background-color: #eee;
 }
 .tablesorter-metro-dark .tablesorter-filter-row td {
-	background: #eee;
+	background-color: #eee;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

@@ -73,7 +73,7 @@
 .tablesorter-blackice tbody > tr:hover > td,
 .tablesorter-blackice tbody > tr.even:hover > td,
 .tablesorter-blackice tbody > tr.odd:hover > td {
-	background: #000;
+	background-color: #000;
 }
 
 /* table processing indicator */
@@ -117,15 +117,15 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
 .tablesorter-blackice .tablesorter-filter-row {
-	background: #222;
+	background-color: #222;
 }
 .tablesorter-blackice .tablesorter-filter-row td {
-	background: #222;
+	background-color: #222;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

@@ -104,13 +104,13 @@
 .tablesorter-blue tbody > tr.even:hover > td,
 .tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow > td,
 .tablesorter-blue tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-	background: #d9d9d9;
+	background-color: #d9d9d9;
 }
 .tablesorter-blue tbody > tr.odd.hover > td,
 .tablesorter-blue tbody > tr.odd:hover > td,
 .tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow > td,
 .tablesorter-blue tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-	background: #bfbfbf;
+	background-color: #bfbfbf;
 }
 
 /* table processing indicator */
@@ -154,15 +154,15 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
 .tablesorter-blue .tablesorter-filter-row {
-	background: #eee;
+	background-color: #eee;
 }
 .tablesorter-blue .tablesorter-filter-row td {
-	background: #eee;
+	background-color: #eee;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

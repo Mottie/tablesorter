@@ -81,7 +81,7 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
@@ -101,14 +101,14 @@ caption {
 	transition: height 0.1s ease;
 }
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter.disabled {
-	background: #eee;
+	background-color: #eee;
 	cursor: not-allowed;
 }
 .tablesorter-bootstrap .tablesorter-filter-row {
-	background: #eee;
+	background-color: #eee;
 }
 .tablesorter-bootstrap .tablesorter-filter-row td {
-	background: #eee;
+	background-color: #eee;
 	line-height: normal;
 	text-align: center;
 	padding: 4px 6px;
