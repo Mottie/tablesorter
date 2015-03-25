@@ -5500,34 +5500,6 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 				</td>
 			</tr>
 
-			<tr id="variable-extra-headers">
-				<td><a href="#" class="permalink">config.$extraHeaders</a></td>
-				<td>jQuery Object</td>
-				<td>Internal list of <strong>all</strong> extra table header cells (<span class="version">v2.16.2</span>)
-					<div class="collapsible">
-						<br>
-						When the <a href="#function-bindevents"><code>bindEvents</code></a> function is used, the extra (external) header cells are added to this variable, and automatically updated with the table headers (<a href="#variable-headers"><code>config.$headers</code></a>).<br>
-						<br>
-						So, when writing a custom widget that clones the table header, there is no longer a need to update the header class names, it's all done automatically.
-					</div>
-					</td>
-				<td></td>
-			</tr>
-
-			<tr id="variable-extra-tables">
-				<td><a href="#" class="permalink">config.$extraTables</a></td>
-				<td>jQuery Object</td>
-				<td>Internal list of <strong>all</strong> extra (cloned) table elements (<span class="version">v2.19.0</span>)
-					<div class="collapsible">
-						<br>
-						Some widgets need to duplicate parts of the original table to provide functionality (e.g. stickyHeaders, scroller). This saved variable will either not exist or contain a jQuery object pointing to the cloned table elements.<br>
-						<br>
-						This variable was added for the uitheme widget to allow dynamic updating of themes to the original table as well as all cloned parts.
-					</div>
-					</td>
-				<td></td>
-			</tr>
-
 			<tr id="variable-header-indexed">
 				<td><a href="#" class="permalink">config.$headerIndexed</a></td>
 				<td>Array</td>
@@ -5978,6 +5950,43 @@ $.each( p.cacheIndex, function(i, v) {
 					The <code>{totalRows}</code> tag in the pager <a href="#pager-output"><code>output</code></a> option is replaced by this value.
 					</div>
 				</td>
+				<td></td>
+			</tr>
+
+		</tbody>
+
+		<!-- non-sorting tbody -->
+		<tbody id="pager-removed" class="tablesorter-infoOnly">
+			<tr><th colspan="5">Removed Variables</th></tr>
+		</tbody>
+
+		<tbody>
+
+			<tr id="variable-extra-headers">
+				<td><a href="#" class="permalink alert">config.$extraHeaders</a></td>
+				<td>jQuery Object</td>
+				<td>Internal list of <strong>all</strong> extra table header cells (<span class="version">v2.16.2</span>; <span class="label label-danger">removed</span> v2.21.3)
+					<div class="collapsible">
+						<p>This variable was removed due to it causing memory leak issues. To now find extra headers use <a href="#namespace"><code>config.namespace</code></a> as follows:</p>
+						<pre class="prettyprint lang-js">$( config.namespace + '_extra_headers' )</pre>
+						<p>When the <a href="#function-bindevents"><code>bindEvents</code></a> function is used, the extra (external) header cells are added to this variable, and automatically updated with the table headers (<a href="#variable-headers"><code>config.$headers</code></a>).</p>
+						<p>So, when writing a custom widget that clones the table header, there is no longer a need to update the header class names, it's all done automatically.</p>
+					</div>
+					</td>
+				<td></td>
+			</tr>
+
+			<tr id="variable-extra-tables">
+				<td><a href="#" class="permalink alert">config.$extraTables</a></td>
+				<td>jQuery Object</td>
+				<td>Internal list of <strong>all</strong> extra (cloned) table elements (<span class="version">v2.19.0</span>; <span class="label label-danger">removed</span> v2.21.3)
+					<div class="collapsible">
+						<p>This variable was removed due to it causing memory leak issues. To find extra tables use <a href="#namespace"><code>config.namespace</code></a> as follows:</p>
+						<pre class="prettyprint lang-js">$( config.namespace + '_extra_table' )</pre>
+						<p>Some widgets need to duplicate parts of the original table to provide functionality (e.g. stickyHeaders, scroller). This saved variable will either not exist or contain a jQuery object pointing to the cloned table elements.</p>
+						<p>This variable was added for the uitheme widget to allow dynamic updating of themes to the original table as well as all cloned parts.</p>
+					</div>
+					</td>
 				<td></td>
 			</tr>
 

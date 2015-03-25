@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) widgets - updated 03-24-2015 (v2.21.2)*/
+/*! tablesorter (FORK) widgets - updated 03-25-2015 (v2.21.2)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
@@ -147,8 +147,8 @@ ts.addWidget({
 	format: function(table, c, wo) {
 		var i, hdr, icon, time, $header, $icon, $tfoot, $h, oldtheme, oldremove, oldIconRmv, hasOldTheme,
 			themesAll = ts.themes,
-			$table = c.$table.add( c.$extraTables ),
-			$headers = c.$headers.add( c.$extraHeaders ),
+			$table = c.$table.add( $( c.namespace + '_extra_table' ) ),
+			$headers = c.$headers.add( $( c.namespace + '_extra_headers' ) ),
 			theme = c.theme || 'jui',
 			themes = themesAll[theme] || {},
 			remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
@@ -219,7 +219,10 @@ ts.addWidget({
 			}
 		}
 		for (i = 0; i < c.columns; i++) {
-			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
+			$header = c.$headers
+				.add($(c.namespace + '_extra_headers'))
+				.not('.sorter-false')
+				.filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $();
 			$h = $headers.not('.sorter-false').filter('[data-column="' + i + '"]:last');
 			if ($h.length) {
@@ -1769,7 +1772,7 @@ ts.addWidget({
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.height() : 0,
 			// clone table, then wrap to make sticky header
 			$stickyTable = wo.$sticky = $table.clone()
-				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders)
+				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders + ' ' + c.namespace.slice(1) + '_extra_table' )
 				.wrap('<div class="' + ts.css.stickyWrap + '">'),
 			$stickyWrap = $stickyTable.parent()
 				.addClass(ts.css.stickyHide)
@@ -1826,13 +1829,6 @@ ts.addWidget({
 		// only add a position relative if a position isn't already defined
 		if ($attach.length && !$attach.css('position')) {
 			$attach.css('position', 'relative');
-		}
-		// save stickyTable element to config
-		// it is also saved to wo.$sticky
-		if (c.$extraTables && c.$extraTables.length) {
-			c.$extraTables.add($stickyTable);
-		} else {
-			c.$extraTables = $stickyTable;
 		}
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }

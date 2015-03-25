@@ -95,7 +95,7 @@ ts.addWidget({
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.height() : 0,
 			// clone table, then wrap to make sticky header
 			$stickyTable = wo.$sticky = $table.clone()
-				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders)
+				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders + ' ' + c.namespace.slice(1) + '_extra_table' )
 				.wrap('<div class="' + ts.css.stickyWrap + '">'),
 			$stickyWrap = $stickyTable.parent()
 				.addClass(ts.css.stickyHide)
@@ -152,13 +152,6 @@ ts.addWidget({
 		// only add a position relative if a position isn't already defined
 		if ($attach.length && !$attach.css('position')) {
 			$attach.css('position', 'relative');
-		}
-		// save stickyTable element to config
-		// it is also saved to wo.$sticky
-		if (c.$extraTables && c.$extraTables.length) {
-			c.$extraTables.add($stickyTable);
-		} else {
-			c.$extraTables = $stickyTable;
 		}
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }

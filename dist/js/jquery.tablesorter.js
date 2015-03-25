@@ -559,7 +559,9 @@
 					cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
 					aria = ['ascending', 'descending'],
 					// find the footer
-					$t = $(table).find('tfoot tr').children().add(c.$extraHeaders).removeClass(css.join(' '));
+					$t = $(table).find('tfoot tr').children()
+						.add( $( c.namespace + '_extra_headers' ) )
+						.removeClass( css.join( ' ' ) );
 				// remove all header information
 				c.$headers
 					.removeClass(css.join(' '))
@@ -1337,10 +1339,10 @@
 				var t, downTarget = null,
 					c = table.config;
 				if (core !== true) {
-					c.$extraHeaders = c.$extraHeaders ? c.$extraHeaders.add($headers) : $headers;
+					$headers.addClass( c.namespace.slice(1) + '_extra_headers' );
 					t = $.fn.closest ? $headers.closest('table')[0] : $headers.parents('table')[0];
 					if (t && t.nodeName === 'TABLE' && t !== table) {
-						c.$extraTables = c.$extraTables ? c.$extraTables.add(t) : $(t);
+						$(t).addClass( c.namespace.slice(1) + '_extra_table' );
 					}
 				}
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
@@ -2057,7 +2059,7 @@
 		format: function(table, c, wo) {
 			var $tb, $tv, $tr, row, even, time, k,
 				child = new RegExp(c.cssChildRow, 'i'),
-				b = c.$tbodies.add( c.$extraTables && c.$extraTables.children( 'tbody' ) );
+				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
 			if (c.debug) {
 				time = new Date();
 			}

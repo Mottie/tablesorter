@@ -58,8 +58,8 @@ ts.addWidget({
 	format: function(table, c, wo) {
 		var i, hdr, icon, time, $header, $icon, $tfoot, $h, oldtheme, oldremove, oldIconRmv, hasOldTheme,
 			themesAll = ts.themes,
-			$table = c.$table.add( c.$extraTables ),
-			$headers = c.$headers.add( c.$extraHeaders ),
+			$table = c.$table.add( $( c.namespace + '_extra_table' ) ),
+			$headers = c.$headers.add( $( c.namespace + '_extra_headers' ) ),
 			theme = c.theme || 'jui',
 			themes = themesAll[theme] || {},
 			remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
@@ -130,7 +130,10 @@ ts.addWidget({
 			}
 		}
 		for (i = 0; i < c.columns; i++) {
-			$header = c.$headers.add(c.$extraHeaders).not('.sorter-false').filter('[data-column="' + i + '"]');
+			$header = c.$headers
+				.add($(c.namespace + '_extra_headers'))
+				.not('.sorter-false')
+				.filter('[data-column="' + i + '"]');
 			$icon = (ts.css.icon) ? $header.find('.' + ts.css.icon) : $();
 			$h = $headers.not('.sorter-false').filter('[data-column="' + i + '"]:last');
 			if ($h.length) {
