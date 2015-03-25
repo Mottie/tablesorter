@@ -438,7 +438,7 @@ $(function(){
 	************************************************/
 	var p = ts.parsers,
 	// test by parser
-	parserTests = 85,
+	parserTests = 90,
 	// skipping metadata parser
 	sample1 = {
 		'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': '\u00e1 test' },
@@ -461,6 +461,10 @@ $(function(){
 	// shortdate to "yyyymmdd"
 	sample3 = {
 		'shortDate' : { '2001/1/2': returnTime('1/2/2001'), '2001-1/2': returnTime('1/2/2001'), '2001,1.2': returnTime('1/2/2001') }
+	},
+	// shortdate to "mmddyy"
+	sample4 = {
+		'shortDate': { '02/01/15': returnTime('2/1/2015'), '2-1-15': returnTime('2/1/2015'), '2 1,15': returnTime('2/1/2015') }
 	},
 	report = function(assert, s) {
 		for (i = 0; i < p.length; i++) {
@@ -495,6 +499,9 @@ $(function(){
 		c1.usNumberFormat = true;
 		th0.dateFormat = c1.dateFormat = "yyyymmdd";
 		report(assert, sample3);
+
+		th0.dateFormat = c1.dateFormat = "mmddyy";
+		report(assert, sample4);
 
 		// undocumented sortValue
 		assert.equal( ts.getParserById('metadata').format(null, table1, th0, 0), 'zzz', 'metadata parser found sortValue');

@@ -52,7 +52,7 @@
 				// *** functionality
 				cancelSelection  : true,       // prevent text selection in the header
 				tabIndex         : true,       // add tabindex to header for keyboard accessibility
-				dateFormat       : 'mmddyyyy', // other options: 'ddmmyyy' or 'yyyymmdd'
+				dateFormat       : 'mmddyyyy', // other options: 'ddmmyyy' or 'yyyymmdd' or 'mmddyy'
 				sortMultiSortKey : 'shiftKey', // key used to select additional columns
 				sortResetKey     : 'ctrlKey',  // key used to remove sorting on a column
 				usNumberFormat   : true,       // false for German '1.234.567,89' or French '1 234 567,89'
@@ -2001,7 +2001,7 @@
 		id: 'shortDate', // 'mmddyyyy', 'ddmmyyyy' or 'yyyymmdd'
 		is: function(s) {
 			// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
-			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test((s || '').replace(/\s+/g,' ').replace(/[\-.,]/g, '/'));
+			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})|(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{2})/).test((s || '').replace(/\s+/g,' ').replace(/[\-.,]/g, '/'));
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
@@ -2016,6 +2016,8 @@
 					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, '$3/$2/$1');
 				} else if (format === 'yyyymmdd') {
 					d = d.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, '$1/$2/$3');
+				} else if (format === 'mmddyy') {
+					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/, '20$3/$1/$2');
 				}
 				date = new Date(d);
 				return date instanceof Date && isFinite(date) ? date.getTime() : s;

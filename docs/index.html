@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -860,8 +860,9 @@
 							<li><code>&quot;mmddyyyy&quot;</code> (default)</li>
 							<li><code>&quot;ddmmyyyy&quot;</code></li>
 							<li><code>&quot;yyyymmdd&quot;</code></li>
+							<li><code>&quot;ddmmyy&quot;</code></li>
 						</ul>
-						In previous versions, this option was set as &quot;us&quot;, &quot;uk&quot; or &quot;dd/mm/yy&quot;. This option was modified to better fit needed date formats. It will only work with four digit years!<br>
+						In previous versions, this option was set as &quot;us&quot;, &quot;uk&quot; or &quot;dd/mm/yy&quot;. This default was modified to better fit needed date formats. Most formats only work with four digit years!<br>
 						<br>
 						The sorter should be set to &quot;shortDate&quot; and the date format can be set in the &quot;dateFormat&quot; option or set for a specific columns within the &quot;headers&quot; option.
 						See <a href="example-option-date-format.html">the demo page</a> to see it working.
@@ -875,7 +876,8 @@
     headers: {
       0: { sorter: "shortDate" }, // "shortDate" with the default dateFormat above
       1: { sorter: "shortDate", dateFormat: "ddmmyyyy" }, // day first format
-      2: { sorter: "shortDate", dateFormat: "yyyymmdd" }  // year first format
+      2: { sorter: "shortDate", dateFormat: "yyyymmdd" },  // year first format
+	  3: { sorter: "shortDate", dateFormat: "mmddyy" }  // really short date format.  Assumes 20xx.
     }
 
   });
