@@ -8,6 +8,8 @@
 	<script src="js/jquery-1.4.4.min.js"></script>
 
 	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
@@ -34,19 +36,19 @@
 
 <script id="js">$(function() {
 
-	$("table:first").tablesorter({
+	$('.narrow-table').tablesorter({
 		theme : 'blue',
 		// initialize zebra striping and resizable widgets on the table
-		widgets: [ "zebra", "resizable" ],
+		widgets: [ "zebra", "resizable", "stickyHeaders" ],
 		widgetOptions: {
 			resizable_addLastColumn : true
 		}
 	});
 
-	$("table:last").tablesorter({
+	$('.full-width-table').tablesorter({
 		theme : 'blue',
 		// initialize zebra striping and resizable widgets on the table
-		widgets: [ "zebra", "resizable" ],
+		widgets: [ "zebra", "resizable", "stickyHeaders" ],
 		widgetOptions: {
 			resizable: true,
 			// These are the default column widths which are used when the table is
@@ -67,37 +69,131 @@
 </div>
 <div id="main">
 
-	<p class="tip">
-		<em>NOTE!</em>
-		<ul>
-			<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
-			<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).</li>
-			<li>In <span class="version">v2.17.4</span>, modified the bindings so the mouse move will now work on the document instead of only within the table header; this makes interaction consistent with what the user expects.</li>
-			<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
-			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
-			<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
-			<li>Column width saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>
-			<li>Right clicking (opening the context menu) will now reset the resized columns (v2.4).</li>
-			<li>Holding down the shift key while resizing will force the last column or the table to resize instead of the next column, but only if the table is full width (v2.7.4).</li>
-			<li>Prevent resizing a column by adding any of the following (they all do the same thing), set in order of priority (v2.7.4):
-				<ul>
-					<li>jQuery data <code>data-resizable="false"</code>.</li>
-					<li>metadata <code>class="{ resizable: 'false'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { resizable : 'false' } }</code>.</li>
-					<li>header class name <code>class="resizable-false"</code>.</li>
-				</ul>
-			</li>
-			<li>Setting the <code>resizable</code> widget option to <code>false</code>, will only prevent the saving of resized columns, it has nothing to do with preventing a column from being resized.</li>
-			<li>Because this widget uses jQuery's <code>closest()</code> (jQuery 1.3+) and <code>index()</code> (jQuery 1.4+) functions, it requires these newer versions of jQuery in order to work.</li>
-			<li>In order to save the resized widths, jQuery version 1.4.1+ should be used because jQuery's <code>parseJson()</code> function is needed.</li>
-			<li>Setting the <code>resizable_addLastColumn</code> widget option to <code>true</code> will add the resizable handle to the last column, see the "non-full" width table below (<span class="version">v2.9.0</span>).</li>
-		</ul>
-	<p>
+
+	<p></p>
+	<br>
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
+				<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).<br><br></li>
+
+				<li>In <span class="version">v2.21.3</span>
+					<ul>
+						<li>Performed a major overhaul on the resizable widget to add resizable handles outside of the table, so now the resizable handles can be used over the entire height of the table!</li>
+						<li>This change allows the resizable widget to work seemlessly with the <strong>stickyHeaders</strong> widget (included in this demo); sadly, to make it work with the scroller widget will require more work.</li>
+					</ul>
+				</li>
+				<li>In <span class="version">v2.17.4</span>, modified the bindings so the mouse move will now work on the document instead of only within the table header; this makes interaction consistent with what the user expects.</li>
+				<li>In <span class="version">v2.15.12</span>, added <code>resizable_widths</code> option which allows the setting of default &amp; reset header widths.</li>
+				<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
+				<li>This widget now saves all changed column widths to local storage, or it falls back to a cookie! (v2.1)</li>
+				<li>Column width saving requires the new "$.tablesorter.storage()" function included with the "jquery.tablesorter.widgets.js" file (v2.1).</li>
+				<li>Right clicking (opening the context menu) will now reset the resized columns (v2.4).</li>
+				<li>Holding down the shift key while resizing will force the last column or the table to resize instead of the next column, but only if the table is full width (v2.7.4).</li>
+				<li>Prevent resizing a column by adding any of the following (they all do the same thing), set in order of priority (v2.7.4):
+					<ul>
+						<li>jQuery data <code>data-resizable="false"</code>.</li>
+						<li>metadata <code>class="{ resizable: 'false'}"</code>. This requires the metadata plugin.</li>
+						<li>headers option <code>headers : { 0 : { resizable : 'false' } }</code>.</li>
+						<li>header class name <code>class="resizable-false"</code>.</li>
+					</ul>
+				</li>
+				<li>Setting the <code>resizable</code> widget option to <code>false</code>, will only prevent the saving of resized columns, it has nothing to do with preventing a column from being resized.</li>
+				<li>Because this widget uses jQuery's <code>closest()</code> (jQuery 1.3+) and <code>index()</code> (jQuery 1.4+) functions, it requires these newer versions of jQuery in order to work.</li>
+				<li>In order to save the resized widths, jQuery version 1.4.1+ should be used because jQuery's <code>parseJson()</code> function is needed.</li>
+				<li>Setting the <code>resizable_addLastColumn</code> widget option to <code>true</code> will add the resizable handle to the last column, see the "non-full" width table below (<span class="version">v2.9.0</span>).</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h4>Resizable widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
+				<thead>
+					<tr><th>Option</th><th class="defaults">Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="resizable">
+						<td><a href="#" class="permalink">resizable</a></td>
+						<td>true</td>
+						<td>When <code>true</code> and the storage widget is included, all column widths will be saved to storage.
+							<div class="collapsible">
+								<p>This means that when the page is reloaded, any adjusted column widths will be restored.</p>
+								<p>The adjusted column sizes can be reset at any time by right-clicking on the table header.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="resizable-add-last-column">
+						<td><a href="#" class="permalink">resizable_addLastColumn</a></td>
+						<td>false</td>
+						<td>When <code>true</code>, the last column of the table is made resizable.
+							<div class="collapsible">
+								<p>If the table is full width, adjusting the right edge would actually shrink or stretch <em>all</em> columns without moving the right border.</p>
+								<p>On narrower tables, the table width will be adjusted.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="resizable-widths">
+						<td><a href="#" class="permalink">resizable_widths</a></td>
+						<td>[ ]</td>
+						<td>Set any default column widths within this zero-based-column-indexed array
+							<div class="collapsible">
+								<p>This option allows the setting of column widths initially (before any resizing occurs, or if there are no saved column widths) and when resetting (right-click on the column header).</p>
+								<p>The array may contain any css allowed width definitions (e.g. percentage, pixels, em, etc).</p>
+								<p>Undefined column widths to not add a specified width to the column</p>
+								<p>Here is an example from the second table in this demo showing how to set this option:</p>
+								<pre class="prettyprint lang-js">// Note that the "Age" column is not resizable,
+// but the width can still be set to 40px here
+resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="resizable-throttle">
+						<td><a href="#" class="permalink">resizable_throttle</a></td>
+						<td>false</td>
+						<td>When this option is set to a number, or true, the resizing event from the window is throttled.
+							<div class="collapsible">
+								<p>Essentially, throttling the resize event limits the number of times the javascript is executed while resizing the window.</p>
+								<p>Without any throttling, slower browsers may lag while the javascript adjusts the column widths of the table.</p>
+								<p>With excessive throttling, the user will notice the table column width lag (while will be seen as the width jumping sporatically to catch up to the mouse) behind the mouse movement.</p>
+								<p>When this option is set to <code>true</code>, a default of <code>5</code> (milliseconds) is used.</p>
+								<p>If setting a number, try to keep this number in the <code>0</code> to <code>10</code> range.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="resizable-target-last">
+						<td><a href="#" class="permalink">resizable_targetLast</a></td>
+						<td>false</td>
+						<td>When <code>true</code>, the last column will be targetted for resizing.
+							<div class="collapsible">
+								<p>When <code>true</code>, resizing a column will change the size of the selected column, and the last column, not the selected column's neighbor.</p>
+								<p>When <code>false</code>, resizing a column will move the column border between it's neighbors.</p>
+								<p>Also, in a <em>full width table</em>, if this option is <code>false</code>, the same behavior as when this option is <code>true</code> can be seen when resizing a column while holding down the <kbd>Shift</kbd> key on the keyboard - the last column is resized.</p>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
 
 	<h1>Demo</h1>
 	<div id="demo">
 <h3>Non-full width table <small>(individual columns resize)</small></h3>
-<table class="tablesorter" style="width:auto">
+<table class="narrow-table" style="width:auto">
 	<thead>
 		<tr>
 			<th>First Name</th>
@@ -153,7 +249,7 @@
 </table>
 
 <h3>Full width table <small>(use shift to force last column to resize)</small></h3>
-<table class="tablesorter">
+<table class="full-width-table">
 	<thead>
 		<tr>
 			<th>First Name</th>
