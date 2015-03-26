@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 03-25-2015 (v2.21.2)*/
+/*! tablesorter (FORK) widgets - updated 03-26-2015 (v2.21.3)*/
 /* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
   }
 }(function($) {
 
-/*! Widget: storage */
+/*! Widget: storage - updated 3/26/2015 (v2.21.3) */
 ;(function ($, window, document) {
 'use strict';
 
@@ -106,7 +106,7 @@ ts.storage = function(table, key, value, options) {
 
 })(jQuery, window, document);
 
-/*! Widget: uitheme */
+/*! Widget: uitheme - updated 3/26/2015 (v2.21.3) */
 ;(function ($) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};
@@ -371,7 +371,7 @@ ts.addWidget({
 
 })(jQuery);
 
-/*! Widget: filter - updated 3/5/2015 (v2.21.0) *//*
+/*! Widget: filter - updated 3/26/2015 (v2.21.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1694,7 +1694,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
 
 })(jQuery);
 
-/*! Widget: stickyHeaders - updated 3/5/2015 (v2.21.0) *//*
+/*! Widget: stickyHeaders - updated 3/26/2015 (v2.21.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -1966,7 +1966,7 @@ ts.addWidget({
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 3/25/2015 (v2.21.3) */
+/*! Widget: resizable - updated 3/26/2015 (v2.21.3) */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};

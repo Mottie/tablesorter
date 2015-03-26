@@ -1,4 +1,4 @@
-/*! Widget: resizable - updated 3/25/2015 (v2.21.3) */
+/*! Widget: resizable - updated 3/26/2015 (v2.21.3) */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};

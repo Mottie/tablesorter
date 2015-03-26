@@ -82,6 +82,43 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.21.3">Version 2.21.3</a> (3/26/2015)
+
+* Core
+  * Fix icon targeting for class names
+  * Modified sort initiation method. A "click" event can now be triggered on a header to initiate a sort - [issue #849](https://github.com/Mottie/tablesorter/pull/849). Thanks [johnjameswhitman](https://github.com/johnjameswhitman).
+  * General code cleanup; mostly changing `tagName` to `nodeName`.
+  * Modified, then removed all references to `config.$extraTables` and `config.$extraHeaders` as it was causing a memory leak.
+* Docs
+  * Update jQuery to v1.11.2.
+  * Update Bootstrap to v3.3.4.
+* Grunt Build
+  * Add custom build file name. See [issue #829](https://github.com/Mottie/tablesorter/issues/829).
+  * The default custom build file name is now "jquery.tablesorter.custom-widgets.js".
+  * See the [Customize wiki page](https://github.com/Mottie/tablesorter/wiki/Customize#custom-build) for more details.
+* Filter
+  * Make "disabled" a modifiable class name - modify it in `$.tablesorter.css.filterDisabled`.
+  * Select2 filter formatter now escapes forward slashes.
+* Output:
+  * Minor code tweak.
+* Pager:
+  * Make `pagerUpdate` method page parameter optional. It was previously required or the page would reset to `0`.
+  * Remove "refreshComplete" bind on destroy. Fixes [issue #854](https://github.com/Mottie/tablesorter/issues/854).
+* Resizable:
+  * Major overhaul of this widget to now make it compatible with the stickyHeaders widget.
+  * Sadly, it still doesn't work properly with the updated scroller widget; it's on my to-do list!
+* Scroller:
+  * Added fixed column support! Fixes issues [#135](https://github.com/Mottie/tablesorter/issues/135), [#689](https://github.com/Mottie/tablesorter/issues/689), [#763](https://github.com/Mottie/tablesorter/issues/763) and [https://github.com/Mottie/tablesorter/issues/804](#804).
+  * Check out the third table in the [scroller widget demo](http://mottie.github.io/tablesorter/docs/example-widget-scroller.html#group) - change the slider to adjust the number of fixed columns.
+* Storage:
+  * Add option (`widgetOptions.storage_useSessionStorage`) to allow switching from local to session storage. Fixes [#851](https://github.com/Mottie/tablesorter/issues/851).
+  * Add a bunch of other storage widget options including `storage_tableId`, `storage_group`, `storage_fixedUrl` and `storage_page`. See the [documentation on how they might be useful](http://mottie.github.io/tablesorter/docs/#widget-storage-fixed-url).
+  * Deprecated `config.fixedUrl` in favor of the `widgetOptions.storage_fixedUrl` option.
+* Themes
+  * Add "hover" class to all hover definitions (for the scroller widget mostly).
+  * Remove filter element offsetting margins.
+  * Target `background-color` instead of `background`. Fixes [issue #853](https://github.com/Mottie/tablesorter/issues/853).
+
 #### <a name="v2.21.2">Version 2.21.2</a> (3/13/2015)
 
 * Core: get accurate column count. Fixes [issue #840](https://github.com/Mottie/tablesorter/issues/840).
@@ -109,38 +146,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Add UMD wrapper to built "jquery.tablesorter.widgets.js" file. Thanks to [nburlett](https://github.com/nburlett) ([pull #837](https://github.com/Mottie/tablesorter/pull/837))!
 * Scroller
   * Properly adjust column widths; fixes [issue #836](https://github.com/Mottie/tablesorter/issues/836).
-
-#### <a name="v2.21.0">Version 2.21.0</a> (3/5/2015)
-
-* Core
-  * Plan to manually update vesion number.
-  * Optimizations: replace arrays using `$.each` with for loops. Fixes [issue #827](https://github.com/Mottie/tablesorter/issues/827).
-  * Add `$.tablesorter.addInstanceMethods` function.
-    * This allows one to define config object instance methods ([docs](http://mottie.github.io/tablesorter/docs/#variable-instanceMethods)).
-    * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for contributing!
-  * Add `config.$headerIndexed` option ([docs](http://mottie.github.io/tablesorter/docs/#variable-header-indexed)).
-* Docs
-  * Update link in readme.
-  * Add contributing information.
-  * Update download method information.
-* Build/Testing
-  * Move jshint to "grunt test" task.
-  * Attempt to make nested callbacks more stable.
-  * Clean up testing & made more stable, by [prijutme4ty](https://github.com/prijutme4ty).
-* ColumnSelector
-  * Add more debug logging.
-* Filter
-  * Add more debug logging.
-  * Add `config` parameter to `filter_functions`.
-  * Add "widget-filter-type-insideRange.js" filter type; this filter type allows searching for a value that is within a range ([demo](http://mottie.github.io/tablesorter/docs/example-parsers-date-range.html)).
-  * External filters can now set initial values; this includes match-any-column inputs.
-  * Extend filterFormatter functions - fixes an issue where HTML5 &amp; jQuery ui filterFormatters override the function definitions.
-* Output
-  * Add `output_includeFooter` option.
-* Pager
-  * Add more debug logging.
-* Scroller
-  * Add missing `tfoot` rows. Fixes [issue #825](https://github.com/Mottie/tablesorter/issues/825).
-* StickyHeaders
-  * Now works properly with a full-height wrapper. Fixes [issue #564](https://github.com/Mottie/tablesorter/issues/564).
-  * Add stickyHeader hidden class name & modal demo links. Fixes [issue #832](https://github.com/Mottie/tablesorter/issues/832).

@@ -1,4 +1,4 @@
-/*! Widget: storage */
+/*! Widget: storage - updated 3/26/2015 (v2.21.3) */
 ;(function ($, window, document) {
 'use strict';
 
