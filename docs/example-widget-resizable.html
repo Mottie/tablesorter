@@ -41,6 +41,7 @@
 		// initialize zebra striping and resizable widgets on the table
 		widgets: [ "zebra", "resizable", "stickyHeaders" ],
 		widgetOptions: {
+			storage_useSessionStorage : true,
 			resizable_addLastColumn : true
 		}
 	});
@@ -192,7 +193,11 @@ resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]</pre>
 
 	<h1>Demo</h1>
 	<div id="demo">
-<h3>Non-full width table <small>(individual columns resize)</small></h3>
+<h3>
+	Non-full width table
+	<sup class="results">&dagger;</sup>
+	<small>(individual columns resize)</small>
+</h3>
 <table class="narrow-table" style="width:auto">
 	<thead>
 		<tr>
@@ -247,8 +252,15 @@ resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]</pre>
 		</tr>
 	</tbody>
 </table>
+<small><span class="results">&dagger;</span> Resized values for this table are saved to <em>session storage</em> - values are lost once the browser is closed.</small>
 
-<h3>Full width table <small>(use shift to force last column to resize)</small></h3>
+<br><br>
+
+<h3>
+	Full width table
+	<sup class="results">&Dagger;</sup>
+	<small>(use shift to force last column to resize)</small>
+</h3>
 <table class="full-width-table">
 	<thead>
 		<tr>
@@ -303,7 +315,9 @@ resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]</pre>
 		</tr>
 	</tbody>
 </table>
+<small><span class="results">&Dagger;</span> Resized values for this table are saved to <em>local storage</em> - values are not lost once the browser is closed.</small>
 </div>
+<p></p>
 
 	<h1>Page Header</h1>
 	<div>

@@ -25,26 +25,39 @@ var ts = $.tablesorter = $.tablesorter || {};
 ts.storage = function(table, key, value, options) {
 	table = $(table)[0];
 	var cookieIndex, cookies, date,
-		hasLocalStorage = false,
+		hasStorage = false,
 		values = {},
 		c = table.config,
+		wo = c && c.widgetOptions,
+		storageType = ( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ) ?
+			'sessionStorage' : 'localStorage',
 		$table = $(table),
-		id = options && options.id || $table.attr(options && options.group ||
-			'data-table-group') || table.id || $('.tablesorter').index( $table ),
-		url = options && options.url || $table.attr(options && options.page ||
-			'data-table-page') || c && c.fixedUrl || window.location.pathname;
+		// id from (1) options ID, (2) table "data-table-group" attribute, (3) widgetOptions.storage_tableId,
+		// (4) table ID, then (5) table index
+		id = options && options.id ||
+			$table.attr( options && options.group || wo && wo.storage_group || 'data-table-group') ||
+			wo && wo.storage_tableId || table.id || $('.tablesorter').index( $table ),
+		// url from (1) options url, (2) table "data-table-page" attribute, (3) widgetOptions.storage_fixedUrl,
+		// (4) table.config.fixedUrl (deprecated), then (5) window location path
+		url = options && options.url ||
+			$table.attr(options && options.page || wo && wo.storage_page || 'data-table-page') ||
+			wo && wo.storage_fixedUrl || c && c.fixedUrl || window.location.pathname;
 	// https://gist.github.com/paulirish/5558557
-	if ('localStorage' in window) {
+	if (storageType in window) {
 		try {
-			window.localStorage.setItem('_tmptest', 'temp');
-			hasLocalStorage = true;
-			window.localStorage.removeItem('_tmptest');
-		} catch(error) {}
+			window[storageType].setItem('_tmptest', 'temp');
+			hasStorage = true;
+			window[storageType].removeItem('_tmptest');
+		} catch(error) {
+			if (c && c.debug) {
+				ts.log( storageType + ' is not supported in this browser' );
+			}
+		}
 	}
 	// *** get value ***
 	if ($.parseJSON) {
-		if (hasLocalStorage) {
-			values = $.parseJSON(localStorage[key] || 'null') || {};
+		if (hasStorage) {
+			values = $.parseJSON( window[storageType][key] || 'null' ) || {};
 		} else {
 			// old browser, using cookies
 			cookies = document.cookie.split(/[;\s|=]/);
@@ -61,8 +74,8 @@ ts.storage = function(table, key, value, options) {
 		}
 		values[url][id] = value;
 		// *** set value ***
-		if (hasLocalStorage) {
-			localStorage[key] = JSON.stringify(values);
+		if (hasStorage) {
+			window[storageType][key] = JSON.stringify(values);
 		} else {
 			date = new Date();
 			date.setTime(date.getTime() + (31536e+6)); // 365 days

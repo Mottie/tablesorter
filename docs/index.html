@@ -1809,7 +1809,7 @@ $(function(){
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
 
-    // initialize a bunch of widgets
+    // initialize a bunch of widgets (the order doesn't matter)
     widgets: ["zebra", "uitheme", "columns", "filter", "resizable", "stickyHeaders"],
 
     widgetOptions: {
@@ -1878,6 +1878,20 @@ $(function(){
       // Set to true for server-side filtering
       filter_serversideFiltering :  false,
 
+      // *** resizable widget ***
+      // if false, resized columns are not saved for next page reload
+      resizable : true,
+      // if true, the last column will be resizable (use in non-full width tables)
+      resizable_addLastColumn: false,
+      // Add the starting & reset header widths
+      resizable_widths : [],
+      // throttle resizable event (needed for slow browsers)
+      resizable_throttle : false,
+
+      // *** savesort widget ***
+      // if false, the sort will not be saved for next page reload
+      saveSort : true,
+
       // *** stickyHeaders widget ***
       // extra class name added to the sticky header row
       stickyHeaders : '',
@@ -1900,28 +1914,24 @@ $(function(){
       // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
       stickyHeaders_zIndex : 2,
 
-      // *** resizable widget ***
-      // if false, resized columns are not saved for next page reload
-      resizable : true,
-      // if true, the last column will be resizable (use in non-full width tables)
-      resizable_addLastColumn: false,
-      // Add the starting & reset header widths
-      resizable_widths : [],
-      // throttle resizable event (needed for slow browsers)
-      resizable_throttle : false,
-
-      // *** savesort widget ***
-      // if false, the sort will not be saved for next page reload
-      saveSort : true,
+      // *** storage widget ***
+      // allows switching between using local & session storage
+      storage_useSessionStorage : false,
+      // alternate table id (set if grouping multiple tables together)
+      storage_tableId  : '',
+      // table attribute to get the table ID, if storage_tableId is undefined
+      storage_group    : '', // defaults to "data-table-group"
+      // alternate url to use (set if grouping tables across multiple pages)
+      storage_fixedUrl : '',
+      // table attribute to get the fixedUrl, if storage_fixedUrl is undefined
+      storage_page     : '',
 
       // *** zebra widget ***
-      // class names to add, default is [ "even", "odd" ]
+      // class names to add to alternate rows, default is [ "even", "odd" ]
       zebra : ["ui-widget-content even", "ui-state-default odd"]
 
       // *** uitheme widget ***
-      // include the name of the theme to use current options are
-      // "jui" (default) and "bootstrap"
-      // uitheme : "jui", // REMOVED OPTION; use "theme" instead
+      // use "config.theme" to set the theme to use
 
     }
 
@@ -1956,13 +1966,25 @@ $(function(){
 				<td><a href="example-parsers-dates.html">Example</a></td>
 			</tr>
 
+		</tbody>
+
+		<!-- non-sorting tbody -->
+		<tbody id="deprecated" class="tablesorter-infoOnly">
+			<tr><th colspan="5">Deprecated/Removed Options</th></tr>
+		</tbody>
+
+		<tbody>
+
 			<tr id="fixedurl">
-				<td><a href="#" class="permalink">fixedUrl</a></td>
+				<td><a href="#" class="permalink alert">fixedUrl</a></td>
 				<td>String</td>
 				<td>undefined</td>
 				<td>
-					This option was added to set a specific page when storing data using the <a href="#function-storage"><code>$.tablesorter.storage</code></a> code (<span class="version">v2.12</span>).
+					This option is being <span class="label label-danger">deprecated</span> in v2.21.3!
+					It has been replaced by <a href="#widget-storage-fixed-url"><code>widgetOptions.storage_fixedUrl</code></a>; but is still available for backwards compatibility.
 					<div class="collapsible"><br>
+						This option was added to set a specific page when storing data using the <a href="#function-storage"><code>$.tablesorter.storage</code></a> code (<span class="version">v2.12</span>).
+						<br>
 						More specifically, when the storage function is used, it attempts to give every table a unique identifier using both the page <strong>url</strong> and table <strong>ID</strong> (or index on the page if no id exists). This option allows you to override the current page url (<em>it doesn't need to be a url, just some constant value</em>) and save data for multiple tables across a domain.<br>
 						<br>
 						The table url &amp; id can also be overridden by setting table data attributes <code>data-table-page</code> (url) and <code>data-table-group</code> (id)<br>(e.g. <code>&lt;table class=&quot;tablesorter&quot; data-table-page=&quot;mydomain&quot; data-table-group=&quot;financial&quot;&gt;...&lt;/table&gt;</code>)<br>
@@ -1972,15 +1994,6 @@ $(function(){
 				</td>
 				<td></td>
 			</tr>
-
-		</tbody>
-
-		<!-- non-sorting tbody -->
-		<tbody id="deprecated" class="tablesorter-infoOnly">
-			<tr><th colspan="5">Deprecated/Removed Options</th></tr>
-		</tbody>
-
-		<tbody>
 
 			<tr id="cssallowclicks">
 				<td><a href="#" class="permalink alert">cssAllowClicks</a></td>
@@ -2002,8 +2015,8 @@ $(function(){
 				<td></td>
 				<td></td>
 				<td>
-					This option is being <span class="label label-danger">deprecated</span>!
-					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>; but is still available for backwards compatibility.
+					This option was <span class="label label-danger">removed</span> in v2.21.2!
+					It has been replaced by <a href="#widget-columns"><code>widgetOptions.columns</code></a>.
 					<div class="collapsible">
 					<br>
 					Default value: <code>{ css: [ "primary", "secondary", "tertiary" ] }</code> (Object with Array)
@@ -2025,8 +2038,8 @@ $(function(){
 				<td></td>
 				<td></td>
 				<td>
-					This option is being <span class="label label-danger">deprecated</span>!
-					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>; but is still available for backwards compatibility.
+					This option was <span class="label label-danger">removed</span> in v2.4!
+					It has been replaced by <a href="#widget-uitheme"><code>widgetOptions.uitheme</code></a>.
 					<div class="collapsible">
 					<br>
 					Default value: <code>{ css: [ "ui-icon-arrowthick-2-n-s", "ui-icon-arrowthick-1-s", "ui-icon-arrowthick-1-n" ] }</code> (Object with Array)
@@ -2056,8 +2069,8 @@ $(function(){
 				<td></td>
 				<td></td>
 				<td>
-					This option is being <span class="label label-danger">deprecated</span>!
-					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>; but is still available for backwards compatibility.
+					This option was <span class="label label-danger">removed</span> in v2.4!
+					It has been replaced by <a href="#widget-zebra"><code>widgetOptions.zebra</code></a>.
 					<div class="collapsible">
 					<br>
 					Default value: <code>{ css: [ &quot;even&quot;, &quot;odd&quot; ] }</code> (Object with Array)
@@ -2660,7 +2673,7 @@ $(function(){
 					Filter widget: Set this option to <code>false</code> to make the column content search case-sensitive, so typing in &quot;a&quot; will not find &quot;Albert&quot;. (v2.3.4)
 					<div class="collapsible">
 					<br>
-					Use the <a href="#widget-filter-ignorecase"><code>filter_ignorecase</code></a> option as follows:
+					Use the <a href="#widget-filter-ignorecase"><code>filter_ignoreCase</code></a> option as follows:
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     widgets: ["filter"],
@@ -2774,7 +2787,7 @@ $(function(){
 					Filter widget: If the storage utility is available (included with <code>jquery.tablesorter.widgets.js</code> file, the last applied filter is saved to storage (<span class="version">v2.14</span>).
 					<div class="collapsible">
 					<br>
-					Filters saved to local storage (or cookies) will override any default filters within the header data-attribute (set by the <a href="#widget-filter-defaultattrib"><code>filter_defaultAttrib</code> option</a> and be available to the pager before any ajax calls are made.<br>
+					Filters saved to local storage (or cookies) will override any default filters within the header data-attribute (set by the <a href="#widget-filter-defaultattrib"><code>filter_defaultAttrib</code> option</a>) and be available to the pager before any ajax calls are made.<br>
 					<br>
 					To bypass this behavior, clear out the saved filters as follows:
 					<pre class="prettyprint lang-js">$.tablesorter.storage( $('table'), 'tablesorter-filters', '' );</pre>
@@ -3379,7 +3392,7 @@ $('table').trigger('search', false);</pre></div>
 					<br>
 					Set this option to either <code>true</code> for a default 5 millisecond delay, or set it to any number less than 10 to adjust the throttling delay that is applied to the mousemove/resizing event.<br>
 					<br>
-					Use the <a href="#widget-resizable-throttle"><code>&quot;resizable_widths&quot;</code></a> option as follows:
+					Use the <a href="#widget-resizable-throttle"><code>&quot;resizable_throttle&quot;</code></a> option as follows:
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     widgets: ["resizable"],
@@ -3414,6 +3427,88 @@ $('table').trigger('search', false);</pre></div>
 });</pre></div>
 				</td>
 				<td><a href="example-widget-savesort.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-storage-use-session-storage">
+				<td><a href="#" class="permalink">storage_useSessionStorage</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Storage widget: If this option is set to <code>false</code>, all saved variables for the table will be within local storage.
+					<div class="collapsible">
+					<p>If <code>true</code>, all saved variables for the table will be within the session storage. This means once the user closes the browser, all saved variables are lost.</p>
+					Use the <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> option to switch to session storage as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["saveSort"],
+    widgetOptions : {
+      // if false, saved variables will be saved in local storage
+      storage_useSessionStorage : true
+    }
+  });
+});</pre></div>
+				</td>
+				<td><a href="example-widget-resizable.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-storage-table-id">
+				<td><a href="#" class="permalink">storage_tableId</a></td>
+				<td>String</td>
+				<td>""</td>
+				<td>
+					Storage widget: This option allows setting an alternate table id so multiple tables on a page have the settings grouped together
+					<div class="collapsible">
+						<p>When grouping together multiple tables, setting the variable on one table will not cause the setting to modify a second table, the change will only be apparent on page reload.</p>
+						<p>If this option is not defined, the actual table id will be used (which isn't conducive to applying to multiple tables!)</p>
+						<p>A more detailed list of the table id priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</a></code> function description.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-storage-group">
+				<td><a href="#" class="permalink">storage_group</a></td>
+				<td>String</td>
+				<td>""</td>
+				<td>
+					Storage widget: Set a table (data) attribute to use to obtain a table id, which allows grouping multiple tables on one page together - they share a common saved setting.
+					<div class="collapsible">
+						<p>If a value is set in this option, the storage widget looks in that defined table data-attribute for a table id.</p>
+						<p>If this option is not defined, then the default data-attribute for the table becomes <code>"data-table-group"</code>.</p>
+						<p>The value in the data-attribute sets a table id, if not found, the storage widget then looks for an id in the <a href="#widget-storage-table-id"><code>storage_tableId</code></a> option.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-storage-fixed-url">
+				<td><a href="#" class="permalink">storage_fixedUrl</a></td>
+				<td>String</td>
+				<td>""</td>
+				<td>
+					Storage widget: This option allows setting an alternate table url so that tables on multiple pages will have their settings grouped together
+					<div class="collapsible">
+						<p>This option replaces and will override the now deprecated <code>config.fixedUrl</code> option.</p>
+						<p>If there is a value within the table's "data-table-page" (set by the <code>storage_page</code> option), it will override this setting.</p>
+						<p>A more detailed list of the table url priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</a></code> function description.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-storage-page">
+				<td><a href="#" class="permalink">storage_page</a></td>
+				<td>String</td>
+				<td>""</td>
+				<td>
+					Storage widget: Set a table (data) attribute to use to obtain a table url, which allows grouping tables across multiple pages together - they share a common saved setting.
+					<div class="collapsible">
+						<p>If a value is set in this option, the storage widget looks in that defined table data-attribute for a table url.</p>
+						<p>If this option is not defined, then the default data-attribute for the table becomes <code>"data-table-page"</code>.</p>
+						<p>The value in the data-attribute sets a table url, if not found, the storage widget then looks for a url in the <a href="#widget-storage-fixed-url"><code>storage_fixedUrl</code></a> option.</p>
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-zebra">
@@ -4179,7 +4274,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Filter widget: This option was <span class="label label-danger">removed</span> in <span class="version updated">v2.15</span>... sorry for the sudden notice.
+					Filter: This option was <span class="label label-danger">removed</span> in <span class="version updated">v2.15</span>... sorry for the sudden notice.
 					<div class="collapsible">
 					<br>
 					This option has been replaced by the <a href="#widget-filter-external"><code>filter_external</code></a> option.<br>
@@ -4214,9 +4309,10 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="#" class="permalink alert">uitheme</a></td>
 				<td>String</td>
 				<td>&quot;jui&quot;</td>
-				<td>
+				<td>UiTheme: This option was <span class="label label-danger">removed</span> in v2.19.0!
+					It has been replaced by <a href="#theme">theme</a>.
+					<div class="collapsible"><br>
 					This option contains the name of the theme. Currently jQuery UI (&quot;jui&quot;) and Bootstrap (&quot;bootstrap&quot;) themes are supported (updated v2.4)
-					<div class="collapsible">
 					<p>
 						<span class="label label-warning">* NOTE *</span> only the <code>uitheme</code> widget option was removed. All of the information below is still pertinent and portions have been copied to the core <a href="#theme"><code>theme</code></a> option.
 					</p>
@@ -4284,7 +4380,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>Numeric</td>
 				<td>0</td>
 				<td>
-					This pager plugin option has been <span class="label label-danger">removed</span>!
+					Pager: This option was <span class="label label-danger">removed</span>!
 					<div class="collapsible">
 					<br>
 					The original tablesorter pager plugin absolutely positioned the pager controls at the bottom of the table. It appears that this option was intended to tweak the position of the pager container. The option exists, but no code was found.</div>
@@ -4297,7 +4393,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					This pager plugin option has been <span class="label label-danger">removed</span>!
+					Pager: This option was <span class="label label-danger">removed</span>!
 					<div class="collapsible">
 					<br>
 					If this option were true, the original tablesorter pager plugin would absolutely position the pager controls at the bottom of the table.</div>
@@ -4310,7 +4406,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>String</td>
 				<td>&quot;/&quot;</td>
 				<td>
-					This pager plugin option has been <span class="label label-danger">removed</span>! Use the <a href="#pager-output">output</a> option to allow for more control over the formatting.
+					Pager: This option was <span class="label label-danger">removed</span>! Use the <a href="#pager-output">output</a> option to allow for more control over the formatting.
 					<div class="collapsible">
 					<br>
 					The original tablesorter pager plugin would combine the current page with the calculated total number of pages within the <a href="#pager-csspagedisplay">cssPageDisplay</a> with this separator string inbetween.</div>
@@ -6707,7 +6803,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						</ul>
 						This function attempts to give every table a unique identifier using both the page url and table id (or index on the page if no id exists), by default. Here is a usage example and a look at what is stored within the local storage:
 						<pre class="prettyprint lang-js">$.tablesorter.storage( $('#tablesorter-demo')[0], 'test', '123');
-// stored as, test = : {"/tablesorter/docs/":{"tablesorter-demo":"123"}}
+// stored under the "test" value as {"/tablesorter/docs/":{"tablesorter-demo":"123"}}
 
 </pre>
 						The saved table url & id can be overridden by setting table data attributes <code>data-table-page</code> (url) and <code>data-table-group</code> (id), as in this sample markup:
@@ -6717,30 +6813,37 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
   id  : 'group1',
   // this group option sets name of the table attribute with the ID;
   // but the value within this data attribute is overridden by the above id option
-  group: 'data-table-group'
+  group: 'data-table-group',
 
   // table pages
   url : 'page1',
   // this page option sets name of the table attribute with the page/url;
   // but the value within the data attribute is overridden by the above url option
-  page: 'data-table-page'
+  page: 'data-table-page',
+
+  // Option added v2.21.3; if `true` the storage function will use sessionStorage
+  // if not defined, the `config.widgetOptions.storage_useSessionStorage` setting is checked
+  // if no settings are found, it will default to `false`, and use localStorage
+  useSessionStorage : false
 });</pre>
 						The priority of table ID settings is as follows:
 						<ol>
 							<li><code>options.id</code> setting</li>
-							<li>Table data attribute (<code>data-table-group</code> by default) value</li>
-							<li>Table id</li>
-							<li>Index of the table on the page</li>
+							<li>Table data attribute (<code>"data-table-group"</code> by default) value</li>
+							<li><a href="#widget-storage-table-id"><code>widgetOptions.storage_tableId</code></a> option</li>
+							<li>Table id attribute</li>
+							<li>Index of the table (compared to other tables with a "tablesorter" class name) on the page</li>
 						</ol>
 						The priority of table url (group) settings is as follows:
 						<ol>
 							<li><code>options.url</code> setting</li>
-							<li>Table data attribute (<code>data-table-page</code> by default) value</li>
-							<li><a href="#fixedurl"><code>fixedUrl</code></a> option value</li>
+							<li>Table data attribute (<code>"data-table-page"</code> by default) value</li>
+							<li><a href="#widget-storage-fixed-url"><code>widgetOptions.storage_fixedUrl</code></a> option value</li>
+							<li><a href="#fixedurl" class="alert" title="deprecated"><code>config.fixedUrl</code></a> option value</li>
 							<li><code>window.location.pathname</code></li>
 						</ol>
 						<br>
-						The <a href="#fixedurl"><code>fixedUrl</code></a> option allows you to override the current page url (it doesn't need to be a url, just some constant value) and save data for multiple tables across a domain. The value from this option has a lower priority than the <code>options</code> id or group settings (see priority list above).<br>
+						The <a href="#widget-storage-fixed-url"><code>storage_fixedUrl</code></a> widget option allows you to override the current page url (it doesn't need to be a url, just some constant value) and save data for multiple tables across a domain. The value from this option has a lower priority than the <code>options</code> id or group settings (see priority list above).<br>
 						<br>
 						When using the storage utility to <em>get</em> a value <em>and</em> use custom table options, set the <code>value</code> parameter to <code>null</code>.<br>
 						<br>
