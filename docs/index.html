@@ -1887,6 +1887,8 @@ $(function(){
       resizable_widths : [],
       // throttle resizable event (needed for slow browsers)
       resizable_throttle : false,
+      // target the last column for resize (like holding shift-drag)
+      resizable_targetLast: false,
 
       // *** savesort widget ***
       // if false, the sort will not be saved for next page reload
@@ -2256,7 +2258,7 @@ $(function(){
 				<td><a href="#" class="permalink">filter_cellFilter</a></td>
 				<td>String or Array</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to each filter cell (<span class="version">v2.18.0</span>).
+				<td>Filter widget: Additional CSS class applied to each filter cell (<span class="version">v2.18.0</span>).
 					<div class="collapsible"><br>
 						When the filter row is built, each table cell (<code>&lt;td&gt;</code>) will get the class name from this option.
 						<ul>
@@ -2283,7 +2285,7 @@ $(function(){
 				<td><a href="#" class="permalink">filter_cssFilter</a></td>
 				<td>String or Array</td>
 				<td>&quot;&quot;</td>
-				<td>Additional CSS class applied to each filter (<span class="version updated">v2.15</span>).
+				<td>Filter widget: Additional CSS class applied to each filter (<span class="version updated">v2.15</span>).
 					<div class="collapsible"><br>
 						As of v2.15, this option can also contain an array of class names that are to be applied to input filters.<br>
 						<br>
@@ -2357,8 +2359,8 @@ $(function(){
 				<td><a href="#" class="permalink">filter_excludeFilter</a></td>
 				<td>Object</td>
 				<td>{ }</td>
-				<td>Additional CSS class applied to each filter (<span class="version">v2.17.8</span>).
-					Filter widget: Exclude a filter type(s) for a column.
+				<td>Filter widget: Additional CSS class applied to each filter (<span class="version">v2.17.8</span>).
+					Exclude a filter type(s) for a column.
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-excludefilter"><code>filter_excludeFilter</code></a> option as follows:
@@ -3407,12 +3409,27 @@ $('table').trigger('search', false);</pre></div>
 				<td></td>
 			</tr>
 
+			<tr id="resizable-target-last">
+				<td><a href="#" class="permalink">resizable_targetLast</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Resizable widget: When <code>true</code>, the last column will be targetted for resizing (<span class="version">v2.21.3</span>).
+					<div class="collapsible">
+						<p>When <code>true</code>, resizing a column will change the size of the selected column, and the last column, not the selected column's neighbor.</p>
+						<p>When <code>false</code>, resizing a column will move the column border between it's neighbors.</p>
+						<p>Also, in a <em>full width table</em>, if this option is <code>false</code>, the same behavior as when this option is <code>true</code> can be seen when resizing a column while holding down the <kbd>Shift</kbd> key on the keyboard - the last column is resized.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-savesort">
 				<td><a href="#" class="permalink">saveSort</a></td>
 				<td>Boolean</td>
 				<td>true</td>
 				<td>
-					saveSort widget: If this option is set to <code>false</code>, new sorts will not be saved. Any previous saved sort will be restored on page reload (v2.4).
+					SaveSort widget: If this option is set to <code>false</code>, new sorts will not be saved. Any previous saved sort will be restored on page reload (v2.4).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-savesort"><code>&quot;saveSort&quot;</code></a> option to not save the current sort:
@@ -3516,7 +3533,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Array</td>
 				<td>[ &quot;even&quot;, &quot;odd&quot; ]</td>
 				<td>
-					zebra widget: When the zebra striping widget is initialized, it automatically applied the default class names of <code>&quot;even&quot;</code> and <code>&quot;odd&quot;</code>. (Modified v2.1).
+					Zebra widget: When the zebra striping widget is initialized, it automatically applied the default class names of <code>&quot;even&quot;</code> and <code>&quot;odd&quot;</code>. (Modified v2.1).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-zebra"><code>&quot;zebra&quot;</code></a> option to change the theme as follows:
