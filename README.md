@@ -107,6 +107,7 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Resizable:
   * Major overhaul of this widget to now make it compatible with the stickyHeaders widget.
   * Sadly, it still doesn't work properly with the updated scroller widget; it's on my to-do list!
+  * Add a `resizable_targetLast` option to automatically target the last column for resize; instead of needing to hold shift while dragging.
 * Scroller:
   * Added fixed column support! Fixes issues [#135](https://github.com/Mottie/tablesorter/issues/135), [#689](https://github.com/Mottie/tablesorter/issues/689), [#763](https://github.com/Mottie/tablesorter/issues/763) and [https://github.com/Mottie/tablesorter/issues/804](#804).
   * Check out the third table in the [scroller widget demo](http://mottie.github.io/tablesorter/docs/example-widget-scroller.html#group) - change the slider to adjust the number of fixed columns.
