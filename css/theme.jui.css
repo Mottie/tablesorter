@@ -62,7 +62,8 @@
 }
 
 /* hovered row colors */
-.tablesorter-jui tbody > tr:hover td {
+.tablesorter-jui tbody > tr.hover > td,
+.tablesorter-jui tbody > tr:hover > td {
 	opacity: 0.7;
 	filter: alpha(opacity=70);
 }
@@ -94,10 +95,10 @@
 
 /* filter widget */
 .tablesorter-jui .tablesorter-filter-row {
-	background: transparent;
+	background-color: transparent;
 }
 .tablesorter-jui .tablesorter-filter-row td {
-	background: transparent;
+	background-color: transparent;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;

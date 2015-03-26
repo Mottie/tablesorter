@@ -63,6 +63,7 @@
 .tablesorter-bootstrap tr.odd > td {
 	background-color: #f9f9f9;
 }
+.tablesorter-bootstrap tbody > tr.hover > td,
 .tablesorter-bootstrap tbody > .odd:hover > td,
 .tablesorter-bootstrap tbody > .even:hover > td {
 	background-color: #f5f5f5;
@@ -80,14 +81,14 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
 .tablesorter-bootstrap .tablesorter-filter-row input.tablesorter-filter,
 .tablesorter-bootstrap .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
-	margin: 0 auto;
+	margin: 0;
 	padding: 4px 6px;
 	background-color: #fff;
 	color: #333;
@@ -100,14 +101,14 @@ caption {
 	transition: height 0.1s ease;
 }
 .tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter.disabled {
-	background: #eee;
+	background-color: #eee;
 	cursor: not-allowed;
 }
 .tablesorter-bootstrap .tablesorter-filter-row {
-	background: #eee;
+	background-color: #eee;
 }
 .tablesorter-bootstrap .tablesorter-filter-row td {
-	background: #eee;
+	background-color: #eee;
 	line-height: normal;
 	text-align: center;
 	padding: 4px 6px;

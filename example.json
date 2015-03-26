@@ -1,4 +1,5 @@
 {
   "widgets" : "filter stickyHeaders uitheme",
-  "includeDependencies" : false
+  "includeDependencies" : false,
+  "destFileName" : "jquery.tablesorter.custom-widgets.js"
 }

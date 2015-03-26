@@ -53,6 +53,7 @@
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
 	background-color: #f9f9f9;
 }
+.tablesorter-bootstrap > tbody > tr.hover > td,
 .tablesorter-bootstrap > tbody > tr.odd:hover > td,
 .tablesorter-bootstrap > tbody > tr.even:hover > td,
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
@@ -73,14 +74,14 @@
 
 /* caption */
 .caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
 .tablesorter-bootstrap .tablesorter-filter-row input.tablesorter-filter,
 .tablesorter-bootstrap .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
-	margin: 0 auto;
+	margin: 0;
 	padding: 4px 6px;
 	color: #333;
 	-webkit-box-sizing: border-box;
@@ -102,10 +103,10 @@
 	transition: height 0.1s ease;
 }
 .tablesorter-bootstrap .tablesorter-filter-row {
-	background: #efefef;
+	background-color: #efefef;
 }
 .tablesorter-bootstrap .tablesorter-filter-row td {
-	background: #efefef;
+	background-color: #efefef;
 	line-height: normal;
 	text-align: center;
 	padding: 4px 6px;

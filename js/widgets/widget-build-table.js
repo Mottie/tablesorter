@@ -1,4 +1,5 @@
-/*! Build Table widget for tableSorter v2.16.0; updated 2/7/2015 (v2.19.0)
+/*! Widget: Build Table - updated 3/26/2015 (v2.21.3) *//*
+ * for tableSorter v2.16.0+
  * by Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -12,7 +13,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 	// data.rows contains an array of rows which contains an array of cells
 	bt = ts.buildTable = function(tar, c){
 		// add table if one doesn't exist
-		var $tbl = tar.tagName === 'TABLE' ? $(tar) : $('<table>').appendTo(tar),
+		var $tbl = tar.nodeName === 'TABLE' ? $(tar) : $('<table>').appendTo(tar),
 			table = $tbl[0],
 			wo = c.widgetOptions = $.extend( true, {}, bt.defaults, c.widgetOptions ),
 			p = wo.build_processing,

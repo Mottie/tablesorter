@@ -1,5 +1,5 @@
 /*!
- * custom pager controls (beta) for TableSorter 9/15/2014 (v2.17.8)
+ * custom pager controls (beta) for TableSorter 9/15/2014 (v2.17.8) - updated 3/26/2015 (v2.21.3)
   initialize custom pager script BEFORE initializing tablesorter/tablesorter pager
   custom pager looks like this:
   1 | 2 … 5 | 6 | 7 … 99 | 100
@@ -88,7 +88,7 @@ $.tablesorter.customPagerControls = function(settings) {
 	if (options.addKeyboard) {
 		$(document).on('keydown', function(events){
 			// ignore arrows inside form elements
-			if (/input|select|textarea/i.test(events.target.tagName)) { return; }
+			if (/input|select|textarea/i.test(events.target.nodeName)) { return; }
 			if (events.which === 37) {
 				// left
 				$pager.find(options.currentPage).filter('.' + options.currentClass).prevAll(':not(span):first').click();

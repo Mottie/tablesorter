@@ -1,5 +1,5 @@
-/*! input & select parsers for jQuery 1.7+ & tablesorter 2.7.11+
- * Updated 3/5/2015 (v2.21.0)
+/*! parser: input & select - updated 3/26/2015 (v2.21.3) *//*
+ * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
@@ -111,7 +111,7 @@
 			// bind to .tablesorter (default class name)
 			$(this).children('tbody')
 			.on('mouseleave', function(e){
-				restoreValue(e.target.tagName === 'TBODY');
+				restoreValue(e.target.nodeName === 'TBODY');
 			})
 			.on('focus', 'select, input, textarea', function(){
 				$(this).data('ts-original-value', this.value);
@@ -129,7 +129,7 @@
 				}
 				// Update cell cache using... select: change, input: enter or textarea: alt + enter
 				if ( ( e.type === 'change' ) ||
-					( e.type === 'keyup' && e.which === 13 && ( e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' && e.altKey ) ) ) {
+					( e.type === 'keyup' && e.which === 13 && ( e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA' && e.altKey ) ) ) {
 					var undef,
 						$tar = $(e.target),
 						$cell = $tar.closest('td'),

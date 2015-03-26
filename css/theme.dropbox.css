@@ -96,6 +96,7 @@
 }
 
 /* hovered row colors */
+.tablesorter-dropbox tbody > tr.hover > td,
 .tablesorter-dropbox tbody > tr:hover > td,
 .tablesorter-dropbox tbody > tr.even:hover > td,
 .tablesorter-dropbox tbody > tr.odd:hover > td {
@@ -140,15 +141,15 @@
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* Filter Widget */
 .tablesorter-dropbox .tablesorter-filter-row {
-	background: #fff;
+	background-color: #fff;
 }
 .tablesorter-dropbox .tablesorter-filter-row td {
-	background: #fff;
+	background-color: #fff;
 	line-height: normal;
 	text-align: center; /* center the input */
 	-webkit-transition: line-height 0.1s ease;
@@ -190,8 +191,7 @@ caption {
 .tablesorter-dropbox select.tablesorter-filter {
 	width: 98%;
 	height: auto;
-	margin: 4px;
-
+	margin: 0;
 	background-color: #fff;
 	border: 1px solid #bbb;
 	color: #333;

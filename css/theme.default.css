@@ -70,10 +70,11 @@ Default Theme
 }
 
 /* hovered row colors */
+.tablesorter-default tbody > tr.hover > td,
 .tablesorter-default tbody > tr:hover > td,
 .tablesorter-default tbody > tr.even:hover > td,
 .tablesorter-default tbody > tr.odd:hover > td {
-	background: #fff;
+	background-color: #fff;
 	color: #000;
 }
 
@@ -118,15 +119,15 @@ Default Theme
 
 /* caption */
 caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
 .tablesorter-default .tablesorter-filter-row {
-	background: #eee;
+	background-color: #eee;
 }
 .tablesorter-default .tablesorter-filter-row td {
-	background: #eee;
+	background-color: #eee;
 	border-bottom: #ccc 1px solid;
 	line-height: normal;
 	text-align: center; /* center the input */
@@ -167,7 +168,7 @@ caption {
 .tablesorter-default select.tablesorter-filter {
 	width: 95%;
 	height: auto;
-	margin: 4px;
+	margin: 4px auto;
 	padding: 4px;
 	background-color: #fff;
 	border: 1px solid #bbb;

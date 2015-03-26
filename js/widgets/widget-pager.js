@@ -1,4 +1,7 @@
-/* Pager widget for TableSorter 3/5/2015 (v2.21.0) - requires jQuery 1.7+ */
+/*! Widget: Pager - updated 3/26/2015 (v2.21.3) */
+/* Requires tablesorter v2.8+ and jQuery 1.7+
+ * by Rob Garrison
+ */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -143,7 +146,7 @@ tsp = ts.pager = {
 				setSize: wo.pager_size,
 				setPage: wo.pager_startPage,
 				events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
-					'pageSize pageSet pageAndSize pagerUpdate '
+					'pageSize pageSet pageAndSize pagerUpdate refreshComplete '
 			}, c.pager);
 
 		// pager initializes multiple times before table has completed initialization
@@ -296,9 +299,12 @@ tsp = ts.pager = {
 			})
 			.on('pageSet.pager pagerUpdate.pager', function(e,v){
 				e.stopPropagation();
-				p.page = (parseInt(v, 10) || 1) - 1;
 				// force pager refresh
-				if (e.type === 'pagerUpdate') { p.last.page = true; }
+				if (e.type === 'pagerUpdate') {
+					v = typeof v === 'undefined' ? p.page + 1 : v;
+					p.last.page = true;
+				}
+				p.page = (parseInt(v, 10) || 1) - 1;
 				tsp.moveToPage(table, p, true);
 				tsp.updatePageDisplay(table, c, false);
 			})
@@ -454,7 +460,7 @@ tsp = ts.pager = {
 				p.$goto.html(t).val( p.page + 1 );
 			}
 			if ($out.length) {
-				$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+				$out[ ($out[0].nodeName === 'INPUT') ? 'val' : 'html' ](s);
 				// rebind startRow/page inputs
 				$out.find('.ts-startRow, .ts-page').off('change.pager').on('change.pager', function(){
 					var v = $(this).val(),

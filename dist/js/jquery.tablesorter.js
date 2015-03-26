@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.21.2 *//*
+/*! TableSorter (FORK) v2.21.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 
 			var ts = this;
 
-			ts.version = '2.21.2';
+			ts.version = '2.21.3';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -559,7 +559,9 @@
 					cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
 					aria = ['ascending', 'descending'],
 					// find the footer
-					$t = $(table).find('tfoot tr').children().add(c.$extraHeaders).removeClass(css.join(' '));
+					$t = $(table).find('tfoot tr').children()
+						.add( $( c.namespace + '_extra_headers' ) )
+						.removeClass( css.join( ' ' ) );
 				// remove all header information
 				c.$headers
 					.removeClass(css.join(' '))
@@ -1067,7 +1069,7 @@
 						// save initial settings
 						c.originalSettings = settings;
 					// create a table from data (build table widget)
-					if (!table.hasInitialized && ts.buildTable && this.tagName !== 'TABLE') {
+					if (!table.hasInitialized && ts.buildTable && this.nodeName !== 'TABLE') {
 						// return the table (in case the original target is the table's container)
 						ts.buildTable(table, c);
 					} else {
@@ -1334,34 +1336,42 @@
 
 			ts.bindEvents = function(table, $headers, core){
 				table = $(table)[0];
-				var downTime,
+				var t, downTarget = null,
 					c = table.config;
 				if (core !== true) {
-					c.$extraHeaders = c.$extraHeaders ? c.$extraHeaders.add($headers) : $headers;
+					$headers.addClass( c.namespace.slice(1) + '_extra_headers' );
+					t = $.fn.closest ? $headers.closest('table')[0] : $headers.parents('table')[0];
+					if (t && t.nodeName === 'TABLE' && t !== table) {
+						$(t).addClass( c.namespace.slice(1) + '_extra_table' );
+					}
 				}
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind( ('mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
-				.bind( 'mousedown mouseup sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
+				.unbind( ('mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
+				.bind( 'mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
 					var cell,
 						$target = $(e.target),
 						type = e.type;
-					// only recognize left clicks or enter
-					if ( ((e.which || e.button) !== 1 && !/sort|keyup/.test(type)) || (type === 'keyup' && e.which !== 13) ) {
+					// only recognize left clicks
+					if ( ( ( e.which || e.button ) !== 1 && !/sort|keyup|click/.test(type) ) ||
+						// allow pressing enter
+						( type === 'keyup' && e.which !== 13 ) ||
+						// allow triggering a click event (e.which is undefined) & ignore physical clicks
+						( type === 'click' && typeof e.which !== 'undefined' ) ) {
 						return;
 					}
-					// ignore long clicks (prevents resizable widget from initializing a sort)
-					if (type === 'mouseup' && external !== true && (new Date().getTime() - downTime > 250)) { return; }
+					// ignore mouseup if mousedown wasn't on the same target
+					if ( type === 'mouseup' && downTarget !== e.target && external !== true ) { return; }
 					// set timer on mousedown
-					if (type === 'mousedown') {
-						downTime = new Date().getTime();
+					if ( type === 'mousedown' ) {
+						downTarget = e.target;
 						return;
 					}
-					cell = $.fn.closest ? $target.closest('td,th') : $target.parents('td,th').filter(':first');
+					downTarget = null;
 					// prevent sort being triggered on form elements
-					if ( /(input|select|button|textarea)/i.test(e.target.tagName) ||
+					if ( /(input|select|button|textarea)/i.test(e.target.nodeName) ||
 						// nosort class name, or elements within a nosort container
 						$target.hasClass(c.cssNoSort) || $target.parents('.' + c.cssNoSort).length > 0 ||
 						// elements within a button
@@ -1370,7 +1380,7 @@
 					}
 					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
-					cell = $.fn.closest ? $(this).closest('th, td')[0] : /TH|TD/.test(this.tagName) ? this : $(this).parents('th, td')[0];
+					cell = $.fn.closest ? $(this).closest('th, td')[0] : /TH|TD/.test(this.nodeName) ? this : $(this).parents('th, td')[0];
 					// reference original table headers and find the same cell
 					cell = c.$headers[ $headers.index( cell ) ];
 					if (!cell.sortDisabled) {
@@ -2048,8 +2058,8 @@
 		priority: 90,
 		format: function(table, c, wo) {
 			var $tb, $tv, $tr, row, even, time, k,
-			child = new RegExp(c.cssChildRow, 'i'),
-			b = c.$tbodies;
+				child = new RegExp(c.cssChildRow, 'i'),
+				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
 			if (c.debug) {
 				time = new Date();
 			}

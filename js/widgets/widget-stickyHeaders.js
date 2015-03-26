@@ -1,4 +1,4 @@
-/*! Widget: stickyHeaders - updated 3/5/2015 (v2.21.0) *//*
+/*! Widget: stickyHeaders - updated 3/26/2015 (v2.21.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -95,7 +95,7 @@ ts.addWidget({
 			nestedStickyTop = $nestedSticky.length ? $nestedSticky.height() : 0,
 			// clone table, then wrap to make sticky header
 			$stickyTable = wo.$sticky = $table.clone()
-				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders)
+				.addClass('containsStickyHeaders ' + ts.css.sticky + ' ' + wo.stickyHeaders + ' ' + c.namespace.slice(1) + '_extra_table' )
 				.wrap('<div class="' + ts.css.stickyWrap + '">'),
 			$stickyWrap = $stickyTable.parent()
 				.addClass(ts.css.stickyHide)
@@ -153,13 +153,6 @@ ts.addWidget({
 		if ($attach.length && !$attach.css('position')) {
 			$attach.css('position', 'relative');
 		}
-		// save stickyTable element to config
-		// it is also saved to wo.$sticky
-		if (c.$extraTables && c.$extraTables.length) {
-			c.$extraTables.add($stickyTable);
-		} else {
-			c.$extraTables = $stickyTable;
-		}
 		// fix clone ID, if it exists - fixes #271
 		if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 		// clear out cloned table, except for sticky header
@@ -179,7 +172,7 @@ ts.addWidget({
 				resizeHeader();
 			});
 
-		ts.bindEvents(table, $stickyThead.children().children('.tablesorter-header'));
+		ts.bindEvents(table, $stickyThead.children().children('.' + ts.css.header));
 
 		// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
 		$table.after( $stickyWrap );

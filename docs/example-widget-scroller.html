@@ -5,7 +5,7 @@
 	<title>jQuery plugin: Tablesorter 2.0 - Scroller Widget</title>
 
 	<!-- jQuery -->
-	<script src="js/jquery-1.4.4.min.js"></script>
+	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
 	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
@@ -33,6 +33,13 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-scroller.js"></script>
 
+	<style id="css">#fixed-columns-table tbody td {
+	/* force "Notes" column to not wrap, so we get a horizontal scrolling demo! (optional css) */
+	white-space: nowrap;
+	/* Add min column width, or "Index" column filter gets too narrow to use (optional css) */
+	min-width: 60px;
+}</style>
+
 	<script id="js">$(function(){
 
 	$('.tablesorter').tablesorter({
@@ -55,6 +62,33 @@
 		}
 	});
 
+	$('#fixed-columns-table').tablesorter({
+		theme: 'jui',
+		showProcessing: true,
+		headerTemplate : '{content} {icon}',
+		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
+		widgetOptions : {
+			scroller_height : 300,
+			scroller_fixedColumns : 2,
+			scroller_rowHighlight : 'hover'
+		}
+	});
+
+	// use jQuery UI slider to change the fixed column size
+	$( '#slider' ).slider({
+		value : 2,
+		min   : 0,
+		max   : 4,
+		step  : 1,
+		slide : function( event, ui ) {
+			// page indicator
+			$( '.fixed-columns' ).text( ui.value );
+			// method to update the fixed column size
+			$( '#fixed-columns-table').trigger( 'setFixedColumnSize', ui.value );
+		}
+	});
+
+
 });</script>
 <script>
 $(function() {
@@ -65,8 +99,6 @@ $(function() {
 		widthFixed: true,
 		widgets: ['uitheme','stickyHeaders']
 	});
-
-	$('link.theme').each(function(){ this.disabled = true; });
 
 	var $tbl,
 		$jth = $('#jth'),
@@ -81,18 +113,10 @@ $(function() {
 		.append(o)
 		.val('jui')
 		.change(function(){
-			var theme = $(this).val().toLowerCase(),
-				name = theme === 'jui' ? 'ui-theme' : theme,
-				// ui-theme is added by the themeswitcher
-				files = $('link.theme').each(function(){
-					this.disabled = true;
-				});
-			files.filter('.' + name).each(function(){
-				this.disabled = false;
-			});
+			var theme = $(this).val().toLowerCase();
 
 			// refresh uitheme widget class names
-			$('.tablesorter').each(function(){
+			$('#main .tablesorter').each(function(){
 				if (this.config) {
 					this.config.theme = theme === 'black-ice' ? 'blackice' : theme;
 				}
@@ -142,6 +166,24 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.21.3</span>
+					<ul>
+						<li><span class="label warning">* NOTE *</span> Prior to v2.21.3, this widget would work with jQuery v1.4.4+, now if requires <em>jQuery v1.7+</em>.</li>
+						<li>The scroller widget was almost completely rewritten! The functionality is the same, but it now allows the adding of fixed columns!</li>
+						<li>Added <code>scroller_fixedColumns</code> which allows setting the number of fixed columns to add to the scroller (see options section for more details).</li>
+						<li>Added <code>scroller_rowHighlight</code> which adds a hover highlight class name to the row in both the fixed column and main table (see options section for more details).</li>
+						<li>Note:
+							<ul>
+								<li>Yes, there are some alignment & padding issues when using the <em>jQuery UI theme</em> with a fixed column, I'll look into resolving this; all other themes are nearly pixel perfect.</li>
+								<li>The fixed column widget includes extra css to prevent tbody cell content from wrapping (see the css code below); it was for demo purposes only, it is not a requirement.</li>
+								<li>This update does not include optimizations to allow this widget to work with very large tables; so please be conscious of this fact.</li>
+								<li>A lot of Firefox tweaks were needed to make it work! I need to investigate why the mousewheel scrolling is so slow (at least in Firefox for Windows) when a fixed column is included.</li>
+								<li>There were lots of other tweaks to the core and other widgets (e.g. zebra & filter widgets) to get these changes to work seamlessly, so please make sure to update everything!</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+
 				<li>In <span class="version">v2.21.1</span>, columns now line up, especially while scrolling horizontally. It may not be pixel perfect, but it looks pretty good if table css "box-sizing" is set to "border-box".</li>
 				<li>In <span class="version">v2.21.0</span>
 					<ul>
@@ -171,11 +213,11 @@ $(function() {
 
 		<h3><a href="#">Options</a></h3>
 		<div>
-			<h4>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<h4>Scroller widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
 			<div>
 				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
-			<table class="options tablesorter-jui" data-sortlist="[[0,0]]">
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
 				<thead>
 					<tr><th>Option</th><th class="defaults">Default</th><th class="sorter-false">Description</th></tr>
 				</thead>
@@ -200,17 +242,6 @@ $(function() {
 						</td>
 					</tr>
 
-					<tr id="scroller-id-prefix">
-						<td><a href="#" class="permalink alert">scroller_idPrefix</a></td>
-						<td>"s_"</td>
-						<td>This option contains a prefix string which is added to a random number (<span class="alert">Removed</span>).
-							<div class="collapsible">
-							<br>
-							This option was been completely removed in <span class="version alert">v2.18.0</span> as the id is now obtained from the unique namespace.
-							</div>
-						</td>
-					</tr>
-
 					<tr id="scroller-up-after-sort">
 						<td><a href="#" class="permalink">scroller_upAfterSort</a></td>
 						<td>true</td>
@@ -227,19 +258,79 @@ $(function() {
 					<tr id="scroller-jump-to-header">
 						<td><a href="#" class="permalink">scroller_jumpToHeader</a></td>
 						<td>true</td>
-						<td>
+						<td>Bring the header into view while scrolling.
 							<div class="collapsible">
-							<br>
-							When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.<br>
-							<br>
-							<span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em>
+							<p>When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.</p>
+							<p><span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em></p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="scroller-fixed-columns">
+						<td><a href="#" class="permalink">scroller_fixedColumns</a></td>
+						<td>0</td>
+						<td>This allows setting the number of fixed columns to add to the scroller (<span class="version">v2.21.3</span>).
+							<div class="collapsible">
+							<p>It's not 100% pixel-perfect in alignment, especially not with a jQuery UI theme, but it looks good with the other themes.</p>
+							<p>If the content is set a RTL direction, add a class name of <code>tablesorter-scroller-rtl</code> (name set in <code>$.tablesorter.css.scrollerRtl</code>) to the table to align the fixed header on the right.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="scroller-row-highlight">
+						<td><a href="#" class="permalink">scroller_rowHighlight</a></td>
+						<td>"hover"</td>
+						<td>Set this to a class name to use when hovering over a fixed column row (<span class="version">v2.21.3</span>).
+							<div class="collapsible">
+							<p>This option adds a hover highlight class name to the hovered row in both the fixed column and main table to ensure the hover highlight shows up in both areas.</p>
+							<p>If this highlighting causes unnecessary lag, it can be disabled by setting this option to an empty string.</p>
+							<p>All current themes have been updated to use this class name for row highlighting; adjust any custom themes as necessary.</p>
 							</div>
 						</td>
 					</tr>
 
 				</tbody>
+
+				<tbody class="tablesorter-infoOnly">
+					<tr><th colspan="5">Deprecated/Removed Options</th></tr>
+				</tbody>
+
+				<tbody>
+					<tr id="scroller-id-prefix">
+						<td><a href="#" class="permalink alert">scroller_idPrefix</a></td>
+						<td>"s_"</td>
+						<td>This option contains a prefix string which is added to a random number (<span class="label alert">Removed</span>).
+							<div class="collapsible">
+							<br>
+							This option was been completely removed in <span class="version alert">v2.18.0</span> as the id is now obtained from the unique namespace.
+							</div>
+						</td>
+					</tr>
+				</tbody>
+
 			</table>
 		</div>
+
+		<h3><a href="#">Methods</a></h3>
+		<div>
+			<h3>Change Fixed Column Size Dynamically</h3>
+			<blockquote>
+				Set the number of fixed columns on <em>any</em> table with a scroller widget applied as follows:
+				<pre class="prettyprint lang-js">$( 'table' ).trigger( 'setFixedColumnSize', size );</pre>
+				<p>Where <code>size</code> is a value between zero and one less than the total number of columns.</p>
+				If <code>size</code> is:
+				<ul>
+					<li>A non-integer, it will be rounded down.</li>
+					<li>Zero or less, no fixed columns will be applied.</li>
+					<li>Undefined, the current number of fixed columns will be refreshed.</li>
+				</ul>
+			</blockquote>
+		</div>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
 	</div>
 
 	<h1>Javascript</h1>
@@ -258,7 +349,7 @@ $(function() {
 	<button type="button">Toggle</button> scroller_upAfterSort  : <span id="uas">true</span>
 	<p></p>
 
-	<table class="tablesorter">
+	<table id="scroller1" class="tablesorter">
 	<thead>
 		<tr>
 			<th class="name">Name</th>
@@ -352,7 +443,100 @@ $(function() {
 	</table>
 	</div>
 
-	<div class="spacer"></div>
+	<h4>
+		Fixed Column Demo<br>
+		<small>(Shrink the browser window if the horizontal scrollbar is not visible)</small>
+	</h4>
+
+	<div id="group">
+	Set number of fixed columns: <span class="fixed-columns">2</span> <div id="slider"></div>
+	</div>
+	<br>
+
+	<table id="fixed-columns-table">
+		<thead>
+			<tr>
+				<th>Index</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>ID</th>
+				<th>Address</th>
+				<th>State</th>
+				<th>Zip</th>
+				<th>Telephone</th>
+				<th>Email</th>
+				<th>Notes</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Index</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>ID</th>
+				<th>Address</th>
+				<th>State</th>
+				<th>Zip</th>
+				<th>Telephone</th>
+				<th>Email</th>
+				<th>Notes</th>
+			</tr>
+		</tfoot>
+		<tbody>
+			<tr><td>1</td><td>Sherry</td><td>Mills</td><td>223</td><td>3792 Sit Rd</td><td>NE</td><td>69836</td><td>(627) 124-8760</td><td>DRamirez@massa.ly</td><td>sagittis amet mattis facilisis vitae molestie nec dolor id sed</td></tr>
+			<tr><td>2</td><td>Markella</td><td>Lessenberry</td><td>895</td><td>5979 Sit Ln</td><td>VA</td><td>97761</td><td>(768) 233-5399</td><td>SPeltier@pulvinar.net</td><td>elementum nullam lacus elit magna libero sed dolor pulvinar orci</td></tr>
+			<tr><td>3</td><td>Lee</td><td>Trenkelbach</td><td>719</td><td>5656 Adipiscing Ave</td><td>ID</td><td>30972</td><td>(149) 293-0691</td><td>LSheppard@lectus.net</td><td>vestibulum at rutrum molestie convallis vestibulum nec egestas consequat vitae</td></tr>
+			<tr><td>4</td><td>Sherrye</td><td>Llc</td><td>908</td><td>2348 Pharetra St</td><td>UT</td><td>50740</td><td>(772) 682-4268</td><td>MAltar@turpis.io</td><td>sit elit consequat amet elit consectetur vestibulum vel quis consequat</td></tr>
+			<tr><td>5</td><td>Juanito</td><td>Lindall</td><td>534</td><td>5181 Lacus Ln</td><td>ID</td><td>71689</td><td>(528) 174-6999</td><td>CKeen@augue.ly</td><td>dui porttitor vestibulum mattis ipsum nunc et morbi dolor ipsum</td></tr>
+			<tr><td>6</td><td>Andre</td><td>Fuller</td><td>716</td><td>8224 Pulvinar Ave</td><td>WY</td><td>12382</td><td>(654) 593-0007</td><td>AMelvin@sed.net</td><td>dolor curabitur nec molestie lacus odio id velit sed neque</td></tr>
+			<tr><td>7</td><td>Sajid</td><td>Cattanach</td><td>997</td><td>3762 Ac Rd</td><td>WA</td><td>16719</td><td>(425) 909-2771</td><td>BMaas@ac.org</td><td>morbi tincidunt ac sollicitudin nec ac orci vitae donec non</td></tr>
+			<tr><td>8</td><td>Heidi</td><td>Rush</td><td>738</td><td>1425 Porta Rd</td><td>SD</td><td>14708</td><td>(341) 095-7183</td><td>DSchrag@sapien.net</td><td>nullam sed aliquam turpis et sagittis libero sed tellus dui</td></tr>
+			<tr><td>9</td><td>Ganesh</td><td>Comeau</td><td>385</td><td>2641 Hendrerit Dr</td><td>MT</td><td>66612</td><td>(201) 977-9765</td><td>SBurks@ipsum.ly</td><td>sit vestibulum ac pretium eget augue sit augue sagittis tellus</td></tr>
+			<tr><td>10</td><td>Regine</td><td>Marina</td><td>479</td><td>6204 Ac Rd</td><td>WI</td><td>55667</td><td>(824) 223-9924</td><td>VPeschke@pharetra.org</td><td>amet fringilla vitae tortor vestibulum egestas eget eget amet sed</td></tr>
+			<tr><td>11</td><td>Wichaya</td><td>Thomas</td><td>487</td><td>861 Risus Dr</td><td>KY</td><td>63224</td><td>(599) 823-8970</td><td>BMohamed@adipiscing.ly</td><td>placerat dolor pulvinar nec morbi amet porta sagittis lacus magna</td></tr>
+			<tr><td>12</td><td>Douglass</td><td>Holliday</td><td>488</td><td>8829 Sit Ave</td><td>IA</td><td>86970</td><td>(113) 897-8276</td><td>CLieb@convallis.io</td><td>dolor magna id amet lorem eros ipsum magna non aliquam</td></tr>
+			<tr><td>13</td><td>Prince</td><td>Schwartzberg</td><td>790</td><td>1757 Sit Ct</td><td>IL</td><td>94739</td><td>(299) 471-3039</td><td>DFavus@quis.org</td><td>magna tincidunt ipsum hendrerit ac vitae tortor consequat magna elit</td></tr>
+			<tr><td>14</td><td>Lola</td><td>Hensley</td><td>486</td><td>8159 Dui Rd</td><td>MN</td><td>88877</td><td>(788) 031-7392</td><td>MBradley@scelerisque.org</td><td>suspendisse donec placerat nec suspendisse lacus ipsum elementum at lorem</td></tr>
+			<tr><td>15</td><td>Dainius</td><td>Finn</td><td>355</td><td>6072 Massa Dr</td><td>VT</td><td>75787</td><td>(638) 345-2650</td><td>MWilcox@velit.ly</td><td>morbi pretium dui dolor elit sed non vestibulum sit dui</td></tr>
+			<tr><td>16</td><td>Aisha</td><td>Schuhmann</td><td>328</td><td>9709 Sagittis Ln</td><td>ND</td><td>44161</td><td>(147) 281-5251</td><td>GDech@mi.com</td><td>massa sed placerat libero egestas at massa sagittis libero orci</td></tr>
+			<tr><td>17</td><td>Maria</td><td>Peacock</td><td>269</td><td>2241 Amet Ave</td><td>MO</td><td>81339</td><td>(656) 079-5964</td><td>POliva@tincidunt.org</td><td>ac hendrerit molestie ipsum facilisis massa odio fringilla hendrerit neque</td></tr>
+			<tr><td>18</td><td>Otilia</td><td>Denbesten</td><td>778</td><td>1965 Nunc Ct</td><td>SC</td><td>98692</td><td>(985) 745-0452</td><td>SWieber@porttitor.net</td><td>aliquam orci odio id ac magna magna aenean sagittis lectus</td></tr>
+			<tr><td>19</td><td>Jian</td><td>Sanchez</td><td>796</td><td>6439 Sit Ln</td><td>OR</td><td>24879</td><td>(168) 754-6725</td><td>AVrtis@porttitor.net</td><td>sapien ipsum nullam pretium quis tincidunt tincidunt sit mattis porttitor</td></tr>
+			<tr><td>20</td><td>Tanny</td><td>Wieland</td><td>814</td><td>7331 Et Rd</td><td>SD</td><td>65216</td><td>(414) 322-1606</td><td>ACasariego@et.org</td><td>odio augue in id lacus tincidunt morbi tempor orci tincidunt</td></tr>
+			<tr><td>21</td><td>Alejandro</td><td>Sidaway</td><td>995</td><td>8125 Placerat Rd</td><td>VA</td><td>98301</td><td>(202) 112-1194</td><td>RHaag@nullam.ly</td><td>lacus aliquam et sagittis etiam aenean lorem ipsum non facilisis</td></tr>
+			<tr><td>22</td><td>Yolanda</td><td>Swanson</td><td>530</td><td>276 Amet Ct</td><td>VT</td><td>42999</td><td>(621) 796-4436</td><td>TDenard@lectus.gov</td><td>lacus vitae quis dui orci ipsum odio pulvinar et nunc</td></tr>
+			<tr><td>23</td><td>Azra</td><td>Filleul</td><td>443</td><td>499 Sagittis Dr</td><td>OK</td><td>59700</td><td>(485) 530-0532</td><td>LSwetland@consectetur.net</td><td>magna mattis sollicitudin placerat vel facilisis sed ac non et</td></tr>
+			<tr><td>24</td><td>Cassandra</td><td>Labrucherie</td><td>606</td><td>6849 Tellus Ct</td><td>SC</td><td>44245</td><td>(960) 044-9381</td><td>WLafave@lectus.io</td><td>ac nullam magna ante sapien tellus tincidunt eros magna sagittis</td></tr>
+			<tr><td>25</td><td>Theodore</td><td>Saver</td><td>150</td><td>5 Tincidunt Ave</td><td>IL</td><td>58210</td><td>(152) 001-4978</td><td>KTorres@sed.io</td><td>ac tincidunt nec rutrum pulvinar id aliquam placerat pharetra placerat</td></tr>
+			<tr><td>26</td><td>Susi</td><td>Murphy</td><td>900</td><td>1614 Hendrerit St</td><td>AZ</td><td>80212</td><td>(532) 030-5050</td><td>ZRingling@sit.io</td><td>quis odio et sapien sit amet eros et augue turpis</td></tr>
+			<tr><td>27</td><td>Corazon</td><td>Lawrence</td><td>577</td><td>3571 Facilisis Rd</td><td>CA</td><td>35195</td><td>(318) 200-2692</td><td>REckhart@scelerisque.io</td><td>tincidunt sit dolor mi donec magna massa vel suspendisse placerat</td></tr>
+			<tr><td>28</td><td>Khosrow</td><td>Fisher</td><td>802</td><td>4323 Tortor Ln</td><td>AK</td><td>38949</td><td>(493) 277-9670</td><td>FHarmati@magna.ly</td><td>lectus tortor ac ipsum sagittis lacus dolor ac fringilla nec</td></tr>
+			<tr><td>29</td><td>Melgema</td><td>Lopez</td><td>893</td><td>1738 Vestibulum Ln</td><td>MS</td><td>32638</td><td>(953) 255-2707</td><td>ABurgin@tortor.ly</td><td>molestie at vel at placerat pharetra consequat dolor nunc placerat</td></tr>
+			<tr><td>30</td><td>Chun</td><td>Lester</td><td>928</td><td>9681 Vestibulum Ct</td><td>ND</td><td>21333</td><td>(474) 719-0476</td><td>ETierney@pulvinar.gov</td><td>vestibulum ipsum tincidunt placerat eros turpis morbi ipsum sit malesuada</td></tr>
+			<tr><td>31</td><td>Dwayne</td><td>Balasubramanian</td><td>418</td><td>3129 Pharetra Dr</td><td>SD</td><td>57558</td><td>(457) 589-4620</td><td>ESyner@aenean.com</td><td>amet sit nec amet lectus augue consequat consectetur vel sed</td></tr>
+			<tr><td>32</td><td>Joshua</td><td>Williamson</td><td>702</td><td>6313 Vestibulum St</td><td>NJ</td><td>39057</td><td>(346) 084-7444</td><td>VFeldman@elit.ly</td><td>sit tempor at lacus libero lorem sit nullam tempor aliquam</td></tr>
+			<tr><td>33</td><td>Shawn</td><td>Dartmann</td><td>124</td><td>4892 Aliquam Rd</td><td>IA</td><td>17745</td><td>(500) 390-3779</td><td>RNesbitt@massa.net</td><td>sit sapien magna libero augue consectetur fringilla orci ac tortor</td></tr>
+			<tr><td>34</td><td>Rupa</td><td>Helgren</td><td>594</td><td>5944 Sed Ave</td><td>CO</td><td>96680</td><td>(174) 841-4348</td><td>FShebish@morbi.net</td><td>at elementum neque ac in consequat elementum magna vitae mattis</td></tr>
+			<tr><td>35</td><td>Gia</td><td>Marks</td><td>635</td><td>2519 Convallis Dr</td><td>GA</td><td>66324</td><td>(188) 657-9140</td><td>SForsyth@adipiscing.gov</td><td>pharetra pulvinar amet dui elementum suspendisse et odio tellus amet</td></tr>
+			<tr><td>36</td><td>Tyetha</td><td>Ahn</td><td>543</td><td>9900 Eros Ct</td><td>PA</td><td>53390</td><td>(482) 686-6141</td><td>LHobbs@non.io</td><td>pulvinar lorem quis fringilla eget velit sed augue rutrum augue</td></tr>
+			<tr><td>37</td><td>Gregory</td><td>Christine</td><td>527</td><td>751 Ipsum Rd</td><td>AK</td><td>44543</td><td>(258) 666-2073</td><td>HCrooker@donec.com</td><td>massa vitae dolor sollicitudin consectetur sollicitudin malesuada massa velit egestas</td></tr>
+			<tr><td>38</td><td>Yelena</td><td>Shanoski</td><td>646</td><td>1612 Donec Ave</td><td>KY</td><td>30729</td><td>(905) 301-3407</td><td>JMcmenamin@massa.gov</td><td>sapien rutrum adipiscing et sed sollicitudin vestibulum pharetra at neque</td></tr>
+			<tr><td>39</td><td>Thursday</td><td>Helm</td><td>666</td><td>5568 Nec Rd</td><td>NE</td><td>94390</td><td>(487) 403-7019</td><td>RMorin@sed.org</td><td>risus hendrerit sollicitudin vestibulum placerat lorem eros consequat lorem magna</td></tr>
+			<tr><td>40</td><td>Melinda</td><td>Oliva</td><td>525</td><td>6973 Rutrum Ct</td><td>IA</td><td>38519</td><td>(964) 234-5172</td><td>FStephens@in.com</td><td>dolor lacus nec odio in etiam facilisis lorem ipsum et</td></tr>
+			<tr><td>41</td><td>Latasha</td><td>Slocum</td><td>210</td><td>8374 Fringilla St</td><td>NV</td><td>23913</td><td>(678) 453-4263</td><td>JWelchert@id.gov</td><td>donec massa dolor elementum scelerisque risus lacus id lorem in</td></tr>
+			<tr><td>42</td><td>Kenneth</td><td>Zazzara</td><td>269</td><td>3364 Tempor Dr</td><td>MO</td><td>30642</td><td>(874) 633-3017</td><td>TGarayan@tincidunt.ly</td><td>sollicitudin nullam egestas aenean molestie velit nec sed tincidunt scelerisque</td></tr>
+			<tr><td>43</td><td>Francine</td><td>Daniels</td><td>366</td><td>2141 Amet Rd</td><td>OH</td><td>90786</td><td>(856) 781-7309</td><td>SIngham@pretium.ly</td><td>egestas amet vel ac pretium lacus nec tortor facilisis et</td></tr>
+			<tr><td>44</td><td>Marie</td><td>Krebs</td><td>124</td><td>4229 Sit Ln</td><td>DE</td><td>41786</td><td>(572) 023-1295</td><td>EClagg@curabitur.io</td><td>lacus elit sagittis quis nec vestibulum malesuada mattis morbi etiam</td></tr>
+			<tr><td>45</td><td>Stanley</td><td>Zehnacker</td><td>456</td><td>4610 Odio St</td><td>VT</td><td>70223</td><td>(257) 234-6755</td><td>HPennell@morbi.gov</td><td>vel aliquam mattis libero sed pharetra donec malesuada pharetra lectus</td></tr>
+			<tr><td>46</td><td>Furdella</td><td>Toffoli</td><td>951</td><td>8366 Placerat Rd</td><td>AZ</td><td>20381</td><td>(740) 422-8726</td><td>YEarls@morbi.net</td><td>non aliquam neque tortor egestas pulvinar tempor amet molestie lorem</td></tr>
+			<tr><td>47</td><td>Talatha</td><td>Nye</td><td>808</td><td>6884 Dolor Dr</td><td>MS</td><td>97282</td><td>(589) 157-7730</td><td>DAcosta@rutrum.gov</td><td>ipsum turpis vestibulum at convallis sit neque elementum sed adipiscing</td></tr>
+			<tr><td>48</td><td>Brent</td><td>Vollrath</td><td>479</td><td>5362 Eget Dr</td><td>MO</td><td>74989</td><td>(664) 642-4525</td><td>YMarina@sollicitudin.net</td><td>massa elementum elit pretium malesuada mi vestibulum non aliquam neque</td></tr>
+			<tr><td>49</td><td>Melissa</td><td>Quintana</td><td>405</td><td>1302 Lacus Dr</td><td>PA</td><td>38853</td><td>(354) 903-9363</td><td>AMarrinson@lacus.io</td><td>morbi quis neque placerat malesuada tincidunt morbi risus at tortor</td></tr>
+			<tr><td>50</td><td>Guadalupe</td><td>Eseltine</td><td>206</td><td>5495 Rutrum Ct</td><td>AR</td><td>37546</td><td>(540) 500-5816</td><td>TLester@morbi.com</td><td>porttitor sit massa ipsum ac massa ac hendrerit vitae malesuada</td></tr>
+		</tbody>
+	</table>
+
+	<div class="halfspacer"></div>
 
 </div>
 

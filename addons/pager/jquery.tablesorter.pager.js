@@ -1,6 +1,6 @@
 /*!
  * tablesorter (FORK) pager plugin
- * updated 3/5/2015 (v2.21.0)
+ * updated 3/26/2015 (v2.21.3)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -115,7 +115,7 @@
 		};
 
 		var pagerEvents = 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
-			'pageSize pageSet pageAndSize pagerUpdate ',
+			'pageSize pageSet pageAndSize pagerUpdate refreshComplete ',
 
 		$this = this,
 
@@ -204,7 +204,7 @@
 					p.$goto.html(t).val( p.page + 1 );
 				}
 				if ($out.length) {
-					$out[ ($out[0].tagName === 'INPUT') ? 'val' : 'html' ](s);
+					$out[ ($out[0].nodeName === 'INPUT') ? 'val' : 'html' ](s);
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change.pager').bind('change.pager', function(){
 						var v = $(this).val(),
@@ -934,9 +934,12 @@
 					})
 					.bind('pageSet.pager pagerUpdate.pager', function(e,v){
 						e.stopPropagation();
-						p.page = (parseInt(v, 10) || 1) - 1;
 						// force pager refresh
-						if (e.type === 'pagerUpdate') { p.last.page = true; }
+						if (e.type === 'pagerUpdate') {
+							v = typeof v === 'undefined' ? p.page + 1 : v;
+							p.last.page = true;
+						}
+						p.page = (parseInt(v, 10) || 1) - 1;
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					})
@@ -984,7 +987,6 @@
 				} else if (c.debug) {
 					ts.log('Pager: >> Goto selector not found');
 				}
-
 				// page size selector
 				p.$size = pager.find(p.cssPageSize);
 				if ( p.$size.length ) {
