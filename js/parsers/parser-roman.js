@@ -1,4 +1,4 @@
-/*! Roman numeral parsers
+/*! Parser: roman - updated 6/28/MMXIV (v2.17.3) *//*
  * code modified from both:
  * Steven Levithan @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
  * Jonathan Snook comment @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter#comment-16140

@@ -1,3 +1,13 @@
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		factory(jQuery);
+	}
+}(function($) {
+
 /*! TableSorter (FORK) v2.21.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
@@ -18,15 +28,7 @@
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 /*global console:false, alert:false, require:false, define:false, module:false */
-(function(factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof module === 'object' && typeof module.exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		factory(jQuery);
-	}
-}(function($) {
+;(function($){
 	'use strict';
 	$.extend({
 		/*jshint supernew:true */
@@ -2092,5 +2094,7 @@
 		}
 	});
 
-	return ts;
+})(jQuery);
+
+return $.tablesorter;
 }));

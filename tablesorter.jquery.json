@@ -42,7 +42,6 @@
   "main": "dist/js/jquery.tablesorter.js",
   "files": [
     "dist/css/theme.default.min.css",
-    "dist/js/jquery.tablesorter.min.js",
-    "dist/js/jquery.tablesorter.widgets.min.js"
+    "dist/js/jquery.tablesorter.combined.min.js"
   ]
 }

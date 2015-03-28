@@ -39,14 +39,11 @@
     "natural",
     "jquery-plugin"
   ],
-  "main": "js/jquery.tablesorter.js",
+  "main": "dist/js/jquery.tablesorter.combined.js",
   "files": [
     "dist/css/theme.default.css",
-    "dist/js/jquery.tablesorter.js",
-    "dist/js/jquery.tablesorter.min.js",
-    "dist/js/jquery.tablesorter.widgets.js",
-    "dist/js/jquery.tablesorter.widgets.min.js",
-    "dist/js/extras/jquery.tablesorter.pager.min.js"
+    "dist/js/jquery.tablesorter.combined.js",
+    "dist/js/jquery.tablesorter.combined.min.js"
   ],
   "repository": {
     "type": "git",

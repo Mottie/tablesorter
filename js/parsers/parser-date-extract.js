@@ -1,7 +1,4 @@
-/*!
- * Extract out date parsers
- * 10/26/2014 (v2.18.0)
- */
+/*! Parser: Extract out date - updated 10/26/2014 (v2.18.0) */
 /*jshint jquery:true */
 ;(function($){
 "use strict";
@@ -17,10 +14,9 @@
 		ymdreplace : /(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/
 	};
 
-	/*! extract US Long Date (ignore any other text)
+	/*! extract US Long Date *//* (ignore any other text)
 	* e.g. "Sue's Birthday! Jun 26, 2004 7:22 AM (8# 2oz)"
-	* demo: http://jsfiddle.net/Mottie/abkNM/4165/
-	*/
+	* demo: http://jsfiddle.net/Mottie/abkNM/4165/ */
 	$.tablesorter.addParser({
 		id: "extractUSLongDate",
 		is: function () {
@@ -39,9 +35,8 @@
 		type: "numeric"
 	});
 
-	/*! extract MMDDYYYY (ignore any other text)
-	* demo: http://jsfiddle.net/Mottie/abkNM/4166/
-	*/
+	/*! extract MMDDYYYY *//* (ignore any other text)
+	* demo: http://jsfiddle.net/Mottie/abkNM/4166/ */
 	$.tablesorter.addParser({
 		id: "extractMMDDYYYY",
 		is: function () {
@@ -60,9 +55,8 @@
 		type: "numeric"
 	});
 
-	/*! extract DDMMYYYY (ignore any other text)
-	* demo: http://jsfiddle.net/Mottie/abkNM/4167/
-	*/
+	/*! extract DDMMYYYY *//* (ignore any other text)
+	* demo: http://jsfiddle.net/Mottie/abkNM/4167/ */
 	$.tablesorter.addParser({
 		id: "extractDDMMYYYY",
 		is: function () {
@@ -81,9 +75,8 @@
 		type: "numeric"
 	});
 
-	/*! extract YYYYMMDD (ignore any other text)
-	* demo: http://jsfiddle.net/Mottie/abkNM/4168/
-	*/
+	/*! extract YYYYMMDD *//* (ignore any other text)
+	* demo: http://jsfiddle.net/Mottie/abkNM/4168/ */
 	$.tablesorter.addParser({
 		id: "extractYYYYMMDD",
 		is: function () {

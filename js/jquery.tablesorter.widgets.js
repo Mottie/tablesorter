@@ -4,16 +4,16 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) widgets - updated 03-26-2015 (v2.21.3)*/
-/* Includes: storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort */
+/*! tablesorter (FORK) - updated 03-28-2015 (v2.21.3)*/
+/* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['jquery'], factory);
-  } else if (typeof module === 'object' && typeof module.exports === 'object') {
-    module.exports = factory(require('jquery'));
-  } else {
-    factory(jQuery);
-  }
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		factory(jQuery);
+	}
 }(function($) {
 
 /*! Widget: storage - updated 3/26/2015 (v2.21.3) */
@@ -2350,6 +2350,5 @@ ts.addWidget({
 
 })(jQuery);
 
-
-  return $.tablesorter;
+return $.tablesorter;
 }));

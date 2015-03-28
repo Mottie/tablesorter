@@ -24,17 +24,16 @@
 
 <!-- Tablesorter: required -->
 <link href="../css/theme.blue.css" rel="stylesheet">
-<script src="../dist/js/jquery.tablesorter.js"></script>
-<script src="../dist/js/jquery.tablesorter.widgets.js"></script>
+<script src="../js/jquery.tablesorter.combined.js"></script>
 <script>
 	$(function() {
 		$.extend( $.tablesorter.defaults, {
 			theme: 'blue',
 			widthFixed: true
 		});
-		$(".compatibility").tablesorter();
-		$("#tablesorter-demo").tablesorter({widgets:['zebra']});
-		$("table.options, table.api").tablesorter({widgets:['stickyHeaders']});
+		$('.compatibility').tablesorter();
+		$('#tablesorter-demo').tablesorter({widgets:['zebra']});
+		$('table.options, table.api').tablesorter({widgets:['stickyHeaders']});
 	});
 </script>
 
@@ -631,8 +630,7 @@
 				<td></td>
 				<td>This is an entirely new row, but attached to the row above while sorting<br>
 					cssChildRow Example HTML:
-					<pre class="prettyprint lang-html">
-&lt;table width=&quot;100%&quot; border=&quot;1&quot;&gt;
+					<pre class="prettyprint lang-html">&lt;table width=&quot;100%&quot; border=&quot;1&quot;&gt;
   &lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Item #&lt;/th&gt;
@@ -667,8 +665,7 @@
       &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;
-					</pre>
+&lt;/table&gt;</pre>
 				</td>
 				<td></td>
 			</tr>
@@ -6075,7 +6072,7 @@ $.each( p.cacheIndex, function(i, v) {
 
 		<!-- non-sorting tbody -->
 		<tbody id="pager-removed" class="tablesorter-infoOnly">
-			<tr><th colspan="5">Removed Variables</th></tr>
+			<tr><th colspan="4">Removed Variables</th></tr>
 		</tbody>
 
 		<tbody>

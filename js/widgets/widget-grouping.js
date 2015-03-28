@@ -1,4 +1,4 @@
-/*! tablesorter Grouping widget - updated 3/5/2015 (v2.21.0) *//*
+/*! Widget: grouping - updated 3/5/2015 (v2.21.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

@@ -1,6 +1,5 @@
-/*! Two digit year parser - 10/26/2014 (v2.18.0)
- * Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html
- */
+/*! Parser: two digit year - updated 10/26/2014 (v2.18.0) */
+/* Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html */
 /*jshint jquery:true */
 ;(function($){
 "use strict";

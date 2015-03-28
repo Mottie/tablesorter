@@ -1,4 +1,4 @@
-/*! Duration parser */
+/*! Parser: duration & countdown - updated 2/7/2015 (v2.19.0) */
 /*jshint jquery:true, unused:false */
 ;(function($){
 'use strict';

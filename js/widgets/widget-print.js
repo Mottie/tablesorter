@@ -1,4 +1,4 @@
-/* Print widget for TableSorter 2/7/2015 (v2.19.0)
+/* Widget: print - updated 2/7/2015 (v2.19.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */

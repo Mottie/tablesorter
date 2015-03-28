@@ -1,14 +1,11 @@
-/*!
- * Extract dates using popular natural language date parsers
- * 10/26/2014 (v2.18.0)
- */
+/*! Parser: dates - updated 10/26/2014 (v2.18.0) */
+/* Extract dates using popular natural language date parsers */
 /*jshint jquery:true */
 ;(function($){
 "use strict";
 
-	/*! Sugar (http://sugarjs.com/dates#comparing_dates)
-	* demo: http://jsfiddle.net/Mottie/abkNM/4163/
-	*/
+	/*! Sugar (http://sugarjs.com/dates#comparing_dates) */
+	/* demo: http://jsfiddle.net/Mottie/abkNM/4163/ */
 	$.tablesorter.addParser({
 		id: "sugar",
 		is: function() {
@@ -21,9 +18,8 @@
 		type: "numeric"
 	});
 
-	/*! Datejs (http://www.datejs.com/)
-	* demo: http://jsfiddle.net/Mottie/abkNM/4164/
-	*/
+	/*! Datejs (http://www.datejs.com/) */
+	/* demo: http://jsfiddle.net/Mottie/abkNM/4164/ */
 	$.tablesorter.addParser({
 		id: "datejs",
 		is: function() {

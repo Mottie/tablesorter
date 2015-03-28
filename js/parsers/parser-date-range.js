@@ -1,8 +1,5 @@
-/*!
- * Range date parsers
- * 2/23/2015 (v2.21.0)
- */
-/* Include the widget-filter-type-insideRange.js to filter ranges */
+/*! Parser: date ranges - updated 2/23/2015 (v2.21.0) */
+/* Include the 'widget-filter-type-insideRange.js' to filter ranges */
 /*jshint jquery:true */
 ;(function($){
 'use strict';
