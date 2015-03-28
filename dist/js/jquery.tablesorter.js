@@ -1825,6 +1825,47 @@
 				}
 			};
 
+			ts.getColumnText = function( table, column, callback ) {
+				table = $( table )[0];
+				var tbodyIndex, rowIndex, cache, row, tbodyLen, rowLen, raw, parsed, $cell, result,
+					hasCallback = typeof callback === 'function',
+					allColumns = column === 'all',
+					data = { raw : [], parsed: [], $cell: [] },
+					c = table.config;
+				if ( !isEmptyObject( c ) ) {
+					tbodyLen = c.$tbodies.length;
+					for ( tbodyIndex = 0; tbodyIndex < tbodyLen; tbodyIndex++ ) {
+						cache = c.cache[ tbodyIndex ].normalized;
+						rowLen = cache.length;
+						for ( rowIndex = 0; rowIndex < rowLen; rowIndex++ ) {
+							result = true;
+							row =	cache[ rowIndex ];
+							parsed = ( allColumns ) ? row.slice(0, c.columns) : row[ column ];
+							row = row[ c.columns ];
+							raw = ( allColumns ) ? row.raw : row.raw[ column ];
+							$cell = ( allColumns ) ? row.$row.children() : row.$row.children().eq( column );
+							if ( hasCallback ) {
+								result = callback({
+									tbodyIndex: tbodyIndex,
+									rowIndex: rowIndex,
+									parsed: parsed,
+									raw: raw,
+									$row: row.$row,
+									$cell: $cell
+								});
+							}
+							if ( result !== false ) {
+								data.parsed.push( parsed );
+								data.raw.push( raw );
+								data.$cell.push( $cell );
+							}
+						}
+					}
+					// return everything
+					return data;
+				}
+			};
+
 			// get sorter, string, empty, etc options for each column from
 			// jQuery data, metadata, header option or header class name ('sorter-false')
 			// priority = jQuery data > meta > headers option > header class name

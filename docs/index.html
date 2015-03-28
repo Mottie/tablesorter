@@ -6535,6 +6535,65 @@ textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textEx
 				</td>
 			</tr>
 
+			<tr id="function-getcolumntext">
+				<td><a href="#" class="permalink">getColumnText</a></td>
+				<td>This utility function returns the entire column text (raw and parsed) as well as other data (<span class="version">v2.21.4</span>).
+					<div class="collapsible">
+					<br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.getColumnText( table, column, callback );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object).</li>
+							<li><code>column</code> - zero-based column index or <code>'all'</code>.</li>
+							<li><code>callback</code> - callback function that is called while obtaining data for each cell within the specified column.</li>
+						</ul>
+						When using the callback, there is only one argument (object) passed to this function; it contains the following:
+						<ul>
+							<li><code>tbodyIndex</code> - the tbody zero-based index of the current cell.</li>
+							<li><code>rowIndex</code> - the row zero-based index of the current cell.</li>
+							<li><code>$row</code> - a jQuery object targetting the current row being processed.</li>
+							<li><code>$cell</code> - a jQuery object targetting the curretn cell being processed.</li>
+							<li><code>parsed</code> - parsed text of the current cell.</li>
+							<li><code>raw</code> - raw (unparsed) text of the current cell.</li>
+						</ul>
+						As an example, say you want to make the text of all cells with a value greater than 20 red (assuming the 'red' class name is defined in css). Do it as follows:
+						<pre class="prettyprint lang-js">var table = $('table')[0];
+// targetting the 4th column (zero-based index)
+$.tablesorter.getColumnText( table, 3, function( data ) {
+  if ( data.parsed > 20 ) {
+    data.$cell.addClass('red');
+  }
+});</pre>
+						In this example, the goal is to get data from rows visible after filtering. When the callback returns <code>false</code>, that row/cell data will not be included in the resulting data:
+						<pre class="prettyprint lang-js">var table = $('table')[0],
+  // getting data from ALL columns, we're just skipping filtered out rows (rows with a "filtered" class)
+  result = $.tablesorter.getColumnText( table, 'all', function( data ) {
+    return !data.$row.hasClass('filtered');
+  });
+  // let's just assume this example is only showing filter matching rows (rows without a "filtered" class ;)
+  // result = {
+  //   raw    : [ [ 'r1c1', 'r1c2', ..., 'r1cN' ], [ 'r2c1', 'r2c2', ..., 'r2cN' ] ..., [ 'rNc1', 'rNc2', ..., 'rNcN' ] ],
+  //   parsed : [ [ 'r1c1', 'r1c2', ..., 'r1cN' ], [ 'r2c1', 'r2c2', ..., 'r2cN' ] ..., [ 'rNc1', 'rNc2', ..., 'rNcN' ] ],
+  //   $cell  : [ [ $r1c1,  $r1c2,  ..., $r1cN  ], [ $r2c1,  $r2c2,  ..., $r2cN  ] ..., [ $rNc1,  $rNc2,  ..., $rNcN  ] ]
+  // }
+</pre>
+						If the callback isn't used, the function will return the cummulated data for the column (it does not include all of the parameters available within the callback function):
+						<pre class="prettyprint lang-js">var table = $('table')[0],
+  // targetting the 4th column (zero-based index)
+  columnText = $.tablesorter.getColumnText( table, 3 );
+  // columnText = {
+  //   raw    : [ 'cell1', 'cell2', ..., 'celln' ],
+  //   parsed : [ 'cell1', 'cell2', ..., 'celln' ],
+  //   $cell  : [ $cell1,  $cell2,  ..., $celln  ]
+  // }
+</pre>
+						All of these methods of gathering column data might be useful for custom widgets, etc.
+						<p></p>
+						<span class="label label-warning">* NOTE *</span> All currently available widgets that gather data from a column will be <em>updated to use this function in v2.22.0</em>.
+					</div>
+				</td>
+			</tr>
+
 			<tr id="function-getdata">
 				<td><a href="#" class="permalink">getData</a></td>
 				<td>This functions gets the sorter, string, empty, etc options for each column from jQuery data, metadata, header option or header class name ("sorter-false") (v2.1.16).
