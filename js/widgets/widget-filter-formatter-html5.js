@@ -1,4 +1,4 @@
-/*! Filter widget formatter html5 functions *//* updated 7/17/2014 (v2.17.5)
+/*! Widget: filter, html5 formatter functions - updated 7/17/2014 (v2.17.5) *//*
  * requires: tableSorter (FORK) 2.15+ and jQuery 1.4.3+
  *
  * html5Number (spinner)

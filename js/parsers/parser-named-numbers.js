@@ -1,4 +1,4 @@
-/*! Named Numbers Parser - 10/26/2014 (v2.18.0)
+/*! Parser: namedNumbers - updated 10/26/2014 (v2.18.0) *//*
  * code modified from http://stackoverflow.com/a/12014376/145346
  */
 /*jshint jquery:true */

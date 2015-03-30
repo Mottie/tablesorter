@@ -82,6 +82,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.21.4">Version 2.21.4</a> (3/28/2015)
+
+* Core
+  * Add a utility [`$.tablesorter.getColumnText()` function](http://mottie.github.io/tablesorter/docs/#function-getcolumntext).
+    * This function will provide a centralized method of obtaining column data (raw & parsed text from cells) and allow processing cells.
+    * I plan to update all widgets that need to interact or obtain column data to use this function in v2.22.0.
+* Build
+  * The build process now includes selected parsers (added `parsers` option to build json).
+  * A new `jquery.tablesorter.combined.js` file is created which will contain the core plugin along with all selected widgets & parsers; a default build does not have any selected parsers.
+  * This will work around, but not resolve, [issue #855](https://github.com/Mottie/tablesorter/issues/855).
+* Extras
+  * Update `semver.js` & `semver-mod.js` to v4.3.3.
+
 #### <a name="v2.21.3">Version 2.21.3</a> (3/26/2015)
 
 * Core
@@ -133,17 +146,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Don't recalculate total rows/pages if using ajax.
   * Remove outdated pager.min file in the `addons` folder; it is now available in the `dist/js/extras` folder.
 * Uitheme: add icon classes while using stickyHeaders. See [issue #842](https://github.com/Mottie/tablesorter/issues/842).
-
-#### <a name="v2.21.1">Version 2.21.1</a> (3/10/2015)
-
-* Core:
-  * Optimize `getColumnData` function.
-  * Use `:last` instead of `.last()` to maintain jQuery v1.2.6 compatibility.
-  * Allow multiple icon class names in the `cssIcon` definition.
-* Docs
-  * Remove initial sort on first table to avoid confusion.
-  * Miscellaneous tweaks.
-* Build
-  * Add UMD wrapper to built "jquery.tablesorter.widgets.js" file. Thanks to [nburlett](https://github.com/nburlett) ([pull #837](https://github.com/Mottie/tablesorter/pull/837))!
-* Scroller
-  * Properly adjust column widths; fixes [issue #836](https://github.com/Mottie/tablesorter/issues/836).

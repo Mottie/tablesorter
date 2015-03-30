@@ -1,4 +1,4 @@
-﻿/*! tablesorter repeatHeaders widget - updated 2/7/2015 (v2.19.0)
+﻿/*! Widget: repeatHeaders - updated 2/7/2015 (v2.19.0) *//*
 * Requires tablesorter v2.8+ and jQuery 1.7+
 * Original by Christian Bach from the example-widgets.html demo
 */

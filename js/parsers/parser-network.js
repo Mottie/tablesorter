@@ -1,4 +1,5 @@
-/*! Network parsers - IPv4, IPv6 and MAC Addresses - 10/26/2014 (v2.18.0) */
+/*! Parser: network - updated 10/26/2014 (v2.18.0) */
+/* IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
 ;(function($){
 	"use strict";
@@ -7,7 +8,7 @@
 		ipv4Format,
 		ipv4Is;
 
-	/*! IPv6 Address parser (WIP)
+	/*! IPv6 Address parser (WIP) *//*
 	* IPv6 Address (ffff:0000:0000:0000:0000:0000:0000:0000)
 	* needs to support short versions like "::8" or "1:2::7:8"
 	* and "::00:192.168.10.184" (embedded IPv4 address)
@@ -17,8 +18,8 @@
 		ipv4Validate : /((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})/,
 		ipv4Extract  : /([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/,
 
-	// simplified regex from http://www.intermapper.com/support/tools/IPV6-Validator.aspx
-	// (specifically from http://download.dartware.com/thirdparty/ipv6validator.js)
+		// simplified regex from http://www.intermapper.com/support/tools/IPV6-Validator.aspx
+		// (specifically from http://download.dartware.com/thirdparty/ipv6validator.js)
 		ipv6Validate : /^\s*((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/i
 	});
 
@@ -83,14 +84,15 @@
 	};
 	ipv4Format = function(s, table) {
 		var i, a = s ? s.split('.') : '',
-		r = '',
-		l = a.length;
+			r = '',
+			l = a.length;
 		for (i = 0; i < l; i++) {
 			r += ('000' + a[i]).slice(-3);
 		}
 		return s ? ts.formatFloat(r, table) : s;
 	};
 
+	/*! Parser: ipv4Address (a.k.a. ipAddress) */
 	// duplicate "ipAddress" as "ipv4Address" (to maintain backwards compatility)
 	ts.addParser({
 		id: 'ipAddress',
@@ -105,6 +107,7 @@
 		type: 'numeric'
 	});
 
+	/*! Parser: MAC address */
 	ts.addParser({
 		id: 'MAC',
 		is: function(s) {

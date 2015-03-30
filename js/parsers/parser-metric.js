@@ -1,4 +1,4 @@
-/*! Metric parser
+/*! Parser: metric *//*
  * Demo: http://jsfiddle.net/Mottie/abkNM/382/
  * Set the metric name in the header (defaults to "m|meter"), e.g.
  *   <th data-metric-name="b|byte">HDD Size</th>

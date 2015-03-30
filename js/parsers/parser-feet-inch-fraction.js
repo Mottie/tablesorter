@@ -1,4 +1,4 @@
-/*! Distance parser
+/*! Parser: distance *//*
 * This parser will parser numbers like 5'10" (5 foot 10 inches)
 * and 31½ into sortable values.
 * Demo: http://jsfiddle.net/Mottie/abkNM/154/

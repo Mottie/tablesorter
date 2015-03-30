@@ -6,22 +6,6 @@
   strictEqual: false, jQuery: false, equal: false, $: false, expect: false, module: false,
   test: false, stop: false, ipv6tests: false */
 
-/************************************************
-	QUnit skip testing
-	http://stackoverflow.com/q/13748129/145346
-************************************************/
-QUnit.testSkip = function( testName, callback ) {
-	QUnit.test(testName + ' (SKIPPED)', function(assert) {
-		if (typeof callback === "function") {
-			callback();
-		}
-		var $li = $('#' + QUnit.config.current.id);
-		QUnit.done(function() {
-			$li.addClass('skipped');
-		});
-	});
-};
-
 // Accepts a function with a single argument -- deferred object, which should be resolved at some point in a function.
 // Returns a promise, wrapping this function call.
 QUnit.deferredCallback = function(func) {
@@ -114,29 +98,13 @@ QUnit.extend(QUnit.assert, {
 		test table data cache
 	************************************************/
 	cacheCompare : function(table, col, expected, txt, filtered){
-		var i, j = 0, k, l,
-			c = table.config,
-			result = [],
-			b = c.$tbodies,
-			l2 = c.columns;
-		for (k = 0; k < b.length; k++){
-			l = b[k].rows.length;
-			for (j = 0; j < l; j++) {
-				if (filtered && c.cache[k].normalized[j][c.columns].$row.hasClass('filtered')) {
-					continue;
-				}
-				if (col === 'all') {
-					// return all columns
-					for (i = 0; i < l2; i++) {
-						result.push( c.cache[k].normalized[j] ? c.cache[k].normalized[j][i] : '' );
-					}
-				} else {
-					// return specific column
-					result.push( c.cache[k].normalized[j] ? c.cache[k].normalized[j][col] : '' );
-				}
-			}
-		}
-		QUnit.assert.deepEqual( result, expected, 'testing parser cache: ' + txt);
+		var flat = [],
+		result = $.tablesorter.getColumnText( table, col, function( data ){
+			return !( filtered && data.$row.hasClass( table.config.widgetOptions.filter_filteredRow ) );
+		});
+		// flatten array
+		flat = flat.concat.apply( flat, result.parsed );
+		QUnit.assert.deepEqual( flat, expected, 'testing parser cache: ' + txt);
 	}
 });
 

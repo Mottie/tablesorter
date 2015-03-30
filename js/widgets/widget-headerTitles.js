@@ -1,4 +1,4 @@
-/*! tablesorter headerTitles widget - updated 3/5/2014 (core v2.15.6)
+/*! Widget: headerTitles - updated 3/5/2014 (v2.15.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

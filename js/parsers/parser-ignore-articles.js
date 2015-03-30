@@ -1,4 +1,4 @@
-/*! Title parser - updated 9/15/2014 (v2.17.8)
+/*! Parser: ignoreArticles - updated 9/15/2014 (v2.17.8) *//*
  * This parser will remove "The", "A" and "An" from the beginning of a book
  * or movie title, so it sorts by the second word or number
  * Demo: http://jsfiddle.net/Mottie/abkNM/5/
