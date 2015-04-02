@@ -2083,6 +2083,7 @@ ts.resizable = {
 				column = parseInt( $this.attr( 'data-column' ), 10 ),
 				columns = c.columns - 1,
 				$header = $this.data( 'header' );
+			if ( !$header ) { return; } // see #859
 			if ( !$header.is(':visible') ) {
 				$this.hide();
 			} else if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
