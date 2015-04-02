@@ -434,7 +434,7 @@ ts.scroller = {
 		ts.bindEvents( c.table, $fixedColumn.find( '.' + tscss.header ) );
 
 		// update thead & tbody in fixed column
-		temp = ( 'sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' );
+		temp = ( 'tablesorter-initialized sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' );
 		c.$table
 			.off( temp )
 			.on( temp, function( event, size ) {
