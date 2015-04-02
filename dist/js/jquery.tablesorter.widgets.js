@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 03-30-2015 (v2.21.4)*/
+/*! tablesorter (FORK) - updated 04-02-2015 (v2.21.4)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2051,7 +2051,7 @@ ts.resizable = {
 		if ( storedSizes.length ) {
 			for ( column = 0; column < c.columns; column++ ) {
 				// set saved resizable widths
-				c.$headers.eq( column ).width( storedSizes[ column ] );
+				c.$headerIndexed[ column ].width( storedSizes[ column ] );
 				if ( $extra.length ) {
 					// stickyHeaders needs to modify min & max width as well
 					ts.resizable.setWidth( $extra.eq( column ).add( $col.eq( column ) ), storedSizes[ column ] );
@@ -2083,8 +2083,11 @@ ts.resizable = {
 				column = parseInt( $this.attr( 'data-column' ), 10 ),
 				columns = c.columns - 1,
 				$header = $this.data( 'header' );
-			if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
+			if ( !$header.is(':visible') ) {
+				$this.hide();
+			} else if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
 				$this.css({
+					display: 'inline-block',
 					height : tableHeight,
 					left : $header.position().left + $header.width() - handleCenter
 				});
@@ -2112,7 +2115,7 @@ ts.resizable = {
 		var namespace = c.namespace + 'tsresize';
 		wo.$resizable_container.children().bind( 'mousedown', function( event ) {
 			// save header cell and mouse position
-			var column,
+			var column, $this,
 				vars = wo.resizable_,
 				$extras = $( c.namespace + '_extra_headers' ),
 				$header = $( event.target ).data( 'header' );
@@ -2131,7 +2134,11 @@ ts.resizable = {
 			vars.next = column;
 
 			vars.mouseXPosition = event.pageX;
-			vars.storedSizes = c.$headers.map(function(){ return $(this).width(); }).get();
+			vars.storedSizes = [];
+			for ( column = 0; column < c.columns; column++ ) {
+				$this = c.$headerIndexed[ column ];
+				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
+			}
 			ts.resizable.toggleTextSelection( c, true );
 		});
 
@@ -2162,15 +2169,20 @@ ts.resizable = {
 		});
 
 		// right click to reset columns to default widths
-		c.$table.find( 'thead:first' ).add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
-		.bind( 'contextmenu' + namespace, function() {
-			// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
-			var allowClick = wo.resizable_.storedSizes.length === 0;
-			ts.resizableReset( c.table );
-			ts.resizable.setHandlePosition( c, wo );
-			wo.resizable_.storedSizes = [];
-			return allowClick;
-		});
+		c.$table
+			.bind( 'columnUpdate' + namespace, function() {
+				ts.resizable.setHandlePosition( c, wo );
+			})
+			.find( 'thead:first' )
+			.add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
+			.bind( 'contextmenu' + namespace, function() {
+				// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
+				var allowClick = wo.resizable_.storedSizes.length === 0;
+				ts.resizableReset( c.table );
+				ts.resizable.setHandlePosition( c, wo );
+				wo.resizable_.storedSizes = [];
+				return allowClick;
+			});
 
 	},
 
@@ -2203,10 +2215,15 @@ ts.resizable = {
 	},
 
 	stopResize : function( c, wo ) {
-		var vars = wo.resizable_;
+		var $this, column,
+			vars = wo.resizable_;
 		vars.storedSizes = [];
 		if ( ts.storage ) {
-			vars.storedSizes = c.$headers.map(function(){ return $(this).width(); }).get();
+			vars.storedSizes = [];
+			for ( column = 0; column < c.columns; column++ ) {
+				$this = c.$headerIndexed[ column ];
+				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
+			}
 			if ( wo.resizable !== false ) {
 				// save all column widths
 				ts.storage( c.table, ts.css.resizableStorage, vars.storedSizes );
@@ -2251,19 +2268,19 @@ ts.addWidget({
 
 ts.resizableReset = function( table, nosave ) {
 	$( table ).each(function(){
-		var $t,
+		var index, $t,
 			c = this.config,
 			wo = c && c.widgetOptions;
-		if ( table && c ) {
-			c.$headers.each( function( i ) {
-				$t = $(this);
-				if ( wo.resizable_widths && wo.resizable_widths[ i ] ) {
-					$t.css( 'width', wo.resizable_widths[ i ] );
+		if ( table && c && c.$headerIndexed.length ) {
+			for ( index = 0; index < c.columns; index++ ) {
+				$t = c.$headerIndexed[ index ];
+				if ( wo.resizable_widths && wo.resizable_widths[ index ] ) {
+					$t.css( 'width', wo.resizable_widths[ index ] );
 				} else if ( !$t.hasClass( 'resizable-false' ) ) {
 					// don't clear the width of any column that is not resizable
 					$t.css( 'width', '' );
 				}
-			});
+			}
 			// reset stickyHeader widths
 			$( window ).trigger( 'resize' );
 			if ( ts.storage && !nosave ) {
