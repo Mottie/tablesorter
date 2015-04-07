@@ -801,6 +801,19 @@ ts.filter = {
 				$(this).hasClass('filter-parsed');
 		}).get();
 
+		// cache filter variables that use ts.getColumnData in the main loop
+		wo.filter_indexed = {
+			functions : [],
+			excludeFilter : [],
+			defaultColFilter : [],
+			defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
+		};
+		for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
+			wo.filter_indexed.functions[ columnIndex ] = ts.getColumnData( table, wo.filter_functions, columnIndex );
+			wo.filter_indexed.defaultColFilter[ columnIndex ] = ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
+			wo.filter_indexed.excludeFilter[ columnIndex ] = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+		}
+
 		if (c.debug) {
 			ts.log('Filter: Starting filter widget search', filters);
 			time = new Date();
@@ -887,8 +900,8 @@ ts.filter = {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
 					}
-					if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || '')) {
-						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) );
+					if ( wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultAnyFilter ) ) {
+						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, wo.filter_indexed.defaultAnyFilter );
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
@@ -970,7 +983,7 @@ ts.filter = {
 						data.index = columnIndex;
 
 						// filter types to exclude, per column
-						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+						excludeMatch = wo.filter_indexed.excludeFilter[ columnIndex ];
 
 						// ignore if filter is empty or disabled
 						if (data.filter) {
@@ -995,14 +1008,14 @@ ts.filter = {
 							}
 
 							val = true;
-							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
-								data.filter = ts.filter.defaultFilter( data.filter, ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) );
+							if (wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultColFilter[ columnIndex ] )) {
+								data.filter = ts.filter.defaultFilter( data.filter, wo.filter_indexed.defaultColFilter[ columnIndex ] );
 								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
 								val = false;
 							}
 							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
-							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
+							fxn = wo.filter_indexed.functions[ columnIndex ];
 							$cell = c.$headerIndexed[columnIndex];
 							hasSelect = $cell.hasClass('filter-select');
 							if ( fxn || ( hasSelect && val ) ) {
