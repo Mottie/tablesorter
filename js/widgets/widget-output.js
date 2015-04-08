@@ -255,8 +255,9 @@ output = ts.output = {
 		// Use HTML5 Blob if browser supports it
 		if ( gotBlob ) {
 
-			window.URL = window.webkitURL || window.URL;
-			blob = new Blob([data], {type: wo.output_encoding});
+			window.URL = window.URL || window.webkitURL;
+			// prepend BOM for utf-8 encoding - see https://github.com/eligrey/FileSaver.js/blob/master/FileSaver.js#L140
+			blob = new Blob( [ '\ufeff', data ], { type: wo.output_encoding } );
 
 			if (nav.msSaveBlob) {
 				// IE 10+
