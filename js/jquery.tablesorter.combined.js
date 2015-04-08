@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 03-30-2015 (v2.21.4)*/
+/*! tablesorter (FORK) - updated 04-08-2015 (v2.21.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.21.4 *//*
+/*! TableSorter (FORK) v2.21.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -44,7 +44,7 @@
 
 			var ts = this;
 
-			ts.version = '2.21.4';
+			ts.version = '2.21.5';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -2861,6 +2861,12 @@ ts.filter = {
 							}
 						}
 						c.$table.find('thead').find('select.' + tscss.filter + '[data-column="' + column + '"]').append(options);
+						txt = wo.filter_selectSource;
+						fxn = $.isFunction(txt) ? true : ts.getColumnData( table, txt, column );
+						if (fxn) {
+							// updating so the extra options are appended
+							ts.filter.buildSelect(c.table, column, '', true, $header.hasClass(wo.filter_onlyAvail));
+						}
 					}
 				}
 			}
@@ -3303,6 +3309,19 @@ ts.filter = {
 				$(this).hasClass('filter-parsed');
 		}).get();
 
+		// cache filter variables that use ts.getColumnData in the main loop
+		wo.filter_indexed = {
+			functions : [],
+			excludeFilter : [],
+			defaultColFilter : [],
+			defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
+		};
+		for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
+			wo.filter_indexed.functions[ columnIndex ] = ts.getColumnData( table, wo.filter_functions, columnIndex );
+			wo.filter_indexed.defaultColFilter[ columnIndex ] = ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
+			wo.filter_indexed.excludeFilter[ columnIndex ] = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+		}
+
 		if (c.debug) {
 			ts.log('Filter: Starting filter widget search', filters);
 			time = new Date();
@@ -3389,8 +3408,8 @@ ts.filter = {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
 					}
-					if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || '')) {
-						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) );
+					if ( wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultAnyFilter ) ) {
+						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, wo.filter_indexed.defaultAnyFilter );
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
@@ -3472,7 +3491,7 @@ ts.filter = {
 						data.index = columnIndex;
 
 						// filter types to exclude, per column
-						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+						excludeMatch = wo.filter_indexed.excludeFilter[ columnIndex ];
 
 						// ignore if filter is empty or disabled
 						if (data.filter) {
@@ -3497,29 +3516,30 @@ ts.filter = {
 							}
 
 							val = true;
-							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
-								data.filter = ts.filter.defaultFilter( data.filter, ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) );
+							if (wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultColFilter[ columnIndex ] )) {
+								data.filter = ts.filter.defaultFilter( data.filter, wo.filter_indexed.defaultColFilter[ columnIndex ] );
 								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
 								val = false;
 							}
 							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
-							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
+							fxn = wo.filter_indexed.functions[ columnIndex ];
 							$cell = c.$headerIndexed[columnIndex];
 							hasSelect = $cell.hasClass('filter-select');
+							filterMatched = null;
 							if ( fxn || ( hasSelect && val ) ) {
 								if (fxn === true || hasSelect) {
 									// default selector uses exact match unless "filter-match" class is found
-									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
+									filterMatched = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								}
-							} else {
-								filterMatched = null;
+							}
+							if (filterMatched === null) {
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
 								$.each(ts.filter.types, function(type, typeFunction) {
@@ -3538,6 +3558,8 @@ ts.filter = {
 									data.exact = (data.iExact + data.childRowText).indexOf( ts.filter.parseFilter(c, data.iFilter, columnIndex, data.parsed[columnIndex]) );
 									result = ( (!wo.filter_startsWith && data.exact >= 0) || (wo.filter_startsWith && data.exact === 0) );
 								}
+							} else {
+								result = filterMatched;
 							}
 							showRow = (result) ? showRow : false;
 						}
@@ -4095,7 +4117,7 @@ ts.addWidget({
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 3/26/2015 (v2.21.3) */
+/*! Widget: resizable - updated 4/2/2015 (v2.21.5) */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter = $.tablesorter || {};
@@ -4186,7 +4208,7 @@ ts.resizable = {
 		if ( storedSizes.length ) {
 			for ( column = 0; column < c.columns; column++ ) {
 				// set saved resizable widths
-				c.$headers.eq( column ).width( storedSizes[ column ] );
+				c.$headerIndexed[ column ].width( storedSizes[ column ] );
 				if ( $extra.length ) {
 					// stickyHeaders needs to modify min & max width as well
 					ts.resizable.setWidth( $extra.eq( column ).add( $col.eq( column ) ), storedSizes[ column ] );
@@ -4199,11 +4221,11 @@ ts.resizable = {
 	},
 
 	setHandlePosition : function( c, wo ) {
-		var tableWidth = c.$table.outerWidth(),
+		var startPosition,
 			hasScroller = ts.hasWidget( c.table, 'scroller' ),
 			tableHeight = c.$table.height(),
 			$handles = wo.$resizable_container.children(),
-			handleCenter = Math.floor( $handles.width() / 2 - parseFloat( c.$headers.css( 'border-right-width' ) ) * 2 );
+			handleCenter = Math.floor( $handles.width() / 2 );
 
 		if ( hasScroller ) {
 			tableHeight = 0;
@@ -4213,15 +4235,21 @@ ts.resizable = {
 				tableHeight += $this.filter('[style*="height"]').length ? $this.height() : $this.children('table').height();
 			});
 		}
+		// subtract out table left position from resizable handles. Fixes #864
+		startPosition = c.$table.position().left;
 		$handles.each( function() {
 			var $this = $(this),
 				column = parseInt( $this.attr( 'data-column' ), 10 ),
 				columns = c.columns - 1,
 				$header = $this.data( 'header' );
-			if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
+			if ( !$header ) { return; } // see #859
+			if ( !$header.is(':visible') ) {
+				$this.hide();
+			} else if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
 				$this.css({
+					display: 'inline-block',
 					height : tableHeight,
-					left : $header.position().left + $header.width() - handleCenter
+					left : $header.position().left - startPosition + $header.outerWidth() - handleCenter
 				});
 			}
 		});
@@ -4247,7 +4275,7 @@ ts.resizable = {
 		var namespace = c.namespace + 'tsresize';
 		wo.$resizable_container.children().bind( 'mousedown', function( event ) {
 			// save header cell and mouse position
-			var column,
+			var column, $this,
 				vars = wo.resizable_,
 				$extras = $( c.namespace + '_extra_headers' ),
 				$header = $( event.target ).data( 'header' );
@@ -4266,7 +4294,11 @@ ts.resizable = {
 			vars.next = column;
 
 			vars.mouseXPosition = event.pageX;
-			vars.storedSizes = c.$headers.map(function(){ return $(this).width(); }).get();
+			vars.storedSizes = [];
+			for ( column = 0; column < c.columns; column++ ) {
+				$this = c.$headerIndexed[ column ];
+				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
+			}
 			ts.resizable.toggleTextSelection( c, true );
 		});
 
@@ -4297,15 +4329,20 @@ ts.resizable = {
 		});
 
 		// right click to reset columns to default widths
-		c.$table.find( 'thead:first' ).add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
-		.bind( 'contextmenu' + namespace, function() {
-			// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
-			var allowClick = wo.resizable_.storedSizes.length === 0;
-			ts.resizableReset( c.table );
-			ts.resizable.setHandlePosition( c, wo );
-			wo.resizable_.storedSizes = [];
-			return allowClick;
-		});
+		c.$table
+			.bind( 'columnUpdate' + namespace, function() {
+				ts.resizable.setHandlePosition( c, wo );
+			})
+			.find( 'thead:first' )
+			.add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
+			.bind( 'contextmenu' + namespace, function() {
+				// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
+				var allowClick = wo.resizable_.storedSizes.length === 0;
+				ts.resizableReset( c.table );
+				ts.resizable.setHandlePosition( c, wo );
+				wo.resizable_.storedSizes = [];
+				return allowClick;
+			});
 
 	},
 
@@ -4313,10 +4350,8 @@ ts.resizable = {
 		if ( wo.resizable_.mouseXPosition === 0 || !wo.resizable_.$target ) { return; }
 		// resize columns
 		var vars = wo.resizable_,
-			$target = vars.$target,
 			$next = vars.$next,
-			leftEdge = event.pageX - vars.mouseXPosition,
-			targetWidth = $target.width();
+			leftEdge = event.pageX - vars.mouseXPosition;
 		if ( vars.fullWidth ) {
 			vars.storedSizes[ vars.target ] += leftEdge;
 			vars.storedSizes[ vars.next ] -= leftEdge;
@@ -4338,10 +4373,15 @@ ts.resizable = {
 	},
 
 	stopResize : function( c, wo ) {
-		var vars = wo.resizable_;
+		var $this, column,
+			vars = wo.resizable_;
 		vars.storedSizes = [];
 		if ( ts.storage ) {
-			vars.storedSizes = c.$headers.map(function(){ return $(this).width(); }).get();
+			vars.storedSizes = [];
+			for ( column = 0; column < c.columns; column++ ) {
+				$this = c.$headerIndexed[ column ];
+				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
+			}
 			if ( wo.resizable !== false ) {
 				// save all column widths
 				ts.storage( c.table, ts.css.resizableStorage, vars.storedSizes );
@@ -4386,19 +4426,19 @@ ts.addWidget({
 
 ts.resizableReset = function( table, nosave ) {
 	$( table ).each(function(){
-		var $t,
+		var index, $t,
 			c = this.config,
 			wo = c && c.widgetOptions;
-		if ( table && c ) {
-			c.$headers.each( function( i ) {
-				$t = $(this);
-				if ( wo.resizable_widths && wo.resizable_widths[ i ] ) {
-					$t.css( 'width', wo.resizable_widths[ i ] );
+		if ( table && c && c.$headerIndexed.length ) {
+			for ( index = 0; index < c.columns; index++ ) {
+				$t = c.$headerIndexed[ index ];
+				if ( wo.resizable_widths && wo.resizable_widths[ index ] ) {
+					$t.css( 'width', wo.resizable_widths[ index ] );
 				} else if ( !$t.hasClass( 'resizable-false' ) ) {
 					// don't clear the width of any column that is not resizable
 					$t.css( 'width', '' );
 				}
-			});
+			}
 			// reset stickyHeader widths
 			$( window ).trigger( 'resize' );
 			if ( ts.storage && !nosave ) {

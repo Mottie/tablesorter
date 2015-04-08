@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 3/26/2015 (v2.21.3) *//*
+/*! Widget: scroller - updated 4/2/2015 (v2.21.5) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -434,7 +434,7 @@ ts.scroller = {
 		ts.bindEvents( c.table, $fixedColumn.find( '.' + tscss.header ) );
 
 		// update thead & tbody in fixed column
-		temp = ( 'sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' );
+		temp = ( 'tablesorter-initialized sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' );
 		c.$table
 			.off( temp )
 			.on( temp, function( event, size ) {

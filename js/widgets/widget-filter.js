@@ -359,6 +359,12 @@ ts.filter = {
 							}
 						}
 						c.$table.find('thead').find('select.' + tscss.filter + '[data-column="' + column + '"]').append(options);
+						txt = wo.filter_selectSource;
+						fxn = $.isFunction(txt) ? true : ts.getColumnData( table, txt, column );
+						if (fxn) {
+							// updating so the extra options are appended
+							ts.filter.buildSelect(c.table, column, '', true, $header.hasClass(wo.filter_onlyAvail));
+						}
 					}
 				}
 			}
@@ -801,6 +807,19 @@ ts.filter = {
 				$(this).hasClass('filter-parsed');
 		}).get();
 
+		// cache filter variables that use ts.getColumnData in the main loop
+		wo.filter_indexed = {
+			functions : [],
+			excludeFilter : [],
+			defaultColFilter : [],
+			defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
+		};
+		for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
+			wo.filter_indexed.functions[ columnIndex ] = ts.getColumnData( table, wo.filter_functions, columnIndex );
+			wo.filter_indexed.defaultColFilter[ columnIndex ] = ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
+			wo.filter_indexed.excludeFilter[ columnIndex ] = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+		}
+
 		if (c.debug) {
 			ts.log('Filter: Starting filter widget search', filters);
 			time = new Date();
@@ -887,8 +906,8 @@ ts.filter = {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
 					}
-					if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || '')) {
-						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) );
+					if ( wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultAnyFilter ) ) {
+						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, wo.filter_indexed.defaultAnyFilter );
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
@@ -970,7 +989,7 @@ ts.filter = {
 						data.index = columnIndex;
 
 						// filter types to exclude, per column
-						excludeMatch = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+						excludeMatch = wo.filter_indexed.excludeFilter[ columnIndex ];
 
 						// ignore if filter is empty or disabled
 						if (data.filter) {
@@ -995,29 +1014,30 @@ ts.filter = {
 							}
 
 							val = true;
-							if (wo.filter_defaultFilter && regex.iQuery.test( ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '')) {
-								data.filter = ts.filter.defaultFilter( data.filter, ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) );
+							if (wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultColFilter[ columnIndex ] )) {
+								data.filter = ts.filter.defaultFilter( data.filter, wo.filter_indexed.defaultColFilter[ columnIndex ] );
 								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
 								val = false;
 							}
 							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
 							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
-							fxn = ts.getColumnData( table, wo.filter_functions, columnIndex );
+							fxn = wo.filter_indexed.functions[ columnIndex ];
 							$cell = c.$headerIndexed[columnIndex];
 							hasSelect = $cell.hasClass('filter-select');
+							filterMatched = null;
 							if ( fxn || ( hasSelect && val ) ) {
 								if (fxn === true || hasSelect) {
 									// default selector uses exact match unless "filter-match" class is found
-									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
+									filterMatched = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								}
-							} else {
-								filterMatched = null;
+							}
+							if (filterMatched === null) {
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
 								$.each(ts.filter.types, function(type, typeFunction) {
@@ -1036,6 +1056,8 @@ ts.filter = {
 									data.exact = (data.iExact + data.childRowText).indexOf( ts.filter.parseFilter(c, data.iFilter, columnIndex, data.parsed[columnIndex]) );
 									result = ( (!wo.filter_startsWith && data.exact >= 0) || (wo.filter_startsWith && data.exact === 0) );
 								}
+							} else {
+								result = filterMatched;
 							}
 							showRow = (result) ? showRow : false;
 						}
