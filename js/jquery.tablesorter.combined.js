@@ -4221,11 +4221,11 @@ ts.resizable = {
 	},
 
 	setHandlePosition : function( c, wo ) {
-		var tableWidth = c.$table.outerWidth(),
+		var startPosition,
 			hasScroller = ts.hasWidget( c.table, 'scroller' ),
 			tableHeight = c.$table.height(),
 			$handles = wo.$resizable_container.children(),
-			handleCenter = Math.floor( $handles.width() / 2 - parseFloat( c.$headers.css( 'border-right-width' ) ) * 2 );
+			handleCenter = Math.floor( $handles.width() / 2 );
 
 		if ( hasScroller ) {
 			tableHeight = 0;
@@ -4235,6 +4235,8 @@ ts.resizable = {
 				tableHeight += $this.filter('[style*="height"]').length ? $this.height() : $this.children('table').height();
 			});
 		}
+		// subtract out table left position from resizable handles. Fixes #864
+		startPosition = c.$table.position().left;
 		$handles.each( function() {
 			var $this = $(this),
 				column = parseInt( $this.attr( 'data-column' ), 10 ),
@@ -4247,7 +4249,7 @@ ts.resizable = {
 				$this.css({
 					display: 'inline-block',
 					height : tableHeight,
-					left : $header.position().left + $header.width() - handleCenter
+					left : $header.position().left - startPosition + $header.outerWidth() - handleCenter
 				});
 			}
 		});
@@ -4348,10 +4350,8 @@ ts.resizable = {
 		if ( wo.resizable_.mouseXPosition === 0 || !wo.resizable_.$target ) { return; }
 		// resize columns
 		var vars = wo.resizable_,
-			$target = vars.$target,
 			$next = vars.$next,
-			leftEdge = event.pageX - vars.mouseXPosition,
-			targetWidth = $target.width();
+			leftEdge = event.pageX - vars.mouseXPosition;
 		if ( vars.fullWidth ) {
 			vars.storedSizes[ vars.target ] += leftEdge;
 			vars.storedSizes[ vars.next ] -= leftEdge;
