@@ -82,6 +82,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.21.5">Version 2.21.5</a> (4/8/2015)
+
+* Filter
+  * Cache main loop variables - speed enhancement.
+  * Allow setting `filter_selectSource` along with `filter_functions` ([demo](http://jsfiddle.net/Mottie/856bzzeL/117/)).
+* Resizable
+  * Integrate with columnSelector. See [issue #859](https://github.com/Mottie/tablesorter/issues/859).
+  * Prevent javascript error.
+  * Resizable handles now properly align when the table is within a layout with margins. Fixes [issue #864](https://github.com/Mottie/tablesorter/issues/864).
+* Scroller
+  * Apply on initialization. Fixes [issue #860](https://github.com/Mottie/tablesorter/issues/860).
+
 #### <a name="v2.21.4">Version 2.21.4</a> (3/28/2015)
 
 * Core
@@ -132,17 +144,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Add "hover" class to all hover definitions (for the scroller widget mostly).
   * Remove filter element offsetting margins.
   * Target `background-color` instead of `background`. Fixes [issue #853](https://github.com/Mottie/tablesorter/issues/853).
-
-#### <a name="v2.21.2">Version 2.21.2</a> (3/13/2015)
-
-* Core: get accurate column count. Fixes [issue #840](https://github.com/Mottie/tablesorter/issues/840).
-* Docs
-  * Update to use jQuery UI v1.11.4.
-  * Add note about resizable widget needing a non-breaking space in an empty cell. Fixes [issue #844](https://github.com/Mottie/tablesorter/issues/844).
-* Editable: fix editable not updating properly on update/pager complete.
-* Filter: prevent error if `parseFilter` returns `NaN` - this depends on what custom parsers return.
-* Output: change carriage returns & tabs to unicode equivalent so it works in Excel. Fixes [issue #845](https://github.com/Mottie/tablesorter/issues/845).
-* Pager
-  * Don't recalculate total rows/pages if using ajax.
-  * Remove outdated pager.min file in the `addons` folder; it is now available in the `dist/js/extras` folder.
-* Uitheme: add icon classes while using stickyHeaders. See [issue #842](https://github.com/Mottie/tablesorter/issues/842).
