@@ -2855,6 +2855,12 @@ ts.filter = {
 							}
 						}
 						c.$table.find('thead').find('select.' + tscss.filter + '[data-column="' + column + '"]').append(options);
+						txt = wo.filter_selectSource;
+						fxn = $.isFunction(txt) ? true : ts.getColumnData( table, txt, column );
+						if (fxn) {
+							// updating so the extra options are appended
+							ts.filter.buildSelect(c.table, column, '', true, $header.hasClass(wo.filter_onlyAvail));
+						}
 					}
 				}
 			}
@@ -3514,19 +3520,20 @@ ts.filter = {
 							fxn = wo.filter_indexed.functions[ columnIndex ];
 							$cell = c.$headerIndexed[columnIndex];
 							hasSelect = $cell.hasClass('filter-select');
+							filterMatched = null;
 							if ( fxn || ( hasSelect && val ) ) {
 								if (fxn === true || hasSelect) {
 									// default selector uses exact match unless "filter-match" class is found
-									result = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
+									filterMatched = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									result = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									result = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
 								}
-							} else {
-								filterMatched = null;
+							}
+							if (filterMatched === null) {
 								// cycle through the different filters
 								// filters return a boolean or null if nothing matches
 								$.each(ts.filter.types, function(type, typeFunction) {
@@ -3545,6 +3552,8 @@ ts.filter = {
 									data.exact = (data.iExact + data.childRowText).indexOf( ts.filter.parseFilter(c, data.iFilter, columnIndex, data.parsed[columnIndex]) );
 									result = ( (!wo.filter_startsWith && data.exact >= 0) || (wo.filter_startsWith && data.exact === 0) );
 								}
+							} else {
+								result = filterMatched;
 							}
 							showRow = (result) ? showRow : false;
 						}
