@@ -261,6 +261,10 @@
 					</ul>
 				</li>
 			</ul>
+			<h4>Known Issues</h4>
+			<ul>
+				<li>Some versions of Safari do not fully support direct downloading, nor will you be able to save the file with the set file name; for more details please refer to <a href="https://github.com/eligrey/FileSaver.js/issues/12">this issue</a>.</li>
+			</ul>
 			<h4>Credit</h4>
 			<ul>
 				<li>This widget uses heavily modified code from:
@@ -583,7 +587,9 @@ line,value1,value2,value3
 							This option, if <code>true</code> tells the widget to remove any leading and trailing (white)space characters
 							<div class="collapsible">
 							<br>
-							Leading and trailing whitespace characters include newlines, spaces, non-breaking spaces and tabs. Any of these whitespace characters in the middle of the table cell will always be preserved.
+							Leading and trailing whitespace characters include newlines, spaces, non-breaking spaces and tabs. Any of these whitespace characters in the middle of the table cell will always be preserved.<br>
+							<br>
+							<span class="label label-info">*NOTE*</span> carriage returns in the middle of the table cell content <em>will be stripped out</em> if this option is set to <code>true</code>.
 							</div>
 						</td>
 					</tr>
@@ -690,10 +696,10 @@ output_encoding : 'data:text/csv;charset=utf8,'</pre><span class="label label-in
 
 				</tbody>
 			</table>
-			<span class="label label-info">Note</span> If you need to change the carriage return and/or the tab replacement strings, modify them as follows:
+			<span class="label label-info">Note</span> If you need to change the carriage return and/or the tab replacement strings, modify them as follows (changed in <span class="version">v2.21.2</span>):
 			<blockquote>
-				<pre class="prettyprint lang-js">$.tablesorter.output.replaceCR = '\\n';
-$.tablesorter.output.replaceTab = '\\t';</pre>
+				<pre class="prettyprint lang-js">$.tablesorter.output.replaceCR = '\x0d\x0a';
+$.tablesorter.output.replaceTab = '\x09';</pre>
 			</blockquote>
 		</div>
 
