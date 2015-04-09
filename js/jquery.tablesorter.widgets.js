@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 04-08-2015 (v2.21.5)*/
+/*! tablesorter (FORK) - updated 04-09-2015 (v2.21.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -20,7 +20,7 @@
 ;(function ($, window, document) {
 'use strict';
 
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 // *** Store data in local storage, with a cookie fallback ***
 /* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
    if you need it, then include https://github.com/douglascrockford/JSON-js
@@ -109,7 +109,7 @@ ts.storage = function(table, key, value, options) {
 /*! Widget: uitheme - updated 3/26/2015 (v2.21.3) */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 ts.themes = {
 	'bootstrap' : {
@@ -295,7 +295,7 @@ ts.addWidget({
 /*! Widget: columns */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 ts.addWidget({
 	id: "columns",
@@ -1722,7 +1722,7 @@ ts.setFilters = function(table, filter, apply, skipFirst) {
  */
 ;(function ($, window) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 $.extend(ts.css, {
 	sticky    : 'tablesorter-stickyHeader', // stickyHeader
@@ -1991,7 +1991,7 @@ ts.addWidget({
 /*! Widget: resizable - updated 4/2/2015 (v2.21.5) */
 ;(function ($, window) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 $.extend(ts.css, {
 	resizableContainer : 'tablesorter-resizable-container',
@@ -2324,7 +2324,7 @@ ts.resizableReset = function( table, nosave ) {
 /*! Widget: saveSort */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 // this widget saves the last sort only if the
 // saveSort widget option is true AND the

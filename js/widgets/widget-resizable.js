@@ -1,7 +1,7 @@
 /*! Widget: resizable - updated 4/2/2015 (v2.21.5) */
 ;(function ($, window) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 $.extend(ts.css, {
 	resizableContainer : 'tablesorter-resizable-container',

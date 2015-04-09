@@ -1,7 +1,7 @@
 /*! Widget: uitheme - updated 3/26/2015 (v2.21.3) */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 ts.themes = {
 	'bootstrap' : {
