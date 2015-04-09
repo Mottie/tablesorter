@@ -8,7 +8,8 @@
 .tablesorter-bootstrap .tablesorter-header,
 .tablesorter-bootstrap tfoot th,
 .tablesorter-bootstrap tfoot td {
-	font: bold 14px/20px Arial, Sans-serif;
+	font: 14px/20px Arial, Sans-serif;
+	font-weight: bold;
 	position: relative;
 	padding: 8px;
 	margin: 0 0 18px;

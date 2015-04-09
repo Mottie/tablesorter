@@ -15,7 +15,8 @@
 .tablesorter-dark th,
 .tablesorter-dark thead td {
 	padding: 4px;
-	font: bold 12px/20px Arial, Sans-serif;
+	font: 12px/20px Arial, Sans-serif;
+	font-weight: bold;
 	color: #fff;
 	background-color: #000;
 	border-collapse: collapse;
