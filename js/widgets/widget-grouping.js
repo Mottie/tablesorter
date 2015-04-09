@@ -110,7 +110,7 @@ ts.grouping = {
 									currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 								}
 								$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
-									'" unselectable="on"><td colspan="' +
+									'" unselectable="on"' + ( c.tabIndex ? ' tabindex="0"' : '' ) + '><td colspan="' +
 									c.columns + '">' + (wo.group_collapsible ? '<i/>' : '') + '<span class="group-name">' +
 									currentGroup + '</span><span class="group-count"></span></td></tr>');
 								if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
@@ -157,13 +157,15 @@ ts.grouping = {
 		if (wo.group_collapsible) {
 			wo.group_currentGroups = [];
 			// .on() requires jQuery 1.7+
-			c.$table.on('click toggleGroup', 'tr.group-header', function(event){
+			c.$table.on('click toggleGroup keyup', 'tr.group-header', function(event){
 				event.stopPropagation();
+				// pressing enter will toggle the group
+				if (event.type === 'keyup' && event.which !== 13) { return; }
 				var isCollapsed, $groups, indx,
 					$this = $(this),
 					name = $this.find('.group-name').text().toLowerCase();
 				// use shift-click to toggle ALL groups
-				if (event.type === 'click' && event.shiftKey) {
+				if (event.shiftKey && (event.type === 'click' || event.type ==='keyup')) {
 					$this.siblings('.group-header').trigger('toggleGroup');
 				}
 				$this.toggleClass('collapsed');
