@@ -15,7 +15,7 @@ Default Theme
 /* header */
 .tablesorter-default th,
 .tablesorter-default thead td {
-	font: bold 12px/18px Arial, Sans-serif;
+	font-weight: bold;
 	color: #000;
 	background-color: #fff;
 	border-collapse: collapse;
