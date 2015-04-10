@@ -250,7 +250,7 @@ $(function(){
 	************************************************/
 	var d = ts.isDigit;
 	QUnit.test( "isDigit", function(assert) {
-		assert.expect(17);
+		assert.expect(18);
 		ok( d('-1'),   "allow negative (-1)");
 		ok( d('+1'),   "allow plus (+1)");
 		ok( d('(1)'),  "allow parenthesis (1)");
@@ -268,6 +268,7 @@ $(function(){
 		ok( !d('1-'),  "negative after (1-) not allowed?");
 		ok( !d('1+'),  "plus after (1+) not allowed?");
 		ok( !d('$2'),  "no money; the currency parser will catch these");
+		ok( !d(''),    "empty string ('')");
 	});
 
 	/************************************************
