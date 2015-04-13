@@ -79,8 +79,8 @@ output = ts.output = {
 					}
 				}
 
-				// don't include hidden columns
-				if ( $this.css('display') !== 'none' ) {
+				// don't include hidden columns, unless option is set
+				if ( !wo.output_hiddenColumns && $this.css('display') !== 'none' ) {
 					// skip column if already defined
 					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
@@ -295,6 +295,7 @@ ts.addWidget({
 	options: {
 		output_separator     : ',',         // set to "json", "array" or any separator
 		output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+		output_hiddenColumns : false,       // include hidden columns in the output
 		output_includeFooter : false,       // include footer rows in the output
 		output_dataAttrib    : 'data-name', // header attrib containing modified header name
 		output_headerRows    : false,       // if true, include multiple header rows (JSON only)
