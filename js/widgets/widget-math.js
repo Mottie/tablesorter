@@ -31,7 +31,7 @@
 					if (typeof txt === "undefined") {
 						txt = this.textContent || $t.text();
 					}
-					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 					return isNaN(txt) ? 0 : txt;
 				}).get();
 			}
@@ -65,7 +65,7 @@
 							if (typeof txt === "undefined") {
 								txt = $t[0].textContent || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					}
@@ -79,7 +79,8 @@
 						if (typeof txt === "undefined") {
 							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 						}
-						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+						// isNaN('') => false
+						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 						arry.push(isNaN(txt) ? 0 : txt);
 					}
 				});
@@ -104,7 +105,7 @@
 							if (typeof txt === "undefined") {
 								txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					});
