@@ -6818,14 +6818,15 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true ); // 
 
 			<tr id="function-resizablereset">
 				<td><a href="#" class="permalink">resizableReset</a></td>
-				<td>This resizable widget function allows resetting column width changes and clearing out the saved set widths (<span class="version">v2.4</span>; <span class="version updated">v2.15</span>)
+				<td>This resizable widget function allows resetting column width changes and clearing out the saved set widths (<span class="version">v2.4</span>; <span class="version updated">v2.10.1</span>)
 					<div class="collapsible"><br>
 						Use it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.resizableReset(table);</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.resizableReset(table, refreshing);</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table(s).</li>
+							<li><code>refreshing</code> - if this flag is set to <code>true</code>, the stored resize settings will not be cleared; all other settings will clear the storage.</li>
 						</ul>
-						This function is used when the user right-clicks on the table header.
+						This function is used when the user right-clicks on the table header (the <code>refreshing</code> flag is undefined at that time to allow saving the changes).
 					</div>
 				</td>
 			</tr>
