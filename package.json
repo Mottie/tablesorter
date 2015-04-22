@@ -41,9 +41,7 @@
   ],
   "main": "dist/js/jquery.tablesorter.combined.js",
   "files": [
-    "dist/css/theme.default.css",
-    "dist/js/jquery.tablesorter.combined.js",
-    "dist/js/jquery.tablesorter.combined.min.js"
+    "dist/"
   ],
   "repository": {
     "type": "git",
