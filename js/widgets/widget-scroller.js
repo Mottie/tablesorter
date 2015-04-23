@@ -114,7 +114,6 @@ $( function() {
 			' padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; }' +
 
 		/*** fixed column ***/
-		'.' + tscss.scrollerFixed + ' { pointer-events: none; }' +
 		/* add horizontal scroll bar; set to "auto", see #135 */
 		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: auto; }' +
 		/* need to position the tbody & tfoot absolutely to hide the scrollbar & move the footer below the horizontal scrollbar */
@@ -416,8 +415,6 @@ ts.scroller = {
 					$el.eq( index ).prop( 'disabled', index < fixedColumns );
 				}
 			}
-			// enable visible fixed column filters
-			$fixedColumn.children( '.' + tscss.scrollerHeader ).find( '.' + tscss.filter ).css( 'pointer-events', 'all' );
 		}
 
 		// disable/enable tab indexes behind fixed column
