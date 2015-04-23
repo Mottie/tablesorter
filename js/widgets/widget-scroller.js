@@ -95,6 +95,8 @@ $( function() {
 		'.' + tscss.scrollerReset + ' { width: auto !important; min-width: auto !important; max-width: auto !important; }' +
 		/* overall wrapper & table section wrappers */
 		'.' + tscss.scrollerWrap + ' { position: relative; overflow: hidden; }' +
+		/* add border-box sizing to all scroller widget tables; see #135 */
+		'.' + tscss.scrollerWrap + ' * { box-sizing: border-box; }' +
 		'.' + tscss.scrollerHeader + ', .' + tscss.scrollerFooter + ' { overflow: hidden; }' +
 		'.' + tscss.scrollerHeader + ' table.' + tscss.table + ' { margin-bottom: 0; }' +
 		'.' + tscss.scrollerFooter + ' table.' + tscss.table + ' thead { visibility: hidden, height: 0; overflow: hidden; }' +
@@ -113,8 +115,8 @@ $( function() {
 
 		/*** fixed column ***/
 		'.' + tscss.scrollerFixed + ' { pointer-events: none; }' +
-		/* add horizontal scroll bar */
-		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: scroll; }' +
+		/* add horizontal scroll bar; set to "auto", see #135 */
+		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: auto; }' +
 		/* need to position the tbody & tfoot absolutely to hide the scrollbar & move the footer below the horizontal scrollbar */
 		'.' + tscss.scrollerFixed + ' .' + tscss.scrollerFooter + ' { position: absolute; bottom: 0; }' +
 		/* hide fixed tbody scrollbar - see http://goo.gl/VsLe6n */
