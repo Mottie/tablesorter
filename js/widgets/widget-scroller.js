@@ -106,14 +106,18 @@ $( function() {
 		/* hide filter row in clones */
 		'.' + tscss.scrollerTable + ' .' + ( tscss.filterRow || 'tablesorter-filter-row' ) + ',.' + tscss.scrollerFooter + ' .' +
 			( tscss.filterRow || 'tablesorter-filter-row' ) + ',.' + tscss.scrollerTable + ' tfoot { display: none; }' +
-		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' { position: absolute; top: 0; z-index: 1; left: 0 } ' +
-		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' { left: auto; right: 0 } ' +
 		/* visibly hide header rows in clones, so we can still set a width on it and still effect the rest of the column */
 		'.' + tscss.scrollerTable + ' table.' + tscss.table + ' thead tr.' + tscss.headerRow + ' *, .' + tscss.scrollerFooter +
 			' table.' + tscss.table + ' thead * { line-height: 0; height: 0; border: none; background-image: none; padding-top: 0;' +
 			' padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; }' +
 
 		/*** fixed column ***/
+		/* disable pointer-events on fixed column wrapper or the user can't interact with the horizontal scrollbar */
+		'.' + tscss.scrollerFixed + ' { pointer-events: none; }' +
+		/* enable pointer-events for fixed column children; see #135 & #878 */
+		'.' + tscss.scrollerFixed + ' > div { pointer-events: all; }' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' { position: absolute; top: 0; z-index: 1; left: 0 } ' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' { left: auto; right: 0 } ' +
 		/* add horizontal scroll bar; set to "auto", see #135 */
 		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: auto; }' +
 		/* need to position the tbody & tfoot absolutely to hide the scrollbar & move the footer below the horizontal scrollbar */
@@ -132,8 +136,8 @@ ts.scroller = {
 
 	// Ugh.. Firefox misbehaves, so it needs to be detected
 	isFirefox : navigator.userAgent.toLowerCase().indexOf( 'firefox' ) > -1,
-	// old IE needs a wrap to hide the fixed column scrollbar; http://stackoverflow.com/a/10965073/145346
-	isOldIE : window.attachEvent && !window.addEventListener,
+	// old IE needs a wrap to hide the fixed column scrollbar; http://stackoverflow.com/a/24408672/145346
+	isOldIE : document.all && !window.atob,
 
 	hasScrollBar : function( $target ) {
 		return $target.get(0).scrollHeight > $target.height();
@@ -420,9 +424,12 @@ ts.scroller = {
 		}
 
 		// disable/enable tab indexes behind fixed column
-		c.$table.children( 'thead' ).children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', -1 );
+		c.$table
+			.add( '.' + tscss.scrollerFooter + ' table' )
+			.children( 'thead' )
+			.children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', -1 );
 		$el = wo.scroller_$header
-			.add( $fixedColumn.find( '.' + tscss.scrollerTable + ' table, .' + tscss.scrollerFooter + ' table' ) )
+			.add( $fixedColumn.find( '.' + tscss.scrollerTable + ' table' ) )
 			.children( 'thead' ).children( 'tr.' + tscss.headerRow );
 		len = $el.length;
 		for ( index = 0; index < len; index++ ) {
@@ -478,7 +485,7 @@ ts.scroller = {
 
 		/*** Scrollbar hack! Since we can't hide the scrollbar with css ***/
 		if ( ts.scroller.isFirefox || ts.scroller.isOldIE ) {
-			$fixedTbody.wrap( '<div class="scroller-firefox-hack" style="overflow:hidden;">' );
+			$fixedTbody.wrap( '<div class="scroller-scrollbar-hack" style="overflow:hidden;">' );
 		}
 
 		ts.scroller.updateFixed( c, wo, true );
