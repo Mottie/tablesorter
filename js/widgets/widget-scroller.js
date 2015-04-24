@@ -132,6 +132,8 @@ ts.scroller = {
 
 	// Ugh.. Firefox misbehaves, so it needs to be detected
 	isFirefox : navigator.userAgent.toLowerCase().indexOf( 'firefox' ) > -1,
+	// old IE needs a wrap to hide the fixed column scrollbar; http://stackoverflow.com/a/10965073/145346
+	isOldIE : window.attachEvent && !window.addEventListener,
 
 	hasScrollBar : function( $target ) {
 		return $target.get(0).scrollHeight > $target.height();
@@ -474,8 +476,8 @@ ts.scroller = {
 				});
 		}
 
-		/*** STUPID FIREFOX HACK! Since we can't hide the scrollbar with css ***/
-		if ( ts.scroller.isFirefox ) {
+		/*** Scrollbar hack! Since we can't hide the scrollbar with css ***/
+		if ( ts.scroller.isFirefox || ts.scroller.isOldIE ) {
 			$fixedTbody.wrap( '<div class="scroller-firefox-hack" style="overflow:hidden;">' );
 		}
 
@@ -507,7 +509,7 @@ ts.scroller = {
 			$fixedTbodies = $fixedTbodiesTable.children( 'tbody' ),
 			$fixedHeader = $fixedColumn.find( '.' + tscss.scrollerHeader ).children( 'table' ).children( 'thead' ),
 			// variables
-			isFirefox = ts.scroller.isFirefox,
+			tsScroller = ts.scroller,
 			scrollBarWidth = wo.scroller_barSetWidth,
 			fixedColumns = wo.scroller_fixedColumns,
 			// get dimensions
@@ -532,8 +534,8 @@ ts.scroller = {
 		}).get();
 
 		// set fixed column width
-		ts.scroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth + borderRightWidth * 2 - borderSpacing );
-		ts.scroller.setWidth( $fixedColumn.find( 'table' ), totalWidth + borderRightWidth );
+		tsScroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth + borderRightWidth * 2 - borderSpacing );
+		tsScroller.setWidth( $fixedColumn.find( 'table' ), totalWidth + borderRightWidth );
 
 		// set fixed column height ( changes with filtering )
 		$fixedColumn.height( $wrapper.height() );
@@ -564,10 +566,10 @@ ts.scroller = {
 					$adjCol = $( $rows[ rowIndex ].outerHTML );
 					$adjCol.children( 'td, th' ).slice( fixedColumns ).remove();
 					// set row height
-					$adjCol.children().eq( 0 ).height( $rows.eq( rowIndex ).outerHeight() - ( isFirefox ? borderBottomWidth * 2 : 0 ) );
+					$adjCol.children().eq( 0 ).height( $rows.eq( rowIndex ).outerHeight() - ( tsScroller.isFirefox ? borderBottomWidth * 2 : 0 ) );
 					// still need to adjust tbody cell widths ( the previous row may now be filtered )
 					if ( rowIndex === 0 ) {
-						ts.scroller.setWidth( $adjCol.children().eq( 0 ), widths[ 0 ] );
+						tsScroller.setWidth( $adjCol.children().eq( 0 ), widths[ 0 ] );
 					}
 					$fb.append( $adjCol );
 				}
@@ -575,7 +577,7 @@ ts.scroller = {
 				// adjust fixed header cell widths
 				$temp = $fixedColumn.find( 'thead' ).children( 'tr.' + tscss.headerRow );
 				for ( index = 0; index < fixedColumns; index++ ) {
-					ts.scroller.setWidth( $temp.children( ':eq(' + index + ')' ), widths[ index ] );
+					tsScroller.setWidth( $temp.children( ':eq(' + index + ')' ), widths[ index ] );
 				}
 
 				// restore tbody
@@ -583,8 +585,8 @@ ts.scroller = {
 			}
 		}
 
-		/*** STUPID FIREFOX HACK! Since we can't hide the scrollbar with css ***/
-		if ( isFirefox ) {
+		/*** scrollbar HACK! Since we can't hide the scrollbar with css ***/
+		if ( tsScroller.isFirefox || tsScroller.isOldIE ) {
 			$fixedTbodiesTable.parent().css({
 				'width' : totalWidth + scrollBarWidth + borderRightWidth
 			});
