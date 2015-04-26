@@ -71,6 +71,7 @@ td.no-edit, span.no-edit {
 					return /^b/i.test(txt) && columnIndex === 0;
 				},
 				editable_wrapContent   : '<div>',       // wrap all editable cell content... makes this widget work in IE, and with autocomplete
+				editable_trimContent   : true,          // trim content ( removes outer tabs & carriage returns )
 				editable_noEdit        : 'no-edit',     // class name of cell that is not editable
 				editable_editComplete  : 'editComplete' // event fired after the table content has been edited
 			}
@@ -420,7 +421,7 @@ td.no-edit, span.no-edit {
 							When a table cell is formatted as follows:
 							<pre class="prettyprint lang-html">&lt;td&gt;
 	John
-&lt;/td&gt;</pre>All carriage returns and tab(s) within the table cell would be included before editing. Once the contenteditable element has focus, the content is cleaned up.<br>
+&lt;/td&gt;</pre>Carriage returns and tab(s) at the beginning &amp; end of the contenteditable table cells will be removed initially and after editing.<br>
 							<br>
 							If this option is <code>true</code>, this widget will trim content <em>upon initialization</em>; this is necessary if you need cleaned it up content before editing, like with an autocomplete script.<br>
 							<br>

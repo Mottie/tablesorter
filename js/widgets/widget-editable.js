@@ -76,7 +76,7 @@ var tse = $.tablesorter.editable = {
 				$t.children().not( '.' + wo.editable_noEdit ).each( function() {
 					var $this = $( this );
 					if ( wo.editable_trimContent ) {
-						$this.text( function( i, txt ) {
+						$this.html( function( i, txt ) {
 							return $.trim( txt );
 						});
 					}
@@ -84,7 +84,7 @@ var tse = $.tablesorter.editable = {
 				});
 			} else {
 				if ( wo.editable_trimContent ) {
-					$t.text( function( i, txt ) {
+					$t.html( function( i, txt ) {
 						return $.trim( txt );
 					});
 				}
@@ -115,15 +115,18 @@ var tse = $.tablesorter.editable = {
 				var $this = $( this ),
 					selAll = wo.editable_selectAll,
 					column = $this.closest( 'td' ).index(),
-					txt = $.trim( $this.text() );
-				if ( wo.editable_enterToAccept ) {
-					// prevent enter from adding into the content
-					$this.on( 'keydown.tseditable', function( e ){
-						if ( e.which === 13 ) {
+					txt = $this.html();
+				if ( wo.editable_trimContent ) {
+					txt = $.trim( txt );
+				}
+				// prevent enter from adding into the content
+				$this
+					.off( 'keydown.tseditable' )
+					.on( 'keydown.tseditable', function( e ){
+						if ( wo.editable_enterToAccept && e.which === 13 ) {
 							e.preventDefault();
 						}
 					});
-				}
 				$this.data({ before : txt, original: txt });
 
 				if ( typeof wo.editable_focused === 'function' ) {
@@ -145,11 +148,14 @@ var tse = $.tablesorter.editable = {
 				var t, validate,
 					valid = false,
 					$this = $( e.target ),
-					txt = $.trim( $this.text() ),
+					txt = $this.html(),
 					column = $this.closest( 'td' ).index();
+				if ( wo.editable_trimContent ) {
+					txt = $.trim( txt );
+				}
 				if ( e.which === 27 ) {
 					// user cancelled
-					$this.html( $.trim( $this.data( 'original' ) ) ).trigger( 'blur.tseditable' );
+					$this.html( $this.data( 'original' ) ).trigger( 'blur.tseditable' );
 					c.$table.data( 'contentFocused', false );
 					return false;
 				}
@@ -171,7 +177,7 @@ var tse = $.tablesorter.editable = {
 						c.$table.find( '.tseditable-last-edited-cell' ).removeClass( 'tseditable-last-edited-cell' );
 						$this
 							.addClass( 'tseditable-last-edited-cell' )
-							.html( $.trim( valid ) )
+							.html( valid )
 							.data( 'before', valid )
 							.data( 'original', valid )
 							.trigger( 'change' );
@@ -192,11 +198,12 @@ var tse = $.tablesorter.editable = {
 					clearTimeout( $this.data( 'timer' ) );
 					$this.data( 'timer', setTimeout( function() {
 						if ( $.isFunction( wo.editable_blur ) ) {
-							wo.editable_blur( $.trim( $this.text() ), column, $this );
+							txt = $this.html();
+							wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
 						}
 					}, 100 ) );
 					// restore original content on blur
-					$this.html( $.trim( $this.data( 'original' ) ) );
+					$this.html( $this.data( 'original' ) );
 				}
 			});
 	}
