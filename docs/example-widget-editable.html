@@ -113,6 +113,14 @@ td.no-edit, span.no-edit {
 		<ul>
 			<li>This widget can not be applied to the original plugin and requires jQuery 1.7+ and a browser that supports <a href="http://caniuse.com/#feat=contenteditable"><code>contenteditable</code> attributes</a> (almost all modern browsers).</li>
 			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).<br><br></li>
+			<li>In <span class="version">v2.21.6</span>,
+				<ul>
+					<li>The cell content now only <em>automatically updates</em> when the user hovers over the table header. Prior to this version, the automatic update would occur when the mouse left the tbody of the table. The reason this is necessary is because initiating a sort would change the row indexing set prior to the cell content being updated, so the cache would end up not matching the table content.</li>
+					<li>Modified the <code>editable_trimContent</code> option to only trim content when set.</li>
+					<li>The widget now works with the contenteditable html (using jQuery's <code>.html()</code>); previously, the widget would only manipulate the text (using jQuery <code>.text()</code>), so any HTML would get stripped out.<br>
+					<span class="label label-info">*Note*</span> Because of this change, if the user presses <kbd>Enter</kbd>, a <code>&lt;div&gt;</code> will be automatically inserted by the browser (not the widget) and any content entered will be added inside this "new line" div. If this is undesirable, use the <code>editable_blur</code> callback to modify the content.</li>
+				</ul>
+
 			<li>Updated <span class="version">v2.17.6</span>,
 				<ul>
 					<li>Fixed the <code>editable_enterToAccept</code> option to do what it was meant to do, accept when the user presses enter.</li>

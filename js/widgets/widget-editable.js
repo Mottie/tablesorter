@@ -25,11 +25,18 @@ var tse = $.tablesorter.editable = {
 		setTimeout( function() {
 			// select all text in contenteditable
 			// see http://stackoverflow.com/a/6150060/145346
-			var sel, range = document.createRange();
-			range.selectNodeContents( cell );
-			sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange( range );
+			var range, selection;
+			if ( document.body.createTextRange ) {
+				range = document.body.createTextRange();
+				range.moveToElementText( cell );
+				range.select();
+			} else if ( window.getSelection ) {
+				selection = window.getSelection();
+				range = document.createRange();
+				range.selectNodeContents( cell );
+				selection.removeAllRanges();
+				selection.addRange( range );
+			}
 		}, 100 );
 	},
 
@@ -98,17 +105,22 @@ var tse = $.tablesorter.editable = {
 			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
 			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ), function() {
 				tse.update( c, c.widgetOptions );
-			});
-
-		c.$tbodies
-			.off( ( 'mouseleave focus blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'mouseleave.tseditable', function() {
+			})
+			// prevent sort initialized by user click on the header from changing the row indexing before
+			// updateCell can finish processing the change
+			.children( 'thead' )
+			.add( $( c.namespace + '_extra_table' ).children( 'thead' ) )
+			.off( 'mouseenter.tseditable' )
+			.on( 'mouseenter.tseditable', function() {
 				if ( c.$table.data( 'contentFocused' ) ) {
 					// change to 'true' instead of element to allow focusout to process
 					c.$table.data( 'contentFocused', true );
 					$( ':focus' ).trigger( 'focusout' );
 				}
-			})
+			});
+
+		c.$tbodies
+			.off( ( 'focus blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
 			.on( 'focus.tseditable', '[contenteditable]', function( e ) {
 				clearTimeout( $( this ).data( 'timer' ) );
 				c.$table.data( 'contentFocused', e.target );
