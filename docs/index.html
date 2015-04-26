@@ -1692,6 +1692,43 @@ $(function(){
 				<td></td>
 			</tr>
 
+			<tr id="pointerclick">
+				<td><a href="#" class="permalink">pointerClick</a></td>
+				<td>String</td>
+				<td>&quot;click&quot;</td>
+				<td>Use this option to change the click event (<span class="version">v2.21.6</span>)
+					<div class="collapsible">
+						<p>Change this option if want to change the click event that is bound to the table headers. Add multiple events separated by spaces.</p>
+						<span class="label label-warning">Warning</span> If this option is set to fire multiple events (e.g. <code>'mouseup pointerup'</code>), sorting may be initialized twice in rapid succession and make it appear that nothing changed.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+			<tr id="pointerdown">
+				<td><a href="#" class="permalink">pointerDown</a></td>
+				<td>String</td>
+				<td>&quot;mousedown&quot;</td>
+				<td>Use this option to change the pointer down event (<span class="version">v2.21.6</span>)
+					<div class="collapsible">
+						<p>Change this option if you're using pointer events (or the <a href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
+						<span class="label label-warning">Warning</span> If this option is set to fire multiple events (e.g. <code>'mousedown pointerdown'</code>), sorting may be initialized twice in rapid succession and make it appear that nothing changed.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+			<tr id="pointerup">
+				<td><a href="#" class="permalink">pointerUp</a></td>
+				<td>String</td>
+				<td>&quot;mouseup&quot;</td>
+				<td>Use this option to change the pointer up event (<span class="version">v2.21.6</span>)
+					<div class="collapsible">
+						<p>Change this option if you're using pointer events (or the <a href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
+						<span class="label label-warning">Warning</span> If this option is set to fire multiple events (e.g. <code>'mouseup pointerup'</code>), sorting may be initialized twice in rapid succession and make it appear that nothing changed.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="textsorter">
 				<td><a href="#" class="permalink">textSorter</a></td>
 				<td>Function</td>

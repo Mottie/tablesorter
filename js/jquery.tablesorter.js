@@ -101,6 +101,11 @@
 				cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
 				cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
 
+				// *** events
+				pointerClick     : 'click',
+				pointerDown      : 'mousedown',
+				pointerUp        : 'mouseup',
+
 				// *** selectors
 				selectorHeaders  : '> thead th, > thead td',
 				selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
@@ -1326,7 +1331,7 @@
 				$(table)[0].config.$tbodies.children().detach();
 			};
 
-			ts.bindEvents = function(table, $headers, core){
+			ts.bindEvents = function(table, $headers, core) {
 				table = $(table)[0];
 				var t, downTarget = null,
 					c = table.config;
@@ -1337,28 +1342,35 @@
 						$(t).addClass( c.namespace.slice(1) + '_extra_table' );
 					}
 				}
+				t = ( c.pointerDown + ' ' + c.pointerUp + ' ' + c.pointerClick + ' sort keyup ' )
+					.replace(/\s+/g, ' ')
+					.split(' ')
+					.join(c.namespace + ' ');
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
 				$headers
 				// http://stackoverflow.com/questions/5312849/jquery-find-self;
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
-				.unbind( ('mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') )
-				.bind( 'mousedown mouseup click sort keyup '.split(' ').join(c.namespace + ' '), function(e, external) {
+				.unbind(t)
+				.bind(t, function(e, external) {
 					var cell,
 						$target = $(e.target),
-						type = e.type;
+						// wrap event type in spaces, so the match doesn't trigger on inner words
+						type = ' ' + e.type + ' ';
 					// only recognize left clicks
-					if ( ( ( e.which || e.button ) !== 1 && !/sort|keyup|click/.test(type) ) ||
+					if ( ( ( e.which || e.button ) !== 1 && !type.match( ' ' + c.pointerClick + ' | sort | keyup ' ) ) ||
 						// allow pressing enter
-						( type === 'keyup' && e.which !== 13 ) ||
+						( type === ' keyup ' && e.which !== 13 ) ||
 						// allow triggering a click event (e.which is undefined) & ignore physical clicks
-						( type === 'click' && typeof e.which !== 'undefined' ) ) {
+						( type.match(' ' + c.pointerClick + ' ') && typeof e.which !== 'undefined' ) ) {
 						return;
 					}
 					// ignore mouseup if mousedown wasn't on the same target
-					if ( type === 'mouseup' && downTarget !== e.target && external !== true ) { return; }
+					if ( type.match(' ' + c.pointerUp + ' ') && downTarget !== e.target && external !== true ) { return; }
 					// set timer on mousedown
-					if ( type === 'mousedown' ) {
+					if ( type.match(' ' + c.pointerDown + ' ') ) {
 						downTarget = e.target;
+						// needed or jQuery v1.2.6 throws an error
+						e.preventDefault();
 						return;
 					}
 					downTarget = null;
