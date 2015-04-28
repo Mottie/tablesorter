@@ -260,6 +260,7 @@ ts.scroller = {
 				}
 				// remove fixed columns
 				wo.scroller_$container.find( '.' + tscss.scrollerFixed ).remove();
+				size = wo.scroller_fixedColumns;
 				if ( size > 0 && size < c.columns - 1 ) {
 					ts.scroller.setupFixed( c, wo );
 				} else {
