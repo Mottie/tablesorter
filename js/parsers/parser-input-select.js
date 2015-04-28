@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 3/26/2015 (v2.21.3) *//*
+/*! Parser: input & select - updated 4/28/2015 (v2.21.6) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -25,6 +25,21 @@
 		},
 		parsed : true, // filter widget flag
 		type: "text"
+	});
+
+	$.tablesorter.addParser({
+		id: "inputs-numeric",
+		is: function(){
+			return false;
+		},
+		format: function(s, table, cell) {
+			var v = $(cell).find('input').val() || s,
+				n = $.tablesorter.formatFloat((v || '').replace(/[^\w,. \-()]/g, ''), table);
+			return n && typeof n === 'number' ? n :
+				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
+		},
+		parsed : true, // filter widget flag
+		type: "numeric"
 	});
 
 	// Custom parser for including checkbox status if using the grouping widget
