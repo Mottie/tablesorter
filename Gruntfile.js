@@ -336,6 +336,9 @@ module.exports = function( grunt ) {
 		grunt.task.run(tasks);
 	});
 
+	// quick build to just minify files for pushes between updates
+	grunt.registerTask( 'quick', [ 'copy', 'uglify', 'clean:css' ] );
+
 	// enter 'grunt custom:{filename}' (not including the '.json')
 	// to load in a custom json file
 	// the expected JSON format is (with custom widgets in a string):
