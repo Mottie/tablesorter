@@ -395,12 +395,13 @@
 		init : function(table, thisWidget, c, wo){
 			c.$table
 				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
-				.on(math.events + ' ' + wo.math_event, function(e){
+				.on(math.events + ' ' + wo.math_event, function(e) {
 					var init = e.type === 'tablesorter-initialized';
-					if (e.type === 'updateAll') {
-						// redo data-column indexes in case columns were rearranged
-						ts.computeColumnIndex( c.$table.children('tbody').children() );
-					} else if (!wo.math_isUpdating || init) {
+					if ( !wo.math_isUpdating || init ) {
+						if ( !/filter/.test(e.type) ) {
+							// redo data-column indexes on update
+							ts.computeColumnIndex( c.$table.children('tbody').children() );
+						}
 						math.recalculate( table, c, wo, init );
 					}
 				})
