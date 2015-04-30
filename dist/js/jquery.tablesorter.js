@@ -1259,9 +1259,10 @@
 			// http://www.javascripttoolbox.com/lib/table/examples.php
 			// http://www.javascripttoolbox.com/temp/table_cellindex.html
 			ts.computeColumnIndex = function(trs) {
-				var matrix = [],
-				lookup = {},
-				i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
+				var i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol,
+					matrix = [],
+					matrixrow = [],
+					lookup = {};
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
 					for (j = 0; j < cells.length; j++) {

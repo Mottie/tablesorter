@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 04-25-2015 (v2.21.5)*/
+/*! tablesorter (FORK) - updated 04-30-2015 (v2.21.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1261,9 +1261,10 @@
 			// http://www.javascripttoolbox.com/lib/table/examples.php
 			// http://www.javascripttoolbox.com/temp/table_cellindex.html
 			ts.computeColumnIndex = function(trs) {
-				var matrix = [],
-				lookup = {},
-				i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol, matrixrow;
+				var i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol,
+					matrix = [],
+					matrixrow = [],
+					lookup = {};
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
 					for (j = 0; j < cells.length; j++) {
