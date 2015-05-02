@@ -35,7 +35,7 @@
 		format: function(s, table, cell) {
 			var v = $(cell).find('input').val() || s,
 				n = $.tablesorter.formatFloat((v || '').replace(/[^\w,. \-()]/g, ''), table);
-			return n && typeof n === 'number' ? n :
+			return s && typeof n === 'number' ? n :
 				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
 		},
 		parsed : true, // filter widget flag
