@@ -111,7 +111,15 @@ ts.addWidget({
 			$stickyCells,
 			laststate = '',
 			spacing = 0,
+			isHideNotvisibleCells = false,
 			setWidth = function($orig, $clone){
+				if(!isHideNotvisibleCells) {
+					$thead.find('tr th').each(function(){
+						if ($(this)[0].style.display === 'none')
+							$stickyTable.find('th').eq($(this).index()).css({display: "none"});
+					});
+					isHideNotvisibleCells = true;
+				}
 				$orig.filter(':visible').each(function(i) {
 					var width, border,
 						$cell = $clone.filter(':visible').eq(i),
