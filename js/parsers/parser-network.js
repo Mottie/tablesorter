@@ -113,7 +113,7 @@
 	ts.addParser({
 		id : 'MAC',
 		is : function( str ) {
-			return ts.regex.ipv6Validate.test(str);
+			return false;
 		},
 		format : function( str ) {
 			var indx, len,
