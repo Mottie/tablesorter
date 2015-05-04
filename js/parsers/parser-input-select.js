@@ -3,10 +3,10 @@
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
 /*jshint browser: true, jquery:true, unused:false */
-;(function($){
-"use strict";
+;( function( $ ) {
+'use strict';
 
-	var updateServer = function(event, $table, $input){
+	var updateServer = function( event, $table, $input ) {
 		// do something here to update your server, if needed
 		// event = change event object
 		// $table = jQuery object of the table that was just updated
@@ -14,155 +14,160 @@
 	};
 
 	// Custom parser for parsing input values
-	// updated dynamically using the "change" function below
+	// updated dynamically using the 'change' function below
 	$.tablesorter.addParser({
-		id: "inputs",
-		is: function(){
+		id : 'inputs',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell) {
-			return $(cell).find('input').val() || s;
+		format : function( txt, table, cell ) {
+			return $( cell ).find( 'input' ).val() || txt;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type : 'text'
 	});
 
 	$.tablesorter.addParser({
-		id: "inputs-numeric",
-		is: function(){
+		id : 'inputs-numeric',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell) {
-			var v = $(cell).find('input').val() || s,
-				n = $.tablesorter.formatFloat((v || '').replace(/[^\w,. \-()]/g, ''), table);
-			return s && typeof n === 'number' ? n :
-				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
+		format : function( txt, table, cell ) {
+			var val = $( cell ).find( 'input' ).val() || txt,
+				num = $.tablesorter.formatFloat( ( val || '' ).replace( /[^\w,. \-()]/g, '' ), table );
+			return txt && typeof num === 'number' ? num :
+				txt ? $.trim( txt && table.config.ignoreCase ? txt.toLocaleLowerCase() : txt ) : txt;
 		},
 		parsed : true, // filter widget flag
-		type: "numeric"
+		type : 'numeric'
 	});
 
 	// Custom parser for including checkbox status if using the grouping widget
-	// updated dynamically using the "change" function below
+	// updated dynamically using the 'change' function below
 	$.tablesorter.addParser({
-		id: "checkbox",
-		is: function(){
+		id : 'checkbox',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell, cellIndex) {
-			var $c = $(cell),
+		format : function( txt, table, cell, cellIndex ) {
+			var $cell = $( cell ),
 				wo = table.config.widgetOptions,
 				// returning plain language here because this is what is shown in the
 				// group headers - change it as desired
-				txt = wo.group_checkbox ? wo.group_checkbox : [ 'checked', 'unchecked' ],
-				$input = $c.find('input[type="checkbox"]'),
-				isChecked = $input.length ? $input[0].checked : '';
+				status = wo.group_checkbox ? wo.group_checkbox : [ 'checked', 'unchecked' ],
+				$input = $cell.find( 'input[type="checkbox"]' ),
+				isChecked = $input.length ? $input[ 0 ].checked : '';
 			// adding class to row, indicating that a checkbox is checked; includes
 			// a column index in case more than one checkbox happens to be in a row
-			$c.closest('tr').toggleClass('checked-' + cellIndex, isChecked);
-			return $input.length ? txt[ isChecked ? 0 : 1 ] : s;
+			$cell.closest( 'tr' ).toggleClass( 'checked checked-' + cellIndex, isChecked );
+			return $input.length ? status[ isChecked ? 0 : 1 ] : txt;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type : 'text'
 	});
 
 	// Custom parser which returns the currently selected options
-	// updated dynamically using the "change" function below
+	// updated dynamically using the 'change' function below
 	$.tablesorter.addParser({
-		id: "select",
-		is: function(){
+		id : 'select',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell) {
-			return $(cell).find('select').val() || s;
+		format : function( txt, table, cell ) {
+			return $( cell ).find( 'select' ).val() || txt;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type : 'text'
 	});
 
 	// Select parser to get the selected text
 	$.tablesorter.addParser({
-		id: "select-text",
-		is: function(){
+		id : 'select-text',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell) {
-			var $s = $(cell).find('select');
-			return $s.length ? $s.find('option:selected').text() || '' : s;
+		format : function( txt, table, cell ) {
+			var $select = $( cell ).find( 'select' );
+			return $select.length ? $select.find( 'option:selected' ).text() || '' : txt;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type : 'text'
 	});
 
 	// Custom parser for parsing textarea values
-	// updated dynamically using the "change" function below
+	// updated dynamically using the 'change' function below
 	$.tablesorter.addParser({
-		id: "textarea",
-		is: function(){
+		id : 'textarea',
+		is : function() {
 			return false;
 		},
-		format: function(s, table, cell) {
-			return $(cell).find('textarea').val() || s;
+		format : function( txt, table, cell ) {
+			return $( cell ).find( 'textarea' ).val() || txt;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type : 'text'
 	});
 
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired
 	// if this code interferes somehow, target the specific table $('#mytable'), instead of $('table')
-	$(function(){
-		$('table').on('tablesorter-initialized', function(){
-			var restoreValue = function(isTbody){
+	$( function() {
+		$( 'table' ).on( 'tablesorter-initialized updateComplete', function() {
+			var namespace = '.parser-forms',
+			restoreValue = function( isTbody ) {
 				// make sure we restore original values (trigger blur)
 				// isTbody is needed to prevent the select from closing in IE
 				// see https://connect.microsoft.com/IE/feedbackdetail/view/962618/
-				if (isTbody) {
-					$(':focus').blur();
+				if ( isTbody ) {
+					$( ':focus' ).blur();
 				}
 				return;
 			};
 			// bind to .tablesorter (default class name)
-			$(this).children('tbody')
-			.on('mouseleave', function(e){
-				restoreValue(e.target.nodeName === 'TBODY');
+			$( this ).children( 'tbody' )
+			.off( namespace )
+			.on( 'mouseleave' + namespace, function( event ) {
+				restoreValue( event.target.nodeName === 'TBODY' );
 			})
-			.on('focus', 'select, input, textarea', function(){
-				$(this).data('ts-original-value', this.value);
+			.on( 'focus' + namespace, 'select, input, textarea', function() {
+				$( this ).data( 'ts-original-value', this.value );
 			})
-			.on('blur', 'input, textarea', function(){
+			.on( 'blur' + namespace, 'input, textarea', function() {
 				// restore input value;
-				// "change" is triggered before "blur" so this doesn't replace the new update with the original
-				this.value = $(this).data('ts-original-value');
+				// 'change' is triggered before 'blur' so this doesn't replace the new update with the original
+				this.value = $( this ).data( 'ts-original-value' );
 			})
-			.on('change keyup', 'select, input, textarea', function(e){
-				if ( e.which === 27 ) {
+			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
+				if ( event.which === 27 ) {
 					// escape: restore original value
-					this.value = $(this).data('ts-original-value');
+					this.value = $( this ).data( 'ts-original-value' );
 					return;
 				}
 				// Update cell cache using... select: change, input: enter or textarea: alt + enter
-				if ( ( e.type === 'change' ) ||
-					( e.type === 'keyup' && e.which === 13 && ( e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA' && e.altKey ) ) ) {
+				if ( event.type === 'change' ||
+					( event.type === 'keyup' && event.which === 13 &&
+					( event.target.nodeName === 'INPUT' || event.target.nodeName === 'TEXTAREA' && event.altKey ) ) ) {
 					var undef,
-						$tar = $(e.target),
-						$cell = $tar.closest('td'),
-						$table = $cell.closest('table'),
-						indx = $cell[0].cellIndex,
-						c = $table[0].config || false,
-						$hdr = c && c.$headers && c.$headers.eq(indx);
-					// abort if not a tablesorter table, or
-					// don't use updateCell if column is set to "sorter-false" and "filter-false", or column is set to "parser-false"
-					if ( !c || ( $hdr && $hdr.length && ( $hdr.hasClass('parser-false') || ( $hdr.hasClass('sorter-false') && $hdr.hasClass('filter-false') ) ) ) ) {
-						return restoreValue();
+						$target = $( event.target ),
+						$cell = $target.closest( 'td' ),
+						$table = $cell.closest( 'table' ),
+						indx = $cell[ 0 ].cellIndex,
+						c = $table[ 0 ].config || false,
+						$hdr = c && c.$headerIndexed && c.$headerIndexed[ indx ] || [],
+						val = $target.val();
+					// abort if not a tablesorter table, or don't use updateCell if column is set
+					// to 'sorter-false' and 'filter-false', or column is set to 'parser-false'
+					if ( $hdr.length && ( $hdr.hasClass( 'parser-false' ) ||
+						( $hdr.hasClass( 'sorter-false' ) && $hdr.hasClass( 'filter-false' ) ) ) ) {
+						return;
 					}
 					// ignore change event if nothing changed
-					if ($tar.val() !== $tar.data('ts-original-value') || e.target.type === 'checkbox') {
-						$tar.data('ts-original-value', $tar.val());
+					if ( val !== $target.data( 'ts-original-value' ) || event.target.type === 'checkbox' ) {
+						$target.data( 'ts-original-value', val );
 						// pass undefined resort value so it falls back to config.resort setting
-						$table.trigger('updateCell', [ $tar.closest('td'), undef, function(){
-							updateServer(e, $table, $tar);
+						$table.trigger( 'updateCell', [ $cell, undef, function() {
+							updateServer( event, $table, $target );
 						} ]);
 					}
 				}
@@ -170,4 +175,4 @@
 		});
 	});
 
-})(jQuery);
+})( jQuery );
