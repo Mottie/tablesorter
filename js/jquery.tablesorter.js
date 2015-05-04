@@ -233,6 +233,29 @@
 				return ts.getParserById('text');
 			}
 
+			// centralized function to extract/parse cell contents
+			function getParsedText( c, cell, colIndex, txt ) {
+				var val = '',
+					parser = c.parsers[ colIndex ],
+					extractor = c.extractors[ colIndex ];
+				txt = txt || ts.getElementText( c, cell, colIndex );
+				if ( parser ) {
+					// do extract before parsing if there is one
+					if ( extractor && typeof extractor.format === 'function' ) {
+						txt = extractor.format( txt, c.table, cell, colIndex );
+					}
+					// allow parsing if the string is empty, previously parsing would change it to zero,
+					// in case the parser needs to extract data from the table cell attributes
+					val = parser.id === 'no-parser' ? '' :
+						// make sure txt is a string (extractor may have converted it)
+						parser.format( '' + txt, c.table, cell, colIndex );
+					if ( c.ignoreCase && typeof val === 'string' ) {
+					 val = val.toLowerCase();
+					}
+				}
+				return val;
+			}
+
 			function buildParserCache(table) {
 				var c = table.config,
 					// update table bodies in case we start with an empty table
@@ -296,11 +319,10 @@
 
 			/* utils */
 			function buildCache(table) {
-				var cc, t, tx, v, i, j, k, $row, cols, cacheTime,
+				var cc, t, v, i, j, k, $row, cols, cacheTime,
 					totalRows, rowData, colMax,
 					c = table.config,
 					$tb = c.$tbodies,
-					extractors = c.extractors,
 					parsers = c.parsers;
 				c.cache = {};
 				c.totalRows = 0;
@@ -349,7 +371,7 @@
 						}
 						rowData.$row = $row;
 						rowData.order = i; // add original row position to rowCache
-						for (j = 0; j < c.columns; ++j) {
+						for ( j = 0; j < c.columns; ++j ) {
 							if (typeof parsers[j] === 'undefined') {
 								if (c.debug) {
 									log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
@@ -358,24 +380,16 @@
 							}
 							t = ts.getElementText(c, $row[0].cells[j], j);
 							rowData.raw.push(t); // save original row text
-							// do extract before parsing if there is one
-							if (typeof extractors[j].id === 'undefined') {
-								tx = t;
-							} else {
-								tx = extractors[j].format(t, table, $row[0].cells[j], j);
-							}
-							// allow parsing if the string is empty, previously parsing would change it to zero,
-							// in case the parser needs to extract data from the table cell attributes
-							v = parsers[j].id === 'no-parser' ? '' : parsers[j].format(tx, table, $row[0].cells[j], j);
-							cols.push( c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v );
-							if ((parsers[j].type || '').toLowerCase() === 'numeric') {
+							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
+							cols.push( v );
+							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
-								colMax[j] = Math.max(Math.abs(v) || 0, colMax[j] || 0);
+								colMax[ j ] = Math.max( Math.abs( v ) || 0, colMax[ j ] || 0 );
 							}
 						}
 						// ensure rowData is always in the same location (after the last column)
-						cols[c.columns] = rowData;
-						cc.normalized.push(cols);
+						cols[ c.columns ] = rowData;
+						cc.normalized.push( cols );
 					}
 					cc.colMax = colMax;
 					// total up rows, not including child rows
@@ -899,35 +913,31 @@
 					table.isUpdating = true;
 					$table.find(c.selectorRemove).remove();
 					// get position from the dom
-					var v, t, row, icell,
+					var t, row, icell, cache,
 					$tb = c.$tbodies,
 					$cell = $(cell),
 					// update cache - format: function(s, table, cell, cellIndex)
 					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
 					tbdy = $tb.index( $.fn.closest ? $cell.closest('tbody') : $cell.parents('tbody').filter(':first') ),
+					tbcache = c.cache[ tbdy ],
 					$row = $.fn.closest ? $cell.closest('tr') : $cell.parents('tr').filter(':first');
 					cell = $cell[0]; // in case cell is a jQuery object
 					// tbody may not exist if update is initialized while tbody is removed for processing
 					if ($tb.length && tbdy >= 0) {
-						row = $tb.eq(tbdy).find('tr').index( $row );
+						row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
+						cache = tbcache.normalized[ row ];
 						icell = $cell.index();
-						c.cache[tbdy].normalized[row][c.columns].$row = $row;
-						if (typeof c.extractors[icell].id === 'undefined') {
-							t = ts.getElementText(c, cell, icell);
-						} else {
-							t = c.extractors[icell].format( ts.getElementText(c, cell, icell), table, cell, icell );
-						}
-						v = c.parsers[icell].id === 'no-parser' ? '' :
-							c.parsers[icell].format( t, table, cell, icell );
-						c.cache[tbdy].normalized[row][icell] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
-						if ((c.parsers[icell].type || '').toLowerCase() === 'numeric') {
+						t = getParsedText( c, cell, icell );
+						cache[ icell ] = t;
+						cache[ c.columns ].$row = $row;
+						if ( (c.parsers[icell].type || '').toLowerCase() === 'numeric' ) {
 							// update column max value (ignore sign)
-							c.cache[tbdy].colMax[icell] = Math.max(Math.abs(v) || 0, c.cache[tbdy].colMax[icell] || 0);
+							tbcache.colMax[icell] = Math.max(Math.abs(t) || 0, tbcache.colMax[icell] || 0);
 						}
-						v = resort !== 'undefined' ? resort : c.resort;
-						if (v !== false) {
+						t = resort !== 'undefined' ? resort : c.resort;
+						if (t !== false) {
 							// widgets will be reapplied
-							checkResort(c, v, callback);
+							checkResort(c, t, callback);
 						} else {
 							// don't reapply widgets is resort is false, just in case it causes
 							// problems with element focus
@@ -947,7 +957,7 @@
 						commonUpdate(table, resort, callback);
 					} else {
 						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
-						var i, j, l, t, v, rowData, cells,
+						var i, j, l, rowData, cells,
 						rows = $row.filter('tr').length,
 						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
@@ -965,14 +975,7 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								if (typeof c.extractors[j].id === 'undefined') {
-									t = ts.getElementText(c, $row[i].cells[j], j);
-								} else {
-									t = c.extractors[j].format( ts.getElementText(c, $row[i].cells[j], j), table, $row[i].cells[j], j );
-								}
-								v = c.parsers[j].id === 'no-parser' ? '' :
-									c.parsers[j].format( t, table, $row[i].cells[j], j );
-								cells[j] = c.ignoreCase && typeof v === 'string' ? v.toLowerCase() : v;
+								cells[j] = getParsedText( c, $row[i].cells[j], j );
 								if ((c.parsers[j].type || '').toLowerCase() === 'numeric') {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
