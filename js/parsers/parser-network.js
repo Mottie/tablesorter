@@ -1,8 +1,8 @@
-/*! Parser: network - updated 10/26/2014 (v2.18.0) */
+/*! Parser: network - updated 5/4/2015 (v2.21.6) */
 /* IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
 ;(function($){
-	"use strict";
+	'use strict';
 
 	var ts = $.tablesorter,
 		ipv4Format,
@@ -10,8 +10,8 @@
 
 	/*! IPv6 Address parser (WIP) *//*
 	* IPv6 Address (ffff:0000:0000:0000:0000:0000:0000:0000)
-	* needs to support short versions like "::8" or "1:2::7:8"
-	* and "::00:192.168.10.184" (embedded IPv4 address)
+	* needs to support short versions like '::8' or '1:2::7:8'
+	* and '::00:192.168.10.184' (embedded IPv4 address)
 	* see http://www.intermapper.com/support/tools/IPV6-Validator.aspx
 	*/
 	$.extend( ts.regex, {}, {
@@ -93,7 +93,7 @@
 	};
 
 	/*! Parser: ipv4Address (a.k.a. ipAddress) */
-	// duplicate "ipAddress" as "ipv4Address" (to maintain backwards compatility)
+	// duplicate 'ipAddress' as 'ipv4Address' (to maintain backwards compatility)
 	ts.addParser({
 		id: 'ipAddress',
 		is: ipv4Is,
@@ -108,21 +108,30 @@
 	});
 
 	/*! Parser: MAC address */
+	/* MAC examples: 12:34:56:78:9A:BC, 1234.5678.9ABC, 12-34-56-78-9A-BC, and 123456789ABC
+	*/
 	ts.addParser({
-		id: 'MAC',
-		is: function(s) {
-			return ts.regex.ipv6Validate.test(s);
+		id : 'MAC',
+		is : function( str ) {
+			return ts.regex.ipv6Validate.test(str);
 		},
-		format: function(s) {
-			var t = '',
-				val = s.replace(/[:.-]/g, '').match(/\w{2}/g);
-			$.each(val, function(i, v){
-				t += ( '000' + parseInt(v, 16) ).slice(-3);
-			});
-			return t;
+		format : function( str ) {
+			var indx, len,
+				mac = '',
+				val = ( str || '' ).replace( /[:.-]/g, '' ).match( /\w{2}/g );
+			if ( val ) {
+				// not assuming all mac addresses in the column will end up with six
+				// groups of two to process, so it's not actually validating the address
+				len = val.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					mac += ( '000' + parseInt( val[ indx ], 16 ) ).slice( -3 );
+				}
+				return mac;
+			}
+			return str;
 		},
 		// uses natural sort hex compare
-		type: 'numeric'
+		type : 'numeric'
 	});
 
-})(jQuery);
+})( jQuery );
