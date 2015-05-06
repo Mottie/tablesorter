@@ -3498,7 +3498,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Storage widget: If this option is set to <code>false</code>, all saved variables for the table will be within local storage.
+					Storage widget: If this option is set to <code>false</code>, all saved variables for the table will be within local storage (<span class="version">v2.21.3</span>).
 					<div class="collapsible">
 					<p>If <code>true</code>, all saved variables for the table will be within the session storage. This means once the user closes the browser, all saved variables are lost.</p>
 					Use the <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> option to switch to session storage as follows:
@@ -6847,7 +6847,7 @@ $.tablesorter.getFilters( $('table') );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>filter</code> - array of filter values to apply to the table.</li>
-							<li><code>apply</code> - boolean flag, if <code>false</code> (default setting), the input values are updated, but not searched for within the table.</li>
+							<li><code>apply</code> - boolean flag, if <code>false</code> (default setting), the input values are updated, but the search is not applied to the table.</li>
 						</ul>
 						Use this function as follows:<br>
 						<pre class="prettyprint lang-js">// update filters, but don't apply the search
