@@ -99,11 +99,19 @@ ts.filter = {
 	types: {
 		// Look for regex
 		regex: function( c, data ) {
-			if ( ts.filter.regex.regex.test(data.iFilter) ) {
+			if ( ts.filter.regex.regex.test(data.filter) ) {
 				var matches,
-					regex = ts.filter.regex.regex.exec(data.iFilter);
+					wo = c.widgetOptions,
+					// cache regex per column for optimal speed
+					regex = wo.filter_regexCache[ data.index ] || ts.filter.regex.regex.exec( data.filter ),
+					isRegex = regex instanceof RegExp;
 				try {
-					matches = new RegExp(regex[1], regex[2]).test( data.iExact );
+					if (!isRegex) {
+						// force case insensitive search if ignoreCase option set?
+						// if ( c.ignoreCase && !regex[2] ) { regex[2] = 'i'; }
+						wo.filter_regexCache[ data.index ] = regex = new RegExp( regex[1], regex[2] );
+					}
+					matches = regex.test( data.exact );
 				} catch (error) {
 					matches = false;
 				}
@@ -262,6 +270,7 @@ ts.filter = {
 		wo.filter_initTimer = null;
 		wo.filter_formatterCount = 0;
 		wo.filter_formatterInit = [];
+		wo.filter_regexCache = [];
 		wo.filter_anyColumnSelector = '[data-column="all"],[data-column="any"]';
 		wo.filter_multipleColumnSelector = '[data-column*="-"],[data-column*=","]';
 
@@ -798,6 +807,9 @@ ts.filter = {
 			data = { anyMatch: false },
 			// anyMatch really screws up with these types of filters
 			noAnyMatch = [ 'range', 'notMatch',  'operators' ];
+
+		// clear regex cache prior to each search
+		wo.filter_regexCache = [];
 
 		// parse columns after formatter, in case the class is added at that point
 		data.parsed = c.$headers.map(function(columnIndex) {
