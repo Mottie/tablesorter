@@ -481,13 +481,13 @@
 		<li><a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.21.0</span>).</li>
 		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.19.1</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.21.5</span>):
+		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.21.6</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.18.1</span>)</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.20.0</span>)</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.21.0</span>)</li>
-				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.17.8</span>)</li>
+				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.21.6</span>)</li>
 				<li><a href="example-widget-filter-custom-search2.html">custom search (example #2)</a> (<span class="version">v2.19.1</span>; <span class="version updated">v2.21.0</span>)</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.21.3</span>)</li>
@@ -2543,10 +2543,17 @@ $(function(){
 					Filter widget: Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions (v2.3.6; <span class="version updated">v2.17.0</span>).
 					<div class="collapsible">
 					<br>
+					In <span class="version updated">v2.21.6</span>, a <code>data</code> parameter was added to that long list of parameters.<p></p>
+					<span class="label alert">*WARNING*</span> In a future update, the filter function parameters will be cleaned up and changed as follows!
+							<pre class="prettyprint lang-js">filter_functions : {
+  // function(e, n, f, i, $r, c, data) {} <- current parameters
+  0 : function(c, data) {} // planned change (version undetermined)
+}</pre>The <code>e</code> (exact table cell text), <code>n</code> (normalized table cell text), <code>f</code> (filter input value), <code>i</code> (column index) and <code>$r</code> (current row; jQuery object) are all already included in the <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types"><code>data</code></a> object.
+					<p></p>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_functions : {
     ".col-date" : {
-        "&lt; 2004" : function (e, n, f, i, $r, c) {
+        "&lt; 2004" : function (e, n, f, i, $r, c, data) {
             return n &lt; Date.UTC(2004, 0, 1); // &lt; Jan 1 2004
         },
         ...
@@ -2588,16 +2595,17 @@ $(function(){
       // i = column index
       // $r = jQuery element of current row
       // c = table.config
+      // data = combined filter data - see filter widget "custom searches" demo, look under "How to add Custom filter types"
       filter_functions: {
         // Add these options to the select dropdown (regex example)
         2 : {
-          "A - D" : function(e, n, f, i, $r, c) { return /^[A-D]/.test(e); },
-          "E - H" : function(e, n, f, i, $r, c) { return /^[E-H]/.test(e); },
-          "I - L" : function(e, n, f, i, $r, c) { return /^[I-L]/.test(e); },
-          "M - P" : function(e, n, f, i, $r, c) { return /^[M-P]/.test(e); },
-          "Q - T" : function(e, n, f, i, $r, c) { return /^[Q-T]/.test(e); },
-          "U - X" : function(e, n, f, i, $r, c) { return /^[U-X]/.test(e); },
-          "Y - Z" : function(e, n, f, i, $r, c) { return /^[Y-Z]/.test(e); }
+          "A - D" : function(e, n, f, i, $r, c, data) { return /^[A-D]/.test(e); },
+          "E - H" : function(e, n, f, i, $r, c, data) { return /^[E-H]/.test(e); },
+          "I - L" : function(e, n, f, i, $r, c, data) { return /^[I-L]/.test(e); },
+          "M - P" : function(e, n, f, i, $r, c, data) { return /^[M-P]/.test(e); },
+          "Q - T" : function(e, n, f, i, $r, c, data) { return /^[Q-T]/.test(e); },
+          "U - X" : function(e, n, f, i, $r, c, data) { return /^[U-X]/.test(e); },
+          "Y - Z" : function(e, n, f, i, $r, c, data) { return /^[Y-Z]/.test(e); }
         }
       }
     }
@@ -2615,14 +2623,15 @@ $(function(){
       // i = column index
       // $r = jQuery element of current row
       // c = table.config
+      // data = combined filter data - see filter widget "custom searches" demo, look under "How to add Custom filter types"
       filter_functions: {
         // Add these options to the select dropdown (numerical comparison example)
         // Note that only the normalized (n) value will contain numerical data
         // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
         4 : {
-          "&lt; $10"      : function(e, n, f, i, $r, c) { return n &lt; 10; },
-          "$10 - $100" : function(e, n, f, i, $r, c) { return n &gt;= 10 && n &lt;=100; },
-          "&gt; $100"     : function(e, n, f, i, $r, c) { return n &gt; 100; }
+          "&lt; $10"      : function(e, n, f, i, $r, c, data) { return n &lt; 10; },
+          "$10 - $100" : function(e, n, f, i, $r, c, data) { return n &gt;= 10 && n &lt;=100; },
+          "&gt; $100"     : function(e, n, f, i, $r, c, data) { return n &gt; 100; }
         }
       }
     }
@@ -2643,9 +2652,10 @@ $(function(){
       // i = column index
       // $r = jQuery element of current row
       // c = table.config
+      // data = combined filter data - see filter widget "custom searches" demo, look under "How to add Custom filter types"
       filter_functions: {
         // Exact match only
-        1 : function(e, n, f, i, $r, c) {
+        1 : function(e, n, f, i, $r, c, data) {
           return e === f;
         }
       }
@@ -2903,7 +2913,7 @@ $('table').trigger('search', false);</pre></div>
   });
 });</pre></div>
 				</td>
-				<td></td>
+				<td><a href="example-widget-filter-custom.html#custom_filter_function">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-selectsource">
@@ -3006,9 +3016,9 @@ $('table').trigger('search', false);</pre></div>
       filter_functions: {
         // Add these options to the select dropdown (regex example)
         1 : {
-          "<10|Less than 10" : function(e, n, f, i, $r, c) { return n < 10; },
-          "10 - 100|Between 10 & 100" : function(e, n, f, i, $r, c) { return n >= 10 && n <=100; },
-          ">100|Greater than 100" : function(e, n, f, i, $r, c) { return n > 100; }
+          "&lt;10|Less than 10" : function(e, n, f, i, $r, c, data) { return n &lt; 10; },
+          "10 - 100|Between 10 & 100" : function(e, n, f, i, $r, c, data) { return n &gt;= 10 && n &lt;=100; },
+          "&gt;100|Greater than 100" : function(e, n, f, i, $r, c, data) { return n &gt; 100; }
         }
       },
       // filter_selectSource array text left of the separator is added to the option value, right into the option text

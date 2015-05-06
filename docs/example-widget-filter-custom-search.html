@@ -100,6 +100,7 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.21.6</span>, additional values were added to the <code>data</code> parameter as it is now provided as a parameter to all <a href="index.html#widget-filter-functions"><code>filter_functions</code></a>. See the "How to add Custom filter types" section below to review the new additions.</li>
 			<li><span class="label warning">Notice!</span> In version <span class="version">v2.17.8</span>, some drastic changes were made to the way variables are passed to the filters. Please check out the "How to add Custom Filter types" section below.</li>
 			<li>This demo was added in <span class="version">v2.17.5</span>, but modification using these instructions works for v2.13.3+; when the filter widget was restructured to allow the adding of custom filter search types.</li>
 			<li>In this demo, two additional search types have been added as an example
@@ -151,8 +152,12 @@ $(function() {
 			<li>Within your filter, first test for your designator symbol.
 				<ul>
 					<li>If it exists within the filter, then do your comparison and return a boolean of <code>true</code> or <code>false</code>.</li>
-					<li>The following arguments are passed to the filter function within the <code>data</code> parameter (changed in <span class="version updated">v2.17.8</span>):
+					<li>The following arguments are passed within the <code>data</code> parameter to both the <code>filter_function</code> &amp; filter type function (changed in <span class="version updated">v2.21.6</span>):
 						<ul>
+							<li><code>data.$row</code> - The jQuery object of the current row being processed by the filter widget; added <span class="version">v2.21.6</span>.</li>
+							<li><code>data.$cells</code> - A jQuery object containing all the table cells in the current row being processed; added <span class="version">v2.21.6</span>.</li>
+							<li><code>data.filters</code> - Array of filters for all columns (some array values may be undefined); added <span class="version">v2.21.6</span>.<br><br></li>
+
 							<li><code>data.filter</code> - The exact text from the filter input (e.g. <code>^h</code>).</li>
 							<li><code>data.iFilter</code> - The text from the filter in all lower case for case insensitive searches, if <code>table.config.widgetOptions.filter_ignoreCase</code> is <code>true</code>.</li>
 							<li><code>data.exact</code> - The exact (or parsed) text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
@@ -162,12 +167,12 @@ $(function() {
 
 							<li><code>data.anyMatch</code> - This is a boolean value indicating when the <code>data.exact</code> and <code>data.iExact</code> parameters contain data from the entire row instead of one cell. This value will always be <code>false</code> if the table does not include an associated any match filter.<br><br></li>
 
-							<li><code>data.rowArray</code> - An array of the exact text from each table cell.</li>
-							<li><code>data.cacheArray</code> - An array of parsed text from each table cell.</li>
-							<li><code>data.childRowText</code> - contains all text from any associated child rows.</li>
+							<li><code>data.rawArray</code> - An array of raw content extracted from each table cell in the row being processed; added <span class="version">v2.21.6</span>.</li>
+							<li><code>data.rowArray</code> - An array of the modified exact text from each table cell in the current row being processed. The content will be in all lower case, if the <a href="index.html#ignorecase"><code>table.config.ignoreCase</code> option</a> is <code>true</code> &amp; accents replaced if the <a href="index.html#sortlocalecompare"><code>table.config.sortLocaleCompare</code> option</a> is <code>true</code>).</li>
+							<li><code>data.cacheArray</code> - An array of parsed content from each table cell in the row being processed.</li>
+							<li><code>data.childRowText</code> - contains <em>all</em> text from any associated child rows.</li>
 
-							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.<br>
-								<span class="label label-info">Note</span> Be aware that the values in this array will all be in lower case if the <code>table.config.ignoreCase</code> option is <code>true</code>.
+							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should be obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.
 							</li>
 						</ul>
 						<br>

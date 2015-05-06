@@ -43,6 +43,24 @@
 			return false;
 		});
 
+		$('.accordion button[data-filter-column]').click(function(){
+			var filters = [],
+				$t = $(this),
+				col = $t.data('filter-column'), // zero-based index
+				txt = $t.data('filter-text') || $t.text(); // text to add to filter
+			filters[col] = txt;
+			$.tablesorter.setFilters( $('#demo table'), filters, true );
+			return false;
+		});
+
+		$('button.search-type').click(function(){
+			var c = $('#demo table')[0].config,
+				wo = c.widgetOptions,
+				search = wo.filter_searchFiltered = !wo.filter_searchFiltered;
+			$('#search-type').html( '' + search );
+			$.tablesorter.setFilters( c.$table, [ '', 'Evan' ], true );
+		});
+
 	});
 	</script>
 
@@ -109,28 +127,28 @@
 				// '.first-name' : true,
 
 				// Exact match only
-				1 : function(e, n, f, i, $r, c) {
+				1 : function(e, n, f, i, $r, c, data) {
 					return e === f;
 				},
 
 				// Add these options to the select dropdown (regex example)
 				2 : {
-					"A - D" : function(e, n, f, i, $r, c) { return /^[A-D]/.test(e); },
-					"E - H" : function(e, n, f, i, $r, c) { return /^[E-H]/.test(e); },
-					"I - L" : function(e, n, f, i, $r, c) { return /^[I-L]/.test(e); },
-					"M - P" : function(e, n, f, i, $r, c) { return /^[M-P]/.test(e); },
-					"Q - T" : function(e, n, f, i, $r, c) { return /^[Q-T]/.test(e); },
-					"U - X" : function(e, n, f, i, $r, c) { return /^[U-X]/.test(e); },
-					"Y - Z" : function(e, n, f, i, $r, c) { return /^[Y-Z]/.test(e); }
+					"A - D" : function(e, n, f, i, $r, c, data) { return /^[A-D]/.test(e); },
+					"E - H" : function(e, n, f, i, $r, c, data) { return /^[E-H]/.test(e); },
+					"I - L" : function(e, n, f, i, $r, c, data) { return /^[I-L]/.test(e); },
+					"M - P" : function(e, n, f, i, $r, c, data) { return /^[M-P]/.test(e); },
+					"Q - T" : function(e, n, f, i, $r, c, data) { return /^[Q-T]/.test(e); },
+					"U - X" : function(e, n, f, i, $r, c, data) { return /^[U-X]/.test(e); },
+					"Y - Z" : function(e, n, f, i, $r, c, data) { return /^[Y-Z]/.test(e); }
 				},
 
 				// Add these options to the select dropdown (numerical comparison example)
 				// Note that only the normalized (n) value will contain numerical data
 				// If you use the exact text, you'll need to parse it (parseFloat or parseInt)
 				4 : {
-					"< $10"      : function(e, n, f, i, $r, c) { return n < 10; },
-					"$10 - $100" : function(e, n, f, i, $r, c) { return n >= 10 && n <=100; },
-					"> $100"     : function(e, n, f, i, $r, c) { return n > 100; }
+					"< $10"      : function(e, n, f, i, $r, c, data) { return n < 10; },
+					"$10 - $100" : function(e, n, f, i, $r, c, data) { return n >= 10 && n <=100; },
+					"> $100"     : function(e, n, f, i, $r, c, data) { return n > 100; }
 				}
 			}
 
@@ -157,6 +175,16 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.21.6</span>,
+					<ul>
+						<li>An additional <code>data</code> parameter was added to the filter functions. It is an object which contains all data provided to the filter type functions (see <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">all the data values here</a>).</li>
+						<li><span class="label warning">*WARNING*</span> In a future update, the filter function parameters will change to clean up the code (I know, it's messy)!
+							<pre class="prettyprint lang-js">filter_functions : {
+  // function(e, n, f, i, $r, c, data) {} <- current parameters
+  0 : function(c, data) {} // planned change (version undetermined)
+}</pre>The <code>e</code> (exact table cell text), <code>n</code> (normalized table cell text), <code>f</code> (filter input value), <code>i</code> (column index) and <code>$r</code> (current row; jQuery object) are all already included in the <code>data</code> object.<p></p></li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.21.0</span>, the filter functions provide an additional parameter <code>c</code> which is the <code>table.config</code>.</li>
 				<li>In <span class="version updated">v2.17.0</span>, the <code>filter_functions</code> column can also be referenced by using a jQuery selector (e.g. class name or ID).</li>
 				<li>In <span class="version">v2.16.3</span>,
@@ -203,14 +231,15 @@
 				<li>To enable this type of filter, add your custom function to the <code>filter_functions</code> option following this example:<pre class="prettyprint lang-javascript">filter_functions : {
 
   // Exact match only
-  1 : function(e, n, f, i, $r, c) {
+  1 : function(e, n, f, i, $r, c, data) {
     return e === f;
   }
 
 }</pre></li>
 				<li>The example shows you how to show only exact matches. The problem with this is that you can't see the matches while typing unless you set the <code>filter_searchDelay</code> option to be a bit longer.</li>
 				<li>Also, the example only checks for an exact match (<code>===</code>) meaning the <code>filter_ignoreCase</code> option is ignored, but other comparisons can be made using regex and the insensitive &quot;i&quot; flag.</li>
-				<li>See the filter function information below.</li>
+				<li><span class="label warning">*NOTE*</span> If using an exact match function like this, consider setting the <a href="index.html#widget-filter-searchfiltered"><code>filter_searchFiltered</code></a> option to false. If it were set to <code>true</code>, the filter widget wouldn't know to search through the entire contents of the column if the content were only slightly different. To see this problem, search for <button data-filter-column="1">Evan</button> in the "Last Name" column, then add an "s" to the end to find "Evans". No results will show up, unless the search filtered option is <code>false</code>.</li>
+				<li>See the filter function information below for more details about the function parameters.</li>
 			</ul>
 		</div>
 
@@ -223,13 +252,13 @@
 
   // Add these options to the select dropdown (regex example)
   2 : {
-    &quot;A - D&quot; : function(e, n, f, i, $r, c) { return /^[A-D]/.test(e); },
-    &quot;E - H&quot; : function(e, n, f, i, $r, c) { return /^[E-H]/.test(e); },
-    &quot;I - L&quot; : function(e, n, f, i, $r, c) { return /^[I-L]/.test(e); },
-    &quot;M - P&quot; : function(e, n, f, i, $r, c) { return /^[M-P]/.test(e); },
-    &quot;Q - T&quot; : function(e, n, f, i, $r, c) { return /^[Q-T]/.test(e); },
-    &quot;U - X&quot; : function(e, n, f, i, $r, c) { return /^[U-X]/.test(e); },
-    &quot;Y - Z&quot; : function(e, n, f, i, $r, c) { return /^[Y-Z]/.test(e); }
+    &quot;A - D&quot; : function(e, n, f, i, $r, c, data) { return /^[A-D]/.test(e); },
+    &quot;E - H&quot; : function(e, n, f, i, $r, c, data) { return /^[E-H]/.test(e); },
+    &quot;I - L&quot; : function(e, n, f, i, $r, c, data) { return /^[I-L]/.test(e); },
+    &quot;M - P&quot; : function(e, n, f, i, $r, c, data) { return /^[M-P]/.test(e); },
+    &quot;Q - T&quot; : function(e, n, f, i, $r, c, data) { return /^[Q-T]/.test(e); },
+    &quot;U - X&quot; : function(e, n, f, i, $r, c, data) { return /^[U-X]/.test(e); },
+    &quot;Y - Z&quot; : function(e, n, f, i, $r, c, data) { return /^[Y-Z]/.test(e); }
   }
 
 }</pre></li>
@@ -238,12 +267,12 @@
   // Note that only the normalized (n) value will contain numerical data
   // If you use the exact text, you'll need to parse it (parseFloat or parseInt)
   4 : {
-    &quot;&lt; $10&quot;      : function(e, n, f, i, $r, c) { return n &lt; 10; },
-    &quot;$10 - $100&quot; : function(e, n, f, i, $r, c) { return n &gt;= 10 && n &lt;=100; },
-    &quot;&gt; $100&quot;     : function(e, n, f, i, $r, c) { return n &gt; 100; }
+    &quot;&lt; $10&quot;      : function(e, n, f, i, $r, c, data) { return n &lt; 10; },
+    &quot;$10 - $100&quot; : function(e, n, f, i, $r, c, data) { return n &gt;= 10 && n &lt;=100; },
+    &quot;&gt; $100&quot;     : function(e, n, f, i, $r, c, data) { return n &gt; 100; }
   }
 }</pre></li>
-				<li>See the &quot;Filter function information&quot; section below.</li>
+				<li>See the &quot;Filter function information&quot; section below for more details about the function parameters.</li>
 			</ul>
 		</div>
 
@@ -268,7 +297,7 @@
 		<div>
 			<ul>
 				<li>The custom function must return a boolean value. If <code>true</code> is returned, the row will be shown if all other filters match; and if <code>false</code> is returned, the row will be hidden.
-				<pre class="prettyprint lang-javascript">function(e, n, f, i, $r, c) { return test; /* test should be a Boolean (true or false) */ }</pre>
+				<pre class="prettyprint lang-javascript">function(e, n, f, i, $r, c, data) { return test; /* test should be a Boolean (true or false) */ }</pre>
 				</li>
 				<li>The <strong>exact text (e)</strong> of the table cell is a variable passed to the function. Note that numbers will need to be parsed to make comparisons.</li>
 				<li><strong>Normalized table cell data (n)</strong> is the next varibale passed to the function.
@@ -288,13 +317,16 @@
 						<li><span class="label alert">* NOTE *</span> The row object provided is <em>not</em> attached to the table, so using something like <code>.parent()</code> or <code>.closest()</code> will not work!</li>
 						<li>For this reason, the next parameter (<code>c</code>) was added.</li>
 					</ul>
+				</li>
 				<li>The <strong>config (c)</strong> is the <code>table.config</code> (added <span class="version">v2.21.0</span>).</li>
+				<li>The <strong>data</strong> parameter is the same data passed to the filter types (see <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">all the data values here</a>).</li>
 			</ul>
 		</div>
 	</div>
 
 	<h1>Demo</h1>
-	<button type="button" class="match" data-filter-column="0" data-filter-text="Denni">Match</button> <span id="mode">false</span> (toggle &quot;filter-match&quot; class on First Name column)<br>
+	<button type="button" class="match" data-filter-column="0" data-filter-text="Denni">Toggle</button> <span id="mode" class="bright">false</span> &quot;filter-match&quot; class name on the "First Name" column<br>
+	<button type="button" class="search-type">Toggle</button> filter_searchFiltered : <span id="search-type" class="bright">true</span> (if true, the search is performed on already filtered rows, with some exceptions)<br>
 	<button type="button" class="reset">Reset Search</button>
 
 	<div id="demo"><table class="tablesorter">

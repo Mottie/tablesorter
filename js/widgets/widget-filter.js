@@ -796,7 +796,7 @@ ts.filter = {
 	},
 	findRows: function(table, filters, combinedFilters) {
 		if (table.config.lastCombinedFilter === combinedFilters || !table.config.widgetOptions.filter_initialized) { return; }
-		var len, norm_rows, $rows, rowIndex, tbodyIndex, $tbody, $cells, $cell, columnIndex,
+		var len, norm_rows, $rows, rowIndex, tbodyIndex, $tbody, $cell, columnIndex,
 			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
 			query, injected, res, id,
@@ -804,7 +804,7 @@ ts.filter = {
 			c = table.config,
 			wo = c.widgetOptions,
 			// data object passed to filters; anyMatch is a flag for the filters
-			data = { anyMatch: false },
+			data = { anyMatch: false, filters: filters },
 			// anyMatch really screws up with these types of filters
 			noAnyMatch = [ 'range', 'notMatch',  'operators' ];
 
@@ -932,30 +932,32 @@ ts.filter = {
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 
 					data.cacheArray = norm_rows[rowIndex];
+					data.rawArray = data.cacheArray[c.columns].raw;
+					data.$row = $rows.eq(rowIndex);
+					data.$cells = data.$row.children();
 
 					childRow = $rows[rowIndex].className;
 					// skip child rows & already filtered rows
 					if ( regex.child.test(childRow) || (searchFiltered && regex.filtered.test(childRow)) ) { continue; }
 					showRow = true;
 					// *** nextAll/nextUntil not supported by Zepto! ***
-					childRow = $rows.eq(rowIndex).nextUntil('tr:not(.' + c.cssChildRow + ')');
+					childRow = data.$row.nextUntil('tr:not(.' + c.cssChildRow + ')');
 					// so, if "table.config.widgetOptions.filter_childRows" is true and there is
 					// a match anywhere in the child row, then it will make the row visible
 					// checked here so the option can be changed dynamically
 					data.childRowText = (childRow.length && wo.filter_childRows) ? childRow.text() : '';
 					data.childRowText = wo.filter_ignoreCase ? data.childRowText.toLocaleLowerCase() : data.childRowText;
-					$cells = $rows.eq(rowIndex).children();
 					if (data.anyMatchFlag) {
 						// look for multiple columns "1-3,4-6,8"
 						columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
 						data.anyMatch = true;
-						data.rowArray = $cells.map(function(i){
+						data.rowArray = data.$cells.map(function(i){
 							if ( $.inArray(i, columnIndex) > -1 ) {
 								var txt;
 								if (data.parsed[i]) {
 									txt = data.cacheArray[i];
 								} else {
-									txt = this ? this.getAttribute( c.textAttribute ) || this.textContent || $(this).text() : '';
+									txt = data.rawArray[i];
 									txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
 									if (c.sortLocaleCompare) {
 										txt = ts.replaceAccents(txt);
@@ -1010,8 +1012,7 @@ ts.filter = {
 							if (wo.filter_useParsedData || data.parsed[columnIndex]) {
 								data.exact = data.cache;
 							} else {
-								val = $cells[columnIndex];
-								result = val ? $.trim( val.getAttribute( c.textAttribute ) || val.textContent || $cells.eq(columnIndex).text() ) : '';
+								result = data.rawArray[ columnIndex ] || '';
 								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405
 							}
 							data.iExact = !regex.type.test(typeof data.exact) && wo.filter_ignoreCase ? data.exact.toLocaleLowerCase() : data.exact;
@@ -1043,10 +1044,10 @@ ts.filter = {
 									filterMatched = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
 								} else if (typeof fxn === 'function') {
 									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, data.$row, c, data);
 								} else if (typeof fxn[ffxn || data.filter] === 'function') {
 									// selector option function
-									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, $rows.eq(rowIndex), c);
+									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, data.$row, c, data);
 								}
 							}
 							if (filterMatched === null) {
@@ -1074,7 +1075,7 @@ ts.filter = {
 							showRow = (result) ? showRow : false;
 						}
 					}
-					$rows.eq(rowIndex)
+					data.$row
 						.toggleClass(wo.filter_filteredRow, !showRow)[0]
 						.display = showRow ? '' : 'none';
 					if (childRow.length) {
@@ -1198,10 +1199,8 @@ ts.filter = {
 				if (wo.filter_useParsedData || c.parsers[column].parsed || c.$headerIndexed[column].hasClass('filter-parsed')) {
 					arry.push( '' + cache.normalized[rowIndex][column] );
 				} else {
-					cell = row.cells[column];
-					if (cell) {
-						arry.push( $.trim( cell.getAttribute( c.textAttribute ) || cell.textContent || $(cell).text() ) );
-					}
+					// get raw cached data instead of content directly from the cells
+					arry.push( cache.normalized[rowIndex][c.columns].raw[column] );
 				}
 			}
 		}

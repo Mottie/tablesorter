@@ -545,13 +545,24 @@ $(function(){
 			<pre class="prettyprint lang-javascript">$('.tablesorter th:eq(0)').data('placeholder', 'Search for...')</pre>
 			</blockquote>
 
+			<h3>Set Filter Initial Searches</h3>
+			<blockquote>
+			Set a <code>data-value</code> attribute (data-attribute name set by the <code>filter_defaultAttrib</code> option) on the associated table header with the desired initial search value.
+			<pre class="prettyprint lang-html">&lt;th data-value=&quot;&lt;=100&quot;&gt;Price&lt;/th&gt;</pre>
+			or, set the header cell's jQuery data
+			<pre class="prettyprint lang-javascript">$('.tablesorter th:eq(0)').data('value', '&lt;=100')</pre>
+			</blockquote>
+
 			<h3>filterReset</h3>
 			<blockquote>
 			Use the <code>filterReset</code> method to reset (clear) all of the current filters using this method
 			<pre class="prettyprint lang-javascript">$('table').trigger('filterReset');</pre>
+			or, just add an element to your page and point to it by setting the <code>filter_reset</code> option, to allow user interaction.
+			<p></p>
+			<span class="label label-info">*NOTE*</span> delegated event bindings are used so these "reset" elements can be dynamically added and removed from the document.
 			</blockquote>
 
-			<h3>search</h3>
+			<h3>Search</h3>
 			<blockquote>
 			With this method, you can pass an array of filter values:
 			<pre class="prettyprint lang-javascript">// apply &quot;2?%&quot; filter to the fifth column (zero-based index)
@@ -598,7 +609,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '', '11' ], true );</pre>
 		</blockquote>
 
-		<h3>Bind External filter</h3>
+		<h3>Bind external filter</h3>
 		<blockquote>
 		Use this method to bind external search filters
 		<ul>
