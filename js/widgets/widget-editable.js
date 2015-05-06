@@ -75,12 +75,12 @@ var tse = $.tablesorter.editable = {
 			// test for children, if they exist, then make the children editable
 			$t = $( this );
 
-			if ( tmp && $t.children().length === 0 ) {
+			if ( tmp && $t.children( 'div, span' ).length === 0 ) {
 				$t.wrapInner( wo.editable_wrapContent );
 			}
-			if ( $t.children().length ) {
-				// make all children content editable
-				$t.children().not( '.' + wo.editable_noEdit ).each( function() {
+			if ( $t.children( 'div, span' ).length ) {
+				// make div/span children content editable
+				$t.children( 'div, span' ).not( '.' + wo.editable_noEdit ).each( function() {
 					var $this = $( this );
 					if ( wo.editable_trimContent ) {
 						$this.html( function( i, txt ) {

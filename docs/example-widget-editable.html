@@ -119,8 +119,9 @@ td.no-edit, span.no-edit {
 					<li>Modified the <code>editable_trimContent</code> option to only trim content when set.</li>
 					<li>The widget now works with the contenteditable html (using jQuery's <code>.html()</code>); previously, the widget would only manipulate the text (using jQuery <code>.text()</code>), so any HTML would get stripped out.<br>
 					<span class="label label-info">*Note*</span> Because of this change, if the user presses <kbd>Enter</kbd>, a <code>&lt;div&gt;</code> will be automatically inserted by the browser (not the widget) and any content entered will be added inside this "new line" div. If this is undesirable, use the <code>editable_blur</code> callback to modify the content.</li>
+					<li>If the cell content is already wrapped in a div or span, that element will be made contenteditable. Otherwise any direct children of the table cell will be made contenteditable; prior to this update, all direct child elements (including <code>&lt;br&gt;</code>s were made contenteditable by mistake).</li>
 				</ul>
-
+			</li>
 			<li>Updated <span class="version">v2.17.6</span>,
 				<ul>
 					<li>Fixed the <code>editable_enterToAccept</code> option to do what it was meant to do, accept when the user presses enter.</li>
@@ -466,7 +467,7 @@ td.no-edit, span.no-edit {
   $('#table').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_wrap : '<div>'
+      editable_wrap : '&lt;div&gt;'
     }
   });
 
