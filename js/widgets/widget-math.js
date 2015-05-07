@@ -4,7 +4,7 @@
 */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	"use strict";
 
 	var ts = $.tablesorter,
@@ -23,7 +23,9 @@
 				$cells = $row.children();
 			if (!$row.hasClass(wo.filter_filteredRow || 'filtered')) {
 				if (wo.math_ignore.length) {
-					$cells = $cells.not('[' + dataAttrib + '=ignore]').not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
+					$cells = $cells
+						.not('[' + dataAttrib + '=ignore]')
+						.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
 				}
 				arry = $cells.not($el).map(function(){
 					$t = $(this);
@@ -39,7 +41,7 @@
 		},
 
 		// get all of the column numerical values in an arry
-		getColumn : function(table, wo, $el, type, dataAttrib){
+		getColumn : function(table, wo, $el, type, dataAttrib) {
 			var i, txt, $t, len, mathAbove,
 				arry = [],
 				c = table.config,
@@ -89,7 +91,7 @@
 		},
 
 		// get all of the column numerical values in an arry
-		getAll : function(table, wo, dataAttrib){
+		getAll : function(table, wo, dataAttrib) {
 			var txt, $t, col,
 				arry = [],
 				c = table.config,
@@ -114,7 +116,7 @@
 			return arry;
 		},
 
-		recalculate : function(table, c, wo, init){
+		recalculate : function(table, c, wo, init) {
 			if (c && (!wo.math_isUpdating || init)) {
 
 				// add data-column attributes to all table cells
@@ -365,7 +367,7 @@
 			return Math.sqrt( vars );
 		},
 		// standard deviation (population)
-		stdevp : function(arry){
+		stdevp : function(arry) {
 			var varp = ts.equations.variance(arry, true);
 			return Math.sqrt( varp );
 		}
@@ -392,7 +394,7 @@
 			math_suffix   : '',
 			math_event    : 'recalculate'
 		},
-		init : function(table, thisWidget, c, wo){
+		init : function(table, thisWidget, c, wo) {
 			c.$table
 				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
 				.on(math.events + ' ' + wo.math_event, function(e) {
@@ -408,13 +410,13 @@
 				.on('updateComplete.tsmath', function(){
 					setTimeout(function(){
 						wo.math_isUpdating = false;
-					}, 500);
+					}, 20);
 				});
 			wo.math_isUpdating = false;
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo, refreshing){
+		remove: function(table, c, wo, refreshing) {
 			if (refreshing) { return; }
 			$(table)
 				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
