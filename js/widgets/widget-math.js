@@ -20,12 +20,10 @@
 				c = table.config,
 				arry = [],
 				$row = $el.closest('tr'),
-				$cells = $row.children();
+				$cells = $row.children().not('[' + dataAttrib + '=ignore]');
 			if (!$row.hasClass(wo.filter_filteredRow || 'filtered')) {
 				if (wo.math_ignore.length) {
-					$cells = $cells
-						.not('[' + dataAttrib + '=ignore]')
-						.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
+					$cells = $cells.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
 				}
 				arry = $cells.not($el).map(function(){
 					$t = $(this);
