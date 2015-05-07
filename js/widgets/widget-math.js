@@ -22,6 +22,7 @@
 				$row = $el.closest('tr'),
 				$cells = $row.children().not('[' + dataAttrib + '=ignore]');
 			if (!$row.hasClass(wo.filter_filteredRow || 'filtered')) {
+				$cells = $cells.not('[' + dataAttrib + '=ignore]');
 				if (wo.math_ignore.length) {
 					$cells = $cells.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
 				}
