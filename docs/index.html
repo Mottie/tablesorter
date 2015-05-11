@@ -1201,7 +1201,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td>jQuery selectors used to find cells in the header.
 					<div class="collapsible">
 					You can change this, but the table will still need the required thead and tbody before this plugin will work properly.
-					<br>Added <code>&gt;</code> to the selector in v2.3 to prevent targetting nested table headers. It was modified again in v2.4 to include <code>td</code> cells within the thead.
+					<br>Added <code>&gt;</code> to the selector in v2.3 to prevent targeting nested table headers. It was modified again in v2.4 to include <code>td</code> cells within the thead.
 					</div>
 					</td>
 				<td></td>
@@ -3461,7 +3461,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Resizable widget: When <code>true</code>, the last column will be targetted for resizing (<span class="version">v2.21.3</span>).
+					Resizable widget: When <code>true</code>, the last column will be targeted for resizing (<span class="version">v2.21.3</span>).
 					<div class="collapsible">
 						<p>When <code>true</code>, resizing a column will change the size of the selected column, and the last column, not the selected column's neighbor.</p>
 						<p>When <code>false</code>, resizing a column will move the column border between it's neighbors.</p>
@@ -6601,14 +6601,14 @@ textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textEx
 						<ul>
 							<li><code>tbodyIndex</code> - the tbody zero-based index of the current cell.</li>
 							<li><code>rowIndex</code> - the row zero-based index of the current cell.</li>
-							<li><code>$row</code> - a jQuery object targetting the current row being processed.</li>
-							<li><code>$cell</code> - a jQuery object targetting the curretn cell being processed.</li>
+							<li><code>$row</code> - a jQuery object targeting the current row being processed.</li>
+							<li><code>$cell</code> - a jQuery object targeting the curretn cell being processed.</li>
 							<li><code>parsed</code> - parsed text of the current cell.</li>
 							<li><code>raw</code> - raw (unparsed) text of the current cell.</li>
 						</ul>
 						As an example, say you want to make the text of all cells with a value greater than 20 red (assuming the 'red' class name is defined in css). Do it as follows:
 						<pre class="prettyprint lang-js">var table = $('table')[0];
-// targetting the 4th column (zero-based index)
+// targeting the 4th column (zero-based index)
 $.tablesorter.getColumnText( table, 3, function( data ) {
   if ( data.parsed > 20 ) {
     data.$cell.addClass('red');
@@ -6629,7 +6629,7 @@ $.tablesorter.getColumnText( table, 3, function( data ) {
 </pre>
 						If the callback isn't used, the function will return the cummulated data for the column (it does not include all of the parameters available within the callback function):
 						<pre class="prettyprint lang-js">var table = $('table')[0],
-  // targetting the 4th column (zero-based index)
+  // targeting the 4th column (zero-based index)
   columnText = $.tablesorter.getColumnText( table, 3 );
   // columnText = {
   //   raw    : [ 'cell1', 'cell2', ..., 'celln' ],

@@ -153,7 +153,7 @@
 			txt = $t.data('filter-text') || $t.text(); // text to add to filter
 
 		filters[col] = txt;
-		// using "table.hasFilters" here to make sure we aren't targetting a sticky header
+		// using "table.hasFilters" here to make sure we aren't targeting a sticky header
 		$.tablesorter.setFilters( $('#table'), filters, true ); // new v2.9
 
 		/** old method (prior to tablsorter v2.9 ***
