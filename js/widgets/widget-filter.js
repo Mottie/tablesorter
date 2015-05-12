@@ -800,6 +800,7 @@ ts.filter = {
 			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
 			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
 			query, injected, res, id,
+			storedFilters = $.extend( [], filters ),
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
@@ -840,7 +841,7 @@ ts.filter = {
 		c.filteredRows = 0;
 		c.totalRows = 0;
 		// combindedFilters are undefined on init
-		combinedFilters = (filters || []).join('');
+		combinedFilters = (storedFilters || []).join('');
 
 		for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 			$tbody = ts.processTbody(table, c.$tbodies.eq(tbodyIndex), true);
@@ -1088,10 +1089,11 @@ ts.filter = {
 			ts.processTbody(table, $tbody, false);
 		}
 		c.lastCombinedFilter = combinedFilters; // save last search
-		c.lastSearch = filters;
-		c.$table.data('lastSearch', filters);
+		// don't save "filters" directly since it may have altered (AnyMatch column searches)
+		c.lastSearch = storedFilters;
+		c.$table.data('lastSearch', storedFilters);
 		if (wo.filter_saveFilters && ts.storage) {
-			ts.storage( table, 'tablesorter-filters', filters );
+			ts.storage( table, 'tablesorter-filters', storedFilters );
 		}
 		if (c.debug) {
 			ts.benchmark("Completed filter widget search", time);
