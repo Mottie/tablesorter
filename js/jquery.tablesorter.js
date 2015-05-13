@@ -190,7 +190,11 @@
 					$node = node.jquery ? node : $(node);
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
-					return $.trim( ( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
+					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
+					return $.trim(
+						( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) ||
+						$node.text()
+					);
 				} else {
 					if (typeof(t) === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
@@ -199,7 +203,7 @@
 					}
 				}
 				// fallback
-				return $.trim( $node[0].textContent || $node.text() || '' );
+				return $.trim( $node[0].textContent || $node.text() );
 			};
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
@@ -235,12 +239,15 @@
 
 			// centralized function to extract/parse cell contents
 			function getParsedText( c, cell, colIndex, txt ) {
-				var val = '',
+				if ( typeof txt === 'undefined' ) {
+					txt = ts.getElementText( c, cell, colIndex );
+				}
+				// if no parser, make sure to return the txt
+				var val = '' + txt,
 					parser = c.parsers[ colIndex ],
 					extractor = c.extractors[ colIndex ];
-				txt = txt || ts.getElementText( c, cell, colIndex );
 				if ( parser ) {
-					// do extract before parsing if there is one
+					// do extract before parsing, if there is one
 					if ( extractor && typeof extractor.format === 'function' ) {
 						txt = extractor.format( txt, c.table, cell, colIndex );
 					}
@@ -320,7 +327,7 @@
 			/* utils */
 			function buildCache(table) {
 				var cc, t, v, i, j, k, $row, cols, cacheTime,
-					totalRows, rowData, colMax,
+					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
 					$tb = c.$tbodies,
 					parsers = c.parsers;
@@ -353,33 +360,40 @@
 							raw: []    // original row text
 						};
 						/** Add the table data to main data array */
-						$row = $($tb[k].rows[i]);
+						$row = $( $tb[ k ].rows[ i ] );
 						cols = [];
 						// if this is a child row, add it to the last row's children and continue to the next row
 						// ignore child row class, if it is the first row
-						if ($row.hasClass(c.cssChildRow) && i !== 0) {
+						if ( $row.hasClass( c.cssChildRow ) && i !== 0 ) {
 							t = cc.normalized.length - 1;
-							cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
+							prevRowData = cc.normalized[ t ][ c.columns ];
+							prevRowData.$row = prevRowData.$row.add( $row );
 							// add 'hasChild' class name to parent row
-							if (!$row.prev().hasClass(c.cssChildRow)) {
-								$row.prev().addClass(ts.css.cssHasChild);
+							if ( !$row.prev().hasClass( c.cssChildRow ) ) {
+								$row.prev().addClass( ts.css.cssHasChild );
 							}
 							// save child row content (un-parsed!)
-							rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
+							v = $row.children( 'th, td' );
+							t = prevRowData.child.length;
+							prevRowData.child[ t ] = [];
+							// child row content does not account for colspans/rowspans; so indexing may be off
+							for ( j = 0; j < c.columns; j++ ) {
+								prevRowData.child[ t ][ j ] = getParsedText( c, v[ j ], j );
+							}
 							// go to the next for loop
 							continue;
 						}
 						rowData.$row = $row;
 						rowData.order = i; // add original row position to rowCache
 						for ( j = 0; j < c.columns; ++j ) {
-							if (typeof parsers[j] === 'undefined') {
-								if (c.debug) {
-									log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
+							if (typeof parsers[ j ] === 'undefined') {
+								if ( c.debug ) {
+									log( 'No parser found for cell:', $row[ 0 ].cells[ j ], 'does it have a header?' );
 								}
 								continue;
 							}
-							t = ts.getElementText(c, $row[0].cells[j], j);
-							rowData.raw.push(t); // save original row text
+							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
+							rowData.raw.push( t ); // save original row text
 							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
 							cols.push( v );
 							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
@@ -396,11 +410,11 @@
 					c.totalRows += cc.normalized.length;
 
 				}
-				if (c.showProcessing) {
-					ts.isProcessing(table); // remove processing icon
+				if ( c.showProcessing ) {
+					ts.isProcessing( table ); // remove processing icon
 				}
-				if (c.debug) {
-					benchmark('Building cache for ' + totalRows + ' rows', cacheTime);
+				if ( c.debug ) {
+					benchmark( 'Building cache for ' + totalRows + ' rows', cacheTime );
 				}
 			}
 
