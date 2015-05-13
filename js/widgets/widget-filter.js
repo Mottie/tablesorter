@@ -132,7 +132,7 @@ ts.filter = {
 					savedSearch = query;
 				// parse filter value in case we're comparing numbers (dates)
 				if (parsed || parser.type === 'numeric') {
-					result = ts.filter.parseFilter(c, $.trim('' + data.iFilter.replace(ts.filter.regex.operators, '')), index, parsed, true);
+					result = ts.filter.parseFilter(c, $.trim('' + data.iFilter.replace(ts.filter.regex.operators, '')), index, true);
 					query = ( typeof result === "number" && result !== '' && !isNaN(result) ) ? result : query;
 				}
 
@@ -502,10 +502,8 @@ ts.filter = {
 		c.$table.data('lastSearch', filters);
 		return filters;
 	},
-	parseFilter: function(c, filter, column, parsed, forceParse){
-		return forceParse || parsed ?
-			c.parsers[column].format( filter, c.table, [], column ) :
-			filter;
+	parseFilter: function( c, filter, column, parsed ) {
+		return parsed ? c.parsers[column].format( filter, c.table, [], column ) : filter;
 	},
 	buildRow: function(table, c, wo) {
 		var col, column, $header, buildSelect, disabled, name, ffxn,
