@@ -132,7 +132,7 @@ $( function() {
 
 		/*** fixed column ***/
 		'.' + tscss.scrollerFixedPanel + ' { pointer-events: all; }' +
-		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel + ' { position: absolute; top: 0; zindex: 2; left: 0 } ' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel + ' { position: absolute; top: 0; bottom: 0; z-index: 2; left: 0; right: 0; } ' +
 		'</style>';
 	$( style ).appendTo( 'body' );
 });
