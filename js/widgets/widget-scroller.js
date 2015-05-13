@@ -40,14 +40,15 @@ var ts = $.tablesorter,
 	tscss = ts.css;
 
 $.extend( ts.css, {
-	scrollerWrap   : 'tablesorter-scroller',
-	scrollerHeader : 'tablesorter-scroller-header',
-	scrollerTable  : 'tablesorter-scroller-table',
-	scrollerFooter : 'tablesorter-scroller-footer',
-	scrollerFixed  : 'tablesorter-scroller-fixed',
-	scrollerHasFix : 'tablesorter-scroller-has-fixed-columns',
-	scrollerReset  : 'tablesorter-scroller-reset',
-	scrollerRtl    : 'tablesorter-scroller-rtl'
+	scrollerWrap        : 'tablesorter-scroller',
+	scrollerHeader      : 'tablesorter-scroller-header',
+	scrollerTable       : 'tablesorter-scroller-table',
+	scrollerFooter      : 'tablesorter-scroller-footer',
+	scrollerFixed       : 'tablesorter-scroller-fixed',
+	scrollerFixedPanel  : 'tablesorter-scroller-fixed-panel',
+	scrollerHasFix      : 'tablesorter-scroller-has-fixed-columns',
+	scrollerReset       : 'tablesorter-scroller-reset',
+	scrollerRtl         : 'tablesorter-scroller-rtl'
 });
 
 ts.addWidget({
@@ -128,6 +129,10 @@ $( function() {
 		/* remove right border of fixed header tables to hide the boundary */
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' table { border-right-color: transparent; padding-right: 0; }' +
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' table { border-left-color: transparent; padding-left: 0; }' +
+
+		/*** fixed column ***/
+		'.' + tscss.scrollerFixedPanel + ' { pointer-events: all; }' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel + ' { position: absolute; top: 0; zindex: 2; left: 0 } ' +
 		'</style>';
 	$( style ).appendTo( 'body' );
 });
@@ -389,6 +394,7 @@ ts.scroller = {
 			.addClass( tscss.scrollerFixed )
 			.removeClass( tscss.scrollerWrap )
 			.attr( 'id', '' );
+		$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
 		$fixedTbody = $fixedColumn.find( '.' + tscss.scrollerTable );
 		$fixedTbody.find( 'table' )
 			.addClass( c.namespace.slice(1) + '_extra_table' )
