@@ -121,7 +121,8 @@ ts.filter = {
 		},
 		// Look for operators >, >=, < or <=
 		operators: function( c, data ) {
-			if ( /^[<>]=?/.test(data.iFilter) ) {
+			// ignore empty strings... because "" < 10 is true
+			if ( /^[<>]=?/.test(data.iFilter) && data.iExact !== '' ) {
 				var cachedValue, result,
 					table = c.table,
 					index = data.index,
