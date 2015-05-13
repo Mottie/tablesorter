@@ -21,7 +21,8 @@
 			return false;
 		},
 		format : function( txt, table, cell ) {
-			return $( cell ).find( 'input' ).val() || txt;
+			var $input = $( cell ).find( 'input' );
+			return $input.length ? $input.val() : txt;
 		},
 		parsed : true, // filter widget flag
 		type : 'text'
@@ -33,7 +34,8 @@
 			return false;
 		},
 		format : function( txt, table, cell ) {
-			var val = $( cell ).find( 'input' ).val() || txt,
+			var $input = $( cell ).find( 'input' );
+			var val = $input.length ? $input.val() : txt,
 				num = $.tablesorter.formatFloat( ( val || '' ).replace( /[^\w,. \-()]/g, '' ), table );
 			return txt && typeof num === 'number' ? num :
 				txt ? $.trim( txt && table.config.ignoreCase ? txt.toLocaleLowerCase() : txt ) : txt;
@@ -74,7 +76,8 @@
 			return false;
 		},
 		format : function( txt, table, cell ) {
-			return $( cell ).find( 'select' ).val() || txt;
+			var $select = $( cell ).find( 'select' );
+			return $select.length ? $select.val() : txt;
 		},
 		parsed : true, // filter widget flag
 		type : 'text'
@@ -102,7 +105,8 @@
 			return false;
 		},
 		format : function( txt, table, cell ) {
-			return $( cell ).find( 'textarea' ).val() || txt;
+			var $textarea = $( cell ).find( 'textarea' );
+			return $textarea.length ? $textarea.val() : txt;
 		},
 		parsed : true, // filter widget flag
 		type : 'text'
