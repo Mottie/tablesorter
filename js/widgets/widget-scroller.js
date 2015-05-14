@@ -131,7 +131,7 @@ $( function() {
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' table { border-left-color: transparent; padding-left: 0; }' +
 
 		/*** fixed column ***/
-		'.' + tscss.scrollerFixedPanel + ' { pointer-events: all; }' +
+		'.' + tscss.scrollerFixedPanel + ' { pointer-events: none; }' +
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel + ' { position: absolute; top: 0; bottom: 0; z-index: 2; left: 0; right: 0; } ' +
 		'</style>';
 	$( style ).appendTo( 'body' );
