@@ -639,9 +639,10 @@
 					val = sortList[indx];
 					// ensure all sortList values are numeric - fixes #127
 					col = parseInt(val[0], 10);
-					// make sure header exists
-					header = c.$headerIndexed[col][0];
-					if (header) { // prevents error if sorton array is wrong
+					// prevents error if sorton array is wrong
+					if ( col < c.columns && c.$headerIndexed[col] ) {
+						// make sure header exists
+						header = c.$headerIndexed[col][0];
 						// o.count = o.count + 1;
 						dir = ('' + val[1]).match(/^(1|d|s|o|n)/);
 						dir = dir ? dir[0] : '';
