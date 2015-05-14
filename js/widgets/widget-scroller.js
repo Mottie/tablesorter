@@ -114,7 +114,7 @@ $( function() {
 
 		/*** fixed column ***/
 		/* disable pointer-events on fixed column wrapper or the user can't interact with the horizontal scrollbar */
-		'.' + tscss.scrollerFixed + ', .' + tscss.scrollerFixedPanel + ' { pointer-events: none; }' +
+		'.' + tscss.scrollerFixed + ', '.' + tscss.scrollerFixed + ' .' + tscss.scrollerFixedPanel + ' { pointer-events: none; }' +
 		/* enable pointer-events for fixed column children; see #135 & #878 */
 		'.' + tscss.scrollerFixed + ' > div { pointer-events: all; }' +
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' { position: absolute; top: 0; z-index: 1; left: 0 } ' +
