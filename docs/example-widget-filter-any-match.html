@@ -80,11 +80,11 @@
 			<li>This is a demo of the <a href="index.html#widget-filter-external"><code>filter_external</code></a> option (added <span class="version">v2.15</span>).</li>
 			<li>In <span class="version">v2.15</span>
 				<ul>
-					<li>The <a class="alert" href="index.html#widget-filter-any-match"><code>filter_anyMatch</code></a> has been <span class="label alert">removed</span> (added <span class="version">v2.13.3</span>; removed in v2.15)</li>
+					<li>The <a class="alert" href="index.html#widget-filter-any-match"><code>filter_anyMatch</code></a> option has been <span class="label alert">removed</span> (added <span class="version">v2.13.3</span>; removed in v2.15)</li>
 					<li>A new option <code>filter_external</code> has been added. It is set to a jQuery selector string (<code>'.search'</code>) or jQuery object (<code>$('.search')</code>) targeting an external input.</li>
 					<li>So now a table can include <em>both</em> a filter row (<code>filter_columnFilters</code> is <code>true</code>, i.e. the internal table filters) and any number of external search inputs (as set by the <code>filter_external</code> option).</li>
 					<li>The external search results must have a <code>data-column="#"</code> attribute set, where <code>#</code> is the index of the column (zero-based) that the input targets, to have an input search all table content, set the data column attribute to <code>"all"</code> to match any column.</li>
-					<li>The <a href="index.html#function-bindsearch"><code>$.tablesorter.bindSearch</code> function</a> (<a href="example-widget-filter-external-inputs.html">see demo</a>) does exactly the same thing as the <code>filter_external</code> option. The major difference is seen when using ajax to populate the table, the initial filter values can be set before tablesorter initialization when using teh <code>filter_external</code> option; whereas, the bind search function can not set initial filter values and is usually executed after tablesorter initialization.</li>
+					<li>The <a href="index.html#function-bindsearch"><code>$.tablesorter.bindSearch</code> function</a> (<a href="example-widget-filter-external-inputs.html">see demo</a>) does exactly the same thing as the <code>filter_external</code> option. The major difference is seen when using ajax to populate the table, the initial filter values can be set before tablesorter initialization when using the <code>filter_external</code> option; whereas, the bind search function can not set initial filter values and is usually executed after tablesorter initialization.</li>
 				</ul>
 			</li>
 		</ul>

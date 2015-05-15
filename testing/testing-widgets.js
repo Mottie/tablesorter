@@ -68,7 +68,7 @@ $(function(){
 					'<tr><td>16</td><td>Jim</td><td>Franco</td><td>24</td><td>$14.19</td><td>14%</td><td>Jan 14, 2004 11:23 AM</td><td>Franco</td></tr>' +
 					'<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td><td>Evans</td></tr>' +
 					'<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td><td>McMasters</td></tr>' +
-					'<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td><td>Bronson</td></tr>' +
+					'<tr><td>55</td><td>Dennis</td><td>Bronson</td><td>65</td><td>$123.00</td><td></td><td>Jan 20, 2001 1:12 PM</td><td>Bronson</td></tr>' +
 					'<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>17%</td><td>Jun 11, 2011 10:55 AM</td><td>delFuego</td></tr>' +
 				'</tbody></table>').find('table');
 			this.table = this.$table[0];
@@ -183,13 +183,13 @@ $(function(){
 				function(){ assert.cacheCompare( table, 4, [153.19, 123], 'search operator (>100); ensure search filtered gets cleared', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', '', '', '', '', '>=20'], true ); },
-				function(){ assert.cacheCompare( table, 5, [22, 20, 25, 44, 44, 32], 'search operator (>=)', true ); }
+				function(){ assert.cacheCompare( table, 5, [22, 20, 25, 44, 44], 'search operator (>=)', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', '', '', '', '', '<10'], true ); },
 				function(){ assert.cacheCompare( table, 5, [5, 4], 'search operator (<10)', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', '', '', '', '', '<100'], true ); },
-				function(){ assert.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 32, 17], 'search operator (<100); ensure search filtered gets cleared', true ); }
+				function(){ assert.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 17], 'search operator (<100); ensure search filtered gets cleared', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', '', '', '', '', '<=20'], true ); },
 				function(){ assert.cacheCompare( table, 5, [5, 18, 20, 4, 14, 11, 15, 17], 'search operator (<=)', true ); }
@@ -249,7 +249,7 @@ $(function(){
 				function(){ assert.cacheCompare( table, 1, ['Bruce', 'Alex'], 'search - filter-match removed', true ); }
 			).nextTask( // filter reset
 				function(){ c.$table.trigger('filterReset'); },
-				function(){ assert.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 32, 17], 'filterReset', true ); }
+				function(){ assert.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, '', 17], 'filterReset', true ); }
 			).nextTask( // filter parsed class
 				function(){
 					wo.filter_startsWith = false;

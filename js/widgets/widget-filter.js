@@ -19,6 +19,7 @@ ts.addWidget({
 	priority: 50,
 	options : {
 		filter_childRows     : false, // if true, filter includes child row content in the search
+		filter_childByColumn : false, // (filter_childRows must be true) if true = search child rows by column; false = search all child row text grouped
 		filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 		filter_columnAnyMatch: true,  // if true, allows using "#:{query}" in AnyMatch searches (column:query)
 		filter_cellFilter    : '',    // css class name added to the filter cell (string or array)
@@ -89,11 +90,15 @@ ts.filter = {
 	},
 		// function( c, data ) { }
 		// c = table.config
-		// data.filter = array of filter input values;
-		// data.iFilter = same array, except lowercase (if wo.filter_ignoreCase is true)
+		// data.$row = jQuery object of the row currently being processed
+		// data.$cells = jQuery object of all cells within the current row
+		// data.filters = array of filters for all columns (some may be undefined)
+		// data.filter = filter for the current column
+		// data.iFilter = same as data.filter, except lowercase (if wo.filter_ignoreCase is true)
 		// data.exact = table cell text (or parsed data if column parser enabled)
 		// data.iExact = same as data.exact, except lowercase (if wo.filter_ignoreCase is true)
-		// data.cache = table cell text from cache, so it has been parsed (& in all lower case if config.ignoreCase is true)
+		// data.cache = table cell text from cache, so it has been parsed (& in all lower case if c.ignoreCase is true)
+		// data.cacheArray = An array of parsed content from each table cell in the row being processed
 		// data.index = column index; table = table element (DOM)
 		// data.parsed = array (by column) of boolean values (from filter_useParsedData or "filter-parsed" class)
 	types: {
@@ -101,15 +106,14 @@ ts.filter = {
 		regex: function( c, data ) {
 			if ( ts.filter.regex.regex.test(data.filter) ) {
 				var matches,
-					wo = c.widgetOptions,
 					// cache regex per column for optimal speed
-					regex = wo.filter_regexCache[ data.index ] || ts.filter.regex.regex.exec( data.filter ),
+					regex = data.filter_regexCache[ data.index ] || ts.filter.regex.regex.exec( data.filter ),
 					isRegex = regex instanceof RegExp;
 				try {
 					if (!isRegex) {
 						// force case insensitive search if ignoreCase option set?
 						// if ( c.ignoreCase && !regex[2] ) { regex[2] = 'i'; }
-						wo.filter_regexCache[ data.index ] = regex = new RegExp( regex[1], regex[2] );
+						data.filter_regexCache[ data.index ] = regex = new RegExp( regex[1], regex[2] );
 					}
 					matches = regex.test( data.exact );
 				} catch (error) {
@@ -135,13 +139,11 @@ ts.filter = {
 					result = ts.filter.parseFilter(c, $.trim('' + data.iFilter.replace(ts.filter.regex.operators, '')), index, true);
 					query = ( typeof result === "number" && result !== '' && !isNaN(result) ) ? result : query;
 				}
-
 				// iExact may be numeric - see issue #149;
 				// check if cached is defined, because sometimes j goes out of range? (numeric columns)
 				cachedValue = ( parsed || parser.type === 'numeric' ) && !isNaN(query) && typeof data.cache !== 'undefined' ? data.cache :
 					isNaN(data.iExact) ? ts.formatFloat( data.iExact.replace(ts.filter.regex.nondigit, ''), table) :
 					ts.formatFloat( data.iExact, table );
-
 				if ( />/.test(data.iFilter) ) { result = />=/.test(data.iFilter) ? cachedValue >= query : cachedValue > query; }
 				if ( /</.test(data.iFilter) ) { result = /<=/.test(data.iFilter) ? cachedValue <= query : cachedValue < query; }
 				// keep showing all rows if nothing follows the operator
@@ -271,7 +273,6 @@ ts.filter = {
 		wo.filter_initTimer = null;
 		wo.filter_formatterCount = 0;
 		wo.filter_formatterInit = [];
-		wo.filter_regexCache = [];
 		wo.filter_anyColumnSelector = '[data-column="all"],[data-column="any"]';
 		wo.filter_multipleColumnSelector = '[data-column*="-"],[data-column*=","]';
 
@@ -793,43 +794,200 @@ ts.filter = {
 		}
 		return columns;
 	},
-	findRows: function(table, filters, combinedFilters) {
-		if (table.config.lastCombinedFilter === combinedFilters || !table.config.widgetOptions.filter_initialized) { return; }
-		var len, norm_rows, $rows, rowIndex, tbodyIndex, $tbody, $cell, columnIndex,
-			childRow, lastSearch, hasSelect, matches, result, showRow, time, val, indx,
-			notFiltered, searchFiltered, filterMatched, excludeMatch, fxn, ffxn,
-			query, injected, res, id,
+	processRow: function( c, data, vars ) {
+		var $cell, columnIndex, hasSelect, matches, result, val, filterMatched, excludeMatch, fxn, ffxn, txt,
+			regex = ts.filter.regex,
+			wo = c.widgetOptions,
+			showRow = true;
+		data.$cells = data.$row.children();
+
+		if ( data.anyMatchFlag ) {
+			// look for multiple columns "1-3,4-6,8"
+			columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
+			data.anyMatch = true;
+			data.rowArray = data.$cells.map(function(i){
+				if ( $.inArray(i, columnIndex) > -1 ) {
+					if (data.parsed[i]) {
+						txt = data.cacheArray[i];
+					} else {
+						txt = data.rawArray[i];
+						txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
+						if (c.sortLocaleCompare) {
+							txt = ts.replaceAccents(txt);
+						}
+					}
+					return txt;
+				}
+			}).get();
+			data.filter = data.anyMatchFilter;
+			data.iFilter = data.iAnyMatchFilter;
+			data.exact = data.rowArray.join(' ');
+			data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
+			data.cache = data.cacheArray.slice(0,-1).join(' ');
+			filterMatched = null;
+			matches = null;
+			for (ffxn in ts.filter.types) {
+				if ($.inArray(ffxn, vars.noAnyMatch) < 0 && matches === null) {
+					matches = ts.filter.types[ffxn]( c, data );
+					if (matches !== null) {
+						filterMatched = matches;
+					}
+				}
+			}
+			if (filterMatched !== null) {
+				showRow = filterMatched;
+			} else {
+				if ( wo.filter_startsWith ) {
+					showRow = false;
+					columnIndex = c.columns;
+					while ( !showRow && columnIndex > 0 ) {
+						columnIndex--;
+						showRow = showRow || data.rowArray[ columnIndex ].indexOf( data.iFilter ) === 0;
+					}
+				} else {
+					showRow = ( data.iExact + data.childRowText ).indexOf( data.iFilter ) >= 0;
+				}
+			}
+			data.anyMatch = false;
+			// no other filters to process
+			if ( data.filters.join( '' ) === data.filter ) {
+				return showRow;
+			}
+		}
+
+		for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
+			data.filter = data.filters[ columnIndex ];
+			data.index = columnIndex;
+
+			// filter types to exclude, per column
+			excludeMatch = vars.excludeFilter[ columnIndex ];
+
+			// ignore if filter is empty or disabled
+			if ( data.filter ) {
+				data.cache = data.cacheArray[ columnIndex ];
+				// check if column data should be from the cell or from parsed data
+				if ( wo.filter_useParsedData || data.parsed[ columnIndex ] ) {
+					data.exact = data.cache;
+				} else {
+					result = data.rawArray[ columnIndex ] || '';
+					data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
+				}
+				data.iExact = !regex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
+					data.exact.toLowerCase() : data.exact;
+				result = showRow; // if showRow is true, show that row
+
+				// in case select filter option has a different value vs text "a - z|A through Z"
+				ffxn = wo.filter_columnFilters ?
+					c.$filters.add( c.$externalFilters )
+						.filter( '[data-column="'+ columnIndex + '"]' )
+						.find( 'select option:selected' )
+						.attr( 'data-function-name' ) || '' : '';
+				// replace accents - see #357
+				if ( c.sortLocaleCompare ) {
+					data.filter = ts.replaceAccents( data.filter );
+				}
+
+				val = true;
+				if ( wo.filter_defaultFilter && regex.iQuery.test( vars.defaultColFilter[ columnIndex ] ) ) {
+					data.filter = ts.filter.defaultFilter( data.filter, vars.defaultColFilter[ columnIndex ] );
+					// val is used to indicate that a filter select is using a default filter;
+					// so we override the exact & partial matches
+					val = false;
+				}
+				// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
+				data.iFilter = wo.filter_ignoreCase ? ( data.filter || '' ).toLowerCase() : data.filter;
+				fxn = vars.functions[ columnIndex ];
+				$cell = c.$headerIndexed[ columnIndex ];
+				hasSelect = $cell.hasClass( 'filter-select' );
+				filterMatched = null;
+				if ( fxn || ( hasSelect && val ) ) {
+					if ( fxn === true || hasSelect ) {
+						// default selector uses exact match unless "filter-match" class is found
+						filterMatched = ( $cell.hasClass( 'filter-match' ) ) ?
+							data.iExact.search( data.iFilter ) >= 0 : data.filter === data.exact;
+					} else if ( typeof fxn === 'function' ) {
+						// filter callback( exact cell content, parser normalized content,
+						// filter input value, column index, jQuery row object )
+						filterMatched = fxn( data.exact, data.cache, data.filter, columnIndex, data.$row, c, data );
+					} else if ( typeof fxn[ ffxn || data.filter ] === 'function' ) {
+						// selector option function
+						filterMatched =
+							fxn[ ffxn || data.filter ]( data.exact, data.cache, data.filter, columnIndex, data.$row, c, data );
+					}
+				}
+				if ( filterMatched === null ) {
+					// cycle through the different filters
+					// filters return a boolean or null if nothing matches
+					matches = null;
+					for ( ffxn in ts.filter.types ) {
+						if ( $.inArray( ffxn, excludeMatch ) < 0 && matches === null ) {
+							matches = ts.filter.types[ ffxn ]( c, data );
+							if ( matches !== null ) {
+								filterMatched = matches;
+							}
+						}
+					}
+					if ( filterMatched !== null ) {
+						result = filterMatched;
+					// Look for match, and add child row data for matching
+					} else {
+						txt = ( data.iExact + data.childRowText )
+							.indexOf( ts.filter.parseFilter( c, data.iFilter, columnIndex, data.parsed[ columnIndex ] ) );
+						result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
+					}
+				} else {
+					result = filterMatched;
+				}
+				showRow = ( result ) ? showRow : false;
+			}
+		}
+		return showRow;
+	},
+	findRows: function( table, filters, combinedFilters ) {
+		if ( table.config.lastCombinedFilter === combinedFilters ||
+			!table.config.widgetOptions.filter_initialized ) {
+			return;
+		}
+		var len, norm_rows, rowData, $rows, rowIndex, tbodyIndex, $tbody, columnIndex,
+			isChild, childRow, lastSearch, showRow, time, val, indx,
+			notFiltered, searchFiltered, query, injected, res, id, txt,
 			storedFilters = $.extend( [], filters ),
 			regex = ts.filter.regex,
 			c = table.config,
 			wo = c.widgetOptions,
 			// data object passed to filters; anyMatch is a flag for the filters
-			data = { anyMatch: false, filters: filters },
-			// anyMatch really screws up with these types of filters
-			noAnyMatch = [ 'range', 'notMatch',  'operators' ];
-
-		// clear regex cache prior to each search
-		wo.filter_regexCache = [];
+			data = {
+				anyMatch: false,
+				filters: filters,
+				// regex filter type cache
+				filter_regexCache : [],
+			},
+			vars = {
+				// anyMatch really screws up with these types of filters
+				noAnyMatch: [ 'range', 'notMatch',  'operators' ],
+				// cache filter variables that use ts.getColumnData in the main loop
+				functions : [],
+				excludeFilter : [],
+				defaultColFilter : [],
+				defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
+			};
 
 		// parse columns after formatter, in case the class is added at that point
-		data.parsed = c.$headers.map(function(columnIndex) {
-			return c.parsers && c.parsers[columnIndex] && c.parsers[columnIndex].parsed ||
-				// getData won't return "parsed" if other "filter-" class names exist (e.g. <th class="filter-select filter-parsed">)
-				ts.getData && ts.getData(c.$headerIndexed[columnIndex], ts.getColumnData( table, c.headers, columnIndex ), 'filter') === 'parsed' ||
-				$(this).hasClass('filter-parsed');
+		data.parsed = c.$headers.map( function( columnIndex ) {
+			return c.parsers && c.parsers[ columnIndex ] &&
+				// force parsing if parser type is numeric
+				( c.parsers[ columnIndex ].parsed || c.parsers[ columnIndex ].type === 'numeric' ) ||
+				// getData won't return "parsed" if other "filter-" class names exist
+				// (e.g. <th class="filter-select filter-parsed">)
+				ts.getData && ts.getData( c.$headerIndexed[ columnIndex ],
+					ts.getColumnData( table, c.headers, columnIndex ), 'filter' ) === 'parsed' ||
+				$( this ).hasClass( 'filter-parsed' );
 		}).get();
 
-		// cache filter variables that use ts.getColumnData in the main loop
-		wo.filter_indexed = {
-			functions : [],
-			excludeFilter : [],
-			defaultColFilter : [],
-			defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
-		};
 		for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
-			wo.filter_indexed.functions[ columnIndex ] = ts.getColumnData( table, wo.filter_functions, columnIndex );
-			wo.filter_indexed.defaultColFilter[ columnIndex ] = ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
-			wo.filter_indexed.excludeFilter[ columnIndex ] = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
+			vars.functions[ columnIndex ] = ts.getColumnData( table, wo.filter_functions, columnIndex );
+			vars.defaultColFilter[ columnIndex ] = ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
+			vars.excludeFilter[ columnIndex ] = ( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split(/\s+/);
 		}
 
 		if (c.debug) {
@@ -860,10 +1018,10 @@ ts.filter = {
 
 				if ( (wo.filter_$anyMatch && wo.filter_$anyMatch.length) || typeof filters[c.columns] !== 'undefined' ) {
 					data.anyMatchFlag = true;
-					data.anyMatchFilter = wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || ( '' + filters[c.columns] ) || '';
+					data.anyMatchFilter = '' + ( filters[c.columns] || wo.filter_$anyMatch && ts.filter.getLatestSearch( wo.filter_$anyMatch ).val() || '' );
 					if (wo.filter_columnAnyMatch) {
 						// specific columns search
-						query = data.anyMatchFilter.split( ts.filter.regex.andSplit );
+						query = data.anyMatchFilter.split( regex.andSplit );
 						injected = false;
 						for (indx = 0; indx < query.length; indx++) {
 							res = query[indx].split(':');
@@ -918,169 +1076,68 @@ ts.filter = {
 						// replace accents
 						data.anyMatchFilter = ts.replaceAccents(data.anyMatchFilter);
 					}
-					if ( wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultAnyFilter ) ) {
-						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, wo.filter_indexed.defaultAnyFilter );
+					if ( wo.filter_defaultFilter && regex.iQuery.test( vars.defaultAnyFilter ) ) {
+						data.anyMatchFilter = ts.filter.defaultFilter( data.anyMatchFilter, vars.defaultAnyFilter );
 						// clear search filtered flag because default filters are not saved to the last search
 						searchFiltered = false;
 					}
 					// make iAnyMatchFilter lowercase unless both filter widget & core ignoreCase options are true
 					// when c.ignoreCase is true, the cache contains all lower case data
-					data.iAnyMatchFilter = !(wo.filter_ignoreCase && c.ignoreCase) ? data.anyMatchFilter : data.anyMatchFilter.toLocaleLowerCase();
+					data.iAnyMatchFilter = !(wo.filter_ignoreCase && c.ignoreCase) ? data.anyMatchFilter : data.anyMatchFilter.toLowerCase();
 				}
 
 				// loop through the rows
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
 
-					data.cacheArray = norm_rows[rowIndex];
-					data.rawArray = data.cacheArray[c.columns].raw;
-					data.$row = $rows.eq(rowIndex);
-					data.$cells = data.$row.children();
-
-					childRow = $rows[rowIndex].className;
+					txt = $rows[rowIndex].className;
+					// the first row can never be a child row
+					isChild = rowIndex && regex.child.test(txt);
 					// skip child rows & already filtered rows
-					if ( regex.child.test(childRow) || (searchFiltered && regex.filtered.test(childRow)) ) { continue; }
-					showRow = true;
-					// *** nextAll/nextUntil not supported by Zepto! ***
-					childRow = data.$row.nextUntil('tr:not(.' + c.cssChildRow + ')');
-					// so, if "table.config.widgetOptions.filter_childRows" is true and there is
-					// a match anywhere in the child row, then it will make the row visible
-					// checked here so the option can be changed dynamically
-					data.childRowText = (childRow.length && wo.filter_childRows) ? childRow.text() : '';
-					data.childRowText = wo.filter_ignoreCase ? data.childRowText.toLocaleLowerCase() : data.childRowText;
-					if (data.anyMatchFlag) {
-						// look for multiple columns "1-3,4-6,8"
-						columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
-						data.anyMatch = true;
-						data.rowArray = data.$cells.map(function(i){
-							if ( $.inArray(i, columnIndex) > -1 ) {
-								var txt;
-								if (data.parsed[i]) {
-									txt = data.cacheArray[i];
-								} else {
-									txt = data.rawArray[i];
-									txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
-									if (c.sortLocaleCompare) {
-										txt = ts.replaceAccents(txt);
-									}
-								}
-								return txt;
-							}
-						}).get();
-						data.filter = data.anyMatchFilter;
-						data.iFilter = data.iAnyMatchFilter;
-						data.exact = data.rowArray.join(' ');
-						data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
-						data.cache = data.cacheArray.slice(0,-1).join(' ');
-						filterMatched = null;
-						$.each(ts.filter.types, function(type, typeFunction) {
-							if ($.inArray(type, noAnyMatch) < 0) {
-								matches = typeFunction( c, data );
-								if (matches !== null) {
-									filterMatched = matches;
-									return false;
-								}
-							}
-						});
-						if (filterMatched !== null) {
-							showRow = filterMatched;
-						} else {
-							if (wo.filter_startsWith) {
-								showRow = false;
-								columnIndex = c.columns;
-								while (!showRow && columnIndex > 0) {
-									columnIndex--;
-									showRow = showRow || data.rowArray[columnIndex].indexOf(data.iFilter) === 0;
-								}
-							} else {
-								showRow = (data.iExact + data.childRowText).indexOf(data.iFilter) >= 0;
-							}
-						}
-						data.anyMatch = false;
+					if ( isChild || ( searchFiltered && regex.filtered.test( txt ) ) ) {
+						continue;
 					}
 
-					for (columnIndex = 0; columnIndex < c.columns; columnIndex++) {
-						data.filter = filters[columnIndex];
-						data.index = columnIndex;
+					data.$row = $rows.eq( rowIndex );
+					data.cacheArray = norm_rows[ rowIndex ];
+					rowData = data.cacheArray[ c.columns ];
+					data.rawArray = rowData.raw;
+					data.childRowText = '';
 
-						// filter types to exclude, per column
-						excludeMatch = wo.filter_indexed.excludeFilter[ columnIndex ];
-
-						// ignore if filter is empty or disabled
-						if (data.filter) {
-							data.cache = data.cacheArray[columnIndex];
-							// check if column data should be from the cell or from parsed data
-							if (wo.filter_useParsedData || data.parsed[columnIndex]) {
-								data.exact = data.cache;
-							} else {
-								result = data.rawArray[ columnIndex ] || '';
-								data.exact = c.sortLocaleCompare ? ts.replaceAccents(result) : result; // issue #405
-							}
-							data.iExact = !regex.type.test(typeof data.exact) && wo.filter_ignoreCase ? data.exact.toLocaleLowerCase() : data.exact;
-							result = showRow; // if showRow is true, show that row
-
-							// in case select filter option has a different value vs text "a - z|A through Z"
-							ffxn = wo.filter_columnFilters ?
-								c.$filters.add(c.$externalFilters).filter('[data-column="'+ columnIndex + '"]').find('select option:selected').attr('data-function-name') || '' : '';
-							// replace accents - see #357
-							if (c.sortLocaleCompare) {
-								data.filter = ts.replaceAccents(data.filter);
-							}
-
-							val = true;
-							if (wo.filter_defaultFilter && regex.iQuery.test( wo.filter_indexed.defaultColFilter[ columnIndex ] )) {
-								data.filter = ts.filter.defaultFilter( data.filter, wo.filter_indexed.defaultColFilter[ columnIndex ] );
-								// val is used to indicate that a filter select is using a default filter; so we override the exact & partial matches
-								val = false;
-							}
-							// data.iFilter = case insensitive (if wo.filter_ignoreCase is true), data.filter = case sensitive
-							data.iFilter = wo.filter_ignoreCase ? (data.filter || '').toLocaleLowerCase() : data.filter;
-							fxn = wo.filter_indexed.functions[ columnIndex ];
-							$cell = c.$headerIndexed[columnIndex];
-							hasSelect = $cell.hasClass('filter-select');
-							filterMatched = null;
-							if ( fxn || ( hasSelect && val ) ) {
-								if (fxn === true || hasSelect) {
-									// default selector uses exact match unless "filter-match" class is found
-									filterMatched = ($cell.hasClass('filter-match')) ? data.iExact.search(data.iFilter) >= 0 : data.filter === data.exact;
-								} else if (typeof fxn === 'function') {
-									// filter callback( exact cell content, parser normalized content, filter input value, column index, jQuery row object )
-									filterMatched = fxn(data.exact, data.cache, data.filter, columnIndex, data.$row, c, data);
-								} else if (typeof fxn[ffxn || data.filter] === 'function') {
-									// selector option function
-									filterMatched = fxn[ffxn || data.filter](data.exact, data.cache, data.filter, columnIndex, data.$row, c, data);
-								}
-							}
-							if (filterMatched === null) {
-								// cycle through the different filters
-								// filters return a boolean or null if nothing matches
-								$.each(ts.filter.types, function(type, typeFunction) {
-									if ($.inArray(type, excludeMatch) < 0) {
-										matches = typeFunction( c, data );
-										if (matches !== null) {
-											filterMatched = matches;
-											return false;
-										}
-									}
-								});
-								if (filterMatched !== null) {
-									result = filterMatched;
-								// Look for match, and add child row data for matching
-								} else {
-									data.exact = (data.iExact + data.childRowText).indexOf( ts.filter.parseFilter(c, data.iFilter, columnIndex, data.parsed[columnIndex]) );
-									result = ( (!wo.filter_startsWith && data.exact >= 0) || (wo.filter_startsWith && data.exact === 0) );
-								}
-							} else {
-								result = filterMatched;
-							}
-							showRow = (result) ? showRow : false;
+					if ( !wo.filter_childByColumn ) {
+						txt = '';
+						// child row cached text
+						childRow = rowData.child;
+						// so, if "table.config.widgetOptions.filter_childRows" is true and there is
+						// a match anywhere in the child row, then it will make the row visible
+						// checked here so the option can be changed dynamically
+						for (indx = 0; indx < childRow.length; indx++) {
+							txt += ' ' + childRow[indx].join('') || '';
 						}
+						data.childRowText = wo.filter_childRows ?
+							( wo.filter_ignoreCase ? txt.toLowerCase() : txt ) :
+							'';
 					}
-					data.$row
+
+					showRow = ts.filter.processRow( c, data, vars );
+					childRow = rowData.$row.filter(':gt(0)');
+
+					if ( wo.filter_childRows && childRow.length ) {
+						if ( wo.filter_childByColumn ) {
+							// cycle through each child row
+							for ( indx = 0; indx < childRow.length; indx++ ) {
+								data.$row = childRow.eq( indx );
+								data.cacheArray = rowData.child[ indx ];
+								data.rawArray = data.cacheArray;
+								// use OR comparison on child rows
+								showRow = showRow || ts.filter.processRow( c, data, vars );
+							}
+						}
+						childRow.toggleClass( wo.filter_filteredRow, !showRow );
+					}
+
+					rowData.$row
 						.toggleClass(wo.filter_filteredRow, !showRow)[0]
 						.display = showRow ? '' : 'none';
-					if (childRow.length) {
-						childRow.toggleClass(wo.filter_filteredRow, !showRow);
-					}
 				}
 			}
 			c.filteredRows += $rows.not('.' + wo.filter_filteredRow).length;
@@ -1183,7 +1240,7 @@ ts.filter = {
 	},
 	getOptions: function(table, column, onlyAvail) {
 		table = $(table)[0];
-		var rowIndex, tbodyIndex, len, row, cache, cell,
+		var rowIndex, tbodyIndex, len, row, cache,
 			c = table.config,
 			wo = c.widgetOptions,
 			arry = [];

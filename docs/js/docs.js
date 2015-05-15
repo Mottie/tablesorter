@@ -21,6 +21,9 @@
 		if ($("#js").length) {
 			$("#javascript pre").addClass('mod').html( cleanupCode( $("#js").html() ) );
 		}
+		if ($("#js2").length) {
+			$("#javascript2 pre").addClass('mod').html( cleanupCode( $("#js2").html() ) );
+		}
 		if ($("#css").length) {
 			$("pre.lang-css").addClass('mod').html( cleanupCode( $("#css").html() ) );
 		}
@@ -117,7 +120,7 @@
 			$t.each(function(i){
 				var $this = $(this);
 				$this.accordion({
-					active: hashId,
+					active: $this.hasClass('start-closed') ? false : hashId,
 					animate: false,
 					heightStyle: 'content',
 					collapsible: true,

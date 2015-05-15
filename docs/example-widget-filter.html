@@ -47,6 +47,9 @@
 			// visible; default is false
 			filter_childRows : false,
 
+			// if true, filter child row content by column; filter_childRows must also be true
+			filter_childByColumn : false,
+
 			// if true, a filter will be added to the top of each table column;
 			// disabled by using -> headers: { 1: { filter: false } } OR add class="filter-false"
 			// if you set this to false, make sure you perform a search using the second method below
@@ -222,28 +225,49 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.21.6</span>
+					<ul>
+						<li>Regex filter searches now cache the created regex object for each query to optimize speed & a regex search now properly uses case-sensitive content.</li>
+						<li>Add <code>data</code> parameter to <code>filter_functions</code> (<a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">get more details</a>).</li>
+						<li>Any match searches which target specific columns will no longer save each filter to its respective column; see <a href="example-widget-filter-any-match.html#anymatch_searches">"AnyMatch Searches"</a> documentation.</li>
+						<li>Operator filter searchs now ignore empty strings (because <code>"" &lt; 10</code> is <code>true</code>).</li>
+						<li>Added <code>filter_childByColumn</code> option which allows the filtering columns in both the parent & child rows. Demo added to the <a href="example-child-rows-filtered.html#child-by-column">filtered child rows demo</a></li>
+					</ul>
+				</li>
 				<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
-				<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a "filter-match" class added.</li>
-				<li>In <span class="version">v2.17.1</span>, added a not exact match (<code>!=</code>) filter type.</li>
-				<li>In <span class="version updated">v2.16+</span>,
+			</ul>
+
+
+			<div class="accordion start-closed">
+				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
+				<div>
 					<ul>
-						<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort (<span class="version updated">v2.16.3</span>).</li>
-						<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted (<span class="version">v2.16.3</span>).</li>
-						<li>Added <code>filter_placeholder</code> option (<span class="version">v2.16.0</span>).</li>
-						<li>Added <code>filter_selectSource</code> option (<span class="version">v2.16.3</span>).</li>
-						<li>updated <code>filter_reset</code> option (<span class="version updated">v2.16.3</span>).</li>
+						<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a "filter-match" class added.</li>
+						<li>In <span class="version">v2.17.1</span>, added a not exact match (<code>!=</code>) filter type.</li>
+						<li>In <span class="version updated">v2.16+</span>,
+							<ul>
+								<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort (<span class="version updated">v2.16.3</span>).</li>
+								<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted (<span class="version">v2.16.3</span>).</li>
+								<li>Added <code>filter_placeholder</code> option (<span class="version">v2.16.0</span>).</li>
+								<li>Added <code>filter_selectSource</code> option (<span class="version">v2.16.3</span>).</li>
+								<li>updated <code>filter_reset</code> option (<span class="version updated">v2.16.3</span>).</li>
+							</ul>
+						</li>
+						<li>In <span class="version updated">v2.15</span>,
+							<ul>
+								<li>The <code>filter_anyMatch</code> widget option was completely <span class="label alert">removed</span>. Sorry for not deprecating this option, but the filter any match code was completely rewritten.</li>
+								<li>Added a <code>filter_external</code> widget option to only accept a jQuery selector string/object; please see the updated <a href="example-widget-filter-any-match.html">filter any match</a> demo for more details.</li>
+							</ul>
+						</li>
+						<li>Added &amp; set <code>filter_saveFilters</code> to <code>true</code> (default is <code>false</code>) in this demo (<span class="version">v2.14</span>).</li>
 					</ul>
-				</li>
-				<li>In <span class="version updated">v2.15</span>,
-					<ul>
-						<li>The <code>filter_anyMatch</code> widget option was completely <span class="label alert">removed</span>. Sorry for not deprecating this option, but the filter any match code was completely rewritten.</li>
-						<li>Added a <code>filter_external</code> widget option to only accept a jQuery selector string/object; please see the updated <a href="example-widget-filter-any-match.html">filter any match</a> demo for more details.</li>
-					</ul>
-				</li>
-				<li>Added &amp; set <code>filter_saveFilters</code> to <code>true</code> (default is <code>false</code>) in this demo (<span class="version">v2.14</span>).</li>
+				</div>
+			</div>
+
+			<ul>
 				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <code>filter_hideFilters</code> option to <code>false</code>.</li>
 				<li>This widget uses jQuery's <code>.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
-				<li>This widget does work with tablesorter v2.0.5.</li>
+				<li>This widget <em>does NOT</em> work with tablesorter v2.0.5.</li>
 				<li>Using the built-in filters (<a href="example-widget-filter-custom-search.html">learn how to customize them here</a> - demo created <span class="version">v2.17.5</span>):
 					<table class="tablesorter-blue notes">
 						<thead>
@@ -278,6 +302,7 @@ $(function(){
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h4>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
+			<h5>This table includes very basic information about the filter options. For more extensive information &amp; links to demos, see the main page <a href="index.html#Widget-options">Widget &amp; Pager Options</a> section.</h5>
 			<div>
 				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
@@ -291,6 +316,19 @@ $(function(){
 						<td><span class="permalink">filter_childRows</span></td>
 						<td>false</td>
 						<td>if <code>true</code>, filter includes child row content in the search.</td>
+					</tr>
+
+					<tr id="filter-child-by-column">
+						<td><a href="#" class="permalink">filter_childByColumn</a></td>
+						<td>false</td>
+						<td>if <code>true</code>, queries will search child row content by column (<span class="version">v2.21.6</span>).
+							<div class="collapsible">
+							<br>
+								The <code>filter_childRows</code> option must be <code>true</code> for this option to work.<br>
+								<br>
+								If <code>false</code>, and the <code>filter_childRows</code> option is <code>true</code>, then queries in <em>any column</em> will search all child content, as before this option was added.
+						</div>
+						</td>
 					</tr>
 
 					<tr id="filter-column-filters">
