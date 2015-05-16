@@ -375,7 +375,7 @@
 
 	<h4>Theming</h4>
 	<ul>
-		<li>The <a href="example-widget-bootstrap-theme.html">Bootstrap</a> &amp; <a href="example-widget-ui-theme.html">jQuery UI</a> themes require the uitheme widget.</li>
+		<li>The <a href="example-widget-bootstrap-theme-v2.html">Bootstrap v2.x</a>, <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x</a> &amp; <a href="example-widget-ui-theme.html">jQuery UI</a> themes require the uitheme widget.</li>
 		<li>Set up a <a href="example-option-theme-metro-style.html">Metro style theme</a> (<span class="version">v2.16.4</span>)</li>
 		<li>Use css to <a href="example-css-highlighting.html">highlight rows &amp; columns</a> (<span class="version">v2.20.0</span>)</li>
 	</ul>
@@ -525,7 +525,7 @@
 		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.19.0</span>):
 			<ul>
 				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
-				<li><a href="example-widget-bootstrap-theme.html">Bootstrap</a> (v2.4)</li>
+				<li><a href="example-widget-bootstrap-theme-v2.html">Bootstrap v2.x</a> &amp; <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x</a> (v2.4)</li>
 			</ul>
 		</li>
 		<li><span class="results">&Dagger;</span> <a href="example-widget-zebra.html">Zebra stripe widget</a></li>
@@ -1966,8 +1966,8 @@ $(function(){
       storage_page     : '',
 
       // *** zebra widget ***
-      // class names to add to alternate rows, default is [ "even", "odd" ]
-      zebra : ["ui-widget-content even", "ui-state-default odd"]
+      // class names to add to alternating rows
+      zebra : ["even", "odd"]
 
       // *** uitheme widget ***
       // use "config.theme" to set the theme to use
