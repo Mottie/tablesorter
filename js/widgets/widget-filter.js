@@ -1481,7 +1481,10 @@ ts.getFilters = function( table, getRaw, setFilters, skipFirst ) {
 		filters = false,
 		c = table ? $( table )[0].config : '',
 		wo = c ? c.widgetOptions : '';
-	if ( getRaw !== true && wo && !wo.filter_columnFilters ) {
+	if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
+		// setFilters called, but last search is exactly the same as the current
+		// fixes issue #733 & #903 where calling update causes the input values to reset
+		( $.isArray(setFilters) && setFilters.join('') === c.lastCombinedFilter ) ) {
 		return $( table ).data( 'lastSearch' );
 	}
 	if ( c ) {
