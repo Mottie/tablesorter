@@ -377,12 +377,12 @@
 			// process data
 			if ( typeof(p.ajaxProcessing) === "function" ) {
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, hsh, $f, $sh, t, th, d, l, rr_count,
+				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len,
 					c = table.config,
-					$t = c.$table,
+					$table = c.$table,
 					tds = '',
 					result = p.ajaxProcessing(data, table, xhr) || [ 0, [] ],
-					hl = $t.find('thead th').length;
+					hl = $table.find('thead th').length;
 
 				// Clean up any previous error.
 				ts.showError(table);
@@ -445,28 +445,30 @@
 					p.processAjaxOnInit = true;
 					// only add new header text if the length matches
 					if ( th && th.length === hl ) {
-						hsh = $t.hasClass('hasStickyHeaders');
+						hsh = $table.hasClass('hasStickyHeaders');
 						$sh = hsh ? c.widgetOptions.$sticky.children('thead:first').children('tr').children() : '';
-						$f = $t.find('tfoot tr:first').children();
+						$f = $table.find('tfoot tr:first').children();
 						// don't change td headers (may contain pager)
-						c.$headers.filter('th').each(function(j){
-							var $t = $(this), icn;
+						$headers = c.$headers.filter( 'th ' );
+						len = $headers.length;
+						for ( j = 0; j < len; j++ ) {
+							$h = $headers.eq( j );
 							// add new test within the first span it finds, or just in the header
-							if ( $t.find('.' + ts.css.icon).length ) {
-								icn = $t.find('.' + ts.css.icon).clone(true);
-								$t.find('.tablesorter-header-inner').html( th[j] ).append(icn);
+							if ( $h.find('.' + ts.css.icon).length ) {
+								icon = $h.find('.' + ts.css.icon).clone(true);
+								$h.find('.tablesorter-header-inner').html( th[j] ).append(icon);
 								if ( hsh && $sh.length ) {
-									icn = $sh.eq(j).find('.' + ts.css.icon).clone(true);
-									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icn);
+									icon = $sh.eq(j).find('.' + ts.css.icon).clone(true);
+									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] ).append(icon);
 								}
 							} else {
-								$t.find('.tablesorter-header-inner').html( th[j] );
+								$h.find('.tablesorter-header-inner').html( th[j] );
 								if (hsh && $sh.length) {
 									$sh.eq(j).find('.tablesorter-header-inner').html( th[j] );
 								}
 							}
 							$f.eq(j).html( th[j] );
-						});
+						}
 					}
 				}
 				if (c.showProcessing) {
@@ -479,7 +481,7 @@
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p, false);
-				$t.trigger('updateCache', [function(){
+				$table.trigger('updateCache', [function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
@@ -487,7 +489,7 @@
 							if (c.debug) {
 								ts.log('Pager: Triggering pagerChange');
 							}
-							$t
+							$table
 								.trigger('applyWidgets')
 								.trigger('pagerChange', p);
 							updatePageDisplay(table, p, true);
@@ -649,6 +651,7 @@
 		},
 
 		showAllRows = function(table, p){
+			var index, $controls, len;
 			if ( p.ajax ) {
 				pagerArrows(p, true);
 			} else {
@@ -669,9 +672,15 @@
 				}
 			}
 			// disable size selector
-			p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page')).each(function(){
-				$(this).attr('aria-disabled', 'true').addClass(p.cssDisabled)[0].disabled = true;
-			});
+			$controls = p.$size
+				.add( p.$goto )
+				.add( p.$container.find( '.ts-startRow, .ts-page' ) );
+			len = $controls.length;
+			for ( index = 0; index < len; index++ ) {
+				$controls.eq( index )
+					.attr( 'aria-disabled', 'true' )
+					.addClass( p.cssDisabled )[0].disabled = true;
+			}
 		},
 
 		// updateCache if delayInit: true
@@ -1043,13 +1052,15 @@
 	}() });
 
 	// see #486
-	ts.showError = function(table, message){
-		$(table).each(function(){
-			var $row,
-				c = this.config,
+	ts.showError = function(table, message) {
+		var index, $row, c, errorRow,
+			$table = $( table ),
+			len = $table.length;
+		for ( index = 0; index < len; index++ ) {
+			c = $table[ index ].config;
+			if ( c ) {
 				errorRow = c.pager && c.pager.cssErrorRow || c.widgetOptions.pager_css && c.widgetOptions.pager_css.errorRow || 'tablesorter-errorRow';
-			if (c) {
-				if (typeof message === 'undefined') {
+				if ( typeof message === 'undefined' ) {
 					c.$table.find('thead').find(c.selectorRemove).remove();
 				} else {
 					$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
@@ -1065,7 +1076,7 @@
 						});
 				}
 			}
-		});
+		}
 	};
 
 // extend plugin scope

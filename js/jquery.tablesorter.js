@@ -554,14 +554,15 @@
 			}
 
 			function updateHeader(table) {
-				var s, $th, col,
-					c = table.config;
-				c.$headers.each(function(index, th){
-					$th = $(th);
+				var index, s, $th, col,
+					c = table.config,
+					len = c.$headers.length;
+				for ( index = 0; index < len; index++ ) {
+					$th = c.$headers.eq( index );
 					col = ts.getColumnData( table, c.headers, index, true );
 					// add 'sorter-false' class if 'parser-false' is set
-					s = ts.getData( th, col, 'sorter' ) === 'false' || ts.getData( th, col, 'parser' ) === 'false';
-					th.sortDisabled = s;
+					s = ts.getData( $th, col, 'sorter' ) === 'false' || ts.getData( $th, col, 'parser' ) === 'false';
+					$th[0].sortDisabled = s;
 					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
 					// aria-controls - requires table ID
 					if (table.id) {
@@ -571,11 +572,11 @@
 							$th.attr('aria-controls', table.id);
 						}
 					}
-				});
+				}
 			}
 
 			function setHeadersCss(table) {
-				var f, i, j,
+				var f, h, i, j, $headers, $h, nextSort, txt,
 					c = table.config,
 					list = c.sortList,
 					len = list.length,
@@ -619,14 +620,19 @@
 					}
 				}
 				// add verbose aria labels
-				c.$headers.not('.sorter-false').each(function(){
-					var $this = $(this),
-						nextSort = this.order[(this.count + 1) % (c.sortReset ? 3 : 2)],
-						txt = $.trim( $this.text() ) + ': ' +
-							ts.language[ $this.hasClass(ts.css.sortAsc) ? 'sortAsc' : $this.hasClass(ts.css.sortDesc) ? 'sortDesc' : 'sortNone' ] +
+				len = c.$headers.length;
+				$headers = c.$headers.not('.sorter-false');
+				for ( i = 0; i < len; i++ ) {
+					$h = $headers.eq( i );
+					if ( $h.length ) {
+						h = $headers[ i ];
+						nextSort = h.order[ ( h.count + 1 ) % ( c.sortReset ? 3 : 2 ) ],
+						txt = $.trim( $h.text() ) + ': ' +
+							ts.language[ $h.hasClass( ts.css.sortAsc ) ? 'sortAsc' : $h.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone' ] +
 							ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
-					$this.attr('aria-label', txt );
-				});
+						$h.attr( 'aria-label', txt );
+					}
+				}
 			}
 
 			function updateHeaderSortCount( table, list ) {
@@ -686,10 +692,11 @@
 					// let any updates complete before initializing a sort
 					return setTimeout(function(){ initSort(table, cell, event); }, 50);
 				}
-				var arry, indx, col, order, s,
+				var arry, indx, i, col, order, s, $header,
 					c = table.config,
 					key = !event[c.sortMultiSortKey],
-					$table = c.$table;
+					$table = c.$table,
+					len = c.$headers.length;
 				// Only call sortStart if sorting is enabled
 				$table.trigger('sortStart', table);
 				// get current column sort order
@@ -697,12 +704,13 @@
 				// reset all sorts on non-current column - issue #30
 				if (c.sortRestart) {
 					indx = cell;
-					c.$headers.each(function() {
+					for ( i = 0; i < len; i++ ) {
+						$header = c.$headers.eq( i );
 						// only reset counts on columns that weren't just clicked on and if not included in a multisort
-						if (this !== indx && (key || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
-							this.count = -1;
+						if ( $header[0] !== indx && ( key || !$header.is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc) ) ) {
+							$header[0].count = -1;
 						}
-					});
+					}
 				}
 				// get current column index
 				indx = parseInt( $(cell).attr('data-column'), 10 );
@@ -1218,7 +1226,7 @@
 			// automatically add a colgroup with col elements set to a percentage width
 			ts.fixColumnWidth = function(table) {
 				table = $(table)[0];
-				var overallWidth, percent,
+				var overallWidth, percent, $tbodies, len, index,
 					c = table.config,
 					colgroup = c.$table.children('colgroup');
 				// remove plugin-added colgroup, in case we need to refresh the widths
@@ -1229,10 +1237,12 @@
 					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
 					overallWidth = c.$table.width();
 					// only add col for visible columns - fixes #371
-					c.$tbodies.find('tr:first').children(':visible').each(function() {
-						percent = parseInt( ( $(this).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
+					$tbodies = c.$tbodies.find('tr:first').children(':visible'); //.each(function()
+					len = $tbodies.length;
+					for ( index = 0; index < len; index++ ) {
+						percent = parseInt( ( $tbodies.eq( index ).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
 						colgroup.append( $('<col>').css('width', percent) );
-					});
+					}
 					c.$table.prepend(colgroup);
 				}
 			};
@@ -1424,17 +1434,20 @@
 
 			// restore headers
 			ts.restoreHeaders = function(table){
-				var $cell,
-					c = $(table)[0].config;
+				var index, $cell,
+					c = $(table)[0].config,
+					$headers = c.$table.find( c.selectorHeaders ),
+					len = $headers.length;
 				// don't use c.$headers here in case header cells were swapped
-				c.$table.find(c.selectorHeaders).each(function(i){
-					$cell = $(this);
+				for ( index = 0; index < len; index++ ) {
+					// c.$table.find(c.selectorHeaders).each(function(i){
+					$cell = $headers.eq( index );
 					// only restore header cells if it is wrapped
 					// because this is also used by the updateAll method
-					if ($cell.find('.' + ts.css.headerIn).length){
-						$cell.html( c.headerContent[i] );
+					if ( $cell.find( '.' + ts.css.headerIn ).length ) {
+						$cell.html( c.headerContent[ index ] );
 					}
-				});
+				}
 			};
 
 			ts.destroy = function(table, removeClasses, callback){
@@ -2121,7 +2134,7 @@
 		id: 'zebra',
 		priority: 90,
 		format: function(table, c, wo) {
-			var $tb, $tv, $tr, row, even, time, k,
+			var $tv, $tr, row, even, time, k, i, len,
 				child = new RegExp(c.cssChildRow, 'i'),
 				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
 			if (c.debug) {
@@ -2130,17 +2143,17 @@
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
 				row = 0;
-				$tb = b.eq(k);
-				$tv = $tb.children('tr:visible').not(c.selectorRemove);
-				// revered back to using jQuery each - strangely it's the fastest method
-				/*jshint loopfunc:true */
-				$tv.each(function(){
-					$tr = $(this);
+				$tv = b.eq( k ).children( 'tr:visible' ).not( c.selectorRemove );
+				len = $tv.length;
+				for ( i = 0; i < len; i++ ) {
+					$tr = $tv.eq( i );
 					// style child rows the same way the parent row was styled
-					if (!child.test(this.className)) { row++; }
-					even = (row % 2 === 0);
-					$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
-				});
+					if ( !child.test( $tr[0].className ) ) { row++; }
+					even = ( row % 2 === 0 );
+					$tr
+						.removeClass( wo.zebra[ even ? 1 : 0 ] )
+						.addClass( wo.zebra[ even ? 0 : 1 ] );
+				}
 			}
 		},
 		remove: function(table, c, wo, refreshing){
