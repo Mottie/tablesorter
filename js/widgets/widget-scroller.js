@@ -616,7 +616,7 @@ ts.scroller = {
 			.off( namespace )
 			.insertBefore( $wrap )
 			.find( 'thead' ).show().css( 'visibility', 'visible' )
-			.children( 'tr.' + tscss.headerRow + ' > *' ).attr( 'tabindex', 0 )
+			.children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', 0 )
 			.end()
 			.find( '.' + tscss.filterRow ).show().removeClass( tscss.filterRowHide );
 		$wrap.remove();
