@@ -1,4 +1,4 @@
-/*! Parser: jQuery Globalize - updated 5/2/2015 (v2.21.6) */
+/*! Parser: jQuery Globalize - updated 5/17/2015 (v2.22.0) */
 /* Extract localized data using jQuery's Globalize parsers; set
  Globalize.locale( 'xx' ) prior to initializing tablesorter! */
 /*jshint jquery:true */

@@ -1,4 +1,4 @@
-/*! Parser: network - updated 5/4/2015 (v2.21.6) */
+/*! Parser: network - updated 5/17/2015 (v2.22.0) */
 /* IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
 ;(function($){

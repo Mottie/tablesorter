@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.21.5 *//*
+/*! TableSorter (FORK) v2.22.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -36,7 +36,7 @@
 
 			var ts = this;
 
-			ts.version = '2.21.5';
+			ts.version = '2.22.0';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -200,7 +200,11 @@
 					$node = node.jquery ? node : $(node);
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
-					return $.trim( ( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) || $node.text() || '' );
+					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
+					return $.trim(
+						( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) ||
+						$node.text()
+					);
 				} else {
 					if (typeof(t) === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
@@ -209,7 +213,7 @@
 					}
 				}
 				// fallback
-				return $.trim( $node[0].textContent || $node.text() || '' );
+				return $.trim( $node[0].textContent || $node.text() );
 			};
 
 			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
@@ -245,12 +249,15 @@
 
 			// centralized function to extract/parse cell contents
 			function getParsedText( c, cell, colIndex, txt ) {
-				var val = '',
+				if ( typeof txt === 'undefined' ) {
+					txt = ts.getElementText( c, cell, colIndex );
+				}
+				// if no parser, make sure to return the txt
+				var val = '' + txt,
 					parser = c.parsers[ colIndex ],
 					extractor = c.extractors[ colIndex ];
-				txt = txt || ts.getElementText( c, cell, colIndex );
 				if ( parser ) {
-					// do extract before parsing if there is one
+					// do extract before parsing, if there is one
 					if ( extractor && typeof extractor.format === 'function' ) {
 						txt = extractor.format( txt, c.table, cell, colIndex );
 					}
@@ -330,7 +337,7 @@
 			/* utils */
 			function buildCache(table) {
 				var cc, t, v, i, j, k, $row, cols, cacheTime,
-					totalRows, rowData, colMax,
+					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
 					$tb = c.$tbodies,
 					parsers = c.parsers;
@@ -363,33 +370,40 @@
 							raw: []    // original row text
 						};
 						/** Add the table data to main data array */
-						$row = $($tb[k].rows[i]);
+						$row = $( $tb[ k ].rows[ i ] );
 						cols = [];
 						// if this is a child row, add it to the last row's children and continue to the next row
 						// ignore child row class, if it is the first row
-						if ($row.hasClass(c.cssChildRow) && i !== 0) {
+						if ( $row.hasClass( c.cssChildRow ) && i !== 0 ) {
 							t = cc.normalized.length - 1;
-							cc.normalized[t][c.columns].$row = cc.normalized[t][c.columns].$row.add($row);
+							prevRowData = cc.normalized[ t ][ c.columns ];
+							prevRowData.$row = prevRowData.$row.add( $row );
 							// add 'hasChild' class name to parent row
-							if (!$row.prev().hasClass(c.cssChildRow)) {
-								$row.prev().addClass(ts.css.cssHasChild);
+							if ( !$row.prev().hasClass( c.cssChildRow ) ) {
+								$row.prev().addClass( ts.css.cssHasChild );
 							}
 							// save child row content (un-parsed!)
-							rowData.child[t] = $.trim( $row[0].textContent || $row.text() || '' );
+							v = $row.children( 'th, td' );
+							t = prevRowData.child.length;
+							prevRowData.child[ t ] = [];
+							// child row content does not account for colspans/rowspans; so indexing may be off
+							for ( j = 0; j < c.columns; j++ ) {
+								prevRowData.child[ t ][ j ] = getParsedText( c, v[ j ], j );
+							}
 							// go to the next for loop
 							continue;
 						}
 						rowData.$row = $row;
 						rowData.order = i; // add original row position to rowCache
 						for ( j = 0; j < c.columns; ++j ) {
-							if (typeof parsers[j] === 'undefined') {
-								if (c.debug) {
-									log('No parser found for cell:', $row[0].cells[j], 'does it have a header?');
+							if (typeof parsers[ j ] === 'undefined') {
+								if ( c.debug ) {
+									log( 'No parser found for cell:', $row[ 0 ].cells[ j ], 'does it have a header?' );
 								}
 								continue;
 							}
-							t = ts.getElementText(c, $row[0].cells[j], j);
-							rowData.raw.push(t); // save original row text
+							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
+							rowData.raw.push( t ); // save original row text
 							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
 							cols.push( v );
 							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
@@ -406,11 +420,11 @@
 					c.totalRows += cc.normalized.length;
 
 				}
-				if (c.showProcessing) {
-					ts.isProcessing(table); // remove processing icon
+				if ( c.showProcessing ) {
+					ts.isProcessing( table ); // remove processing icon
 				}
-				if (c.debug) {
-					benchmark('Building cache for ' + totalRows + ' rows', cacheTime);
+				if ( c.debug ) {
+					benchmark( 'Building cache for ' + totalRows + ' rows', cacheTime );
 				}
 			}
 
@@ -550,14 +564,15 @@
 			}
 
 			function updateHeader(table) {
-				var s, $th, col,
-					c = table.config;
-				c.$headers.each(function(index, th){
-					$th = $(th);
+				var index, s, $th, col,
+					c = table.config,
+					len = c.$headers.length;
+				for ( index = 0; index < len; index++ ) {
+					$th = c.$headers.eq( index );
 					col = ts.getColumnData( table, c.headers, index, true );
 					// add 'sorter-false' class if 'parser-false' is set
-					s = ts.getData( th, col, 'sorter' ) === 'false' || ts.getData( th, col, 'parser' ) === 'false';
-					th.sortDisabled = s;
+					s = ts.getData( $th, col, 'sorter' ) === 'false' || ts.getData( $th, col, 'parser' ) === 'false';
+					$th[0].sortDisabled = s;
 					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
 					// aria-controls - requires table ID
 					if (table.id) {
@@ -567,11 +582,11 @@
 							$th.attr('aria-controls', table.id);
 						}
 					}
-				});
+				}
 			}
 
 			function setHeadersCss(table) {
-				var f, i, j,
+				var f, h, i, j, $headers, $h, nextSort, txt,
 					c = table.config,
 					list = c.sortList,
 					len = list.length,
@@ -615,14 +630,19 @@
 					}
 				}
 				// add verbose aria labels
-				c.$headers.not('.sorter-false').each(function(){
-					var $this = $(this),
-						nextSort = this.order[(this.count + 1) % (c.sortReset ? 3 : 2)],
-						txt = $.trim( $this.text() ) + ': ' +
-							ts.language[ $this.hasClass(ts.css.sortAsc) ? 'sortAsc' : $this.hasClass(ts.css.sortDesc) ? 'sortDesc' : 'sortNone' ] +
+				len = c.$headers.length;
+				$headers = c.$headers.not('.sorter-false');
+				for ( i = 0; i < len; i++ ) {
+					$h = $headers.eq( i );
+					if ( $h.length ) {
+						h = $headers[ i ];
+						nextSort = h.order[ ( h.count + 1 ) % ( c.sortReset ? 3 : 2 ) ],
+						txt = $.trim( $h.text() ) + ': ' +
+							ts.language[ $h.hasClass( ts.css.sortAsc ) ? 'sortAsc' : $h.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone' ] +
 							ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
-					$this.attr('aria-label', txt );
-				});
+						$h.attr( 'aria-label', txt );
+					}
+				}
 			}
 
 			function updateHeaderSortCount( table, list ) {
@@ -635,9 +655,10 @@
 					val = sortList[indx];
 					// ensure all sortList values are numeric - fixes #127
 					col = parseInt(val[0], 10);
-					// make sure header exists
-					header = c.$headerIndexed[col][0];
-					if (header) { // prevents error if sorton array is wrong
+					// prevents error if sorton array is wrong
+					if ( col < c.columns && c.$headerIndexed[col] ) {
+						// make sure header exists
+						header = c.$headerIndexed[col][0];
 						// o.count = o.count + 1;
 						dir = ('' + val[1]).match(/^(1|d|s|o|n)/);
 						dir = dir ? dir[0] : '';
@@ -681,10 +702,11 @@
 					// let any updates complete before initializing a sort
 					return setTimeout(function(){ initSort(table, cell, event); }, 50);
 				}
-				var arry, indx, col, order, s,
+				var arry, indx, i, col, order, s, $header,
 					c = table.config,
 					key = !event[c.sortMultiSortKey],
-					$table = c.$table;
+					$table = c.$table,
+					len = c.$headers.length;
 				// Only call sortStart if sorting is enabled
 				$table.trigger('sortStart', table);
 				// get current column sort order
@@ -692,12 +714,13 @@
 				// reset all sorts on non-current column - issue #30
 				if (c.sortRestart) {
 					indx = cell;
-					c.$headers.each(function() {
+					for ( i = 0; i < len; i++ ) {
+						$header = c.$headers.eq( i );
 						// only reset counts on columns that weren't just clicked on and if not included in a multisort
-						if (this !== indx && (key || !$(this).is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc))) {
-							this.count = -1;
+						if ( $header[0] !== indx && ( key || !$header.is('.' + ts.css.sortDesc + ',.' + ts.css.sortAsc) ) ) {
+							$header[0].count = -1;
 						}
-					});
+					}
 				}
 				// get current column index
 				indx = parseInt( $(cell).attr('data-column'), 10 );
@@ -1213,7 +1236,7 @@
 			// automatically add a colgroup with col elements set to a percentage width
 			ts.fixColumnWidth = function(table) {
 				table = $(table)[0];
-				var overallWidth, percent,
+				var overallWidth, percent, $tbodies, len, index,
 					c = table.config,
 					colgroup = c.$table.children('colgroup');
 				// remove plugin-added colgroup, in case we need to refresh the widths
@@ -1224,10 +1247,12 @@
 					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
 					overallWidth = c.$table.width();
 					// only add col for visible columns - fixes #371
-					c.$tbodies.find('tr:first').children(':visible').each(function() {
-						percent = parseInt( ( $(this).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
+					$tbodies = c.$tbodies.find('tr:first').children(':visible'); //.each(function()
+					len = $tbodies.length;
+					for ( index = 0; index < len; index++ ) {
+						percent = parseInt( ( $tbodies.eq( index ).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
 						colgroup.append( $('<col>').css('width', percent) );
-					});
+					}
 					c.$table.prepend(colgroup);
 				}
 			};
@@ -1419,17 +1444,20 @@
 
 			// restore headers
 			ts.restoreHeaders = function(table){
-				var $cell,
-					c = $(table)[0].config;
+				var index, $cell,
+					c = $(table)[0].config,
+					$headers = c.$table.find( c.selectorHeaders ),
+					len = $headers.length;
 				// don't use c.$headers here in case header cells were swapped
-				c.$table.find(c.selectorHeaders).each(function(i){
-					$cell = $(this);
+				for ( index = 0; index < len; index++ ) {
+					// c.$table.find(c.selectorHeaders).each(function(i){
+					$cell = $headers.eq( index );
 					// only restore header cells if it is wrapped
 					// because this is also used by the updateAll method
-					if ($cell.find('.' + ts.css.headerIn).length){
-						$cell.html( c.headerContent[i] );
+					if ( $cell.find( '.' + ts.css.headerIn ).length ) {
+						$cell.html( c.headerContent[ index ] );
 					}
-				});
+				}
 			};
 
 			ts.destroy = function(table, removeClasses, callback){
@@ -1589,8 +1617,8 @@
 				'E' : '\u00c9\u00c8\u00ca\u00cb\u011a\u0118', // ÉÈÊËĚĘ
 				'i' : '\u00ed\u00ec\u0130\u00ee\u00ef\u0131', // íìİîïı
 				'I' : '\u00cd\u00cc\u0130\u00ce\u00cf', // ÍÌİÎÏ
-				'o' : '\u00f3\u00f2\u00f4\u00f5\u00f6', // óòôõö
-				'O' : '\u00d3\u00d2\u00d4\u00d5\u00d6', // ÓÒÔÕÖ
+				'o' : '\u00f3\u00f2\u00f4\u00f5\u00f6\u014d', // óòôõöō
+				'O' : '\u00d3\u00d2\u00d4\u00d5\u00d6\u014c', // ÓÒÔÕÖŌ
 				'ss': '\u00df', // ß (s sharp)
 				'SS': '\u1e9e', // ẞ (Capital sharp s)
 				'u' : '\u00fa\u00f9\u00fb\u00fc\u016f', // úùûüů
@@ -2116,7 +2144,7 @@
 		id: 'zebra',
 		priority: 90,
 		format: function(table, c, wo) {
-			var $tb, $tv, $tr, row, even, time, k,
+			var $tv, $tr, row, even, time, k, i, len,
 				child = new RegExp(c.cssChildRow, 'i'),
 				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
 			if (c.debug) {
@@ -2125,17 +2153,17 @@
 			for (k = 0; k < b.length; k++ ) {
 				// loop through the visible rows
 				row = 0;
-				$tb = b.eq(k);
-				$tv = $tb.children('tr:visible').not(c.selectorRemove);
-				// revered back to using jQuery each - strangely it's the fastest method
-				/*jshint loopfunc:true */
-				$tv.each(function(){
-					$tr = $(this);
+				$tv = b.eq( k ).children( 'tr:visible' ).not( c.selectorRemove );
+				len = $tv.length;
+				for ( i = 0; i < len; i++ ) {
+					$tr = $tv.eq( i );
 					// style child rows the same way the parent row was styled
-					if (!child.test(this.className)) { row++; }
-					even = (row % 2 === 0);
-					$tr.removeClass(wo.zebra[even ? 1 : 0]).addClass(wo.zebra[even ? 0 : 1]);
-				});
+					if ( !child.test( $tr[0].className ) ) { row++; }
+					even = ( row % 2 === 0 );
+					$tr
+						.removeClass( wo.zebra[ even ? 1 : 0 ] )
+						.addClass( wo.zebra[ even ? 0 : 1 ] );
+				}
 			}
 		},
 		remove: function(table, c, wo, refreshing){
