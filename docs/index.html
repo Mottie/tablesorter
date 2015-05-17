@@ -479,7 +479,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-chart.html">Chart Widget</a> (<span class="version">v2.19.0</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns Highlight widget</a> (v2.0.17)</li>
 		<li><a href="example-widget-column-selector.html">Column Selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.21.0</span>).</li>
-		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.19.1</span>).</li>
+		<li><a href="example-widget-editable.html">Content Editable widget</a> (v2.9; <span class="version updated">v2.21.6</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter Widget (<span class="version updated">v2.21.6</span>):
 			<ul>
@@ -496,7 +496,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-formatter.html">Formatter widget</a> (<span class="version">v2.19.1</span>).</li>
 		<li>Grouping rows widget:
 			<ul>
-				<li><a href="example-widget-grouping.html">basic</a> (v2.8; <span class="version updated">v2.21.0</span>).</li>
+				<li><a href="example-widget-grouping.html">basic</a> (v2.8; <span class="version updated">v2.21.6</span>).</li>
 				<li><a href="example-widget-grouping-filter-childrows.html">Grouping + filter + child rows</a> (<span class="updated version">v2.15.12</span>)</li>
 			</ul>
 		</li>
@@ -507,16 +507,16 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.21.3</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.21.6</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.21.3</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.21.6</span>).<br>
 			<br>
 		</li>
 
 		<li><a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.19.0</span>)</li>
 		<li><a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.19.0</span>)</li>
 		<li><a href="example-widgets.html">Repeat Headers widget</a> (v2.0.5; <span class="version updated">v2.19.0</span>)</li>
-		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.21.5</span>)</li>
+		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable Columns widget</a> (v2.0.23.1; <span class="version updated">v2.21.6</span>)</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27)</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.21.6</span>).</li>
 		<li><a href="example-widget-static-row.html">StaticRow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.19.1</span>).</li>
@@ -525,7 +525,7 @@
 		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.19.0</span>):
 			<ul>
 				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9)</li>
-				<li><a href="example-widget-bootstrap-theme-v2.html">Bootstrap v2.x</a> &amp; <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x</a> (v2.4)</li>
+				<li><a href="example-widget-bootstrap-theme-v2.html">Bootstrap v2.x</a> (demo added <span class="version">v2.21.6</span>) &amp; <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x</a> (v2.4)</li>
 			</ul>
 		</li>
 		<li><span class="results">&Dagger;</span> <a href="example-widget-zebra.html">Zebra stripe widget</a></li>
@@ -1866,7 +1866,7 @@ $(function(){
       filter_childByColumn : false,
       // show column filters
       filter_columnFilters : true,
-      // css class name added to the filter cell (string or array)
+      // extra css class name (string or array) added to the filter element (input or select)
       filter_cellFilter    : '',
       // css class applied to the filter row inputs/select
       filter_cssFilter     : '',
@@ -7025,16 +7025,16 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 
 	<strong id="Download-Required">Required:</strong>
 	<ul>
-		<li><a class="external" href="http://jquery.com/download/">jQuery</a> (1.2.6 or higher; some demos & <a class="external" href="http://api.jquery.com/data/#data-html5">HTML5 data-attributes</a> need jQuery 1.4.3+)</li>
+		<li><a class="external" href="http://jquery.com/download/">jQuery</a> (1.2.6 or higher; some widgets, demos & <a class="external" href="http://api.jquery.com/data/#data-html5">HTML5 data-attributes</a> need jQuery 1.4.3+)</li>
 		<li><a href="../dist/js/jquery.tablesorter.min.js">jquery.tablesorter.min.js</a> (minified for production - please put the file on your server)</li>
 	</ul>
 
 	<strong id="Download-Addons">Optional / Add-Ons:</strong>
 	<ul>
-		<li><a class="external" href="https://github.com/jquery-orphans/jquery-metadata">jQuery Metadata 2.1</a> (4kb, required for setting <a href="#metadata">inline options</a>)</li>
-		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a> (~65kb/<a href="../js/jquery.tablesorter.min.js">~30kb minified</a>)</li>
-		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (~30kb/<a href="../addons/pager/jquery.tablesorter.pager.min.js">~15kb minified</a>, <a href="example-pager.html">demo</a>)</li>
-		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (~68kb/<a href="../js/jquery.tablesorter.widgets.min.js">~30kb min</a>, includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets).</li>
+		<li><a class="external" href="https://github.com/jquery-orphans/jquery-metadata">jQuery Metadata 2.1</a> (required for setting <a href="#metadata">inline options</a>)</li>
+		<li><a href="../js/jquery.tablesorter.js">jquery.tablesorter.js</a></li>
+		<li><a href="../addons/pager/jquery.tablesorter.pager.js">jquery.tablesorter.pager.js</a> (<a href="example-pager.html">demo</a>)</li>
+		<li><a href="../js/jquery.tablesorter.widgets.js">jquery.tablesorter.widgets.js</a> (includes the jQuery UI theme, columns styling, resizable columns, filter, sticky header and save sort widgets).</li>
 	</ul>
 
 	<strong id="Download-Themes">Themes:</strong>

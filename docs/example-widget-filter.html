@@ -58,7 +58,7 @@
 			// if true, allows using "#:{query}" in AnyMatch searches (column:query; added v2.20.0)
 			filter_columnAnyMatch: true,
 
-			// css class name added to the filter cell (string or array)
+			// extra css class name (string or array) added to the filter element (input or select)
 			filter_cellFilter : '',
 
 			// extra css class name(s) applied to the table row containing the filters & the inputs within that row
@@ -355,7 +355,7 @@ $(function(){
 					<tr id="filter-cell-filter">
 						<td><a href="#" class="permalink">filter_cellFilter</a></td>
 						<td>''</td>
-						<td>Extra css class name added to the filter cell (string or array) (<span class="version">v2.18.0</span>)
+						<td>Extra css class name (string or array) added to the filter element (input or select) (<span class="version">v2.18.0</span>)
 							<div class="collapsible">
 							<br>
 							The filter cell (<code>&lt;td&gt;</code>) is not to be confused with the <code>filter_cssFilter</code> option which adds an extra class name to the filter inputs (<code>&lt;input&gt;</code>).
