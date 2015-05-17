@@ -939,7 +939,7 @@ ts.filter = {
 				}
 				
 				// add tabindex
-				buildFilter.attr('tabindex', column );
+				buildFilter.attr('tabindex', 1 );
 			}
 		}
 	},
