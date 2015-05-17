@@ -252,7 +252,7 @@ ts.scroller = {
 
 		// Sorting, so scroll to top
 		$table
-			.off( 'sortEnd' + namespace + ' setFixedColumnSize' + namespace )
+			.off( 'sortEnd setFixedColumnSize updateComplete '.split( ' ' ).join( namespace + ' ' ) )
 			.on( 'sortEnd' + namespace, function() {
 				if ( wo.scroller_upAfterSort ) {
 					$table.parent().animate({ scrollTop: 0 }, 'fast' );
@@ -270,6 +270,10 @@ ts.scroller = {
 				} else {
 					wo.scroller_$container.removeClass( tscss.scrollerHasFix );
 				}
+			})
+			.on( 'updateComplete' + namespace, function() {
+				// adjust column sizes after an update
+				ts.scroller.resize( c, wo );
 			});
 
 		// Setup window.resizeEnd event
