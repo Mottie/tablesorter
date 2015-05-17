@@ -25,7 +25,7 @@
 			$("#javascript2 pre").addClass('mod').html( cleanupCode( $("#js2").html() ) );
 		}
 		if ($("#css").length) {
-			$("pre.lang-css").addClass('mod').html( cleanupCode( $("#css").html() ) );
+			$("pre.lang-css").not('.locked').addClass('mod').html( cleanupCode( $("#css").html() ) );
 		}
 		if ($("#demo").length && $("#html pre").length) {
 			$("#html pre").addClass('mod').html( cleanupCode( $("#demo").html() ) );

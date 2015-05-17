@@ -33,10 +33,11 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-scroller.js"></script>
 
-	<style id="css">#fixed-columns-table tbody td {
-	/* force "Notes" column to not wrap, so we get a horizontal scrolling demo! (optional css) */
+	<style id="css">/* OPTIONAL CSS! */
+#fixed-columns-table tbody td {
+	/* force "Notes" column to not wrap, so we get a horizontal scrolling demo! */
 	white-space: nowrap;
-	/* Add min column width, or "Index" column filter gets too narrow to use (optional css) */
+	/* Add min column width, or "Index" column filter gets too narrow to use */
 	min-width: 60px;
 }</style>
 
@@ -69,7 +70,11 @@
 		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
 		widgetOptions : {
 			scroller_height : 300,
+			// set number of columns to fix
 			scroller_fixedColumns : 2,
+			// add a fixed column overlay for styling
+			scroller_addFixedOverlay : false,
+			// add hover highlighting to the fixed column (disable if it causes slowing)
 			scroller_rowHighlight : 'hover'
 		}
 	});
@@ -172,6 +177,9 @@ $(function() {
 						<li>Fixed columns no longer have pointer events disabled.</li>
 						<li>Fixed column vertical scrollbar is now hidden in IE9 &amp; older.</li>
 						<li>Fixed tabbing through fixed column header cells &amp; inputs.</li>
+						<li>The "setFixedColumnSize" can now be called with no set size to refresh the fixed column.</li>
+						<li>Add <code>scroller_addFixedOverlay</code> option which when <code>true</code>, adds an overlay on the fixed columns for styling.</li>
+						<li>Refresh column sizes after update.</li>
 					</ul>
 				</li>
 				<li>In <span class="version">v2.21.3</span>
@@ -280,6 +288,33 @@ $(function() {
 							<div class="collapsible">
 							<p>It's not 100% pixel-perfect in alignment, especially not with a jQuery UI theme, but it looks good with the other themes.</p>
 							<p>If the content is set a RTL direction, add a class name of <code>tablesorter-scroller-rtl</code> (name set in <code>$.tablesorter.css.scrollerRtl</code>) to the table to align the fixed header on the right.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="scroller-add-fixed-overlay">
+						<td><a href="#" class="permalink">scroller_addFixedOverlay</a></td>
+						<td>false</td>
+						<td>Setting this to <code>true</code> will add a fixed overlay which can be used for styling (<span class="version">v2.21.6</span>).
+							<div class="collapsible">
+							<p>A class name of "tablesorter-scroller-fixed-panel" is added to the overlay.</p>
+							<p>Here is are two examples:
+								<h4><a href="http://jsfiddle.net/856bzzeL/206/">Semi-transparent overlay</a>*</h4>
+								<pre class="prettyprint lang-css locked">div.tablesorter-scroller-fixed-panel {
+  background-color: rgba( 0, 0, 0, 0.4);
+  z-index: 2;
+  opacity: 0.15;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}</pre>
+								<h4><a href="http://jsfiddle.net/856bzzeL/208/">Black border</a>*</h4>
+								<pre class="prettyprint lang-css locked">div.tablesorter-scroller-fixed-panel {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-right: 2px solid black;
+}</pre>
+									<p>* Demos by <a href="https://github.com/TheSin-">TheSin-</a> from <a href="https://github.com/Mottie/tablesorter/issues/887#issuecomment-101862175">issue 887</a>.</p>
+									<p><span class="label warning">*WARNING*</span> interacting with elements under this overlay requires that the browser supports <a href="http://caniuse.com/#search=pointer-events">pointer-events</a>.</p>
 							</div>
 						</td>
 					</tr>

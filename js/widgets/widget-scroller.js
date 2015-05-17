@@ -62,6 +62,8 @@ ts.addWidget({
 		scroller_fixedColumns : 0,
 		// add hover highlighting to the fixed column (disable if it causes slowing)
 		scroller_rowHighlight : 'hover',
+		// add a fixed column overlay for styling
+		scroller_addFixedOverlay : false,
 		// bar width is now calculated; set a value to override
 		scroller_barWidth : null
 	},
@@ -397,7 +399,9 @@ ts.scroller = {
 			.addClass( tscss.scrollerFixed )
 			.removeClass( tscss.scrollerWrap )
 			.attr( 'id', '' );
-		$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
+		if ( wo.scroller_addFixedOverlay ) {
+			$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
+		}
 		$fixedTbody = $fixedColumn.find( '.' + tscss.scrollerTable );
 		$fixedTbody.find( 'table' )
 			.addClass( c.namespace.slice(1) + '_extra_table' )
