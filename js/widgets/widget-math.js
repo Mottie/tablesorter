@@ -1,10 +1,10 @@
-/*! Widget: math - updated 2/9/2015 (v2.19.1) *//*
+/*! Widget: math - updated 5/17/2015 (v2.22.0) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	"use strict";
 
 	var ts = $.tablesorter,
@@ -20,10 +20,10 @@
 				c = table.config,
 				arry = [],
 				$row = $el.closest('tr'),
-				$cells = $row.children();
+				$cells = $row.children().not('[' + dataAttrib + '=ignore]');
 			if (!$row.hasClass(wo.filter_filteredRow || 'filtered')) {
 				if (wo.math_ignore.length) {
-					$cells = $cells.not('[' + dataAttrib + '=ignore]').not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
+					$cells = $cells.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
 				}
 				arry = $cells.not($el).map(function(){
 					$t = $(this);
@@ -31,7 +31,7 @@
 					if (typeof txt === "undefined") {
 						txt = this.textContent || $t.text();
 					}
-					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 					return isNaN(txt) ? 0 : txt;
 				}).get();
 			}
@@ -39,7 +39,7 @@
 		},
 
 		// get all of the column numerical values in an arry
-		getColumn : function(table, wo, $el, type, dataAttrib){
+		getColumn : function(table, wo, $el, type, dataAttrib) {
 			var i, txt, $t, len, mathAbove,
 				arry = [],
 				c = table.config,
@@ -65,7 +65,7 @@
 							if (typeof txt === "undefined") {
 								txt = $t[0].textContent || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					}
@@ -79,7 +79,8 @@
 						if (typeof txt === "undefined") {
 							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 						}
-						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+						// isNaN('') => false
+						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 						arry.push(isNaN(txt) ? 0 : txt);
 					}
 				});
@@ -88,7 +89,7 @@
 		},
 
 		// get all of the column numerical values in an arry
-		getAll : function(table, wo, dataAttrib){
+		getAll : function(table, wo, dataAttrib) {
 			var txt, $t, col,
 				arry = [],
 				c = table.config,
@@ -104,7 +105,7 @@
 							if (typeof txt === "undefined") {
 								txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table);
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					});
@@ -113,7 +114,7 @@
 			return arry;
 		},
 
-		recalculate : function(table, c, wo, init){
+		recalculate : function(table, c, wo, init) {
 			if (c && (!wo.math_isUpdating || init)) {
 
 				// add data-column attributes to all table cells
@@ -364,7 +365,7 @@
 			return Math.sqrt( vars );
 		},
 		// standard deviation (population)
-		stdevp : function(arry){
+		stdevp : function(arry) {
 			var varp = ts.equations.variance(arry, true);
 			return Math.sqrt( varp );
 		}
@@ -391,28 +392,29 @@
 			math_suffix   : '',
 			math_event    : 'recalculate'
 		},
-		init : function(table, thisWidget, c, wo){
+		init : function(table, thisWidget, c, wo) {
 			c.$table
 				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
-				.on(math.events + ' ' + wo.math_event, function(e){
+				.on(math.events + ' ' + wo.math_event, function(e) {
 					var init = e.type === 'tablesorter-initialized';
-					if (e.type === 'updateAll') {
-						// redo data-column indexes in case columns were rearranged
-						ts.computeColumnIndex( c.$table.children('tbody').children() );
-					} else if (!wo.math_isUpdating || init) {
+					if ( !wo.math_isUpdating || init ) {
+						if ( !/filter/.test(e.type) ) {
+							// redo data-column indexes on update
+							ts.computeColumnIndex( c.$table.children('tbody').children() );
+						}
 						math.recalculate( table, c, wo, init );
 					}
 				})
 				.on('updateComplete.tsmath', function(){
 					setTimeout(function(){
 						wo.math_isUpdating = false;
-					}, 500);
+					}, 20);
 				});
 			wo.math_isUpdating = false;
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo, refreshing){
+		remove: function(table, c, wo, refreshing) {
 			if (refreshing) { return; }
 			$(table)
 				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )

@@ -427,11 +427,11 @@
 			<ul>
 				<li>Setting the <code>data-priority</code> to any non-numerical name (e.g. "critical" or "persistent").</li>
 				<li>Setting the column selector widget columns option <code>columnSelector_columns : { 0 : 'disable' }</code>.</li>
-				<li>The following methods in order of priority:
+				<li>The following methods, added to the header cell, in order of priority:
 					<ul>
 						<li>jQuery data <code>data-columnSelector="disable"</code>.</li>
-						<li>metadata <code>class=&quot;{ columnSelector : disable }&quot;</code>.</li>
-						<li>headers option <code>headers : { 0 : { columnSelector: disable } }</code>.</li>
+						<li>metadata <code>class=&quot;{ columnSelector : disable }&quot;</code> (requires the metadata plugin).</li>
+						<li>headers option <code>headers : { 0 : { columnSelector: 'disable' } }</code>.</li>
 						<li>header class name <code>class=&quot;columnSelector-disable&quot;</code>.</li>
 					</ul>
 				</li>

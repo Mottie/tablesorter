@@ -17,7 +17,8 @@
 .tablesorter-blackice th,
 .tablesorter-blackice thead td  {
 	padding: 4px;
-	font: bold 13px/20px Arial, Sans-serif;
+	font: 13px/20px Arial, Sans-serif;
+	font-weight: bold;
 	color: #e5e5e5;
 	text-align: left;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);

@@ -4,7 +4,7 @@
  */
 ;(function ($, window) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 $.extend(ts.css, {
 	sticky    : 'tablesorter-stickyHeader', // stickyHeader

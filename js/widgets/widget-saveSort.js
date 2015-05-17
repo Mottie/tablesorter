@@ -1,7 +1,7 @@
 /*! Widget: saveSort */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 // this widget saves the last sort only if the
 // saveSort widget option is true AND the

@@ -1,7 +1,7 @@
-/*! Widget: resizable - updated 4/2/2015 (v2.21.5) */
+/*! Widget: resizable - updated 5/17/2015 (v2.22.0) */
 ;(function ($, window) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 $.extend(ts.css, {
 	resizableContainer : 'tablesorter-resizable-container',
@@ -290,7 +290,7 @@ ts.addWidget({
 	init: function(table, thisWidget, c, wo) {
 		ts.resizable.init( c, wo );
 	},
-	remove: function( table, c, wo ) {
+	remove: function( table, c, wo, refreshing ) {
 		if (wo.$resizable_container) {
 			var namespace = c.namespace + 'tsresize';
 			c.$table.add( $( c.namespace + '_extra_table' ) )
@@ -299,13 +299,13 @@ ts.addWidget({
 
 				wo.$resizable_container.remove();
 			ts.resizable.toggleTextSelection( c, false );
-			ts.resizableReset( table );
+			ts.resizableReset( table, refreshing );
 			$( document ).unbind( 'mousemove' + namespace + ' mouseup' + namespace );
 		}
 	}
 });
 
-ts.resizableReset = function( table, nosave ) {
+ts.resizableReset = function( table, refreshing ) {
 	$( table ).each(function(){
 		var index, $t,
 			c = this.config,
@@ -322,7 +322,7 @@ ts.resizableReset = function( table, nosave ) {
 			}
 			// reset stickyHeader widths
 			$( window ).trigger( 'resize' );
-			if ( ts.storage && !nosave ) {
+			if ( ts.storage && !refreshing ) {
 				ts.storage( this, ts.css.resizableStorage, {} );
 			}
 		}

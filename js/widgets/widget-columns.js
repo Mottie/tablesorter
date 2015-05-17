@@ -1,7 +1,7 @@
 /*! Widget: columns */
 ;(function ($) {
 'use strict';
-var ts = $.tablesorter = $.tablesorter || {};
+var ts = $.tablesorter || {};
 
 ts.addWidget({
 	id: "columns",

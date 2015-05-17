@@ -1,4 +1,4 @@
-/*! Widget: editable - updated 2/9/2015 (v2.19.1) *//*
+/*! Widget: editable - updated 5/17/2015 (v2.22.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -8,10 +8,13 @@
 	'use strict';
 
 var tse = $.tablesorter.editable = {
+	namespace : '.tseditable',
+	// last edited class name
+	lastEdited: 'tseditable-last-edited-cell',
 
 	editComplete: function( c, wo, $cell, refocus ) {
 		$cell
-			.removeClass( 'tseditable-last-edited-cell' )
+			.removeClass( tse.lastEdited )
 			.trigger( wo.editable_editComplete, [ c ] );
 		// restore focus last cell after updating
 		if ( refocus ) {
@@ -25,16 +28,23 @@ var tse = $.tablesorter.editable = {
 		setTimeout( function() {
 			// select all text in contenteditable
 			// see http://stackoverflow.com/a/6150060/145346
-			var sel, range = document.createRange();
-			range.selectNodeContents( cell );
-			sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange( range );
+			var range, selection;
+			if ( document.body.createTextRange ) {
+				range = document.body.createTextRange();
+				range.moveToElementText( cell );
+				range.select();
+			} else if ( window.getSelection ) {
+				selection = window.getSelection();
+				range = document.createRange();
+				range.selectNodeContents( cell );
+				selection.removeAllRanges();
+				selection.addRange( range );
+			}
 		}, 100 );
 	},
 
-	update: function( c, wo ) {
-		var indx, tmp, $t,
+	getColumns : function( c, wo ) {
+		var indx, tmp,
 			colIndex = [],
 			cols = [];
 		if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
@@ -61,22 +71,33 @@ var tse = $.tablesorter.editable = {
 			wo.editable_columnsArray = colIndex;
 			wo.editable_columnsArray.sort(function(a,b){ return a - b; });
 		}
-		tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent );
+		return cols;
+	},
+
+	update: function( c, wo ) {
+		var $t,
+			tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
+			cols = tse.getColumns( c, wo ).join( ',' );
+
+		// turn off contenteditable to allow dynamically setting the wo.editable_noEdit
+		// class on table cells - see issue #900
+		c.$tbodies.find( cols ).find( '[contenteditable]' ).prop( 'contenteditable', false );
+
 		// IE does not allow making TR/TH/TD cells directly editable ( issue #404 )
 		// so add a div or span inside ( it's faster than using wrapInner() )
-		c.$tbodies.find( cols.join( ',' ) ).not( '.' + wo.editable_noEdit ).each( function() {
+		c.$tbodies.find( cols ).not( '.' + wo.editable_noEdit ).each( function() {
 			// test for children, if they exist, then make the children editable
 			$t = $( this );
 
-			if ( tmp && $t.children().length === 0 ) {
+			if ( tmp && $t.children( 'div, span' ).length === 0 ) {
 				$t.wrapInner( wo.editable_wrapContent );
 			}
-			if ( $t.children().length ) {
-				// make all children content editable
-				$t.children().not( '.' + wo.editable_noEdit ).each( function() {
+			if ( $t.children( 'div, span' ).length ) {
+				// make div/span children content editable
+				$t.children( 'div, span' ).not( '.' + wo.editable_noEdit ).each( function() {
 					var $this = $( this );
 					if ( wo.editable_trimContent ) {
-						$this.text( function( i, txt ) {
+						$this.html( function( i, txt ) {
 							return $.trim( txt );
 						});
 					}
@@ -84,7 +105,7 @@ var tse = $.tablesorter.editable = {
 				});
 			} else {
 				if ( wo.editable_trimContent ) {
-					$t.text( function( i, txt ) {
+					$t.html( function( i, txt ) {
 						return $.trim( txt );
 					});
 				}
@@ -94,36 +115,45 @@ var tse = $.tablesorter.editable = {
 	},
 
 	bindEvents: function( c, wo ) {
+		var namespace = tse.namespace;
 		c.$table
-			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'updateComplete pagerComplete '.split( ' ' ).join( '.tseditable ' ), function() {
+			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
+			.on( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ), function() {
 				tse.update( c, c.widgetOptions );
-			});
-
-		c.$tbodies
-			.off( ( 'mouseleave focus blur focusout keydown '.split( ' ' ).join( '.tseditable ' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'mouseleave.tseditable', function() {
+			})
+			// prevent sort initialized by user click on the header from changing the row indexing before
+			// updateCell can finish processing the change
+			.children( 'thead' )
+			.add( $( c.namespace + '_extra_table' ).children( 'thead' ) )
+			.off( 'mouseenter' + namespace )
+			.on( 'mouseenter' + namespace, function() {
 				if ( c.$table.data( 'contentFocused' ) ) {
 					// change to 'true' instead of element to allow focusout to process
 					c.$table.data( 'contentFocused', true );
 					$( ':focus' ).trigger( 'focusout' );
 				}
-			})
-			.on( 'focus.tseditable', '[contenteditable]', function( e ) {
+			});
+
+		c.$tbodies
+			.off( ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
+			.on( 'focus' + namespace, '[contenteditable]', function( e ) {
 				clearTimeout( $( this ).data( 'timer' ) );
 				c.$table.data( 'contentFocused', e.target );
 				var $this = $( this ),
 					selAll = wo.editable_selectAll,
 					column = $this.closest( 'td' ).index(),
-					txt = $.trim( $this.text() );
-				if ( wo.editable_enterToAccept ) {
-					// prevent enter from adding into the content
-					$this.on( 'keydown.tseditable', function( e ){
-						if ( e.which === 13 ) {
+					txt = $this.html();
+				if ( wo.editable_trimContent ) {
+					txt = $.trim( txt );
+				}
+				// prevent enter from adding into the content
+				$this
+					.off( 'keydown' + namespace )
+					.on( 'keydown' + namespace, function( e ){
+						if ( wo.editable_enterToAccept && e.which === 13 ) {
 							e.preventDefault();
 						}
 					});
-				}
 				$this.data({ before : txt, original: txt });
 
 				if ( typeof wo.editable_focused === 'function' ) {
@@ -140,16 +170,19 @@ var tse = $.tablesorter.editable = {
 					}
 				}
 			})
-			.on( 'blur focusout keydown '.split( ' ' ).join( '.tseditable ' ), '[contenteditable]', function( e ) {
+			.on( 'blur focusout keydown '.split( ' ' ).join( namespace + ' ' ), '[contenteditable]', function( e ) {
 				if ( !c.$table.data( 'contentFocused' ) ) { return; }
 				var t, validate,
 					valid = false,
 					$this = $( e.target ),
-					txt = $.trim( $this.text() ),
+					txt = $this.html(),
 					column = $this.closest( 'td' ).index();
+				if ( wo.editable_trimContent ) {
+					txt = $.trim( txt );
+				}
 				if ( e.which === 27 ) {
 					// user cancelled
-					$this.html( $.trim( $this.data( 'original' ) ) ).trigger( 'blur.tseditable' );
+					$this.html( $this.data( 'original' ) ).trigger( 'blur' + namespace );
 					c.$table.data( 'contentFocused', false );
 					return false;
 				}
@@ -168,10 +201,10 @@ var tse = $.tablesorter.editable = {
 					}
 
 					if ( t && valid !== false ) {
-						c.$table.find( '.tseditable-last-edited-cell' ).removeClass( 'tseditable-last-edited-cell' );
+						c.$table.find( '.' + tse.lastEdited ).removeClass( tse.lastEdited );
 						$this
-							.addClass( 'tseditable-last-edited-cell' )
-							.html( $.trim( valid ) )
+							.addClass( tse.lastEdited )
+							.html( valid )
 							.data( 'before', valid )
 							.data( 'original', valid )
 							.trigger( 'change' );
@@ -179,11 +212,11 @@ var tse = $.tablesorter.editable = {
 							if ( wo.editable_autoResort ) {
 								setTimeout( function() {
 									c.$table.trigger( 'sorton', [ c.sortList, function() {
-										tse.editComplete( c, wo, c.$table.find( '.tseditable-last-edited-cell' ), true );
+										tse.editComplete( c, wo, c.$table.find( '.' + tse.lastEdited ), true );
 									}, true ] );
 								}, 10 );
 							} else {
-								tse.editComplete( c, wo, c.$table.find( '.tseditable-last-edited-cell' ) );
+								tse.editComplete( c, wo, c.$table.find( '.' + tse.lastEdited ) );
 							}
 						} ] );
 						return false;
@@ -192,13 +225,28 @@ var tse = $.tablesorter.editable = {
 					clearTimeout( $this.data( 'timer' ) );
 					$this.data( 'timer', setTimeout( function() {
 						if ( $.isFunction( wo.editable_blur ) ) {
-							wo.editable_blur( $.trim( $this.text() ), column, $this );
+							txt = $this.html();
+							wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
 						}
 					}, 100 ) );
 					// restore original content on blur
-					$this.html( $.trim( $this.data( 'original' ) ) );
+					$this.html( $this.data( 'original' ) );
 				}
 			});
+	},
+	destroy : function( c, wo ) {
+		var namespace = tse.namespace,
+			cols = tse.getColumns( c, wo ),
+
+		tmp = ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
+		c.$table.off( tmp );
+
+		tmp = ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
+		c.$tbodies
+			.off( tmp )
+			.find( cols.join( ',' ) )
+			.find( '[contenteditable]' )
+			.prop( 'contenteditable', false );
 	}
 
 };
@@ -223,6 +271,11 @@ var tse = $.tablesorter.editable = {
 			if ( !wo.editable_columns.length ) { return; }
 			tse.update( c, wo );
 			tse.bindEvents( c, wo );
+		},
+		remove : function( table, c, wo, refreshing ) {
+			if ( !refreshing ) {
+				tse.destroy( c, wo ) ;
+			}
 		}
 	});
 

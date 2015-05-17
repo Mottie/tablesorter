@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 4/2/2015 (v2.21.5) *//*
+/*! Widget: scroller - updated 5/17/2015 (v2.22.0) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -40,14 +40,15 @@ var ts = $.tablesorter,
 	tscss = ts.css;
 
 $.extend( ts.css, {
-	scrollerWrap   : 'tablesorter-scroller',
-	scrollerHeader : 'tablesorter-scroller-header',
-	scrollerTable  : 'tablesorter-scroller-table',
-	scrollerFooter : 'tablesorter-scroller-footer',
-	scrollerFixed  : 'tablesorter-scroller-fixed',
-	scrollerHasFix : 'tablesorter-scroller-has-fixed-columns',
-	scrollerReset  : 'tablesorter-scroller-reset',
-	scrollerRtl    : 'tablesorter-scroller-rtl'
+	scrollerWrap        : 'tablesorter-scroller',
+	scrollerHeader      : 'tablesorter-scroller-header',
+	scrollerTable       : 'tablesorter-scroller-table',
+	scrollerFooter      : 'tablesorter-scroller-footer',
+	scrollerFixed       : 'tablesorter-scroller-fixed',
+	scrollerFixedPanel  : 'tablesorter-scroller-fixed-panel',
+	scrollerHasFix      : 'tablesorter-scroller-has-fixed-columns',
+	scrollerReset       : 'tablesorter-scroller-reset',
+	scrollerRtl         : 'tablesorter-scroller-rtl'
 });
 
 ts.addWidget({
@@ -61,6 +62,8 @@ ts.addWidget({
 		scroller_fixedColumns : 0,
 		// add hover highlighting to the fixed column (disable if it causes slowing)
 		scroller_rowHighlight : 'hover',
+		// add a fixed column overlay for styling
+		scroller_addFixedOverlay : false,
 		// bar width is now calculated; set a value to override
 		scroller_barWidth : null
 	},
@@ -95,6 +98,8 @@ $( function() {
 		'.' + tscss.scrollerReset + ' { width: auto !important; min-width: auto !important; max-width: auto !important; }' +
 		/* overall wrapper & table section wrappers */
 		'.' + tscss.scrollerWrap + ' { position: relative; overflow: hidden; }' +
+		/* add border-box sizing to all scroller widget tables; see #135 */
+		'.' + tscss.scrollerWrap + ' * { box-sizing: border-box; }' +
 		'.' + tscss.scrollerHeader + ', .' + tscss.scrollerFooter + ' { overflow: hidden; }' +
 		'.' + tscss.scrollerHeader + ' table.' + tscss.table + ' { margin-bottom: 0; }' +
 		'.' + tscss.scrollerFooter + ' table.' + tscss.table + ' thead { visibility: hidden, height: 0; overflow: hidden; }' +
@@ -104,17 +109,20 @@ $( function() {
 		/* hide filter row in clones */
 		'.' + tscss.scrollerTable + ' .' + ( tscss.filterRow || 'tablesorter-filter-row' ) + ',.' + tscss.scrollerFooter + ' .' +
 			( tscss.filterRow || 'tablesorter-filter-row' ) + ',.' + tscss.scrollerTable + ' tfoot { display: none; }' +
-		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' { position: absolute; top: 0; z-index: 1; left: 0 } ' +
-		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' { left: auto; right: 0 } ' +
 		/* visibly hide header rows in clones, so we can still set a width on it and still effect the rest of the column */
 		'.' + tscss.scrollerTable + ' table.' + tscss.table + ' thead tr.' + tscss.headerRow + ' *, .' + tscss.scrollerFooter +
 			' table.' + tscss.table + ' thead * { line-height: 0; height: 0; border: none; background-image: none; padding-top: 0;' +
 			' padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; }' +
 
 		/*** fixed column ***/
-		'.' + tscss.scrollerFixed + ' { pointer-events: none; }' +
-		/* add horizontal scroll bar */
-		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: scroll; }' +
+		/* disable pointer-events on fixed column wrapper or the user can't interact with the horizontal scrollbar */
+		'.' + tscss.scrollerFixed + ', .' + tscss.scrollerFixed + ' .' + tscss.scrollerFixedPanel + ' { pointer-events: none; }' +
+		/* enable pointer-events for fixed column children; see #135 & #878 */
+		'.' + tscss.scrollerFixed + ' > div { pointer-events: all; }' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' { position: absolute; top: 0; z-index: 1; left: 0 } ' +
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' { left: auto; right: 0 } ' +
+		/* add horizontal scroll bar; set to "auto", see #135 */
+		'.' + tscss.scrollerWrap + '.' + tscss.scrollerHasFix + ' > .' + tscss.scrollerTable + ' { overflow-x: auto; }' +
 		/* need to position the tbody & tfoot absolutely to hide the scrollbar & move the footer below the horizontal scrollbar */
 		'.' + tscss.scrollerFixed + ' .' + tscss.scrollerFooter + ' { position: absolute; bottom: 0; }' +
 		/* hide fixed tbody scrollbar - see http://goo.gl/VsLe6n */
@@ -123,6 +131,9 @@ $( function() {
 		/* remove right border of fixed header tables to hide the boundary */
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + ' table { border-right-color: transparent; padding-right: 0; }' +
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixed + '.' + tscss.scrollerRtl + ' table { border-left-color: transparent; padding-left: 0; }' +
+
+		/*** fixed column panel ***/
+		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel + ' { position: absolute; top: 0; bottom: 0; z-index: 2; left: 0; right: 0; } ' +
 		'</style>';
 	$( style ).appendTo( 'body' );
 });
@@ -131,6 +142,8 @@ ts.scroller = {
 
 	// Ugh.. Firefox misbehaves, so it needs to be detected
 	isFirefox : navigator.userAgent.toLowerCase().indexOf( 'firefox' ) > -1,
+	// old IE needs a wrap to hide the fixed column scrollbar; http://stackoverflow.com/a/24408672/145346
+	isOldIE : document.all && !window.atob,
 
 	hasScrollBar : function( $target ) {
 		return $target.get(0).scrollHeight > $target.height();
@@ -241,7 +254,7 @@ ts.scroller = {
 
 		// Sorting, so scroll to top
 		$table
-			.off( 'sortEnd' + namespace + ' setFixedColumnSize' + namespace )
+			.off( 'sortEnd setFixedColumnSize updateComplete '.split( ' ' ).join( namespace + ' ' ) )
 			.on( 'sortEnd' + namespace, function() {
 				if ( wo.scroller_upAfterSort ) {
 					$table.parent().animate({ scrollTop: 0 }, 'fast' );
@@ -253,11 +266,16 @@ ts.scroller = {
 				}
 				// remove fixed columns
 				wo.scroller_$container.find( '.' + tscss.scrollerFixed ).remove();
+				size = wo.scroller_fixedColumns;
 				if ( size > 0 && size < c.columns - 1 ) {
 					ts.scroller.setupFixed( c, wo );
 				} else {
 					wo.scroller_$container.removeClass( tscss.scrollerHasFix );
 				}
+			})
+			.on( 'updateComplete' + namespace, function() {
+				// adjust column sizes after an update
+				ts.scroller.resize( c, wo );
 			});
 
 		// Setup window.resizeEnd event
@@ -381,6 +399,9 @@ ts.scroller = {
 			.addClass( tscss.scrollerFixed )
 			.removeClass( tscss.scrollerWrap )
 			.attr( 'id', '' );
+		if ( wo.scroller_addFixedOverlay ) {
+			$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
+		}
 		$fixedTbody = $fixedColumn.find( '.' + tscss.scrollerTable );
 		$fixedTbody.find( 'table' )
 			.addClass( c.namespace.slice(1) + '_extra_table' )
@@ -414,14 +435,15 @@ ts.scroller = {
 					$el.eq( index ).prop( 'disabled', index < fixedColumns );
 				}
 			}
-			// enable visible fixed column filters
-			$fixedColumn.children( '.' + tscss.scrollerHeader ).find( '.' + tscss.filter ).css( 'pointer-events', 'all' );
 		}
 
 		// disable/enable tab indexes behind fixed column
-		c.$table.children( 'thead' ).children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', -1 );
+		c.$table
+			.add( '.' + tscss.scrollerFooter + ' table' )
+			.children( 'thead' )
+			.children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', -1 );
 		$el = wo.scroller_$header
-			.add( $fixedColumn.find( '.' + tscss.scrollerTable + ' table, .' + tscss.scrollerFooter + ' table' ) )
+			.add( $fixedColumn.find( '.' + tscss.scrollerTable + ' table' ) )
 			.children( 'thead' ).children( 'tr.' + tscss.headerRow );
 		len = $el.length;
 		for ( index = 0; index < len; index++ ) {
@@ -475,9 +497,9 @@ ts.scroller = {
 				});
 		}
 
-		/*** STUPID FIREFOX HACK! Since we can't hide the scrollbar with css ***/
-		if ( ts.scroller.isFirefox ) {
-			$fixedTbody.wrap( '<div class="scroller-firefox-hack" style="overflow:hidden;">' );
+		/*** Scrollbar hack! Since we can't hide the scrollbar with css ***/
+		if ( ts.scroller.isFirefox || ts.scroller.isOldIE ) {
+			$fixedTbody.wrap( '<div class="scroller-scrollbar-hack" style="overflow:hidden;">' );
 		}
 
 		ts.scroller.updateFixed( c, wo, true );
@@ -508,7 +530,7 @@ ts.scroller = {
 			$fixedTbodies = $fixedTbodiesTable.children( 'tbody' ),
 			$fixedHeader = $fixedColumn.find( '.' + tscss.scrollerHeader ).children( 'table' ).children( 'thead' ),
 			// variables
-			isFirefox = ts.scroller.isFirefox,
+			tsScroller = ts.scroller,
 			scrollBarWidth = wo.scroller_barSetWidth,
 			fixedColumns = wo.scroller_fixedColumns,
 			// get dimensions
@@ -533,8 +555,8 @@ ts.scroller = {
 		}).get();
 
 		// set fixed column width
-		ts.scroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth + borderRightWidth * 2 - borderSpacing );
-		ts.scroller.setWidth( $fixedColumn.find( 'table' ), totalWidth + borderRightWidth );
+		tsScroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth + borderRightWidth * 2 - borderSpacing );
+		tsScroller.setWidth( $fixedColumn.find( 'table' ), totalWidth + borderRightWidth );
 
 		// set fixed column height ( changes with filtering )
 		$fixedColumn.height( $wrapper.height() );
@@ -565,10 +587,10 @@ ts.scroller = {
 					$adjCol = $( $rows[ rowIndex ].outerHTML );
 					$adjCol.children( 'td, th' ).slice( fixedColumns ).remove();
 					// set row height
-					$adjCol.children().eq( 0 ).height( $rows.eq( rowIndex ).outerHeight() - ( isFirefox ? borderBottomWidth * 2 : 0 ) );
+					$adjCol.children().eq( 0 ).height( $rows.eq( rowIndex ).outerHeight() - ( tsScroller.isFirefox ? borderBottomWidth * 2 : 0 ) );
 					// still need to adjust tbody cell widths ( the previous row may now be filtered )
 					if ( rowIndex === 0 ) {
-						ts.scroller.setWidth( $adjCol.children().eq( 0 ), widths[ 0 ] );
+						tsScroller.setWidth( $adjCol.children().eq( 0 ), widths[ 0 ] );
 					}
 					$fb.append( $adjCol );
 				}
@@ -576,7 +598,7 @@ ts.scroller = {
 				// adjust fixed header cell widths
 				$temp = $fixedColumn.find( 'thead' ).children( 'tr.' + tscss.headerRow );
 				for ( index = 0; index < fixedColumns; index++ ) {
-					ts.scroller.setWidth( $temp.children( ':eq(' + index + ')' ), widths[ index ] );
+					tsScroller.setWidth( $temp.children( ':eq(' + index + ')' ), widths[ index ] );
 				}
 
 				// restore tbody
@@ -584,8 +606,8 @@ ts.scroller = {
 			}
 		}
 
-		/*** STUPID FIREFOX HACK! Since we can't hide the scrollbar with css ***/
-		if ( isFirefox ) {
+		/*** scrollbar HACK! Since we can't hide the scrollbar with css ***/
+		if ( tsScroller.isFirefox || tsScroller.isOldIE ) {
 			$fixedTbodiesTable.parent().css({
 				'width' : totalWidth + scrollBarWidth + borderRightWidth
 			});
@@ -602,7 +624,7 @@ ts.scroller = {
 			.off( namespace )
 			.insertBefore( $wrap )
 			.find( 'thead' ).show().css( 'visibility', 'visible' )
-			.children( 'tr.' + tscss.headerRow + ' > *' ).attr( 'tabindex', 0 )
+			.children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', 0 )
 			.end()
 			.find( '.' + tscss.filterRow ).show().removeClass( tscss.filterRowHide );
 		$wrap.remove();

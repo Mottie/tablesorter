@@ -701,46 +701,6 @@ Album,Artist,Price ($)</pre>
 				<li>Always verify that the JSON is valid (use <a href="http://jsonlint.com/">JSONLint</a>) and realize that browsers like Chrome will not allow you to access locally hosted (desktop) JSON files. Test it with Firefox instead.</li>
 			</ul>
 
-			<h3>Build.json file</h3>
-			<pre class="prettyprint lang-js">{
-	"headers" : [
-		[
-			{ "text": "First Name", "class": "fname", "width": "20%" },
-			"Last Name",
-			{ "text": "Age", "class": "age", "data-sorter" : false },
-			"Total",
-			{ "text": "Discount", "class" : "sorter-false" },
-			{ "text": "Date", "class" : "date" }
-		]
-	],
-	"footers" : "clone",
-	"rows" : [
-		[ "Peter", "Parker", 28, "$9.99",  "20%", "Jul 6, 2006 8:14 AM"   ],
-		[ "John",  "Hood",   33, "$19.99", "25%", "Dec 10, 2002 5:14 AM"  ],
-		[ "Clark", "Kent",   18, "$15.89", "44%", "Jan 12, 2003 11:14 AM" ],
-
-		{ "newTbody": true, "class": "tablesorter-infoOnly" },
-		{ "cells" : [ { "html": "<strong>JSON Info Row</strong>", "colspan": 6 } ] },
-
-		{ "newTbody" : true },
-		[ "Bruce", "Evans",    22, "$13.19",  "11%", "Jan 18, 2007 9:12 AM"  ],
-		[ "Bruce", "Almighty", 45, "$153.19", "44%", "Jan 18, 2001 9:12 AM"  ],
-
-		{ "class": "specialRow",
-			"cells" : [
-				{ "text": "Fred", "class": "fname" },
-				{ "text": "Smith", "class": "lname" },
-				{ "text": 18, "class": "age", "data-info": "fake ID!, he's only 16" },
-				{ "text": "$22.44", "class": "total" },
-				"8%",
-				{ "text": "Aug 20, 2012 10:15 AM", "class": "date" }
-			],
-			"data-info" : "This row likes turtles"
-		}
-	]
-}</pre>
-			<h3>HTML</h3>
-			<pre class="prettyprint lang-html">&lt;div id=&quot;object2Table2&quot;&gt;&lt;/div&gt;</pre>
 			<h3>Javascript</h3>
 			<pre class="prettyprint lang-js">$(function() {
 	$('#object2Table2').tablesorter({
@@ -752,6 +712,142 @@ Album,Artist,Price ($)</pre>
 		}
 	});
 });</pre>
+
+			<h3>Build.json file</h3>
+			<pre class="prettyprint lang-js">{
+	"headers": [
+		[
+			{ "text": "First Name", "class": "fname", "width": "20%" },
+			"Last Name",
+			{ "text": "Age", "class": "age", "data-sorter": false },
+			"Total",
+			{ "text": "Discount", "class": "sorter-false" },
+			{ "text": "Date", "class": "date", "width": "20%" }
+		]
+	],
+	"footers": "clone",
+	"rows": [
+		[ "Peter", "Parker", 28, "$9.99",  "20%", "Jul 6, 2006 8:14 AM"   ],
+		[ "John",  "Hood",   33, "$19.99", "25%", "Dec 10, 2002 5:14 AM"  ],
+		[ "Clark", "Kent",   18, "$15.89", "44%", "Jan 12, 2003 11:14 AM" ],
+
+		{ "newTbody": true, "class": "tablesorter-infoOnly" },
+		{ "cells": [ { "html": "<strong>JSON Info Row</strong>", "colspan": 6 } ] },
+
+		{ "newTbody": true },
+		[ "Bruce", "Evans",    22, "$13.19",  "11%", "Jan 18, 2007 9:12 AM"  ],
+		[ "Brice", "Almighty", 45, "$153.19", "44%", "Jan 18, 2001 9:12 AM"  ],
+
+		{ "class": "specialRow",
+			"cells": [
+				{ "text": "Fred", "class": "fname" },
+				{ "text": "Smith", "class": "lname" },
+				{ "text": 18, "class": "age", "data-info": "fake ID!, he's only 16" },
+				{ "text": "$22.44", "class": "total" },
+				"8%",
+				{ "text": "Aug 20, 2012 10:15 AM", "class": "date" }
+			],
+			"data-info": "This row likes turtles"
+		}
+	]
+}</pre>
+			<h3>HTML (before)</h3>
+			<pre class="prettyprint lang-html">&lt;div id=&quot;object2Table2&quot;&gt;&lt;/div&gt;</pre>
+
+			<h3>HTML (after)</h3>
+			<pre class="prettyprint lang-html">&lt;div id=&quot;object2Table2&quot;&gt;
+	&lt;table class=&quot;tablesorter tablesorter-blue&quot; role=&quot;grid&quot;&gt;
+		&lt;colgroup&gt;
+			&lt;col style=&quot;width: 20%;&quot;&gt;
+			&lt;col&gt;
+			&lt;col&gt;
+			&lt;col&gt;
+			&lt;col&gt;
+			&lt;col style=&quot;width: 20%;&quot;&gt;
+		&lt;/colgroup&gt;
+		&lt;thead&gt;
+			&lt;tr&gt;
+				&lt;th class=&quot;fname&quot;&gt;First Name&lt;/th&gt;
+				&lt;th&gt;Last Name&lt;/th&gt;
+				&lt;th class=&quot;age&quot; data-sorter=&quot;false&quot;&gt;Age&lt;/th&gt;
+				&lt;th&gt;Total&lt;/th&gt;
+				&lt;th class=&quot;sorter-false&quot;&gt;Discount&lt;/th&gt;
+				&lt;th class=&quot;date&quot;&gt;Date&lt;/th&gt;
+			&lt;/tr&gt;
+		&lt;/thead&gt;
+		&lt;tbody&gt;
+			&lt;tr&gt;
+				&lt;td&gt;Peter&lt;/td&gt;
+				&lt;td&gt;Parker&lt;/td&gt;
+				&lt;td&gt;28&lt;/td&gt;
+				&lt;td&gt;$9.99&lt;/td&gt;
+				&lt;td&gt;20%&lt;/td&gt;
+				&lt;td&gt;Jul 6, 2006 8:14 AM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;John&lt;/td&gt;
+				&lt;td&gt;Hood&lt;/td&gt;
+				&lt;td&gt;33&lt;/td&gt;
+				&lt;td&gt;$19.99&lt;/td&gt;
+				&lt;td&gt;25%&lt;/td&gt;
+				&lt;td&gt;Dec 10, 2002 5:14 AM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;Clark&lt;/td&gt;
+				&lt;td&gt;Kent&lt;/td&gt;
+				&lt;td&gt;18&lt;/td&gt;
+				&lt;td&gt;$15.89&lt;/td&gt;
+				&lt;td&gt;44%&lt;/td&gt;
+				&lt;td&gt;Jan 12, 2003 11:14 AM&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/tbody&gt;
+		&lt;tbody class=&quot;tablesorter-infoOnly&quot;&gt;
+			&lt;tr&gt;
+				&lt;td colspan=&quot;6&quot;&gt;
+					&lt;strong&gt;JSON Info Row&lt;/strong&gt;
+				&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/tbody&gt;
+		&lt;tbody&gt;
+			&lt;tr&gt;
+				&lt;td&gt;Bruce&lt;/td&gt;
+				&lt;td&gt;Evans&lt;/td&gt;
+				&lt;td&gt;22&lt;/td&gt;
+				&lt;td&gt;$13.19&lt;/td&gt;
+				&lt;td&gt;11%&lt;/td&gt;
+				&lt;td&gt;Jan 18, 2007 9:12 AM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+				&lt;td&gt;Brice&lt;/td&gt;
+				&lt;td&gt;Almighty&lt;/td&gt;
+				&lt;td&gt;45&lt;/td&gt;
+				&lt;td&gt;$153.19&lt;/td&gt;
+				&lt;td&gt;44%&lt;/td&gt;
+				&lt;td&gt;Jan 18, 2001 9:12 AM&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr class=&quot;specialRow&quot; data-info=&quot;This row likes turtles&quot;&gt;
+				&lt;td class=&quot;fname&quot;&gt;Fred&lt;/td&gt;
+				&lt;td class=&quot;lname&quot;&gt;Smith&lt;/td&gt;
+				&lt;td class=&quot;age&quot; data-info=&quot;fake ID!, he&#39;s only 16&quot;&gt;18&lt;/td&gt;
+				&lt;td class=&quot;total&quot;&gt;$22.44&lt;/td&gt;
+				&lt;td&gt;8%&lt;/td&gt;
+				&lt;td class=&quot;date&quot;&gt;Aug 20, 2012 10:15 AM&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/tbody&gt;
+		&lt;tfoot&gt;
+			&lt;tr&gt;
+				&lt;th class=&quot;fname&quot;&gt;First Name&lt;/th&gt;
+				&lt;th&gt;Last Name&lt;/th&gt;
+				&lt;th class=&quot;age&quot; data-sorter=&quot;false&quot;&gt;Age&lt;/th&gt;
+				&lt;th&gt;Total&lt;/th&gt;
+				&lt;th class=&quot;sorter-false&quot;&gt;Discount&lt;/th&gt;
+				&lt;th class=&quot;date&quot;&gt;Date&lt;/th&gt;
+			&lt;/tr&gt;
+		&lt;/tfoot&gt;
+	&lt;/table&gt;
+&lt;/div&gt;</pre>
+
+
 			<h3>Result</h3>
 			<div id="object2Table2" class="container"></div>
 

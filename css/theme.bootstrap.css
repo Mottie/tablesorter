@@ -9,7 +9,8 @@
 .tablesorter-bootstrap thead td,
 .tablesorter-bootstrap tfoot th,
 .tablesorter-bootstrap tfoot td {
-	font: bold 14px/20px Arial, Sans-serif;
+	font: 14px/20px Arial, Sans-serif;
+	font-weight: bold;
 	padding: 4px;
 	margin: 0 0 18px;
 	background-color: #eee;

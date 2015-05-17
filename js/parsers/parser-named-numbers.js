@@ -81,12 +81,13 @@
 	},
 	result, group,
 	negativeRegex = new RegExp('(' + named.negative.join('|') + ')'),
-	calc = function ( word, table ) {
-		var num = named.numbers.hasOwnProperty( word ) ? named.numbers[ word ] : null,
+	calc = function ( rawWord, table ) {
+		// remove extra characters that might be next to the word
+		var word = rawWord.replace( /[,."']/g, '' ),
+			// formatFloat will deal with the commas & decimals in the number format
+			num = $.tablesorter.formatFloat( rawWord || '', table ),
 			power = named.powers.hasOwnProperty( word ) ? named.powers[ word ] : null;
-		if ( !num && !isNaN( word ) ) {
-			num = $.tablesorter.formatFloat( word || '', table );
-		}
+		num = typeof num === 'number' ? num : named.numbers.hasOwnProperty( word ) ? named.numbers[ word ] : null;
 		if ( num !== null ) {
 			group += num;
 		} else if ( word === named.hundred ) {
