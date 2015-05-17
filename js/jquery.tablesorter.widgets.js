@@ -937,6 +937,9 @@ ts.filter = {
 				if (disabled) {
 					buildFilter.attr('placeholder', '').addClass(tscss.filterDisabled)[0].disabled = true; // disabled!
 				}
+				
+				// add tabindex
+				buildFilter.attr('tabindex', column );
 			}
 		}
 	},
