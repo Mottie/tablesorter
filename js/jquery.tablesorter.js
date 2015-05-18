@@ -1381,7 +1381,7 @@
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
 				.unbind(t)
 				.bind(t, function(e, external) {
-					var cell,
+					var cell, temp,
 						$target = $(e.target),
 						// wrap event type in spaces, so the match doesn't trigger on inner words
 						type = ' ' + e.type + ' ';
@@ -1398,8 +1398,9 @@
 					// set timer on mousedown
 					if ( type.match(' ' + c.pointerDown + ' ') ) {
 						downTarget = e.target;
-						// needed or jQuery v1.2.6 throws an error
-						e.preventDefault();
+						// needed or jQuery v1.3.2 or older throws an "Uncaught TypeError: handler.apply is not a function" error
+						temp = $target.jquery.split( '.' );
+						if ( temp[0] === '1' && temp[1] < 4 ) { e.preventDefault(); }
 						return;
 					}
 					downTarget = null;
