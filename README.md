@@ -82,6 +82,10 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.22.1">Version 2.22.1</a> (5/17/2015)
+
+* Filter: fix issue with searches always looking for parsed content in numeric columns.
+
 #### <a name="v2.22.0">Version 2.22.0</a> (5/17/2015)
 
 * Docs

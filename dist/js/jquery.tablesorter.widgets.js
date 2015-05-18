@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 05-17-2015 (v2.22.0)*/
+/*! tablesorter (FORK) - updated 05-17-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -365,7 +365,7 @@ ts.addWidget({
 
 })(jQuery);
 
-/*! Widget: filter - updated 5/17/2015 (v2.22.0) *//*
+/*! Widget: filter - updated 5/17/2015 (v2.22.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -614,7 +614,7 @@ ts.filter = {
 				var index = data.index,
 					parsed = data.parsed[ index ],
 					txt = data.iFilter.replace( ts.filter.regex.orReplace, '|' ),
-					query = ts.filter.parseFilter( c, txt, index, parsed ) || '';
+					query = '' + ( ts.filter.parseFilter( c, txt, index, parsed ) || '' );
 				// look for an exact match with the 'or' unless the 'filter-match' class is found
 				if ( !c.$headerIndexed[ index ].hasClass( 'filter-match' ) && /\|/.test( query ) ) {
 					// show all results while using filter match. Fixes #727
@@ -1432,7 +1432,7 @@ ts.filter = {
 		data.parsed = c.$headers.map( function( columnIndex ) {
 			return c.parsers && c.parsers[ columnIndex ] &&
 				// force parsing if parser type is numeric
-				( c.parsers[ columnIndex ].parsed || c.parsers[ columnIndex ].type === 'numeric' ) ||
+				c.parsers[ columnIndex ].parsed ||
 				// getData won't return 'parsed' if other 'filter-' class names exist
 				// ( e.g. <th class="filter-select filter-parsed"> )
 				ts.getData && ts.getData( c.$headerIndexed[ columnIndex ],
