@@ -102,7 +102,7 @@ $( function() {
 		'.' + tscss.scrollerWrap + ' * { box-sizing: border-box; }' +
 		'.' + tscss.scrollerHeader + ', .' + tscss.scrollerFooter + ' { overflow: hidden; }' +
 		'.' + tscss.scrollerHeader + ' table.' + tscss.table + ' { margin-bottom: 0; }' +
-		'.' + tscss.scrollerFooter + ' table.' + tscss.table + ' thead { visibility: hidden, height: 0; overflow: hidden; }' +
+		'.' + tscss.scrollerFooter + ' table.' + tscss.table + ' thead { visibility: hidden; height: 0; overflow: hidden; }' +
 		/* always leave the scroll bar visible for tbody, or table overflows into the scrollbar when height < max height (filtering) */
 		'.' + tscss.scrollerTable + ' { overflow-y: scroll; }' +
 		'.' + tscss.scrollerTable + ' table.' + tscss.table + ' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow-y: scroll; }' +
