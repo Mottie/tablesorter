@@ -5730,10 +5730,10 @@ $headers.each(function(){
 				<td>jQuery Object</td>
 				<td>Internal list of <strong>all</strong> table header cells (<span class="version">v2.8</span>)
 					<div class="collapsible">
-					<br>
-					The header cells are targeted using the jQuery selector from the <a href="#selectorheaders"><code>selectorHeaders</code></a> option.<br>
-					<br>
-					Please note that the headers cells are simply an array of all header cells and should not be targeted using a column index. For example, given the following table <code>thead</code> markup, the <code>header-index</code> counts the header <code>th</code> cells and does not actually match the <code>data-column</code> index when extra rows and/or <code>colspan</code> or <code>rowspan</code> are included in any of the header cells:
+					<p>
+					<span class="label label-info">*NOTE*</span> The header cells within rows with the <a href="#cssignorerow"><code>cssIgnoreRow</code></a> class (default is <code>"tablesorter-ignoreRow"</code> will not be included in this variable.</p>
+					<p>Header cells in not-ignored rows are targeted using the jQuery selector from the <a href="#selectorheaders"><code>selectorHeaders</code></a> option</p>
+					Please note that the headers cells are simply an array of targetted header cells and should not be targeted using a column index. For example, given the following table <code>thead</code> markup, the <code>header-index</code> counts the header <code>th</code> cells and does not actually match the <code>data-column</code> index when extra rows and/or <code>colspan</code> or <code>rowspan</code> are included in any of the header cells:
 					<pre class="prettyprint lang-html">&lt;thead&gt;
 	&lt;tr&gt;
 		&lt;th colspan=&quot;4&quot; data-column=&quot;0&quot; class=&quot;sorter-false&quot;&gt;header-index 0&lt;/th&gt;
@@ -5743,6 +5743,11 @@ $headers.each(function(){
 		&lt;th data-column=&quot;1&quot;&gt;header-index 2&lt;/th&gt;
 		&lt;th data-column=&quot;2&quot;&gt;header-index 3&lt;/th&gt;
 		&lt;th data-column=&quot;3&quot;&gt;header-index 4&lt;/th&gt;
+	&lt;/tr&gt;
+	&lt;!-- the next row WILL NOT be included in the config.$headers variable --&gt;
+	&lt;tr class="tablesorter-ignoreRow"&gt;
+		&lt;th colspan=&quot;2&quot; data-column=&quot;0&quot;&gt;This cell is not included in the config.$headers&lt;/th&gt;
+		&lt;th colspan=&quot;2&quot; data-column=&quot;2&quot;&gt;This cell is not included in the config.$headers&lt;/th&gt;
 	&lt;/tr&gt;
 	&lt;tr&gt;
 		&lt;th colspan=&quot;2&quot; data-column=&quot;0&quot; class=&quot;sorter-false&quot;&gt;header-index 5&lt;/th&gt;
