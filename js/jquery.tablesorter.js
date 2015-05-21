@@ -1395,10 +1395,11 @@
 					}
 					// ignore mouseup if mousedown wasn't on the same target
 					if ( type.match(' ' + c.pointerUp + ' ') && downTarget !== e.target && external !== true ) { return; }
-					// set timer on mousedown
+					// set target on mousedown
 					if ( type.match(' ' + c.pointerDown + ' ') ) {
 						downTarget = e.target;
-						// needed or jQuery v1.3.2 or older throws an "Uncaught TypeError: handler.apply is not a function" error
+						// preventDefault needed or jQuery v1.3.2 and older throws an
+						// "Uncaught TypeError: handler.apply is not a function" error
 						temp = $target.jquery.split( '.' );
 						if ( temp[0] === '1' && temp[1] < 4 ) { e.preventDefault(); }
 						return;

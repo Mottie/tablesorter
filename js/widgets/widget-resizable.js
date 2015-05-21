@@ -251,6 +251,8 @@ ts.resizable = {
 			ts.resizable.setWidths( c, wo );
 		}
 		vars.mouseXPosition = event.pageX;
+		// dynamically update sticky header widths
+		c.$table.trigger('stickyHeadersUpdate');
 	},
 
 	stopResize : function( c, wo ) {
@@ -270,7 +272,8 @@ ts.resizable = {
 		}
 		vars.mouseXPosition = 0;
 		vars.$target = vars.$next = null;
-		$(window).trigger('resize'); // will update stickyHeaders, just in case
+		// will update stickyHeaders, just in case, see #912
+		c.$table.trigger('stickyHeadersUpdate');
 	}
 };
 
@@ -321,7 +324,7 @@ ts.resizableReset = function( table, refreshing ) {
 				}
 			}
 			// reset stickyHeader widths
-			$( window ).trigger( 'resize' );
+			c.$table.trigger( 'stickyHeadersUpdate' );
 			if ( ts.storage && !refreshing ) {
 				ts.storage( this, ts.css.resizableStorage, {} );
 			}

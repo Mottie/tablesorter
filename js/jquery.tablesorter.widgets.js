@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-18-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 05-21-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1955,32 +1955,34 @@ $.extend(ts.css, {
 // Add a resize event to table headers
 ts.addHeaderResizeEvent = function(table, disable, settings) {
 	table = $(table)[0]; // make sure we're using a dom element
-	var headers,
-		defaults = {
+	if ( !table.config ) { return; }
+	var defaults = {
 			timer : 250
 		},
 		options = $.extend({}, defaults, settings),
 		c = table.config,
 		wo = c.widgetOptions,
-		checkSizes = function(triggerEvent) {
+		checkSizes = function( triggerEvent ) {
+			var index, headers, $header, sizes, width, height,
+				len = c.$headers.length;
 			wo.resize_flag = true;
 			headers = [];
-			c.$headers.each(function() {
-				var $header = $(this),
-					sizes = $header.data('savedSizes') || [0,0], // fixes #394
-					width = this.offsetWidth,
-					height = this.offsetHeight;
-				if (width !== sizes[0] || height !== sizes[1]) {
-					$header.data('savedSizes', [ width, height ]);
-					headers.push(this);
+			for ( index = 0; index < len; index++ ) {
+				$header = c.$headers.eq( index );
+				sizes = $header.data( 'savedSizes' ) || [ 0,0 ]; // fixes #394
+				width = $header[0].offsetWidth;
+				height = $header[0].offsetHeight;
+				if ( width !== sizes[0] || height !== sizes[1] ) {
+					$header.data( 'savedSizes', [ width, height ] );
+					headers.push( $header[0] );
 				}
-			});
-			if (headers.length && triggerEvent !== false) {
-				c.$table.trigger('resize', [ headers ]);
+			}
+			if ( headers.length && triggerEvent !== false ) {
+				c.$table.trigger( 'resize', [ headers ] );
 			}
 			wo.resize_flag = false;
 		};
-	checkSizes(false);
+	checkSizes( false );
 	clearInterval(wo.resize_timer);
 	if (disable) {
 		wo.resize_flag = false;
@@ -2016,7 +2018,8 @@ ts.addWidget({
 		if ( c.$table.hasClass('hasStickyHeaders') || ($.inArray('filter', c.widgets) >= 0 && !c.$table.hasClass('hasFilters')) ) {
 			return;
 		}
-		var $table = c.$table,
+		var index, len, $t,
+			$table = c.$table,
 			// add position: relative to attach element, hopefully it won't cause trouble.
 			$attach = $(wo.stickyHeaders_attachTo),
 			namespace = c.namespace + 'stickyheaders ',
@@ -2051,10 +2054,12 @@ ts.addWidget({
 			laststate = '',
 			spacing = 0,
 			setWidth = function($orig, $clone){
-				$orig.filter(':visible').each(function(i) {
-					var width, border,
-						$cell = $clone.filter(':visible').eq(i),
-						$this = $(this);
+				var index, width, border, $cell, $this,
+					$cells = $orig.filter(':visible'),
+					len = $cells.length;
+				for ( index = 0; index < len; index++ ) {
+					$cell = $clone.filter(':visible').eq(index);
+					$this = $cells.eq(index);
 					// code from https://github.com/jmosbech/StickyTableHeaders
 					if ($this.css('box-sizing') === 'border-box') {
 						width = $this.outerWidth();
@@ -2072,10 +2077,11 @@ ts.addWidget({
 						}
 					}
 					$cell.css({
+						'width': width,
 						'min-width': width,
 						'max-width': width
 					});
-				});
+				}
 			},
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
@@ -2087,6 +2093,39 @@ ts.addWidget({
 				});
 				setWidth( $table, $stickyTable );
 				setWidth( $header, $stickyCells );
+			},
+			scrollSticky = function( resizing ) {
+				if (!$table.is(':visible')) { return; } // fixes #278
+				// Detect nested tables - fixes #724
+				nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
+				var offset = $table.offset(),
+					yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
+					xWindow = $.isWindow( $xScroll[0] ),
+					// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+					scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+					tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
+					isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
+					cssSettings = { visibility : isVisible };
+
+				if ($attach.length) {
+					cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
+				}
+				if (xWindow) {
+					// adjust when scrolling horizontally - fixes issue #143
+					cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing;
+				}
+				if ($nestedSticky.length) {
+					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
+				}
+				$stickyWrap
+					.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
+					.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
+					.css(cssSettings);
+				if (isVisible !== laststate || resizing) {
+					// make sure the column widths match
+					resizeHeader();
+					laststate = isVisible;
+				}
 			};
 		// only add a position relative if a position isn't already defined
 		if ($attach.length && !$attach.css('position')) {
@@ -2118,48 +2157,26 @@ ts.addWidget({
 
 		// onRenderHeader is defined, we need to do something about it (fixes #641)
 		if (c.onRenderHeader) {
-			$stickyThead.children('tr').children().each(function(index){
+			$t = $stickyThead.children('tr').children();
+			len = $t.length;
+			for ( index = 0; index < len; index++ ) {
 				// send second parameter
-				c.onRenderHeader.apply( $(this), [ index, c, $stickyTable ] );
-			});
+				c.onRenderHeader.apply( $t.eq( index ), [ index, c, $stickyTable ] );
+			}
 		}
 
 		// make it sticky!
 		$xScroll.add($yScroll)
-		.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
-		.bind('scroll resize '.split(' ').join( namespace ), function(event) {
-			if (!$table.is(':visible')) { return; } // fixes #278
-			// Detect nested tables - fixes #724
-			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
-			var offset = $table.offset(),
-				yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-				xWindow = $.isWindow( $xScroll[0] ),
-				// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
-				scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
-				tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
-				isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
-				cssSettings = { visibility : isVisible };
+			.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+			.bind('scroll resize '.split(' ').join( namespace ), function( event ) {
+				scrollSticky( event.type === 'resize' );
+			});
+		c.$table
+			.unbind('stickyHeadersUpdate' + namespace)
+			.bind('stickyHeadersUpdate' + namespace, function(){
+				scrollSticky( true );
+			});
 
-			if ($attach.length) {
-				cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
-			}
-			if (xWindow) {
-				// adjust when scrolling horizontally - fixes issue #143
-				cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing;
-			}
-			if ($nestedSticky.length) {
-				cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
-			}
-			$stickyWrap
-				.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
-				.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
-				.css(cssSettings);
-			if (isVisible !== laststate || event.type === 'resize') {
-				// make sure the column widths match
-				resizeHeader();
-				laststate = isVisible;
-			}
-		});
 		if (wo.stickyHeaders_addResizeEvent) {
 			ts.addHeaderResizeEvent(table);
 		}
@@ -2195,7 +2212,7 @@ ts.addWidget({
 		var namespace = c.namespace + 'stickyheaders ';
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind( ('pagerComplete filterEnd '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+			.unbind( ('pagerComplete filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		$(window)
@@ -2462,6 +2479,8 @@ ts.resizable = {
 			ts.resizable.setWidths( c, wo );
 		}
 		vars.mouseXPosition = event.pageX;
+		// dynamically update sticky header widths
+		c.$table.trigger('stickyHeadersUpdate');
 	},
 
 	stopResize : function( c, wo ) {
@@ -2481,7 +2500,8 @@ ts.resizable = {
 		}
 		vars.mouseXPosition = 0;
 		vars.$target = vars.$next = null;
-		$(window).trigger('resize'); // will update stickyHeaders, just in case
+		// will update stickyHeaders, just in case, see #912
+		c.$table.trigger('stickyHeadersUpdate');
 	}
 };
 
@@ -2532,7 +2552,7 @@ ts.resizableReset = function( table, refreshing ) {
 				}
 			}
 			// reset stickyHeader widths
-			$( window ).trigger( 'resize' );
+			c.$table.trigger( 'stickyHeadersUpdate' );
 			if ( ts.storage && !refreshing ) {
 				ts.storage( this, ts.css.resizableStorage, {} );
 			}
