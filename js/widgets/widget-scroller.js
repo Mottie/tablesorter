@@ -175,8 +175,6 @@ ts.scroller = {
 			id = c.namespace.slice( 1 ) + 'tsscroller',
 			$table = c.$table;
 
-		// force developer to set fixedWidth to maintain column widths
-		c.widthFixed = true;
 		maxHt = wo.scroller_height || 300;
 		tbHt = $table.children( 'tbody' ).height();
 		if ( tbHt !== 0 && maxHt > tbHt ) { maxHt = tbHt + 10; }  // Table is less than h px
@@ -191,7 +189,6 @@ ts.scroller = {
 			$foot = $( '<table class="' + $table.attr('class') + '" cellpadding=0 cellspacing=0 style="margin-top:0"></table>' )
 				.addClass( c.namespace.slice(1) + '_extra_table' )
 				.append( $t.clone( true ) ) // maintain any bindings on the tfoot cells
-				.append( $table.children( 'thead' )[ 0 ].outerHTML )
 				.wrap( '<div class="' + tscss.scrollerFooter + '"/>' );
 			$fCells = $foot.children( 'tfoot' ).eq( 0 ).children( 'tr' ).children();
 		}
@@ -306,10 +303,6 @@ ts.scroller = {
 			$div = $( 'div.' + tscss.scrollerWrap + '[id != "' + id + '"]' ).hide();
 
 		$table.children( 'thead' ).show();
-		// only remove colgroup if it was added by the plugin
-		// the $.tablesorter.fixColumnWidth() function already does this (v2.19.0)
-		// but we need to get "accurate" resized measurements here - see issue #680
-		$table.add( $hdr ).add( $foot ).children( 'colgroup' ).remove();
 
 		// Reset sizes so parent can resize.
 		$table
@@ -360,19 +353,6 @@ ts.scroller = {
 			.find( '.' + tscss.scrollerReset )
 			.removeClass( tscss.scrollerReset );
 
-		// refresh colgroup & copy to cloned header
-		ts.fixColumnWidth( c.table );
-
-		// add colgroup to all clones
-		$hCells = $table.children( 'colgroup' );
-		if ( $hCells.length ) {
-			$bCells = $hCells[0].outerHTML;
-			$hdr.prepend( $bCells );
-			if ( $foot.length ) {
-				$foot.prepend( $bCells );
-			}
-		}
-
 		// update fixed column sizes
 		if ( wo.scroller_fixedColumns > 0 ) {
 			ts.scroller.updateFixed( c, wo, true );
@@ -407,6 +387,8 @@ ts.scroller = {
 			.addClass( c.namespace.slice(1) + '_extra_table' )
 			.attr( 'id', '' );
 		$fixedContainer = $fixedTbody.find( 'tbody' );
+
+		$fixedTbody.children( 'table' ).children( 'thead, tfoot' ).remove();
 
 		wo.scroller_$fixedColumns = $fixedColumn;
 
