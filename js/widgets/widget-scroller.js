@@ -371,7 +371,10 @@ ts.scroller = {
 			$table = c.$table,
 			namespace = c.namespace + 'tsscrollerFixed',
 			$wrapper = wo.scroller_$container,
-			fixedColumns = wo.scroller_fixedColumns;
+			fixedColumns = wo.scroller_fixedColumns,
+			$mainTableWrapper = c.$table.parent(),
+			fixedScroll = true,
+			tableScroll = true;
 
 		$fixedColumn = $wrapper
 			.addClass( tscss.scrollerHasFix )
@@ -448,13 +451,25 @@ ts.scroller = {
 			// *** SCROLL *** scroll fixed column along with main
 			.off( 'scroll' + namespace )
 			.on( 'scroll' + namespace, function() {
-				$fixedTbody.scrollTop( $( this ).scrollTop() );
+				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
+				var scrollPosition = $( this ).scrollTop();
+				if ( fixedScroll && $fixedTbody.scrollTop() !== scrollPosition ) {
+					tableScroll = false;
+					$fixedTbody[0].scrollTop = scrollPosition;
+					setTimeout(function(){ tableScroll = true; }, 20);
+				}
 			});
 		// scroll main along with fixed column
 		$fixedTbody
 			.off( 'scroll' + namespace )
 			.on( 'scroll' + namespace, function() {
-				c.$table.parent().scrollTop( $fixedTbody.scrollTop() );
+				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
+				var scrollPosition = $fixedTbody.scrollTop();
+				if ( tableScroll && $mainTableWrapper.scrollTop !== scrollPosition ) {
+					fixedScroll = false;
+					$mainTableWrapper[0].scrollTop = scrollPosition;
+					setTimeout(function(){ fixedScroll = true; }, 20);
+				}
 			})
 			.scroll();
 
