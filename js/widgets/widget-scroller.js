@@ -296,7 +296,7 @@ ts.scroller = {
 	},
 
 	resize : function( c, wo ) {
-		var index, borderWidth, setWidth, $hCells, $bCells, $fCells, $headers, $this,
+		var index, borderWidth, setWidth, firstRowWithoutColSpan, $hCells, $bCells, $fCells, $headers, $this,
 			$table = c.$table,
 			$tableWrap = $table.parent(),
 			$hdr = wo.scroller_$header,
@@ -330,7 +330,8 @@ ts.scroller = {
 		$hdr.parent().add( $foot.parent() ).width( setWidth );
 
 		$hCells = $hdr.children( 'thead' ).children().children( 'th, td' ).filter( ':visible' );
-		$bCells = $table.children('tbody').eq( 0 ).children().eq( 0 ).children( 'th, td' ).filter( ':visible' );
+		firstRowWithoutColSpan = $table.children('tbody').eq( 0 ).children().not( ':has([colspan])' ).first().index();
+		$bCells = $table.children('tbody').eq( 0 ).children().eq( firstRowWithoutColSpan > 0 ? firstRowWithoutColSpan : 0 ).children( 'th, td' ).filter( ':visible' );
 		$fCells = $foot.children( 'tfoot' ).children().children( 'th, td' ).filter( ':visible' );
 
 		ts.scroller.setWidth( $hCells.add( $bCells ).add( $fCells ), '' );
@@ -514,7 +515,7 @@ ts.scroller = {
 		c.$table.parent().width( wo.scroller_$container.width() );
 
 		// scroller_fixedColumns
-		var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, totalRows, widths,
+		var index, tbodyIndex, rowIndex, firstRowWithoutColSpan, firstRowWithoutColSpanIndex, $tbody, $adjCol, $fb, totalRows, widths,
 			$table = c.$table,
 			$wrapper = wo.scroller_$container,
 
@@ -573,7 +574,9 @@ ts.scroller = {
 		$fixedColumn.find( '.' + tscss.scrollerTable )
 			.height( $table.parent().height() - scrollBarWidth + borderBottomWidth );
 
-		// update fixed column tbody content, set row height & set cell widths for first row
+		// update fixed column tbody content, set row height & set cell widths for first row without colspan
+		firstRowWithoutColSpan = $table.children('tbody').eq( 0 ).children().not( ':has([colspan])' ).first().index();
+		firstRowWithoutColSpanIndex = firstRowWithoutColSpan > 0 ? firstRowWithoutColSpan : 0;
 		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 			$tbody = $mainTbodies.eq( tbodyIndex );
 			if ( $tbody.length ) {
@@ -589,7 +592,7 @@ ts.scroller = {
 					// set row height
 					$adjCol.children().eq( 0 ).height( $rows.eq( rowIndex ).outerHeight() - ( tsScroller.isFirefox ? borderBottomWidth * 2 : 0 ) );
 					// still need to adjust tbody cell widths ( the previous row may now be filtered )
-					if ( rowIndex === 0 ) {
+					if ( rowIndex === firstRowWithoutColSpanIndex ) {
 						tsScroller.setWidth( $adjCol.children().eq( 0 ), widths[ 0 ] );
 					}
 					$fb.append( $adjCol );
