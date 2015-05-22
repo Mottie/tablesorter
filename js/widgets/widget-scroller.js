@@ -81,11 +81,11 @@ ts.addWidget({
 
 /* Add window resizeEnd event */
 ts.window_resize = function() {
-	if ( this.resize_timer ) {
-		clearTimeout( this.resize_timer );
+	if ( ts.timer_resize ) {
+		clearTimeout( ts.timer_resize );
 	}
-	this.resize_timer = setTimeout( function() {
-		$( this ).trigger( 'resizeEnd' );
+	ts.timer_resize = setTimeout( function() {
+		$( window ).trigger( 'resizeEnd' );
 	}, 250 );
 };
 
@@ -102,7 +102,6 @@ $( function() {
 		'.' + tscss.scrollerWrap + ' * { box-sizing: border-box; }' +
 		'.' + tscss.scrollerHeader + ', .' + tscss.scrollerFooter + ' { overflow: hidden; }' +
 		'.' + tscss.scrollerHeader + ' table.' + tscss.table + ' { margin-bottom: 0; }' +
-		'.' + tscss.scrollerFooter + ' table.' + tscss.table + ' thead { visibility: hidden; height: 0; overflow: hidden; }' +
 		/* always leave the scroll bar visible for tbody, or table overflows into the scrollbar when height < max height (filtering) */
 		'.' + tscss.scrollerTable + ' { overflow-y: scroll; }' +
 		'.' + tscss.scrollerTable + ' table.' + tscss.table + ' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow-y: scroll; }' +
@@ -176,8 +175,11 @@ ts.scroller = {
 			$table = c.$table;
 
 		maxHt = wo.scroller_height || 300;
-		tbHt = $table.children( 'tbody' ).height();
-		if ( tbHt !== 0 && maxHt > tbHt ) { maxHt = tbHt + 10; }  // Table is less than h px
+		// sum all tbody heights
+		tbHt = 0;
+		$table.children( 'tbody' ).map( function() {
+			tbHt += $( this ).outerHeight();
+		});
 
 		wo.scroller_$header = $hdr = $( '<table class="' + $table.attr( 'class' ) + '" cellpadding=0 cellspacing=0>' +
 			$table.children( 'thead' )[0].outerHTML +
@@ -232,7 +234,7 @@ ts.scroller = {
 
 		ts.scroller.resize( c, wo );
 
-		$table.find( 'thead' ).css( 'visibility', 'hidden' );
+		$table.find( 'thead' ).hide();
 
 		tbHt = $tableWrap.parent().height();
 
@@ -302,6 +304,7 @@ ts.scroller = {
 			// Hide other scrollers so we can resize
 			$div = $( 'div.' + tscss.scrollerWrap + '[id != "' + id + '"]' ).hide();
 
+		// show original table thead to get proper alignments
 		$table.children( 'thead' ).show();
 
 		// Reset sizes so parent can resize.
@@ -322,9 +325,24 @@ ts.scroller = {
 		setWidth = $tableWrap.innerWidth() - ( ts.scroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 ) + borderWidth;
 		$hdr.parent().add( $foot.parent() ).width( setWidth );
 
-		$hCells = $hdr.children( 'thead' ).children().children( 'th, td' ).filter( ':visible' );
-		$bCells = $table.children('tbody').eq( 0 ).children().eq( 0 ).children( 'th, td' ).filter( ':visible' );
-		$fCells = $foot.children( 'tfoot' ).children().children( 'th, td' ).filter( ':visible' );
+		$hCells = $hdr
+			.children( 'thead' )
+			.children( 'tr' )
+			.not( '.' + c.cssIgnoreRow )
+			.children( 'th, td' )
+			.filter( ':visible' );
+		$bCells = c.$tbodies
+			.eq( 0 )
+			.children( 'tr' )
+			.not( '.' + c.cssChildRow )
+			.eq( 0 )
+			.children( 'th, td' )
+			.filter( ':visible' );
+		$fCells = $foot
+			.children( 'tfoot' )
+			.children( 'tr' )
+			.children( 'th, td' )
+			.filter( ':visible' );
 
 		ts.scroller.setWidth( $hCells.add( $bCells ).add( $fCells ), '' );
 		$headers = $table.children( 'thead' ).children().eq( 0 ).children( 'th, td' );
@@ -358,8 +376,8 @@ ts.scroller = {
 			ts.scroller.updateFixed( c, wo, true );
 		}
 
-		// hide filter row because filterEnd event fires
-		$table.children( 'thead' ).find( '.' + tscss.filterRow ).hide();
+		// hide original table thead
+		$table.children( 'thead' ).hide();
 
 		$div.show();
 
@@ -369,12 +387,8 @@ ts.scroller = {
 	setupFixed : function( c, wo ) {
 		var index, index2, $el, len, temp, $fixedColumn, $fixedTbody, $fixedContainer,
 			$table = c.$table,
-			namespace = c.namespace + 'tsscrollerFixed',
 			$wrapper = wo.scroller_$container,
-			fixedColumns = wo.scroller_fixedColumns,
-			$mainTableWrapper = c.$table.parent(),
-			fixedScroll = true,
-			tableScroll = true;
+			fixedColumns = wo.scroller_fixedColumns;
 
 		$fixedColumn = $wrapper
 			.addClass( tscss.scrollerHasFix )
@@ -382,15 +396,16 @@ ts.scroller = {
 			.addClass( tscss.scrollerFixed )
 			.removeClass( tscss.scrollerWrap )
 			.attr( 'id', '' );
+
 		if ( wo.scroller_addFixedOverlay ) {
 			$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
 		}
 		$fixedTbody = $fixedColumn.find( '.' + tscss.scrollerTable );
-		$fixedTbody.find( 'table' )
+		$fixedTbody.children( 'table' )
 			.addClass( c.namespace.slice(1) + '_extra_table' )
 			.attr( 'id', '' );
-		$fixedContainer = $fixedTbody.find( 'tbody' );
 
+		$fixedContainer = $fixedTbody.children( 'table' ).children( 'tbody' );
 		$fixedTbody.children( 'table' ).children( 'thead, tfoot' ).remove();
 
 		wo.scroller_$fixedColumns = $fixedColumn;
@@ -439,60 +454,7 @@ ts.scroller = {
 		}
 
 		ts.bindEvents( c.table, $fixedColumn.find( '.' + tscss.header ) );
-
-		// update thead & tbody in fixed column
-		temp = ( 'tablesorter-initialized sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' );
-		c.$table
-			.off( temp )
-			.on( temp, function( event, size ) {
-				ts.scroller.updateFixed( c, wo, false );
-			})
-			.parent()
-			// *** SCROLL *** scroll fixed column along with main
-			.off( 'scroll' + namespace )
-			.on( 'scroll' + namespace, function() {
-				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				var scrollPosition = $( this ).scrollTop();
-				if ( fixedScroll && $fixedTbody.scrollTop() !== scrollPosition ) {
-					tableScroll = false;
-					$fixedTbody[0].scrollTop = scrollPosition;
-					setTimeout(function(){ tableScroll = true; }, 20);
-				}
-			});
-		// scroll main along with fixed column
-		$fixedTbody
-			.off( 'scroll' + namespace )
-			.on( 'scroll' + namespace, function() {
-				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				var scrollPosition = $fixedTbody.scrollTop();
-				if ( tableScroll && $mainTableWrapper.scrollTop !== scrollPosition ) {
-					fixedScroll = false;
-					$mainTableWrapper[0].scrollTop = scrollPosition;
-					setTimeout(function(){ fixedScroll = true; }, 20);
-				}
-			})
-			.scroll();
-
-		// *** ROW HIGHLIGHT ***
-		if ( wo.scroller_rowHighlight !== '' ) {
-			temp = 'mouseover mouseleave '.split( ' ' ).join( namespace + ' ' );
-			c.$table
-				.off( temp, 'tr' )
-				.on( temp, 'tr', function( event ) {
-					var indx = $( this ).index();
-					$fixedContainer.children().eq( indx )
-						.add( this )
-						.toggleClass( wo.scroller_rowHighlight, event.type === 'mouseover' );
-				});
-			$fixedTbody.find( 'table' )
-				.off( temp, 'tr' )
-				.on( temp, 'tr', function( event ) {
-					var indx = $( this ).index();
-					c.$tbodies.children().eq( indx )
-						.add( this )
-						.toggleClass( wo.scroller_rowHighlight, event.type === 'mouseover' );
-				});
-		}
+		ts.scroller.bindFixedColumnEvents( c, wo );
 
 		/*** Scrollbar hack! Since we can't hide the scrollbar with css ***/
 		if ( ts.scroller.isFirefox || ts.scroller.isOldIE ) {
@@ -503,6 +465,68 @@ ts.scroller = {
 
 	},
 
+	bindFixedColumnEvents : function( c, wo ) {
+		// update thead & tbody in fixed column
+		var namespace = c.namespace + 'tsscrollerFixed',
+			events = ( 'tablesorter-initialized sortEnd filterEnd ' ).split( ' ' ).join( namespace + ' ' ),
+			events2 = 'scroll' + namespace,
+			$fixedTbody = wo.scroller_$fixedColumns.find( '.' + tscss.scrollerTable ),
+			fixedScroll = true,
+			tableScroll = true;
+
+		c.$table
+			.off( events )
+			.on( events, function() {
+				ts.scroller.updateFixed( c, wo, false );
+			})
+			.parent()
+			// *** SCROLL *** scroll fixed column along with main
+			.off( events2 )
+			.on( events2, function() {
+				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
+				if ( fixedScroll || !ts.scroller.isFirefox ) {
+					tableScroll = false;
+					$fixedTbody[0].scrollTop = $( this ).scrollTop();
+					setTimeout(function(){ tableScroll = true; }, 20);
+				}
+			});
+		// scroll main along with fixed column
+		$fixedTbody
+			.off( events2 )
+			.on( events2, function() {
+				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
+				if ( tableScroll || !ts.scroller.isFirefox  ) {
+					fixedScroll = false;
+					c.$table.parent()[0].scrollTop = $( this ).scrollTop();
+					setTimeout(function(){ fixedScroll = true; }, 20);
+				}
+			})
+			.scroll();
+
+		// *** ROW HIGHLIGHT ***
+		if ( wo.scroller_rowHighlight !== '' ) {
+			events = 'mouseover mouseleave '.split( ' ' ).join( namespace + ' ' );
+			// can't use c.$tbodies because it doesn't include info-only tbodies
+			c.$table
+				.off( events, 'tbody > tr' )
+				.on( events, 'tbody > tr', function( event ) {
+					var indx = c.$table.children( 'tbody' ).children( 'tr' ).index( this );
+					$fixedTbody.children( 'table' ).children( 'tbody' ).children( 'tr' ).eq( indx )
+						.add( this )
+						.toggleClass( wo.scroller_rowHighlight, event.type === 'mouseover' );
+				});
+			$fixedTbody.find( 'table' )
+				.off( events, 'tbody > tr' )
+				.on( events, 'tbody > tr', function( event ) {
+					var $fixed = $fixedTbody.children( 'table' ).children( 'tbody' ).children( 'tr' ),
+						indx = $fixed.index( this );
+					c.$table.children( 'tbody' ).children( 'tr' ).eq( indx )
+						.add( this )
+						.toggleClass( wo.scroller_rowHighlight, event.type === 'mouseover' );
+				});
+		}
+	},
+
 	updateFixed : function( c, wo ) {
 		if ( !c.isScrolling ) { return; }
 
@@ -511,7 +535,7 @@ ts.scroller = {
 		c.$table.parent().width( wo.scroller_$container.width() );
 
 		// scroller_fixedColumns
-		var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, totalRows, widths,
+		var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, totalRows, widths, $fixHead, $fixBody, $fixFoot,
 			$table = c.$table,
 			$wrapper = wo.scroller_$container,
 
@@ -543,10 +567,10 @@ ts.scroller = {
 			$temp.eq( index ).height( $rows.eq( index ).outerHeight() );
 		}
 
-		// body cell dimensions seem to be more accurate *shrug*
-		$rows = ( c.filteredRows > 0 ? c.$tbodies : $table.children( 'thead' ) ).children( 'tr:visible' );
+		// body cell dimensions seem to be more accurate *shrug* ( $rows contains table cells in this block )
+		$rows = c.filteredRows > 0 ? c.$tbodies.children( 'tr:visible' ).children() : $( c.$headerIndexed );
 		// recalculate widths
-		widths = $rows.children( ':lt(' + fixedColumns + ')' ).map( function() {
+		widths = $rows.filter( ':lt(' + fixedColumns + ')' ).map( function() {
 			totalWidth += $( this ).outerWidth() + borderSpacing;
 			return $( this ).outerWidth();
 		}).get();
@@ -557,18 +581,6 @@ ts.scroller = {
 
 		// set fixed column height ( changes with filtering )
 		$fixedColumn.height( $wrapper.height() );
-
-		if ( wo.scroller_$footer.length ) {
-			// adjust footer row heights (text could wrap on resize)
-			$temp = $wrapper.children( '.' + tscss.scrollerFooter ).find( 'tfoot tr' );
-			$rows = $fixedColumn.find( '.' + tscss.scrollerFooter + ' tfoot tr' );
-			for ( index = 0; index < $rows.length; index++ ) {
-				$rows.eq( index ).height( $temp.eq( index ).height() );
-			}
-		}
-		// leave a gap under the tbody for the horizontal scrollbar
-		$fixedColumn.find( '.' + tscss.scrollerTable )
-			.height( $table.parent().height() - scrollBarWidth + borderBottomWidth );
 
 		// update fixed column tbody content, set row height & set cell widths for first row
 		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
@@ -591,11 +603,15 @@ ts.scroller = {
 					}
 					$fb.append( $adjCol );
 				}
-
-				// adjust fixed header cell widths
-				$temp = $fixedColumn.find( 'thead' ).children( 'tr.' + tscss.headerRow );
+				// adjust fixed thead/tbody/tfoot cell widths
+				$fixHead = $fixedColumn.find( 'thead' ).children( 'tr.' + tscss.headerRow ).children();
+				$fixBody = $fixedColumn.find( 'tbody' ).not('.' + c.cssInfoBlock ).children( 'tr' ).eq( 0 ).children();
+				$fixFoot = $fixedColumn.find( 'tfoot' ).children( 'tr' ).eq( 0 ).children();
 				for ( index = 0; index < fixedColumns; index++ ) {
-					tsScroller.setWidth( $temp.children( ':eq(' + index + ')' ), widths[ index ] );
+					$temp = $fixHead.eq( index )
+						.add( $fixBody.eq( index ) )
+						.add( $fixFoot.eq( index ) );
+					tsScroller.setWidth( $temp, widths[ index ] );
 				}
 
 				// restore tbody
@@ -610,6 +626,18 @@ ts.scroller = {
 			});
 		}
 
+		if ( wo.scroller_$footer.length ) {
+			// adjust footer row heights (text could wrap on resize)
+			$temp = $wrapper.children( '.' + tscss.scrollerFooter ).find( 'tfoot tr' );
+			$rows = $fixedColumn.find( '.' + tscss.scrollerFooter + ' tfoot tr' );
+			for ( index = 0; index < $rows.length; index++ ) {
+				$rows.eq( index ).height( $temp.eq( index ).height() );
+			}
+		}
+		// leave a gap under the tbody for the horizontal scrollbar
+		$fixedColumn.find( '.' + tscss.scrollerTable )
+			.height( $table.parent().height() - scrollBarWidth + borderBottomWidth );
+
 		$fixedColumn.show();
 
 	},
@@ -620,7 +648,7 @@ ts.scroller = {
 		c.$table
 			.off( namespace )
 			.insertBefore( $wrap )
-			.find( 'thead' ).show().css( 'visibility', 'visible' )
+			.find( 'thead' ).show()
 			.children( 'tr.' + tscss.headerRow ).children().attr( 'tabindex', 0 )
 			.end()
 			.find( '.' + tscss.filterRow ).show().removeClass( tscss.filterRowHide );

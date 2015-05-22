@@ -381,6 +381,8 @@ $(function() {
 	</div>
 
 	<h1>Demo</h1>
+	<p><a href="#wide-demo">Full-width</a> | <a href="#narrow-demo">Half-width</a> | <a href="#fixed-demo">Fixed columns</a></p>
+	<a id="wide-demo"></a>
 	Choose Theme:
 	<select>
 		<option value="jui">Jquery UI</option>
@@ -460,11 +462,14 @@ $(function() {
 	</tbody>
 	</table>
 
-	<div class="narrow-block">
+	<div id="narrow-demo" class="narrow-block">
 	<table class="tablesorter">
 		<thead>
 			<tr><th>Account #</th><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Diff</th></tr>
 		</thead>
+		<tfoot>
+			<tr><th>Account #</th><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Diff</th></tr>
+		</tfoot>
 		<tbody>
 			<tr><td>A43</td><td>Peter</td><td>Parker</td><td>28</td><td>9.99</td><td>20.3%</td><td>+3</td></tr>
 			<tr><td>A255</td><td>John</td><td>Hood</td><td>33</td><td>19.99</td><td>25.1%</td><td>-7</td></tr>
@@ -485,7 +490,7 @@ $(function() {
 	</table>
 	</div>
 
-	<h4>
+	<h4 id="fixed-demo">
 		Fixed Column Demo<br>
 		<small>(Shrink the browser window if the horizontal scrollbar is not visible)</small>
 	</h4>
