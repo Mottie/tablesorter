@@ -277,7 +277,7 @@ ts.scroller = {
 			});
 
 		// Sorting, so scroll to top
-		tmp = 'sortEnd setFixedColumnSize updateComplete pagerComplete pagerInitialized '
+		tmp = 'sortEnd setFixedColumnSize updateComplete pagerComplete pagerInitialized columnUpdate '
 			.split( ' ' )
 			.join( namespace + ' ' );
 		$table
@@ -305,7 +305,8 @@ ts.scroller = {
 					ts.scroller.resize( c, wo );
 				}
 			})
-			.on( 'updateComplete pagerComplete pagerInitialized '.split( ' ' ).join( namespace + ' ' ), function() {
+			.on( 'updateComplete pagerComplete pagerInitialized columnUpdate '
+				.split( ' ' ).join( namespace + ' ' ), function() {
 				// adjust column sizes after an update
 				ts.scroller.resize( c, wo );
 			});
