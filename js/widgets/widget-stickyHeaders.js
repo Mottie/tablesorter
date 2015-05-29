@@ -127,7 +127,7 @@ ts.addWidget({
 					} else {
 						if ($cell.css('border-collapse') === 'collapse') {
 							if (window.getComputedStyle) {
-								width = parseFloat( window.getComputedStyle(this, null).width );
+								width = parseFloat( window.getComputedStyle($this[0], null).width );
 							} else {
 								// ie8 only
 								border = parseFloat( $this.css('border-width') );

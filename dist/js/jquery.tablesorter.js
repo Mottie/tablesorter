@@ -2148,7 +2148,7 @@
 		format: function(table, c, wo) {
 			var $tv, $tr, row, even, time, k, i, len,
 				child = new RegExp(c.cssChildRow, 'i'),
-				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
+				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody:not(.' + c.cssInfoBlock + ')' ) );
 			if (c.debug) {
 				time = new Date();
 			}

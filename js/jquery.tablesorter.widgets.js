@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-21-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 05-29-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2066,7 +2066,7 @@ ts.addWidget({
 					} else {
 						if ($cell.css('border-collapse') === 'collapse') {
 							if (window.getComputedStyle) {
-								width = parseFloat( window.getComputedStyle(this, null).width );
+								width = parseFloat( window.getComputedStyle($this[0], null).width );
 							} else {
 								// ie8 only
 								border = parseFloat( $this.css('border-width') );
