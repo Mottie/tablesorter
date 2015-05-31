@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 05-29-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 05-31-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1193,7 +1193,7 @@ ts.filter = {
 				return $( b ).attr( 'data-lastSearchTime' ) - $( a ).attr( 'data-lastSearchTime' );
 			});
 		}
-		return $();
+		return $input || $();
 	},
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns '1-3,4-6,8' in data-column
@@ -1876,8 +1876,8 @@ ts.getFilters = function( table, getRaw, setFilters, skipFirst ) {
 					$column = ts.filter.getLatestSearch( $column );
 					if ( $.isArray( setFilters ) ) {
 						// skip first ( latest input ) to maintain cursor position while typing
-						if ( skipFirst ) {
-							$column.slice( 1 );
+						if ( skipFirst && $column.length > 1 ) {
+							$column = $column.slice( 1 );
 						}
 						if ( i === c.columns ) {
 							// prevent data-column='all' from filling data-column='0,1' ( etc )
