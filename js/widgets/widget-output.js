@@ -39,7 +39,7 @@ output = ts.output = {
 	},
 
 	processRow: function(c, $rows, isHeader, isJSON) {
-		var $this, row, col, rowlen, collen, txt,
+		var $this, row, col, rowlen, collen, txt, attr,
 			wo = c.widgetOptions,
 			tmpRow = [],
 			dupe = wo.output_duplicateSpans,
@@ -62,7 +62,9 @@ output = ts.output = {
 				// process colspans
 				if ($this.filter('[colspan]').length) {
 					collen = parseInt( $this.attr('colspan'), 10) - 1;
-					txt = output.formatData( wo, $this.attr(wo.output_dataAttrib) || $this.html(), isHeader );
+					attr = $this.attr(wo.output_dataAttrib);
+					// allow data-attribute to be an empty string
+					txt = output.formatData( wo, typeof attr !== 'undefined' ? attr : $this.html(), isHeader );
 					for (col = 1; col <= collen; col++) {
 						// if we're processing the header & making JSON, the header names need to be unique
 						if ($this.filter('[rowspan]').length) {

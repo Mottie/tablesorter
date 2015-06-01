@@ -223,6 +223,7 @@
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.22.2</span>, the data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
 				<li>In <span class="version">v2.22.0</span>,
 					<ul>
 						<li>Added the BOM back to the UTF-8 csv downloadable file to support unicode characters in Excel.</li>
@@ -478,10 +479,11 @@ line,value1,value2,value3
 						<td><a href="#" class="permalink">output_dataAttrib</a></td>
 						<td><code>'data-name'</code></td>
 						<td>
-							This option allows you to override any table cell (<code>thead</code> or <code>tbody</code>) text with the contents of this data-attribute
+							This option allows you to override any table cell (<code>thead</code> or <code>tbody</code>) text with the contents of this data-attribute (<span class="version updated">v2.22.2</span>)
 							<div class="collapsible">
 							<br>
-							In the below example, the header text is obtained from this set data-attribute. If the data-attribute doesn't exist, then the header name is obtained from the actual header text.<br>
+							<p>In the below example, the header text is obtained from this set data-attribute. If the data-attribute doesn't exist, then the header name is obtained from the actual header text.</p>
+							<p>The data-attribute can be an empty string (<span class="version updated">v2.22.2</span>).</p>
 							<pre class="prettyprint lang-html">&lt;thead&gt;
 	&lt;tr&gt;
 		&lt;th&gt;Rank&lt;/th&gt;
@@ -493,8 +495,7 @@ line,value1,value2,value3
 		&lt;th&gt;Date&lt;/th&gt;
 	&lt;/tr&gt;
 &lt;/thead&gt;</pre>
-							<br>
-							Notice in this output that the "First" and "Last" columns match the contents of the <code>data-name</code> attribute and not the header text:
+							<p>Notice in this output that the "First" and "Last" columns match the contents of the <code>data-name</code> attribute and not the header text:</p>
 							<pre class="prettyprint lang-js">Rank,First,Last,Age,Total,Discount,Date</pre>
 							<span class="label warning">* NOTE *</span> The core plugin uses the <code>data-text</code> attribute for text extraction. If you want to use the same data for both, make the data-attributes match!
 							</div>
