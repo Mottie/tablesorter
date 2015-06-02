@@ -303,8 +303,11 @@ ts.scroller = {
 					ts.scroller.resize( c, wo );
 				}
 			})
-			.on( 'updateComplete pagerComplete pagerInitialized columnUpdate '
-				.split( ' ' ).join( namespace + ' ' ), function() {
+			.on( 'updateComplete pagerComplete columnUpdate '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+				// Stop from running twice with pager
+				if ( ts.hasWidget( 'pager' ) && event.type === 'updateComplete' ) {
+					return;
+				}
 				// adjust column sizes after an update
 				ts.scroller.resize( c, wo );
 			});
@@ -430,11 +433,11 @@ ts.scroller = {
 			.find( '.' + tscss.scrollerReset )
 			.removeClass( tscss.scrollerReset );
 
-		// update fixed column sizes
-		tsScroller.updateFixed( c, wo );
-
 		// hide original table thead
 		$table.children( 'thead' ).addClass( tscss.scrollerHideElement );
+
+		// update fixed column sizes
+		tsScroller.updateFixed( c, wo );
 
 		$div.removeClass( tscss.scrollerHideElement );
 
@@ -629,7 +632,7 @@ ts.scroller = {
 
 		wo.scroller_isBusy = true;
 
-		// Make sure the wo.scroller_$fixedColumns container exists if not build it
+		// Make sure the wo.scroller_$fixedColumns container exists, if not build it
 		if ( !$wrapper.find( '.' + tscss.scrollerFixed ).length ) {
 			ts.scroller.setupFixed( c, wo );
 		}
@@ -697,7 +700,7 @@ ts.scroller = {
 		}
 		c.$tbodies.eq(0).prepend( row += '</tr>' );
 
-		// update fixed column tbody content, set row height & set cell widths for first row
+		// update fixed column tbody content, set cell widths on hidden row
 		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 			$tbody = $mainTbodies.eq( tbodyIndex );
 			if ( $tbody.length ) {
