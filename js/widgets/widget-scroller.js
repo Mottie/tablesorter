@@ -205,11 +205,6 @@ ts.scroller = {
 			( ts.scroller.getBarWidth() || 15 );
 
 		maxHt = wo.scroller_height || 300;
-		// sum all tbody heights
-		tbHt = 0;
-		$table.children( 'tbody' ).map( function() {
-			tbHt += $( this ).outerHeight();
-		});
 
 		$hdr = $( '<table class="' + $table.attr( 'class' ) + '" cellpadding=0 cellspacing=0>' +
 			$table.children( 'thead' )[ 0 ].outerHTML + '</table>' );
@@ -852,7 +847,7 @@ ts.scroller = {
 			.children( 'tr' );
 		ts.scroller.fixHeight( $rows, $fixed );
 
-		if ( ts.scroller.isFirefox ) {
+		if ( ts.scroller.isFirefox || ts.scroller.isOldIE ) {
 			// Firefox/Old IE scrollbar hack (wraps table to hide the scrollbar)
 			$fixedColumns = $fixedColumns.find( '.' + tscss.scrollerHack );
 		}
