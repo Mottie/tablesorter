@@ -331,6 +331,7 @@ ts.scroller = {
 
 	resize : function( c, wo ) {
 		var index, borderWidth, setWidth, $hCells, $bCells, $fCells, $headers, $this, temp,
+			tsScroller = ts.scroller,
 			$table = c.$table,
 			$tableWrap = $table.parent(),
 			$hdr = wo.scroller_$header,
@@ -343,7 +344,7 @@ ts.scroller = {
 		wo.scroller_calcWidths = [];
 
 		// Remove fixed so we get proper widths and heights
-		ts.scroller.removeFixed( c, wo );
+		tsScroller.removeFixed( c, wo );
 
 		// show original table elements to get proper alignment
 		$table
@@ -380,7 +381,7 @@ ts.scroller = {
 			.children( 'th, td' )
 			.filter( ':visible' );
 
-		ts.scroller.setWidth( $hCells.add( $bCells ).add( $fCells ), '' );
+		tsScroller.setWidth( $hCells.add( $bCells ).add( $fCells ), '' );
 		$headers = c.$headerIndexed;
 
 		for ( index = 0; index < $headers.length; index++ ) {
@@ -405,16 +406,16 @@ ts.scroller = {
 			temp = $hCells.eq( index )
 				.add( $bCells.eq( index ) )
 				.add( $fCells.eq( index ) );
-			ts.scroller.setWidth( temp, setWidth );
+			tsScroller.setWidth( temp, setWidth );
 			// save current widths
 			wo.scroller_calcWidths[ index ] = setWidth;
 		}
 
 		temp = $tableWrap.parent().innerWidth() -
-			( ts.scroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 );
+			( tsScroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 );
 		$tableWrap.width( temp );
 
-		temp = ( ts.scroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 ) + borderWidth;
+		temp = ( tsScroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 ) + borderWidth;
 		setWidth = $tableWrap.innerWidth() - temp;
 
 		$hdr
@@ -430,7 +431,7 @@ ts.scroller = {
 			.removeClass( tscss.scrollerReset );
 
 		// update fixed column sizes
-		ts.scroller.updateFixed( c, wo );
+		tsScroller.updateFixed( c, wo );
 
 		// hide original table thead
 		$table.children( 'thead' ).addClass( tscss.scrollerHideElement );
@@ -536,7 +537,8 @@ ts.scroller = {
 
 	bindFixedColumnEvents : function( c, wo ) {
 		// update thead & tbody in fixed column
-		var namespace = c.namespace + 'tsscrollerFixed',
+		var tsScroller = ts.scroller,
+			namespace = c.namespace + 'tsscrollerFixed',
 			// bind to ts-init or filterEnd, but not both!
 			events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized' ) +
 				' sortEnd ' ).split( ' ' ).join( namespace + ' ' ),
@@ -548,8 +550,8 @@ ts.scroller = {
 		c.$table
 			.off( events )
 			.on( events, function() {
-				ts.scroller.updateFixed( c, wo, false );
-				ts.scroller.resize( c, wo );
+				tsScroller.updateFixed( c, wo, false );
+				tsScroller.resize( c, wo );
 			})
 			.parent()
 			// *** SCROLL *** scroll fixed column along with main
@@ -557,7 +559,7 @@ ts.scroller = {
 			.on( events2, function() {
 				if ( wo.scroller_isBusy ) { return; }
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( fixedScroll || !ts.scroller.isFirefox ) {
+				if ( fixedScroll || !tsScroller.isFirefox ) {
 					tableScroll = false;
 					$fixedTbody[0].scrollTop = $( this ).scrollTop();
 					setTimeout( function() {
@@ -570,7 +572,7 @@ ts.scroller = {
 			.off( events2 )
 			.on( events2, function() {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( tableScroll || !ts.scroller.isFirefox ) {
+				if ( tableScroll || !tsScroller.isFirefox ) {
 					fixedScroll = false;
 					c.$table.parent()[0].scrollTop = $( this ).scrollTop();
 					setTimeout( function() {
@@ -746,13 +748,14 @@ ts.scroller = {
 			}
 		}
 
+		adj = ts.scroller.hasScrollBar( $tableWrap ) ? scrollBarWidth : 0;
+
 		/*** scrollbar HACK! Since we can't hide the scrollbar with css ***/
 		if ( tsScroller.isFirefox || tsScroller.isOldIE ) {
 			$fixedTbodiesTable
+				.css( 'width', totalWidth )
 				.parent()
-				.css({
-					'width' : totalWidth
-				});
+				.css( 'width', totalWidth + adj );
 		}
 
 		$fixedColumn.removeClass( tscss.scrollerHideElement );
@@ -764,7 +767,6 @@ ts.scroller = {
 				.addClass( tscss.scrollerHideColumn );
 		}
 
-		adj = ts.scroller.hasScrollBar( $tableWrap ) ? scrollBarWidth : 0;
 		totalWidth = totalWidth - borderRightWidth;
 		temp = $tableWrap.parent().innerWidth() - totalWidth;
 		$tableWrap.width( temp );
