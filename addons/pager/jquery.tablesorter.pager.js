@@ -1046,6 +1046,9 @@
 						updatePageDisplay(table, p, false);
 					}
 				}
+
+				// make the hasWidget function think that the pager widget is being used
+				c.widgetInit.pager = true;
 			});
 		};
 
