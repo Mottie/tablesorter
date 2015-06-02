@@ -132,9 +132,9 @@ $( function() {
 		/* need to position the tbody & tfoot absolutely to hide the scrollbar & move the footer
 		below the horizontal scrollbar */
 		'.' + tscss.scrollerFixed + ' .' + tscss.scrollerFooter + ' { position: absolute; bottom: 0; }' +
-		/* hide fixed tbody scrollbar - see http://goo.gl/VsLe6n */
+		/* hide fixed tbody scrollbar - see http://goo.gl/VsLe6n - set overflow to auto here for mousewheel scroll */
 		'.' + tscss.scrollerFixed + ' .' + tscss.scrollerTable +
-			' { position: relative; left: 0; overflow: hidden; -ms-overflow-style: none; }' +
+			' { position: relative; left: 0; overflow: auto; -ms-overflow-style: none; }' +
 		'.' + tscss.scrollerFixed + ' .' + tscss.scrollerTable + '::-webkit-scrollbar { display: none; }' +
 		/*** fixed column panel ***/
 		'.' + tscss.scrollerWrap + ' .' + tscss.scrollerFixedPanel +
