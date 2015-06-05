@@ -54,6 +54,7 @@
 		format : function( txt, table, cell, cellIndex ) {
 			var $cell = $( cell ),
 				wo = table.config.widgetOptions,
+				checkedClass = table.config.checkboxClass || 'checked',
 				// returning plain language here because this is what is shown in the
 				// group headers - change it as desired
 				status = wo.group_checkbox ? wo.group_checkbox : [ 'checked', 'unchecked' ],
@@ -61,7 +62,7 @@
 				isChecked = $input.length ? $input[ 0 ].checked : '';
 			// adding class to row, indicating that a checkbox is checked; includes
 			// a column index in case more than one checkbox happens to be in a row
-			$cell.closest( 'tr' ).toggleClass( 'checked checked-' + cellIndex, isChecked );
+			$cell.closest( 'tr' ).toggleClass( checkedClass + ' ' + checkedClass + '-' + cellIndex, isChecked );
 			return $input.length ? status[ isChecked ? 0 : 1 ] : txt;
 		},
 		parsed : true, // filter widget flag

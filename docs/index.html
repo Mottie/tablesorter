@@ -597,6 +597,20 @@
 				<td></td>
 			</tr>
 
+			<tr id="checkboxclass">
+				<td><a href="#" class="permalink">checkboxClass</a></td>
+				<td>String</td>
+				<td>"checked"</td>
+				<td>Used by the "checkbox" parser in the <code>parser-input-select.js</code> file (<span class="version">v2.22.2</span>).
+					<div class="collapsible">
+						<p>When using the checkbox parser, this class name is added to the row along with this class name plus the column index when the targeted checkbox is checked.</p>
+						<p>For example, if the named parser file has been loaded &amp; "sorter-checkbox" class is added to the first column header, then any checked checkbox in the first column will have <code>"checked checked-0"</code> class names added to the row.</p>
+						Checkboxes in any other column, not targeted by the parser, will be ignored and no extra row class names will be added.
+					</div>
+				</td>
+				<td><a href="example-widget-output.html">Example</a></td>
+			</tr>
+
 			<tr id="cssasc">
 				<td><a href="#" class="permalink">cssAsc</a></td>
 				<td>String</td>
