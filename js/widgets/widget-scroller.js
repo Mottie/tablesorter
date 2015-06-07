@@ -445,7 +445,7 @@ ts.scroller = {
 
 	// Add fixed (frozen) columns (Do not call directly, use updateFixed)
 	setupFixed : function( c, wo ) {
-		var index, index2, $el, len, temp, $fixedColumn, $fixedTbody, $fixedContainer,
+		var index, index2, $el, len, temp, $fixedColumn, $fixedTbody,
 			$table = c.$table,
 			$wrapper = wo.scroller_$container,
 			fixedColumns = wo.scroller_fixedColumns;
@@ -462,7 +462,6 @@ ts.scroller = {
 		}
 
 		$fixedTbody = $fixedColumn.find( '.' + tscss.scrollerTable );
-		$fixedContainer = $fixedTbody.children( 'table' ).children( 'tbody' );
 		$fixedTbody
 			.children( 'table' )
 			.addClass( c.namespace.slice( 1 ) + '_extra_table' )
