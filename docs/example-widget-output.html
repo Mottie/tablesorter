@@ -34,7 +34,7 @@
 		vertical-align: top;
 	}
 	.dropdown-menu {
-		min-width: 280px;
+		min-width: 320px;
 		font-size: 12px;
 		padding: 10px;
 	}
@@ -65,6 +65,7 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-output.js"></script>
+	<script src="../js/parsers/parser-input-select.js"></script>
 
 	<!-- Tablesorter: optional -->
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
@@ -99,57 +100,66 @@
 
 	<script id="js">$(function() {
 
-	// set up demo for two table groups
+	$('.group1 table').tablesorter({
+		theme: 'bootstrap',
+		checkboxClass : 'checked', // default setting
+		widthFixed : true,
+		headerTemplate : '{content} {icon}',
+		widgets: ["zebra", "filter", "uitheme", "output"],
+		widgetOptions : {
+			filter_filteredRow  : 'filtered',
+			filter_reset        : '.group1 .reset',
+			output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ';')
+			output_ignoreColumns : [0],          // columns to ignore [0, 1,... ] (zero-based index)
+			output_hiddenColumns : false,       // include hidden columns in the output
+			output_includeFooter : true,        // include footer rows in the output
+			output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
+			output_headerRows    : true,        // output all header rows (multiple rows)
+			output_delivery      : 'p',         // (p)opup, (d)ownload
+			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered or jQuery filter selector
+			output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
+			output_replaceQuote  : '\u201c;',   // change quote to left double quote
+			output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
+			output_trimSpaces    : false,       // remove extra white-space characters from beginning & end
+			output_wrapQuotes    : false,       // wrap every cell output in quotes
+			output_popupStyle    : 'width=580,height=310',
+			output_saveFileName  : 'mytable.csv',
+			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
+			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
+			// callback executed when processing completes
+			// return true to continue download/output
+			// return false to stop delivery & do something else with the data
+			output_callback      : function(config, data) { return true; },
+
+			// the need to modify this for Excel no longer exists
+			output_encoding      : 'data:application/octet-stream;charset=utf8,'
+
+		}
+	}).tablesorterPager({
+		container: $('.ts-pager'),
+		output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+		size: 5
+	});
+
+	$('.group2 table').tablesorter({
+		theme: 'bootstrap',
+		widthFixed : true,
+		headerTemplate : '{content} {icon}',
+		widgets: ["zebra", "filter", "uitheme", "output"],
+		widgetOptions : {
+			filter_filteredRow   : 'filtered',
+			filter_reset         : '.group2 .reset',
+			output_headerRows    : true,        // output all header rows (multiple rows)
+			output_popupStyle    : 'width=580,height=310',
+			output_saveFileName  : 'mytable.csv'
+		}
+	});
+
+	// set up download buttons for two table groups
 	var demos = ['.group1', '.group2'];
 
 	$.each(demos, function(groupIndex){
 		var $this = $(demos[groupIndex]);
-
-		// call the tablesorter plugin
-		$this.find("table").tablesorter({
-			theme: 'bootstrap',
-			widthFixed : true,
-			headerTemplate : '{content} {icon}',
-			widgets: ["zebra", "filter", "uitheme", "output"],
-			widgetOptions : {
-				filter_filteredRow  : 'filtered',
-				filter_reset        : demos[groupIndex] + ' .reset',
-				output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ',')
-				output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
-				output_hiddenColumns : false,       // include hidden columns in the output
-				output_includeFooter : true,        // include footer rows in the output
-				output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
-				output_headerRows    : true,        // output all header rows (multiple rows)
-				output_delivery      : 'p',         // (p)opup, (d)ownload
-				output_saveRows      : 'f',         // (a)ll, (f)iltered or (v)isible
-				output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
-				output_replaceQuote  : '\u201c;',   // change quote to left double quote
-				output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
-				output_trimSpaces    : false,       // remove extra white-space characters from beginning & end
-				output_wrapQuotes    : false,       // wrap every cell output in quotes
-				output_popupStyle    : 'width=580,height=310',
-				output_saveFileName  : 'mytable.csv',
-				// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
-				output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
-				// callback executed when processing completes
-				// return true to continue download/output
-				// return false to stop delivery & do something else with the data
-				output_callback      : function(config, data) { return true; },
-
-				// the need to modify this for Excel no longer exists
-				output_encoding      : 'data:application/octet-stream;charset=utf8,'
-
-			}
-		});
-
-		// add pager to first table
-		if (groupIndex === 0) {
-			$this.find("table").tablesorterPager({
-				container: $(".ts-pager"),
-				output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-				size: 5
-			});
-		}
 
 		$this.find('.dropdown-toggle').click(function(e){
 			// this is needed because clicking inside the dropdown will close
@@ -184,8 +194,12 @@
 				wo = $table[0].config.widgetOptions,
 				saved = $this.find('.output-filter-all :checked').attr('class');
 			wo.output_separator    = $this.find('.output-separator-input').val();
-			wo.output_delivery     = $this.find('.output-download-popup :checked').attr('class') === "output-download" ? 'd' : 'p';
-			wo.output_saveRows     = saved === "output-filter" ? 'f' : saved === 'output-visible' ? 'v' : 'a';
+			wo.output_delivery     = $this.find('.output-download-popup :checked').attr('class') === 'output-download' ? 'd' : 'p';
+			wo.output_saveRows     = saved === 'output-filter' ? 'f' :
+				saved === 'output-visible' ? 'v' :
+				saved === 'output-selected' ? '.checked' : // checked class name, see table.config.checkboxClass
+				saved === 'output-sel-vis' ? '.checked:visible' :
+				'a';
 			wo.output_replaceQuote = $this.find('.output-replacequotes').val();
 			wo.output_trimSpaces   = $this.find('.output-trim').is(':checked');
 			wo.output_includeHTML  = $this.find('.output-html').is(':checked');
@@ -223,7 +237,19 @@
 
 			<h4>Changes</h4>
 			<ul>
-				<li>In <span class="version">v2.22.2</span>, the data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
+				<li>In <span class="version">v2.22.2</span>,
+					<ul>
+						<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
+						<li>Update <code>output_saveRows</code> option, it now includes the ability to set a jQuery filter selector.
+							<ul>
+								<li>For example, if you want to only output rows with an active checkbox, set this option to <code>'.checked'</code> (default class added by the checkbox parser contained in the "parser-input-select.js" file).</li>
+								<li>To output only visible active checkboxes, set this option to <code>'.checked:visible'</code>.</li>
+								<li>To output rows without an active checkbox, set this option to <code>':not(.checked)'</code>, etc.</li>
+								<li>More details can be found in the options section.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.22.0</span>,
 					<ul>
 						<li>Added the BOM back to the UTF-8 csv downloadable file to support unicode characters in Excel.</li>
@@ -529,14 +555,37 @@ line,value1,value2,value3
 						<td><a href="#" class="permalink">output_saveRows</a></td>
 						<td><code>'filtered'</code></td>
 						<td>
-							Change this option to either <code>'filtered'</code>, <code>'visible'</code> or <code>'all'</code> to set which rows will be added to the output.
+							Change this option to either <code>'filtered'</code>, <code>'visible'</code>, <code>'all'</code> or (<span class="version updated">v2.22.2</span>) a jQuery filter selector to set to match rows to be added to the output.
 							<div class="collapsible">
 							<br>
-							Even if this option is set to <code>'filtered'</code> and the filter widget is not being used, all of the rows will be added to the output.<br>
-							<br>
-							When setting this option, only the first letter is required (<code>'f'</code>, <code>'v'</code> or <code>'a'</code>) :
-							<br>
-							<pre class="prettyprint lang-js">output_saveRows : 'f'</pre>
+							<ul>
+								<li><code>'filtered'</code> - output rows that have not been filtered by the filter widget (i.e. rows that do not have the "filtered" class applied; this class name is set by the <a href="index.html#widget-filter-filteredrow"><code>filter_filteredRow</code> widget option</a>).</li>
+								<li><code>'visible'</code> - only output rows that are currently visible; rows hidden by pagination will not be included.</li>
+								<li>jQuery filter selector - output all rows that match the jQuery filter.
+									<ul>
+										<li>For example, <code>'.checked'</code>, <code>'.checked:visible'</code> or <code>:not(.checked)</code> can be used; these examples match the class set by the checkbox parser <code>table.config.checkboxClass</code> class setting.</li>
+										<li>For reference, internally, the rows are filtered using this setting: <code>$rows.filter( wo.output_saveRows )</code>.</li>
+										<li>Instead of checking to see if <code>output_saveRows</code> works as a filter, the option is checked to see if it contains any of the following characters before it is used as a filter:
+											<ul>
+												<li><code>'.'</code> (class selector)</li>
+												<li><code>'#'</code> (id selector)</li>
+												<li><code>':'</code> (filter selectors, e.g. <code>':visible'</code> or <code>':not()'</code>)</li>
+												<li><code>[</code> (start of an attribute selector)</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li><code>'all'</code> - output all rows even if they are hidden. When the pager <code>removeRows</code> option is <code>true</code>, rows not visible do not exist in the DOM and therefore will not be included.</li>
+							</ul>
+							<p>Even if this option is set to <code>'filtered'</code> and the filter widget is not being used, all of the rows will be added to the output.</p>
+							<p><span class="label label-info">*NOTE*</span> When setting this option,
+								<ul>
+									<li>Only the first letter is required for filtered (<code>'f'</code>) or visible (<code>'v'</code>) rows.
+										<pre class="prettyprint lang-js">output_saveRows : 'f'</pre>
+									</li>
+									<li>If using a jQuery selector, it won't be recognized as a selector unless one of the characters (<code>.#:[</code>) is contained in the setting; if your filter is not working, or uses a charater not listed, then please <a href="index.html#Support">contact me for support</a>.</li>
+									<li>If no matches are found, all rows will be sent to the output.</li>
+								</ul>
 							</div>
 						</td>
 					</tr>
@@ -761,12 +810,18 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					</div>
 				</li>
 				<li>
-					<div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible or all rows">
+					<div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible, selected, selected+visible or all rows">
 						<label class="btn btn-default btn-sm active">
 							<input type="radio" name="getrows1" class="output-filter" checked="checked"> Filtered
 						</label>
 						<label class="btn btn-default btn-sm">
 							<input type="radio" name="getrows1" class="output-visible"> Visible
+						</label>
+						<label class="btn btn-default btn-sm">
+							<input type="radio" name="getrows1" class="output-selected"> Selected
+						</label>
+						<label class="btn btn-default btn-sm">
+							<input type="radio" name="getrows1" class="output-sel-vis"> Sel+Vis
 						</label>
 						<label class="btn btn-default btn-sm">
 							<input type="radio" name="getrows1" class="output-all"> All
@@ -804,6 +859,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 	<table id="table" class="tablesorter">
 		<thead>
 			<tr>
+				<th class="sorter-checkbox"></th>
 				<th>Rank</th>
 				<th data-name="First">First Name</th>
 				<th data-name="Last">Last Name</th>
@@ -815,6 +871,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 		</thead>
 		<tfoot>
 			<tr>
+				<th></th>
 				<th>Rank</th>
 				<th data-name="First & middle">First Name</th>
 				<th data-name="Last & Title">Last Name</th>
@@ -825,19 +882,19 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 			</tr>
 		</tfoot>
 		<tbody>
-			<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
-			<tr><td>11</td><td>Aaron</td><td>"doc" Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
-			<tr><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
-			<tr><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
-			<tr><td>21</td><td><span class="red">John</span></td><td>        "Robin"<br>	Hood          </td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
-			<tr><td>013</td><td>Clark</td><td>"Old man" Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
-			<tr><td>005</td><td>Bruce</td><td>Almighty <span class="red">Esq</span></td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>
-			<tr><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
-			<tr><td>16</td><td>Jim</td><td>"Jimmy" Franco</td><td>24</td><td><span class="red">-$14.19</span></td><td>24%</td><td>Jan 14, 2004 11:23 AM</td></tr>
-			<tr><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
-			<tr><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
-			<tr><td>55</td><td>Dennis</td><td><span class="red">"Charley"</span> Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
-			<tr><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>12%</td><td>Jun 11, 2011 10:55 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>11</td><td>Aaron</td><td>"doc" Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td></tr>
+			<tr><td><input type="checkbox"></td><td>12</td><td>Brandon Clark</td><td>Henry Jr</td><td>51</td><td>$42.29</td><td>18%</td><td>Oct 13, 2000 1:15 PM</td></tr>
+			<tr><td><input type="checkbox"></td><td>111</td><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>21</td><td><span class="red">John</span></td><td>        "Robin"<br>	Hood          </td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>013</td><td>Clark</td><td>"Old man" Kent Sr.</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>005</td><td>Bruce</td><td>Almighty <span class="red">Esq</span></td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2021 9:12 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>10</td><td>Alex</td><td>Dumass</td><td>13</td><td>$5.29</td><td>4%</td><td>Jan 8, 2012 5:11 PM</td></tr>
+			<tr><td><input type="checkbox"></td><td>16</td><td>Jim</td><td>"Jimmy" Franco</td><td>24</td><td><span class="red">-$14.19</span></td><td>24%</td><td>Jan 14, 2004 11:23 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>166</td><td>Bruce Lee</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+			<tr><td><input type="checkbox"></td><td>100</td><td>Brenda Dexter</td><td>McMasters</td><td>18</td><td>$55.20</td><td>15%</td><td>Feb 12, 2010 7:23 PM</td></tr>
+			<tr><td><input type="checkbox"></td><td>55</td><td>Dennis</td><td><span class="red">"Charley"</span> Bronson</td><td>65</td><td>$123.00</td><td>32%</td><td>Jan 20, 2001 1:12 PM</td></tr>
+			<tr><td><input type="checkbox"></td><td>9</td><td>Martha</td><td>delFuego</td><td>25</td><td>$22.09</td><td>12%</td><td>Jun 11, 2011 10:55 AM</td></tr>
 		</tbody>
 	</table>
 </div>

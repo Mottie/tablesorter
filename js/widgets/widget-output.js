@@ -39,7 +39,7 @@ output = ts.output = {
 	},
 
 	processRow: function(c, $rows, isHeader, isJSON) {
-		var $this, row, col, rowlen, collen, txt, attr,
+		var $this, row, col, rowlen, collen, txt,
 			wo = c.widgetOptions,
 			tmpRow = [],
 			dupe = wo.output_duplicateSpans,
@@ -53,7 +53,7 @@ output = ts.output = {
 				// process rowspans
 				if ($this.filter('[rowspan]').length) {
 					rowlen = parseInt( $this.attr('rowspan'), 10) - 1;
-					txt = output.formatData( wo, $this.attr(wo.output_dataAttrib) || $this.html(), isHeader );
+					txt = output.formatData( wo, $this, isHeader );
 					for (row = 1; row <= rowlen; row++) {
 						if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 						tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
@@ -62,9 +62,8 @@ output = ts.output = {
 				// process colspans
 				if ($this.filter('[colspan]').length) {
 					collen = parseInt( $this.attr('colspan'), 10) - 1;
-					attr = $this.attr(wo.output_dataAttrib);
 					// allow data-attribute to be an empty string
-					txt = output.formatData( wo, typeof attr !== 'undefined' ? attr : $this.html(), isHeader );
+					txt = output.formatData( wo, $this, isHeader );
 					for (col = 1; col <= collen; col++) {
 						// if we're processing the header & making JSON, the header names need to be unique
 						if ($this.filter('[rowspan]').length) {
@@ -86,7 +85,7 @@ output = ts.output = {
 					// skip column if already defined
 					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
-						output.formatData( wo, $this.attr(wo.output_dataAttrib) || $this.html(), isHeader );
+						output.formatData( wo, $this, isHeader );
 					cellIndex++;
 				}
 			});
@@ -112,6 +111,7 @@ output = ts.output = {
 			outputJSON = tmpData === 'json',
 			outputArray = tmpData === 'array',
 			separator = outputJSON || outputArray ? ',' : wo.output_separator,
+			saveRows = wo.output_saveRows,
 			$el = c.$table;
 		// regex to look for the set separator or HTML
 		wo.output_regex = new RegExp('(' + (/\\/.test(separator) ? '\\' : '' ) + separator + ')' );
@@ -129,9 +129,14 @@ output = ts.output = {
 			$rows = $rows.add( $el.children('tfoot').children('tr').clone() );
 		}
 
-		// get (f)iltered, (v)isible or all rows (look for the first letter only)
-		$rows = /f/.test(wo.output_saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
-			/v/.test(wo.output_saveRows) ? $rows.filter(':visible') : $rows;
+		// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
+		$rows = /^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
+			/^v/.test(saveRows) ? $rows.filter(':visible') :
+			// look for '.' (class selector), '#' (id selector),
+			// ':' (basic filters, e.g. ':not()') or '[' (attribute selector start)
+			/^[.#:\[]/.test(saveRows) ? $rows.filter(saveRows) :
+			// default to all rows
+			$rows;
 
 		// process to array of arrays
 		csvData = output.processRow(c, $rows);
@@ -194,12 +199,13 @@ output = ts.output = {
 		return json;
 	},
 
-	formatData : function(wo, input, isHeader) {
-		var txt,
+	formatData : function(wo, $el, isHeader) {
+		var attr = $el.attr(wo.output_dataAttrib),
+			txt = typeof attr !== 'undefined' ? attr : $el.html(),
 			quotes = (wo.output_separator || ',').toLowerCase(),
 			separator = quotes === 'json' || quotes === 'array',
 			// replace " with “ if undefined
-			result = input.replace(/\"/g, wo.output_replaceQuote || '\u201c');
+			result = txt.replace(/\"/g, wo.output_replaceQuote || '\u201c');
 		// replace line breaks with \\n & tabs with \\t
 		if (!wo.output_trimSpaces) {
 			result = result.replace(output.regexBR, output.replaceCR).replace(/\t/g, output.replaceTab);
@@ -302,7 +308,7 @@ ts.addWidget({
 		output_dataAttrib    : 'data-name', // header attrib containing modified header name
 		output_headerRows    : false,       // if true, include multiple header rows (JSON only)
 		output_delivery      : 'popup',     // popup, download
-		output_saveRows      : 'filtered',  // all, visible or filtered
+		output_saveRows      : 'filtered',  // (a)ll, (v)isible, (f)iltered or jQuery filter selector
 		output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
 		output_replaceQuote  : '\u201c;',   // left double quote
 		output_includeHTML   : false,
