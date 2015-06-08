@@ -181,8 +181,8 @@ output = ts.output = {
 			rowLen = tmpRow.length;
 		for (rowIndex = 0; rowIndex < rowLen; rowIndex++) {
 			// remove any blank rows
-			tmp = tmpRow[rowIndex].join('').replace(/\"/g,'');
-			if (tmpRow[rowIndex].length > 0 && tmp !== '') {
+			tmp = ( tmpRow[rowIndex] || [] ).join('').replace(/\"/g,'');
+			if ( ( tmpRow[rowIndex] || [] ).length > 0 && tmp !== '' ) {
 				csvData[csvData.length] = outputArray ? tmpRow[rowIndex] : tmpRow[rowIndex].join(wo.output_separator);
 			}
 		}
