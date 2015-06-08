@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 05-31-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-07-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -218,9 +218,8 @@
 				return $.trim( $node[0].textContent || $node.text() );
 			};
 
-			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
+			function detectParserForColumn(c, rows, rowIndex, cellIndex) {
 				var cur, $node,
-					c = table.config,
 					i = ts.parsers.length,
 					node = false,
 					nodeValue = '',
@@ -231,7 +230,7 @@
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
-						if (table.config.debug) {
+						if (c.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
 					} else {
@@ -241,7 +240,7 @@
 				while (--i >= 0) {
 					cur = ts.parsers[i];
 					// ignore the default text parser because it will always be true
-					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node, $node)) {
+					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, c.table, node, $node)) {
 						return cur;
 					}
 				}
@@ -275,14 +274,15 @@
 				return val;
 			}
 
-			function buildParserCache(table) {
-				var c = table.config,
-					// update table bodies in case we start with an empty table
-					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, np, p, e, time,
+			function buildParserCache( c, $tbodies ) {
+				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
+					table = c.table,
 					j = 0,
-					parsersDebug = '',
-					len = tb.length;
+					parsersDebug = '';
+				// update table bodies in case we start with an empty table
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies;
+				len = tb.length;
 				if ( len === 0) {
 					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
@@ -317,7 +317,7 @@
 								e = false;
 							}
 							if (!p) {
-								p = detectParserForColumn(table, rows, -1, i);
+								p = detectParserForColumn(c, rows, -1, i);
 							}
 							if (c.debug) {
 								parsersDebug += 'column:' + i + '; extractor:' + e.id + '; parser:' + p.id + '; string:' + c.strings[i] + '; empty: ' + c.empties[i] + '\n';
@@ -337,12 +337,14 @@
 			}
 
 			/* utils */
-			function buildCache(table) {
-				var cc, t, v, i, j, k, $row, cols, cacheTime,
+			function buildCache(table, $tbodies) {
+				var cc, t, v, i, j, k, $tb, $row, cols, cacheTime,
 					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
-					$tb = c.$tbodies,
 					parsers = c.parsers;
+				// update tbody variable
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				$tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies,
 				c.cache = {};
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
@@ -559,7 +561,7 @@
 				// remove rows/elements before update
 				c.$table.find(c.selectorRemove).remove();
 				// rebuild parsers
-				buildParserCache(table);
+				buildParserCache(c);
 				// rebuild the cache map
 				buildCache(table);
 				checkResort(c, resort, callback);
@@ -849,7 +851,7 @@
 									num = (c.strings[col]) ? c.string[c.strings[col]] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
-								// var sort = $.tablesorter['sort' + s](table, a[c], b[c], c, colMax[c], dir);
+								// var sort = $.tablesorter['sort' + s]( a[c], b[c], dir, colMax[c], table);
 								sort = c.numberSorter ? c.numberSorter(a[col], b[col], dir, colMax[col], table) :
 									ts[ 'sortNumeric' + (dir ? 'Asc' : 'Desc') ](a[col], b[col], num, colMax[col], col, table);
 							} else {
@@ -997,7 +999,7 @@
 						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!(c.parsers && c.parsers.length)) {
-							buildParserCache(table);
+							buildParserCache(c);
 						}
 						// add each row
 						for (i = 0; i < rows; i++) {
@@ -1055,13 +1057,14 @@
 						callback(table);
 					}
 				})
-				.bind('updateCache' + c.namespace, function(e, callback){
+				// $tbodies variable is used by the tbody sorting widget
+				.bind('updateCache' + c.namespace, function(e, callback, $tbodies){
 					// rebuild parsers
 					if (!(c.parsers && c.parsers.length)) {
-						buildParserCache(table);
+						buildParserCache(c, $tbodies);
 					}
 					// rebuild the cache map
-					buildCache(table);
+					buildCache(table, $tbodies);
 					if ($.isFunction(callback)) {
 						callback(table);
 					}
@@ -1181,7 +1184,7 @@
 				// add widget options before parsing (e.g. grouping widget has parser settings)
 				ts.applyWidgetOptions(table, c);
 				// try to auto detect column type, and store in tables config
-				buildParserCache(table);
+				buildParserCache(c);
 				// start total row count at zero
 				c.totalRows = 0;
 				// build the cache for the tbody cells
@@ -3812,7 +3815,7 @@ ts.filter = {
 	},
 	getOptionSource: function( table, column, onlyAvail ) {
 		table = $( table )[0];
-		var cts, indx, len,
+		var cts, txt, indx, len,
 			c = table.config,
 			wo = c.widgetOptions,
 			parsed = [],
@@ -3857,11 +3860,13 @@ ts.filter = {
 			len = arry.length;
 			// parse select option values
 			for ( indx = 0; indx < len; indx++ ) {
+				txt = arry[ indx ];
 				// parse array data using set column parser; this DOES NOT pass the original
 				// table cell to the parser format function
 				parsed.push({
-					t : arry[ indx ],
-					p : c.parsers && c.parsers[ column ].format( arry[ indx ], table, [], column )
+					t : txt,
+					// check parser length - fixes #934
+					p : c.parsers && c.parsers.length && c.parsers[ column ].format( txt, table, [], column ) || txt
 				});
 			}
 

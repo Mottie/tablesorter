@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-31-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-07-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1643,7 +1643,7 @@ ts.filter = {
 	},
 	getOptionSource: function( table, column, onlyAvail ) {
 		table = $( table )[0];
-		var cts, indx, len,
+		var cts, txt, indx, len,
 			c = table.config,
 			wo = c.widgetOptions,
 			parsed = [],
@@ -1688,11 +1688,13 @@ ts.filter = {
 			len = arry.length;
 			// parse select option values
 			for ( indx = 0; indx < len; indx++ ) {
+				txt = arry[ indx ];
 				// parse array data using set column parser; this DOES NOT pass the original
 				// table cell to the parser format function
 				parsed.push({
-					t : arry[ indx ],
-					p : c.parsers && c.parsers[ column ].format( arry[ indx ], table, [], column )
+					t : txt,
+					// check parser length - fixes #934
+					p : c.parsers && c.parsers.length && c.parsers[ column ].format( txt, table, [], column ) || txt
 				});
 			}
 
