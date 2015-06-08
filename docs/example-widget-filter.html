@@ -22,7 +22,7 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script id="js">$(function() {
 
@@ -237,7 +237,6 @@ $(function(){
 				<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
 			</ul>
 
-
 			<div class="accordion start-closed">
 				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 				<div>
@@ -265,6 +264,7 @@ $(function(){
 			</div>
 
 			<ul>
+				<li><span class="label label-info">*NOTE*</span> If using a custom theme, make sure to add the class set in the <code>filter_filteredRow</code> option (set to <code>filtered</code> by default) in the css, and set it to <code>display:none</code>. When filtering rows, the filter widget adds the "filtered" class to hide the row; all available themes include this definition.</li>
 				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <code>filter_hideFilters</code> option to <code>false</code>.</li>
 				<li>This widget uses jQuery's <code>.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
 				<li>This widget <em>does NOT</em> work with tablesorter v2.0.5.</li>
