@@ -248,6 +248,7 @@
 								<li>More details can be found in the options section.</li>
 							</ul>
 						</li>
+						<li>Fix issue with <code>output_hiddenColumns</code> causing an empty output.</li>
 					</ul>
 				</li>
 				<li>In <span class="version">v2.22.0</span>,
@@ -578,7 +579,7 @@ line,value1,value2,value3
 								<li><code>'all'</code> - output all rows even if they are hidden. When the pager <code>removeRows</code> option is <code>true</code>, rows not visible do not exist in the DOM and therefore will not be included.</li>
 							</ul>
 							<p>Even if this option is set to <code>'filtered'</code> and the filter widget is not being used, all of the rows will be added to the output.</p>
-							<p><span class="label label-info">*NOTE*</span> When setting this option,
+							<p><span class="label label-info">*NOTE*</span> When setting this option,</p>
 								<ul>
 									<li>Only the first letter is required for filtered (<code>'f'</code>) or visible (<code>'v'</code>) rows.
 										<pre class="prettyprint lang-js">output_saveRows : 'f'</pre>

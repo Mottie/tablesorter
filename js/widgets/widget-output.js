@@ -45,6 +45,7 @@ output = ts.output = {
 			dupe = wo.output_duplicateSpans,
 			addSpanIndex = isHeader && isJSON && wo.output_headerRows && $.isFunction(wo.output_callbackJSON),
 			cellIndex = 0;
+
 		$rows.each(function(rowIndex) {
 			if (!tmpRow[rowIndex]) { tmpRow[rowIndex] = []; }
 			cellIndex = 0;
@@ -79,9 +80,8 @@ output = ts.output = {
 						}
 					}
 				}
-
 				// don't include hidden columns, unless option is set
-				if ( !wo.output_hiddenColumns && $this.css('display') !== 'none' ) {
+				if ( wo.output_hiddenColumns || $this.css('display') !== 'none' ) {
 					// skip column if already defined
 					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
