@@ -237,7 +237,7 @@
 			}
 
 			// centralized function to extract/parse cell contents
-			function getParsedText( c, cell, colIndex, txt ) {
+			 ts.getParsedText = function( c, cell, colIndex, txt ) {
 				if ( typeof txt === 'undefined' ) {
 					txt = ts.getElementText( c, cell, colIndex );
 				}
@@ -380,7 +380,7 @@
 							prevRowData.child[ t ] = [];
 							// child row content does not account for colspans/rowspans; so indexing may be off
 							for ( j = 0; j < c.columns; j++ ) {
-								prevRowData.child[ t ][ j ] = getParsedText( c, v[ j ], j );
+								prevRowData.child[ t ][ j ] = ts.getParsedText( c, v[ j ], j );
 							}
 							// go to the next for loop
 							continue;
@@ -396,7 +396,7 @@
 							}
 							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
 							rowData.raw.push( t ); // save original row text
-							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
+							v = ts.getParsedText( c, $row[ 0 ].cells[ j ], j, t );
 							cols.push( v );
 							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
@@ -952,7 +952,7 @@
 						row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
 						cache = tbcache.normalized[ row ];
 						icell = $cell.index();
-						t = getParsedText( c, cell, icell );
+						t = ts.getParsedText( c, cell, icell );
 						cache[ icell ] = t;
 						cache[ c.columns ].$row = $row;
 						if ( (c.parsers[icell].type || '').toLowerCase() === 'numeric' ) {
@@ -1000,7 +1000,7 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = getParsedText( c, $row[i].cells[j], j );
+								cells[j] = ts.getParsedText( c, $row[i].cells[j], j );
 								if ((c.parsers[j].type || '').toLowerCase() === 'numeric') {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
