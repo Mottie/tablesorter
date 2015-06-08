@@ -123,12 +123,6 @@ output = ts.output = {
 		// all tbody rows
 		$rows = $el.children('tbody').children('tr');
 
-		if (wo.output_includeFooter) {
-			// clone, to force the tfoot rows to the end of this selection of rows
-			// otherwise they appear after the thead (the order in the HTML)
-			$rows = $rows.add( $el.children('tfoot').children('tr').clone() );
-		}
-
 		// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
 		$rows = /^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
 			/^v/.test(saveRows) ? $rows.filter(':visible') :
@@ -140,6 +134,13 @@ output = ts.output = {
 
 		// process to array of arrays
 		csvData = output.processRow(c, $rows);
+
+		if (wo.output_includeFooter) {
+			// clone, to force the tfoot rows to the end of this selection of rows
+			// otherwise they appear after the thead (the order in the HTML)
+			csvData = csvData.concat( output.processRow( c, $el.children('tfoot').children('tr:visible') ) );
+		}
+
 		len = headers.length;
 
 		if (wo.output_ignoreColumns.length) {
