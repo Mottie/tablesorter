@@ -83,9 +83,6 @@
 #popover-target input {
   margin-right: 5px;
 }
-.popover {
-	margin-top: -65px; /* adjust popover position */
-}
 </style>
 
 <script id="js">$(function() {
@@ -133,24 +130,23 @@
 	});
 
 	/*** Bootstrap popover demo ***/
-	$('#popover')
-		.popover({
-			placement: 'right',
-			html: true, // required if content has HTML
-			content: '<div id="popover-target"></div>'
-		})
-		// bootstrap popover event triggered when the popover opens
-		.on('shown.bs.popover', function () {
-			// call this function to copy the column selection code into the popover
-			$.tablesorter.columnSelector.attachTo( $('.bootstrap-popup'), '#popover-target');
-		});
-
+	
 	// initialize column selector using default settings
 	// note: no container is defined!
 	$(".bootstrap-popup").tablesorter({
 		theme: 'blue',
 		widgets: ['zebra', 'columnSelector', 'stickyHeaders']
 	});
+	
+	// call this function to copy the column selection code into the popover
+	$.tablesorter.columnSelector.attachTo( $('.bootstrap-popup'), '#popover-target');
+	
+	$('#popover')
+		.popover({
+			placement: 'right',
+			html: true, // required if content has HTML
+			content: $('#popover-target')
+		});
 
 });
 </script>
@@ -502,6 +498,10 @@
 	Select Column
 </button>
 
+<div class="hidden">
+	<div id="popover-target"></div>
+</div>
+
 <table class="tablesorter bootstrap-popup">
 	<thead>
 		<tr>
@@ -576,6 +576,10 @@
 &lt;button id=&quot;popover&quot; type=&quot;button&quot; class=&quot;btn btn-default&quot;&gt;
 	Select Column
 &lt;/button&gt;
+
+&lt;div class=&quot;hidden&quot;&gt;
+	&lt;div id=&quot;popover-target&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
 
 &lt;table class=&quot;tablesorter bootstrap-popup&quot;&gt;
 	&lt;thead&gt;
