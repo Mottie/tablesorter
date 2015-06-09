@@ -163,7 +163,6 @@ output = ts.output = {
 
 		if (outputJSON) {
 			tmpData = [];
-			console.log( csvData, headers );
 			rowsLen = csvData.length;
 			for ( indx = 0; indx < rowsLen; indx++ ) {
 				// multiple header rows & output_headerRows = true, pick the last row...
@@ -208,7 +207,7 @@ output = ts.output = {
 	},
 
 	row2Hash : function( keys, values ) {
-		var indx, val,
+		var indx,
 			json = {},
 			len = values.length;
 		for ( indx = 0; indx < len; indx++ ) {
