@@ -39,72 +39,83 @@ output = ts.output = {
 	},
 
 	processRow: function(c, $rows, isHeader, isJSON) {
-		var $this, row, col, rowlen, collen, txt,
+		var $cell, $cells, cellsLen, rowIndex, row, col, indx, rowspanLen, colspanLen, txt,
 			wo = c.widgetOptions,
 			tmpRow = [],
 			dupe = wo.output_duplicateSpans,
 			addSpanIndex = isHeader && isJSON && wo.output_headerRows && $.isFunction(wo.output_callbackJSON),
-			cellIndex = 0;
+			cellIndex = 0,
+			rowsLength = $rows.length;
 
-		$rows.each(function(rowIndex) {
+		for ( rowIndex = 0; rowIndex < rowsLength; rowIndex++ ) {
 			if (!tmpRow[rowIndex]) { tmpRow[rowIndex] = []; }
 			cellIndex = 0;
-			$(this).children().each(function(){
-				$this = $(this);
+			$cells = $rows.eq( rowIndex ).children();
+			cellsLen = $cells.length;
+			for ( indx = 0; indx < cellsLen; indx++ ) {
+				$cell = $cells.eq( indx );
 				// process rowspans
-				if ($this.filter('[rowspan]').length) {
-					rowlen = parseInt( $this.attr('rowspan'), 10) - 1;
-					txt = output.formatData( wo, $this, isHeader );
-					for (row = 1; row <= rowlen; row++) {
+				if ($cell.filter('[rowspan]').length) {
+					rowspanLen = parseInt( $cell.attr('rowspan'), 10) - 1;
+					txt = output.formatData( wo, $cell, isHeader );
+					for (row = 1; row <= rowspanLen; row++) {
 						if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 						tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
 					}
 				}
 				// process colspans
-				if ($this.filter('[colspan]').length) {
-					collen = parseInt( $this.attr('colspan'), 10) - 1;
+				if ($cell.filter('[colspan]').length) {
+					colspanLen = parseInt( $cell.attr('colspan'), 10) - 1;
 					// allow data-attribute to be an empty string
-					txt = output.formatData( wo, $this, isHeader );
-					for (col = 1; col <= collen; col++) {
+					txt = output.formatData( wo, $cell, isHeader );
+					for (col = 1; col <= colspanLen; col++) {
 						// if we're processing the header & making JSON, the header names need to be unique
-						if ($this.filter('[rowspan]').length) {
-							rowlen = parseInt( $this.attr('rowspan'), 10);
-							for (row = 0; row < rowlen; row++) {
+						if ($cell.filter('[rowspan]').length) {
+							rowspanLen = parseInt( $cell.attr('rowspan'), 10);
+							for (row = 0; row < rowspanLen; row++) {
 								if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 								tmpRow[rowIndex + row][cellIndex + col] = addSpanIndex ?
-									wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
+									wo.output_callbackJSON($cell, txt, cellIndex + col) ||
+									txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
 							}
 						} else {
 							tmpRow[rowIndex][cellIndex + col] = addSpanIndex ?
-								wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
+								wo.output_callbackJSON($cell, txt, cellIndex + col) ||
+								txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
 						}
 					}
 				}
-				// don't include hidden columns, unless option is set
-				if ( wo.output_hiddenColumns || $this.css('display') !== 'none' ) {
-					// skip column if already defined
-					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
-					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
-						output.formatData( wo, $this, isHeader );
-					cellIndex++;
-				}
-			});
-		});
-		return tmpRow;
+
+				// skip column if already defined
+				while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
+
+				tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
+					output.formatData( wo, $cell, isHeader );
+				cellIndex++;
+			}
+		}
+		return ts.output.removeColumns( c, wo, tmpRow );
 	},
 
-	ignoreColumns : function(wo, data) {
-		// ignore columns -> remove data from built array (because we've already processed any rowspan/colspan)
-		$.each( data, function(indx, val){
-			data[indx] = $.grep(val, function(v, cellIndx){
-				return $.inArray(cellIndx, wo.output_ignoreColumns) < 0;
-			});
-		});
+	// remove hidden/ignored columns
+	removeColumns : function( c, wo, arry ) {
+		var rowIndex, row, colIndex,
+			data = [],
+			len = arry.length;
+		for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
+			row = arry[ rowIndex ];
+			data[ rowIndex ] = [];
+			for ( colIndex = 0; colIndex < c.columns; colIndex++ ) {
+				if ( !wo.output_hiddenColumnArray[ colIndex ] ) {
+					data[ rowIndex ].push( row[ colIndex ] );
+				}
+			}
+		}
 		return data;
 	},
 
 	process : function(c, wo) {
-		var mydata, $this, $rows, headers, csvData, len,
+		var mydata, $this, $rows, headers, csvData, len, rowsLen, tmp,
 			hasStringify = window.JSON && JSON.hasOwnProperty('stringify'),
 			indx = 0,
 			tmpData = (wo.output_separator || ',').toLowerCase(),
@@ -115,6 +126,13 @@ output = ts.output = {
 			$el = c.$table;
 		// regex to look for the set separator or HTML
 		wo.output_regex = new RegExp('(' + (/\\/.test(separator) ? '\\' : '' ) + separator + ')' );
+
+		// make a list of hidden columns
+		wo.output_hiddenColumnArray = [];
+		for ( indx = 0; indx < c.columns; indx++ ) {
+			wo.output_hiddenColumnArray[ indx ] = $.inArray( indx, wo.output_ignoreColumns ) > -1 ||
+				c.$headerIndexed[ indx ].css( 'display' ) === 'none';
+		}
 
 		// get header cells
 		$this = $el.find('thead tr:visible').not('.' + (ts.css.filterRow || 'tablesorter-filter-row') );
@@ -143,22 +161,21 @@ output = ts.output = {
 
 		len = headers.length;
 
-		if (wo.output_ignoreColumns.length) {
-			headers = output.ignoreColumns(wo, headers);
-			csvData = output.ignoreColumns(wo, csvData);
-		}
-
 		if (outputJSON) {
 			tmpData = [];
-			$.each( csvData, function(indx, val){
+			console.log( csvData, headers );
+			rowsLen = csvData.length;
+			for ( indx = 0; indx < rowsLen; indx++ ) {
 				// multiple header rows & output_headerRows = true, pick the last row...
-				tmpData.push( output.row2Hash( headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1], val ) );
-			});
+				tmp = headers[ ( len > 1 && wo.output_headerRows ) ? indx % len : len - 1 ];
+				tmpData.push( output.row2Hash( tmp, csvData[ indx ] ) );
+			}
 
 			// requires JSON stringify; if it doesn't exist, the output will show [object Object],... in the output window
 			mydata = hasStringify ? JSON.stringify(tmpData) : tmpData;
 		} else {
-			tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : [ headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1] ], outputArray)
+			tmp = [ headers[ ( len > 1 && wo.output_headerRows ) ? indx % len : len - 1 ] ];
+			tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : tmp, outputArray)
 				.concat( output.row2CSV(wo, csvData, outputArray) );
 
 			// stringify the array; if stringify doesn't exist the array will be flattened
@@ -190,13 +207,15 @@ output = ts.output = {
 		return csvData;
 	},
 
-	row2Hash : function(keys, values) {
-		var json = {};
-		$.each(values, function(indx, val) {
+	row2Hash : function( keys, values ) {
+		var indx, val,
+			json = {},
+			len = values.length;
+		for ( indx = 0; indx < len; indx++ ) {
 			if ( indx < keys.length ) {
-				json[ keys[indx] ] = val;
+				json[ keys[ indx ] ] = values[ indx ];
 			}
-		});
+		}
 		return json;
 	},
 
@@ -278,7 +297,8 @@ output = ts.output = {
 				// Dispatching click event; using $(link).trigger() won't work
 				if (document.createEvent) {
 					e = document.createEvent('MouseEvents');
-					// event.initMouseEvent(type, canBubble, cancelable, view, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget);
+					// event.initMouseEvent(type, canBubble, cancelable, view, detail, screenX, screenY, clientX, clientY,
+					// ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget);
 					e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 					link.dispatchEvent(e);
 				}
