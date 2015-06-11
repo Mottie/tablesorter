@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 06-07-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-10-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -249,7 +249,7 @@
 			}
 
 			// centralized function to extract/parse cell contents
-			 ts.getParsedText = function( c, cell, colIndex, txt ) {
+			ts.getParsedText = function( c, cell, colIndex, txt ) {
 				if ( typeof txt === 'undefined' ) {
 					txt = ts.getElementText( c, cell, colIndex );
 				}
@@ -272,7 +272,7 @@
 					}
 				}
 				return val;
-			}
+			};
 
 			function buildParserCache( c, $tbodies ) {
 				var rows, list, l, i, h, ch, np, p, e, time, tb, len,

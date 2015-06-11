@@ -237,7 +237,7 @@
 			}
 
 			// centralized function to extract/parse cell contents
-			 ts.getParsedText = function( c, cell, colIndex, txt ) {
+			ts.getParsedText = function( c, cell, colIndex, txt ) {
 				if ( typeof txt === 'undefined' ) {
 					txt = ts.getElementText( c, cell, colIndex );
 				}
@@ -260,7 +260,7 @@
 					}
 				}
 				return val;
-			}
+			};
 
 			function buildParserCache( c, $tbodies ) {
 				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
