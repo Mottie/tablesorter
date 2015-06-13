@@ -153,7 +153,7 @@ ts.sortTbodies = {
 	},
 
 	restoreTbodies : function ( c, wo, $sortedTbodies ) {
-		var $nosort, $tbodies, $thisTbody, tbLen, nsLen, hasShuffled, index, indx, targetIndex,
+		var $nosort, $tbodies, $thisTbody, tbLen, nsLen, index, targetIndex,
 			$table = c.$table,
 			hasShuffled = true,
 			indx = 0;
