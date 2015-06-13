@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 06-10-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-12-2015 (v2.22.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2648,6 +2648,66 @@ ts.filter = {
 		// data.index = column index; table = table element ( DOM )
 		// data.parsed = array ( by column ) of boolean values ( from filter_useParsedData or 'filter-parsed' class )
 	types: {
+		or : function( c, data, vars ) {
+			if ( /\|/.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
+				var indx, filterMatched, txt, query, regex,
+					// duplicate data but split filter
+					data2 = $.extend( {}, data ),
+					index = data.index,
+					parsed = data.parsed[ index ],
+					filter = data.filter.split( ts.filter.regex.orSplit ),
+					iFilter = data.iFilter.split( ts.filter.regex.orSplit ),
+					len = filter.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					data2.nestedFilters = true;
+					data2.filter = '' + ( ts.filter.parseFilter( c, filter[ indx ], index, parsed ) || '' );
+					data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
+					query = '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')';
+					regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+					// filterMatched = data2.filter === '' && indx > 0 ? true
+					// look for an exact match with the 'or' unless the 'filter-match' class is found
+					filterMatched = regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars );
+					if ( filterMatched ) {
+						return filterMatched;
+					}
+				}
+				// may be null from processing types
+				return filterMatched || false;
+			}
+			return null;
+		},
+		// Look for an AND or && operator ( logical and )
+		and : function( c, data, vars ) {
+			if ( ts.filter.regex.andTest.test( data.filter ) ) {
+				var indx, filterMatched, result, txt, query, regex,
+					// duplicate data but split filter
+					data2 = $.extend( {}, data ),
+					index = data.index,
+					parsed = data.parsed[ index ],
+					filter = data.filter.split( ts.filter.regex.andSplit ),
+					iFilter = data.iFilter.split( ts.filter.regex.andSplit ),
+					len = filter.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					data2.nestedFilters = true;
+					data2.filter = '' + ( ts.filter.parseFilter( c, filter[ indx ], index, parsed ) || '' );
+					data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
+					query = ( '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')' )
+						// replace wild cards since /(a*)/i will match anything
+						.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' );
+					regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+					// look for an exact match with the 'and' unless the 'filter-match' class is found
+					result = ( regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars ) );
+					if ( indx === 0 ) {
+						filterMatched = result;
+					} else {
+						filterMatched = filterMatched && result;
+					}
+				}
+				// may be null from processing types
+				return filterMatched || false;
+			}
+			return null;
+		},
 		// Look for regex
 		regex: function( c, data ) {
 			if ( ts.filter.regex.regex.test( data.filter ) ) {
@@ -2735,23 +2795,6 @@ ts.filter = {
 			}
 			return null;
 		},
-		// Look for an AND or && operator ( logical and )
-		and : function( c, data ) {
-			if ( ts.filter.regex.andTest.test( data.filter ) ) {
-				var index = data.index,
-					parsed = data.parsed[index],
-					query = data.iFilter.split( ts.filter.regex.andSplit ),
-					result = data.iExact.search( $.trim( ts.filter.parseFilter( c, query[0], index, parsed ) ) ) >= 0,
-					indx = query.length - 1;
-				while ( result && indx ) {
-					result = result &&
-						data.iExact.search( $.trim( ts.filter.parseFilter( c, query[indx], index, parsed ) ) ) >= 0;
-					indx--;
-				}
-				return result;
-			}
-			return null;
-		},
 		// Look for a range ( using ' to ' or ' - ' ) - see issue #166; thanks matzhu!
 		range : function( c, data ) {
 			if ( ts.filter.regex.toTest.test( data.iFilter ) ) {
@@ -2788,24 +2831,20 @@ ts.filter = {
 		},
 		// Look for wild card: ? = single, * = multiple, or | = logical OR
 		wild : function( c, data ) {
-			if ( /[\?\*\|]/.test( data.iFilter ) || ts.filter.regex.orReplace.test( data.filter ) ) {
+			if ( /[\?\*\|]/.test( data.iFilter ) ) {
 				var index = data.index,
 					parsed = data.parsed[ index ],
-					txt = data.iFilter.replace( ts.filter.regex.orReplace, '|' ),
-					query = '' + ( ts.filter.parseFilter( c, txt, index, parsed ) || '' );
+					query = '' + ( ts.filter.parseFilter( c, data.iFilter, index, parsed ) || '' );
 				// look for an exact match with the 'or' unless the 'filter-match' class is found
-				if ( !c.$headerIndexed[ index ].hasClass( 'filter-match' ) && /\|/.test( query ) ) {
-					// show all results while using filter match. Fixes #727
-					if ( query[ query.length - 1 ] === '|' ) {
-						query += '*';
-					}
-					query = data.anyMatch && $.isArray( data.rowArray ) ?
-						'(' + query + ')' :
-						'^(' + query + ')$';
+				if ( !/\?\*/.test( query ) && data.nestedFilters ) {
+					query = data.isMatch ? query : '^(' + query + ')$';
 				}
 				// parsing the filter may not work properly when using wildcards =/
-				return new RegExp( query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ) )
-					.test( data.iExact );
+				return new RegExp(
+					query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ),
+					c.widgetOptions.filter_ignoreCase ? 'i' : ''
+				)
+				.test( data.exact );
 			}
 			return null;
 		},
@@ -2859,7 +2898,7 @@ ts.filter = {
 			toSplit : new RegExp( '(?:\\s+(?:-|' + ts.language.to + ')\\s+)' ,'gi' ),
 			andTest : new RegExp( '\\s+(' + ts.language.and + '|&&)\\s+', 'i' ),
 			andSplit : new RegExp( '(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi' ),
-			orReplace : new RegExp( '\\s+(' + ts.language.or + ')\\s+', 'gi' ),
+			orSplit : new RegExp( '(?:\\s+(?:' + ts.language.or + ')\\s+|\\|)', 'gi' ),
 			iQuery : new RegExp( val, 'i' ),
 			igQuery : new RegExp( val, 'ig' )
 		});
@@ -3079,7 +3118,6 @@ ts.filter = {
 			}
 		}
 	},
-
 	setDefaults: function( table, c, wo ) {
 		var isArray, saved, indx, col, $filters,
 			// get current ( default ) filters
@@ -3424,8 +3462,22 @@ ts.filter = {
 		}
 		return columns;
 	},
+	processTypes: function( c, data, vars ) {
+		var ffxn,
+			filterMatched = null,
+			matches = null;
+		for ( ffxn in ts.filter.types ) {
+			if ( $.inArray( ffxn, vars.excludeMatch ) < 0 && matches === null ) {
+				matches = ts.filter.types[ffxn]( c, data, vars );
+				if ( matches !== null ) {
+					filterMatched = matches;
+				}
+			}
+		}
+		return filterMatched;
+	},
 	processRow: function( c, data, vars ) {
-		var $cell, columnIndex, hasSelect, matches, result, val, filterMatched, excludeMatch,
+		var columnIndex, hasSelect, result, val, filterMatched,
 			fxn, ffxn, txt,
 			regex = ts.filter.regex,
 			wo = c.widgetOptions,
@@ -3436,6 +3488,7 @@ ts.filter = {
 			// look for multiple columns '1-3,4-6,8'
 			columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
 			data.anyMatch = true;
+			data.isMatch = true;
 			data.rowArray = data.$cells.map( function( i ) {
 				if ( $.inArray( i, columnIndex ) > -1 ) {
 					if ( data.parsed[ i ] ) {
@@ -3455,16 +3508,10 @@ ts.filter = {
 			data.exact = data.rowArray.join( ' ' );
 			data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
 			data.cache = data.cacheArray.slice( 0, -1 ).join( ' ' );
-			filterMatched = null;
-			matches = null;
-			for ( ffxn in ts.filter.types ) {
-				if ( $.inArray( ffxn, vars.noAnyMatch ) < 0 && matches === null ) {
-					matches = ts.filter.types[ffxn]( c, data );
-					if ( matches !== null ) {
-						filterMatched = matches;
-					}
-				}
-			}
+
+			vars.excludeMatch = vars.noAnyMatch;
+			filterMatched = ts.filter.processTypes( c, data, vars );
+
 			if ( filterMatched !== null ) {
 				showRow = filterMatched;
 			} else {
@@ -3491,7 +3538,7 @@ ts.filter = {
 			data.index = columnIndex;
 
 			// filter types to exclude, per column
-			excludeMatch = vars.excludeFilter[ columnIndex ];
+			vars.excludeMatch = vars.excludeFilter[ columnIndex ];
 
 			// ignore if filter is empty or disabled
 			if ( data.filter ) {
@@ -3505,6 +3552,9 @@ ts.filter = {
 				}
 				data.iExact = !regex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
 					data.exact.toLowerCase() : data.exact;
+
+				data.isMatch = c.$headerIndexed[ data.index ].hasClass( 'filter-match' );
+
 				result = showRow; // if showRow is true, show that row
 
 				// in case select filter option has a different value vs text 'a - z|A through Z'
@@ -3529,13 +3579,12 @@ ts.filter = {
 				// data.filter = case sensitive
 				data.iFilter = wo.filter_ignoreCase ? ( data.filter || '' ).toLowerCase() : data.filter;
 				fxn = vars.functions[ columnIndex ];
-				$cell = c.$headerIndexed[ columnIndex ];
-				hasSelect = $cell.hasClass( 'filter-select' );
+				hasSelect = c.$headerIndexed[ columnIndex ].hasClass( 'filter-select' );
 				filterMatched = null;
 				if ( fxn || ( hasSelect && val ) ) {
 					if ( fxn === true || hasSelect ) {
 						// default selector uses exact match unless 'filter-match' class is found
-						filterMatched = $cell.hasClass( 'filter-match' ) ?
+						filterMatched = data.isMatch ?
 							data.iExact.search( data.iFilter ) >= 0 :
 							data.filter === data.exact;
 					} else if ( typeof fxn === 'function' ) {
@@ -3552,15 +3601,7 @@ ts.filter = {
 				if ( filterMatched === null ) {
 					// cycle through the different filters
 					// filters return a boolean or null if nothing matches
-					matches = null;
-					for ( ffxn in ts.filter.types ) {
-						if ( $.inArray( ffxn, excludeMatch ) < 0 && matches === null ) {
-							matches = ts.filter.types[ ffxn ]( c, data );
-							if ( matches !== null ) {
-								filterMatched = matches;
-							}
-						}
-					}
+					filterMatched = ts.filter.processTypes( c, data, vars );
 					if ( filterMatched !== null ) {
 						result = filterMatched;
 					// Look for match, and add child row data for matching
