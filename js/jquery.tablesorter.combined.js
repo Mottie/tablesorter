@@ -3350,14 +3350,13 @@ ts.filter = {
 		}
 	},
 	hideFilters: function( table, c ) {
-		var $filterRow, $filterRow2, timer;
-		$( table )
+		var timer;
+		c.$table
 			.find( '.' + tscss.filterRow )
-			.addClass( tscss.filterRowHide )
 			.bind( 'mouseenter mouseleave', function( e ) {
 				// save event object - http://bugs.jquery.com/ticket/12140
-				var event = e;
-				$filterRow = $( this );
+				var event = e,
+					$filterRow = $( this );
 				clearTimeout( timer );
 				timer = setTimeout( function() {
 					if ( /enter|over/.test( event.type ) ) {
@@ -3375,13 +3374,14 @@ ts.filter = {
 				}, 200 );
 			})
 			.find( 'input, select' ).bind( 'focus blur', function( e ) {
-				$filterRow2 = $( this ).closest( 'tr' );
+				var event = e,
+					$row = $( this ).closest( 'tr' );
 				clearTimeout( timer );
-				var event = e;
 				timer = setTimeout( function() {
+					clearTimeout( timer );
 					// don't hide row if any filter has a value
 					if ( ts.getFilters( c.$table ).join( '' ) === '' ) {
-						$filterRow2.toggleClass( tscss.filterRowHide, event.type === 'focus' );
+						$row.toggleClass( tscss.filterRowHide, event.type !== 'focus' );
 					}
 				}, 200 );
 			});
