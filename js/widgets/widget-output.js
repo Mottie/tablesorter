@@ -31,7 +31,8 @@ output = ts.output = {
 	init : function(c) {
 		c.$table
 			.off(output.event)
-			.on(output.event, function(){
+			.on(output.event, function( e ) {
+				e.stopPropagation();
 				// explicitly use table.config.widgetOptions because we want
 				// the most up-to-date values; not the "wo" from initialization
 				output.process(c, c.widgetOptions);
