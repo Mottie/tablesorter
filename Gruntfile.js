@@ -231,7 +231,8 @@ module.exports = function( grunt ) {
 				},
 				'loopfunc': true,
 				'jquery': true,
-				'browser': true
+				'browser': true,
+				'es3': true
 			}
 		},
 
