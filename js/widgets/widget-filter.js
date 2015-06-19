@@ -1090,7 +1090,7 @@ ts.filter = {
 				anyMatch: false,
 				filters: filters,
 				// regex filter type cache
-				filter_regexCache : [],
+				filter_regexCache : []
 			},
 			vars = {
 				// anyMatch really screws up with these types of filters
