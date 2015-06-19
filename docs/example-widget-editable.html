@@ -393,7 +393,7 @@ td.no-edit, span.no-edit {
       editable_validate : function(txt, orig, columnIndex, $element){
         // only allow one word
         var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
-        return t ? t : false;
+        return t || false;
       }
     }
   });
