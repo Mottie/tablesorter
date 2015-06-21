@@ -199,6 +199,7 @@ ts.scroller = {
 		c.widthFixed = true;
 
 		wo.scroller_calcWidths = [];
+		wo.scroller_saved = [ 0, 0 ];
 		wo.scroller_isBusy = true;
 
 		// set scrollbar width & allow setting width to zero
@@ -282,18 +283,21 @@ ts.scroller = {
 
 		$table
 			.off( namespace )
-			.on( 'sortEnd' + namespace, function() {
+			.on( 'sortEnd filterEnd'.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// Sorting, so scroll to top
-				if ( wo.scroller_upAfterSort ) {
-					$table.parent().animate({
+				if ( event.type === 'sortEnd' && wo.scroller_upAfterSort ) {
+					$tableWrap.animate({
 						scrollTop : 0
 					}, 'fast' );
+				} else if ( wo.scroller_fixedColumns ) {
+					setTimeout( function() {
+						// restore previous scroll position
+						$tableWrap
+							.scrollTop( wo.scroller_saved[1] )
+							.scrollLeft( wo.scroller_saved[0] );
+						tsScroller.updateFixed( c, wo, false );
+					}, 0 );
 				}
-			})
-			.on( 'sortEnd filterEnd'.split( ' ' ).join( namespace + ' ' ), function(e) {
-				setTimeout(function(){
-					$tableWrap.trigger( 'scroll' );
-				}, 0);
 			})
 			.on( 'setFixedColumnSize' + namespace, function( event, size ) {
 				var $wrap = wo.scroller_$container;
@@ -553,7 +557,9 @@ ts.scroller = {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
 				if ( fixedScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
 					tableScroll = false;
-					$fixedTbody[0].scrollTop = $( this ).scrollTop();
+					var $this = $( this );
+					$fixedTbody[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
+					wo.scroller_saved[0] = $this.scrollLeft();
 					setTimeout( function() {
 						tableScroll = true;
 					}, 20 );
@@ -566,7 +572,8 @@ ts.scroller = {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
 				if ( tableScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
 					fixedScroll = false;
-					c.$table.parent()[0].scrollTop = $( this ).scrollTop();
+					var $this = $( this );
+					c.$table.parent()[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
 					setTimeout( function() {
 						fixedScroll = true;
 					}, 20 );
