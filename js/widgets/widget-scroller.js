@@ -146,6 +146,7 @@ ts.scroller = {
 	isFirefox : navigator.userAgent.toLowerCase().indexOf( 'firefox' ) > -1,
 	// old IE needs a wrap to hide the fixed column scrollbar; http://stackoverflow.com/a/24408672/145346
 	isOldIE : document.all && !window.atob,
+	isIE : ( document.all && !window.atob ) || navigator.appVersion.indexOf( 'Trident/' ) > 0,
 	// http://stackoverflow.com/questions/7944460/detect-safari-browser - needed to position scrolling body
 	// when the table is set up in RTL direction
 	isSafari : navigator.userAgent.toLowerCase().indexOf( 'safari' ) > -1 &&
@@ -550,7 +551,7 @@ ts.scroller = {
 			.on( events, function() {
 				if ( wo.scroller_isBusy ) { return; }
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( fixedScroll || !tsScroller.isFirefox ) {
+				if ( fixedScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
 					tableScroll = false;
 					$fixedTbody[0].scrollTop = $( this ).scrollTop();
 					setTimeout( function() {
@@ -563,7 +564,7 @@ ts.scroller = {
 			.off( events )
 			.on( events, function() {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( tableScroll || !tsScroller.isFirefox ) {
+				if ( tableScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
 					fixedScroll = false;
 					c.$table.parent()[0].scrollTop = $( this ).scrollTop();
 					setTimeout( function() {
