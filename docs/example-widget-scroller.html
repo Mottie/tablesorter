@@ -94,18 +94,22 @@
 		}
 	});
 
+	var startFixedColumns = 2;
+
 	$('#fixed-columns-table').tablesorter({
 		theme: 'jui',
 		showProcessing: true,
 		headerTemplate : '{content} {icon}',
 		widgets: [ 'uitheme', 'zebra', 'filter', 'scroller' ],
 		widgetOptions : {
-			scroller_jumpToHeader : false,
-			scroller_upAfterSort : false,
+			// scroll tbody to top after sorting
+			scroller_upAfterSort: true,
+			// pop table header into view while scrolling up the page
+			scroller_jumpToHeader: true,
 
 			scroller_height : 300,
 			// set number of columns to fix
-			scroller_fixedColumns : 2,
+			scroller_fixedColumns : startFixedColumns,
 			// add a fixed column overlay for styling
 			scroller_addFixedOverlay : false,
 			// add hover highlighting to the fixed column (disable if it causes slowing)
@@ -118,7 +122,7 @@
 
 	// use jQuery UI slider to change the fixed column size
 	$( '#slider' ).slider({
-		value : 2,
+		value : startFixedColumns,
 		min   : 0,
 		max   : 4,
 		step  : 1,
@@ -130,20 +134,15 @@
 		}
 	});
 
+	// update column value display
+	$( '.fixed-columns' ).text( startFixedColumns );
+
 });</script>
 <script>
 $(function() {
 
-	$('.options').tablesorter({
-		theme: 'jui',
-		headerTemplate : '{content} {icon}',
-		widthFixed: true,
-		widgets: ['uitheme','stickyHeaders']
-	});
-
-	var $tbl,
-		$jth = $('#jth'),
-		$uas = $('#uas'),
+	var $jth = $('#jth'), // scroller_jumpToHeader toggle button
+		$uas = $('#uas'), // scroller_upAfterSort toggle button
 		themes = 'default blue green grey ice black-ice dark dropbox metro-dark',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
@@ -171,7 +170,6 @@ $(function() {
 			$(window).trigger('resize');
 		}).change();
 
-	$tbl = $('.tablesorter-scroller-table table');
 	$('button').click(function(){
 		var jth = $jth.text() === 'true',
 			uas = $uas.text() === 'true';
@@ -180,12 +178,15 @@ $(function() {
 		} else {
 			uas = !uas;
 		}
-		$tbl.each(function(){
-			this.config.widgetOptions.scroller_jumpToHeader = jth;
-			this.config.widgetOptions.scroller_upAfterSort = uas;
-			$jth.html(jth + '');
-			$uas.html(uas + '');
+		$('.tablesorter-scroller-table table').each(function(){
+			var c = this.config;
+			if (c) {
+				c.widgetOptions.scroller_jumpToHeader = jth;
+				c.widgetOptions.scroller_upAfterSort = uas;
+			}
 		});
+		$jth.html(jth + '');
+		$uas.html(uas + '');
 		return false;
 	});
 
@@ -686,6 +687,12 @@ $(function() {
 			<tr><td>A13</td><td>John</td><td>James</td><td>16</td><td>13.89</td><td>42.1%</td><td>-13</td></tr>
 			<tr><td>A71</td><td>Nick</td><td>Parker</td><td>45</td><td>13.89</td><td>44%</td><td>+29</td></tr>
 			<tr><td>A21</td><td>Charles</td><td>Dunn</td><td>19</td><td>15.49</td><td>22%</td><td>+3</td></tr>
+			<tr><td>A42</td><td>Tera</td><td>Jones</td><td>83</td><td>14.19</td><td>13%</td><td>+5</td></tr>
+			<tr><td>A51</td><td>Paul</td><td>Daniels</td><td>76</td><td>5.99</td><td>20%</td><td>+1</td></tr>
+			<tr><td>A36</td><td>Harvey</td><td>Phillips</td><td>84</td><td>22.50</td><td>23%</td><td>+2</td></tr>
+			<tr><td>A5</td><td>James</td><td>Micheal</td><td>11</td><td>12.99</td><td>44.4%</td><td>-3</td></tr>
+			<tr><td>A1</td><td>Norma</td><td>Harry</td><td>43</td><td>12.39</td><td>41%</td><td>-9</td></tr>
+			<tr><td>A91</td><td>Charley</td><td>Duncan</td><td>22</td><td>14.44</td><td>12%</td><td>-1</td></tr>
 		</tbody>
 	</table>
 	</div>

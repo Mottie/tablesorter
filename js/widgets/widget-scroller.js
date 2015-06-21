@@ -52,7 +52,6 @@ $.extend( ts.css, {
 	scrollerBarSpacer   : 'tablesorter-scroller-bar-spacer',
 	scrollerAddedHeight : 'tablesorter-scroller-added-height',
 	scrollerHack        : 'tablesorter-scroller-scrollbar-hack',
-	scrollerReset       : 'tablesorter-scroller-reset',
 	// class name on table cannot start with 'tablesorter-' or the
 	// suffix "scroller-rtl" will match as a theme name
 	scrollerRtl         : 'ts-scroller-rtl'
@@ -102,8 +101,6 @@ ts.window_resize = function() {
 // Add extra scroller css
 $( function() {
 	var style = '<style>' +
-		/* reset width to get accurate measurements after window resize */
-		'.' + tscss.scrollerReset + ' { width: auto !important; min-width: auto !important; max-width: auto !important; }' +
 		/* overall wrapper & table section wrappers */
 		'.' + tscss.scrollerWrap + ' { position: relative; overflow: hidden; }' +
 		/* add border-box sizing to all scroller widget tables; see #135 */
@@ -188,13 +185,17 @@ ts.scroller = {
 	},
 
 	setup : function( c, wo ) {
-		var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, tmp,
+		var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp,
 			$win = $( window ),
+			tsScroller = ts.scroller,
 			namespace = c.namespace + 'tsscroller',
 			$foot = $(),
 			// c.namespace contains a unique tablesorter ID, per table
 			id = c.namespace.slice( 1 ) + 'tsscroller',
 			$table = c.$table;
+
+		// force config.widthFixed option - this helps maintain proper alignment across cloned tables
+		c.widthFixed = true;
 
 		wo.scroller_calcWidths = [];
 		wo.scroller_isBusy = true;
@@ -202,7 +203,7 @@ ts.scroller = {
 		// set scrollbar width & allow setting width to zero
 		wo.scroller_barSetWidth = wo.scroller_barWidth !== null ?
 			wo.scroller_barWidth :
-			( ts.scroller.getBarWidth() || 15 );
+			( tsScroller.getBarWidth() || 15 );
 
 		maxHt = wo.scroller_height || 300;
 
@@ -274,18 +275,24 @@ ts.scroller = {
 					.scrollLeft( $( this ).scrollLeft() );
 			});
 
-		// Sorting, so scroll to top
-		tmp = 'sortEnd setFixedColumnSize updateComplete pagerComplete pagerInitialized columnUpdate '
-			.split( ' ' )
-			.join( namespace + ' ' );
+		// resize/update events
+		events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized' ) +
+				' updateComplete pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' )
+
 		$table
-			.off( tmp )
+			.off( namespace )
 			.on( 'sortEnd' + namespace, function() {
+				// Sorting, so scroll to top
 				if ( wo.scroller_upAfterSort ) {
 					$table.parent().animate({
 						scrollTop : 0
 					}, 'fast' );
 				}
+			})
+			.on( 'sortEnd filterEnd'.split( ' ' ).join( namespace + ' ' ), function(e) {
+				setTimeout(function(){
+					$tableWrap.trigger( 'scroll' );
+				}, 0);
 			})
 			.on( 'setFixedColumnSize' + namespace, function( event, size ) {
 				var $wrap = wo.scroller_$container;
@@ -293,23 +300,26 @@ ts.scroller = {
 					wo.scroller_fixedColumns = parseInt( size, 10 );
 				}
 				// remove fixed columns
-				ts.scroller.removeFixed( c, wo );
+				tsScroller.removeFixed( c, wo );
 				size = wo.scroller_fixedColumns;
 				if ( size > 0 && size < c.columns - 1 ) {
-					ts.scroller.updateFixed( c, wo );
+					tsScroller.updateFixed( c, wo );
 				} else if ( $wrap.hasClass( tscss.scrollerHasFix ) ) {
 					$wrap.removeClass( tscss.scrollerHasFix );
 					// resize needed to make tables full width
-					ts.scroller.resize( c, wo );
+					tsScroller.resize( c, wo );
 				}
 			})
-			.on( 'updateComplete pagerComplete columnUpdate '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			.on( events, function( event ) {
 				// Stop from running twice with pager
 				if ( ts.hasWidget( 'pager' ) && event.type === 'updateComplete' ) {
 					return;
 				}
+				if ( wo.scroller_fixedColumns > 0 ) {
+					tsScroller.updateFixed( c, wo, false );
+				}
 				// adjust column sizes after an update
-				ts.scroller.resize( c, wo );
+				tsScroller.resize( c, wo );
 			});
 
 		// Setup window.resizeEnd event
@@ -320,7 +330,7 @@ ts.scroller = {
 				// IE calls resize when you modify content, so we have to unbind the resize event
 				// so we don't end up with an infinite loop. we can rebind after we're done.
 				$win.off( 'resize' + namespace, ts.window_resize );
-				ts.scroller.resize( c, wo );
+				tsScroller.resize( c, wo );
 				$win.on( 'resize' + namespace, ts.window_resize );
 				$tableWrap.trigger( 'scroll' + namespace );
 			});
@@ -328,13 +338,15 @@ ts.scroller = {
 		// initialization flag
 		c.isScrolling = true;
 
-		ts.scroller.updateFixed( c, wo );
+		tsScroller.updateFixed( c, wo );
 
 	},
 
 	resize : function( c, wo ) {
+		if ( wo.scroller_isBusy ) { return; }
 		var index, borderWidth, setWidth, $hCells, $bCells, $fCells, $headers, $this, temp,
 			tsScroller = ts.scroller,
+			$container = wo.scroller_$container,
 			$table = c.$table,
 			$tableWrap = $table.parent(),
 			$hdr = wo.scroller_$header,
@@ -342,52 +354,28 @@ ts.scroller = {
 			id = c.namespace.slice( 1 ) + 'tsscroller',
 			// Hide other scrollers so we can resize
 			$div = $( 'div.' + tscss.scrollerWrap + '[id!="' + id + '"]' )
-				.addClass( tscss.scrollerHideElement );
+				.addClass( tscss.scrollerHideElement ),
+			row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) + '">';
 
 		wo.scroller_calcWidths = [];
 
 		// Remove fixed so we get proper widths and heights
 		tsScroller.removeFixed( c, wo );
+		$container.find( '.' + tscss.scrollerSpacerRow ).remove();
+		// remove ts added colgroups
+		$container.find( '.' + ts.css.colgroup ).remove();
 
 		// show original table elements to get proper alignment
 		$table
 			.find( '.' + tscss.scrollerHideElement )
 			.removeClass( tscss.scrollerHideElement );
 
-		// Reset sizes so parent can resize.
-		$table
-			.addClass( tscss.scrollerReset )
-			.children( 'thead' )
-			.find( '.' + tscss.headerIn )
-			.addClass( tscss.scrollerReset );
-		$tableWrap.addClass( tscss.scrollerReset );
-
 		// include left & right border widths
 		borderWidth = parseInt( $table.css( 'border-left-width' ), 10 );
 
-		$hCells = $hdr
-			.children( 'thead' )
-			.children( 'tr' )
-			.not( '.' + c.cssIgnoreRow )
-			.children( 'th, td' )
-			.filter( ':visible' );
-		$bCells = c.$tbodies
-			.eq( 0 )
-			.children( 'tr' )
-			.not( '.' + c.cssChildRow )
-			.eq( 0 )
-			.children( 'th, td' )
-			.filter( ':visible' );
-		$fCells = $foot
-			.children( 'tfoot' )
-			.children( 'tr' )
-			.children( 'th, td' )
-			.filter( ':visible' );
-
-		tsScroller.setWidth( $hCells.add( $bCells ).add( $fCells ), '' );
 		$headers = c.$headerIndexed;
 
-		for ( index = 0; index < $headers.length; index++ ) {
+		for ( index = 0; index < c.columns; index++ ) {
 			$this = $headers[ index ];
 			// code from https://github.com/jmosbech/StickyTableHeaders
 			if ( $this.css( 'box-sizing' ) === 'border-box' ) {
@@ -406,12 +394,25 @@ ts.scroller = {
 					setWidth = $this.width();
 				}
 			}
-			temp = $hCells.eq( index )
-				.add( $bCells.eq( index ) )
-				.add( $fCells.eq( index ) );
-			tsScroller.setWidth( temp, setWidth );
+			row += '<td data-column="' + index + '" style="padding:0;margin:0;border:0;height:0;max-height:0;' +
+				'min-height:0;width:' + setWidth + 'px;min-width:' + setWidth + 'px;max-width:' + setWidth + 'px"></td>';
+
 			// save current widths
 			wo.scroller_calcWidths[ index ] = setWidth;
+		}
+		row += '</tr>';
+		c.$tbodies.eq(0).prepend( row ); // tbody
+		$hdr.children( 'thead' ).append( row );
+		$foot.children( 'tfoot' ).append( row );
+		// update resizable widget handles
+		c.$table.trigger( 'resizableUpdate' );
+
+		// include colgroup or alignment is off
+		if ( c.widthFixed ) {
+			ts.fixColumnWidth( c.table );
+			row = c.$table.children( 'colgroup' )[0].outerHTML;
+			$hdr.prepend( row );
+			$foot.prepend( row );
 		}
 
 		temp = $tableWrap.parent().innerWidth() -
@@ -428,10 +429,6 @@ ts.scroller = {
 
 		$tableWrap
 			.width( setWidth + temp );
-
-		wo.scroller_$container
-			.find( '.' + tscss.scrollerReset )
-			.removeClass( tscss.scrollerReset );
 
 		// hide original table thead
 		$table.children( 'thead' ).addClass( tscss.scrollerHideElement );
@@ -541,24 +538,16 @@ ts.scroller = {
 		// update thead & tbody in fixed column
 		var tsScroller = ts.scroller,
 			namespace = c.namespace + 'tsscrollerFixed',
-			// bind to ts-init or filterEnd, but not both!
-			events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized' ) +
-				' sortEnd ' ).split( ' ' ).join( namespace + ' ' ),
-			events2 = 'scroll' + namespace,
+			events = 'scroll' + namespace,
 			$fixedTbody = wo.scroller_$fixedColumns.find( '.' + tscss.scrollerTable ),
 			fixedScroll = true,
 			tableScroll = true;
 
 		c.$table
-			.off( events )
-			.on( events, function() {
-				tsScroller.updateFixed( c, wo, false );
-				tsScroller.resize( c, wo );
-			})
 			.parent()
 			// *** SCROLL *** scroll fixed column along with main
-			.off( events2 )
-			.on( events2, function() {
+			.off( events )
+			.on( events, function() {
 				if ( wo.scroller_isBusy ) { return; }
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
 				if ( fixedScroll || !tsScroller.isFirefox ) {
@@ -571,8 +560,8 @@ ts.scroller = {
 			});
 		// scroll main along with fixed column
 		$fixedTbody
-			.off( events2 )
-			.on( events2, function() {
+			.off( events )
+			.on( events, function() {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
 				if ( tableScroll || !tsScroller.isFirefox ) {
 					fixedScroll = false;
@@ -616,12 +605,39 @@ ts.scroller = {
 		}
 	},
 
-	updateFixed : function( c, wo ) {
+	adjustWidth : function( c, wo, totalWidth, adj, dir ) {
 		var $wrapper = wo.scroller_$container;
+
+		// RTL support (fixes column on right)
+		$wrapper
+			.children( '.' + tscss.scrollerTable )
+			.css( dir ? 'right' : 'left', totalWidth );
+		$wrapper
+			.children( '.' + tscss.scrollerHeader + ', .' + tscss.scrollerFooter )
+			// Safari needs a scrollbar width of extra adjusment to align the fixed & scrolling columns
+			.css( dir ? 'right' : 'left', totalWidth + ( dir && ts.scroller.isSafari ? adj : 0 ) );
+	},
+
+	updateFixed : function( c, wo ) {
+		var temp, adj,
+			$wrapper = wo.scroller_$container,
+			$hdr = wo.scroller_$header,
+			$foot = wo.scroller_$footer,
+			$table = c.$table,
+			$tableWrap = $table.parent(),
+			scrollBarWidth = wo.scroller_barSetWidth,
+			dir = $table.hasClass( tscss.scrollerRtl );
 
 		if ( wo.scroller_fixedColumns === 0 ) {
 			wo.scroller_isBusy = false;
 			ts.scroller.removeFixed( c, wo );
+			temp = $wrapper.width();
+			$tableWrap.width( temp );
+			adj = ts.scroller.hasScrollBar( $tableWrap ) ? scrollBarWidth : 0;
+			$hdr
+				.parent()
+				.add( $foot.parent() )
+				.width( temp - adj );
 			return;
 		}
 
@@ -638,11 +654,7 @@ ts.scroller = {
 
 		// scroller_fixedColumns
 		var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, $fixHead, $fixBody, $fixFoot,
-			totalRows, temp, adj, row,
-			$table = c.$table,
-			$tableWrap = $table.parent(),
-			$hdr = wo.scroller_$header,
-			$foot = wo.scroller_$footer,
+			totalRows, row,
 
 			// source cells for measurement
 			$mainTbodies = wo.scroller_$container
@@ -666,9 +678,7 @@ ts.scroller = {
 				.children( 'tbody' ),
 			// variables
 			tsScroller = ts.scroller,
-			scrollBarWidth = wo.scroller_barSetWidth,
 			fixedColumns = wo.scroller_fixedColumns,
-			dir = $table.hasClass( tscss.scrollerRtl ),
 			// get dimensions
 			$temp = $table.find( 'tbody td' ),
 			borderRightWidth = parseInt( $temp.css( 'border-right-width' ), 10 ) || 1,
@@ -690,15 +700,6 @@ ts.scroller = {
 		tsScroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth );
 		tsScroller.setWidth( $fixedColumn.children().children( 'table' ), totalWidth );
 
-		$table.find( '.' + tscss.scrollerSpacerRow ).remove();
-		row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) + '">';
-		for ( index = 0; index < c.columns; index++ ) {
-			row += '<td style="padding:0; margin:0;height:0;max-height:0;min-height:0;width:' +
-				widths[ index ] + 'px;min-width:' + widths[ index ] + 'px;max-width:' +
-				widths[ index ] + 'px"></td>';
-		}
-		c.$tbodies.eq(0).prepend( row += '</tr>' );
-
 		// update fixed column tbody content, set cell widths on hidden row
 		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 			$tbody = $mainTbodies.eq( tbodyIndex );
@@ -716,33 +717,6 @@ ts.scroller = {
 						.slice( fixedColumns )
 						.remove();
 					$fb.append( $adjCol );
-				}
-				// adjust fixed thead/tbody/tfoot cell widths
-				$fixHead = $fixedColumn
-					.find( 'thead' )
-					.children( 'tr.' + tscss.headerRow )
-					.children();
-				$fixBody = $fixedColumn
-					.find( tscss.scrollerSpacerRow )
-					.children();
-				$fixFoot = $fixedColumn
-					.find( 'tfoot' )
-					.children( 'tr' )
-					.eq( 0 )
-					.children();
-				// reusing variables, so ignore the names :P
-				$adjCol = $hdr.children( 'thead' ).children( 'tr' ).children( 'td, th' );
-				$rows = $foot.children( 'tfoot' ).children( 'tr' ).children( 'td, th' );
-				for ( index = 0; index < c.columns; index++ ) {
-					if ( index < fixedColumns ) {
-						$temp = $fixHead.eq( index )
-							.add( $fixBody.eq( index ) )
-							.add( $fixFoot.eq( index ) );
-						tsScroller.setWidth( $temp, widths[ index ] );
-					}
-					$temp = $adjCol.eq( index )
-						.add( $rows.eq( index ) );
-					tsScroller.setWidth( $temp, widths[ index ] );
 				}
 
 				// restore tbody
