@@ -439,6 +439,10 @@ ts.scroller = {
 
 		$div.removeClass( tscss.scrollerHideElement );
 
+		// restore scrollTop - fixes #926
+		$tableWrap.scrollTop( wo.scroller_saved[1] );
+		wo.scroller_$fixedColumns.find( '.' + tscss.scrollerTable ).scrollTop( wo.scroller_saved[1] );
+
 		// update resizable widget handles
 		setTimeout( function() {
 			c.$table.trigger( 'resizableUpdate' );
@@ -556,7 +560,7 @@ ts.scroller = {
 			.on( events, function() {
 				if ( wo.scroller_isBusy ) { return; }
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( fixedScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
+				if ( !wo.scroller_isBusy && ( fixedScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) ) {
 					tableScroll = false;
 					var $this = $( this );
 					$fixedTbody[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
@@ -571,7 +575,7 @@ ts.scroller = {
 			.off( events )
 			.on( events, function() {
 				// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-				if ( tableScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) {
+				if ( !wo.scroller_isBusy && ( tableScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) ) {
 					fixedScroll = false;
 					var $this = $( this );
 					c.$table.parent()[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
