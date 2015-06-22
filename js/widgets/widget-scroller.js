@@ -409,16 +409,12 @@ ts.scroller = {
 		c.$tbodies.eq(0).prepend( row ); // tbody
 		$hdr.children( 'thead' ).append( row );
 		$foot.children( 'tfoot' ).append( row );
-		// update resizable widget handles
-		c.$table.trigger( 'resizableUpdate' );
 
 		// include colgroup or alignment is off
-		if ( c.widthFixed ) {
-			ts.fixColumnWidth( c.table );
-			row = c.$table.children( 'colgroup' )[0].outerHTML;
-			$hdr.prepend( row );
-			$foot.prepend( row );
-		}
+		ts.fixColumnWidth( c.table );
+		row = c.$table.children( 'colgroup' )[0].outerHTML;
+		$hdr.prepend( row );
+		$foot.prepend( row );
 
 		temp = $tableWrap.parent().innerWidth() -
 			( tsScroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 );
@@ -442,6 +438,11 @@ ts.scroller = {
 		tsScroller.updateFixed( c, wo );
 
 		$div.removeClass( tscss.scrollerHideElement );
+
+		// update resizable widget handles
+		setTimeout( function() {
+			c.$table.trigger( 'resizableUpdate' );
+		}, 100 );
 
 	},
 
