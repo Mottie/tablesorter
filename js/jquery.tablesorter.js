@@ -191,10 +191,10 @@
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
-					return $.trim(
-						( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) ||
-						$node.text()
-					);
+					if ( t === 'basic' && typeof ( te = $node.attr(c.textAttribute) ) !== 'undefined' ) {
+						return $.trim( te );
+					}
+					return $.trim( node.textContent || $node.text() );
 				} else {
 					if (typeof(t) === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
