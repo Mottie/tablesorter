@@ -2589,7 +2589,7 @@ $(function(){
 					In <span class="version updated">v2.22.0</span>, a <code>data</code> parameter was added to that long list of parameters.<p></p>
 					<span class="label alert">*WARNING*</span> In a future update, the filter function parameters will be cleaned up and changed as follows!
 							<pre class="prettyprint lang-js">filter_functions : {
-  // function(e, n, f, i, $r, c, data) {} <- current parameters
+  // function(e, n, f, i, $r, c, data) {} &lt;- current parameters
   0 : function(c, data) {} // planned change (version undetermined)
 }</pre>The <code>e</code> (exact table cell text), <code>n</code> (normalized table cell text), <code>f</code> (filter input value), <code>i</code> (column index) and <code>$r</code> (current row; jQuery object) are all already included in the <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types"><code>data</code></a> object.
 					<p></p>
@@ -3567,7 +3567,7 @@ $('table').trigger('search', false);</pre></div>
 					<div class="collapsible">
 						<p>When grouping together multiple tables, setting the variable on one table will not cause the setting to modify a second table, the change will only be apparent on page reload.</p>
 						<p>If this option is not defined, the actual table id will be used (which isn't conducive to applying to multiple tables!)</p>
-						<p>A more detailed list of the table id priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</a></code> function description.</p>
+						<p>A more detailed list of the table id priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</code></a> function description.</p>
 					</div>
 				</td>
 				<td></td>
@@ -3597,7 +3597,7 @@ $('table').trigger('search', false);</pre></div>
 					<div class="collapsible">
 						<p>This option replaces and will override the now deprecated <code>config.fixedUrl</code> option.</p>
 						<p>If there is a value within the table's "data-table-page" (set by the <code>storage_page</code> option), it will override this setting.</p>
-						<p>A more detailed list of the table url priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</a></code> function description.</p>
+						<p>A more detailed list of the table url priority settings can be found in the <a href="#function-storage"><code>$.tablesorter.storage</code></a> function description.</p>
 					</div>
 				</td>
 				<td></td>
@@ -4370,7 +4370,7 @@ $('table').trigger('search', false);</pre></div>
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody id="pager-removed" class="tablesorter-infoOnly">
+		<tbody id="pager-removed-options" class="tablesorter-infoOnly">
 			<tr><th colspan="5">Removed Options</th></tr>
 		</tbody>
 
@@ -6029,7 +6029,7 @@ var p = $('#mytable').data('tablesorter').pager;
 				<td></td>
 			</tr>
 
-			<tr id="variable-pager-size">
+			<tr id="variable-pager-size-object">
 				<td><a href="#" class="permalink">p.$size</a></td>
 				<td>jQuery Object</td>
 				<td>Contains a jQuery object pointing to a select with the desired page size settings already in place.
@@ -6173,7 +6173,7 @@ $.each( p.cacheIndex, function(i, v) {
 		</tbody>
 
 		<!-- non-sorting tbody -->
-		<tbody id="pager-removed" class="tablesorter-infoOnly">
+		<tbody id="pager-removed-variables" class="tablesorter-infoOnly">
 			<tr><th colspan="4">Removed Variables</th></tr>
 		</tbody>
 
@@ -6861,7 +6861,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 $.tablesorter.filter.buildSelect( $('table'), 0, [ 1, 2, 3, 4 ], true );
 
 // append "Aaron" and "Fred" to the second column's filter select options. These options will remain unsorted.
-$.tablesorter.filter.buildSelect( $('table'), 1, $('<option>Aaron</option><option>Fred</option>'), false );</pre>
+$.tablesorter.filter.buildSelect( $('table'), 1, $('&lt;option&gt;Aaron&lt;/option&gt;&lt;option&gt;Fred&lt;/option&gt;'), false );</pre>
 						Please be aware that this function will allow you to modify the select options, but as soon as the user filters any column, all of the select options will refresh and obtain options from the table column, or from the <code>filter_selectSource</code> function.
 					</div>
 				</td>
