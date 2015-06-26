@@ -150,7 +150,7 @@ var tse = $.tablesorter.editable = {
 				$this
 					.off( 'keydown' + namespace )
 					.on( 'keydown' + namespace, function( e ){
-						if ( wo.editable_enterToAccept && e.which === 13 ) {
+						if ( wo.editable_enterToAccept && e.which === 13 && !e.shiftKey ) {
 							e.preventDefault();
 						}
 					});
@@ -187,7 +187,7 @@ var tse = $.tablesorter.editable = {
 					return false;
 				}
 				// accept on enter ( if set ), alt-enter ( always ) or if autoAccept is set and element is blurred or unfocused
-				t = e.which === 13 && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
+				t = e.which === 13 && !e.shiftKey && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
 				// change if new or user hits enter ( if option set )
 				if ( t && $this.data( 'before' ) !== txt ) {
 
