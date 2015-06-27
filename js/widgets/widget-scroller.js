@@ -279,7 +279,7 @@ ts.scroller = {
 
 		// resize/update events
 		events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized' ) +
-				' updateComplete pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' )
+				' updateComplete pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' );
 
 		$table
 			.off( namespace )
