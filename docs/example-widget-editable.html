@@ -41,6 +41,10 @@ td.no-edit, span.no-edit {
 }
 .focused {
 	color: blue;
+}
+td.editable_updated {
+	background-color: green;
+	color: white;
 }</style>
 	<script id="js">$(function() {
 
@@ -79,10 +83,17 @@ td.no-edit, span.no-edit {
 		// config event variable new in v2.17.6
 		.children('tbody').on('editComplete', 'td', function(event, config){
 			var $this = $(this),
-
 				newContent = $this.text(),
 				cellIndex = this.cellIndex, // there shouldn't be any colspans in the tbody
 				rowIndex = $this.closest('tr').attr('id'); // data-row-index stored in row id
+
+			// Do whatever you want here to indicate
+			// that the content was updated
+			$this.addClass( 'editable_updated' ); // green background + white text
+			setTimeout(function(){
+				$this.removeClass( 'editable_updated' );
+			}, 500);
+
 			/*
 			$.post("mysite.php", {
 				"row"     : rowIndex,
@@ -113,7 +124,12 @@ td.no-edit, span.no-edit {
 		<ul>
 			<li>This widget can not be applied to the original plugin and requires jQuery 1.7+ and a browser that supports <a href="http://caniuse.com/#feat=contenteditable"><code>contenteditable</code> attributes</a> (almost all modern browsers).</li>
 			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).<br><br></li>
-			<li>In <span class="version">v2.22.2</span>, <kbd>Shift</kbd>+<kbd>Enter</kbd> can now be used to start a new line even if <code>editable_enterToAccept</code> is <code>true</code>.</li>
+			<li>In <span class="version">v2.22.2</span>,
+				<ul>
+					<li><kbd>Shift</kbd>+<kbd>Enter</kbd> can now be used to start a new line even if <code>editable_enterToAccept</code> is <code>true</code>.</li>
+					<li>Sorting is now delayed until the editable content has been updated in the cache. This no longer relies on hovering over the table header as this would not be adequate on touch devices.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.22.0</span>,
 				<ul>
 					<li>The cell content now only <em>automatically updates</em> when the user hovers over the table header. Prior to this version, the automatic update would occur when the mouse left the tbody of the table. The reason this is necessary is because initiating a sort would change the row indexing set prior to the cell content being updated, so the cache would end up not matching the table content.</li>
@@ -134,7 +150,7 @@ td.no-edit, span.no-edit {
 			</li>
 			<li>Updated <span class="version updated">v2.13.2</span>, because of the limitation in IE, if a table cell contains any DIV or SPAN immediately inside the cell, it will be targeted instead of the table cell itself and made content editable. So, if you don't care about IE support, there is no need to include the extra markup.</li>
 			<li>In some browsers, additional CSS is needed to highlight a focused editable table cell. See the CSS block below.</li>
-			<li>Pressing escape while editing will cancel any changes.</li>
+			<li>Pressing <kbd>Escape</kbd> while editing will cancel any changes.</li>
 			<li>In the demo below, click in any of the first three columns to edit the content, except for the cell containing <span class="no-edit">"Peter"</span>.</li>
 			<li>To prevent a table cell from becoming editable, add the class name <code>"no-edit"</code> to the cell. Set by the <code>editable_noEdit</code> option.</li>
 		</ul>
@@ -233,6 +249,8 @@ td.no-edit, span.no-edit {
 							<div class="collapsible">
 							<br>
 							if <code>false</code>, clicking outside the cell will accept the content.<br>
+							<br>
+							As of <span class="version">v2.22.2</span>, pressing <kbd>Shift</kbd>+<kbd>Enter</kbd> will add a carriage return and not automatically accept the changes.<br>
 							<br>
 							Default value: <code>true</code>
 							</div>

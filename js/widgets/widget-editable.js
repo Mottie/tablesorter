@@ -13,7 +13,8 @@ var tse = $.tablesorter.editable = {
 	lastEdited: 'tseditable-last-edited-cell',
 
 	editComplete: function( c, wo, $cell, refocus ) {
-		$cell
+		c.$table
+			.find( '.' + tse.lastEdited )
 			.removeClass( tse.lastEdited )
 			.trigger( wo.editable_editComplete, [ c ] );
 		// restore focus last cell after updating
@@ -139,6 +140,7 @@ var tse = $.tablesorter.editable = {
 			.on( 'focus' + namespace, '[contenteditable]', function( e ) {
 				clearTimeout( $( this ).data( 'timer' ) );
 				c.$table.data( 'contentFocused', e.target );
+				c.table.isUpdating = true; // prevent sorting while editing
 				var $this = $( this ),
 					selAll = wo.editable_selectAll,
 					column = $this.closest( 'td' ).index(),
@@ -184,6 +186,7 @@ var tse = $.tablesorter.editable = {
 					// user cancelled
 					$this.html( $this.data( 'original' ) ).trigger( 'blur' + namespace );
 					c.$table.data( 'contentFocused', false );
+					c.table.isUpdating = false;
 					return false;
 				}
 				// accept on enter ( if set ), alt-enter ( always ) or if autoAccept is set and element is blurred or unfocused
@@ -212,11 +215,11 @@ var tse = $.tablesorter.editable = {
 							if ( wo.editable_autoResort ) {
 								setTimeout( function() {
 									c.$table.trigger( 'sorton', [ c.sortList, function() {
-										tse.editComplete( c, wo, c.$table.find( '.' + tse.lastEdited ), true );
+										tse.editComplete( c, wo, c.$table.data( 'contentFocused' ), true );
 									}, true ] );
 								}, 10 );
 							} else {
-								tse.editComplete( c, wo, c.$table.find( '.' + tse.lastEdited ) );
+								tse.editComplete( c, wo, c.$table.data( 'contentFocused' ) );
 							}
 						} ] );
 						return false;
@@ -224,6 +227,8 @@ var tse = $.tablesorter.editable = {
 				} else if ( !valid && e.type !== 'keydown' ) {
 					clearTimeout( $this.data( 'timer' ) );
 					$this.data( 'timer', setTimeout( function() {
+					c.table.isUpdating = false; // clear flag or sorting will be disabled
+
 						if ( $.isFunction( wo.editable_blur ) ) {
 							txt = $this.html();
 							wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
