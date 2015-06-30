@@ -441,7 +441,10 @@ ts.scroller = {
 
 		// restore scrollTop - fixes #926
 		$tableWrap.scrollTop( wo.scroller_saved[1] );
-		wo.scroller_$fixedColumns.find( '.' + tscss.scrollerTable ).scrollTop( wo.scroller_saved[1] );
+		wo.scroller_$container
+			.find( '.' + tscss.scrollerFixed )
+			.find( '.' + tscss.scrollerTable )
+			.scrollTop( wo.scroller_saved[1] );
 
 		// update resizable widget handles
 		setTimeout( function() {
