@@ -36,7 +36,7 @@
 
 		// pass the headers argument and passing a object
 		headers: {
-			// set initial sort order by column, this headers option setting overrides the sortInitialOrder option
+			// disable sorter & parser for age column
 			1: { sorter: false, parser: false }
 		}
 
@@ -63,7 +63,7 @@
 				<ul>
 					<li>jQuery data <code>data-parser="false"</code>.</li>
 					<li>metadata <code>class="{ parser: "false" }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { parser: "false" } }</code>.</li>
+					<li>headers option <code>headers : { 0 : { parser: false } }</code>.</li>
 					<li>header class name <code>class="parser-false"</code>.</li>
 				</ul>
 			</li>
@@ -76,6 +76,7 @@
 		<tr>
 			<th>Name</th>
 			<th>Age</th>
+			<!-- disable sorter & parser for the Date column -->
 			<th class="sorter-false parser-false">Date</th>
 		</tr>
 	</thead>

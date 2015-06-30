@@ -76,9 +76,11 @@
 	$(function() {
 		$('button[data-sort]').click(function(){
 			var $this = $(this),
+				$box = $this.closest('.box'),
 				sort = $this.data('sort'),
-				$pre = $this.closest('.box').find('pre:last');
-			$pre.html('$("table").trigger("sorton", [ ' + JSON.stringify(sort) + ' ]);');
+				$pre = $box.find('pre:last'),
+				id = $box.attr('data-id');
+			$pre.html('$("#table' + id + '").trigger("sorton", [ ' + JSON.stringify(sort) + ' ]);');
 			prettyPrint( null, $pre[0] );
 			return false;
 		});
@@ -99,6 +101,7 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version">v2.22.0</span>, a "click" event can be triggered on the header cell to toggle the sort.</li>
 			<li>In <span class="version">v2.17.0</span>, added sorton values (a)scending, (d)escending, (n)ext, (s)ame &amp; (o)pposite. Use the demo below help understand how to use these settings.</li>
 			<li>In v2.9, a "sort" event can be triggered on the header cell to toggle the sort.</li>
 		</ul>
@@ -112,7 +115,7 @@ Basic Asc/Desc sort
 ********************
 -->
 <div class="block">
-	<div class="left box">
+	<div class="left box" data-id="1">
 
 		<button class="sort-reset" data-sort="[]">Reset</button>
 		<h3>Sort Ascending/Descending</h3>
@@ -120,7 +123,7 @@ Basic Asc/Desc sort
 		<br>
 		<button data-sort="[[0,0]]">Asc</button> (<code>[[0,0]]</code>) <button data-sort='[[0,"a"],[1,"d"]]'>Asc/Desc</button> (<code>[[0,"a"],[1,"d"]]</code>)<br>
 		<button data-sort="[[0,1]]">Desc</button> (<code>[[0,1]]</code>) <button data-sort='[[0,"d"],[1,"a"]]'>Desc/Asc</button> (<code>[[0,"d"],[1,"a"]]</code>)
-		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<pre class="prettyprint lang-js updating">$("#table1").trigger("sorton", [ [] ]);</pre>
 		<small>* <code>"a"</code> &amp; <code>"d"</code> values added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">
@@ -146,7 +149,7 @@ Toggle Sort (Next)
 ********************
 -->
 <div class="block">
-	<div class="left box">
+	<div class="left box" data-id="2">
 
 		<button class="sort-reset" data-sort="[]">Reset</button>
 		<h3>Toggle sort (Next)</h3>
@@ -159,7 +162,7 @@ Toggle Sort (Next)
 
 		<button data-sort='[[0,"n"]]'>Asc/Desc</button> (<code>[[0,"n"]]</code>)<br>
 		<button data-sort='[[0,"n"],[1,"n"]]'>Asc/Desc</button> (<code>[[0,"n"],[1,"n"]]</code>; columns are independent)
-		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<pre class="prettyprint lang-js updating">$("#table2").trigger("sorton", [ [] ]);</pre>
 		<small>* <code>"n"</code> value added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">
@@ -185,7 +188,7 @@ Sort Same/Opposite
 ********************
 -->
 <div class="block">
-	<div class="left box">
+	<div class="left box" data-id="3">
 		<button class="sort-reset" data-sort="[]">Reset</button>
 		<h3>Sort Same/Opposite</h3>
 		The same (<code>"s"</code>) or opposite (<code>"o"</code>) sort values always set the column sort based on the primary column<super>*</super>.<br>
@@ -199,7 +202,7 @@ Sort Same/Opposite
 		<button data-sort='[[0,"n"],[1,"o"],[2,"n"]]'>Next/opposite/next</button> (<code>[[0,"n"],[1,"o"],[2,"n"]]</code>)<br>
 		<button data-sort='[[0,"n"],[1,"o"],[2,"s"]]'>Next/opposite/same</button> (<code>[[0,"n"],[1,"o"],[2,"s"]]</code>)<br>
 		<button data-sort='[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]'>Next/opposite/same/opposite</button> (<code>[[0,"n"],[1,"o"],[2,"s"],[3,"o"]]</code>)
-		<pre class="prettyprint lang-js updating">$("table").trigger("sorton", [ [] ]);</pre>
+		<pre class="prettyprint lang-js updating">$("#table3").trigger("sorton", [ [] ]);</pre>
 		<small>* <code>"s"</code> &amp; <code>"o"</code> values added <span class="version">v2.17.0</span>.</small>
 	</div>
 	<div class="right box">

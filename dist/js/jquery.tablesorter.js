@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.22.1 *//*
+/*! TableSorter (FORK) v2.22.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -36,7 +36,7 @@
 
 			var ts = this;
 
-			ts.version = '2.22.1';
+			ts.version = '2.22.2';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -201,10 +201,10 @@
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
-					return $.trim(
-						( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) ||
-						$node.text()
-					);
+					if ( t === 'basic' && typeof ( te = $node.attr(c.textAttribute) ) !== 'undefined' ) {
+						return $.trim( te );
+					}
+					return $.trim( node.textContent || $node.text() );
 				} else {
 					if (typeof(t) === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
@@ -216,9 +216,8 @@
 				return $.trim( $node[0].textContent || $node.text() );
 			};
 
-			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
+			function detectParserForColumn(c, rows, rowIndex, cellIndex) {
 				var cur, $node,
-					c = table.config,
 					i = ts.parsers.length,
 					node = false,
 					nodeValue = '',
@@ -229,7 +228,7 @@
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
-						if (table.config.debug) {
+						if (c.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
 					} else {
@@ -239,7 +238,7 @@
 				while (--i >= 0) {
 					cur = ts.parsers[i];
 					// ignore the default text parser because it will always be true
-					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node, $node)) {
+					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, c.table, node, $node)) {
 						return cur;
 					}
 				}
@@ -248,7 +247,7 @@
 			}
 
 			// centralized function to extract/parse cell contents
-			function getParsedText( c, cell, colIndex, txt ) {
+			ts.getParsedText = function( c, cell, colIndex, txt ) {
 				if ( typeof txt === 'undefined' ) {
 					txt = ts.getElementText( c, cell, colIndex );
 				}
@@ -271,16 +270,17 @@
 					}
 				}
 				return val;
-			}
+			};
 
-			function buildParserCache(table) {
-				var c = table.config,
-					// update table bodies in case we start with an empty table
-					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, np, p, e, time,
+			function buildParserCache( c, $tbodies ) {
+				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
+					table = c.table,
 					j = 0,
-					parsersDebug = '',
-					len = tb.length;
+					parsersDebug = '';
+				// update table bodies in case we start with an empty table
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies;
+				len = tb.length;
 				if ( len === 0) {
 					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
@@ -315,7 +315,7 @@
 								e = false;
 							}
 							if (!p) {
-								p = detectParserForColumn(table, rows, -1, i);
+								p = detectParserForColumn(c, rows, -1, i);
 							}
 							if (c.debug) {
 								parsersDebug += 'column:' + i + '; extractor:' + e.id + '; parser:' + p.id + '; string:' + c.strings[i] + '; empty: ' + c.empties[i] + '\n';
@@ -335,12 +335,14 @@
 			}
 
 			/* utils */
-			function buildCache(table) {
-				var cc, t, v, i, j, k, $row, cols, cacheTime,
+			function buildCache(table, $tbodies) {
+				var cc, t, v, i, j, k, $tb, $row, cols, cacheTime,
 					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
-					$tb = c.$tbodies,
 					parsers = c.parsers;
+				// update tbody variable
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				$tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies,
 				c.cache = {};
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
@@ -388,7 +390,7 @@
 							prevRowData.child[ t ] = [];
 							// child row content does not account for colspans/rowspans; so indexing may be off
 							for ( j = 0; j < c.columns; j++ ) {
-								prevRowData.child[ t ][ j ] = getParsedText( c, v[ j ], j );
+								prevRowData.child[ t ][ j ] = ts.getParsedText( c, v[ j ], j );
 							}
 							// go to the next for loop
 							continue;
@@ -404,7 +406,7 @@
 							}
 							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
 							rowData.raw.push( t ); // save original row text
-							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
+							v = ts.getParsedText( c, $row[ 0 ].cells[ j ], j, t );
 							cols.push( v );
 							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
@@ -557,7 +559,7 @@
 				// remove rows/elements before update
 				c.$table.find(c.selectorRemove).remove();
 				// rebuild parsers
-				buildParserCache(table);
+				buildParserCache(c);
 				// rebuild the cache map
 				buildCache(table);
 				checkResort(c, resort, callback);
@@ -847,7 +849,7 @@
 									num = (c.strings[col]) ? c.string[c.strings[col]] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
-								// var sort = $.tablesorter['sort' + s](table, a[c], b[c], c, colMax[c], dir);
+								// var sort = $.tablesorter['sort' + s]( a[c], b[c], dir, colMax[c], table);
 								sort = c.numberSorter ? c.numberSorter(a[col], b[col], dir, colMax[col], table) :
 									ts[ 'sortNumeric' + (dir ? 'Asc' : 'Desc') ](a[col], b[col], num, colMax[col], col, table);
 							} else {
@@ -960,7 +962,7 @@
 						row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
 						cache = tbcache.normalized[ row ];
 						icell = $cell.index();
-						t = getParsedText( c, cell, icell );
+						t = ts.getParsedText( c, cell, icell );
 						cache[ icell ] = t;
 						cache[ c.columns ].$row = $row;
 						if ( (c.parsers[icell].type || '').toLowerCase() === 'numeric' ) {
@@ -995,7 +997,7 @@
 						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!(c.parsers && c.parsers.length)) {
-							buildParserCache(table);
+							buildParserCache(c);
 						}
 						// add each row
 						for (i = 0; i < rows; i++) {
@@ -1008,7 +1010,7 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = getParsedText( c, $row[i].cells[j], j );
+								cells[j] = ts.getParsedText( c, $row[i].cells[j], j );
 								if ((c.parsers[j].type || '').toLowerCase() === 'numeric') {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
@@ -1053,13 +1055,14 @@
 						callback(table);
 					}
 				})
-				.bind('updateCache' + c.namespace, function(e, callback){
+				// $tbodies variable is used by the tbody sorting widget
+				.bind('updateCache' + c.namespace, function(e, callback, $tbodies){
 					// rebuild parsers
 					if (!(c.parsers && c.parsers.length)) {
-						buildParserCache(table);
+						buildParserCache(c, $tbodies);
 					}
 					// rebuild the cache map
-					buildCache(table);
+					buildCache(table, $tbodies);
 					if ($.isFunction(callback)) {
 						callback(table);
 					}
@@ -1179,7 +1182,7 @@
 				// add widget options before parsing (e.g. grouping widget has parser settings)
 				ts.applyWidgetOptions(table, c);
 				// try to auto detect column type, and store in tables config
-				buildParserCache(table);
+				buildParserCache(c);
 				// start total row count at zero
 				c.totalRows = 0;
 				// build the cache for the tbody cells
@@ -1391,7 +1394,7 @@
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
 				.unbind(t)
 				.bind(t, function(e, external) {
-					var cell,
+					var cell, temp,
 						$target = $(e.target),
 						// wrap event type in spaces, so the match doesn't trigger on inner words
 						type = ' ' + e.type + ' ';
@@ -1405,11 +1408,13 @@
 					}
 					// ignore mouseup if mousedown wasn't on the same target
 					if ( type.match(' ' + c.pointerUp + ' ') && downTarget !== e.target && external !== true ) { return; }
-					// set timer on mousedown
+					// set target on mousedown
 					if ( type.match(' ' + c.pointerDown + ' ') ) {
 						downTarget = e.target;
-						// needed or jQuery v1.2.6 throws an error
-						e.preventDefault();
+						// preventDefault needed or jQuery v1.3.2 and older throws an
+						// "Uncaught TypeError: handler.apply is not a function" error
+						temp = $target.jquery.split( '.' );
+						if ( temp[0] === '1' && temp[1] < 4 ) { e.preventDefault(); }
 						return;
 					}
 					downTarget = null;
@@ -2146,7 +2151,7 @@
 		format: function(table, c, wo) {
 			var $tv, $tr, row, even, time, k, i, len,
 				child = new RegExp(c.cssChildRow, 'i'),
-				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
+				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody:not(.' + c.cssInfoBlock + ')' ) );
 			if (c.debug) {
 				time = new Date();
 			}

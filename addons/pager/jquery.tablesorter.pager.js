@@ -408,7 +408,7 @@
 						c.totalRows = p.totalRows = result.total;
 						c.filteredRows = p.filteredRows = typeof result.filteredRows !== 'undefined' ? result.filteredRows : result.total;
 						th = result.headers;
-						d = result.rows;
+						d = result.rows || [];
 					} else {
 						// allow [ total, rows, headers ]  or [ rows, total, headers ]
 						t = isNaN(result[0]) && !isNaN(result[1]);
@@ -417,7 +417,8 @@
 						p.totalRows = isNaN(rr_count) ? p.totalRows || 0 : rr_count;
 						// can't set filtered rows when returning an array
 						c.totalRows = c.filteredRows = p.filteredRows = p.totalRows;
-						d = p.totalRows === 0 ? [""] : result[t ? 0 : 1] || []; // row data
+						// set row data to empty array if nothing found - see http://stackoverflow.com/q/30875583/145346
+						d = p.totalRows === 0 ? [] : result[t ? 0 : 1] || []; // row data
 						th = result[2]; // headers
 					}
 					l = d && d.length;
@@ -1046,6 +1047,9 @@
 						updatePageDisplay(table, p, false);
 					}
 				}
+
+				// make the hasWidget function think that the pager widget is being used
+				c.widgetInit.pager = true;
 			});
 		};
 

@@ -17,7 +17,7 @@ ts.alignChar = {
 				column     : this.column,
 				align      : $this.attr(wo.alignChar_charAttrib),
 				alignIndex : parseInt( $this.attr(wo.alignChar_indexAttrib) || 0, 10),
-				adjust     : parseFloat($this.attr(wo.alignChar_adjustAttrib)) || 0,
+				adjust     : parseFloat($this.attr(wo.alignChar_adjustAttrib)) || 0
 			};
 			vars.regex = new RegExp('\\' + vars.align, 'g');
 			if (typeof vars.align !== 'undefined') {

@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-17-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-30-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.22.1 *//*
+/*! TableSorter (FORK) v2.22.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -44,7 +44,7 @@
 
 			var ts = this;
 
-			ts.version = '2.22.1';
+			ts.version = '2.22.2';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -209,10 +209,10 @@
 				if (typeof(t) === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
-					return $.trim(
-						( t === 'basic' ? $node.attr(c.textAttribute) || node.textContent : node.textContent ) ||
-						$node.text()
-					);
+					if ( t === 'basic' && typeof ( te = $node.attr(c.textAttribute) ) !== 'undefined' ) {
+						return $.trim( te );
+					}
+					return $.trim( node.textContent || $node.text() );
 				} else {
 					if (typeof(t) === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
@@ -224,9 +224,8 @@
 				return $.trim( $node[0].textContent || $node.text() );
 			};
 
-			function detectParserForColumn(table, rows, rowIndex, cellIndex) {
+			function detectParserForColumn(c, rows, rowIndex, cellIndex) {
 				var cur, $node,
-					c = table.config,
 					i = ts.parsers.length,
 					node = false,
 					nodeValue = '',
@@ -237,7 +236,7 @@
 						node = rows[rowIndex].cells[cellIndex];
 						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
-						if (table.config.debug) {
+						if (c.debug) {
 							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
 					} else {
@@ -247,7 +246,7 @@
 				while (--i >= 0) {
 					cur = ts.parsers[i];
 					// ignore the default text parser because it will always be true
-					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, table, node, $node)) {
+					if (cur && cur.id !== 'text' && cur.is && cur.is(nodeValue, c.table, node, $node)) {
 						return cur;
 					}
 				}
@@ -256,7 +255,7 @@
 			}
 
 			// centralized function to extract/parse cell contents
-			function getParsedText( c, cell, colIndex, txt ) {
+			ts.getParsedText = function( c, cell, colIndex, txt ) {
 				if ( typeof txt === 'undefined' ) {
 					txt = ts.getElementText( c, cell, colIndex );
 				}
@@ -279,16 +278,17 @@
 					}
 				}
 				return val;
-			}
+			};
 
-			function buildParserCache(table) {
-				var c = table.config,
-					// update table bodies in case we start with an empty table
-					tb = c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')'),
-					rows, list, l, i, h, ch, np, p, e, time,
+			function buildParserCache( c, $tbodies ) {
+				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
+					table = c.table,
 					j = 0,
-					parsersDebug = '',
-					len = tb.length;
+					parsersDebug = '';
+				// update table bodies in case we start with an empty table
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies;
+				len = tb.length;
 				if ( len === 0) {
 					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
@@ -323,7 +323,7 @@
 								e = false;
 							}
 							if (!p) {
-								p = detectParserForColumn(table, rows, -1, i);
+								p = detectParserForColumn(c, rows, -1, i);
 							}
 							if (c.debug) {
 								parsersDebug += 'column:' + i + '; extractor:' + e.id + '; parser:' + p.id + '; string:' + c.strings[i] + '; empty: ' + c.empties[i] + '\n';
@@ -343,12 +343,14 @@
 			}
 
 			/* utils */
-			function buildCache(table) {
-				var cc, t, v, i, j, k, $row, cols, cacheTime,
+			function buildCache(table, $tbodies) {
+				var cc, t, v, i, j, k, $tb, $row, cols, cacheTime,
 					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
-					$tb = c.$tbodies,
 					parsers = c.parsers;
+				// update tbody variable
+				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
+				$tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies,
 				c.cache = {};
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
@@ -396,7 +398,7 @@
 							prevRowData.child[ t ] = [];
 							// child row content does not account for colspans/rowspans; so indexing may be off
 							for ( j = 0; j < c.columns; j++ ) {
-								prevRowData.child[ t ][ j ] = getParsedText( c, v[ j ], j );
+								prevRowData.child[ t ][ j ] = ts.getParsedText( c, v[ j ], j );
 							}
 							// go to the next for loop
 							continue;
@@ -412,7 +414,7 @@
 							}
 							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
 							rowData.raw.push( t ); // save original row text
-							v = getParsedText( c, $row[ 0 ].cells[ j ], j, t );
+							v = ts.getParsedText( c, $row[ 0 ].cells[ j ], j, t );
 							cols.push( v );
 							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
@@ -565,7 +567,7 @@
 				// remove rows/elements before update
 				c.$table.find(c.selectorRemove).remove();
 				// rebuild parsers
-				buildParserCache(table);
+				buildParserCache(c);
 				// rebuild the cache map
 				buildCache(table);
 				checkResort(c, resort, callback);
@@ -855,7 +857,7 @@
 									num = (c.strings[col]) ? c.string[c.strings[col]] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
-								// var sort = $.tablesorter['sort' + s](table, a[c], b[c], c, colMax[c], dir);
+								// var sort = $.tablesorter['sort' + s]( a[c], b[c], dir, colMax[c], table);
 								sort = c.numberSorter ? c.numberSorter(a[col], b[col], dir, colMax[col], table) :
 									ts[ 'sortNumeric' + (dir ? 'Asc' : 'Desc') ](a[col], b[col], num, colMax[col], col, table);
 							} else {
@@ -968,7 +970,7 @@
 						row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
 						cache = tbcache.normalized[ row ];
 						icell = $cell.index();
-						t = getParsedText( c, cell, icell );
+						t = ts.getParsedText( c, cell, icell );
 						cache[ icell ] = t;
 						cache[ c.columns ].$row = $row;
 						if ( (c.parsers[icell].type || '').toLowerCase() === 'numeric' ) {
@@ -1003,7 +1005,7 @@
 						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
 						// fixes adding rows to an empty table - see issue #179
 						if (!(c.parsers && c.parsers.length)) {
-							buildParserCache(table);
+							buildParserCache(c);
 						}
 						// add each row
 						for (i = 0; i < rows; i++) {
@@ -1016,7 +1018,7 @@
 							};
 							// add each cell
 							for (j = 0; j < l; j++) {
-								cells[j] = getParsedText( c, $row[i].cells[j], j );
+								cells[j] = ts.getParsedText( c, $row[i].cells[j], j );
 								if ((c.parsers[j].type || '').toLowerCase() === 'numeric') {
 									// update column max value (ignore sign)
 									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
@@ -1061,13 +1063,14 @@
 						callback(table);
 					}
 				})
-				.bind('updateCache' + c.namespace, function(e, callback){
+				// $tbodies variable is used by the tbody sorting widget
+				.bind('updateCache' + c.namespace, function(e, callback, $tbodies){
 					// rebuild parsers
 					if (!(c.parsers && c.parsers.length)) {
-						buildParserCache(table);
+						buildParserCache(c, $tbodies);
 					}
 					// rebuild the cache map
-					buildCache(table);
+					buildCache(table, $tbodies);
 					if ($.isFunction(callback)) {
 						callback(table);
 					}
@@ -1187,7 +1190,7 @@
 				// add widget options before parsing (e.g. grouping widget has parser settings)
 				ts.applyWidgetOptions(table, c);
 				// try to auto detect column type, and store in tables config
-				buildParserCache(table);
+				buildParserCache(c);
 				// start total row count at zero
 				c.totalRows = 0;
 				// build the cache for the tbody cells
@@ -1399,7 +1402,7 @@
 				.find(c.selectorSort).add( $headers.filter(c.selectorSort) )
 				.unbind(t)
 				.bind(t, function(e, external) {
-					var cell,
+					var cell, temp,
 						$target = $(e.target),
 						// wrap event type in spaces, so the match doesn't trigger on inner words
 						type = ' ' + e.type + ' ';
@@ -1413,11 +1416,13 @@
 					}
 					// ignore mouseup if mousedown wasn't on the same target
 					if ( type.match(' ' + c.pointerUp + ' ') && downTarget !== e.target && external !== true ) { return; }
-					// set timer on mousedown
+					// set target on mousedown
 					if ( type.match(' ' + c.pointerDown + ' ') ) {
 						downTarget = e.target;
-						// needed or jQuery v1.2.6 throws an error
-						e.preventDefault();
+						// preventDefault needed or jQuery v1.3.2 and older throws an
+						// "Uncaught TypeError: handler.apply is not a function" error
+						temp = $target.jquery.split( '.' );
+						if ( temp[0] === '1' && temp[1] < 4 ) { e.preventDefault(); }
 						return;
 					}
 					downTarget = null;
@@ -2154,7 +2159,7 @@
 		format: function(table, c, wo) {
 			var $tv, $tr, row, even, time, k, i, len,
 				child = new RegExp(c.cssChildRow, 'i'),
-				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody' ) );
+				b = c.$tbodies.add( $( c.namespace + '_extra_table' ).children( 'tbody:not(.' + c.cssInfoBlock + ')' ) );
 			if (c.debug) {
 				time = new Date();
 			}
@@ -2649,6 +2654,66 @@ ts.filter = {
 		// data.index = column index; table = table element ( DOM )
 		// data.parsed = array ( by column ) of boolean values ( from filter_useParsedData or 'filter-parsed' class )
 	types: {
+		or : function( c, data, vars ) {
+			if ( /\|/.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
+				var indx, filterMatched, txt, query, regex,
+					// duplicate data but split filter
+					data2 = $.extend( {}, data ),
+					index = data.index,
+					parsed = data.parsed[ index ],
+					filter = data.filter.split( ts.filter.regex.orSplit ),
+					iFilter = data.iFilter.split( ts.filter.regex.orSplit ),
+					len = filter.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					data2.nestedFilters = true;
+					data2.filter = '' + ( ts.filter.parseFilter( c, filter[ indx ], index, parsed ) || '' );
+					data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
+					query = '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')';
+					regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+					// filterMatched = data2.filter === '' && indx > 0 ? true
+					// look for an exact match with the 'or' unless the 'filter-match' class is found
+					filterMatched = regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars );
+					if ( filterMatched ) {
+						return filterMatched;
+					}
+				}
+				// may be null from processing types
+				return filterMatched || false;
+			}
+			return null;
+		},
+		// Look for an AND or && operator ( logical and )
+		and : function( c, data, vars ) {
+			if ( ts.filter.regex.andTest.test( data.filter ) ) {
+				var indx, filterMatched, result, txt, query, regex,
+					// duplicate data but split filter
+					data2 = $.extend( {}, data ),
+					index = data.index,
+					parsed = data.parsed[ index ],
+					filter = data.filter.split( ts.filter.regex.andSplit ),
+					iFilter = data.iFilter.split( ts.filter.regex.andSplit ),
+					len = filter.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					data2.nestedFilters = true;
+					data2.filter = '' + ( ts.filter.parseFilter( c, filter[ indx ], index, parsed ) || '' );
+					data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
+					query = ( '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')' )
+						// replace wild cards since /(a*)/i will match anything
+						.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' );
+					regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+					// look for an exact match with the 'and' unless the 'filter-match' class is found
+					result = ( regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars ) );
+					if ( indx === 0 ) {
+						filterMatched = result;
+					} else {
+						filterMatched = filterMatched && result;
+					}
+				}
+				// may be null from processing types
+				return filterMatched || false;
+			}
+			return null;
+		},
 		// Look for regex
 		regex: function( c, data ) {
 			if ( ts.filter.regex.regex.test( data.filter ) ) {
@@ -2736,23 +2801,6 @@ ts.filter = {
 			}
 			return null;
 		},
-		// Look for an AND or && operator ( logical and )
-		and : function( c, data ) {
-			if ( ts.filter.regex.andTest.test( data.filter ) ) {
-				var index = data.index,
-					parsed = data.parsed[index],
-					query = data.iFilter.split( ts.filter.regex.andSplit ),
-					result = data.iExact.search( $.trim( ts.filter.parseFilter( c, query[0], index, parsed ) ) ) >= 0,
-					indx = query.length - 1;
-				while ( result && indx ) {
-					result = result &&
-						data.iExact.search( $.trim( ts.filter.parseFilter( c, query[indx], index, parsed ) ) ) >= 0;
-					indx--;
-				}
-				return result;
-			}
-			return null;
-		},
 		// Look for a range ( using ' to ' or ' - ' ) - see issue #166; thanks matzhu!
 		range : function( c, data ) {
 			if ( ts.filter.regex.toTest.test( data.iFilter ) ) {
@@ -2789,24 +2837,20 @@ ts.filter = {
 		},
 		// Look for wild card: ? = single, * = multiple, or | = logical OR
 		wild : function( c, data ) {
-			if ( /[\?\*\|]/.test( data.iFilter ) || ts.filter.regex.orReplace.test( data.filter ) ) {
+			if ( /[\?\*\|]/.test( data.iFilter ) ) {
 				var index = data.index,
 					parsed = data.parsed[ index ],
-					txt = data.iFilter.replace( ts.filter.regex.orReplace, '|' ),
-					query = '' + ( ts.filter.parseFilter( c, txt, index, parsed ) || '' );
+					query = '' + ( ts.filter.parseFilter( c, data.iFilter, index, parsed ) || '' );
 				// look for an exact match with the 'or' unless the 'filter-match' class is found
-				if ( !c.$headerIndexed[ index ].hasClass( 'filter-match' ) && /\|/.test( query ) ) {
-					// show all results while using filter match. Fixes #727
-					if ( query[ query.length - 1 ] === '|' ) {
-						query += '*';
-					}
-					query = data.anyMatch && $.isArray( data.rowArray ) ?
-						'(' + query + ')' :
-						'^(' + query + ')$';
+				if ( !/\?\*/.test( query ) && data.nestedFilters ) {
+					query = data.isMatch ? query : '^(' + query + ')$';
 				}
 				// parsing the filter may not work properly when using wildcards =/
-				return new RegExp( query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ) )
-					.test( data.iExact );
+				return new RegExp(
+					query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ),
+					c.widgetOptions.filter_ignoreCase ? 'i' : ''
+				)
+				.test( data.exact );
 			}
 			return null;
 		},
@@ -2860,7 +2904,7 @@ ts.filter = {
 			toSplit : new RegExp( '(?:\\s+(?:-|' + ts.language.to + ')\\s+)' ,'gi' ),
 			andTest : new RegExp( '\\s+(' + ts.language.and + '|&&)\\s+', 'i' ),
 			andSplit : new RegExp( '(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi' ),
-			orReplace : new RegExp( '\\s+(' + ts.language.or + ')\\s+', 'gi' ),
+			orSplit : new RegExp( '(?:\\s+(?:' + ts.language.or + ')\\s+|\\|)', 'gi' ),
 			iQuery : new RegExp( val, 'i' ),
 			igQuery : new RegExp( val, 'ig' )
 		});
@@ -3080,7 +3124,6 @@ ts.filter = {
 			}
 		}
 	},
-
 	setDefaults: function( table, c, wo ) {
 		var isArray, saved, indx, col, $filters,
 			// get current ( default ) filters
@@ -3307,14 +3350,13 @@ ts.filter = {
 		}
 	},
 	hideFilters: function( table, c ) {
-		var $filterRow, $filterRow2, timer;
-		$( table )
+		var timer;
+		c.$table
 			.find( '.' + tscss.filterRow )
-			.addClass( tscss.filterRowHide )
 			.bind( 'mouseenter mouseleave', function( e ) {
 				// save event object - http://bugs.jquery.com/ticket/12140
-				var event = e;
-				$filterRow = $( this );
+				var event = e,
+					$filterRow = $( this );
 				clearTimeout( timer );
 				timer = setTimeout( function() {
 					if ( /enter|over/.test( event.type ) ) {
@@ -3332,13 +3374,14 @@ ts.filter = {
 				}, 200 );
 			})
 			.find( 'input, select' ).bind( 'focus blur', function( e ) {
-				$filterRow2 = $( this ).closest( 'tr' );
+				var event = e,
+					$row = $( this ).closest( 'tr' );
 				clearTimeout( timer );
-				var event = e;
 				timer = setTimeout( function() {
+					clearTimeout( timer );
 					// don't hide row if any filter has a value
 					if ( ts.getFilters( c.$table ).join( '' ) === '' ) {
-						$filterRow2.toggleClass( tscss.filterRowHide, event.type === 'focus' );
+						$row.toggleClass( tscss.filterRowHide, event.type !== 'focus' );
 					}
 				}, 200 );
 			});
@@ -3372,7 +3415,7 @@ ts.filter = {
 				return $( b ).attr( 'data-lastSearchTime' ) - $( a ).attr( 'data-lastSearchTime' );
 			});
 		}
-		return $();
+		return $input || $();
 	},
 	multipleColumns: function( c, $input ) {
 		// look for multiple columns '1-3,4-6,8' in data-column
@@ -3425,8 +3468,22 @@ ts.filter = {
 		}
 		return columns;
 	},
+	processTypes: function( c, data, vars ) {
+		var ffxn,
+			filterMatched = null,
+			matches = null;
+		for ( ffxn in ts.filter.types ) {
+			if ( $.inArray( ffxn, vars.excludeMatch ) < 0 && matches === null ) {
+				matches = ts.filter.types[ffxn]( c, data, vars );
+				if ( matches !== null ) {
+					filterMatched = matches;
+				}
+			}
+		}
+		return filterMatched;
+	},
 	processRow: function( c, data, vars ) {
-		var $cell, columnIndex, hasSelect, matches, result, val, filterMatched, excludeMatch,
+		var columnIndex, hasSelect, result, val, filterMatched,
 			fxn, ffxn, txt,
 			regex = ts.filter.regex,
 			wo = c.widgetOptions,
@@ -3437,6 +3494,7 @@ ts.filter = {
 			// look for multiple columns '1-3,4-6,8'
 			columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
 			data.anyMatch = true;
+			data.isMatch = true;
 			data.rowArray = data.$cells.map( function( i ) {
 				if ( $.inArray( i, columnIndex ) > -1 ) {
 					if ( data.parsed[ i ] ) {
@@ -3456,16 +3514,10 @@ ts.filter = {
 			data.exact = data.rowArray.join( ' ' );
 			data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
 			data.cache = data.cacheArray.slice( 0, -1 ).join( ' ' );
-			filterMatched = null;
-			matches = null;
-			for ( ffxn in ts.filter.types ) {
-				if ( $.inArray( ffxn, vars.noAnyMatch ) < 0 && matches === null ) {
-					matches = ts.filter.types[ffxn]( c, data );
-					if ( matches !== null ) {
-						filterMatched = matches;
-					}
-				}
-			}
+
+			vars.excludeMatch = vars.noAnyMatch;
+			filterMatched = ts.filter.processTypes( c, data, vars );
+
 			if ( filterMatched !== null ) {
 				showRow = filterMatched;
 			} else {
@@ -3492,7 +3544,7 @@ ts.filter = {
 			data.index = columnIndex;
 
 			// filter types to exclude, per column
-			excludeMatch = vars.excludeFilter[ columnIndex ];
+			vars.excludeMatch = vars.excludeFilter[ columnIndex ];
 
 			// ignore if filter is empty or disabled
 			if ( data.filter ) {
@@ -3506,6 +3558,9 @@ ts.filter = {
 				}
 				data.iExact = !regex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
 					data.exact.toLowerCase() : data.exact;
+
+				data.isMatch = c.$headerIndexed[ data.index ].hasClass( 'filter-match' );
+
 				result = showRow; // if showRow is true, show that row
 
 				// in case select filter option has a different value vs text 'a - z|A through Z'
@@ -3530,13 +3585,12 @@ ts.filter = {
 				// data.filter = case sensitive
 				data.iFilter = wo.filter_ignoreCase ? ( data.filter || '' ).toLowerCase() : data.filter;
 				fxn = vars.functions[ columnIndex ];
-				$cell = c.$headerIndexed[ columnIndex ];
-				hasSelect = $cell.hasClass( 'filter-select' );
+				hasSelect = c.$headerIndexed[ columnIndex ].hasClass( 'filter-select' );
 				filterMatched = null;
 				if ( fxn || ( hasSelect && val ) ) {
 					if ( fxn === true || hasSelect ) {
 						// default selector uses exact match unless 'filter-match' class is found
-						filterMatched = $cell.hasClass( 'filter-match' ) ?
+						filterMatched = data.isMatch ?
 							data.iExact.search( data.iFilter ) >= 0 :
 							data.filter === data.exact;
 					} else if ( typeof fxn === 'function' ) {
@@ -3553,15 +3607,7 @@ ts.filter = {
 				if ( filterMatched === null ) {
 					// cycle through the different filters
 					// filters return a boolean or null if nothing matches
-					matches = null;
-					for ( ffxn in ts.filter.types ) {
-						if ( $.inArray( ffxn, excludeMatch ) < 0 && matches === null ) {
-							matches = ts.filter.types[ ffxn ]( c, data );
-							if ( matches !== null ) {
-								filterMatched = matches;
-							}
-						}
-					}
+					filterMatched = ts.filter.processTypes( c, data, vars );
 					if ( filterMatched !== null ) {
 						result = filterMatched;
 					// Look for match, and add child row data for matching
@@ -3595,7 +3641,7 @@ ts.filter = {
 				anyMatch: false,
 				filters: filters,
 				// regex filter type cache
-				filter_regexCache : [],
+				filter_regexCache : []
 			},
 			vars = {
 				// anyMatch really screws up with these types of filters
@@ -3816,7 +3862,7 @@ ts.filter = {
 	},
 	getOptionSource: function( table, column, onlyAvail ) {
 		table = $( table )[0];
-		var cts, indx, len,
+		var cts, txt, indx, len,
 			c = table.config,
 			wo = c.widgetOptions,
 			parsed = [],
@@ -3861,11 +3907,13 @@ ts.filter = {
 			len = arry.length;
 			// parse select option values
 			for ( indx = 0; indx < len; indx++ ) {
+				txt = arry[ indx ];
 				// parse array data using set column parser; this DOES NOT pass the original
 				// table cell to the parser format function
 				parsed.push({
-					t : arry[ indx ],
-					p : c.parsers && c.parsers[ column ].format( arry[ indx ], table, [], column )
+					t : txt,
+					// check parser length - fixes #934
+					p : c.parsers && c.parsers.length && c.parsers[ column ].format( txt, table, [], column ) || txt
 				});
 			}
 
@@ -4055,8 +4103,8 @@ ts.getFilters = function( table, getRaw, setFilters, skipFirst ) {
 					$column = ts.filter.getLatestSearch( $column );
 					if ( $.isArray( setFilters ) ) {
 						// skip first ( latest input ) to maintain cursor position while typing
-						if ( skipFirst ) {
-							$column.slice( 1 );
+						if ( skipFirst && $column.length > 1 ) {
+							$column = $column.slice( 1 );
 						}
 						if ( i === c.columns ) {
 							// prevent data-column='all' from filling data-column='0,1' ( etc )
@@ -4128,32 +4176,34 @@ $.extend(ts.css, {
 // Add a resize event to table headers
 ts.addHeaderResizeEvent = function(table, disable, settings) {
 	table = $(table)[0]; // make sure we're using a dom element
-	var headers,
-		defaults = {
+	if ( !table.config ) { return; }
+	var defaults = {
 			timer : 250
 		},
 		options = $.extend({}, defaults, settings),
 		c = table.config,
 		wo = c.widgetOptions,
-		checkSizes = function(triggerEvent) {
+		checkSizes = function( triggerEvent ) {
+			var index, headers, $header, sizes, width, height,
+				len = c.$headers.length;
 			wo.resize_flag = true;
 			headers = [];
-			c.$headers.each(function() {
-				var $header = $(this),
-					sizes = $header.data('savedSizes') || [0,0], // fixes #394
-					width = this.offsetWidth,
-					height = this.offsetHeight;
-				if (width !== sizes[0] || height !== sizes[1]) {
-					$header.data('savedSizes', [ width, height ]);
-					headers.push(this);
+			for ( index = 0; index < len; index++ ) {
+				$header = c.$headers.eq( index );
+				sizes = $header.data( 'savedSizes' ) || [ 0,0 ]; // fixes #394
+				width = $header[0].offsetWidth;
+				height = $header[0].offsetHeight;
+				if ( width !== sizes[0] || height !== sizes[1] ) {
+					$header.data( 'savedSizes', [ width, height ] );
+					headers.push( $header[0] );
 				}
-			});
-			if (headers.length && triggerEvent !== false) {
-				c.$table.trigger('resize', [ headers ]);
+			}
+			if ( headers.length && triggerEvent !== false ) {
+				c.$table.trigger( 'resize', [ headers ] );
 			}
 			wo.resize_flag = false;
 		};
-	checkSizes(false);
+	checkSizes( false );
 	clearInterval(wo.resize_timer);
 	if (disable) {
 		wo.resize_flag = false;
@@ -4189,7 +4239,8 @@ ts.addWidget({
 		if ( c.$table.hasClass('hasStickyHeaders') || ($.inArray('filter', c.widgets) >= 0 && !c.$table.hasClass('hasFilters')) ) {
 			return;
 		}
-		var $table = c.$table,
+		var index, len, $t,
+			$table = c.$table,
 			// add position: relative to attach element, hopefully it won't cause trouble.
 			$attach = $(wo.stickyHeaders_attachTo),
 			namespace = c.namespace + 'stickyheaders ',
@@ -4224,17 +4275,19 @@ ts.addWidget({
 			laststate = '',
 			spacing = 0,
 			setWidth = function($orig, $clone){
-				$orig.filter(':visible').each(function(i) {
-					var width, border,
-						$cell = $clone.filter(':visible').eq(i),
-						$this = $(this);
+				var index, width, border, $cell, $this,
+					$cells = $orig.filter(':visible'),
+					len = $cells.length;
+				for ( index = 0; index < len; index++ ) {
+					$cell = $clone.filter(':visible').eq(index);
+					$this = $cells.eq(index);
 					// code from https://github.com/jmosbech/StickyTableHeaders
 					if ($this.css('box-sizing') === 'border-box') {
 						width = $this.outerWidth();
 					} else {
 						if ($cell.css('border-collapse') === 'collapse') {
 							if (window.getComputedStyle) {
-								width = parseFloat( window.getComputedStyle(this, null).width );
+								width = parseFloat( window.getComputedStyle($this[0], null).width );
 							} else {
 								// ie8 only
 								border = parseFloat( $this.css('border-width') );
@@ -4245,10 +4298,11 @@ ts.addWidget({
 						}
 					}
 					$cell.css({
+						'width': width,
 						'min-width': width,
 						'max-width': width
 					});
-				});
+				}
 			},
 			resizeHeader = function() {
 				stickyOffset = $stickyOffset.length ? $stickyOffset.height() || 0 : parseInt(wo.stickyHeaders_offset, 10) || 0;
@@ -4260,6 +4314,39 @@ ts.addWidget({
 				});
 				setWidth( $table, $stickyTable );
 				setWidth( $header, $stickyCells );
+			},
+			scrollSticky = function( resizing ) {
+				if (!$table.is(':visible')) { return; } // fixes #278
+				// Detect nested tables - fixes #724
+				nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
+				var offset = $table.offset(),
+					yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
+					xWindow = $.isWindow( $xScroll[0] ),
+					// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+					scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
+					tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
+					isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
+					cssSettings = { visibility : isVisible };
+
+				if ($attach.length) {
+					cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
+				}
+				if (xWindow) {
+					// adjust when scrolling horizontally - fixes issue #143
+					cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing;
+				}
+				if ($nestedSticky.length) {
+					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
+				}
+				$stickyWrap
+					.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
+					.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
+					.css(cssSettings);
+				if (isVisible !== laststate || resizing) {
+					// make sure the column widths match
+					resizeHeader();
+					laststate = isVisible;
+				}
 			};
 		// only add a position relative if a position isn't already defined
 		if ($attach.length && !$attach.css('position')) {
@@ -4291,48 +4378,26 @@ ts.addWidget({
 
 		// onRenderHeader is defined, we need to do something about it (fixes #641)
 		if (c.onRenderHeader) {
-			$stickyThead.children('tr').children().each(function(index){
+			$t = $stickyThead.children('tr').children();
+			len = $t.length;
+			for ( index = 0; index < len; index++ ) {
 				// send second parameter
-				c.onRenderHeader.apply( $(this), [ index, c, $stickyTable ] );
-			});
+				c.onRenderHeader.apply( $t.eq( index ), [ index, c, $stickyTable ] );
+			}
 		}
 
 		// make it sticky!
 		$xScroll.add($yScroll)
-		.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
-		.bind('scroll resize '.split(' ').join( namespace ), function(event) {
-			if (!$table.is(':visible')) { return; } // fixes #278
-			// Detect nested tables - fixes #724
-			nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
-			var offset = $table.offset(),
-				yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-				xWindow = $.isWindow( $xScroll[0] ),
-				// scrollTop = ( $attach.length ? $attach.offset().top : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
-				scrollTop = ( $attach.length ? ( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) : $yScroll.scrollTop() ) + stickyOffset + nestedStickyTop,
-				tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)),
-				isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
-				cssSettings = { visibility : isVisible };
+			.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+			.bind('scroll resize '.split(' ').join( namespace ), function( event ) {
+				scrollSticky( event.type === 'resize' );
+			});
+		c.$table
+			.unbind('stickyHeadersUpdate' + namespace)
+			.bind('stickyHeadersUpdate' + namespace, function(){
+				scrollSticky( true );
+			});
 
-			if ($attach.length) {
-				cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
-			}
-			if (xWindow) {
-				// adjust when scrolling horizontally - fixes issue #143
-				cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft() - spacing;
-			}
-			if ($nestedSticky.length) {
-				cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
-			}
-			$stickyWrap
-				.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
-				.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
-				.css(cssSettings);
-			if (isVisible !== laststate || event.type === 'resize') {
-				// make sure the column widths match
-				resizeHeader();
-				laststate = isVisible;
-			}
-		});
 		if (wo.stickyHeaders_addResizeEvent) {
 			ts.addHeaderResizeEvent(table);
 		}
@@ -4368,7 +4433,7 @@ ts.addWidget({
 		var namespace = c.namespace + 'stickyheaders ';
 		c.$table
 			.removeClass('hasStickyHeaders')
-			.unbind( ('pagerComplete filterEnd '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+			.unbind( ('pagerComplete filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 			.next('.' + ts.css.stickyWrap).remove();
 		if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 		$(window)
@@ -4382,7 +4447,8 @@ ts.addWidget({
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 5/17/2015 (v2.22.0) */
+/*! Widget: resizable - updated 6/26/2015 (v2.22.2) */
+/*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 'use strict';
 var ts = $.tablesorter || {};
@@ -4401,8 +4467,8 @@ $(function(){
 			'-khtml-user-select: none; -webkit-user-select: none; user-select: none; }' +
 		'.' + ts.css.resizableContainer + ' { position: relative; height: 1px; }' +
 		// make handle z-index > than stickyHeader z-index, so the handle stays above sticky header
-		'.' + ts.css.resizableHandle + ' { position: absolute; display: inline-block; width: 8px; top: 1px;' +
-			'cursor: ew-resize; z-index: 3; user-select: none; -moz-user-select: none; }' +
+		'.' + ts.css.resizableHandle + ' { position: absolute; display: inline-block; width: 8px;' +
+			'top: 1px; cursor: ew-resize; z-index: 3; user-select: none; -moz-user-select: none; }' +
 		'</style>';
 	$(s).appendTo('body');
 });
@@ -4411,34 +4477,69 @@ ts.resizable = {
 	init : function( c, wo ) {
 		if ( c.$table.hasClass( 'hasResizable' ) ) { return; }
 		c.$table.addClass( 'hasResizable' );
-		ts.resizableReset( c.table, true ); // set default widths
+
+		var noResize, $header, column, storedSizes, tmp,
+			$table = c.$table,
+			$parent = $table.parent(),
+			marginTop = parseInt( $table.css( 'margin-top' ), 10 ),
 
 		// internal variables
-		wo.resizable_ = {
-			$wrap : c.$table.parent(),
+		vars = wo.resizable_ = {
+			useStorage : ts.storage && wo.resizable !== false,
+			$wrap : $parent,
 			mouseXPosition : 0,
 			$target : null,
 			$next : null,
-			overflow : c.$table.parent().css('overflow') === 'auto',
-			fullWidth : Math.abs(c.$table.parent().width() - c.$table.width()) < 20,
+			overflow : $parent.css('overflow') === 'auto' ||
+				$parent.css('overflow') === 'scroll' ||
+				$parent.css('overflow-x') === 'auto' ||
+				$parent.css('overflow-x') === 'scroll',
 			storedSizes : []
 		};
 
-		var noResize, $header, column, storedSizes,
-			marginTop = parseInt( c.$table.css( 'margin-top' ), 10 );
+		// set default widths
+		ts.resizableReset( c.table, true );
 
-		wo.resizable_.storedSizes = storedSizes = ( ( ts.storage && wo.resizable !== false ) ?
+		// now get measurements!
+		vars.tableWidth = $table.width();
+		// attempt to autodetect
+		vars.fullWidth = Math.abs( $parent.width() - vars.tableWidth ) < 20;
+
+		/*
+		// Hacky method to determine if table width is set to "auto"
+		// http://stackoverflow.com/a/20892048/145346
+		if ( !vars.fullWidth ) {
+			tmp = $table.width();
+			$header = $table.wrap('<span>').parent(); // temp variable
+			storedSizes = parseInt( $table.css( 'margin-left' ), 10 ) || 0;
+			$table.css( 'margin-left', storedSizes + 50 );
+			vars.tableWidth = $header.width() > tmp ? 'auto' : tmp;
+			$table.css( 'margin-left', storedSizes ? storedSizes : '' );
+			$header = null;
+			$table.unwrap('<span>');
+		}
+		*/
+
+		if ( vars.useStorage && vars.overflow ) {
+			// save table width
+			ts.storage( c.table, 'tablesorter-table-original-css-width', vars.tableWidth );
+			tmp = ts.storage( c.table, 'tablesorter-table-resized-width' ) || 'auto';
+			ts.resizable.setWidth( $table, tmp, true );
+		}
+		wo.resizable_.storedSizes = storedSizes = ( vars.useStorage ?
 			ts.storage( c.table, ts.css.resizableStorage ) :
 			[] ) || [];
 		ts.resizable.setWidths( c, wo, storedSizes );
+		ts.resizable.updateStoredSizes( c, wo );
 
 		wo.$resizable_container = $( '<div class="' + ts.css.resizableContainer + '">' )
 			.css({ top : marginTop })
-			.insertBefore( c.$table );
+			.insertBefore( $table );
 		// add container
 		for ( column = 0; column < c.columns; column++ ) {
 			$header = c.$headerIndexed[ column ];
-			noResize = ts.getData( $header, ts.getColumnData( c.table, c.headers, column ), 'resizable' ) === 'false';
+			tmp = ts.getColumnData( c.table, c.headers, column );
+			noResize = ts.getData( $header, tmp, 'resizable' ) === 'false';
 			if ( !noResize ) {
 				$( '<div class="' + ts.css.resizableHandle + '">' )
 					.appendTo( wo.$resizable_container )
@@ -4450,37 +4551,52 @@ ts.resizable = {
 					.bind( 'selectstart', false );
 			}
 		}
-		c.$table.one('tablesorter-initialized', function() {
+		$table.one('tablesorter-initialized', function() {
 			ts.resizable.setHandlePosition( c, wo );
 			ts.resizable.bindings( this.config, this.config.widgetOptions );
 		});
 	},
 
-	setWidth : function( $el, width ) {
+	updateStoredSizes : function( c, wo ) {
+		var column, $header,
+			len = c.columns,
+			vars = wo.resizable_;
+		vars.storedSizes = [];
+		for ( column = 0; column < len; column++ ) {
+			$header = c.$headerIndexed[ column ];
+			vars.storedSizes[ column ] = $header.is(':visible') ? $header.width() : 0;
+		}
+	},
+
+	setWidth : function( $el, width, overflow ) {
+		// overflow tables need min & max width set as well
 		$el.css({
 			'width' : width,
-			'min-width' : '',
-			'max-width' : ''
+			'min-width' : overflow ? width : '',
+			'max-width' : overflow ? width : ''
 		});
 	},
 
 	setWidths : function( c, wo, storedSizes ) {
-		var column,
+		var column, $temp,
+			vars = wo.resizable_,
 			$extra = $( c.namespace + '_extra_headers' ),
 			$col = c.$table.children( 'colgroup' ).children( 'col' );
-		storedSizes = storedSizes || wo.resizable_.storedSizes || [];
+		storedSizes = storedSizes || vars.storedSizes || [];
 		// process only if table ID or url match
 		if ( storedSizes.length ) {
 			for ( column = 0; column < c.columns; column++ ) {
 				// set saved resizable widths
-				c.$headerIndexed[ column ].width( storedSizes[ column ] );
+				ts.resizable.setWidth( c.$headerIndexed[ column ], storedSizes[ column ], vars.overflow );
 				if ( $extra.length ) {
 					// stickyHeaders needs to modify min & max width as well
-					ts.resizable.setWidth( $extra.eq( column ).add( $col.eq( column ) ), storedSizes[ column ] );
+					$temp = $extra.eq( column ).add( $col.eq( column ) );
+					ts.resizable.setWidth( $temp, storedSizes[ column ], vars.overflow );
 				}
 			}
-			if ( $( c.namespace + '_extra_table' ).length && !ts.hasWidget( c.table, 'scroller' ) ) {
-				ts.resizable.setWidth( $( c.namespace + '_extra_table' ), c.$table.outerWidth() );
+			$temp = $( c.namespace + '_extra_table' );
+			if ( $temp.length && !ts.hasWidget( c.table, 'scroller' ) ) {
+				ts.resizable.setWidth( $temp, c.$table.outerWidth(), vars.overflow );
 			}
 		}
 	},
@@ -4540,7 +4656,7 @@ ts.resizable = {
 		var namespace = c.namespace + 'tsresize';
 		wo.$resizable_container.children().bind( 'mousedown', function( event ) {
 			// save header cell and mouse position
-			var column, $this,
+			var column,
 				vars = wo.resizable_,
 				$extras = $( c.namespace + '_extra_headers' ),
 				$header = $( event.target ).data( 'header' );
@@ -4559,11 +4675,7 @@ ts.resizable = {
 			vars.next = column;
 
 			vars.mouseXPosition = event.pageX;
-			vars.storedSizes = [];
-			for ( column = 0; column < c.columns; column++ ) {
-				$this = c.$headerIndexed[ column ];
-				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
-			}
+			ts.resizable.updateStoredSizes( c, wo );
 			ts.resizable.toggleTextSelection( c, true );
 		});
 
@@ -4614,47 +4726,51 @@ ts.resizable = {
 	mouseMove : function( c, wo, event ) {
 		if ( wo.resizable_.mouseXPosition === 0 || !wo.resizable_.$target ) { return; }
 		// resize columns
-		var vars = wo.resizable_,
+		var column,
+			total = 0,
+			vars = wo.resizable_,
 			$next = vars.$next,
+			tar = vars.storedSizes[ vars.target ],
 			leftEdge = event.pageX - vars.mouseXPosition;
-		if ( vars.fullWidth ) {
-			vars.storedSizes[ vars.target ] += leftEdge;
-			vars.storedSizes[ vars.next ] -= leftEdge;
-			ts.resizable.setWidths( c, wo );
-
-		} else if ( vars.overflow ) {
-			c.$table.add( $( c.namespace + '_extra_table' ) ).width(function(i, w){
-				return w + leftEdge;
-			});
+		if ( vars.overflow ) {
+			if ( tar + leftEdge > 0 ) {
+				vars.storedSizes[ vars.target ] += leftEdge;
+				ts.resizable.setWidth( vars.$target, vars.storedSizes[ vars.target ], true );
+				// update the entire table width
+				for ( column = 0; column < c.columns; column++ ) {
+					total += vars.storedSizes[ column ];
+				}
+				ts.resizable.setWidth( c.$table.add( $( c.namespace + '_extra_table' ) ), total );
+			}
 			if ( !$next.length ) {
 				// if expanding right-most column, scroll the wrapper
 				vars.$wrap[0].scrollLeft = c.$table.width();
 			}
+		} else if ( vars.fullWidth ) {
+			vars.storedSizes[ vars.target ] += leftEdge;
+			vars.storedSizes[ vars.next ] -= leftEdge;
+			ts.resizable.setWidths( c, wo );
 		} else {
 			vars.storedSizes[ vars.target ] += leftEdge;
 			ts.resizable.setWidths( c, wo );
 		}
 		vars.mouseXPosition = event.pageX;
+		// dynamically update sticky header widths
+		c.$table.trigger('stickyHeadersUpdate');
 	},
 
 	stopResize : function( c, wo ) {
-		var $this, column,
-			vars = wo.resizable_;
-		vars.storedSizes = [];
-		if ( ts.storage ) {
-			vars.storedSizes = [];
-			for ( column = 0; column < c.columns; column++ ) {
-				$this = c.$headerIndexed[ column ];
-				vars.storedSizes[ column ] = $this.is(':visible') ? $this.width() : 0;
-			}
-			if ( wo.resizable !== false ) {
-				// save all column widths
-				ts.storage( c.table, ts.css.resizableStorage, vars.storedSizes );
-			}
+		var vars = wo.resizable_;
+		ts.resizable.updateStoredSizes( c, wo );
+		if ( vars.useStorage ) {
+			// save all column widths
+			ts.storage( c.table, ts.css.resizableStorage, vars.storedSizes );
+			ts.storage( c.table, 'tablesorter-table-resized-width', c.$table.width() );
 		}
 		vars.mouseXPosition = 0;
 		vars.$target = vars.$next = null;
-		$(window).trigger('resize'); // will update stickyHeaders, just in case
+		// will update stickyHeaders, just in case, see #912
+		c.$table.trigger('stickyHeadersUpdate');
 	}
 };
 
@@ -4665,11 +4781,12 @@ ts.addWidget({
 	id: "resizable",
 	priority: 40,
 	options: {
-		resizable : true,
+		resizable : true, // save column widths to storage
 		resizable_addLastColumn : false,
 		resizable_widths : [],
 		resizable_throttle : false, // set to true (5ms) or any number 0-10 range
-		resizable_targetLast : false
+		resizable_targetLast : false,
+		resizable_fullWidth : null
 	},
 	init: function(table, thisWidget, c, wo) {
 		ts.resizable.init( c, wo );
@@ -4693,19 +4810,28 @@ ts.resizableReset = function( table, refreshing ) {
 	$( table ).each(function(){
 		var index, $t,
 			c = this.config,
-			wo = c && c.widgetOptions;
+			wo = c && c.widgetOptions,
+			vars = wo.resizable_;
 		if ( table && c && c.$headerIndexed.length ) {
+			// restore the initial table width
+			if ( vars.overflow && vars.tableWidth ) {
+				ts.resizable.setWidth( c.$table, vars.tableWidth, true );
+				if ( vars.useStorage ) {
+					ts.storage( table, 'tablesorter-table-resized-width', 'auto' );
+				}
+			}
 			for ( index = 0; index < c.columns; index++ ) {
 				$t = c.$headerIndexed[ index ];
 				if ( wo.resizable_widths && wo.resizable_widths[ index ] ) {
-					$t.css( 'width', wo.resizable_widths[ index ] );
+					ts.resizable.setWidth( $t, wo.resizable_widths[ index ], vars.overflow );
 				} else if ( !$t.hasClass( 'resizable-false' ) ) {
 					// don't clear the width of any column that is not resizable
-					$t.css( 'width', '' );
+					ts.resizable.setWidth( $t, '', vars.overflow );
 				}
 			}
+
 			// reset stickyHeader widths
-			$( window ).trigger( 'resize' );
+			c.$table.trigger( 'stickyHeadersUpdate' );
 			if ( ts.storage && !refreshing ) {
 				ts.storage( this, ts.css.resizableStorage, {} );
 			}

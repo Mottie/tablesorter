@@ -23,7 +23,7 @@ table.options .property, .setwidth {width:115px;}
 table.options .type {width:100px; }
 table.options .defaults {width:160px;}
 table.options .examples {width:60px;}
-table.options thead th:nth-child(1) { width: 10%; }
+table.options thead th:nth-child(1) { width: 1%; }
 table.options thead .defaults { width: 1%; }
 table.compatibility { width: 50%; float: right; font-size: .8em; margin-left: 20px; }
 table.compatibility th,table.compatibility td { text-align: center; padding: 2px; }

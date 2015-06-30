@@ -27,8 +27,7 @@ tsColSel = ts.columnSelector = {
 		}
 
 		// unique table class name
-		c.tableId = 'tablesorter' + new Date().getTime();
-		c.$table.addClass( c.tableId );
+		c.$table.addClass( c.namespace.slice(1) + 'columnselector' );
 
 		// build column selector/state array
 		colSel = c.selector = { $container : $(wo.columnSelector_container || '<div>') };
@@ -205,9 +204,9 @@ tsColSel = ts.columnSelector = {
 	},
 
 	updateBreakpoints: function(c, wo) {
-		var priority, column, breaks,
+		var priority, column, breaks, temp,
 			colSel = c.selector,
-			prefix = '.' + c.tableId,
+			prefix = c.namespace + 'columnselector',
 			mediaAll = [],
 			breakpts = '';
 		if (wo.columnSelector_mediaquery && !colSel.auto) {
@@ -222,9 +221,12 @@ tsColSel = ts.columnSelector = {
 			breaks = [];
 			c.$headers.filter('[' + wo.columnSelector_priority + '=' + (priority + 1) + ']').each(function(){
 				column = parseInt($(this).attr('data-column'), 10) + 1;
-				breaks.push(prefix + ' col:nth-child(' + column + ')');
-				breaks.push(prefix + ' tr th:nth-child(' + column + ')');
-				breaks.push(prefix + ' tr td:nth-child(' + column + ')');
+				temp = ' col:nth-child(' + column + ')';
+				breaks.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
+				temp = ' tr th:nth-child(' + column + ')';
+				breaks.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
+				temp = ' tr td:nth-child(' + column + ')';
+				breaks.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
 			});
 			if (breaks.length) {
 				mediaAll = mediaAll.concat( breaks );
@@ -247,16 +249,19 @@ tsColSel = ts.columnSelector = {
 		if (wo.columnSelector_mediaquery && c.selector.auto || c.selector.isInitializing) {
 			return;
 		}
-		var column,
+		var column, temp,
 			colSel = c.selector,
 			styles = [],
-			prefix = '.' + c.tableId;
+			prefix = c.namespace + 'columnselector';
 		colSel.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
 			if (!this.checked) {
 				column = parseInt( $(this).attr('data-column'), 10 ) + 1;
-				styles.push(prefix + ' col:nth-child(' + column + ')');
-				styles.push(prefix + ' tr th:nth-child(' + column + ')');
-				styles.push(prefix + ' tr td:nth-child(' + column + ')');
+				temp = ' col:nth-child(' + column + ')';
+				styles.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
+				temp = ' tr th:nth-child(' + column + ')';
+				styles.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
+				temp = ' tr td:nth-child(' + column + ')';
+				styles.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
 			}
 			$(this).toggleClass( wo.columnSelector_cssChecked, this.checked );
 		});

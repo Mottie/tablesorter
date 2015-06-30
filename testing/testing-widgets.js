@@ -148,7 +148,7 @@ $(function(){
 					wo = this.wo,
 					$table = this.$table,
 					table = this.table;
-			expect(27);
+			expect(31);
 
 			return QUnit.SequentialRunner(
 				function(actions, assertions) {
@@ -205,6 +205,18 @@ $(function(){
 			).nextTask(
 				function(){ ts.setFilters( table, ['', 'br && cl'], true ); },
 				function(){ assert.cacheCompare( table, 1, ['Brandon Clark'], 'search and match; ensure search filtered gets cleared', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', 'c* && l && a'], true ); },
+				function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Clark'], 'search "c* && l && a"', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', 'a && !o'], true ); },
+				function(){ assert.cacheCompare( table, 1, ['Clark', 'Alex', 'Brenda Dexter', 'Martha'], 'search "a && !o"', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', '', '' , '>20 && <40'], true ); },
+				function(){ assert.cacheCompare( table, 3, [25, 28, 33, 24, 22, 25], 'search ">20 && <40"', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', '', '' , '<10 or >40'], true ); },
+				function(){ assert.cacheCompare( table, 3, [51, 45, 65], 'search "<10 or >40"', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', 'alex|br*'], true ); },
 				function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search OR match', true ); }
