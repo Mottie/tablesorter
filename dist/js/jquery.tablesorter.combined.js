@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 06-26-2015 (v2.22.1)*/
+/*! tablesorter (FORK) - updated 06-30-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.22.1 *//*
+/*! TableSorter (FORK) v2.22.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -38,7 +38,7 @@
 
 			var ts = this;
 
-			ts.version = '2.22.1';
+			ts.version = '2.22.2';
 
 			ts.parsers = [];
 			ts.widgets = [];
