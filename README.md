@@ -82,6 +82,10 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.22.3">Version 2.22.3</a> (6/30/2015)
+
+* Scroller: fix javascript error `scroller_$fixedColumns` is undefined.
+
 #### <a name="v2.22.2">Version 2.22.2</a> (6/30/2015)
 
 * Core
