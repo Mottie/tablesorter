@@ -138,6 +138,11 @@
 						ui.newPanel.find('table').trigger('applyWidgets');
 					}
 				});
+				console.log( hash );
+				// hash is not a jQuery selector
+				if ( /[=,]/.test(hash) ) {
+					return false;
+				}
 				// open parent accordion of nested accordion
 				if ( $this.find(hash).length && !$this.children(hash).length ) {
 					// div should have an id of ui-accordion-#-panel-#
@@ -170,7 +175,7 @@
 	function showProperty(){
 		var prop, $t, wo, stickyHt,
 			h = window.location.hash;
-		if (h) {
+		if (h && !/[=,]/.test(h)) {
 			prop = $(h);
 			if (prop.length && !/h3|a|table/i.test(prop[0].nodeName)) {
 				prop.find('.collapsible').show();
