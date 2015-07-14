@@ -107,7 +107,8 @@
 		<div>
 			<ul>
 				<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
-				<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).<br><br></li>
+				<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).</li>
+				<li><span class="label label-info">IMPORTANT</span> The resizable will not work properly if the <a href="index.html#widthfixed"><code>widthFixed</code></a> option is set to <code>true</code>. Make sure it is set to <code>false</code> (default setting).<br><br></li>
 
 				<li>In <span class="version">v2.22.2</span>, resizable will now work with tables inside an overflow wrapper (see <a href="https://github.com/Mottie/tablesorter/issues/953">issue #953</a>).</li>
 				<li>In <span class="version">v2.21.5</span>, this widget now works with the columnSelector widget &amp; tables with margins (see <a href="https://github.com/Mottie/tablesorter/issues/864">issue #864</a>).</li>
