@@ -386,7 +386,7 @@ ts.scroller = {
 			if ( $this.css( 'box-sizing' ) === 'border-box' ) {
 				setWidth = $this.outerWidth();
 			} else {
-				if ( $hCells.eq( index ).css( 'border-collapse' ) === 'collapse' ) {
+				if ( $this.css( 'border-collapse' ) === 'collapse' ) {
 					if ( $this.length && window.getComputedStyle ) {
 						setWidth = parseFloat( window.getComputedStyle( $this[ 0 ], null ).width );
 					} else {
@@ -794,6 +794,7 @@ ts.scroller = {
 		$fixedColumn.removeClass( tscss.scrollerHideElement );
 
 		wo.scroller_isBusy = false;
+
 	},
 
 	fixHeight : function( $rows, $fixedRows ) {
