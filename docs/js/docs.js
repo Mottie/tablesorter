@@ -198,7 +198,7 @@
 		}
 	}
 
-	$(window).load(function(){
+	$(window).bind('load', function(){
 		if ($('#root').length) {
 			$(window).bind('hashchange', function(){
 				showProperty();
