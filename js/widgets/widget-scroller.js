@@ -880,24 +880,26 @@ ts.scroller = {
 	remove : function( c, wo ) {
 		var $wrap = wo.scroller_$container,
 			namespace = c.namespace + 'tsscroller';
-		c.$table
-			.off( namespace )
-			.insertBefore( $wrap )
-			.find( 'thead' )
-			.removeClass( tscss.scrollerHideElement )
-			.children( 'tr.' + tscss.headerRow )
-			.children()
-			.attr( 'tabindex', 0 )
-			.end()
-			.find( '.' + tscss.filterRow )
-			.removeClass( tscss.scrollerHideElement + ' ' + tscss.filterRowHide );
-		c.$table
-			.find( '.' + tscss.filter )
-			.not( '.' + tscss.filterDisabled )
-			.prop( 'disabled', false );
-		$wrap.remove();
+		c.$table.off( namespace );
 		$( window ).off( namespace );
-		c.isScrolling = false;
+		if ( $wrap ) {
+			c.$table
+				.insertBefore( $wrap )
+				.find( 'thead' )
+				.removeClass( tscss.scrollerHideElement )
+				.children( 'tr.' + tscss.headerRow )
+				.children()
+				.attr( 'tabindex', 0 )
+				.end()
+				.find( '.' + tscss.filterRow )
+				.removeClass( tscss.scrollerHideElement + ' ' + tscss.filterRowHide );
+			c.$table
+				.find( '.' + tscss.filter )
+				.not( '.' + tscss.filterDisabled )
+				.prop( 'disabled', false );
+			$wrap.remove();
+			c.isScrolling = false;
+		}
 	}
 
 };
