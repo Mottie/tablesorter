@@ -345,6 +345,14 @@ ts.scroller = {
 
 		tsScroller.updateFixed( c, wo );
 
+		// updateAll called - need to give the browser time to adjust the layout
+		// before calculating fix column widths
+		if ( c.table.hasInitialized && c.isScrolling ) {
+			setTimeout(function(){
+				ts.scroller.resize( c, wo );
+			}, 50);
+		}
+
 	},
 
 	resize : function( c, wo ) {
