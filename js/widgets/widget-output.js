@@ -58,7 +58,7 @@ output = ts.output = {
 				// process rowspans
 				if ($cell.filter('[rowspan]').length) {
 					rowspanLen = parseInt( $cell.attr('rowspan'), 10) - 1;
-					txt = output.formatData( wo, $cell, isHeader );
+					txt = output.formatData( c, wo, $cell, isHeader );
 					for (row = 1; row <= rowspanLen; row++) {
 						if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 						tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
@@ -68,7 +68,7 @@ output = ts.output = {
 				if ($cell.filter('[colspan]').length) {
 					colspanLen = parseInt( $cell.attr('colspan'), 10) - 1;
 					// allow data-attribute to be an empty string
-					txt = output.formatData( wo, $cell, isHeader );
+					txt = output.formatData( c, wo, $cell, isHeader );
 					for (col = 1; col <= colspanLen; col++) {
 						// if we're processing the header & making JSON, the header names need to be unique
 						if ($cell.filter('[rowspan]').length) {
@@ -91,7 +91,7 @@ output = ts.output = {
 				while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 
 				tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
-					output.formatData( wo, $cell, isHeader );
+					output.formatData( c, wo, $cell, isHeader );
 				cellIndex++;
 			}
 		}
@@ -219,7 +219,7 @@ output = ts.output = {
 		return json;
 	},
 
-	formatData : function(wo, $el, isHeader) {
+	formatData : function(c, wo, $el, isHeader) {
 		var attr = $el.attr(wo.output_dataAttrib),
 			txt = typeof attr !== 'undefined' ? attr : $el.html(),
 			quotes = (wo.output_separator || ',').toLowerCase(),
@@ -242,7 +242,18 @@ output = ts.output = {
 		result = wo.output_trimSpaces || isHeader ? $.trim(result) : result;
 		// JSON & array outputs don't need quotes
 		quotes = separator ? false : wo.output_wrapQuotes || wo.output_regex.test(result) || output.regexQuote.test(result);
-		return quotes ? '"' + result + '"' : result;
+		result = quotes ? '"' + result + '"' : result;
+
+		// formatting callback - added v2.22.4
+		if ( typeof wo.output_formatContent === 'function' ) {
+			return wo.output_formatContent( c, wo, {
+				isHeader : isHeader,
+				$cell : $el,
+				content : result
+			});
+		}
+
+		return result;
 	},
 
 	popup : function(data, style, wrap) {
@@ -337,6 +348,8 @@ ts.addWidget({
 		output_wrapQuotes    : false,
 		output_popupStyle    : 'width=500,height=300',
 		output_saveFileName  : 'mytable.csv',
+		// format $cell content callback
+		output_formatContent : null, // function(config, data){ return data.content; }
 		// callback executed when processing completes
 		// return true to continue download/output
 		// return false to stop delivery & do something else with the data
