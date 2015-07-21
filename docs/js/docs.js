@@ -136,9 +136,13 @@
 					activate: function(e, ui) {
 						// refresh zebra widget when rows are visible
 						ui.newPanel.find('table').trigger('applyWidgets');
+						var $opt = ui.newPanel.find('table.options');
+						// options tables are hidden, so colgroup won't find any visible columns to get widths
+						if ( $opt.length && $opt[0].config ) {
+							$.tablesorter.fixColumnWidth( $opt );
+						}
 					}
 				});
-				console.log( hash );
 				// hash is not a jQuery selector
 				if ( /[=,]/.test(hash) ) {
 					return false;
@@ -187,10 +191,12 @@
 					$t = prop.closest('table');
 					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
-						stickyHt =  $t[0].config.widgetOptions.$sticky.outerHeight();
-						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? stickyHt : 0;
-						if ($t.hasClass('options') || $t.hasClass('api')) {
-							window.scrollTo( 0, prop.offset().top - h );
+						if ( wo.$sticky ) {
+							stickyHt = wo.$sticky.outerHeight();
+							h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? stickyHt : 0;
+							if ($t.hasClass('options') || $t.hasClass('api')) {
+								window.scrollTo( 0, prop.offset().top - h );
+							}
 						}
 					}
 				}, 200);
