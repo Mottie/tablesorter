@@ -18,20 +18,29 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-sort2Hash.js"></script>
 
 <script id="js">$(function() {
 
 	$( 'table' ).tablesorter({
 		theme: 'blue',
-		widgets: [ 'zebra', 'sort2Hash' ],
+		widgets: [ 'zebra', 'sort2Hash', 'saveSort' ],
 		widgetOptions : {
 			// hash prefix
-			sort2Hash_hash      : '#',
+			sort2Hash_hash             : '#',
 			// don't '#' or '=' here
-			sort2Hash_separator : ',',
+			sort2Hash_separator        : ',',
 			// this option > table ID > table index on page
-			sort2Hash_tableId   : null
+			sort2Hash_tableId          : null,
+			// if true, show header cell text instead of a zero-based column index
+			sort2Hash_useHeaderText    : false,
+			// allow processing of text if sort2Hash_useHeaderText: true
+			sort2Hash_processHeaderText : null, // function( text, config, columnIndex ) {},
+			// direction text shown in the URL e.g. [ 'asc', 'desc' ]
+			sort2Hash_directionText    : [ 0, 1 ], // default values
+			// if true, override saveSort widget sort, if used & stored sort is available
+			sort2Hash_overrideSaveSort : true
 		}
 	});
 
@@ -69,7 +78,7 @@
 			</div>
 			<table class="tablesorter-blue options">
 				<thead>
-					<tr><th>Option</th><th>Default</th><th>Description</th></tr>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
 				</thead>
 				<tbody>
 
@@ -108,6 +117,64 @@
 						</td>
 					</tr>
 
+					<tr id="sort2hash_useheadertext">
+						<td><a href="#" class="permalink">sort2Hash_useHeaderText</a></td>
+						<td><code>false</code></td>
+						<td>
+							If <code>true</code>, text from the header is used instead of a zero-based column index.
+							<div class="collapsible">
+							<br>
+							Please be aware that if the column text contains spaces or special characters, they will be encoded in the URL. So, <code>"First &#xa3;$&#x20ac;&#x00a4;&#x00a5;&#xa2; Name"</code> will become <code>"First%20%C2%A3$%E2%82%AC%C2%A4%C2%A5%C2%A2%20Name"</code>. This would make the hash very difficult to read.
+							<p>Further processing of this header cell text can be done using the <code>sort2Hash_processHeaderText</code> function.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_processheadertext">
+						<td><a href="#" class="permalink">sort2Hash_processHeaderText</a></td>
+						<td><code>null</code></td>
+						<td>
+							If the <code>sort2Hash_useHeaderText</code> option is <code>true</code>, a function here will further process the header cell text.
+							<div class="collapsible">
+							<br>
+							Use this function to perform any processing on the header cell text, as desired.
+							<p>At this point, the header cell text has not been encoded.</p>
+							<p>Here is one example:</p>
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // remove all non-alphanumeric characters (including spaces)
+  return text.replace( /[^a-z0-9]/gi, '' );
+}</pre>
+							Another example:
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // completely custom text to use for the hash
+  // this method assumes that the table layout is constant
+  // (i.e. columns are not added, removed or rearranged)
+  return [ 'first', 'last', 'age', 'total', 'disc', 'date' ][ columnIndex ];
+}</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_directiontext">
+						<td><a href="#" class="permalink">sort2Hash_directionText</a></td>
+						<td><code>[ 0, 1 ]</code></td>
+						<td>
+							Set the direction text shown in the URL.
+							<div class="collapsible">
+							<br>
+							Only the first two values will be used from this array. The first value is assigned to ascending sorts and the second is assigned to descending sorts.
+							<p>Use the option as follows:</p>
+							<pre class="prettyprint lang-js">sort2Hash_directionText : [ 'asc', 'desc' ]</pre>
+							<span class="label warning">*NOTE*</span> When converting the hash into a value, if the direction hash does not match the second value (<code>'desc'</code> in the example above), it will fallback to an ascending sort no matter what text in contained within the first value.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_overridesavesort">
+						<td><span class="permalink">sort2Hash_overrideSaveSort</span></td>
+						<td><code>false</code></td>
+						<td>if <code>true</code>, the hash sort will override any stored sort (saveSort widget).</td>
+					</tr>
 
 				</tbody>
 			</table>
