@@ -115,7 +115,7 @@ ts.addWidget({
 		sort2Hash_useHeaderText     : false,    // use column header text (true) or zero-based column index
 		sort2Hash_processHeaderText : null,     // function( text, config, columnIndex ) {},
 		sort2Hash_directionText     : [ 0, 1 ], // [ 'asc', 'desc' ],
-		sort2Hash_overrideSaveSort  : false,    // if true, override saveSort widget if saved sort available
+		sort2Hash_overrideSaveSort  : false     // if true, override saveSort widget if saved sort available
 	},
 	init: function(table, thisWidget, c, wo) {
 		s2h.init( c, wo );
