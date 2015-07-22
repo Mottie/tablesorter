@@ -81,7 +81,7 @@ s2h = {
 			if ( wo.sort2Hash_useHeaderText ) {
 				txt = $.trim( c.$headerIndexed[ column ].text() );
 				if ( typeof wo.sort2Hash_processHeaderText === 'function' ) {
-					txt = wo.sort2Hash_processHeaderText( txt, config, column );
+					txt = wo.sort2Hash_processHeaderText( txt, c, column );
 				}
 				column = txt;
 			}
