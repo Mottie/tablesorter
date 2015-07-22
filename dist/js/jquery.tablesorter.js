@@ -1359,11 +1359,11 @@
 				var holdr;
 				if (getIt) {
 					table.isProcessing = true;
-					$tb.before('<span class="tablesorter-savemyplace"/>');
+					$tb.before('<colgroup class="tablesorter-savemyplace"/>');
 					holdr = ($.fn.detach) ? $tb.detach() : $tb.remove();
 					return holdr;
 				}
-				holdr = $(table).find('span.tablesorter-savemyplace');
+				holdr = $(table).find('colgroup.tablesorter-savemyplace');
 				$tb.insertAfter( holdr );
 				holdr.remove();
 				table.isProcessing = false;

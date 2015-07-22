@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 07-14-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-22-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1367,11 +1367,11 @@
 				var holdr;
 				if (getIt) {
 					table.isProcessing = true;
-					$tb.before('<span class="tablesorter-savemyplace"/>');
+					$tb.before('<colgroup class="tablesorter-savemyplace"/>');
 					holdr = ($.fn.detach) ? $tb.detach() : $tb.remove();
 					return holdr;
 				}
-				holdr = $(table).find('span.tablesorter-savemyplace');
+				holdr = $(table).find('colgroup.tablesorter-savemyplace');
 				$tb.insertAfter( holdr );
 				holdr.remove();
 				table.isProcessing = false;
