@@ -1349,12 +1349,14 @@
 				var holdr;
 				if (getIt) {
 					table.isProcessing = true;
-					$tb.before('<span class="tablesorter-savemyplace"/>');
 					holdr = ($.fn.detach) ? $tb.detach() : $tb.remove();
 					return holdr;
 				}
-				holdr = $(table).find('span.tablesorter-savemyplace');
-				$tb.insertAfter( holdr );
+				if ($(table).find("thead").length > 0) {
+					$(table).find("thead").after($tb);
+				} else {
+					$(table).prepend($tb);
+				}
 				holdr.remove();
 				table.isProcessing = false;
 			};
