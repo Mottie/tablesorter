@@ -25,22 +25,22 @@
 
 	$( 'table' ).tablesorter({
 		theme: 'blue',
-		widgets: [ 'zebra', 'sort2Hash', 'saveSort' ],
+		widgets: [ 'zebra', 'sort2Hash' ],
 		widgetOptions : {
 			// hash prefix
-			sort2Hash_hash             : '#',
+			sort2Hash_hash              : '#',
 			// don't '#' or '=' here
-			sort2Hash_separator        : ',',
+			sort2Hash_separator         : ',',
 			// this option > table ID > table index on page
-			sort2Hash_tableId          : null,
+			sort2Hash_tableId           : null,
 			// if true, show header cell text instead of a zero-based column index
-			sort2Hash_useHeaderText    : false,
+			sort2Hash_useHeaderText     : false,
 			// allow processing of text if sort2Hash_useHeaderText: true
 			sort2Hash_processHeaderText : null, // function( text, config, columnIndex ) {},
 			// direction text shown in the URL e.g. [ 'asc', 'desc' ]
-			sort2Hash_directionText    : [ 0, 1 ], // default values
+			sort2Hash_directionText     : [ 0, 1 ], // default values
 			// if true, override saveSort widget sort, if used & stored sort is available
-			sort2Hash_overrideSaveSort : true
+			sort2Hash_overrideSaveSort  : true // default = false
 		}
 	});
 
