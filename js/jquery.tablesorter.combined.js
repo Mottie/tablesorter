@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 07-22-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-23-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1706,8 +1706,8 @@
 				ts.widgets.push(widget);
 			};
 
-			ts.hasWidget = function(table, name){
-				$table = $(table);
+			ts.hasWidget = function( $table, name ) {
+				$table = $( $table );
 				return $table.length && $table[0].config && $table[0].config.widgetInit[name] || false;
 			};
 

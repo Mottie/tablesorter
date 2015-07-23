@@ -1698,8 +1698,8 @@
 				ts.widgets.push(widget);
 			};
 
-			ts.hasWidget = function(table, name){
-				$table = $(table);
+			ts.hasWidget = function( $table, name ) {
+				$table = $( $table );
 				return $table.length && $table[0].config && $table[0].config.widgetInit[name] || false;
 			};
 

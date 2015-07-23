@@ -750,6 +750,15 @@ $(function(){
 	});
 
 	/************************************************
+		test has widget function
+	************************************************/
+	QUnit.test( "has zebra widget", function(assert) {
+		assert.expect(2);
+		assert.equal( ts.hasWidget(  table2, 'zebra'), true, 'table has zebra widget (using table element object)' );
+		assert.equal( ts.hasWidget( $table2, 'zebra'), true, 'table has zebra widget (using jQuery table object)' );
+	});
+
+	/************************************************
 		check destroy method
 	************************************************/
 	QUnit.test("testing destroy method", function(assert) {
