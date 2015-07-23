@@ -132,11 +132,17 @@
 			wo.output_hiddenColumnArray = [];
 			for ( indx = 0; indx < c.columns; indx++ ) {
 				wo.output_hiddenColumnArray[ indx ] = $.inArray( indx, wo.output_ignoreColumns ) > -1 ||
-					c.$headerIndexed[ indx ].css( 'display' ) === 'none';
+				( !wo.output_hiddenColumns && c.$headerIndexed[ indx ].css( 'display' ) === 'none' &&
+					!c.$headerIndexed[ indx ].hasClass( 'tablesorter-scroller-hidden-column' )  );
 			}
 
 			// get header cells
-			$this = $el.find('thead tr:visible').not('.' + (ts.css.filterRow || 'tablesorter-filter-row') );
+			$this = $el
+				.find('thead tr')
+				.not('.' + (ts.css.filterRow || 'tablesorter-filter-row') )
+				.filter( function() {
+					return wo.output_hiddenColumns || $(this).css('display') !== 'none';
+				});
 			headers = output.processRow(c, $this, true, outputJSON);
 
 			// all tbody rows
@@ -333,23 +339,23 @@
 	ts.addWidget({
 		id: 'output',
 		options: {
-			output_separator     : ',',         // set to 'json', 'array' or any separator
-			output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
-			output_hiddenColumns : false,       // include hidden columns in the output
-			output_includeFooter : false,       // include footer rows in the output
-			output_dataAttrib    : 'data-name', // header attrib containing modified header name
-			output_headerRows    : false,       // if true, include multiple header rows (JSON only)
-			output_delivery      : 'popup',     // popup, download
-			output_saveRows      : 'filtered',  // (a)ll, (v)isible, (f)iltered or jQuery filter selector
-			output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
-			output_replaceQuote  : '\u201c;',   // left double quote
-			output_includeHTML   : false,
-			output_trimSpaces    : true,
-			output_wrapQuotes    : false,
-			output_popupStyle    : 'width=500,height=300',
-			output_saveFileName  : 'mytable.csv',
+			output_separator      : ',',         // set to 'json', 'array' or any separator
+			output_ignoreColumns  : [],          // columns to ignore [0, 1,... ] (zero-based index)
+			output_hiddenColumns  : false,       // include hidden columns in the output
+			output_includeFooter  : false,       // include footer rows in the output
+			output_dataAttrib     : 'data-name', // header attrib containing modified header name
+			output_headerRows     : false,       // if true, include multiple header rows (JSON only)
+			output_delivery       : 'popup',     // popup, download
+			output_saveRows       : 'filtered',  // (a)ll, (v)isible, (f)iltered or jQuery filter selector
+			output_duplicateSpans : true,        // duplicate output data in tbody colspan/rowspan
+			output_replaceQuote   : '\u201c;',   // left double quote
+			output_includeHTML    : false,
+			output_trimSpaces     : true,
+			output_wrapQuotes     : false,
+			output_popupStyle     : 'width=500,height=300',
+			output_saveFileName   : 'mytable.csv',
 			// format $cell content callback
-			output_formatContent : null, // function(config, data){ return data.content; }
+			output_formatContent  : null, // function(config, data){ return data.content; }
 			// callback executed when processing completes
 			// return true to continue download/output
 			// return false to stop delivery & do something else with the data
