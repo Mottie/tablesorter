@@ -7,254 +7,254 @@
 ;( function( $ ){
 	'use strict';
 
-var tse = $.tablesorter.editable = {
-	namespace : '.tseditable',
-	// last edited class name
-	lastEdited: 'tseditable-last-edited-cell',
+	var tse = $.tablesorter.editable = {
+		namespace : '.tseditable',
+		// last edited class name
+		lastEdited: 'tseditable-last-edited-cell',
 
-	editComplete: function( c, wo, $cell, refocus ) {
-		c.$table
-			.find( '.' + tse.lastEdited )
-			.removeClass( tse.lastEdited )
-			.trigger( wo.editable_editComplete, [ c ] );
-		// restore focus last cell after updating
-		if ( refocus ) {
+		editComplete: function( c, wo, $cell, refocus ) {
+			c.$table
+				.find( '.' + tse.lastEdited )
+				.removeClass( tse.lastEdited )
+				.trigger( wo.editable_editComplete, [ c ] );
+			// restore focus last cell after updating
+			if ( refocus ) {
+				setTimeout( function() {
+					$cell.focus();
+				}, 50 );
+			}
+		},
+
+		selectAll: function( cell ) {
 			setTimeout( function() {
-				$cell.focus();
-			}, 50 );
-		}
-	},
-
-	selectAll: function( cell ) {
-		setTimeout( function() {
-			// select all text in contenteditable
-			// see http://stackoverflow.com/a/6150060/145346
-			var range, selection;
-			if ( document.body.createTextRange ) {
-				range = document.body.createTextRange();
-				range.moveToElementText( cell );
-				range.select();
-			} else if ( window.getSelection ) {
-				selection = window.getSelection();
-				range = document.createRange();
-				range.selectNodeContents( cell );
-				selection.removeAllRanges();
-				selection.addRange( range );
-			}
-		}, 100 );
-	},
-
-	getColumns : function( c, wo ) {
-		var indx, tmp,
-			colIndex = [],
-			cols = [];
-		if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
-			// editable_columns can contain a range string ( i.e. '2-4' )
-			tmp = wo.editable_columns.split( /\s*-\s*/ );
-			indx = parseInt( tmp[ 0 ], 10 ) || 0;
-			tmp = parseInt( tmp[ 1 ], 10 ) || ( c.columns - 1 );
-			if ( tmp > c.columns ) {
-				tmp = c.columns - 1;
-			}
-			for ( ; indx <= tmp; indx++ ) {
-				colIndex.push( indx );
-				cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
-			}
-		} else if ( $.isArray( wo.editable_columns ) ) {
-			$.each( wo.editable_columnsArray || wo.editable_columns, function( i, col ) {
-				if ( col < c.columns ) {
-					colIndex.push( col );
-					cols.push( 'td:nth-child(' + ( col + 1 ) + ')' );
+				// select all text in contenteditable
+				// see http://stackoverflow.com/a/6150060/145346
+				var range, selection;
+				if ( document.body.createTextRange ) {
+					range = document.body.createTextRange();
+					range.moveToElementText( cell );
+					range.select();
+				} else if ( window.getSelection ) {
+					selection = window.getSelection();
+					range = document.createRange();
+					range.selectNodeContents( cell );
+					selection.removeAllRanges();
+					selection.addRange( range );
 				}
-			});
-		}
-		if ( !wo.editable_columnsArray ) {
-			wo.editable_columnsArray = colIndex;
-			wo.editable_columnsArray.sort(function(a,b){ return a - b; });
-		}
-		return cols;
-	},
+			}, 100 );
+		},
 
-	update: function( c, wo ) {
-		var $t,
-			tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
-			cols = tse.getColumns( c, wo ).join( ',' );
-
-		// turn off contenteditable to allow dynamically setting the wo.editable_noEdit
-		// class on table cells - see issue #900
-		c.$tbodies.find( cols ).find( '[contenteditable]' ).prop( 'contenteditable', false );
-
-		// IE does not allow making TR/TH/TD cells directly editable ( issue #404 )
-		// so add a div or span inside ( it's faster than using wrapInner() )
-		c.$tbodies.find( cols ).not( '.' + wo.editable_noEdit ).each( function() {
-			// test for children, if they exist, then make the children editable
-			$t = $( this );
-
-			if ( tmp && $t.children( 'div, span' ).length === 0 ) {
-				$t.wrapInner( wo.editable_wrapContent );
+		getColumns : function( c, wo ) {
+			var indx, tmp,
+				colIndex = [],
+				cols = [];
+			if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
+				// editable_columns can contain a range string ( i.e. '2-4' )
+				tmp = wo.editable_columns.split( /\s*-\s*/ );
+				indx = parseInt( tmp[ 0 ], 10 ) || 0;
+				tmp = parseInt( tmp[ 1 ], 10 ) || ( c.columns - 1 );
+				if ( tmp > c.columns ) {
+					tmp = c.columns - 1;
+				}
+				for ( ; indx <= tmp; indx++ ) {
+					colIndex.push( indx );
+					cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
+				}
+			} else if ( $.isArray( wo.editable_columns ) ) {
+				$.each( wo.editable_columnsArray || wo.editable_columns, function( i, col ) {
+					if ( col < c.columns ) {
+						colIndex.push( col );
+						cols.push( 'td:nth-child(' + ( col + 1 ) + ')' );
+					}
+				});
 			}
-			if ( $t.children( 'div, span' ).length ) {
-				// make div/span children content editable
-				$t.children( 'div, span' ).not( '.' + wo.editable_noEdit ).each( function() {
-					var $this = $( this );
+			if ( !wo.editable_columnsArray ) {
+				wo.editable_columnsArray = colIndex;
+				wo.editable_columnsArray.sort(function(a, b){ return a - b; });
+			}
+			return cols;
+		},
+
+		update: function( c, wo ) {
+			var $t,
+				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
+				cols = tse.getColumns( c, wo ).join( ',' );
+
+			// turn off contenteditable to allow dynamically setting the wo.editable_noEdit
+			// class on table cells - see issue #900
+			c.$tbodies.find( cols ).find( '[contenteditable]' ).prop( 'contenteditable', false );
+
+			// IE does not allow making TR/TH/TD cells directly editable ( issue #404 )
+			// so add a div or span inside ( it's faster than using wrapInner() )
+			c.$tbodies.find( cols ).not( '.' + wo.editable_noEdit ).each( function() {
+				// test for children, if they exist, then make the children editable
+				$t = $( this );
+
+				if ( tmp && $t.children( 'div, span' ).length === 0 ) {
+					$t.wrapInner( wo.editable_wrapContent );
+				}
+				if ( $t.children( 'div, span' ).length ) {
+					// make div/span children content editable
+					$t.children( 'div, span' ).not( '.' + wo.editable_noEdit ).each( function() {
+						var $this = $( this );
+						if ( wo.editable_trimContent ) {
+							$this.html( function( i, txt ) {
+								return $.trim( txt );
+							});
+						}
+						$this.prop( 'contenteditable', true );
+					});
+				} else {
 					if ( wo.editable_trimContent ) {
-						$this.html( function( i, txt ) {
+						$t.html( function( i, txt ) {
 							return $.trim( txt );
 						});
 					}
-					$this.prop( 'contenteditable', true );
-				});
-			} else {
-				if ( wo.editable_trimContent ) {
-					$t.html( function( i, txt ) {
-						return $.trim( txt );
-					});
-				}
-				$t.prop( 'contenteditable', true );
-			}
-		});
-	},
-
-	bindEvents: function( c, wo ) {
-		var namespace = tse.namespace;
-		c.$table
-			.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ), function() {
-				tse.update( c, c.widgetOptions );
-			})
-			// prevent sort initialized by user click on the header from changing the row indexing before
-			// updateCell can finish processing the change
-			.children( 'thead' )
-			.add( $( c.namespace + '_extra_table' ).children( 'thead' ) )
-			.off( 'mouseenter' + namespace )
-			.on( 'mouseenter' + namespace, function() {
-				if ( c.$table.data( 'contentFocused' ) ) {
-					// change to 'true' instead of element to allow focusout to process
-					c.$table.data( 'contentFocused', true );
-					$( ':focus' ).trigger( 'focusout' );
+					$t.prop( 'contenteditable', true );
 				}
 			});
+		},
 
-		c.$tbodies
-			.off( ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
-			.on( 'focus' + namespace, '[contenteditable]', function( e ) {
-				clearTimeout( $( this ).data( 'timer' ) );
-				c.$table.data( 'contentFocused', e.target );
-				c.table.isUpdating = true; // prevent sorting while editing
-				var $this = $( this ),
-					selAll = wo.editable_selectAll,
-					column = $this.closest( 'td' ).index(),
-					txt = $this.html();
-				if ( wo.editable_trimContent ) {
-					txt = $.trim( txt );
-				}
-				// prevent enter from adding into the content
-				$this
-					.off( 'keydown' + namespace )
-					.on( 'keydown' + namespace, function( e ){
-						if ( wo.editable_enterToAccept && e.which === 13 && !e.shiftKey ) {
-							e.preventDefault();
-						}
-					});
-				$this.data({ before : txt, original: txt });
+		bindEvents: function( c, wo ) {
+			var namespace = tse.namespace;
+			c.$table
+				.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
+				.on( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ), function() {
+					tse.update( c, c.widgetOptions );
+				})
+				// prevent sort initialized by user click on the header from changing the row indexing before
+				// updateCell can finish processing the change
+				.children( 'thead' )
+				.add( $( c.namespace + '_extra_table' ).children( 'thead' ) )
+				.off( 'mouseenter' + namespace )
+				.on( 'mouseenter' + namespace, function() {
+					if ( c.$table.data( 'contentFocused' ) ) {
+						// change to 'true' instead of element to allow focusout to process
+						c.$table.data( 'contentFocused', true );
+						$( ':focus' ).trigger( 'focusout' );
+					}
+				});
 
-				if ( typeof wo.editable_focused === 'function' ) {
-					wo.editable_focused( txt, column, $this );
-				}
+			c.$tbodies
+				.off( ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
+				.on( 'focus' + namespace, '[contenteditable]', function( e ) {
+					clearTimeout( $( this ).data( 'timer' ) );
+					c.$table.data( 'contentFocused', e.target );
+					c.table.isUpdating = true; // prevent sorting while editing
+					var $this = $( this ),
+						selAll = wo.editable_selectAll,
+						column = $this.closest( 'td' ).index(),
+						txt = $this.html();
+					if ( wo.editable_trimContent ) {
+						txt = $.trim( txt );
+					}
+					// prevent enter from adding into the content
+					$this
+						.off( 'keydown' + namespace )
+						.on( 'keydown' + namespace, function( e ){
+							if ( wo.editable_enterToAccept && e.which === 13 && !e.shiftKey ) {
+								e.preventDefault();
+							}
+						});
+					$this.data({ before : txt, original: txt });
 
-				if ( selAll ) {
-					if ( typeof selAll === 'function' ) {
-						if ( selAll( txt, column, $this ) ) {
+					if ( typeof wo.editable_focused === 'function' ) {
+						wo.editable_focused( txt, column, $this );
+					}
+
+					if ( selAll ) {
+						if ( typeof selAll === 'function' ) {
+							if ( selAll( txt, column, $this ) ) {
+								tse.selectAll( $this[0] );
+							}
+						} else {
 							tse.selectAll( $this[0] );
 						}
-					} else {
-						tse.selectAll( $this[0] );
 					}
-				}
-			})
-			.on( 'blur focusout keydown '.split( ' ' ).join( namespace + ' ' ), '[contenteditable]', function( e ) {
-				if ( !c.$table.data( 'contentFocused' ) ) { return; }
-				var t, validate,
-					valid = false,
-					$this = $( e.target ),
-					txt = $this.html(),
-					column = $this.closest( 'td' ).index();
-				if ( wo.editable_trimContent ) {
-					txt = $.trim( txt );
-				}
-				if ( e.which === 27 ) {
-					// user cancelled
-					$this.html( $this.data( 'original' ) ).trigger( 'blur' + namespace );
-					c.$table.data( 'contentFocused', false );
-					c.table.isUpdating = false;
-					return false;
-				}
-				// accept on enter ( if set ), alt-enter ( always ) or if autoAccept is set and element is blurred or unfocused
-				t = e.which === 13 && !e.shiftKey && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
-				// change if new or user hits enter ( if option set )
-				if ( t && $this.data( 'before' ) !== txt ) {
-
-					validate = wo.editable_validate;
-					valid = txt;
-
-					if ( typeof( validate ) === 'function' ) {
-						valid = validate( txt, $this.data( 'original' ), column, $this );
-					} else if ( typeof ( validate = $.tablesorter.getColumnData( c.table, validate, column ) ) === 'function' ) {
-						valid = validate( txt, $this.data( 'original' ), column, $this );
+				})
+				.on( 'blur focusout keydown '.split( ' ' ).join( namespace + ' ' ), '[contenteditable]', function( e ) {
+					if ( !c.$table.data( 'contentFocused' ) ) { return; }
+					var t, validate,
+						valid = false,
+						$this = $( e.target ),
+						txt = $this.html(),
+						column = $this.closest( 'td' ).index();
+					if ( wo.editable_trimContent ) {
+						txt = $.trim( txt );
 					}
-
-					if ( t && valid !== false ) {
-						c.$table.find( '.' + tse.lastEdited ).removeClass( tse.lastEdited );
-						$this
-							.addClass( tse.lastEdited )
-							.html( valid )
-							.data( 'before', valid )
-							.data( 'original', valid )
-							.trigger( 'change' );
-						c.$table.trigger( 'updateCell', [ $this.closest( 'td' ), false, function() {
-							if ( wo.editable_autoResort ) {
-								setTimeout( function() {
-									c.$table.trigger( 'sorton', [ c.sortList, function() {
-										tse.editComplete( c, wo, c.$table.data( 'contentFocused' ), true );
-									}, true ] );
-								}, 10 );
-							} else {
-								tse.editComplete( c, wo, c.$table.data( 'contentFocused' ) );
-							}
-						} ] );
+					if ( e.which === 27 ) {
+						// user cancelled
+						$this.html( $this.data( 'original' ) ).trigger( 'blur' + namespace );
+						c.$table.data( 'contentFocused', false );
+						c.table.isUpdating = false;
 						return false;
 					}
-				} else if ( !valid && e.type !== 'keydown' ) {
-					clearTimeout( $this.data( 'timer' ) );
-					$this.data( 'timer', setTimeout( function() {
-					c.table.isUpdating = false; // clear flag or sorting will be disabled
+					// accept on enter ( if set ), alt-enter ( always ) or if autoAccept is set and element is blurred or unfocused
+					t = e.which === 13 && !e.shiftKey && ( wo.editable_enterToAccept || e.altKey ) || wo.editable_autoAccept && e.type !== 'keydown';
+					// change if new or user hits enter ( if option set )
+					if ( t && $this.data( 'before' ) !== txt ) {
 
-						if ( $.isFunction( wo.editable_blur ) ) {
-							txt = $this.html();
-							wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
+						validate = wo.editable_validate;
+						valid = txt;
+
+						if ( typeof validate === 'function' ) {
+							valid = validate( txt, $this.data( 'original' ), column, $this );
+						} else if ( typeof ( validate = $.tablesorter.getColumnData( c.table, validate, column ) ) === 'function' ) {
+							valid = validate( txt, $this.data( 'original' ), column, $this );
 						}
-					}, 100 ) );
-					// restore original content on blur
-					$this.html( $this.data( 'original' ) );
-				}
-			});
-	},
-	destroy : function( c, wo ) {
-		var namespace = tse.namespace,
-			cols = tse.getColumns( c, wo ),
 
-		tmp = ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
-		c.$table.off( tmp );
+						if ( t && valid !== false ) {
+							c.$table.find( '.' + tse.lastEdited ).removeClass( tse.lastEdited );
+							$this
+								.addClass( tse.lastEdited )
+								.html( valid )
+								.data( 'before', valid )
+								.data( 'original', valid )
+								.trigger( 'change' );
+							c.$table.trigger( 'updateCell', [ $this.closest( 'td' ), false, function() {
+								if ( wo.editable_autoResort ) {
+									setTimeout( function() {
+										c.$table.trigger( 'sorton', [ c.sortList, function() {
+											tse.editComplete( c, wo, c.$table.data( 'contentFocused' ), true );
+										}, true ] );
+									}, 10 );
+								} else {
+									tse.editComplete( c, wo, c.$table.data( 'contentFocused' ) );
+								}
+							} ] );
+							return false;
+						}
+					} else if ( !valid && e.type !== 'keydown' ) {
+						clearTimeout( $this.data( 'timer' ) );
+						$this.data( 'timer', setTimeout( function() {
+							c.table.isUpdating = false; // clear flag or sorting will be disabled
 
-		tmp = ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
-		c.$tbodies
-			.off( tmp )
-			.find( cols.join( ',' ) )
-			.find( '[contenteditable]' )
-			.prop( 'contenteditable', false );
-	}
+							if ( $.isFunction( wo.editable_blur ) ) {
+								txt = $this.html();
+								wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
+							}
+						}, 100 ) );
+						// restore original content on blur
+						$this.html( $this.data( 'original' ) );
+					}
+				});
+		},
+		destroy : function( c, wo ) {
+			var namespace = tse.namespace,
+				cols = tse.getColumns( c, wo ),
 
-};
+			tmp = ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
+			c.$table.off( tmp );
+
+			tmp = ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
+			c.$tbodies
+				.off( tmp )
+				.find( cols.join( ',' ) )
+				.find( '[contenteditable]' )
+				.prop( 'contenteditable', false );
+		}
+
+	};
 
 	$.tablesorter.addWidget({
 		id: 'editable',

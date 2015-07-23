@@ -5,8 +5,8 @@
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
-"use strict";
-var ts = $.tablesorter = $.tablesorter || {},
+	'use strict';
+	var ts = $.tablesorter = $.tablesorter || {},
 
 	// build a table from data (requires existing <table> tag)
 	// data.header contains an array of header titles
@@ -40,7 +40,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 						// valid JSON!
 						return bt.object( table, d, wo );
 					}
-				} catch(ignore) {}
+				} catch (ignore) {}
 				// fall through in case it's a csv string
 			}
 			// Array
@@ -105,7 +105,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 
 		// *** CSV only options ***
 		build_csvStartLine : 0,   // line within the csv to start adding to table
-		build_csvSeparator : ",", // csv separator
+		build_csvSeparator : ',', // csv separator
 
 		// *** build object options ***
 		build_objectRowKey    : 'rows',    // object key containing table rows
@@ -225,7 +225,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		var c, h,
 			csv = wo.build_type === 'csv' || typeof data === 'string',
 			$t = $(table),
-			lines = csv ? data.replace('\r','').split('\n') : data,
+			lines = csv ? data.replace('\r', '').split('\n') : data,
 			len = lines.length,
 			printedLines = 0,
 			infooter = false,
@@ -276,13 +276,13 @@ var ts = $.tablesorter = $.tablesorter || {},
 	// CSV Parser by Brian Huisman (http://www.greywyvern.com/?post=258)
 	bt.splitCSV = function(str, sep) {
 		var x, tl,
-			thisCSV = $.trim(str).split(sep = sep || ",");
+			thisCSV = $.trim(str).split(sep = sep || ',');
 		for ( x = thisCSV.length - 1; x >= 0; x-- ) {
 			if ( thisCSV[x].replace(/\"\s+$/, '"').charAt(thisCSV[x].length - 1) === '"' ) {
 				if ( (tl = thisCSV[x].replace(/^\s+\"/, '"')).length > 1 && tl.charAt(0) === '"' ) {
 					thisCSV[x] = thisCSV[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
 				} else if (x) {
-					thisCSV.splice(x - 1, 2, [thisCSV[x - 1], thisCSV[x]].join(sep));
+					thisCSV.splice(x - 1, 2, [ thisCSV[x - 1], thisCSV[x] ].join(sep));
 				} else {
 					thisCSV = thisCSV.shift().split(sep).concat(thisCSV);
 				}
@@ -304,7 +304,7 @@ var ts = $.tablesorter = $.tablesorter || {},
 		bt.buildComplete(table, wo);
 	};
 
-/* ==== Object example ====
+	/* ==== Object example ====
 	data : {
 		headers : [
 			[
@@ -345,9 +345,9 @@ var ts = $.tablesorter = $.tablesorter || {},
 			}
 		]
 	}
-*/
+	*/
 	bt.object = function(table, data, wo) {
-		// "rows"
+		// 'rows'
 		var j, l, t, $c, $t, $tb, $tr,
 			c = table.config,
 			kh = wo.build_objectHeaderKey,

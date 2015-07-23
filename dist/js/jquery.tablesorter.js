@@ -198,7 +198,7 @@
 					// node could be a jquery object
 					// http://jsperf.com/jquery-vs-instanceof-jquery/2
 					$node = node.jquery ? node : $(node);
-				if (typeof(t) === 'string') {
+				if (typeof t === 'string') {
 					// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 					// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
 					if ( t === 'basic' && typeof ( te = $node.attr(c.textAttribute) ) !== 'undefined' ) {
@@ -206,7 +206,7 @@
 					}
 					return $.trim( node.textContent || $node.text() );
 				} else {
-					if (typeof(t) === 'function') {
+					if (typeof t === 'function') {
 						return $.trim( t($node[0], c.table, cellIndex) );
 					} else if (typeof (te = ts.getColumnData( c.table, t, cellIndex )) === 'function') {
 						return $.trim( te($node[0], c.table, cellIndex) );
@@ -266,7 +266,7 @@
 						// make sure txt is a string (extractor may have converted it)
 						parser.format( '' + txt, c.table, cell, colIndex );
 					if ( c.ignoreCase && typeof val === 'string' ) {
-					 val = val.toLowerCase();
+						val = val.toLowerCase();
 					}
 				}
 				return val;
@@ -510,20 +510,22 @@
 						// set up header template
 						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, $t.find('.' + ts.css.icon).length ? '' : i);
 						if (c.onRenderTemplate) {
-							h = c.onRenderTemplate.apply($t, [index, t]);
+							h = c.onRenderTemplate.apply( $t, [ index, t ] );
 							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
 						}
 						$t.html('<div class="' + ts.css.headerIn + '">' + t + '</div>'); // faster than wrapInner
 					}
-					if (c.onRenderHeader) { c.onRenderHeader.apply($t, [index, c, c.$table]); }
+					if (c.onRenderHeader) { c.onRenderHeader.apply( $t, [ index, c, c.$table ] ); }
 					// *** remove this.column value if no conflicts found
 					elem.column = parseInt( $t.attr('data-column'), 10);
-					elem.order = formatSortingOrder( ts.getData($t, ch, 'sortInitialOrder') || c.sortInitialOrder ) ? [1,0,2] : [0,1,2];
+					elem.order = formatSortingOrder( ts.getData( $t, ch, 'sortInitialOrder' ) || c.sortInitialOrder ) ?
+						[ 1, 0, 2 ] : // desc, asc, unsorted
+						[ 0, 1, 2 ];  // asc, desc, unsorted
 					elem.count = -1; // set to -1 because clicking on the header automatically adds one
 					elem.lockedOrder = false;
 					lock = ts.getData($t, ch, 'lockedOrder') || false;
 					if (typeof lock !== 'undefined' && lock !== false) {
-						elem.order = elem.lockedOrder = formatSortingOrder(lock) ? [1,1,1] : [0,0,0];
+						elem.order = elem.lockedOrder = formatSortingOrder(lock) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
 					}
 					$t.addClass(ts.css.header + ' ' + c.cssHeader);
 					// add cell to headerList
@@ -593,9 +595,9 @@
 					list = c.sortList,
 					len = list.length,
 					none = ts.css.sortNone + ' ' + c.cssNone,
-					css = [ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc],
+					css = [ ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc ],
 					cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
-					aria = ['ascending', 'descending'],
+					aria = [ 'ascending', 'descending' ],
 					// find the footer
 					$t = $(table).find('tfoot tr').children()
 						.add( $( c.namespace + '_extra_headers' ) )
@@ -665,7 +667,7 @@
 						dir = ('' + val[1]).match(/^(1|d|s|o|n)/);
 						dir = dir ? dir[0] : '';
 						// 0/(a)sc (default), 1/(d)esc, (s)ame, (o)pposite, (n)ext
-						switch(dir) {
+						switch (dir) {
 							case '1': case 'd': // descending
 								dir = 1;
 								break;
@@ -741,11 +743,11 @@
 					// add column to sort list
 					order = cell.order[cell.count];
 					if (order < 2) {
-						c.sortList.push([indx, order]);
+						c.sortList.push([ indx, order ]);
 						// add other columns if header spans across multiple
 						if (cell.colSpan > 1) {
 							for (col = 1; col < cell.colSpan; col++) {
-								c.sortList.push([indx + col, order]);
+								c.sortList.push([ indx + col, order ]);
 							}
 						}
 					}
@@ -756,7 +758,7 @@
 						for (col = 0; col < c.sortAppend.length; col++) {
 							s = ts.isValueInArray(c.sortAppend[col][0], c.sortList);
 							if (s >= 0) {
-								c.sortList.splice(s,1);
+								c.sortList.splice(s, 1);
 							}
 						}
 					}
@@ -770,7 +772,7 @@
 								// order.count seems to be incorrect when compared to cell.count
 								s[1] = order.order[cell.count];
 								if (s[1] === 2) {
-									c.sortList.splice(col,1);
+									c.sortList.splice(col, 1);
 									order.count = -1;
 								}
 							}
@@ -779,11 +781,11 @@
 						// add column to sort list array
 						order = cell.order[cell.count];
 						if (order < 2) {
-							c.sortList.push([indx, order]);
+							c.sortList.push([ indx, order ]);
 							// add other columns if header spans across multiple
 							if (cell.colSpan > 1) {
 								for (col = 1; col < cell.colSpan; col++) {
-									c.sortList.push([indx + col, order]);
+									c.sortList.push([ indx + col, order ]);
 								}
 							}
 						}
@@ -857,10 +859,10 @@
 								x = dir ? a : b;
 								y = dir ? b : a;
 								// text sort function
-								if (typeof(cts) === 'function') {
+								if (typeof cts === 'function') {
 									// custom OVERALL text sorter
 									sort = cts(x[col], y[col], dir, col, table);
-								} else if (typeof(cts) === 'object' && cts.hasOwnProperty(col)) {
+								} else if (typeof cts === 'object' && cts.hasOwnProperty(col)) {
 									// custom text sorter for a SPECIFIC COLUMN
 									sort = cts[col](x[col], y[col], dir, col, table);
 								} else {
@@ -893,14 +895,14 @@
 				// this will catch spamming of the updateCell method
 				if (resrt !== false && !c.serverSideSorting && !c.table.isProcessing) {
 					if (sl.length) {
-						c.$table.trigger('sorton', [sl, function(){
+						c.$table.trigger('sorton', [ sl, function(){
 							resortComplete(c, callback);
-						}, true]);
+						}, true ]);
 					} else {
-						c.$table.trigger('sortReset', [function(){
+						c.$table.trigger('sortReset', [ function(){
 							resortComplete(c, callback);
 							ts.applyWidget(c.table, false);
-						}]);
+						} ]);
 					}
 				} else {
 					resortComplete(c, callback);
@@ -1100,10 +1102,10 @@
 			ts.construct = function(settings) {
 				return this.each(function() {
 					var table = this,
-						// merge & extend config options
-						c = $.extend(true, {}, ts.defaults, settings, ts.instanceMethods);
-						// save initial settings
-						c.originalSettings = settings;
+					// merge & extend config options
+					c = $.extend(true, {}, ts.defaults, settings, ts.instanceMethods);
+					// save initial settings
+					c.originalSettings = settings;
 					// create a table from data (build table widget)
 					if (!table.hasInitialized && ts.buildTable && this.nodeName !== 'TABLE') {
 						// return the table (in case the original target is the table's container)
@@ -1158,7 +1160,7 @@
 					c.namespace = '.tablesorter' + Math.random().toString(16).slice(2);
 				} else {
 					// make sure namespace starts with a period & doesn't have weird characters
-					c.namespace = '.' + c.namespace.replace(/\W/g,'');
+					c.namespace = '.' + c.namespace.replace(/\W/g, '');
 				}
 
 				c.$table.children().children('tr').attr('role', 'row');
@@ -1202,7 +1204,7 @@
 				ts.applyWidget(table, true);
 				// if user has supplied a sort list to constructor
 				if (c.sortList.length > 0) {
-					$table.trigger('sorton', [c.sortList, {}, !c.initWidgets, true]);
+					$table.trigger('sorton', [ c.sortList, {}, !c.initWidgets, true ]);
 				} else {
 					setHeadersCss(table);
 					if (c.initWidgets) {
@@ -1241,22 +1243,22 @@
 				table = $(table)[0];
 				var overallWidth, percent, $tbodies, len, index,
 					c = table.config,
-					colgroup = c.$table.children('colgroup');
+					$colgroup = c.$table.children('colgroup');
 				// remove plugin-added colgroup, in case we need to refresh the widths
-				if (colgroup.length && colgroup.hasClass(ts.css.colgroup)) {
-					colgroup.remove();
+				if ($colgroup.length && $colgroup.hasClass(ts.css.colgroup)) {
+					$colgroup.remove();
 				}
 				if (c.widthFixed && c.$table.children('colgroup').length === 0) {
-					colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
+					$colgroup = $('<colgroup class="' + ts.css.colgroup + '">');
 					overallWidth = c.$table.width();
 					// only add col for visible columns - fixes #371
-					$tbodies = c.$tbodies.find('tr:first').children(':visible'); //.each(function()
+					$tbodies = c.$tbodies.find('tr:first').children(':visible'); // .each(function()
 					len = $tbodies.length;
 					for ( index = 0; index < len; index++ ) {
 						percent = parseInt( ( $tbodies.eq( index ).width() / overallWidth ) * 1000, 10 ) / 10 + '%';
-						colgroup.append( $('<col>').css('width', percent) );
+						$colgroup.append( $('<col>').css('width', percent) );
 					}
-					c.$table.prepend(colgroup);
+					c.$table.prepend($colgroup);
 				}
 			};
 
@@ -1303,12 +1305,12 @@
 						cellId = rowIndex + '-' + $cell.index();
 						rowSpan = cell.rowSpan || 1;
 						colSpan = cell.colSpan || 1;
-						if (typeof(matrix[rowIndex]) === 'undefined') {
+						if (typeof matrix[rowIndex] === 'undefined') {
 							matrix[rowIndex] = [];
 						}
 						// Find first available column in the first row
 						for (k = 0; k < matrix[rowIndex].length + 1; k++) {
-							if (typeof(matrix[rowIndex][k]) === 'undefined') {
+							if (typeof matrix[rowIndex][k] === 'undefined') {
 								firstAvailCol = k;
 								break;
 							}
@@ -1317,7 +1319,7 @@
 						// add data-column
 						$cell.attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
 						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
-							if (typeof(matrix[k]) === 'undefined') {
+							if (typeof matrix[k] === 'undefined') {
 								matrix[k] = [];
 							}
 							matrixrow = matrix[k];
@@ -1333,10 +1335,10 @@
 			// *** Process table ***
 			// add processing indicator
 			ts.isProcessing = function(table, toggle, $ths) {
-				table = $(table);
-				var c = table[0].config,
+				$table = $(table);
+				var c = $table[0].config,
 					// default to all headers
-					$h = $ths || table.find('.' + ts.css.header);
+					$h = $ths || $table.find('.' + ts.css.header);
 				if (toggle) {
 					// don't use sortList if custom $ths used
 					if (typeof $ths !== 'undefined' && c.sortList.length > 0) {
@@ -1346,9 +1348,9 @@
 							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList) >= 0;
 						});
 					}
-					table.add($h).addClass(ts.css.processing + ' ' + c.cssProcessing);
+					$table.add($h).addClass(ts.css.processing + ' ' + c.cssProcessing);
 				} else {
-					table.add($h).removeClass(ts.css.processing + ' ' + c.cssProcessing);
+					$table.add($h).removeClass(ts.css.processing + ' ' + c.cssProcessing);
 				}
 			};
 
@@ -1478,8 +1480,8 @@
 					$f = $t.find('tfoot:first > tr').children('th, td');
 				if (removeClasses === false && $.inArray('uitheme', c.widgets) >= 0) {
 					// reapply uitheme classes, in case we want to maintain appearance
-					$t.trigger('applyWidgetId', ['uitheme']);
-					$t.trigger('applyWidgetId', ['zebra']);
+					$t.trigger('applyWidgetId', [ 'uitheme' ]);
+					$t.trigger('applyWidgetId', [ 'zebra' ]);
 				}
 				// remove widget added rows, just in case
 				$h.find('tr').not($r).remove();
@@ -1491,7 +1493,7 @@
 					.removeData('tablesorter')
 					.unbind( events.replace(/\s+/g, ' ') );
 				c.$headers.add($f)
-					.removeClass( [ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone].join(' ') )
+					.removeClass( [ ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone ].join(' ') )
 					.removeAttr('data-column')
 					.removeAttr('aria-label')
 					.attr('aria-disabled', 'true');
@@ -1697,8 +1699,8 @@
 			};
 
 			ts.hasWidget = function(table, name){
-				table = $(table);
-				return table.length && table[0].config && table[0].config.widgetInit[name] || false;
+				$table = $(table);
+				return $table.length && $table[0].config && $table[0].config.widgetInit[name] || false;
 			};
 
 			ts.getWidgetById = function(name) {
@@ -1738,7 +1740,7 @@
 				if (c.debug) { time = new Date(); }
 				// look for widgets to apply from in table class
 				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-				wd = new RegExp( '\\s' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' )+ '\\s', 'g' );
+				wd = new RegExp( '\\s' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' ) + '\\s', 'g' );
 				if ( tableClass.match( wd ) ) {
 					// extract out the widget id from the table class (widget id's can include dashes)
 					w = tableClass.match( wd );
@@ -1946,13 +1948,13 @@
 						typeof table !== 'undefined' ? table : true;
 				if (t) {
 					// US Format - 1,234,567.89 -> 1234567.89
-					s = s.replace(/,/g,'');
+					s = s.replace(/,/g, '');
 				} else {
 					// German Format = 1.234.567,89 -> 1234567.89
 					// French Format = 1 234 567,89 -> 1234567.89
-					s = s.replace(/[\s|\.]/g,'').replace(/,/g,'.');
+					s = s.replace(/[\s|\.]/g, '').replace(/,/g, '.');
 				}
-				if(/^\s*\([.\d]+\)/.test(s)) {
+				if (/^\s*\([.\d]+\)/.test(s)) {
 					// make (#) into a negative number -> (10) = -10
 					s = s.replace(/^\s*\(([.\d]+)\)/, '-$1');
 				}
@@ -2020,7 +2022,7 @@
 	ts.addParser({
 		id: 'currency',
 		is: function(s) {
-			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test((s || '').replace(/[+\-,. ]/g,'')); // £$€¤¥¢
+			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test((s || '').replace(/[+\-,. ]/g, '')); // £$€¤¥¢
 		},
 		format: function(s, table) {
 			var n = ts.formatFloat((s || '').replace(/[^\w,. \-()]/g, ''), table);
@@ -2095,7 +2097,7 @@
 		id: 'shortDate', // 'mmddyyyy', 'ddmmyyyy' or 'yyyymmdd'
 		is: function(s) {
 			// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
-			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test((s || '').replace(/\s+/g,' ').replace(/[\-.,]/g, '/'));
+			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test((s || '').replace(/\s+/g, ' ').replace(/[\-.,]/g, '/'));
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {

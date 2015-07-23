@@ -1,6 +1,6 @@
 /*! Widget: filter, insideRange filter type - updated 2/23/2015 (v2.21.0) */
 ;(function($){
-'use strict';
+	'use strict';
 
 	// Add insideRange filter type
 	// ============================

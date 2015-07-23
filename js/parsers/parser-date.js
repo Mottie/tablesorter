@@ -2,7 +2,7 @@
 /* Extract dates using popular natural language date parsers */
 /*jshint jquery:true */
 ;(function($){
-'use strict';
+	'use strict';
 
 	/*! Sugar (http://sugarjs.com/dates#comparing_dates) */
 	/* demo: http://jsfiddle.net/Mottie/abkNM/4163/ */

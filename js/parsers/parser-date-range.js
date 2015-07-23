@@ -2,7 +2,7 @@
 /* Include the 'widget-filter-type-insideRange.js' to filter ranges */
 /*jshint jquery:true */
 ;(function($){
-'use strict';
+	'use strict';
 
 	var regex = {
 		mdy        : /(\d{1,2}[-\s]\d{1,2}[-\s]\d{4}(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?)/gi,

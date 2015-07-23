@@ -2,10 +2,10 @@
 /* alt attribute parser for jQuery 1.7+ & tablesorter 2.7.11+ */
 /*jshint jquery:true, unused:false */
 ;(function($){
-"use strict";
+	'use strict';
 
 	$.tablesorter.addParser({
-		id: "image",
+		id: 'image',
 		is: function(){
 			return false;
 		},
@@ -13,7 +13,7 @@
 			return $(cell).find('img').attr(table.config.imgAttr || 'alt') || s;
 		},
 		parsed : true, // filter widget flag
-		type: "text"
+		type: 'text'
 	});
 
 })(jQuery);

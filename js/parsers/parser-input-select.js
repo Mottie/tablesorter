@@ -4,7 +4,7 @@
  */
 /*jshint browser: true, jquery:true, unused:false */
 ;( function( $ ) {
-'use strict';
+	'use strict';
 
 	var updateServer = function( event, $table, $input ) {
 		// do something here to update your server, if needed

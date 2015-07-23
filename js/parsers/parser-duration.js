@@ -1,7 +1,7 @@
 /*! Parser: duration & countdown - updated 2/7/2015 (v2.19.0) */
 /*jshint jquery:true, unused:false */
 ;(function($){
-'use strict';
+	'use strict';
 
 	// If any number > 9999, then set table.config.durationLength = 5
 	// The below regex matches this duration example: 1y 23d 12h 44m 9s

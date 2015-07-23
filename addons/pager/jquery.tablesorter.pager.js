@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
-	"use strict";
+	'use strict';
 	/*jshint supernew:true */
 	var ts = $.tablesorter;
 
@@ -176,13 +176,13 @@
 				// form the output string (can now get a new output string from the server)
 				s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
 					// {page} = one-based index; {page+#} = zero based index +/- value
-					.replace(/\{page([\-+]\d+)?\}/gi, function(m,n){
+					.replace(/\{page([\-+]\d+)?\}/gi, function(m, n){
 						return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
 					})
 					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
 					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
 						var len, indx,
-							str = m.replace(/[{}\s]/g,''),
+							str = m.replace(/[{}\s]/g, ''),
 							extra = str.split(':'),
 							data = p.ajaxData,
 							// return zero for default page/row numbers
@@ -209,7 +209,7 @@
 					// rebind startRow/page inputs
 					$out.find('.ts-startRow, .ts-page').unbind('change' + namespace).bind('change' + namespace, function(){
 						var v = $(this).val(),
-							pg = $(this).hasClass('ts-startRow') ? Math.floor( v/p.size ) + 1 : v;
+							pg = $(this).hasClass('ts-startRow') ? Math.floor( v / p.size ) + 1 : v;
 						c.$table.trigger('pageSet' + namespace, [ pg ]);
 					});
 				}
@@ -242,7 +242,7 @@
 				current_page = p.page + 1,
 				start_page = skip_set_size,
 				end_page = pg - skip_set_size,
-				option_pages = [1],
+				option_pages = [ 1 ],
 				// construct default options pages array
 				option_pages_start_page = (large_collection) ? skip_set_size : 1;
 
@@ -286,7 +286,7 @@
 			option_pages = $.grep(option_pages, function(value, indx) {
 				return $.inArray(value, option_pages) === indx;
 			})
-			.sort(function(a,b) { return a - b; });
+			.sort(function(a, b) { return a - b; });
 
 			return option_pages;
 		},
@@ -376,7 +376,7 @@
 
 		renderAjax = function(data, table, p, xhr, exception){
 			// process data
-			if ( typeof(p.ajaxProcessing) === "function" ) {
+			if ( typeof p.ajaxProcessing === 'function' ) {
 				// ajaxProcessing result: [ total, rows, headers ]
 				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len,
 					c = table.config,
@@ -483,7 +483,7 @@
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p, false);
-				$table.trigger('updateCache', [function(){
+				$table.trigger('updateCache', [ function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
@@ -495,9 +495,9 @@
 								.trigger('applyWidgets')
 								.trigger('pagerChange', p);
 							updatePageDisplay(table, p, true);
-							}, 0);
+						}, 0);
 					}
-				}]);
+				} ]);
 
 			}
 			if (!p.initialized) {
@@ -555,7 +555,7 @@
 				c = table.config,
 				url = (p.ajaxUrl) ? p.ajaxUrl
 				// allow using "{page+1}" in the url string to switch to a non-zero based index
-				.replace(/\{page([\-+]\d+)?\}/, function(s,n){ return p.page + (n ? parseInt(n, 10) : 0); })
+				.replace(/\{page([\-+]\d+)?\}/, function(s, n){ return p.page + (n ? parseInt(n, 10) : 0); })
 				.replace(/\{size\}/g, p.size) : '',
 			sortList = c.sortList,
 			filterList = p.currentFilters || $(table).data('lastSearch') || [],
@@ -584,7 +584,7 @@
 				url = url.replace(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join('&') : filterCol );
 				p.currentFilters = filterList;
 			}
-			if ( typeof(p.customAjaxUrl) === "function" ) {
+			if ( typeof p.customAjaxUrl === 'function' ) {
 				url = p.customAjaxUrl(table, url);
 			}
 			if (c.debug) {
@@ -940,13 +940,13 @@
 						changeHeight(table, p);
 						updatePageDisplay(table, p, true);
 					})
-					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e,v){
+					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, v){
 						e.stopPropagation();
 						setPageSize(table, parseInt(v, 10) || p.settings.size || 10, p);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					})
-					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e,v){
+					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, v){
 						e.stopPropagation();
 						// force pager refresh
 						if (e.type === 'pagerUpdate') {
@@ -973,7 +973,7 @@
 					ts.log('Pager: >> Container not found');
 				}
 				pager.find(ctrls.join(','))
-					.attr("tabindex", 0)
+					.attr('tabindex', 0)
 					.unbind('click' + namespace)
 					.bind('click' + namespace, function(e){
 						e.stopPropagation();
@@ -1024,17 +1024,18 @@
 				$t.trigger('pagerBeforeInitialized', p);
 
 				enablePager(table, p, false);
-				if ( typeof(p.ajaxUrl) === 'string' ) {
+				if ( typeof p.ajaxUrl === 'string' ) {
 					// ajax pager; interact with database
 					p.ajax = true;
-					//When filtering with ajax, allow only custom filtering function, disable default filtering since it will be done server side.
+					// When filtering with ajax, allow only custom filtering function, disable default
+					// filtering since it will be done server side.
 					c.widgetOptions.filter_serversideFiltering = true;
 					c.serverSideSorting = true;
 					moveToPage(table, p);
 				} else {
 					p.ajax = false;
 					// Regular pager; all rows stored in memory
-					$(this).trigger("appendCache", true);
+					$(this).trigger('appendCache', true);
 					hideRowsSetup(table, p);
 				}
 
@@ -1087,9 +1088,9 @@
 		}
 	};
 
-// extend plugin scope
-$.fn.extend({
-	tablesorterPager: $.tablesorterPager.construct
-});
+	// extend plugin scope
+	$.fn.extend({
+		tablesorterPager: $.tablesorterPager.construct
+	});
 
 })(jQuery);

@@ -5,7 +5,7 @@
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
-'use strict';
+	'use strict';
 	var ts = $.tablesorter;
 
 	ts.formatter = {

@@ -75,6 +75,7 @@
     "grunt-contrib-qunit": "^0.5.2",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-jscs": "^1.8.0",
     "grunt-string-replace": "^1.0.0"
   }
 }

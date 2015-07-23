@@ -5,7 +5,7 @@
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($) {
-	"use strict";
+	'use strict';
 
 	var ts = $.tablesorter,
 
@@ -28,10 +28,10 @@
 				arry = $cells.not($el).map(function(){
 					$t = $(this);
 					txt = $t.attr(c.textAttribute);
-					if (typeof txt === "undefined") {
+					if (typeof txt === 'undefined') {
 						txt = this.textContent || $t.text();
 					}
-					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
+					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
 					return isNaN(txt) ? 0 : txt;
 				}).get();
 			}
@@ -57,15 +57,15 @@
 					mathAbove = $t.filter('[' + dataAttrib + '^=above]').length;
 					// ignore filtered rows & rows with data-math="ignore" (and starting row)
 					if ( ( !$rows.eq(i).hasClass(filtered) && $rows.eq(i).not('[' + dataAttrib + '=ignore]').length && i !== len ) || mathAbove && i !== len ) {
-						// stop calculating "above", when encountering another "above"
+						// stop calculating 'above', when encountering another 'above'
 						if (mathAbove) {
 							i = 0;
 						} else if ($t.length) {
 							txt = $t.attr(c.textAttribute);
-							if (typeof txt === "undefined") {
+							if (typeof txt === 'undefined') {
 								txt = $t[0].textContent || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					}
@@ -76,11 +76,11 @@
 					$t = $(this).children().filter('[data-column=' + cIndex + ']');
 					if (!$(this).hasClass(filtered) && $t.not('[' + dataAttrib + '^=above],[' + dataAttrib + '^=col]').length && !$t.is($el)) {
 						txt = $t.attr(c.textAttribute);
-						if (typeof txt === "undefined") {
+						if (typeof txt === 'undefined') {
 							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 						}
 						// isNaN('') => false
-						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
+						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
 						arry.push(isNaN(txt) ? 0 : txt);
 					}
 				});
@@ -102,10 +102,10 @@
 						col = parseInt( $t.attr('data-column'), 10);
 						if (!$t.filter('[' + dataAttrib + ']').length && $.inArray(col, wo.math_ignore) < 0) {
 							txt = $t.attr(c.textAttribute);
-							if (typeof txt === "undefined") {
+							if (typeof txt === 'undefined') {
 								txt = ($t[0] ? $t[0].textContent : '') || $t.text();
 							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ""), table) || 0;
+							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
 							arry.push(isNaN(txt) ? 0 : txt);
 						}
 					});
@@ -133,8 +133,8 @@
 				$mathCells = c.$table.find('.' + c.cssInfoBlock + ', tfoot').find('[' + dataAttrib + ']');
 				math.mathType( table, wo, $mathCells, wo.math_priority, dataAttrib );
 
-				// find the "all" total
-				math.mathType( table, wo, c.$table.find('[' + dataAttrib + '^=all]'), ['all'], dataAttrib );
+				// find the 'all' total
+				math.mathType( table, wo, c.$table.find('[' + dataAttrib + '^=all]'), [ 'all' ], dataAttrib );
 
 				wo.math_isUpdating = true;
 				c.$table.trigger('update');
@@ -153,8 +153,8 @@
 					$cells.filter('[' + dataAttrib + '^=' + type + ']').each(function(){
 						$t = $(this);
 						formula = ($t.attr(dataAttrib) || '').replace(type + '-', '');
-						arry = (type === "row") ? math.getRow(table, wo, $t, dataAttrib) :
-							(type === "all") ? getAll : math.getColumn(table, wo, $t, type, dataAttrib);
+						arry = (type === 'row') ? math.getRow(table, wo, $t, dataAttrib) :
+							(type === 'all') ? getAll : math.getColumn(table, wo, $t, type, dataAttrib);
 						if (eq[formula]) {
 							t = eq[formula](arry);
 							if (table.config.debug && console && console.log) {
@@ -232,7 +232,7 @@
 
 		// search for separator for grp & decimal, anything not digit, not +/- sign, not #.
 		result = m.match( /[^\d\-\+#]/g );
-		decimal = ( result && result[result.length-1] ) || '.'; // treat the right most symbol as decimal
+		decimal = ( result && result[result.length - 1] ) || '.'; // treat the right most symbol as decimal
 		group = ( result && result[1] && result[0] ) || ',';  // treat the left most symbol as group separator
 
 		// split the decimal for the format string if any.
@@ -282,7 +282,7 @@
 			v[0] = str;
 		}
 
-		v[1] = ( m[1] && v[1] ) ? decimal + v[1] : "";
+		v[1] = ( m[1] && v[1] ) ? decimal + v[1] : '';
 		// put back any negation, combine integer and fraction, and add back prefix & suffix
 		return prefix + ( ( isNegative ? '-' : '' ) + v[0] + v[1] ) + suffix;
 	};
@@ -304,7 +304,7 @@
 		},
 		median : function(arry) {
 			// https://gist.github.com/caseyjustus/1166258
-			arry.sort( function(a,b){ return a - b; } );
+			arry.sort( function(a, b){ return a - b; } );
 			var half = Math.floor( arry.length / 2 );
 			return (arry.length % 2) ? arry[half] : ( arry[half - 1] + arry[half] ) / 2.0;
 		},
@@ -314,12 +314,12 @@
 			var i, el,
 				modeMap = {},
 				maxCount = 1,
-				modes = [arry[0]];
+				modes = [ arry[0] ];
 			for (i = 0; i < arry.length; i++) {
 				el = arry[i];
 				modeMap[el] = modeMap[el] ? modeMap[el] + 1 : 1;
 				if ( modeMap[el] > maxCount ) {
-					modes = [el];
+					modes = [ el ];
 					maxCount = modeMap[el];
 				} else if (modeMap[el] === maxCount) {
 					modes.push(el);
@@ -327,7 +327,7 @@
 				}
 			}
 			// returns arry of modes if there is a tie
-			return modes.sort( function(a,b){ return a - b; } );
+			return modes.sort( function(a, b){ return a - b; } );
 		},
 		max : function(arry) {
 			return Math.max.apply( Math, arry );
@@ -336,7 +336,7 @@
 			return Math.min.apply( Math, arry );
 		},
 		range: function(arry) {
-			var v = arry.sort(function(a,b){ return a - b; });
+			var v = arry.sort(function(a, b){ return a - b; });
 			return v[ arry.length - 1 ] - v[0];
 		},
 		// common variance equation
@@ -374,7 +374,7 @@
 	// add new widget called repeatHeaders
 	// ************************************
 	ts.addWidget({
-		id: "math",
+		id: 'math',
 		priority: 100,
 		options: {
 			math_data     : 'math',
@@ -384,7 +384,7 @@
 			math_mask     : '#,##0.00',
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
-			// order of calculation; "all" is last
+			// order of calculation; 'all' is last
 			math_priority : [ 'row', 'above', 'col' ],
 			// template for or just prepend the mask prefix & suffix with this HTML
 			// e.g. '<span class="red">{content}</span>'

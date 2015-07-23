@@ -6,7 +6,7 @@
  */
 /*jshint jquery:true */
 ;( function( $ ) {
-'use strict';
+	'use strict';
 
 	var prefixes = {
 		// 'prefix' : [ base 10, base 2 ]
@@ -23,7 +23,7 @@
 		'h|hecto'       : [ 1e2, 1e2 ],
 		'da|deka'       : [ 1e1, 1e1 ],
 		'd|deci'        : [ 1e-1, 1e-1 ],
-		'c|centi'       : [ 1e-2, 1e-2],
+		'c|centi'       : [ 1e-2, 1e-2 ],
 		'm|milli'       : [ 1e-3, 1e-3 ],
 		'µ|micro'       : [ 1e-6, 1e-6 ],
 		'n|nano'        : [ 1e-9, 1e-9 ],

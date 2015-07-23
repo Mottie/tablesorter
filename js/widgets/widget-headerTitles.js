@@ -5,14 +5,14 @@
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
-"use strict";
-var ts = $.tablesorter;
+	'use strict';
+	var ts = $.tablesorter;
 
 	ts.addWidget({
 		id: 'headerTitles',
 		options: {
 			// use aria-label text
-			// e.g. "First Name: Ascending sort applied, activate to apply a descending sort"
+			// e.g. 'First Name: Ascending sort applied, activate to apply a descending sort'
 			headerTitle_useAria  : false,
 			// add tooltip class
 			headerTitle_tooltip  : '',
