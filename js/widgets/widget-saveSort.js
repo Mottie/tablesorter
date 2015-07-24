@@ -29,7 +29,7 @@
 				if (saveSort && table.hasInitialized && ts.storage) {
 					ts.storage( table, 'tablesorter-savesort', sortList );
 					if (c.debug) {
-						ts.benchmark('saveSort widget: Saving last sort: ' + c.sortList, time);
+						console.log('saveSort widget: Saving last sort: ' + c.sortList + ts.benchmark(time));
 					}
 				}
 			} else {
@@ -41,7 +41,7 @@
 					stored = ts.storage( table, 'tablesorter-savesort' );
 					sortList = (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
 					if (c.debug) {
-						ts.benchmark('saveSort: Last sort loaded: "' + sortList + '"', time);
+						console.log('saveSort: Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
 					$table.bind('saveSortReset', function(event) {
 						event.stopPropagation();

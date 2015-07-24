@@ -129,7 +129,7 @@
         pos = endIndex === cols ? false : endIndex <= startIndex,
         $rows = c.$table.children().children( 'tr' );
       if ( c.debug ) {
-        ts.log( 'Inserting column ' + startIndex + ( pos ? ' before' : ' after' ) + ' column ' + endIndex );
+        console.log( 'Inserting column ' + startIndex + ( pos ? ' before' : ' after' ) + ' column ' + endIndex );
       }
       $rows.each( function() {
         $cols = $( this ).children();

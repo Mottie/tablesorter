@@ -1124,7 +1124,7 @@
 			}
 
 			if ( c.debug ) {
-				ts.log( 'Filter: Starting filter widget search', filters );
+				console.log( 'Filter: Starting filter widget search', filters );
 				time = new Date();
 			}
 			// filtered rows count
@@ -1214,7 +1214,7 @@
 					// can't search when all rows are hidden - this happens when looking for exact matches
 					if ( searchFiltered && notFiltered === 0 ) { searchFiltered = false; }
 					if ( c.debug ) {
-						ts.log( 'Filter: Searching through ' +
+						console.log( 'Filter: Searching through ' +
 							( searchFiltered && notFiltered < len ? notFiltered : 'all' ) + ' rows' );
 					}
 					if ( data.anyMatchFlag ) {
@@ -1300,7 +1300,7 @@
 				ts.storage( table, 'tablesorter-filters', storedFilters );
 			}
 			if ( c.debug ) {
-				ts.benchmark( 'Completed filter widget search', time );
+				console.log( 'Completed filter widget search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterEnd', c );

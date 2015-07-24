@@ -57,7 +57,7 @@
 
 		// even if wo.build_type is undefined, we can try to figure out the type
 		if ( !ts.buildTable.hasOwnProperty(typ) && typ !== '' ) {
-			if (c.debug) { ts.log('aborting build table widget, incorrect build type'); }
+			if (c.debug) { console.error('aborting build table widget, incorrect build type'); }
 			return false;
 		}
 
@@ -71,7 +71,7 @@
 				runType(data);
 			})
 			.fail(function( jqXHR, textStatus, errorThrown) {
-				if (c.debug) { ts.log('aborting build table widget, failed ajax load'); }
+				if (c.debug) { console.error('aborting build table widget, failed ajax load'); }
 				$tbl.html('<tr><td class="error">' + jqXHR.status + ' '  + textStatus + '</td></tr>');
 			});
 		} else {
@@ -356,7 +356,7 @@
 			r = data.hasOwnProperty(kr) && !$.isEmptyObject(data.kr) ? data.kr : data.hasOwnProperty('rows') ? data.rows : false;
 
 		if (!h || !r || h.length === 0 || r.length === 0) {
-			if (c.debug) { ts.log('aborting build table widget, missing data for object build'); }
+			if (c.debug) { console.error('aborting build table widget, missing data for object build'); }
 			return false;
 		}
 

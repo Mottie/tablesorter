@@ -21,7 +21,7 @@
 			$t = $(wo.columnSelector_layout);
 			if (!$t.find('input').add( $t.filter('input') ).length) {
 				if (c.debug) {
-					ts.log('ColumnSelector: >> ERROR: Column Selector aborting, no input found in the layout! ***');
+					console.error('ColumnSelector: >> ERROR: Column Selector aborting, no input found in the layout! ***');
 				}
 				return;
 			}
@@ -45,7 +45,7 @@
 			if (colSel.$container.length) {
 				tsColSel.updateCols(c, wo);
 			} else if (c.debug) {
-				ts.log('ColumnSelector: >> container not found');
+				console.warn('ColumnSelector: >> container not found');
 			}
 
 			c.$table

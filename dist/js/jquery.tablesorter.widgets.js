@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-23-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-24-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -62,7 +62,7 @@
 				window[storageType].removeItem('_tmptest');
 			} catch (error) {
 				if (c && c.debug) {
-					ts.log( storageType + ' is not supported in this browser' );
+					console.warn( storageType + ' is not supported in this browser' );
 				}
 			}
 		}
@@ -260,7 +260,7 @@
 				}
 			}
 			if (c.debug) {
-				ts.benchmark('Applying ' + theme + ' theme', time);
+				console.log('Applying ' + theme + ' theme' + ts.benchmark(time));
 			}
 		},
 		remove: function(table, c, wo, refreshing) {
@@ -1491,7 +1491,7 @@
 			}
 
 			if ( c.debug ) {
-				ts.log( 'Filter: Starting filter widget search', filters );
+				console.log( 'Filter: Starting filter widget search', filters );
 				time = new Date();
 			}
 			// filtered rows count
@@ -1581,7 +1581,7 @@
 					// can't search when all rows are hidden - this happens when looking for exact matches
 					if ( searchFiltered && notFiltered === 0 ) { searchFiltered = false; }
 					if ( c.debug ) {
-						ts.log( 'Filter: Searching through ' +
+						console.log( 'Filter: Searching through ' +
 							( searchFiltered && notFiltered < len ? notFiltered : 'all' ) + ' rows' );
 					}
 					if ( data.anyMatchFlag ) {
@@ -1667,7 +1667,7 @@
 				ts.storage( table, 'tablesorter-filters', storedFilters );
 			}
 			if ( c.debug ) {
-				ts.benchmark( 'Completed filter widget search', time );
+				console.log( 'Completed filter widget search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterEnd', c );
@@ -2689,7 +2689,7 @@
 				if (saveSort && table.hasInitialized && ts.storage) {
 					ts.storage( table, 'tablesorter-savesort', sortList );
 					if (c.debug) {
-						ts.benchmark('saveSort widget: Saving last sort: ' + c.sortList, time);
+						console.log('saveSort widget: Saving last sort: ' + c.sortList + ts.benchmark(time));
 					}
 				}
 			} else {
@@ -2701,7 +2701,7 @@
 					stored = ts.storage( table, 'tablesorter-savesort' );
 					sortList = (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
 					if (c.debug) {
-						ts.benchmark('saveSort: Last sort loaded: "' + sortList + '"', time);
+						console.log('saveSort: Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
 					$table.bind('saveSortReset', function(event) {
 						event.stopPropagation();

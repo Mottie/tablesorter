@@ -218,7 +218,7 @@
 			fixHeight(table, p);
 			if (p.initialized && completed !== false) {
 				if (c.debug) {
-					ts.log('Pager: Triggering pagerComplete');
+					console.log('Pager: Triggering pagerComplete');
 				}
 				c.$table.trigger('pagerComplete', p);
 				// save pager info to storage
@@ -390,7 +390,7 @@
 
 				if ( exception ) {
 					if (c.debug) {
-						ts.log('Pager: >> Ajax Error', xhr, exception);
+						console.error('Pager: >> Ajax Error', xhr, exception);
 					}
 					ts.showError(table,
 						xhr.status === 0 ? 'Not connected, verify Network' :
@@ -489,7 +489,7 @@
 						// multiple applyWidget blocking code from blocking this trigger
 						setTimeout(function(){
 							if (c.debug) {
-								ts.log('Pager: Triggering pagerChange');
+								console.log('Pager: Triggering pagerChange');
 							}
 							$table
 								.trigger('applyWidgets')
@@ -504,7 +504,7 @@
 				p.initialized = true;
 				p.initializing = false;
 				if (table.config.debug) {
-					ts.log('Pager: Triggering pagerInitialized');
+					console.log('Pager: Triggering pagerInitialized');
 				}
 				$(table)
 					.trigger('applyWidgets')
@@ -544,7 +544,7 @@
 					}
 				};
 				if (c.debug) {
-					ts.log('Pager: Ajax initialized', p.ajaxObject);
+					console.log('Pager: Ajax initialized', p.ajaxObject);
 				}
 				$.ajax(p.ajaxObject);
 			}
@@ -588,7 +588,7 @@
 				url = p.customAjaxUrl(table, url);
 			}
 			if (c.debug) {
-				ts.log('Pager: Ajax url = ' + url);
+				console.log('Pager: Ajax url = ' + url);
 			}
 			return url;
 		},
@@ -603,7 +603,7 @@
 				e = p.size;
 			if ( l < 1 ) {
 				if (c.debug) {
-					ts.log('Pager: >> No rows for pager to render');
+					console.warn('Pager: >> No rows for pager to render');
 				}
 				// empty table, abort!
 				return;
@@ -616,7 +616,7 @@
 			p.isDisabled = false; // needed because sorting will change the page and re-enable the pager
 			if (p.initialized) {
 				if (c.debug) {
-					ts.log('Pager: Triggering pagerChange');
+					console.log('Pager: Triggering pagerChange');
 				}
 				$t.trigger('pagerChange', p);
 			}
@@ -647,7 +647,7 @@
 			updatePageDisplay(table, p);
 			if (table.isUpdating) {
 				if (c.debug) {
-					ts.log('Pager: Triggering updateComplete');
+					console.log('Pager: Triggering updateComplete');
 				}
 				$t.trigger('updateComplete', [ table, true ]);
 			}
@@ -671,7 +671,7 @@
 				renderTable(table, table.config.rowsCopy, p);
 				$(table).trigger('applyWidgets');
 				if (table.config.debug) {
-					ts.log('Pager: Disabled');
+					console.log('Pager: Disabled');
 				}
 			}
 			// disable size selector
@@ -730,7 +730,7 @@
 				(l.optAjaxUrl || '') === (p.ajaxUrl || '') &&
 				l.sortList === (c.sortList || []).join(',') ) { return; }
 			if (c.debug) {
-				ts.log('Pager: Changing to page ' + p.page);
+				console.log('Pager: Changing to page ' + p.page);
 			}
 			p.last = {
 				page : p.page,
@@ -750,14 +750,14 @@
 			$.data(table, 'pagerLastPage', p.page);
 			if (p.initialized && pageMoved !== false) {
 				if (c.debug) {
-					ts.log('Pager: Triggering pageMoved');
+					console.log('Pager: Triggering pageMoved');
 				}
 				$t
 					.trigger('pageMoved', p)
 					.trigger('applyWidgets');
 				if (table.isUpdating) {
 					if (c.debug) {
-						ts.log('Pager: Triggering updateComplete');
+						console.log('Pager: Triggering updateComplete');
 					}
 					$t.trigger('updateComplete', [ table, true ]);
 				}
@@ -837,7 +837,7 @@
 				setPageSize(table, p.size, p);
 				hideRowsSetup(table, p);
 				if (c.debug) {
-					ts.log('Pager: Enabled');
+					console.log('Pager: Enabled');
 				}
 			}
 		};
@@ -872,7 +872,7 @@
 				// save a copy of the original settings
 				p.settings = $.extend( true, {}, $.tablesorterPager.defaults, settings );
 				if (c.debug) {
-					ts.log('Pager: Initializing');
+					console.log('Pager: Initializing');
 				}
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
@@ -970,7 +970,7 @@
 				ctrls = [ p.cssFirst, p.cssPrev, p.cssNext, p.cssLast ];
 				fxn = [ moveToFirstPage, moveToPrevPage, moveToNextPage, moveToLastPage ];
 				if (c.debug && !pager.length) {
-					ts.log('Pager: >> Container not found');
+					console.warn('Pager: >> Container not found');
 				}
 				pager.find(ctrls.join(','))
 					.attr('tabindex', 0)
@@ -999,7 +999,7 @@
 							updatePageDisplay(table, p, false);
 						});
 				} else if (c.debug) {
-					ts.log('Pager: >> Goto selector not found');
+					console.warn('Pager: >> Goto selector not found');
 				}
 				// page size selector
 				p.$size = pager.find(p.cssPageSize);
@@ -1015,7 +1015,7 @@
 						return false;
 					});
 				} else if (c.debug) {
-					ts.log('Pager: >> Size selector not found');
+					console.warn('Pager: >> Size selector not found');
 				}
 
 				// clear initialized flag
@@ -1045,7 +1045,7 @@
 					p.initialized = true;
 					moveToPage(table, p);
 					if (c.debug) {
-						ts.log('Pager: Triggering pagerInitialized');
+						console.log('Pager: Triggering pagerInitialized');
 					}
 					c.$table.trigger('pagerInitialized', p);
 					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {

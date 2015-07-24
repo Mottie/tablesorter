@@ -158,7 +158,7 @@
 				}
 			}
 			if (c.debug) {
-				ts.benchmark('Applying ' + theme + ' theme', time);
+				console.log('Applying ' + theme + ' theme' + ts.benchmark(time));
 			}
 		},
 		remove: function(table, c, wo, refreshing) {

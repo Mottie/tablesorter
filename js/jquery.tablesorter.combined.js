@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 07-23-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-24-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -172,24 +172,6 @@
 			// These methods can be applied on table.config instance
 			ts.instanceMethods = {};
 
-			/* debuging utils */
-			function log() {
-				var a = arguments[0],
-					s = arguments.length > 1 ? Array.prototype.slice.call(arguments) : a;
-				if (typeof console !== 'undefined' && typeof console.log !== 'undefined') {
-					console[ /error/i.test(a) ? 'error' : /warn/i.test(a) ? 'warn' : 'log' ](s);
-				} else {
-					alert(s);
-				}
-			}
-
-			function benchmark(s, d) {
-				log(s + ' (' + (new Date().getTime() - d.getTime()) + 'ms)');
-			}
-
-			ts.log = log;
-			ts.benchmark = benchmark;
-
 			// $.isEmptyObject from jQuery v1.4
 			function isEmptyObject(obj) {
 				/*jshint forin: false */
@@ -237,7 +219,7 @@
 						nodeValue = ts.getElementText(c, node, cellIndex);
 						$node = $(node);
 						if (c.debug) {
-							log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
+							console.log('Checking if value was empty on row ' + rowIndex + ', column: ' + cellIndex + ': "' + nodeValue + '"');
 						}
 					} else {
 						keepLooking = false;
@@ -284,16 +266,16 @@
 				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
 					table = c.table,
 					j = 0,
-					parsersDebug = '';
+					debug = {};
 				// update table bodies in case we start with an empty table
 				c.$tbodies = c.$table.children('tbody:not(.' + c.cssInfoBlock + ')');
 				tb = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies;
 				len = tb.length;
 				if ( len === 0) {
-					return c.debug ? log('Warning: *Empty table!* Not building a parser cache') : '';
+					return c.debug ? console.warn('Warning: *Empty table!* Not building a parser cache') : '';
 				} else if (c.debug) {
 					time = new Date();
-					log('Detecting parsers for each column');
+					console[ console.group ? 'group' : 'log' ]('Detecting parsers for each column');
 				}
 				list = {
 					extractors: [],
@@ -326,7 +308,12 @@
 								p = detectParserForColumn(c, rows, -1, i);
 							}
 							if (c.debug) {
-								parsersDebug += 'column:' + i + '; extractor:' + e.id + '; parser:' + p.id + '; string:' + c.strings[i] + '; empty: ' + c.empties[i] + '\n';
+								debug[ '(' + i + ') ' + h.text() ] = {
+									parser : p.id,
+									extractor : e ? e.id : 'none',
+									string : c.strings[i],
+									empty  : c.empties[i]
+								};
 							}
 							list.parsers[i] = p;
 							list.extractors[i] = e;
@@ -334,9 +321,14 @@
 					}
 					j += (list.parsers.length) ? len : 1;
 				}
-				if (c.debug) {
-					log(parsersDebug ? parsersDebug : 'No parsers detected');
-					benchmark('Completed detecting parsers', time);
+				if ( c.debug ) {
+					if ( !isEmptyObject( debug ) ) {
+						console[ console.table ? 'table' : 'log' ]( debug );
+					} else {
+						console.warn( '  No parsers detected!' );
+					}
+					console.log( 'Completed detecting parsers' + ts.benchmark( time ) );
+					if ( console.groupEnd ) { console.groupEnd(); }
 				}
 				c.parsers = list.parsers;
 				c.extractors = list.extractors;
@@ -355,7 +347,7 @@
 				c.totalRows = 0;
 				// if no parsers found, return - it's an empty table.
 				if (!parsers) {
-					return c.debug ? log('Warning: *Empty table!* Not building a cache') : '';
+					return c.debug ? console.warn('Warning: *Empty table!* Not building a cache') : '';
 				}
 				if (c.debug) {
 					cacheTime = new Date();
@@ -408,7 +400,7 @@
 						for ( j = 0; j < c.columns; ++j ) {
 							if (typeof parsers[ j ] === 'undefined') {
 								if ( c.debug ) {
-									log( 'No parser found for cell:', $row[ 0 ].cells[ j ], 'does it have a header?' );
+									console.warn( 'No parser found for cell:', $row[ 0 ].cells[ j ], 'does it have a header?' );
 								}
 								continue;
 							}
@@ -434,7 +426,7 @@
 					ts.isProcessing( table ); // remove processing icon
 				}
 				if ( c.debug ) {
-					benchmark( 'Building cache for ' + totalRows + ' rows', cacheTime );
+					console.log( 'Building cache for ' + totalRows + ' rows' + ts.benchmark( cacheTime ) );
 				}
 			}
 
@@ -478,7 +470,7 @@
 					c.appender(table, rows);
 				}
 				if (c.debug) {
-					benchmark('Rebuilt table', appendTime);
+					console.log( 'Rebuilt table' + ts.benchmark(appendTime) );
 				}
 				// apply table widgets; but not before ajax completes
 				if (!init && !c.appender) { ts.applyWidget(table); }
@@ -559,8 +551,8 @@
 				// enable/disable sorting
 				updateHeader(table);
 				if (c.debug) {
-					benchmark('Built headers:', time);
-					log(c.$headers);
+					console.log( 'Built headers:' + ts.benchmark( time ) );
+					console.log( c.$headers );
 				}
 			}
 
@@ -883,7 +875,9 @@
 						return a[c.columns].order - b[c.columns].order;
 					});
 				}
-				if (c.debug) { benchmark('Sorting on ' + sortList.toString() + ' and dir ' + order + ' time', sortTime); }
+				if (c.debug) {
+					console.log( 'Sorting on ' + sortList.toString() + ' and dir ' + order + ' time' + ts.benchmark(sortTime) );
+				}
 			}
 
 			function resortComplete(c, callback){
@@ -1127,7 +1121,14 @@
 			ts.setup = function(table, c) {
 				// if no thead or tbody, or tablesorter is already present, quit
 				if (!table || !table.tHead || table.tBodies.length === 0 || table.hasInitialized === true) {
-					return c.debug ? log('ERROR: stopping initialization! No table, thead, tbody or tablesorter has already been initialized') : '';
+					if ( c.debug ) {
+						if ( table.hasInitialized ) {
+							console.warn( 'Stopping initialization. Tablesorter has already been initialized' );
+						} else {
+							console.error( 'Stopping initialization! No table, thead or tbody' );
+						}
+					}
+					return;
 				}
 
 				var k = '',
@@ -1141,7 +1142,10 @@
 				table.config = c;
 				// save the settings where they read
 				$.data(table, 'tablesorter', c);
-				if (c.debug) { $.data( table, 'startoveralltimer', new Date()); }
+				if (c.debug) {
+					console[ console.group ? 'group' : 'log' ]( 'Initializing tablesorter' );
+					$.data( table, 'startoveralltimer', new Date());
+				}
 
 				// removing this in version 3 (only supports jQuery 1.7+)
 				c.supportsDataObject = (function(version) {
@@ -1240,7 +1244,8 @@
 				table.hasInitialized = true;
 				table.isProcessing = false;
 				if (c.debug) {
-					ts.benchmark('Overall initialization time', $.data( table, 'startoveralltimer'));
+					console.log( 'Overall initialization time: ' + ts.benchmark( $.data( table, 'startoveralltimer') ) );
+					if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 				}
 				$table.trigger('tablesorter-initialized', table);
 				if (typeof c.initialized === 'function') { c.initialized(table); }
@@ -1483,6 +1488,7 @@
 				var events,
 					$t = $(table),
 					c = table.config,
+					debug = c.debug,
 					$h = $t.find('thead:first'),
 					$r = $h.find('tr.' + ts.css.headerRow).removeClass(ts.css.headerRow + ' ' + c.cssHeaderRow),
 					$f = $t.find('tfoot:first > tr').children('th, td');
@@ -1513,6 +1519,9 @@
 				delete table.config.cache;
 				if (typeof callback === 'function') {
 					callback(table);
+				}
+				if (debug) {
+					console.log( 'tablesorter has been removed' );
 				}
 			};
 
@@ -1737,7 +1746,7 @@
 
 			ts.applyWidget = function(table, init, callback) {
 				table = $(table)[0]; // in case this is called externally
-				var indx, len, name,
+				var indx, len, names, widget, name, applied,
 					c = table.config,
 					wo = c.widgetOptions,
 					tableClass = ' ' + c.table.className + ' ',
@@ -1765,11 +1774,11 @@
 					c.widgets = $.grep(c.widgets, function(v, k){
 						return $.inArray(v, c.widgets) === k;
 					});
-					name = c.widgets || [];
-					len = name.length;
+					names = c.widgets || [];
+					len = names.length;
 					// build widget array & add priority as needed
 					for (indx = 0; indx < len; indx++) {
-						wd = ts.getWidgetById(name[indx]);
+						wd = ts.getWidgetById(names[indx]);
 						if (wd && wd.id) {
 							// set priority to 10 if not defined
 							if (!wd.priority) { wd.priority = 10; }
@@ -1782,28 +1791,47 @@
 					});
 					// add/update selected widgets
 					len = widgets.length;
+					if (c.debug) {
+						console[ console.group ? 'group' : 'log' ]( 'Start ' + ( init ? 'initializing' : 'applying' ) + ' widgets' );
+					}
 					for (indx = 0; indx < len; indx++) {
-						if (widgets[indx]) {
-							if ( init || !( c.widgetInit[ widgets[indx].id ] ) ) {
+						widget = widgets[indx];
+						if (widget) {
+							name = widget.id;
+							applied = false;
+							if (c.debug) { time2 = new Date(); }
+
+							if ( init || !( c.widgetInit[ name ] ) ) {
 								// set init flag first to prevent calling init more than once (e.g. pager)
-								c.widgetInit[ widgets[indx].id ] = true;
+								c.widgetInit[ name ] = true;
 								if (table.hasInitialized) {
 									// don't reapply widget options on tablesorter init
 									ts.applyWidgetOptions( table, c );
 								}
-								if ( 'init' in widgets[indx] ) {
-									if (c.debug) { time2 = new Date(); }
-									widgets[indx].init(table, widgets[indx], c, wo);
-									if (c.debug) { ts.benchmark('Initializing ' + widgets[indx].id + ' widget', time2); }
+								if ( 'init' in widget ) {
+									applied = true;
+									if (c.debug) {
+										console[ console.group ? 'group' : 'log' ]( 'Initializing ' + name + ' widget' );
+									}
+									widget.init(table, widget, c, wo);
 								}
 							}
-							if ( !init && 'format' in widgets[indx] ) {
-								if (c.debug) { time2 = new Date(); }
-								widgets[indx].format(table, c, wo, false);
-								if (c.debug) { ts.benchmark( ( init ? 'Initializing ' : 'Applying ' ) + widgets[indx].id + ' widget', time2); }
+							if ( !init && 'format' in widget ) {
+								applied = true;
+								if (c.debug) {
+									console[ console.group ? 'group' : 'log' ]( 'Updating ' + name + ' widget' );
+								}
+								widget.format(table, c, wo, false);
+							}
+							if (c.debug) {
+								if (applied) {
+									console.log( 'Completed ' + ( init ? 'initializing ' : 'applying ' ) + name + ' widget' + ts.benchmark( time2 ) );
+									if ( console.groupEnd ) { console.groupEnd(); }
+								}
 							}
 						}
 					}
+					if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 					// callback executed on init only
 					if (!init && typeof callback === 'function') {
 						callback(table);
@@ -1815,7 +1843,7 @@
 				}, 0);
 				if (c.debug) {
 					w = c.widgets.length;
-					benchmark('Completed ' + (init === true ? 'initializing ' : 'applying ') + w + ' widget' + (w !== 1 ? 's' : ''), time);
+					console.log( 'Completed ' + (init === true ? 'initializing ' : 'applying ') + w + ' widget' + (w !== 1 ? 's' : '') + ts.benchmark(time) );
 				}
 			};
 
@@ -1843,7 +1871,10 @@
 					widget = ts.getWidgetById(name[i]);
 					indx = $.inArray( name[i], c.widgets );
 					if ( widget && 'remove' in widget ) {
-						if (c.debug && indx >= 0) { log( 'Removing "' + name[i] + '" widget' ); }
+						if (c.debug && indx >= 0) { console.log( 'Removing "' + name[i] + '" widget' ); }
+						if ( c.debug ) {
+							console.log( ( refreshing ? 'Refreshing' : 'Removing' ) + ' "' + name[i] + '" widget' );
+						}
 						widget.remove(table, c, c.widgetOptions, refreshing);
 						c.widgetInit[ name[i] ] = false;
 					}
@@ -1891,7 +1922,11 @@
 					allColumns = column === 'all',
 					data = { raw : [], parsed: [], $cell: [] },
 					c = table.config;
-				if ( !isEmptyObject( c ) ) {
+				if ( isEmptyObject( c ) ) {
+					if ( c.debug ) {
+						console.warn( 'No cache found - aborting getColumnText function!' );
+					}
+				} else {
 					tbodyLen = c.$tbodies.length;
 					for ( tbodyIndex = 0; tbodyIndex < tbodyLen; tbodyIndex++ ) {
 						cache = c.cache[ tbodyIndex ].normalized;
@@ -1986,6 +2021,23 @@
 	$.fn.extend({
 		tablesorter: ts.construct
 	});
+
+	// set up debug logs
+	if ( !( console && console.log ) ) {
+		ts.logs = [];
+		/*jshint -W020 */
+		console = {};
+		console.log = console.warn = console.error = console.table = function() {
+			ts.logs.push( [ Date.now(), arguments ] );
+		};
+	}
+
+	ts.log = function(){
+		console.log( arguments );
+	};
+	ts.benchmark = function( diff ) {
+		return ( ' (' + ( new Date().getTime() - diff.getTime() ) + 'ms)' );
+	};
 
 	// add default parsers
 	ts.addParser({
@@ -2248,7 +2300,7 @@
 				window[storageType].removeItem('_tmptest');
 			} catch (error) {
 				if (c && c.debug) {
-					ts.log( storageType + ' is not supported in this browser' );
+					console.warn( storageType + ' is not supported in this browser' );
 				}
 			}
 		}
@@ -2446,7 +2498,7 @@
 				}
 			}
 			if (c.debug) {
-				ts.benchmark('Applying ' + theme + ' theme', time);
+				console.log('Applying ' + theme + ' theme' + ts.benchmark(time));
 			}
 		},
 		remove: function(table, c, wo, refreshing) {
@@ -3677,7 +3729,7 @@
 			}
 
 			if ( c.debug ) {
-				ts.log( 'Filter: Starting filter widget search', filters );
+				console.log( 'Filter: Starting filter widget search', filters );
 				time = new Date();
 			}
 			// filtered rows count
@@ -3767,7 +3819,7 @@
 					// can't search when all rows are hidden - this happens when looking for exact matches
 					if ( searchFiltered && notFiltered === 0 ) { searchFiltered = false; }
 					if ( c.debug ) {
-						ts.log( 'Filter: Searching through ' +
+						console.log( 'Filter: Searching through ' +
 							( searchFiltered && notFiltered < len ? notFiltered : 'all' ) + ' rows' );
 					}
 					if ( data.anyMatchFlag ) {
@@ -3853,7 +3905,7 @@
 				ts.storage( table, 'tablesorter-filters', storedFilters );
 			}
 			if ( c.debug ) {
-				ts.benchmark( 'Completed filter widget search', time );
+				console.log( 'Completed filter widget search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterEnd', c );
@@ -4875,7 +4927,7 @@
 				if (saveSort && table.hasInitialized && ts.storage) {
 					ts.storage( table, 'tablesorter-savesort', sortList );
 					if (c.debug) {
-						ts.benchmark('saveSort widget: Saving last sort: ' + c.sortList, time);
+						console.log('saveSort widget: Saving last sort: ' + c.sortList + ts.benchmark(time));
 					}
 				}
 			} else {
@@ -4887,7 +4939,7 @@
 					stored = ts.storage( table, 'tablesorter-savesort' );
 					sortList = (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
 					if (c.debug) {
-						ts.benchmark('saveSort: Last sort loaded: "' + sortList + '"', time);
+						console.log('saveSort: Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
 					$table.bind('saveSortReset', function(event) {
 						event.stopPropagation();

@@ -76,7 +76,7 @@ $.tablesorter.addWidget({
 					if (endIndex >= 0 && lastIndx === endIndex) { return false; }
 					lastIndx = endIndex;
 					if (c.debug) {
-						ts.log( endIndex === 0 ? 'target before column 0' : endIndex === len ? 'target after last column' : 'target between columns ' + startIndex + ' and ' + endIndex);
+						console.log( endIndex === 0 ? 'target before column 0' : endIndex === len ? 'target after last column' : 'target between columns ' + startIndex + ' and ' + endIndex);
 					}
 					$bar.css('left', offsets[i-1]);
 					return false;
@@ -98,7 +98,7 @@ $.tablesorter.addWidget({
 			if ( s > -1 && endIndex > -1 && s != endIndex && s + 1 !== endIndex ) {
 				adj = endIndex !== 0;
 				if (c.debug) {
-					ts.log( 'Inserting column ' + s + (adj ? ' after' : ' before') + ' column ' + (endIndex - adj ? 1 : 0) );
+					console.log( 'Inserting column ' + s + (adj ? ' after' : ' before') + ' column ' + (endIndex - adj ? 1 : 0) );
 				}
 				rows.each(function() {
 					cols = $(this).children();

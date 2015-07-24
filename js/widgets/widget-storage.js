@@ -50,7 +50,7 @@
 				window[storageType].removeItem('_tmptest');
 			} catch (error) {
 				if (c && c.debug) {
-					ts.log( storageType + ' is not supported in this browser' );
+					console.warn( storageType + ' is not supported in this browser' );
 				}
 			}
 		}

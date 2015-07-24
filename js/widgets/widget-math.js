@@ -4,177 +4,217 @@
 */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($) {
+;( function( $ ) {
 	'use strict';
 
 	var ts = $.tablesorter,
 
 	math = {
 
+		error: {
+			0       : 'Infinity result: Divide by zero',
+			1       : 'Need more than one element to make this calculation',
+			'undef' : 'No elements found'
+		},
+
+		// value returned when calculation is not possible, e.g. no values, dividing by zero, etc.
+		invalid : function( name, errorIndex ) {
+			// name = function returning invalid results
+			// errorIndex = math.error index with an explanation of the error
+			console.log( name, math.error[ errorIndex ] );
+			return 'none'; // text for cell
+		},
+
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
 			'filterReset filterEnd ' ).split(' ').join('.tsmath '),
 
+		processText : function( c, $cell ) {
+			var txt = $cell.attr( c.textAttribute );
+			if ( typeof txt === 'undefined' ) {
+				txt = $cell[0].textContent || $cell.text();
+			}
+			txt = ts.formatFloat( txt.replace( /[^\w,. \-()]/g, '' ), c.table ) || 0;
+			// isNaN('') => false
+			return isNaN( txt ) ? 0 : txt;
+		},
+
 		// get all of the row numerical values in an arry
-		getRow : function(table, wo, $el, dataAttrib) {
+		getRow : function( c, $el ) {
 			var $t, txt,
-				c = table.config,
+				wo = c.widgetOptions,
 				arry = [],
-				$row = $el.closest('tr'),
-				$cells = $row.children().not('[' + dataAttrib + '=ignore]');
-			if (!$row.hasClass(wo.filter_filteredRow || 'filtered')) {
-				if (wo.math_ignore.length) {
-					$cells = $cells.not('[data-column=' + wo.math_ignore.join('],[data-column=') + ']');
+				$row = $el.closest( 'tr' ),
+				$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
+			if ( !$row.hasClass( wo.filter_filteredRow || 'filtered' ) ) {
+				if ( wo.math_ignore.length ) {
+					$cells = $cells.not( '[data-column=' + wo.math_ignore.join( '],[data-column=' ) + ']' );
 				}
-				arry = $cells.not($el).map(function(){
-					$t = $(this);
-					txt = $t.attr(c.textAttribute);
-					if (typeof txt === 'undefined') {
-						txt = this.textContent || $t.text();
-					}
-					txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
-					return isNaN(txt) ? 0 : txt;
+				arry = $cells.not( $el ).map( function() {
+					return math.processText( c, $( this ) );
 				}).get();
 			}
 			return arry;
 		},
 
 		// get all of the column numerical values in an arry
-		getColumn : function(table, wo, $el, type, dataAttrib) {
-			var i, txt, $t, len, mathAbove,
+		getColumn : function( c, $el, type ) {
+			var index, txt, $t, len, $mathRows, mathAbove,
 				arry = [],
-				c = table.config,
+				wo = c.widgetOptions,
 				filtered = wo.filter_filteredRow || 'filtered',
-				cIndex = parseInt( $el.attr('data-column'), 10 ),
-				$rows = c.$table.children('tbody').children(),
-				$row = $el.closest('tr');
+				cIndex = parseInt( $el.attr( 'data-column' ), 10 ),
+				$rows = c.$table.children( 'tbody' ).children(),
+				$row = $el.closest( 'tr' );
 			// make sure tfoot rows are AFTER the tbody rows
-			// $rows.add( c.$table.children('tfoot').children() );
-			if (type === 'above') {
-				len = $rows.index($row);
-				i = len;
-				while (i >= 0) {
-					$t = $rows.eq(i).children().filter('[data-column=' + cIndex + ']');
-					mathAbove = $t.filter('[' + dataAttrib + '^=above]').length;
+			// $rows.add( c.$table.children( 'tfoot' ).children() );
+			if ( type === 'above' ) {
+				len = $rows.index( $row );
+				index = len;
+				while ( index >= 0 ) {
+					$t = $rows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
+					mathAbove = $t.filter( '[' + wo.math_dataAttrib + '^=above]' ).length;
 					// ignore filtered rows & rows with data-math="ignore" (and starting row)
-					if ( ( !$rows.eq(i).hasClass(filtered) && $rows.eq(i).not('[' + dataAttrib + '=ignore]').length && i !== len ) || mathAbove && i !== len ) {
+					if ( ( !$rows.eq( index ).hasClass( filtered ) &&
+							$rows.eq( index ).not( '[' + wo.math_dataAttrib + '=ignore]' ).length &&
+							index !== len ) ||
+							mathAbove && index !== len ) {
 						// stop calculating 'above', when encountering another 'above'
-						if (mathAbove) {
-							i = 0;
-						} else if ($t.length) {
-							txt = $t.attr(c.textAttribute);
-							if (typeof txt === 'undefined') {
-								txt = $t[0].textContent || $t.text();
-							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
-							arry.push(isNaN(txt) ? 0 : txt);
+						if ( mathAbove ) {
+							index = 0;
+						} else if ( $t.length ) {
+							arry.push( math.processText( c, $t ) );
 						}
 					}
-					i--;
+					index--;
 				}
 			} else {
-				$rows.not('[' + dataAttrib + '=ignore]').each(function(){
-					$t = $(this).children().filter('[data-column=' + cIndex + ']');
-					if (!$(this).hasClass(filtered) && $t.not('[' + dataAttrib + '^=above],[' + dataAttrib + '^=col]').length && !$t.is($el)) {
-						txt = $t.attr(c.textAttribute);
-						if (typeof txt === 'undefined') {
-							txt = ($t[0] ? $t[0].textContent : '') || $t.text();
-						}
-						// isNaN('') => false
-						txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
-						arry.push(isNaN(txt) ? 0 : txt);
+				$mathRows = $rows.not( '[' + wo.math_dataAttrib + '=ignore]' ); // .each(function(){
+				len = $mathRows.length;
+				for ( index = 0; index < len; index++ ) {
+					$t = $mathRows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
+					if ( !$mathRows.eq( index ).hasClass( filtered ) &&
+						$t.not( '[' + wo.math_dataAttrib + '^=above],[' + wo.math_dataAttrib + '^=col]' ).length &&
+						!$t.is( $el ) ) {
+						arry.push( math.processText( c, $t ) );
 					}
-				});
+				}
 			}
 			return arry;
 		},
 
 		// get all of the column numerical values in an arry
-		getAll : function(table, wo, dataAttrib) {
-			var txt, $t, col,
+		getAll : function( c ) {
+			var txt, $t, col, $row, rowIndex, rowLen, $cells, cellIndex, cellLen,
 				arry = [],
-				c = table.config,
+				wo = c.widgetOptions,
 				filtered = wo.filter_filteredRow || 'filtered',
-				$rows = c.$table.children('tbody').children();
-			$rows.each(function(){
-				if (!$(this).hasClass(filtered)) {
-					$(this).children().each(function(){
-						$t = $(this);
-						col = parseInt( $t.attr('data-column'), 10);
-						if (!$t.filter('[' + dataAttrib + ']').length && $.inArray(col, wo.math_ignore) < 0) {
-							txt = $t.attr(c.textAttribute);
-							if (typeof txt === 'undefined') {
-								txt = ($t[0] ? $t[0].textContent : '') || $t.text();
-							}
-							txt = ts.formatFloat(txt.replace(/[^\w,. \-()]/g, ''), table) || 0;
-							arry.push(isNaN(txt) ? 0 : txt);
+				$rows = c.$table.children( 'tbody' ).children().not( '[' + wo.math_dataAttrib + '=ignore]' );
+			rowLen = $rows.length;
+			for ( rowIndex = 0; rowIndex < rowLen; rowIndex++ ) {
+				$row = $rows.eq( rowIndex );
+				if ( !$row.hasClass( filtered ) ) {
+					$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
+					cellLen = $cells.length;
+					// $row.children().each(function(){
+					for ( cellIndex = 0; cellIndex < cellLen; cellIndex++ ) {
+						$t = $cells.eq( cellIndex );
+						col = parseInt( $t.attr( 'data-column' ), 10);
+						if ( !$t.filter( '[' + wo.math_dataAttrib + ']' ).length && $.inArray( col, wo.math_ignore ) < 0 ) {
+							arry.push( math.processText( c, $t ) );
 						}
-					});
+					}
 				}
-			});
+			}
 			return arry;
 		},
 
 		recalculate : function(table, c, wo, init) {
-			if (c && (!wo.math_isUpdating || init)) {
+			if ( c && ( !wo.math_isUpdating || init ) ) {
 
 				// add data-column attributes to all table cells
-				if (init) {
-					ts.computeColumnIndex( c.$table.children('tbody').children() );
+				if ( init ) {
+					ts.computeColumnIndex( c.$table.children( 'tbody' ).children() );
 				}
 
 				// data-attribute name (defaults to data-math)
-				var dataAttrib = 'data-' + (wo.math_data || 'math'),
+				wo.math_dataAttrib = 'data-' + (wo.math_data || 'math');
 
 				// all non-info tbody cells
-				$mathCells = c.$tbodies.find('[' + dataAttrib + ']');
-				math.mathType( table, wo, $mathCells, wo.math_priority, dataAttrib );
+				var $mathCells = c.$tbodies.find( '[' + wo.math_dataAttrib + ']' );
+				math.mathType( c, $mathCells, wo.math_priority );
 
 				// only info tbody cells
-				$mathCells = c.$table.find('.' + c.cssInfoBlock + ', tfoot').find('[' + dataAttrib + ']');
-				math.mathType( table, wo, $mathCells, wo.math_priority, dataAttrib );
+				$mathCells = c.$table
+					.children( '.' + c.cssInfoBlock + ', tfoot' )
+					.find( '[' + wo.math_dataAttrib + ']' );
+				math.mathType( c, $mathCells, wo.math_priority );
 
 				// find the 'all' total
-				math.mathType( table, wo, c.$table.find('[' + dataAttrib + '^=all]'), [ 'all' ], dataAttrib );
+				$mathCells = c.$table.find( '[' + wo.math_dataAttrib + '^=all]' );
+				math.mathType( c, $mathCells, [ 'all' ] );
 
 				wo.math_isUpdating = true;
-				c.$table.trigger('update');
-			}
-		},
-
-		mathType : function(table, wo, $cells, priority, dataAttrib) {
-			if ($cells.length) {
-				var formula, t, $t, arry, getAll,
-					eq = ts.equations;
-				if (priority[0] === 'all') {
-					// no need to get all cells more than once
-					getAll = math.getAll(table, wo, dataAttrib);
+				if ( c.debug ) {
+					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
 				}
-				$.each( priority, function(i, type) {
-					$cells.filter('[' + dataAttrib + '^=' + type + ']').each(function(){
-						$t = $(this);
-						formula = ($t.attr(dataAttrib) || '').replace(type + '-', '');
-						arry = (type === 'row') ? math.getRow(table, wo, $t, dataAttrib) :
-							(type === 'all') ? getAll : math.getColumn(table, wo, $t, type, dataAttrib);
-						if (eq[formula]) {
-							t = eq[formula](arry);
-							if (table.config.debug && console && console.log) {
-								console.log($t.attr(dataAttrib), arry, '=', t);
-							}
-							math.output( $t, wo, t, arry );
-						}
-					});
-				});
+				c.$table.trigger( 'update' );
 			}
 		},
 
-		output : function($cell, wo, value, arry) {
-			// get mask from cell data-attribute: data-math-mask="#,##0.00"
-			var result = ts.formatMask( $cell.attr('data-' + wo.math_data + '-mask') || wo.math_mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
-			if ($.isFunction(wo.math_complete)) {
-				result = wo.math_complete($cell, wo, result, value, arry);
+		mathType : function( c, $cells, priority ) {
+			if ( $cells.length ) {
+				var formula, result, $el, arry, getAll, $targetCells, index, len,
+					wo = c.widgetOptions,
+					equations = ts.equations;
+				if ( priority[0] === 'all' ) {
+					// no need to get all cells more than once
+					getAll = math.getAll( c );
+				}
+				if (c.debug) {
+					console[ console.group ? 'group' : 'log' ]( 'Tablesorter Math widget recalculation' );
+				}
+				// $.each is okay here... only 3 priorities
+				$.each( priority, function( i, type ) {
+					$targetCells = $cells.filter( '[' + wo.math_dataAttrib + '^=' + type + ']' );
+					len = $targetCells.length;
+					if ( len ) {
+						if (c.debug) {
+							console[ console.group ? 'group' : 'log' ]( type );
+						}
+						for ( index = 0; index < len; index++ ) {
+							$el = $targetCells.eq( index );
+							formula = ( $el.attr( wo.math_dataAttrib ) || '' ).replace( type + '-', '' );
+							arry = ( type === 'row' ) ? math.getRow( c, $el ) :
+								( type === 'all' ) ? getAll : math.getColumn( c, $el, type );
+							if ( equations[ formula ] ) {
+								if ( arry.length ) {
+									result = equations[ formula ]( arry );
+									if ( c.debug ) {
+										console.log( $el.attr( wo.math_dataAttrib ), arry, '=', result );
+									}
+								} else {
+									// mean will return a divide by zero error, everything else shows an undefined error
+									result = math.invalid( formula, formula === 'mean' ? 0 : 'undef' );
+								}
+								math.output( $el, wo, result, arry );
+							}
+						}
+						if ( c.debug && console.groupEnd ) { console.groupEnd(); }
+					}
+				});
+				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 			}
-			if (result !== false) {
-				$cell.html(result);
+		},
+
+		output : function( $cell, wo, value, arry ) {
+			// get mask from cell data-attribute: data-math-mask="#,##0.00"
+			var mask = $cell.attr( 'data-' + wo.math_data + '-mask' ) || wo.math_mask,
+				result = ts.formatMask( mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
+			if ( typeof wo.math_complete === 'function' ) {
+				result = wo.math_complete( $cell, wo, result, value, arry );
+			}
+			if ( result !== false ) {
+				$cell.html( result );
 			}
 		}
 
@@ -188,146 +228,153 @@
 	* (c)2011 ecava
 	* Dual licensed under the MIT or GPL Version 2 licenses.
 	*/
-	ts.formatMask = function(m, v, tmpPrefix, tmpSuffix) {
-		if ( !m || isNaN(+v) ) {
-			return v; // return as it is.
+	ts.formatMask = function( mask, val, tmpPrefix, tmpSuffix ) {
+		if ( !mask || isNaN( +val ) ) {
+			return val; // return as it is.
 		}
 
 		var isNegative, result, decimal, group, posLeadZero, posTrailZero, posSeparator, part, szSep,
-			integer, str, offset, i, l, len, start, tmp, end, inv,
-			prefix = '',
-			suffix = '';
+			integer, str, offset, index, end, inv,
+			suffix = '',
 
-		// find prefix/suffix
-		len = m.length;
-		start = m.search( /[0-9\-\+#]/ );
-		tmp = start > 0 ? m.substring(0, start) : '';
-		prefix = tmp;
+			// find prefix/suffix
+			len = mask.length,
+			start = mask.search( /[0-9\-\+#]/ ),
+			tmp = start > 0 ? mask.substring( 0, start ) : '',
+			prefix = tmp;
+
 		if ( start > 0 && tmpPrefix ) {
-			if ( /\{content\}/.test(tmpPrefix || '') ) {
-				prefix = (tmpPrefix || '').replace(/\{content\}/g, tmp || '');
+			if ( /\{content\}/.test( tmpPrefix || '' ) ) {
+				prefix = ( tmpPrefix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {
-				prefix = (tmpPrefix || '') + tmp;
+				prefix = ( tmpPrefix || '' ) + tmp;
 			}
 		}
 		// reverse string: not an ideal method if there are surrogate pairs
-		inv = m.split('').reverse().join('');
+		inv = mask.split( '' ).reverse().join( '' );
 		end = inv.search( /[0-9\-\+#]/ );
-		i = len - end;
-		i += (m.substring( i, i + 1 ) === '.') ? 1 : 0;
-		tmp = end > 0 ? m.substring( i, len) : '';
+		index = len - end;
+		index += ( mask.substring( index, index + 1 ) === '.' ) ? 1 : 0;
+		tmp = end > 0 ? mask.substring( index, len ) : '';
 		suffix = tmp;
-		if (tmp !== '' && tmpSuffix) {
-			if ( /\{content\}/.test(tmpSuffix || '') ) {
-				suffix = (tmpSuffix || '').replace(/\{content\}/g, tmp || '');
+		if ( tmp !== '' && tmpSuffix ) {
+			if ( /\{content\}/.test( tmpSuffix || '' ) ) {
+				suffix = ( tmpSuffix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {
-				suffix = tmp + (tmpSuffix || '');
+				suffix = tmp + ( tmpSuffix || '' );
 			}
 		}
-		m = m.substring(start, i);
+		mask = mask.substring( start, index );
 
 		// convert any string to number according to formation sign.
-		v = m.charAt(0) == '-' ? -v : +v;
-		isNegative = v < 0 ? v = -v : 0; // process only abs(), and turn on flag.
+		val = mask.charAt( 0 ) == '-' ? -val : +val;
+		isNegative = val < 0 ? val = -val : 0; // process only abs(), and turn on flag.
 
 		// search for separator for grp & decimal, anything not digit, not +/- sign, not #.
-		result = m.match( /[^\d\-\+#]/g );
-		decimal = ( result && result[result.length - 1] ) || '.'; // treat the right most symbol as decimal
-		group = ( result && result[1] && result[0] ) || ',';  // treat the left most symbol as group separator
+		result = mask.match( /[^\d\-\+#]/g );
+		decimal = ( result && result[ result.length - 1 ] ) || '.'; // treat the right most symbol as decimal
+		group = ( result && result[ 1 ] && result[ 0 ] ) || ',';  // treat the left most symbol as group separator
 
 		// split the decimal for the format string if any.
-		m = m.split( decimal );
+		mask = mask.split( decimal );
 		// Fix the decimal first, toFixed will auto fill trailing zero.
-		v = v.toFixed( m[1] && m[1].length );
-		v = +(v) + ''; // convert number to string to trim off *all* trailing decimal zero(es)
+		val = val.toFixed( mask[ 1 ] && mask[ 1 ].length );
+		val = +( val ) + ''; // convert number to string to trim off *all* trailing decimal zero(es)
 
 		// fill back any trailing zero according to format
-		posTrailZero = m[1] && m[1].lastIndexOf('0'); // look for last zero in format
-		part = v.split('.');
+		posTrailZero = mask[ 1 ] && mask[ 1 ].lastIndexOf( '0' ); // look for last zero in format
+		part = val.split( '.' );
 		// integer will get !part[1]
-		if ( !part[1] || ( part[1] && part[1].length <= posTrailZero ) ) {
-			v = (+v).toFixed( posTrailZero + 1 );
+		if ( !part[ 1 ] || ( part[ 1 ] && part[ 1 ].length <= posTrailZero ) ) {
+			val = ( +val ).toFixed( posTrailZero + 1 );
 		}
-		szSep = m[0].split( group ); // look for separator
-		m[0] = szSep.join(''); // join back without separator for counting the pos of any leading 0.
+		szSep = mask[ 0 ].split( group ); // look for separator
+		mask[ 0 ] = szSep.join( '' ); // join back without separator for counting the pos of any leading 0.
 
-		posLeadZero = m[0] && m[0].indexOf('0');
+		posLeadZero = mask[ 0 ] && mask[ 0 ].indexOf( '0' );
 		if ( posLeadZero > -1 ) {
-			while ( part[0].length < ( m[0].length - posLeadZero ) ) {
-				part[0] = '0' + part[0];
+			while ( part[ 0 ].length < ( mask[ 0 ].length - posLeadZero ) ) {
+				part[ 0 ] = '0' + part[ 0 ];
 			}
-		} else if ( +part[0] === 0 ) {
-			part[0] = '';
+		} else if ( +part[ 0 ] === 0 ) {
+			part[ 0 ] = '';
 		}
 
-		v = v.split('.');
-		v[0] = part[0];
+		val = val.split( '.' );
+		val[ 0 ] = part[ 0 ];
 
 		// process the first group separator from decimal (.) only, the rest ignore.
 		// get the length of the last slice of split result.
-		posSeparator = ( szSep[1] && szSep[ szSep.length - 1 ].length );
+		posSeparator = ( szSep[ 1 ] && szSep[ szSep.length - 1 ].length );
 		if ( posSeparator ) {
-			integer = v[0];
+			integer = val[ 0 ];
 			str = '';
 			offset = integer.length % posSeparator;
-			l = integer.length;
-			for ( i = 0; i < l; i++ ) {
-				str += integer.charAt(i); // ie6 only support charAt for sz.
+			len = integer.length;
+			for ( index = 0; index < len; index++ ) {
+				str += integer.charAt( index ); // ie6 only support charAt for sz.
 				// -posSeparator so that won't trail separator on full length
 				/*jshint -W018 */
-				if ( !( ( i - offset + 1 ) % posSeparator ) && i < l - posSeparator ) {
+				if ( !( ( index - offset + 1 ) % posSeparator ) && index < l - posSeparator ) {
 					str += group;
 				}
 			}
-			v[0] = str;
+			val[ 0 ] = str;
 		}
 
-		v[1] = ( m[1] && v[1] ) ? decimal + v[1] : '';
+		val[ 1 ] = ( mask[ 1 ] && val[ 1 ] ) ? decimal + val[ 1 ] : '';
 		// put back any negation, combine integer and fraction, and add back prefix & suffix
-		return prefix + ( ( isNegative ? '-' : '' ) + v[0] + v[1] ) + suffix;
+		return prefix + ( ( isNegative ? '-' : '' ) + val[ 0 ] + val[ 1 ] ) + suffix;
 	};
 
 	ts.equations = {
-		count : function(arry) {
+		count : function( arry ) {
 			return arry.length;
 		},
-		sum : function(arry) {
-			var total = 0;
-			$.each( arry, function(i) {
-				total += arry[i];
-			});
+		sum : function( arry ) {
+			var index,
+				len = arry.length,
+				total = 0;
+			for ( index = 0; index < len; index++ ) {
+				total += arry[ index ];
+			}
 			return total;
 		},
-		mean : function(arry) {
+		mean : function( arry ) {
 			var total = ts.equations.sum( arry );
 			return total / arry.length;
 		},
-		median : function(arry) {
-			// https://gist.github.com/caseyjustus/1166258
-			arry.sort( function(a, b){ return a - b; } );
-			var half = Math.floor( arry.length / 2 );
-			return (arry.length % 2) ? arry[half] : ( arry[half - 1] + arry[half] ) / 2.0;
+		median : function( arry ) {
+			var half,
+				len = arry.length;
+			if ( len > 1 ) {
+				// https://gist.github.com/caseyjustus/1166258
+				arry.sort( function( a, b ){ return a - b; } );
+				half = Math.floor( len / 2 );
+				return ( len % 2 ) ? arry[ half ] : ( arry[ half - 1 ] + arry[ half ] ) / 2;
+			}
+			return math.invalid( 'median', 1 );
 		},
-		mode : function(arry) {
+		mode : function( arry ) {
 			// http://stackoverflow.com/a/3451640/145346
-			if ( arry.length === 0 ) { return 'none'; }
-			var i, el,
+			var index, el, m,
 				modeMap = {},
 				maxCount = 1,
-				modes = [ arry[0] ];
-			for (i = 0; i < arry.length; i++) {
-				el = arry[i];
-				modeMap[el] = modeMap[el] ? modeMap[el] + 1 : 1;
-				if ( modeMap[el] > maxCount ) {
+				modes = [ arry[ 0 ] ];
+			for ( index = 0; index < arry.length; index++ ) {
+				el = arry[ index ];
+				modeMap[ el ] = modeMap[ el ] ? modeMap[ el ] + 1 : 1;
+				m = modeMap[ el ];
+				if ( m > maxCount ) {
 					modes = [ el ];
-					maxCount = modeMap[el];
-				} else if (modeMap[el] === maxCount) {
-					modes.push(el);
-					maxCount = modeMap[el];
+					maxCount = m;
+				} else if ( m === maxCount ) {
+					modes.push( el );
+					maxCount = m;
 				}
 			}
 			// returns arry of modes if there is a tie
-			return modes.sort( function(a, b){ return a - b; } );
+			return modes.sort( function( a, b ){ return a - b; } );
 		},
 		max : function(arry) {
 			return Math.max.apply( Math, arry );
@@ -336,37 +383,42 @@
 			return Math.min.apply( Math, arry );
 		},
 		range: function(arry) {
-			var v = arry.sort(function(a, b){ return a - b; });
-			return v[ arry.length - 1 ] - v[0];
+			var v = arry.sort( function( a, b ){ return a - b; } );
+			return v[ arry.length - 1 ] - v[ 0 ];
 		},
 		// common variance equation
 		// (not accessible via data-attribute setting)
-		variance: function(arry, population) {
-			var avg = ts.equations.mean( arry ),
+		variance: function( arry, population ) {
+			var divisor,
+				avg = ts.equations.mean( arry ),
 				v = 0,
 				i = arry.length;
-			while (i--) {
-				v += Math.pow( ( arry[i] - avg ), 2 );
+			while ( i-- ) {
+				v += Math.pow( ( arry[ i ] - avg ), 2 );
 			}
-			v /= ( arry.length - (population ? 0 : 1) );
+			divisor = ( arry.length - ( population ? 0 : 1 ) );
+			if ( divisor === 0 ) {
+				return math.invalid( 'variance', 0 );
+			}
+			v /= divisor;
 			return v;
 		},
 		// variance (population)
-		varp : function(arry) {
-			return ts.equations.variance(arry, true);
+		varp : function( arry ) {
+			return ts.equations.variance( arry, true );
 		},
 		// variance (sample)
-		vars : function(arry) {
-			return ts.equations.variance(arry);
+		vars : function( arry ) {
+			return ts.equations.variance( arry );
 		},
 		// standard deviation (sample)
-		stdevs : function(arry) {
-			var vars = ts.equations.variance(arry);
+		stdevs : function( arry ) {
+			var vars = ts.equations.variance( arry );
 			return Math.sqrt( vars );
 		},
 		// standard deviation (population)
-		stdevp : function(arry) {
-			var varp = ts.equations.variance(arry, true);
+		stdevp : function( arry ) {
+			var varp = ts.equations.variance( arry, true );
 			return Math.sqrt( varp );
 		}
 	};
@@ -392,33 +444,36 @@
 			math_suffix   : '',
 			math_event    : 'recalculate'
 		},
-		init : function(table, thisWidget, c, wo) {
+		init : function( table, thisWidget, c, wo ) {
+			// filterEnd fires after updateComplete
+			var update = ts.hasWidget( table, 'filter' ) ? 'filterEnd' : 'updateComplete';
 			c.$table
-				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
-				.on(math.events + ' ' + wo.math_event, function(e) {
+				.off( ( math.events + ' updateComplete.tsmath ' + wo.math_event ).replace( /\s+/g, ' ' ) )
+				.on( math.events + ' ' + wo.math_event, function( e ) {
 					var init = e.type === 'tablesorter-initialized';
 					if ( !wo.math_isUpdating || init ) {
-						if ( !/filter/.test(e.type) ) {
+						if ( !/filter/.test( e.type ) ) {
 							// redo data-column indexes on update
 							ts.computeColumnIndex( c.$table.children('tbody').children() );
 						}
 						math.recalculate( table, c, wo, init );
 					}
 				})
-				.on('updateComplete.tsmath', function(){
-					setTimeout(function(){
+				.on( update + '.tsmath', function() {
+					setTimeout( function(){
+						if ( wo.math_isUpdating && c.debug && console.groupEnd ) { console.groupEnd(); }
 						wo.math_isUpdating = false;
-					}, 20);
+					}, 40 );
 				});
 			wo.math_isUpdating = false;
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo, refreshing) {
-			if (refreshing) { return; }
-			$(table)
-				.off( (math.events + ' updateComplete.tsmath ' + wo.math_event).replace(/\s+/g, ' ') )
-				.find('[data-' + wo.math_data + ']').empty();
+		remove: function( table, c, wo, refreshing ) {
+			if ( refreshing ) { return; }
+			c.$table
+				.off( ( math.events + ' updateComplete.tsmath ' + wo.math_event ).replace( /\s+/g, ' ' ) )
+				.find( '[data-' + wo.math_data + ']' ).empty();
 		}
 	});
 
