@@ -72,7 +72,7 @@
 					i--;
 				}
 			} else {
-				$rows.each(function(){
+				$rows.not('[' + dataAttrib + '=ignore]').each(function(){
 					$t = $(this).children().filter('[data-column=' + cIndex + ']');
 					if (!$(this).hasClass(filtered) && $t.not('[' + dataAttrib + '^=above],[' + dataAttrib + '^=col]').length && !$t.is($el)) {
 						txt = $t.attr(c.textAttribute);
