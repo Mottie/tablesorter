@@ -1653,10 +1653,11 @@
 			};
 
 			// *** utilities ***
-			ts.isValueInArray = function(column, arry) {
-				var indx, len = arry.length;
-				for (indx = 0; indx < len; indx++) {
-					if (arry[indx][0] === column) {
+			ts.isValueInArray = function( column, arry ) {
+				var indx,
+					len = arry && arry.length || 0;
+				for ( indx = 0; indx < len; indx++ ) {
+					if ( arry[ indx ][ 0 ] === column ) {
 						return indx;
 					}
 				}

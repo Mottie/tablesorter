@@ -322,6 +322,21 @@ $(function(){
 	});
 
 	/************************************************
+		isValueInArray
+	************************************************/
+
+	QUnit.test( "isValueInArray", function(assert) {
+		var v = ts.isValueInArray;
+		assert.expect(6);
+		ok( v( 0, null ) < 0, "null" );
+		ok( v( 0, [] ) < 0, "Empty array" );
+		ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, "Column found (first array)" );
+		ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, "Column found (second array)" );
+		ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, "Column found (third array)" );
+		ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , "Column not found" );
+	});
+
+	/************************************************
 		character equivalent replacement
 	************************************************/
 	QUnit.test( "replace accents", function(assert) {
