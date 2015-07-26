@@ -176,12 +176,12 @@ $(function(){
 	});
 
 	$table3.tablesorter({
-		emptyTo: "bottom",
-		stringTo: "max", // non-numeric content is treated as a MAX value
+		emptyTo: 'bottom',
+		stringTo: 'max', // non-numeric content is treated as a MAX value
 		headers: {
-			0: { empty : "top" }, // sort empty cells to the top
-			2: { string: "min" }, // non-numeric content is treated as a MIN value
-			3: { sorter: "digit", empty : "zero", string : "top" }
+			0: { empty : 'top' }, // sort empty cells to the top
+			2: { string: 'min' }, // non-numeric content is treated as a MIN value
+			3: { sorter: 'digit', empty : 'zero', string : 'top' }
 		}
 	});
 
@@ -199,7 +199,7 @@ $(function(){
 		initialized: function(table){
 			var e, c = table.config;
 			// trigger sort on 5th column
-			// this method is used because triggering a "sorton" would ignore sortForce/sortAppend
+			// this method is used because triggering a 'sorton' would ignore sortForce/sortAppend
 			c.$headers.eq(4).trigger('sort');
 			e = $.Event('sort');
 			e.which = 1;
@@ -217,11 +217,11 @@ $(function(){
 	/************************************************
 		Initialization
 	************************************************/
-	QUnit.test( "tablesorter loaded & initialized", function(assert) {
+	QUnit.test( 'tablesorter loaded & initialized', function(assert) {
 		assert.expect(3);
-		assert.equal( typeof ts, 'object', "tablesorter loaded");
-		assert.equal( table1.hasInitialized, true, "tablesorter initialized flag");
-		assert.equal( init, true, "tablesorter initialized event");
+		assert.equal( typeof ts, 'object', 'tablesorter loaded');
+		assert.equal( table1.hasInitialized, true, 'tablesorter initialized flag');
+		assert.equal( init, true, 'tablesorter initialized event');
 	});
 
 	c1 = table1.config;
@@ -233,7 +233,7 @@ $(function(){
 		Test column numbering
 	************************************************/
 	// later: include a table header with colspan & rowspan
-	QUnit.test( "column numbering", function(assert) {
+	QUnit.test( 'column numbering', function(assert) {
 		assert.expect(2);
 		var internalColumn = true,
 			dataColumn = true;
@@ -241,33 +241,33 @@ $(function(){
 			internalColumn = internalColumn && this.column === i;
 			dataColumn = dataColumn && $(this).attr('data-column') == i;
 		});
-		assert.equal( internalColumn, true, "Correct internal column numbering" );
-		assert.equal( dataColumn, true, "Correct data-column attribute numbering" );
+		assert.equal( internalColumn, true, 'Correct internal column numbering' );
+		assert.equal( dataColumn, true, 'Correct data-column attribute numbering' );
 	});
 
 	/************************************************
 		check isDigit function
 	************************************************/
 	var d = ts.isDigit;
-	QUnit.test( "isDigit", function(assert) {
+	QUnit.test( 'isDigit', function(assert) {
 		assert.expect(18);
-		ok( d('-1'),   "allow negative (-1)");
-		ok( d('+1'),   "allow plus (+1)");
-		ok( d('(1)'),  "allow parenthesis (1)");
+		ok( d('-1'),   'allow negative (-1)');
+		ok( d('+1'),   'allow plus (+1)');
+		ok( d('(1)'),  'allow parenthesis (1)');
 		ok( d('123'),  "string has numbers ('123')");
-		ok( d(123),    "has numbers (123)");
-		ok( d('1.2'),  "remove decimal (1.2)");
-		ok( d('1,234'),"remove commas (1,234)");
+		ok( d(123),    'has numbers (123)');
+		ok( d('1.2'),  'remove decimal (1.2)');
+		ok( d('1,234'),'remove commas (1,234)');
 		ok( d("11'"),  "remove apostrophe's (11')"); // 11 feet
 		ok( d('3\'4"'),"remove quotes (3'4\")"); // 3 foot 4 inches
-		ok( d(' 12 '), "remove spaces ( 12 )");
-		ok( !d('x'),   "non-digit alphabet");
-		ok( !d('1x'),  "digit + alphabet");
-		ok( !d('x1'),  "alphabet + digit");
-		ok( !d('@'),   "non-digit symbols");
-		ok( !d('1-'),  "negative after (1-) not allowed?");
-		ok( !d('1+'),  "plus after (1+) not allowed?");
-		ok( !d('$2'),  "no money; the currency parser will catch these");
+		ok( d(' 12 '), 'remove spaces ( 12 )');
+		ok( !d('x'),   'non-digit alphabet');
+		ok( !d('1x'),  'digit + alphabet');
+		ok( !d('x1'),  'alphabet + digit');
+		ok( !d('@'),   'non-digit symbols');
+		ok( !d('1-'),  'negative after (1-) not allowed?');
+		ok( !d('1+'),  'plus after (1+) not allowed?');
+		ok( !d('$2'),  'no money; the currency parser will catch these');
 		ok( !d(''),    "empty string ('')");
 	});
 
@@ -277,7 +277,7 @@ $(function(){
 	var ff = function(str) {
 		return ts.formatFloat(str, table1);
 	};
-	QUnit.test( "formatFloat", function(assert) {
+	QUnit.test( 'formatFloat', function(assert) {
 		assert.expect(18);
 		assert.strictEqual( ff(''), '', 'returns empty string' );
 		assert.strictEqual( ff(5), 5, 'returns numerical values');
@@ -313,7 +313,7 @@ $(function(){
 		return ts.getData( c2.$headers[n], c2.headers[n], 'sorter' );
 	};
 
-	QUnit.test( "getData", function(assert) {
+	QUnit.test( 'getData', function(assert) {
 		assert.expect(4);
 		var txt = [ 'jQuery data', 'meta data', 'headers option', 'header class name' ];
 		for (i = 0; i < 4; i++) {
@@ -325,34 +325,72 @@ $(function(){
 		isValueInArray
 	************************************************/
 
-	QUnit.test( "isValueInArray", function(assert) {
+	QUnit.test( 'isValueInArray', function(assert) {
 		var v = ts.isValueInArray;
 		assert.expect(6);
-		ok( v( 0, null ) < 0, "null" );
-		ok( v( 0, [] ) < 0, "Empty array" );
-		ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, "Column found (first array)" );
-		ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, "Column found (second array)" );
-		ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, "Column found (third array)" );
-		ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , "Column not found" );
+		ok( v( 0, null ) < 0, 'null' );
+		ok( v( 0, [] ) < 0, 'Empty array' );
+		ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, 'Column found (first array)' );
+		ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, 'Column found (second array)' );
+		ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, 'Column found (third array)' );
+		ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , 'Column not found' );
+	});
+
+	/************************************************
+		isProcessing
+	************************************************/
+	QUnit.test( 'isProcessing', function(assert) {
+		$table3.trigger('sortReset');
+		assert.expect(5);
+		var p = ts.isProcessing,
+			findClasses = function( applied, columns ) {
+				var i, tmp,
+					headers = 0,
+					len = columns.length,
+					headers = 0,
+					// if processing applied, class is added to the table
+					result = applied && $table3.hasClass( ts.css.processing );
+				if ( len === 1 && columns[ 0 ] < 0 ) {
+					// processing class should not be found on headers
+					return ( !result || applied && result ) && c3.$headers.find( '.' + ts.css.processing ).length === 0;
+				}
+				for ( i = 0; i < len; i++ ) {
+					tmp = c3.$headers.eq( columns[ i ] ).hasClass( ts.css.processing );
+					if ( tmp ) { headers++; }
+					result = result && tmp;
+				}
+				return result && headers === len;
+			};
+		$table3.trigger('sorton', [[[0,0], [1,0]]]);
+		p( $table3, true );
+		ok( findClasses( true, [ 0, 1 ] ), 'Processing 2 columns' );
+		p( $table3, false );
+		ok( findClasses( false, [ -1 ] ), 'No sort' );
+		p( $table3, true, c3.$headers.eq(4) );
+		ok( findClasses( true, [ -1 ] ), 'Processing specified column not in sortList' );
+		p( $table3, true, c3.$headers.eq(1) );
+		ok( findClasses( true, [ 1 ] ), 'Processing specified column in sortList' );
+		$table3.trigger('sortReset');
+		ok( findClasses( false, [ -1 ] ), 'No sort' );
 	});
 
 	/************************************************
 		character equivalent replacement
 	************************************************/
-	QUnit.test( "replace accents", function(assert) {
+	QUnit.test( 'replace accents', function(assert) {
 		assert.expect(6);
 		assert.strictEqual( ts.replaceAccents('\u00e1\u00e0\u00e2\u00e3\u00e4\u0105\u00e5\u00c1\u00c0\u00c2\u00c3\u00c4\u0104\u00c5'), 'aaaaaaaAAAAAAA', "replaced a's");
 		assert.strictEqual( ts.replaceAccents('\u00e9\u00e8\u00ea\u00eb\u011b\u0119\u00c9\u00c8\u00ca\u00cb\u011a\u0118'), 'eeeeeeEEEEEE', "replaced e's");
 		assert.strictEqual( ts.replaceAccents('\u00ed\u00ec\u0130\u00ee\u00ef\u0131\u00cd\u00cc\u0130\u00ce\u00cf'), 'iiiiiiIIiII', "replaced i's");
 		assert.strictEqual( ts.replaceAccents('\u00f3\u00f2\u00f4\u00f5\u00f6\u00d3\u00d2\u00d4\u00d5\u00d6'), 'oooooOOOOO', "replaced o's");
 		assert.strictEqual( ts.replaceAccents('\u00fa\u00f9\u00fb\u00fc\u016f\u00da\u00d9\u00db\u00dc\u016e'), 'uuuuuUUUUU', "replaced u's");
-		assert.strictEqual( ts.replaceAccents('\u00e7\u0107\u010d\u00c7\u0106\u010c\u00df\u1e9e'), 'cccCCCssSS', "replaced c & s sharp");
+		assert.strictEqual( ts.replaceAccents('\u00e7\u0107\u010d\u00c7\u0106\u010c\u00df\u1e9e'), 'cccCCCssSS', 'replaced c & s sharp');
 	});
 
 	/************************************************
 		detect parsers
 	************************************************/
-	QUnit.test( "detect parsers", function(assert) {
+	QUnit.test( 'detect parsers', function(assert) {
 		var done = assert.async();
 		assert.expect(2);
 		$('#testblock2').html('<table class="tablesorter"><thead>' +
@@ -436,13 +474,13 @@ $(function(){
 		'time'      : { '12:34 AM': returnTime('2000/01/01 12:34 AM'), '1:00 pm': returnTime('2000/01/01 1:00 pm') },
 		'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
 	},
-	// switch ignoreCase, sortLocalCompare & shortDate "ddmmyyyy"
+	// switch ignoreCase, sortLocalCompare & shortDate 'ddmmyyyy'
 	sample2 = {
 		'text'      : { 'TesT': 'TesT', '\u00e1 test': 'a test' },
 		'currency'  : { '\u20ac 123 456,78': 123456.78, '\u20ac 123.456,78': 123456.78 },
 		'shortDate' : { '2/1/2001': returnTime('1/2/2001'), '2-1-2001': returnTime('1/2/2001'), '2 1,2001': returnTime('1/2/2001') }
 	},
-	// shortdate to "yyyymmdd"
+	// shortdate to 'yyyymmdd'
 	sample3 = {
 		'shortDate' : { '2001/1/2': returnTime('1/2/2001'), '2001-1/2': returnTime('1/2/2001'), '2001,1.2': returnTime('1/2/2001') }
 	},
@@ -452,7 +490,7 @@ $(function(){
 			if (s.hasOwnProperty(t)) {
 				/*jshint loopfunc:true */
 				$.each(s[t], function(k,v){
-					// check "is" and "format" functions
+					// check 'is' and 'format' functions
 					if (p[i].is(k)) {
 						assert.equal( p[i].format(k, table1, th0, 0), v, t + ' parser: "' + k + '" parsed to ' + v );
 					} else {
@@ -466,18 +504,18 @@ $(function(){
 		}
 	};
 
-	QUnit.test( "testing parsers", function(assert) {
+	QUnit.test( 'testing parsers', function(assert) {
 		assert.expect(parserTests);
 		report(assert, sample1);
 
 		c1.sortLocaleCompare = true;
 		c1.ignoreCase = false;
 		c1.usNumberFormat = false;
-		th0.dateFormat = c1.dateFormat = "ddmmyyyy";
+		th0.dateFormat = c1.dateFormat = 'ddmmyyyy';
 		report(assert, sample2);
 
 		c1.usNumberFormat = true;
-		th0.dateFormat = c1.dateFormat = "yyyymmdd";
+		th0.dateFormat = c1.dateFormat = 'yyyymmdd';
 		report(assert, sample3);
 
 		// undocumented sortValue
@@ -486,7 +524,7 @@ $(function(){
 		assert.equal( ts.getParserById('metadata').format(null, table1, th0, 0), 'nevermore', 'metadata parser found poe');
 	});
 
-	QUnit.test( "textExtraction Method", function(assert) {
+	QUnit.test( 'textExtraction Method', function(assert) {
 		assert.expect(4);
 
 		$table1.trigger('sorton', [[[ 0,0 ]]]);
@@ -505,7 +543,7 @@ $(function(){
 	/************************************************
 		test parser cache
 	************************************************/
-	QUnit.test( "parser cache; sorton methods; empty & string", function(assert) {
+	QUnit.test( 'parser cache; sorton methods; empty & string', function(assert) {
 		assert.expect(18);
 		$table1.trigger('sortReset');
 
@@ -555,7 +593,7 @@ $(function(){
 		assert.cacheCompare( table3, 3, [ -8.4, -2.2, -0.1, '', 5.2, 11.4, 23.6, 97.4, 'n/a #1', 'n/a #2' ], 'asc sort; empty to zero; string to bottom' );
 
 		$table3.find('th:eq(3)').data('string', 'none');
-		c3.headers[3].empty = "bottom";
+		c3.headers[3].empty = 'bottom';
 		c3.sortList = [[ 3, 1 ]]; // added to test sortList
 		$table3.trigger('update');
 		assert.cacheCompare( table3, 3, [ 97.4, 23.6, 11.4, 5.2, 'n/a #1', 'n/a #2', -0.1, -2.2, -8.4, '' ], 'desc sort; empty to zero; string to none/zero' );
@@ -573,7 +611,7 @@ $(function(){
 
 	});
 
-	QUnit.test( "sorton methods", function(assert) {
+	QUnit.test( 'sorton methods', function(assert) {
 		assert.expect(6);
 
 		$table3.trigger('sorton', [[[ 0,'d' ]]]);
@@ -595,7 +633,7 @@ $(function(){
 
 	});
 
-	QUnit.test( "sort Events", function(assert) {
+	QUnit.test( 'sort Events', function(assert) {
 		assert.expect(1);
 
 		$table1.add($table5).bind( events.join('.testing '), function(e){
@@ -619,7 +657,7 @@ $(function(){
 	/************************************************
 		test update methods
 	************************************************/
-	QUnit.test( "parser cache; update methods & callbacks", function(assert) {
+	QUnit.test( 'parser cache; update methods & callbacks', function(assert) {
 		assert.expect(10);
 		var oldColMax;
 		c1.ignoreCase = true;
@@ -694,7 +732,7 @@ $(function(){
 	/************************************************
 		test sortForce, sortAppend, sortMultiSortKey and sortResetKey options
 	************************************************/
-	QUnit.test( "sortForce, sortAppend, sortMultiSortKey & sortResetKey; and numberSorter option", function(assert){
+	QUnit.test( 'sortForce, sortAppend, sortMultiSortKey & sortResetKey; and numberSorter option', function(assert){
 		assert.expect(3);
 
 		assert.cacheCompare( table4, 3, [ 2, 1, 7, 6, 5, 3, 4, 8, 9, 10 ], 'force x2 + sorted x2 + append x2, ascending' );
@@ -725,7 +763,7 @@ $(function(){
 	/************************************************
 		check header css
 	************************************************/
-	QUnit.test( "testing header css & sortReset method", function(assert) {
+	QUnit.test( 'testing header css & sortReset method', function(assert) {
 		assert.expect(7);
 		t = $(th0);
 		assert.equal( $table1.hasClass(ts.css.table), true, 'table class applied');
@@ -752,7 +790,7 @@ $(function(){
 		return t;
 	};
 
-	QUnit.test( "apply zebra widget", function(assert) {
+	QUnit.test( 'apply zebra widget', function(assert) {
 		assert.expect(3);
 		assert.equal( zebra(), false, 'zebra not applied' );
 		c2.widgets = [ 'zebra' ];
@@ -767,7 +805,7 @@ $(function(){
 	/************************************************
 		test has widget function
 	************************************************/
-	QUnit.test( "has & remove zebra widget", function(assert) {
+	QUnit.test( 'has & remove zebra widget', function(assert) {
 		assert.expect(3);
 		c2.widgets = [ 'zebra' ];
 		$table2.trigger('applyWidgets');
@@ -780,7 +818,7 @@ $(function(){
 	/************************************************
 		check destroy method
 	************************************************/
-	QUnit.test("testing destroy method", function(assert) {
+	QUnit.test('testing destroy method', function(assert) {
 		$table2.trigger('sorton', [[[ 0,1 ]]] );
 		$table2.trigger('destroy');
 		assert.expect(7);
