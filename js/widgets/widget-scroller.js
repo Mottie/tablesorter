@@ -277,9 +277,9 @@
 						.scrollLeft( $( this ).scrollLeft() );
 				});
 
-			// resize/update events
-			events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized' ) +
-					' updateComplete pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' );
+			// resize/update events - filterEnd fires after "tablesorter-initialized" and "updateComplete"
+			events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized updateComplete' ) +
+					' sortEnd pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' );
 
 			$table
 				.off( namespace )
@@ -295,7 +295,7 @@
 							$tableWrap
 								.scrollTop( wo.scroller_saved[1] )
 								.scrollLeft( wo.scroller_saved[0] );
-							tsScroller.updateFixed( c, wo, false );
+							tsScroller.updateFixed( c, wo );
 						}, 0 );
 					}
 				})
@@ -321,7 +321,7 @@
 						return;
 					}
 					if ( wo.scroller_fixedColumns > 0 ) {
-						tsScroller.updateFixed( c, wo, false );
+						tsScroller.updateFixed( c, wo );
 					}
 					// adjust column sizes after an update
 					tsScroller.resize( c, wo );
@@ -807,6 +807,7 @@
 
 		fixHeight : function( $rows, $fixedRows ) {
 			var index, heightRow, heightFixed, $r, $f,
+				addedHt = tscss.scrollerAddedHeight,
 				len = $rows.length;
 			for ( index = 0; index < len; index++ ) {
 				$r = $rows.eq( index );
@@ -814,9 +815,9 @@
 				heightRow = $r.height();
 				heightFixed = $f.height();
 				if ( heightRow > heightFixed ) {
-					$f.addClass( tscss.scrollerAddedHeight ).height( heightRow );
+					$f.addClass( addedHt ).height( heightRow );
 				} else if ( heightRow < heightFixed ) {
-					$r.addClass( tscss.scrollerAddedHeight ).height( heightFixed );
+					$r.addClass( addedHt ).height( heightFixed );
 				}
 			}
 		},
