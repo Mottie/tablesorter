@@ -1329,8 +1329,8 @@
 
 			// *** Process table ***
 			// add processing indicator
-			ts.isProcessing = function(table, toggle, $ths) {
-				$table = $(table);
+			ts.isProcessing = function( $table, toggle, $ths ) {
+				$table = $( $table );
 				var c = $table[0].config,
 					// default to all headers
 					$h = $ths || $table.find('.' + ts.css.header);
