@@ -53,6 +53,7 @@
 		},
 		format : function( txt, table, cell, cellIndex ) {
 			var $cell = $( cell ),
+				$row = $cell.closest( 'tr' ),
 				wo = table.config.widgetOptions,
 				checkedClass = table.config.checkboxClass || 'checked',
 				// returning plain language here because this is what is shown in the
@@ -62,7 +63,13 @@
 				isChecked = $input.length ? $input[ 0 ].checked : '';
 			// adding class to row, indicating that a checkbox is checked; includes
 			// a column index in case more than one checkbox happens to be in a row
-			$cell.closest( 'tr' ).toggleClass( checkedClass + ' ' + checkedClass + '-' + cellIndex, isChecked );
+			$row.toggleClass( checkedClass + '-' + cellIndex, isChecked );
+			if ( isChecked ) {
+				$row.addClass( checkedClass );
+			} else if ( !( $row[0].className || '' ).match( checkedClass + '-' ) ) {
+				// don't remove checked class if other columns have a check
+				$row.removeClass( checkedClass );
+			}
 			return $input.length ? status[ isChecked ? 0 : 1 ] : txt;
 		},
 		parsed : true, // filter widget flag
