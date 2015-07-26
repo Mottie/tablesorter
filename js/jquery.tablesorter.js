@@ -1339,7 +1339,7 @@
 					if (typeof $ths !== 'undefined' && c.sortList.length > 0) {
 						// get headers from the sortList
 						$h = $h.filter(function(){
-							// get data-column from attr to keep  compatibility with jQuery 1.2.6
+							// get data-column from attr to keep compatibility with jQuery 1.2.6
 							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList) >= 0;
 						});
 					}

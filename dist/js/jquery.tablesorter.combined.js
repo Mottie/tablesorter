@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-24-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-26-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1341,8 +1341,8 @@
 
 			// *** Process table ***
 			// add processing indicator
-			ts.isProcessing = function(table, toggle, $ths) {
-				$table = $(table);
+			ts.isProcessing = function( $table, toggle, $ths ) {
+				$table = $( $table );
 				var c = $table[0].config,
 					// default to all headers
 					$h = $ths || $table.find('.' + ts.css.header);
@@ -1351,7 +1351,7 @@
 					if (typeof $ths !== 'undefined' && c.sortList.length > 0) {
 						// get headers from the sortList
 						$h = $h.filter(function(){
-							// get data-column from attr to keep  compatibility with jQuery 1.2.6
+							// get data-column from attr to keep compatibility with jQuery 1.2.6
 							return this.sortDisabled ? false : ts.isValueInArray( parseFloat($(this).attr('data-column')), c.sortList) >= 0;
 						});
 					}
@@ -1665,10 +1665,11 @@
 			};
 
 			// *** utilities ***
-			ts.isValueInArray = function(column, arry) {
-				var indx, len = arry.length;
-				for (indx = 0; indx < len; indx++) {
-					if (arry[indx][0] === column) {
+			ts.isValueInArray = function( column, arry ) {
+				var indx,
+					len = arry && arry.length || 0;
+				for ( indx = 0; indx < len; indx++ ) {
+					if ( arry[ indx ][ 0 ] === column ) {
 						return indx;
 					}
 				}
