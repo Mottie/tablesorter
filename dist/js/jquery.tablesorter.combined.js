@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-26-2015 (v2.22.2)*/
+/*! tablesorter (FORK) - updated 07-27-2015 (v2.22.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2718,12 +2718,18 @@
 						data2.filter = '' + ( ts.filter.parseFilter( c, filter[ indx ], index, parsed ) || '' );
 						data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
 						query = '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')';
-						regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
-						// filterMatched = data2.filter === '' && indx > 0 ? true
-						// look for an exact match with the 'or' unless the 'filter-match' class is found
-						filterMatched = regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars );
-						if ( filterMatched ) {
-							return filterMatched;
+						try {
+							// use try/catch, because query may not be a valid regex if "|" is contained within a partial regex search,
+							// e.g "/(Alex|Aar" -> Uncaught SyntaxError: Invalid regular expression: /(/(Alex)/: Unterminated group
+							regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+							// filterMatched = data2.filter === '' && indx > 0 ? true
+							// look for an exact match with the 'or' unless the 'filter-match' class is found
+							filterMatched = regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars );
+							if ( filterMatched ) {
+								return filterMatched;
+							}
+						} catch ( error ) {
+							return null;
 						}
 					}
 					// may be null from processing types
@@ -2749,13 +2755,18 @@
 						query = ( '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')' )
 							// replace wild cards since /(a*)/i will match anything
 							.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' );
-						regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
-						// look for an exact match with the 'and' unless the 'filter-match' class is found
-						result = ( regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars ) );
-						if ( indx === 0 ) {
-							filterMatched = result;
-						} else {
-							filterMatched = filterMatched && result;
+						try {
+							// use try/catch just in case RegExp is invalid
+							regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
+							// look for an exact match with the 'and' unless the 'filter-match' class is found
+							result = ( regex.test( data2.exact ) || ts.filter.processTypes( c, data2, vars ) );
+							if ( indx === 0 ) {
+								filterMatched = result;
+							} else {
+								filterMatched = filterMatched && result;
+							}
+						} catch ( error ) {
+							return null;
 						}
 					}
 					// may be null from processing types
@@ -2895,11 +2906,15 @@
 						query = data.isMatch ? query : '^(' + query + ')$';
 					}
 					// parsing the filter may not work properly when using wildcards =/
-					return new RegExp(
-						query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ),
-						c.widgetOptions.filter_ignoreCase ? 'i' : ''
-					)
-					.test( data.exact );
+					try {
+						return new RegExp(
+							query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ),
+							c.widgetOptions.filter_ignoreCase ? 'i' : ''
+						)
+						.test( data.exact );
+					} catch ( error ) {
+						return null;
+					}
 				}
 				return null;
 			},
