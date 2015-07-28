@@ -1,4 +1,4 @@
-/*! Widget: sort2Hash - updated 7/21/2015 (v2.22.4) */
+/*! Widget: sort2Hash - updated 7/28/2015 (v2.22.4) */
 ;( function( $ ) {
 	'use strict';
 	var ts = $.tablesorter || {},

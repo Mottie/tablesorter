@@ -1,4 +1,4 @@
-/*! Widget: math - updated 5/17/2015 (v2.22.0) *//*
+/*! Widget: math - updated 7/28/2015 (v2.22.4) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
