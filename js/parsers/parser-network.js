@@ -29,13 +29,14 @@
 			return ts.regex.ipv6Validate.test(s);
 		},
 		format: function(address, table) {
-			// code modified from http://forrst.com/posts/JS_Expand_Abbreviated_IPv6_Addresses-1OR
+			// code modified from http://zurb.com/forrst/posts/JS_Expand_Abbreviated_IPv6_Addresses-1OR
+			// Saved to https://gist.github.com/Mottie/7018157
 			var i, t, sides, groups, groupsPresent,
 				hex = table ? (typeof table === 'boolean' ? table : table && table.config.ipv6HexFormat || false) : false,
 				fullAddress = '',
 				expandedAddress = '',
-				validGroupCount = 8,
-				validGroupSize = 4;
+				validGroupCount = 8;
+			// validGroupSize = 4; <- removed while loop
 			// remove any extra spaces
 			address = address.replace(/\s*/g, '');
 			// look for embedded ipv4
@@ -112,7 +113,7 @@
 	*/
 	ts.addParser({
 		id : 'MAC',
-		is : function( str ) {
+		is : function() {
 			return false;
 		},
 		format : function( str ) {

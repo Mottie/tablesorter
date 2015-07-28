@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 07-28-2015 (v2.22.4)*/
+/*! tablesorter (FORK) - updated 07-28-2015 (v2.22.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.22.4 *//*
+/*! TableSorter (FORK) v2.22.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -35,7 +35,7 @@
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false, alert:false, require:false, define:false, module:false */
+/*global console:false */
 ;(function($){
 	'use strict';
 	$.extend({
@@ -44,7 +44,7 @@
 
 			var ts = this;
 
-			ts.version = '2.22.4';
+			ts.version = '2.22.5';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -2250,6 +2250,7 @@
 })(jQuery);
 
 /*! Widget: storage - updated 3/26/2015 (v2.21.3) */
+/*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
 
@@ -2711,7 +2712,7 @@
 		types: {
 			or : function( c, data, vars ) {
 				if ( /\|/.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
-					var indx, filterMatched, txt, query, regex,
+					var indx, filterMatched, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
 						index = data.index,
@@ -2746,7 +2747,7 @@
 			// Look for an AND or && operator ( logical and )
 			and : function( c, data, vars ) {
 				if ( ts.filter.regex.andTest.test( data.filter ) ) {
-					var indx, filterMatched, result, txt, query, regex,
+					var indx, filterMatched, result, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
 						index = data.index,

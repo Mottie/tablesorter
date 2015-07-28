@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.22.4 *//*
+/*! TableSorter (FORK) v2.22.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -17,7 +17,7 @@
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false, alert:false, require:false, define:false, module:false */
+/*global console:false */
 ;(function($){
 	'use strict';
 	$.extend({
@@ -26,7 +26,7 @@
 
 			var ts = this;
 
-			ts.version = '2.22.4';
+			ts.version = '2.22.5';
 
 			ts.parsers = [];
 			ts.widgets = [];

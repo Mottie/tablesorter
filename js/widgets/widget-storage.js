@@ -1,4 +1,5 @@
 /*! Widget: storage - updated 3/26/2015 (v2.21.3) */
+/*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
 

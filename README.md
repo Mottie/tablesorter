@@ -82,6 +82,12 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.22.5">Version 2.22.5</a> (7/28/2015)
+
+* Overall:
+ * Set JSHint "undef" & "unused" options. Fixed issues.
+ * The math widget was throwing a javascript error after missing a changed variable name & JSHint wasn't catching it, until now.
+
 #### <a name="v2.22.4">Version 2.22.4</a> (7/28/2015)
 
 * Overall

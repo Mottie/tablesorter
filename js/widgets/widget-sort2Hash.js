@@ -50,7 +50,7 @@
 				// just see if column contains a number
 				if ( isNaN( temp ) || temp > c.columns ) {
 					regex = new RegExp( '(' + column + ')', 'i' );
-					column = c.$headers.filter( function( index, cell ) {
+					column = c.$headers.filter( function( index ) {
 						return regex.test( c.$headers[ index ].textContent || '' );
 					}).attr( 'data-column' );
 				}
@@ -94,8 +94,7 @@
 			return sort.join( wo.sort2Hash_separator );
 		},
 		setHash : function( c, wo ) {
-			var arry = [],
-				sort = s2h.processSort( c, wo );
+			var sort = s2h.processSort( c, wo );
 			if ( sort.length ) {
 				// remove old hash
 				s2h.getSort( c, wo, true );
