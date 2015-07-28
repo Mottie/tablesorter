@@ -40,8 +40,7 @@
 
 		// get all of the row numerical values in an arry
 		getRow : function( c, $el ) {
-			var $t, txt,
-				wo = c.widgetOptions,
+			var wo = c.widgetOptions,
 				arry = [],
 				$row = $el.closest( 'tr' ),
 				$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
@@ -58,7 +57,7 @@
 
 		// get all of the column numerical values in an arry
 		getColumn : function( c, $el, type ) {
-			var index, txt, $t, len, $mathRows, mathAbove,
+			var index, $t, len, $mathRows, mathAbove,
 				arry = [],
 				wo = c.widgetOptions,
 				filtered = wo.filter_filteredRow || 'filtered',
@@ -104,7 +103,7 @@
 
 		// get all of the column numerical values in an arry
 		getAll : function( c ) {
-			var txt, $t, col, $row, rowIndex, rowLen, $cells, cellIndex, cellLen,
+			var $t, col, $row, rowIndex, rowLen, $cells, cellIndex, cellLen,
 				arry = [],
 				wo = c.widgetOptions,
 				filtered = wo.filter_filteredRow || 'filtered',
@@ -128,7 +127,7 @@
 			return arry;
 		},
 
-		recalculate : function(table, c, wo, init) {
+		recalculate : function(c, wo, init) {
 			if ( c && ( !wo.math_isUpdating || init ) ) {
 
 				// add data-column attributes to all table cells
@@ -315,7 +314,7 @@
 				str += integer.charAt( index ); // ie6 only support charAt for sz.
 				// -posSeparator so that won't trail separator on full length
 				/*jshint -W018 */
-				if ( !( ( index - offset + 1 ) % posSeparator ) && index < l - posSeparator ) {
+				if ( !( ( index - offset + 1 ) % posSeparator ) && index < len - posSeparator ) {
 					str += group;
 				}
 			}
@@ -456,7 +455,7 @@
 							// redo data-column indexes on update
 							ts.computeColumnIndex( c.$table.children('tbody').children() );
 						}
-						math.recalculate( table, c, wo, init );
+						math.recalculate( c, wo, init );
 					}
 				})
 				.on( update + '.tsmath', function() {

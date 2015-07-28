@@ -105,7 +105,7 @@
 		types: {
 			or : function( c, data, vars ) {
 				if ( /\|/.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
-					var indx, filterMatched, txt, query, regex,
+					var indx, filterMatched, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
 						index = data.index,
@@ -140,7 +140,7 @@
 			// Look for an AND or && operator ( logical and )
 			and : function( c, data, vars ) {
 				if ( ts.filter.regex.andTest.test( data.filter ) ) {
-					var indx, filterMatched, result, txt, query, regex,
+					var indx, filterMatched, result, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
 						index = data.index,

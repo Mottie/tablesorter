@@ -2,6 +2,7 @@
 /* Extract localized data using jQuery's Globalize parsers; set
  Globalize.locale( 'xx' ) prior to initializing tablesorter! */
 /*jshint jquery:true */
+/*global Globalize:false */
 ;( function( $ ) {
 	'use strict';
 

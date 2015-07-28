@@ -5,7 +5,7 @@
  * Download-File-JS: https://github.com/PixelsCommander/Download-File-JS (http://www.apache.org/licenses/LICENSE-2.0)
  */
 /*jshint browser:true, jquery:true, unused:false */
-/*global jQuery: false */
+/*global jQuery:false, alert:false */
 ;(function($){
 	'use strict';
 

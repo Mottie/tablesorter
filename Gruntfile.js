@@ -244,15 +244,20 @@ module.exports = function( grunt ) {
 			},
 			options: {
 				globals: {
+					'JSON': false,
 					'localStorage': false,
 					'navigator': false,
 					'console': false,
-					'alert': false
+					'require': false,
+					'define': false,
+					'module': false
 				},
 				'loopfunc': true,
 				'jquery': true,
 				'browser': true,
-				'es3': true
+				'es3': true,
+				'unused': true,
+				'undef': true
 			}
 		},
 
