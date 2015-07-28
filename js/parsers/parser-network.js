@@ -69,7 +69,7 @@
 				// it's fastest & easiest for tablesorter to sort decimal values (vs hex)
 				groups[i] = hex ? ('0000' + groups[i]).slice(-4) :
 					('00000' + (parseInt(groups[i], 16) || 0)).slice(-5);
-				expandedAddress += ( i != validGroupCount-1) ? groups[i] + ':' : groups[i];
+				expandedAddress += ( i != validGroupCount - 1) ? groups[i] + ':' : groups[i];
 			}
 			return hex ? expandedAddress : expandedAddress.replace(/:/g, '');
 		},

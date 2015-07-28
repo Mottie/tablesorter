@@ -3,7 +3,7 @@
  */
 /*jshint jquery:true */
 ;(function($){
-"use strict";
+	'use strict';
 
 	// Change language of the named numbers as needed
 	var named = {
@@ -99,7 +99,7 @@
 	};
 
 	$.tablesorter.addParser({
-		id: "namedNumbers",
+		id: 'namedNumbers',
 		is: function () {
 			return false;
 		},
@@ -116,7 +116,7 @@
 			// make sure to let zero get parsed, so check hasOwnProperty
 			return result || named.numbers.hasOwnProperty( str ) ? result : $.tablesorter.formatFloat( str || '', table );
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 })( jQuery );

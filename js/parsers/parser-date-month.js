@@ -2,7 +2,7 @@
 /* Demo: http://jsfiddle.net/Mottie/abkNM/4169/ */
 /*jshint jquery:true */
 ;(function($){
-"use strict";
+	'use strict';
 
 	var ts = $.tablesorter;
 	ts.dates = $.extend({}, ts.dates, {
@@ -12,7 +12,7 @@
 	ts.dates.monthLower = ts.dates.monthCased.join(',').toLocaleLowerCase().split(',');
 
 	ts.addParser({
-		id: "month",
+		id: 'month',
 		is: function(){
 			return false;
 		},
@@ -20,7 +20,7 @@
 			if (s) {
 				var j = -1, c = table.config,
 				n = c.ignoreCase ? s.toLocaleLowerCase() : s;
-				$.each(ts.dates[ 'month' + (c.ignoreCase ? 'Lower' : 'Cased') ], function(i,v){
+				$.each(ts.dates[ 'month' + (c.ignoreCase ? 'Lower' : 'Cased') ], function(i, v){
 					if (j < 0 && n.match(v)) {
 						j = i;
 						return false;
@@ -32,7 +32,7 @@
 			}
 			return s;
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 })(jQuery);

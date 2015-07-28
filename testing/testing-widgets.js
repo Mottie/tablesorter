@@ -1,5 +1,5 @@
 /*!
-* TableSorter QUnit Testing
+* TableSorter QUnit Testing - filter widget
 */
 /*jshint unused: false */
 /*global start: false, asyncTest: false, equal: false, $: false, expect: false, module: false,
@@ -148,7 +148,7 @@ $(function(){
 					wo = this.wo,
 					$table = this.$table,
 					table = this.table;
-			expect(31);
+			expect(33);
 
 			return QUnit.SequentialRunner(
 				function(actions, assertions) {
@@ -220,6 +220,12 @@ $(function(){
 			).nextTask(
 				function(){ ts.setFilters( table, ['', 'alex|br*'], true ); },
 				function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search OR match', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', '/(Alex|Aar'], true ); },
+				function(){ assert.cacheCompare( table, 1, [], 'Partial OR match, but invalid regex', true ); }
+			).nextTask(
+				function(){ ts.setFilters( table, ['', '/(Alex && '], true ); },
+				function(){ assert.cacheCompare( table, 1, [], 'Partial AND match, and way messed up regex', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', '', '', '', '5 - 10'], true ); },
 				function(){ assert.cacheCompare( table, 4, [5.95, 9.99, 5.29], 'search range', true ); }

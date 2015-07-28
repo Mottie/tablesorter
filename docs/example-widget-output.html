@@ -237,6 +237,7 @@
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.22.4</span>, added <code>output_formatContent</code> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
 						<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
@@ -698,6 +699,35 @@ line,value1,value2,value3
 						<td><code>'mytable.csv'</code></td>
 						<td>When downloading, this option sets the filename of the output.</td>
 					</tr>
+
+					<tr id="output_formatcontent">
+						<td><a href="#" class="permalink">output_formatContent</a></td>
+						<td>null</td>
+						<td>This callback is executed after the content of a table cell has been processed.
+							<div class="collapsible">
+								<br>
+								Default setting &amp; how to use this option:
+								<pre class="prettyprint lang-js">output_formatContent : function( c, wo, data ) {
+	// data.isHeader (boolean) = true if processing a header cell
+	// data.$cell = jQuery object of the cell currently being processed
+	// data.content = processed cell content (spaces trimmed, quotes added/replaced, etc)
+	// **********
+	// use data.$cell.html() to get the original cell content
+	return data.content
+		.replace(/fred/ig, '')  // because we don't like fred
+		// because HTML is being processed, you might want to also replace HTML codes
+		.replace(/&amp;amp;/g, '&') // convert '&amp;amp;' &rarr; '&amp;'
+}</pre>
+								If you want to replace all HTML codes, check out the <a href="https://github.com/mathiasbynens/he#hedecodehtml-options">he library</a>; then you can use this code (Fred would be happy):
+								<pre class="prettyprint lang-js">output_formatContent : function( c, wo, data ) {
+	// replace all HTML shortcut codes
+	// (e.g. 'foo &amp;copy; bar &amp;ne; baz &amp;#x1D306; qux' &rarr; 'foo &copy; bar &ne; baz &#x1D306; qux' )
+	return he.decode( data.content );
+}</pre>
+							</div>
+						</td>
+					</tr>
+
 					<tr id="output_callback">
 						<td><a href="#" class="permalink">output_callback</a></td>
 						<td>{see description}</td>

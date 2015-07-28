@@ -136,8 +136,17 @@
 					activate: function(e, ui) {
 						// refresh zebra widget when rows are visible
 						ui.newPanel.find('table').trigger('applyWidgets');
+						var $opt = ui.newPanel.find('table.options');
+						// options tables are hidden, so colgroup won't find any visible columns to get widths
+						if ( $opt.length && $opt[0].config ) {
+							$.tablesorter.fixColumnWidth( $opt );
+						}
 					}
 				});
+				// hash is not a jQuery selector
+				if ( /[=,]/.test(hash) ) {
+					return false;
+				}
 				// open parent accordion of nested accordion
 				if ( $this.find(hash).length && !$this.children(hash).length ) {
 					// div should have an id of ui-accordion-#-panel-#
@@ -170,7 +179,7 @@
 	function showProperty(){
 		var prop, $t, wo, stickyHt,
 			h = window.location.hash;
-		if (h) {
+		if (h && !/[=,]/.test(h)) {
 			prop = $(h);
 			if (prop.length && !/h3|a|table/i.test(prop[0].nodeName)) {
 				prop.find('.collapsible').show();
@@ -182,10 +191,12 @@
 					$t = prop.closest('table');
 					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
-						stickyHt =  $t[0].config.widgetOptions.$sticky.outerHeight();
-						h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? stickyHt : 0;
-						if ($t.hasClass('options') || $t.hasClass('api')) {
-							window.scrollTo( 0, prop.offset().top - h );
+						if ( wo.$sticky ) {
+							stickyHt = wo.$sticky.outerHeight();
+							h = ( wo.$sticky ? wo.$sticky.height() : '' ) || $t.hasClass('hasStickHeaders') ? stickyHt : 0;
+							if ($t.hasClass('options') || $t.hasClass('api')) {
+								window.scrollTo( 0, prop.offset().top - h );
+							}
 						}
 					}
 				}, 200);
@@ -193,7 +204,7 @@
 		}
 	}
 
-	$(window).load(function(){
+	$(window).bind('load', function(){
 		if ($('#root').length) {
 			$(window).bind('hashchange', function(){
 				showProperty();

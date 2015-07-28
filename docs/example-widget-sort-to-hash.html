@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Sort2Hash Widget (Beta)</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-sort2Hash.js"></script>
+
+<script id="js">$(function() {
+
+	$( 'table' ).tablesorter({
+		theme: 'blue',
+		widgets: [ 'zebra', 'sort2Hash' ],
+		widgetOptions : {
+			// hash prefix
+			sort2Hash_hash              : '#',
+			// don't '#' or '=' here
+			sort2Hash_separator         : ',',
+			// this option > table ID > table index on page
+			sort2Hash_tableId           : null,
+			// if true, show header cell text instead of a zero-based column index
+			sort2Hash_useHeaderText     : false,
+			// allow processing of text if sort2Hash_useHeaderText: true
+			sort2Hash_processHeaderText : null, // function( text, config, columnIndex ) {},
+			// direction text shown in the URL e.g. [ 'asc', 'desc' ]
+			sort2Hash_directionText     : [ 0, 1 ], // default values
+			// if true, override saveSort widget sort, if used & stored sort is available
+			sort2Hash_overrideSaveSort  : true // default = false
+		}
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Sort2Hash Widget (Beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p></p>
+	<br>
+
+	<div id="root" class="accordion">
+
+		<h3><a href="#">Notes</a></h3>
+		<div>
+		<ul>
+			<li>Added <span class="version">v2.22.4</span>. Instead of using the <a href="example-widget-savesort.html">saveSort</a> widget, this widget updates the hash tag to allow saving &amp; sharing a sort applied to a tablesorter table.</li>
+			<li>Sort the tables in the demo below. Notice the changes made to the location hash, then reload the page to have the hash applied to the tables.</li>
+			<li>This widget requires jQuery version 1.7+.</li>
+			<li>This widget does NOT work with tablesorter v2.0.5.</li>
+		</ul>
+		</div>
+
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h3>Sort2Hash widget default options (added inside of tablesorter <code>widgetOptions</code>)</h3>
+			<div class="tip">
+				<span class="label label-info">TIP!</span> Click on the link in the option column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="tablesorter-blue options">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="sort2hash_hash">
+						<td><span class="permalink">sort2hash_hash</span></td>
+						<td><code>'#'</code></td>
+						<td>
+							The hash should always be there. This option was added to allow setting extra hash parameters and/or hashbang or whatever.
+						</td>
+					</tr>
+
+					<tr id="sort2hash_separator">
+						<td><a href="#" class="permalink">sort2Hash_separator</a></td>
+						<td><code>','</code></td>
+						<td>
+							Change the hash separator using this option. There are some limitations.
+							<div class="collapsible">
+							<br>
+							In the location hash, the sort parameters are added as <code>&tableID=column,direction, ... ,column,direction</code> (no spaces). This option allows changing the column-direction separator, a comma by default, into the chosen separator.
+							<p><span class="label alert">*NOTE*</span> Do not set this option to use a hash (<code>#</code>), ampersand (<code>&</code>) or equal sign (<code>=</code>) as it will interfere with how the hash parameters are set up.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_tableid">
+						<td><a href="#" class="permalink">sort2Hash_tableId</a></td>
+						<td><code>null</code></td>
+						<td>
+							Set an ID here to override the table id attribute.
+							<div class="collapsible">
+							<br>
+							In the location hash, the sort parameters are added as <code>&tableID=column,direction, ... ,column,direction</code> (no spaces). The <code>tableID</code> is set by this option.
+							<p>This option setting is prioritized over the actual table ID attribute. If neither are set, the <code>tableID</code> will be set as the table's zero-based index on the page.</p>
+							<pre class="prettyprint">sort2Hash_tableID &gt; table.id attribute &gt; table index</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_useheadertext">
+						<td><a href="#" class="permalink">sort2Hash_useHeaderText</a></td>
+						<td><code>false</code></td>
+						<td>
+							If <code>true</code>, text from the header is used instead of a zero-based column index.
+							<div class="collapsible">
+							<br>
+							Please be aware that if the column text contains spaces or special characters, they will be encoded in the URL. So, <code>"First &#xa3;$&#x20ac;&#x00a4;&#x00a5;&#xa2; Name"</code> will become <code>"First%20%C2%A3$%E2%82%AC%C2%A4%C2%A5%C2%A2%20Name"</code>. This would make the hash very difficult to read.
+							<p>Further processing of this header cell text can be done using the <code>sort2Hash_processHeaderText</code> function.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_processheadertext">
+						<td><a href="#" class="permalink">sort2Hash_processHeaderText</a></td>
+						<td><code>null</code></td>
+						<td>
+							If the <code>sort2Hash_useHeaderText</code> option is <code>true</code>, a function here will further process the header cell text.
+							<div class="collapsible">
+							<br>
+							Use this function to perform any processing on the header cell text, as desired.
+							<p>At this point, the header cell text has not been encoded.</p>
+							<p>Here is one example:</p>
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // remove all non-alphanumeric characters (including spaces)
+  return text.replace( /[^a-z0-9]/gi, '' );
+}</pre>
+							Another example:
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // completely custom text to use for the hash
+  // this method assumes that the table layout is constant
+  // (i.e. columns are not added, removed or rearranged)
+  return [ 'first', 'last', 'age', 'total', 'disc', 'date' ][ columnIndex ];
+}</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_directiontext">
+						<td><a href="#" class="permalink">sort2Hash_directionText</a></td>
+						<td><code>[ 0, 1 ]</code></td>
+						<td>
+							Set the direction text shown in the URL.
+							<div class="collapsible">
+							<br>
+							Only the first two values will be used from this array. The first value is assigned to ascending sorts and the second is assigned to descending sorts.
+							<p>Use the option as follows:</p>
+							<pre class="prettyprint lang-js">sort2Hash_directionText : [ 'asc', 'desc' ]</pre>
+							<span class="label warning">*NOTE*</span> When converting the hash into a value, if the direction hash does not match the second value (<code>'desc'</code> in the example above), it will fallback to an ascending sort no matter what text in contained within the first value.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_overridesavesort">
+						<td><span class="permalink">sort2Hash_overrideSaveSort</span></td>
+						<td><code>false</code></td>
+						<td>if <code>true</code>, the hash sort will override any stored sort (saveSort widget).</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+	<h1>Demo</h1>
+	<div id="demo"><table>
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+	</tbody>
+</table>
+
+<table id="second">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+	</tbody>
+</table>
+</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

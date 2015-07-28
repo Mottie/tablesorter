@@ -334,7 +334,7 @@ table.focus-highlight td:before {
 
 <script>
 /* highlight hover & focus selectors in the syntax highlighted code */
-$(window).load(function(){
+$(window).on('load', function(){
 	setTimeout(function(){
 		// css
 		$('.pln:contains(highlight)').each(function(){

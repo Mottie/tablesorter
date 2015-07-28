@@ -3,7 +3,7 @@
  Globalize.locale( 'xx' ) prior to initializing tablesorter! */
 /*jshint jquery:true */
 ;( function( $ ) {
-'use strict';
+	'use strict';
 
 	/*! jQuery Globalize date parser (https://github.com/jquery/globalize#date-module) */
 	/* demo: http://jsfiddle.net/Mottie/0j18Lw8r/ */

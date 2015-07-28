@@ -2,7 +2,7 @@
 /* Demo: http://jsfiddle.net/Mottie/abkNM/4169/ */
 /*jshint jquery:true */
 ;(function($){
-"use strict";
+	'use strict';
 
 	var ts = $.tablesorter;
 	ts.dates = $.extend({}, ts.dates, {
@@ -12,7 +12,7 @@
 	ts.dates.weekdayLower = ts.dates.weekdayCased.join(',').toLocaleLowerCase().split(',');
 
 	ts.addParser({
-		id: "weekday",
+		id: 'weekday',
 		is: function(){
 			return false;
 		},
@@ -20,7 +20,7 @@
 			if (s) {
 				var j = -1, c = table.config;
 				s = c.ignoreCase ? s.toLocaleLowerCase() : s;
-				$.each(ts.dates[ 'weekday' + (c.ignoreCase ? 'Lower' : 'Cased') ], function(i,v){
+				$.each(ts.dates[ 'weekday' + (c.ignoreCase ? 'Lower' : 'Cased') ], function(i, v){
 					if (j < 0 && s.match(v)) {
 						j = i;
 						return false;
@@ -32,7 +32,7 @@
 			}
 			return s;
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 })(jQuery);

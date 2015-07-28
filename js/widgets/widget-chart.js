@@ -32,7 +32,7 @@
 				.off(wo.chart_event)
 				.on(wo.chart_event, function() {
 					if (this.hasInitialized) {
-						// refresh "c" variable in case options are updated dynamically
+						// refresh 'c' variable in case options are updated dynamically
 						var c = this.config;
 						chart.getCols(c, c.widgetOptions);
 						chart.getData(c, c.widgetOptions);
@@ -258,7 +258,7 @@
 			// Set the label column
 			chart_labelCol: 0,
 			// data sort, should always be first row, might want [[0,1]]
-			chart_sort: [[0,0]],
+			chart_sort: [ [ 0, 0 ] ],
 			// event to trigger get updated data
 			chart_event: 'chartData'
 		},
