@@ -155,13 +155,13 @@
 			ts.instanceMethods = {};
 
 			// $.isEmptyObject from jQuery v1.4
-			function isEmptyObject(obj) {
+			ts.isEmptyObject = function( obj ) {
 				/*jshint forin: false */
-				for (var name in obj) {
+				for ( var name in obj ) {
 					return false;
 				}
 				return true;
-			}
+			};
 
 			ts.getElementText = function(c, node, cellIndex) {
 				if (!node) { return ''; }
@@ -304,7 +304,7 @@
 					j += (list.parsers.length) ? len : 1;
 				}
 				if ( c.debug ) {
-					if ( !isEmptyObject( debug ) ) {
+					if ( !ts.isEmptyObject( debug ) ) {
 						console[ console.table ? 'table' : 'log' ]( debug );
 					} else {
 						console.warn( '  No parsers detected!' );
@@ -317,7 +317,7 @@
 			}
 
 			/* utils */
-			function buildCache(table, $tbodies) {
+			function buildCache(table, callback, $tbodies) {
 				var cc, t, v, i, j, k, $tb, $row, cols, cacheTime,
 					totalRows, rowData, prevRowData, colMax,
 					c = table.config,
@@ -410,54 +410,8 @@
 				if ( c.debug ) {
 					console.log( 'Building cache for ' + totalRows + ' rows' + ts.benchmark( cacheTime ) );
 				}
-			}
-
-			// init flag (true) used by pager plugin to prevent widget application
-			function appendToTable(table, init) {
-				var c = table.config,
-					wo = c.widgetOptions,
-					$tbodies = c.$tbodies,
-					rows = [],
-					cc = c.cache,
-					n, totalRows, $bk, $tb,
-					i, k, appendTime;
-				// empty table - fixes #206/#346
-				if (isEmptyObject(cc)) {
-					// run pager appender in case the table was just emptied
-					return c.appender ? c.appender(table, rows) :
-						table.isUpdating ? c.$table.trigger('updateComplete', table) : ''; // Fixes #532
-				}
-				if (c.debug) {
-					appendTime = new Date();
-				}
-				for (k = 0; k < $tbodies.length; k++) {
-					$bk = $tbodies.eq(k);
-					if ($bk.length) {
-						// get tbody
-						$tb = ts.processTbody(table, $bk, true);
-						n = cc[k].normalized;
-						totalRows = n.length;
-						for (i = 0; i < totalRows; i++) {
-							rows.push(n[i][c.columns].$row);
-							// removeRows used by the pager plugin; don't render if using ajax - fixes #411
-							if (!c.appender || (c.pager && (!c.pager.removeRows || !wo.pager_removeRows) && !c.pager.ajax)) {
-								$tb.append(n[i][c.columns].$row);
-							}
-						}
-						// restore tbody
-						ts.processTbody(table, $tb, false);
-					}
-				}
-				if (c.appender) {
-					c.appender(table, rows);
-				}
-				if (c.debug) {
-					console.log( 'Rebuilt table' + ts.benchmark(appendTime) );
-				}
-				// apply table widgets; but not before ajax completes
-				if (!init && !c.appender) { ts.applyWidget(table); }
-				if (table.isUpdating) {
-					c.$table.trigger('updateComplete', table);
+				if ( $.isFunction( callback ) ) {
+					callback( table );
 				}
 			}
 
@@ -788,7 +742,7 @@
 					// set css for headers
 					setHeadersCss(table);
 					multisort(table);
-					appendToTable(table);
+					ts.appendCache( c );
 					$table.trigger('sortEnd', table);
 				}, 1);
 			}
@@ -803,7 +757,7 @@
 					sortList = c.sortList,
 					l = sortList.length,
 					bl = c.$tbodies.length;
-				if (c.serverSideSorting || isEmptyObject(c.cache)) { // empty table - fixes #206/#346
+				if (c.serverSideSorting || ts.isEmptyObject(c.cache)) { // empty table - fixes #206/#346
 					return;
 				}
 				if (c.debug) { sortTime = new Date(); }
@@ -894,195 +848,79 @@
 				}
 			}
 
-			function bindMethods(table){
+			function bindMethods( table ){
 				var c = table.config,
 					$table = c.$table,
-					events = ('sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
-						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave ').split(' ')
-						.join(c.namespace + ' ');
+					events = ( 'sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
+						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave ' ).split( ' ' )
+						.join( c.namespace + ' ' );
 				// apply easy methods that trigger bound events
 				$table
-				.unbind( events.replace(/\s+/g, ' ') )
-				.bind('sortReset' + c.namespace, function(e, callback){
+				.unbind( events.replace( /\s+/g, ' ' ) )
+				.bind( 'sortReset' + c.namespace, function( e, callback ) {
 					e.stopPropagation();
-					c.sortList = [];
-					setHeadersCss(table);
-					multisort(table);
-					appendToTable(table);
-					if ($.isFunction(callback)) {
-						callback(table);
-					}
+					// using this.config to ensure functions are getting a non-cached version of the config
+					ts.sortReset( this.config, callback );
 				})
-				.bind('updateAll' + c.namespace, function(e, resort, callback){
+				.bind( 'updateAll' + c.namespace, function( e, resort, callback ) {
 					e.stopPropagation();
-					table.isUpdating = true;
-					ts.refreshWidgets(table, true, true);
-					buildHeaders(table);
-					ts.bindEvents(table, c.$headers, true);
-					bindMethods(table);
-					commonUpdate(table, resort, callback);
+					ts.updateAll( this.config, resort, callback );
 				})
-				.bind('update' + c.namespace + ' updateRows' + c.namespace, function(e, resort, callback) {
+				.bind( 'update' + c.namespace + ' updateRows' + c.namespace, function( e, resort, callback ) {
 					e.stopPropagation();
-					table.isUpdating = true;
-					// update sorting (if enabled/disabled)
-					updateHeader(table);
-					commonUpdate(table, resort, callback);
+					ts.update( this.config, resort, callback );
 				})
-				.bind('updateCell' + c.namespace, function(e, cell, resort, callback) {
+				.bind( 'updateCell' + c.namespace, function(e, cell, resort, callback ) {
 					e.stopPropagation();
-					table.isUpdating = true;
-					$table.find(c.selectorRemove).remove();
-					// get position from the dom
-					var t, row, icell, cache,
-					$tb = c.$tbodies,
-					$cell = $(cell),
-					// update cache - format: function(s, table, cell, cellIndex)
-					// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
-					tbdy = $tb.index( $.fn.closest ? $cell.closest('tbody') : $cell.parents('tbody').filter(':first') ),
-					tbcache = c.cache[ tbdy ],
-					$row = $.fn.closest ? $cell.closest('tr') : $cell.parents('tr').filter(':first');
-					cell = $cell[0]; // in case cell is a jQuery object
-					// tbody may not exist if update is initialized while tbody is removed for processing
-					if ($tb.length && tbdy >= 0) {
-						row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
-						cache = tbcache.normalized[ row ];
-						icell = $cell.index();
-						t = ts.getParsedText( c, cell, icell );
-						cache[ icell ] = t;
-						cache[ c.columns ].$row = $row;
-						if ( (c.parsers[icell].type || '').toLowerCase() === 'numeric' ) {
-							// update column max value (ignore sign)
-							tbcache.colMax[icell] = Math.max(Math.abs(t) || 0, tbcache.colMax[icell] || 0);
-						}
-						t = resort !== 'undefined' ? resort : c.resort;
-						if (t !== false) {
-							// widgets will be reapplied
-							checkResort(c, t, callback);
-						} else {
-							// don't reapply widgets is resort is false, just in case it causes
-							// problems with element focus
-							if ($.isFunction(callback)) {
-								callback(table);
-							}
-							c.$table.trigger('updateComplete', c.table);
-						}
-					}
+					ts.updateCell( this.config, cell, resort, callback );
 				})
-				.bind('addRows' + c.namespace, function(e, $row, resort, callback) {
+				.bind( 'addRows' + c.namespace, function(e, $row, resort, callback) {
 					e.stopPropagation();
-					if ( !$row || !( $row instanceof jQuery ) || $row.closest( 'table' )[ 0 ] !== c.table ) {
-						if ( c.debug ) {
-							console.error( 'addRows method requires a jQuery selector reference to rows that have already ' +
-								'been added to the table' );
-						}
-						return false;
-					}
-					table.isUpdating = true;
-					if (isEmptyObject(c.cache)) {
-						// empty table, do an update instead - fixes #450
-						updateHeader(table);
-						commonUpdate(table, resort, callback);
-					} else {
-						$row = $($row).attr('role', 'row'); // make sure we're using a jQuery object
-						var i, j, l, rowData, cells,
-						rows = $row.filter('tr').length,
-						tbdy = c.$tbodies.index( $row.parents('tbody').filter(':first') );
-						// fixes adding rows to an empty table - see issue #179
-						if (!(c.parsers && c.parsers.length)) {
-							buildParserCache(c);
-						}
-						// add each row
-						for (i = 0; i < rows; i++) {
-							l = $row[i].cells.length;
-							cells = [];
-							rowData = {
-								child: [],
-								$row : $row.eq(i),
-								order: c.cache[tbdy].normalized.length
-							};
-							// add each cell
-							for (j = 0; j < l; j++) {
-								cells[j] = ts.getParsedText( c, $row[i].cells[j], j );
-								if ((c.parsers[j].type || '').toLowerCase() === 'numeric') {
-									// update column max value (ignore sign)
-									c.cache[tbdy].colMax[j] = Math.max(Math.abs(cells[j]) || 0, c.cache[tbdy].colMax[j] || 0);
-								}
-							}
-							// add the row data to the end
-							cells.push(rowData);
-							// update cache
-							c.cache[tbdy].normalized.push(cells);
-						}
-						// resort using current settings
-						checkResort(c, resort, callback);
-					}
+					ts.addRows( this.config, $row, resort, callback );
 				})
-				.bind('updateComplete' + c.namespace, function(){
+				.bind( 'updateComplete' + c.namespace, function() {
 					table.isUpdating = false;
 				})
-				.bind('sorton' + c.namespace, function(e, list, callback, init) {
-					var c = table.config;
+				.bind( 'sorton' + c.namespace, function( e, list, callback, init ) {
 					e.stopPropagation();
-					$table.trigger('sortStart', this);
-					// update header count index
-					updateHeaderSortCount(table, list);
-					// set css for headers
-					setHeadersCss(table);
-					// fixes #346
-					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
-					$table.trigger('sortBegin', this);
-					// sort the table and append it to the dom
-					multisort(table);
-					appendToTable(table, init);
-					$table.trigger('sortEnd', this);
-					ts.applyWidget(table);
-					if ($.isFunction(callback)) {
-						callback(table);
-					}
+					ts.sortOn( this.config, list, callback, init );
 				})
-				.bind('appendCache' + c.namespace, function(e, callback, init) {
+				.bind( 'appendCache' + c.namespace, function( e, callback, init ) {
 					e.stopPropagation();
-					appendToTable(table, init);
-					if ($.isFunction(callback)) {
-						callback(table);
+					ts.appendCache( this.config, init );
+					if ( $.isFunction( callback ) ) {
+						callback( table );
 					}
 				})
 				// $tbodies variable is used by the tbody sorting widget
-				.bind('updateCache' + c.namespace, function(e, callback, $tbodies){
-					// rebuild parsers
-					if (!(c.parsers && c.parsers.length)) {
-						buildParserCache(c, $tbodies);
-					}
-					// rebuild the cache map
-					buildCache(table, $tbodies);
-					if ($.isFunction(callback)) {
-						callback(table);
-					}
-				})
-				.bind('applyWidgetId' + c.namespace, function(e, id) {
+				.bind( 'updateCache' + c.namespace, function( e, callback, $tbodies ){
 					e.stopPropagation();
-					ts.getWidgetById(id).format(table, c, c.widgetOptions);
+					ts.updateCache( this.config, callback, $tbodies );
 				})
-				.bind('applyWidgets' + c.namespace, function(e, init) {
+				.bind( 'applyWidgetId' + c.namespace, function( e, id ) {
+					e.stopPropagation();
+					ts.getWidgetById( id ).format( table, this.config, this.config.widgetOptions );
+				})
+				.bind( 'applyWidgets' + c.namespace, function( e, init ) {
 					e.stopPropagation();
 					// apply widgets
-					ts.applyWidget(table, init);
+					ts.applyWidget( table, init );
 				})
-				.bind('refreshWidgets' + c.namespace, function(e, all, dontapply){
+				.bind( 'refreshWidgets' + c.namespace, function( e, all, dontapply ) {
 					e.stopPropagation();
-					ts.refreshWidgets(table, all, dontapply);
+					ts.refreshWidgets( table, all, dontapply );
 				})
-				.bind('destroy' + c.namespace, function(e, c, cb){
+				.bind( 'destroy' + c.namespace, function( e, removeClasses, callback ) {
 					e.stopPropagation();
-					ts.destroy(table, c, cb);
+					ts.destroy( table, removeClasses, callback );
 				})
-				.bind('resetToLoadState' + c.namespace, function(){
+				.bind( 'resetToLoadState' + c.namespace, function( e ) {
+					e.stopPropagation();
 					// remove all widgets
-					ts.removeWidget(table, true, false);
+					ts.removeWidget( table, true, false );
 					// restore original settings; this clears out current settings, but does not clear
 					// values saved to storage.
-					c = $.extend(true, ts.defaults, c.originalSettings);
+					c = $.extend( true, ts.defaults, c.originalSettings );
 					table.hasInitialized = false;
 					// setup the entire table again
 					ts.setup( table, c );
@@ -1430,7 +1268,7 @@
 						$target.parents('button').length > 0 ) {
 						return !c.cancelSelection;
 					}
-					if (c.delayInit && isEmptyObject(c.cache)) { buildCache(table); }
+					if (c.delayInit && ts.isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
 					cell = $.fn.closest ? $(this).closest('th, td')[0] : /TH|TD/.test(this.nodeName) ? this : $(this).parents('th, td')[0];
 					// reference original table headers and find the same cell
@@ -1448,6 +1286,205 @@
 							'user-select': 'none',
 							'MozUserSelect': 'none' // not needed for jQuery 1.8+
 						});
+				}
+			};
+
+			ts.sortReset = function( c, callback ) {
+				var table = c.table;
+				c.sortList = [];
+				setHeadersCss( table );
+				multisort( table );
+				ts.appendCache( c );
+				if ( $.isFunction( callback ) ) {
+					callback( table );
+				}
+			};
+
+			ts.updateAll = function( c, resort, callback ) {
+				var table = c.table;
+				table.isUpdating = true;
+				ts.refreshWidgets( table, true, true );
+				buildHeaders( table );
+				ts.bindEvents( table, c.$headers, true );
+				bindMethods( table);
+				commonUpdate( table, resort, callback );
+			};
+
+			ts.update = function( c, resort, callback ) {
+				var table = c.table;
+				table.isUpdating = true;
+				// update sorting (if enabled/disabled)
+				updateHeader( table );
+				commonUpdate( table, resort, callback );
+			};
+
+			ts.updateCell = function( c, cell, resort, callback ) {
+				c.table.isUpdating = true;
+				c.$table.find( c.selectorRemove ).remove();
+				// get position from the dom
+				var t, row, icell, cache,
+				table = c.table,
+				$tb = c.$tbodies,
+				$cell = $(cell),
+				// update cache - format: function(s, table, cell, cellIndex)
+				// no closest in jQuery v1.2.6 - tbdy = $tb.index( $(cell).closest('tbody') ),$row = $(cell).closest('tr');
+				tbdy = $tb.index( $.fn.closest ? $cell.closest( 'tbody' ) : $cell.parents( 'tbody' ).filter( ':first' ) ),
+				tbcache = c.cache[ tbdy ],
+				$row = $.fn.closest ? $cell.closest( 'tr' ) : $cell.parents( 'tr' ).filter( ':first' );
+				cell = $cell[ 0 ]; // in case cell is a jQuery object
+				// tbody may not exist if update is initialized while tbody is removed for processing
+				if ( $tb.length && tbdy >= 0 ) {
+					row = $tb.eq( tbdy ).find( 'tr' ).index( $row );
+					cache = tbcache.normalized[ row ];
+					icell = $cell.index();
+					t = ts.getParsedText( c, cell, icell );
+					cache[ icell ] = t;
+					cache[ c.columns ].$row = $row;
+					if ( ( c.parsers[ icell ].type || '' ).toLowerCase() === 'numeric' ) {
+						// update column max value (ignore sign)
+						tbcache.colMax[ icell ] = Math.max( Math.abs( t ) || 0, tbcache.colMax[ icell ] || 0 );
+					}
+					t = resort !== 'undefined' ? resort : c.resort;
+					if ( t !== false ) {
+						// widgets will be reapplied
+						checkResort( c, t, callback );
+					} else {
+						// don't reapply widgets is resort is false, just in case it causes
+						// problems with element focus
+						if ( $.isFunction( callback ) ) {
+							callback( table );
+						}
+						c.$table.trigger( 'updateComplete', c.table );
+					}
+				}
+			};
+
+			ts.addRows = function( c, $row, resort, callback ) {
+				if ( !$row || !( $row instanceof jQuery ) || $row.closest( 'table' )[ 0 ] !== c.table ) {
+					if ( c.debug ) {
+						console.error( 'addRows method requires a jQuery selector reference to rows that have already ' +
+							'been added to the table' );
+					}
+					return false;
+				}
+				var i, j, l, rowData, cells, rows, tbdy,
+					table = c.table;
+				table.isUpdating = true;
+				if ( ts.isEmptyObject( c.cache ) ) {
+					// empty table, do an update instead - fixes #450
+					updateHeader( table );
+					commonUpdate( table, resort, callback );
+				} else {
+					rows = $row.filter( 'tr' ).attr( 'role', 'row' ).length;
+					tbdy = c.$tbodies.index( $row.parents( 'tbody' ).filter( ':first' ) );
+					// fixes adding rows to an empty table - see issue #179
+					if ( !( c.parsers && c.parsers.length ) ) {
+						buildParserCache( c );
+					}
+					// add each row
+					for ( i = 0; i < rows; i++ ) {
+						l = $row[ i ].cells.length;
+						cells = [];
+						rowData = {
+							child: [],
+							$row : $row.eq( i ),
+							order: c.cache[ tbdy ].normalized.length
+						};
+						// add each cell
+						for ( j = 0; j < l; j++ ) {
+							cells[ j ] = ts.getParsedText( c, $row[ i ].cells[ j ], j );
+							if ( ( c.parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
+								// update column max value (ignore sign)
+								c.cache[ tbdy ].colMax[ j ] = Math.max( Math.abs( cells[ j ] ) || 0, c.cache[ tbdy ].colMax[ j ] || 0 );
+							}
+						}
+						// add the row data to the end
+						cells.push( rowData );
+						// update cache
+						c.cache[ tbdy ].normalized.push( cells );
+					}
+					// resort using current settings
+					checkResort( c, resort, callback );
+				}
+			};
+
+			ts.updateCache = function( c, callback, $tbodies ) {
+				// rebuild parsers
+				if ( !( c.parsers && c.parsers.length ) ) {
+					buildParserCache( c, $tbodies );
+				}
+				// rebuild the cache map
+				buildCache( c.table, callback, $tbodies );
+			};
+
+			// init flag (true) used by pager plugin to prevent widget application
+			// renamed from appendToTable
+			ts.appendCache = function( c, init ) {
+				var n, totalRows, $bk, $tb, i, k, appendTime,
+					table = c.table,
+					wo = c.widgetOptions,
+					$tbodies = c.$tbodies,
+					rows = [],
+					cc = c.cache;
+				// empty table - fixes #206/#346
+				if ( ts.isEmptyObject( cc ) ) {
+					// run pager appender in case the table was just emptied
+					return c.appender ? c.appender( table, rows ) :
+						table.isUpdating ? c.$table.trigger( 'updateComplete', table ) : ''; // Fixes #532
+				}
+				if ( c.debug ) {
+					appendTime = new Date();
+				}
+				for ( k = 0; k < $tbodies.length; k++ ) {
+					$bk = $tbodies.eq( k );
+					if ( $bk.length ) {
+						// get tbody
+						$tb = ts.processTbody( table, $bk, true );
+						n = cc[ k ].normalized;
+						totalRows = n.length;
+						for ( i = 0; i < totalRows; i++ ) {
+							rows.push( n[ i ][ c.columns ].$row );
+							// removeRows used by the pager plugin; don't render if using ajax - fixes #411
+							if ( !c.appender || ( c.pager && ( !c.pager.removeRows || !wo.pager_removeRows ) && !c.pager.ajax ) ) {
+								$tb.append( n[ i ][ c.columns ].$row );
+							}
+						}
+						// restore tbody
+						ts.processTbody( table, $tb, false );
+					}
+				}
+				if ( c.appender ) {
+					c.appender( table, rows );
+				}
+				if ( c.debug ) {
+					console.log( 'Rebuilt table' + ts.benchmark( appendTime ) );
+				}
+				// apply table widgets; but not before ajax completes
+				if ( !init && !c.appender ) { ts.applyWidget( table ); }
+				if ( table.isUpdating ) {
+					c.$table.trigger( 'updateComplete', table );
+				}
+			};
+
+			ts.sortOn = function( c, list, callback, init ) {
+				var table = c.table;
+				c.$table.trigger( 'sortStart', table );
+				// update header count index
+				updateHeaderSortCount( table, list );
+				// set css for headers
+				setHeadersCss( table );
+				// fixes #346
+				if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
+					buildCache( table );
+				}
+				c.$table.trigger( 'sortBegin', table );
+				// sort the table and append it to the dom
+				multisort( table );
+				ts.appendCache( c, init );
+				c.$table.trigger( 'sortEnd', table );
+				ts.applyWidget( table );
+				if ( $.isFunction( callback ) ) {
+					callback( table );
 				}
 			};
 
@@ -1912,7 +1949,7 @@
 					allColumns = column === 'all',
 					data = { raw : [], parsed: [], $cell: [] },
 					c = table.config;
-				if ( isEmptyObject( c ) ) {
+				if ( ts.isEmptyObject( c ) ) {
 					if ( c.debug ) {
 						console.warn( 'No cache found - aborting getColumnText function!' );
 					}
@@ -2064,7 +2101,8 @@
 		},
 		format: function(s, table) {
 			var n = ts.formatFloat((s || '').replace(/[^\w,. \-()]/g, ''), table);
-			return s && typeof n === 'number' ? n : s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
+			return s && typeof n === 'number' ? n :
+				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
 		},
 		type: 'numeric'
 	});
@@ -2072,11 +2110,14 @@
 	ts.addParser({
 		id: 'currency',
 		is: function(s) {
-			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test((s || '').replace(/[+\-,. ]/g, '')); // £$€¤¥¢
+			s = (s || '').replace(/[+\-,. ]/g, '');
+			// test for £$€¤¥¢
+			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test(s);
 		},
 		format: function(s, table) {
 			var n = ts.formatFloat((s || '').replace(/[^\w,. \-()]/g, ''), table);
-			return s && typeof n === 'number' ? n : s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
+			return s && typeof n === 'number' ? n :
+				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
 		},
 		type: 'numeric'
 	});
@@ -2134,7 +2175,8 @@
 		is: function(s) {
 			// two digit years are not allowed cross-browser
 			// Jan 01, 2013 12:34:56 PM or 01 Jan 2013
-			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i).test(s) || (/^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i).test(s);
+			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i).test(s) ||
+				(/^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i).test(s);
 		},
 		format: function(s, table) {
 			var date = s ? new Date( s.replace(/(\S)([AP]M)$/i, '$1 $2') ) : s;
@@ -2146,16 +2188,20 @@
 	ts.addParser({
 		id: 'shortDate', // 'mmddyyyy', 'ddmmyyyy' or 'yyyymmdd'
 		is: function(s) {
+			s = (s || '').replace(/\s+/g, ' ').replace(/[\-.,]/g, '/');
 			// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
-			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test((s || '').replace(/\s+/g, ' ').replace(/[\-.,]/g, '/'));
+			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test(s);
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
 				var date, d,
 					c = table.config,
 					ci = c.$headerIndexed[ cellIndex ],
-					format = ci.length && ci[0].dateFormat || ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') || c.dateFormat;
-				d = s.replace(/\s+/g, ' ').replace(/[\-.,]/g, '/'); // escaped - because JSHint in Firefox was showing it as an error
+					format = ci.length && ci[0].dateFormat ||
+						ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') ||
+						c.dateFormat;
+				// escaped "-" because JSHint in Firefox was showing it as an error
+				d = s.replace(/\s+/g, ' ').replace(/[\-.,]/g, '/');
 				if (format === 'mmddyyyy') {
 					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, '$3/$1/$2');
 				} else if (format === 'ddmmyyyy') {

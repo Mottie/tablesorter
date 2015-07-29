@@ -4547,27 +4547,37 @@ $.extend($.tablesorter.themes.jui, {
 
 			<tr id="addrows">
 				<td><a href="#" class="permalink">addRows</a></td>
-				<td>Use this method to add table rows (v2.0.16; <span class="version updated">v2.19.0</span>).
+				<td>Use this method to add table rows (v2.0.16; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
-						<br>
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	$rows = $( 'tr.addedRows' ), // jQuery selector of newly appended row(s)
+	// applies or reapplies a sort to the table; use false to not update the sort
+	resort = true, // or [ [0,0], [1,0] ] etc
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.addRows( config, $rows, resort, callback );</pre>
+						<h4>Triggered event method:</h4>
 						It does not work the same as &quot;update&quot; in that it only adds rows, it does not remove them.<br>
 						<br>
 						Also, use this method to add table rows while using the pager plugin. If the &quot;update&quot; method is used, only the visible table rows continue to exist.
 						<pre class="prettyprint lang-js">// Add multiple rows to the table
   var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
     '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
-    $row = $(row),
+    $row = $( row ),
     // resort table using true to reapply the current sort; set to false to prevent resort
     // if undefined, the resort value will be obtained from config.resort (added v2.19.0)
     // As of v2.19.0, the resort variable can contain a new sortList to be applied
     // A callback method was added in 2.3.9.
-    resort = true, // or [[0,0],[1,0]] etc
-    callback = function(table){
-      alert('rows have been added!');
+    resort = true, // or [ [0,0], [1,0] ] etc
+    callback = function( table ){
+      alert( 'rows have been added!' );
     };
-  $('table')
-    .find('tbody').append($row)
-    .trigger('addRows', [$row, resort, callback]);</pre>
+  $( 'table' )
+    .find( 'tbody' ).append( $row )
+    .trigger( 'addRows', [ $row, resort, callback ] );</pre>
 					In <span class="version">v2.16.1</span>, the <code>$row</code> parameter can be an HTML string, row DOM element or jQuery object.
 					</div>
 				</td>
@@ -4591,7 +4601,7 @@ $.extend($.tablesorter.themes.jui, {
 				<td>Use this method to initialize a sort while targeting a specific column header (<span class="version">v2.9</span>).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">// Target a specific header
-$('table').find('th:eq(2)').trigger('sort');</pre>Using this method will maintain the sorting order; so, if the column is already sorted in ascending order, this method will act as if you manually clicked on the header. Whatever sort order is applied is dependent on other option settings such as <code>initialSortOrder</code>, <code>lockedOrder</code> (set within the <code>headers</code>), <code>sortReset</code> option, <code>sortRestart</code> and will be ignored if the column sort is disabled (<code>sorter: false</code>).<br>
+$('table').find('th:eq(2)').trigger('sort');</pre>Using this method will maintain the sorting order; so, if the column is already sorted in ascending order, this method will act as if you manually clicked on the header. Whatever sort order is applied is dependent on other option settings such as <code>initialSortOrder</code>, <code>lockedOrder</code> (set within the <code>headers</code>), <code>sortReset</code> option, <code>sortRestart</code> and will be ignored if the column sort is disabled (<code>sorter: false</code>).
 					</div>
 				</td>
 				<td></td>
@@ -4599,23 +4609,35 @@ $('table').find('th:eq(2)').trigger('sort');</pre>Using this method will maintai
 
 			<tr id="sorton">
 				<td><a href="#" class="permalink">sorton</a></td>
-				<td>Use this method to sort an initialized table in the desired order (<span class="version updated">v2.17.0</span>)
+				<td>Use this method to sort an initialized table in the desired order (<span class="version updated">v2.23.0</span>)
 					<div class="collapsible">
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	sort = [ [ 0,0 ], [ 1,0 ] ],
+	callback = function( table ) {
+		// do something
+	};
+	// NOTE: the triggered 'sorton' method requires the sort & callback methods to be
+	// passed inside an array, this direct method does not.
+	// Also, notice the "O" of "sortOn" is capitalized in this direct method
+$.tablesorter.sortOn( config, sort, callback );</pre>
+						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">// Choose a new sort order
-var sort = [[0,0],[2,0]],
-    callback = function(table){
-        alert('new sort applied to ' + table.id);
+var sort = [ [0,0], [2,0] ],
+    callback = function( table ){
+        alert( 'new sort applied to ' + table.id );
     };
 // Note that the sort value below is inside of another array (inside another set of square brackets)
 // without a callback it could look like this:
-$("table").trigger("sorton", [ [[0,0],[2,0]] ]);
+$( 'table' ).trigger( 'sorton', [ [[0,0],[2,0]] ] );
 
 // when including a callback method the outer square bracket wrap both parameters (added in 2.3.9).
-$("table").trigger("sorton", [sort, callback]);</pre>
-				<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.<br>
-				<br>
-				In <span class="version updated">v2.17.0</span>, the sort direction can be set using "a" (ascending), "d" (descending), "n" (next), "s" (same) &amp; "o" (opposite).
-				<pre class="prettyprint lang-js">$('table').trigger('sorton', [ [[0,"a"],[2,"n"]] ]);</pre>
+$( 'table' ).trigger( 'sorton', [ sort, callback ] );</pre>
+					<span class="label label-warning">*NOTE*</span> using this method to sort ignores the additions from the <a href="#sortforce"><code>sortForce</code></a> and <a href="#sortappend"><code>sortAppend</code></a> options.<br>
+					<br>
+					In <span class="version updated">v2.17.0</span>, the sort direction can be set using "a" (ascending), "d" (descending), "n" (next), "s" (same) &amp; "o" (opposite).
+					<pre class="prettyprint lang-js">$('table').trigger('sorton', [ [[0,"a"],[2,"n"]] ]);</pre>
 				Please try out the demo (example link) to better understand how these values work.
 					</div>
 				</td>
@@ -4624,18 +4646,25 @@ $("table").trigger("sorton", [sort, callback]);</pre>
 
 			<tr id="sortreset-method">
 				<td><a href="#" class="permalink">sortReset</a></td>
-				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7; <span class="version updated">v2.16.0</span>).
+				<td>Use this method to reset the table to it's initial unsorted state (v2.4.7; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
-						<br>
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.sortReset( config, callback );</pre>
+						<h4>Triggered event method:</h4>
 						This method immediately resets the entire table sort, while the option only resets the column sort after a third click.<br>
 						<br>
 						In <span class="version updated">v2.16.0</span>, a callback function was added to this method.<br>
 						<br>
 						<pre class="prettyprint lang-js">// Reset the table (make it unsorted)
-var callback = function(table) {
-	console.log('sort has been reset');
+var callback = function( table ) {
+	console.log( 'sort has been reset' );
 };
-$("table").trigger("sortReset", [callback]);</pre>
+$( 'table' ).trigger( 'sortReset', [ callback ] );</pre>
 					<span class="label label-warning">*NOTE*</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>.
 					</div>
 				</td>
@@ -4644,20 +4673,30 @@ $("table").trigger("sortReset", [callback]);</pre>
 
 			<tr id="update">
 				<td><a href="#" class="permalink">update</a> / <a href="#" class="permalink">updateRows</a></td>
-				<td>Update the <code>tbody</code>'s stored data (<code>update</code> &amp; <code>updateRows</code> do exactly the same thing; <span class="version updated">v2.19.0</span>)
-					<div class="collapsible"><br>
+				<td>Update the <code>tbody</code>'s stored data (<code>update</code> &amp; <code>updateRows</code> do exactly the same thing; <span class="version updated">v2.23.0</span>)
+					<div class="collapsible">
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	// applies or reapplies a sort to the table; use false to not update the sort
+	resort = true, // or [ [0,0], [1,0] ] etc
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.update( config, resort, callback );</pre>
+						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">// Add new content
-$("table tbody").append(html);
+$( 'table tbody' ).append( html );
 
 // let the plugin know that we made a update
 // the resort flag set to true will trigger an automatic resort using the current sort
 // if set to false, no new sort will be applied; or set it to any sortList value (e.g. [[0,0]]; new v2.19.0)
 // A callback method was added in 2.3.9.
 var resort = true,
-    callback = function(table){
-        alert('new sort applied');
+    callback = function( table ){
+        alert( 'new sort applied' );
     };
-$("table").trigger("update", [resort, callback]);
+$( 'table' ).trigger( 'update', [ resort, callback ] );
 
 // As of version 2.19.0, if the resort parameter is undefined, the setting from the config.resort will be used
 
@@ -4665,24 +4704,34 @@ $("table").trigger("update", [resort, callback]);
 // &amp; will use the current sort selection), so include the following if you want to specify a different sort
 
 // set sorting column and direction, this will sort on the first and third column
-var sorting = [[2,1],[0,0]];
+var sorting = [ [2,1], [0,0] ];
 // method to use prior to v2.19.0
-// $("table")
-//  .trigger("update", [ false ])
-//  .trigger("sorton", [sorting]);
+// $( 'table' )
+//  .trigger( 'update', [ false ] )
+//  .trigger( 'sorton', [ sorting ] );
 // After v2.19.0; do the following to apply a new sort after updating
 // if sorting is an empty array [], then the sort will be reset
-$('table').trigger('update', [ sorting ]);</pre>
-	<span class="label label-info">NOTE</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
-	</div>
+$( 'table' ).trigger( 'update', [ sorting ] );</pre>
+						<span class="label label-info">NOTE</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
+					</div>
 				</td>
 				<td><a href="example-ajax.html">Example</a></td>
 			</tr>
 
 			<tr id="updateall">
 				<td><a href="#" class="permalink">updateAll</a></td>
-				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) (<span class="version">v2.8</span>; <span class="version updated">v2.19.0</span>).
+				<td>Update a column of cells (<code>thead</code> and <code>tbody</code>) (<span class="version">v2.8</span>; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	// applies or reapplies a sort to the table; use false to not update the sort
+	resort = true, // or [ [0,0], [1,0] ] etc
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.updateAll( config, resort, callback );</pre>
+						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">// Change thead & tbody column of cells
 // remember, "eq()" is zero based & "nth-child()" is 1 based
 $("table thead th:eq(2)").html("Number");
@@ -4711,11 +4760,21 @@ $("table").trigger("updateAll", [ resort, callback ]);</pre></div>
 
 			<tr id="updatecache">
 				<td><a href="#" class="permalink">updateCache</a></td>
-				<td>Update the parsers, only if not defined, then update the internal cache (<span class="version">v2.15.4</span>; <span class="version updated">v2.22.2</span>).
+				<td>Update the parsers, only if not defined, then update the internal cache (<span class="version">v2.15.4</span>; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
-					<p>In <span class="version updated">v2.22.2</span>, a new parameter was added to allow passing a jQuery object containing tbodies (for the tbody sorting widget)</p>
-					<p>This method is used by the pager (addon &amp; widget) to update the data stored within the cache after the content has been updated using ajax.</p>
-					<pre class="prettyprint lang-js">// optional callback function
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	// optional parameter to target tbodies
+	$tbodies = $( 'table' ).children( 'tbody.totals' ),
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.updateCache( config, callback, $tbodies );</pre>
+						<h4>Triggered event method:</h4>
+						<p>In <span class="version updated">v2.22.2</span>, a new parameter was added to allow passing a jQuery object containing tbodies (for the tbody sorting widget)</p>
+						<p>This method is used by the pager (addon &amp; widget) to update the data stored within the cache after the content has been updated using ajax.</p>
+						<pre class="prettyprint lang-js">// optional callback function
 var callback = function( table ){ /* do something */ },
 	// optional in v2.22.2; defaults to table.config.$tbodies if undefined
 	$tbodies = $( 'table' ).children( 'tbody' );
@@ -4726,7 +4785,7 @@ $("table").trigger("updateCache", [ callback, $tbodies ] );</pre></div>
 
 			<tr id="appendcache">
 				<td><a href="#" class="permalink">appendCache</a></td>
-				<td>Adds all of the cached table rows back into the table.<br>
+				<td>Adds all of the cached table rows back into the table (<span class="version updated">v2.23.0</span>).<br>
 					<div class="collapsible"><br>
 					This method was originally designed to be used with the pager. It should be used under these conditions:
 					<ul>
@@ -4736,7 +4795,14 @@ $("table").trigger("updateCache", [ callback, $tbodies ] );</pre></div>
 						<li>And, before triggering an &quot;update&quot;.</li>
 					</ul>
 					Note: The entire table is stored in the cache, but when using the pager with the <a href="#pager-removerows"><code>removeRows</code> option</a> set to <code>true</code>, only the visible portion is actually exists within the table. So, use this option to add all stored rows back into the table before manually changing the contents. Otherwise, if any update method is triggered, only the visible rows will be added back to the cache.
-						<pre class="prettyprint lang-js">// how to update the table contents
+					<h4>Direct method:</h4>
+					<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+					<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config;
+// there is no callback available when using this direct method because
+// it may divert to pager injected functions, if the pager is being used
+$.tablesorter.appendCache( config );</pre>
+					<h4>Triggered event method:</h4>
+					<pre class="prettyprint lang-js">// how to update the table contents
 $("table")
   .trigger("appendCache")
   .append('&lt;tr&gt;...&lt;/tr&gt;') // add new row(s), or delete rows
@@ -4748,42 +4814,53 @@ $("table")
 
 			<tr id="updatecell">
 				<td><a href="#" class="permalink">updateCell</a></td>
-				<td>Update a table cell in the tablesorter data (<span class="version updated">v2.19.0</span>).
+				<td>Update a table cell in the tablesorter data (<span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	$cell = $( 'td.random' ), // jQuery selector or DOM element of newly updated cell
+	// applies or reapplies a sort to the table; use false to not update the sort
+	resort = true, // or [ [0,0], [1,0] ] etc
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.updateCell( config, $cell, resort, callback );</pre>
+						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">$(function() {
-  $("table").tablesorter();
+  $( 'table' ).tablesorter();
 
-  $("td.discount").click(function(){
+  $( 'td.discount' ).click( function() {
 
     // Do we want to reapply the current sort on the column?
     // see updateRow for other resort settings as of v2.19.0
     // if resort is undefined, the value from config.resort (added v2.19.0) will be used
     var resort = false,
         // Do something after the cell update in this callback function
-        callback = function(table){
+        callback = function( table ) {
           /* do something */
         },
         // randomize a number & add it to the cell
-        discount = '$' + Math.round(Math.random() * Math.random() * 100) + '.' +
-          ('0' + Math.round(Math.random() * Math.random() * 100)).slice(-2);
+        discount = '$' + Math.round( Math.random() * Math.random() * 100 ) + '.' +
+          ( '0' + Math.round( Math.random() * Math.random() * 100 ) ).slice( -2 );
 
     // add new table cell text
-    $(this).text(discount);
+    $( this ).text( discount );
 
     // update the table, so the tablesorter plugin can update its value
     // set resort flag to false to prevent automatic resort (since we're using a different sort below)
     // prior to v2.19.0, leave the resort flag as undefined, or with any other value, to automatically resort the table
     // new resort values can be set as of v2.19.0 - please see the "updateRow" documentation for more details
-    // $("table").trigger("updateCell", [this]); &lt; - resort is undefined so the table WILL resort
-    $("table").trigger("updateCell", [this, resort, callback]);
+    // $( 'table' ).trigger( 'updateCell', [ this ] ); &lt; - resort is undefined so the table WILL resort
+    $( 'table' ).trigger( 'updateCell', [ this, resort, callback ] );
 
     // As of version 2.0.14, the table will automatically resort (using the current sort selection)
     // after the update, so include the following if you want to specify a different sort
 
     // prior to v2.19.0, set sorting column and direction, this will sort on the first and third column
     // after v2.19.0, add any new sort to the "resort" variable above
-    var sorting = [[3,1]];
-    $("table").trigger("sorton", [sorting]);
+    var sorting = [ [ 3,1 ] ];
+    $( 'table' ).trigger( 'sorton', [ sorting ] );
 
     return false;
   });
