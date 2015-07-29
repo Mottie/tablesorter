@@ -971,6 +971,13 @@
 				})
 				.bind('addRows' + c.namespace, function(e, $row, resort, callback) {
 					e.stopPropagation();
+					if ( !$row || !( $row instanceof jQuery ) || $row.closest( 'table' )[ 0 ] !== c.table ) {
+						if ( c.debug ) {
+							console.error( 'addRows method requires a jQuery selector reference to rows that have already ' +
+								'been added to the table' );
+						}
+						return false;
+					}
 					table.isUpdating = true;
 					if (isEmptyObject(c.cache)) {
 						// empty table, do an update instead - fixes #450
