@@ -139,7 +139,7 @@
 				c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
 			if (hasFilters && !p.ajaxUrl) {
-				if ($.isEmptyObject(c.cache)) {
+				if (ts.isEmptyObject(c.cache)) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
 				} else {
@@ -708,7 +708,7 @@
 			var pg, c = table.config,
 				$t = $(table),
 				l = p.last;
-			if ( pageMoved !== false && p.initialized && $.isEmptyObject(c.cache)) {
+			if ( pageMoved !== false && p.initialized && ts.isEmptyObject(c.cache)) {
 				return updateCache(table);
 			}
 			// abort page move if the table has filters and has not been initialized
