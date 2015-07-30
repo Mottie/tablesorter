@@ -5074,11 +5074,12 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 			</tr>
 
 			<tr id="destroypager">
-				<td><a href="#" class="permalink">destroy.pager</a></td>
-				<td>Calling this method will reveal the entire table, remove the pager functionality, and hide the actual pager (v2.0.16).
+				<td><a href="#" class="permalink">destroyPager</a></td>
+				<td>Calling this method will reveal the entire table, remove the pager functionality, and hide the actual pager (v2.0.16; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
+						<p>In <span class="version updated">v2.23.0</span>, this method was changed from <code>destroy.pager</code> to <code>destroyPager</code> because of issues with unique namespacing.</p>
 						<pre class="prettyprint lang-js">$(function(){
-  $('table').trigger('destroy.pager');
+  $('table').trigger('destroyPager');
 });</pre>
 						The only way to restore the pager is to re-initialize the pager addon
 						<br>
@@ -5090,25 +5091,26 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 			</tr>
 
 			<tr id="disablepager">
-				<td><a href="#" class="permalink">disable.pager</a></td>
-				<td>This method will put the pager into a disabled state (v2.0.21.2).
+				<td><a href="#" class="permalink">disablePager</a></td>
+				<td>This method will put the pager into a disabled state (v2.0.21.2; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
-					<br>
+					<p>In <span class="version updated">v2.23.0</span>, this method was changed from <code>disable.pager</code> to <code>disablePager</code> because of issues with unique namespacing.</p>
 					The disabled state will reveal all table rows and disable, but not hide, pager controls.
 					<br>
 						<pre class="prettyprint lang-js">$(function(){
-  $('table').trigger('disable.pager');
+  $('table').trigger('disablePager');
 });</pre></div>
 				</td>
 				<td><a href="example-pager.html">Example</a></td>
 			</tr>
 
 			<tr id="enablepager">
-				<td><a href="#" class="permalink">enable.pager</a></td>
-				<td>This method will re-enable the pager, but only from the disabled state (v2.0.21.2).
+				<td><a href="#" class="permalink">enablePager</a></td>
+				<td>This method will re-enable the pager, but only from the disabled state (v2.0.21.2; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
+						<p>In <span class="version updated">v2.23.0</span>, this method was changed from <code>enable.pager</code> to <code>enablePager</code> because of issues with unique namespacing.</p>
 						<pre class="prettyprint lang-js">$(function(){
-  $('table').trigger('enable.pager');
+  $('table').trigger('enablePager');
 });</pre></div>
 				</td>
 				<td><a href="example-pager.html">Example</a></td>

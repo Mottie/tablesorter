@@ -157,11 +157,11 @@
 		$('table').delegate('button.remove', 'click' ,function(){
 			var t = $('table');
 			// disabling the pager will restore all table rows
-			// t.trigger('disable.pager');
+			// t.trigger('disablePager');
 			// remove chosen row
 			$(this).closest('tr').remove();
 			// restore pager
-			// t.trigger('enable.pager');
+			// t.trigger('enablePager');
 			t.trigger('update');
 			return false;
 		});
@@ -172,7 +172,7 @@
 			// Exterminate, annhilate, destroy! http://www.youtube.com/watch?v=LOqn8FxuyFs
 			var $t = $(this);
 			if (/Destroy/.test( $t.text() )){
-				$('table').trigger('destroy.pager');
+				$('table').trigger('destroyPager');
 				$t.text('Restore Pager');
 			} else {
 				$('table').tablesorterPager(pagerOptions);
@@ -185,7 +185,7 @@
 		// **************
 		$('.toggle').click(function(){
 			var mode = /Disable/.test( $(this).text() );
-			$('table').trigger( (mode ? 'disable' : 'enable') + '.pager');
+			$('table').trigger( (mode ? 'disable' : 'enable') + 'Pager');
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 			return false;
 		});
@@ -231,6 +231,13 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
+				<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
+					<ul>
+						<li><code>destroy.pager</code> is now <code>destroyPager</code></li>
+						<li><code>disable.pager</code> is now <code>disablePager</code></li>
+						<li><code>enable.pager</code> is now <code>enablePager</code></li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
 				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
 				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code>removeRows</code> option to false will break the sort.</li>

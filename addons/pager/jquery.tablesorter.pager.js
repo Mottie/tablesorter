@@ -114,7 +114,7 @@
 
 		};
 
-		var pagerEvents = 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
+		var pagerEvents = 'filterInit filterStart filterEnd sortEnd disablePager enablePager destroyPager updateComplete ' +
 			'pageSize pageSet pageAndSize pagerUpdate refreshComplete ',
 
 		$this = this,
@@ -909,15 +909,15 @@
 							c.$table.trigger('applyWidgets');
 						}
 					})
-					.bind('disable' + namespace, function(e){
+					.bind('disablePager' + namespace, function(e){
 						e.stopPropagation();
 						showAllRows(table, p);
 					})
-					.bind('enable' + namespace, function(e){
+					.bind('enablePager' + namespace, function(e){
 						e.stopPropagation();
 						enablePager(table, p, true);
 					})
-					.bind('destroy' + namespace, function(e){
+					.bind('destroyPager' + namespace, function(e){
 						e.stopPropagation();
 						destroyPager(table, p);
 					})

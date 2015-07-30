@@ -145,7 +145,7 @@
 					// save original pager size
 					setSize: wo.pager_size,
 					setPage: wo.pager_startPage,
-					events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
+					events: 'filterInit filterStart filterEnd sortEnd disablePager enablePager destroyPager updateComplete ' +
 						'pageSize pageSet pageAndSize pagerUpdate refreshComplete '
 				}, c.pager);
 
@@ -257,15 +257,15 @@
 						c.$table.trigger('applyWidgets');
 					}
 				})
-				.on('disable' + namespace, function(e){
+				.on('disablePager' + namespace, function(e){
 					e.stopPropagation();
 					tsp.showAllRows(table, c);
 				})
-				.on('enable' + namespace, function(e){
+				.on('enablePager' + namespace, function(e){
 					e.stopPropagation();
 					tsp.enablePager(table, c, true);
 				})
-				.on('destroy' + namespace, function(e, refreshing){
+				.on('destroyPager' + namespace, function(e, refreshing){
 					e.stopPropagation();
 					tsp.destroyPager(table, c, refreshing);
 				})
