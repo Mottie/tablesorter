@@ -1373,8 +1373,8 @@
 					// row contained in the table?
 					( $.fn.closest ? $row.closest( 'table' )[ 0 ] : $row.parents( 'table' )[ 0 ] ) !== c.table ) {
 					if ( c.debug ) {
-						console.error( 'addRows method requires a jQuery selector reference to rows that have already ' +
-							'been added to the table' );
+						console.error( 'addRows method requires (1) a jQuery selector reference to rows that have already ' +
+							'been added to the table, or (2) row HTML string to be added to a table with only one tbody' );
 					}
 					return false;
 				}
