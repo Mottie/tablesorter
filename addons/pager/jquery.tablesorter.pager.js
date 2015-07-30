@@ -801,16 +801,23 @@
 		},
 
 		destroyPager = function(table, p) {
+			var c = table.config,
+				namespace = c.namespace + 'pager',
+				ctrls = [ p.cssFirst, p.cssPrev, p.cssNext, p.cssLast, p.cssGoto, p.cssPageSize ].join( ',' );
 			showAllRows(table, p);
-			p.$container.hide(); // hide pager
-			var c = table.config;
+			p.$container
+				// hide pager controls
+				.hide()
+				// unbind
+				.find( ctrls )
+				.unbind( namespace );
 			c.appender = null; // remove pager appender function
-			p.initialized = false;
-			delete c.rowsCopy;
-			$(table).unbind( pagerEvents.split(' ').join(c.namespace + 'pager ').replace(/\s+/g, ' ') );
+			c.$table.unbind( namespace );
 			if (ts.storage) {
 				ts.storage(table, p.storageKey, '');
 			}
+			delete c.pager;
+			delete c.rowsCopy;
 		},
 
 		enablePager = function(table, p, triggered) {
@@ -888,6 +895,7 @@
 				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
 
 				$t
+					// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
 					.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
 					.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');

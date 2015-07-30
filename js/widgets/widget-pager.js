@@ -144,9 +144,7 @@
 					last: {},
 					// save original pager size
 					setSize: wo.pager_size,
-					setPage: wo.pager_startPage,
-					events: 'filterInit filterStart filterEnd sortEnd disablePager enablePager destroyPager updateComplete ' +
-						'pageSize pageSet pageAndSize pagerUpdate refreshComplete '
+					setPage: wo.pager_startPage
 				}, c.pager);
 
 			// pager initializes multiple times before table has completed initialization
@@ -236,7 +234,7 @@
 				s = wo.pager_selectors;
 
 			c.$table
-				.off( $.trim(p.events.split(' ').join(namespace + ' ')) )
+				.off( namespace )
 				.on('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 					// don't change page if filters are the same (pager updating, etc)
@@ -1073,17 +1071,25 @@
 
 		destroyPager: function(table, c, refreshing){
 			var p = c.pager,
+				s = c.widgetOptions.pager_selectors,
+				ctrls = [ s.first, s.prev, s.next, s.last, s.gotoPage, s.pageSize ].join( ',' ),
 				namespace = c.namespace + 'pager';
 			p.initialized = false;
-			c.$table.off( $.trim(p.events.split(' ').join(namespace + ' ')) );
-			if (refreshing) { return; }
+			c.$table.off( namespace );
+			p.$container
+				// hide pager
+				.hide()
+				// unbind pager controls
+				.find( ctrls )
+				.off( namespace );
+			if ( refreshing ) { return; }
 			tsp.showAllRows(table, c);
-			p.$container.hide(); // hide pager
 			c.appender = null; // remove pager appender function
-			delete table.config.rowsCopy;
 			if (ts.storage) {
 				ts.storage(table, c.widgetOptions.pager_storageKey, '');
 			}
+			delete table.config.pager;
+			delete table.config.rowsCopy;
 		},
 
 		enablePager: function(table, c, triggered){
