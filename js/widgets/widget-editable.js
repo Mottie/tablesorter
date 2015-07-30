@@ -10,7 +10,8 @@
 	var tse = $.tablesorter.editable = {
 		namespace : '.tseditable',
 		// last edited class name
-		lastEdited: 'tseditable-last-edited-cell',
+	        lastEdited: 'tseditable-last-edited-cell',
+                myCols: [],
 
 		editComplete: function( c, wo, $cell, refocus ) {
 			c.$table
@@ -48,7 +49,7 @@
 			var indx, tmp,
 				colIndex = [],
 				cols = [];
-			if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
+                        if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
 				// editable_columns can contain a range string ( i.e. '2-4' )
 				tmp = wo.editable_columns.split( /\s*-\s*/ );
 				indx = parseInt( tmp[ 0 ], 10 ) || 0;
@@ -60,6 +61,7 @@
 					colIndex.push( indx );
 					cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
 				}
+                                tse.myCols = cols;
 			} else if ( $.isArray( wo.editable_columns ) ) {
 				$.each( wo.editable_columnsArray || wo.editable_columns, function( i, col ) {
 					if ( col < c.columns ) {
@@ -67,12 +69,14 @@
 						cols.push( 'td:nth-child(' + ( col + 1 ) + ')' );
 					}
 				});
+                                tse.myCols = cols;
 			}
 			if ( !wo.editable_columnsArray ) {
 				wo.editable_columnsArray = colIndex;
 				wo.editable_columnsArray.sort(function(a, b){ return a - b; });
 			}
-			return cols;
+
+  		        return tse.myCols;
 		},
 
 		update: function( c, wo ) {
@@ -80,7 +84,7 @@
 				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
 				cols = tse.getColumns( c, wo ).join( ',' );
 
-			// turn off contenteditable to allow dynamically setting the wo.editable_noEdit
+		        // turn off contenteditable to allow dynamically setting the wo.editable_noEdit
 			// class on table cells - see issue #900
 			c.$tbodies.find( cols ).find( '[contenteditable]' ).prop( 'contenteditable', false );
 
@@ -116,7 +120,7 @@
 		},
 
 		bindEvents: function( c, wo ) {
-			var namespace = tse.namespace;
+		  var namespace = tse.namespace;
 			c.$table
 				.off( ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
 				.on( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ), function() {
@@ -138,7 +142,7 @@
 			c.$tbodies
 				.off( ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' ) )
 				.on( 'focus' + namespace, '[contenteditable]', function( e ) {
-					clearTimeout( $( this ).data( 'timer' ) );
+				        clearTimeout( $( this ).data( 'timer' ) );
 					c.$table.data( 'contentFocused', e.target );
 					c.table.isUpdating = true; // prevent sorting while editing
 					var $this = $( this ),
