@@ -658,7 +658,7 @@ $(function(){
 		test update methods
 	************************************************/
 	QUnit.test( 'parser cache; update methods & callbacks', function(assert) {
-		assert.expect(10);
+		assert.expect(11);
 		var oldColMax;
 		c1.ignoreCase = true;
 		// updateAll
@@ -692,6 +692,18 @@ $(function(){
 			assert.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
 			                                      'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6, '', 0 ], 'addRows method' );
 		}]);
+		// the next two methods shouldn't do anything; especially not cause a javascript error!
+		$table1.trigger('addRows', [null, true]);
+		$table1.trigger('addRows', [$('<tr>'), true]);
+
+		// addRows as string to table with only one tbody
+		t = '<tr class="temp"><td>g</td><td>h</td><td>i</td><td>j</td></tr>';
+		$table2.trigger('addRows', [t, true, function(){
+			assert.cacheCompare( table2, 'all', [ 'a', 'b', 'c', 'd',
+			                                      'z', 'y', 'x', 'w',
+			                                      'g', 'h', 'i', 'j' ], 'addRows as string method' );
+		}]);
+		$table2.find('tr.temp').remove();
 
 		// updateCell
 		t = $table1.find('td:contains("7")');

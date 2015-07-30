@@ -4552,33 +4552,49 @@ $.extend($.tablesorter.themes.jui, {
 						<h4>Direct method:</h4>
 						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
 						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
-	$rows = $( 'tr.addedRows' ), // jQuery selector of newly appended row(s)
-	// applies or reapplies a sort to the table; use false to not update the sort
-	resort = true, // or [ [0,0], [1,0] ] etc
-	callback = function( table ) {
-		// do something
-	};
+  $rows = $( 'tr.addedRows' ), // jQuery selector of newly appended row(s)
+  // applies or reapplies a sort to the table; use false to not update the sort
+  resort = true, // or [ [0,0], [1,0] ] etc
+  callback = function( table ) {
+    // do something
+  };
 $.tablesorter.addRows( config, $rows, resort, callback );</pre>
 						<h4>Triggered event method:</h4>
 						It does not work the same as &quot;update&quot; in that it only adds rows, it does not remove them.<br>
 						<br>
 						Also, use this method to add table rows while using the pager plugin. If the &quot;update&quot; method is used, only the visible table rows continue to exist.
 						<pre class="prettyprint lang-js">// Add multiple rows to the table
-  var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
-    '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
-    $row = $( row ),
-    // resort table using true to reapply the current sort; set to false to prevent resort
-    // if undefined, the resort value will be obtained from config.resort (added v2.19.0)
-    // As of v2.19.0, the resort variable can contain a new sortList to be applied
-    // A callback method was added in 2.3.9.
-    resort = true, // or [ [0,0], [1,0] ] etc
-    callback = function( table ){
-      alert( 'rows have been added!' );
-    };
-  $( 'table' )
-    .find( 'tbody' ).append( $row )
-    .trigger( 'addRows', [ $row, resort, callback ] );</pre>
-					In <span class="version">v2.16.1</span>, the <code>$row</code> parameter can be an HTML string, row DOM element or jQuery object.
+var row = '&lt;tr&gt;&lt;td&gt;Inigo&lt;/td&gt;&lt;td&gt;Montoya&lt;/td&gt;&lt;td&gt;34&lt;/td&gt;' +
+  '&lt;td&gt;$19.99&lt;/td&gt;&lt;td&gt;15%&lt;/td&gt;&lt;td&gt;Sep 25, 1987 12:00PM&lt;/td&gt;&lt;/tr&gt;',
+  $row = $( row ),
+  // resort table using true to reapply the current sort; set to false to prevent resort
+  // if undefined, the resort value will be obtained from config.resort (added v2.19.0)
+  // As of v2.19.0, the resort variable can contain a new sortList to be applied
+  // A callback method was added in 2.3.9.
+  resort = true, // or [ [0,0], [1,0] ] etc
+  callback = function( table ){
+    alert( 'rows have been added!' );
+  };
+$( 'table' )
+  .find( 'tbody' ).append( $row )
+  .trigger( 'addRows', [ $row, resort, callback ] );</pre>
+					<hr>
+					<ul>
+						<li>In <span class="version">v2.23.0</span>,
+							<ul>
+								<li>If a table contains only one tbody (not counting information only tbodies; which have a class name from <code>cssInfoBlock</code>), then a row string can be used in this method.
+								<pre class="prettyprint lang-js">var $table = $( 'table' ),
+config = $table[ 0 ].config;
+// triggered event method
+$table.trigger( 'addRows', [ '&lt;tr&gt;...&lt;/tr&gt;', true ] );
+
+// direct method
+$.tablesorter.addRows( config, '&lt;tr&gt;...&lt;/tr&gt;', true );</pre></li>
+								<li>So instead of making a jQuery object, appending it to the table, then passing the reference to the method, you can just pass a string. This method doesn't work if a table has multiple tbodies, because the plugin doesn't know where you want to add the rows.</li>
+							</ul>
+						</li>
+						<li>In <span class="version">v2.16.1</span>, the <code>$row</code> parameter can be a row DOM element or jQuery object.</li>
+					</ul>
 					</div>
 				</td>
 				<td><a href="example-add-rows.html">Example</a></td>

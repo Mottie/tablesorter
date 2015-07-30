@@ -1372,15 +1372,24 @@
 			};
 
 			ts.addRows = function( c, $row, resort, callback ) {
-				if ( !$row || !( $row instanceof jQuery ) || $row.closest( 'table' )[ 0 ] !== c.table ) {
+				var i, j, l, rowData, cells, rows, tbdy,
+					// allow passing a row string if only one non-info tbody exists in the table
+					valid = typeof $row === 'string' && c.$tbodies.length === 1 && /<tr/.test( $row || '' ),
+					table = c.table;
+				if ( valid ) {
+					$row = $( $row );
+					c.$tbodies.append( $row );
+				} else if ( !$row ||
+					// row is a jQuery object?
+					!( $row instanceof jQuery ) ||
+					// row contained in the table?
+					( $.fn.closest ? $row.closest( 'table' )[ 0 ] : $row.parents( 'table' )[ 0 ] ) !== c.table ) {
 					if ( c.debug ) {
 						console.error( 'addRows method requires a jQuery selector reference to rows that have already ' +
 							'been added to the table' );
 					}
 					return false;
 				}
-				var i, j, l, rowData, cells, rows, tbdy,
-					table = c.table;
 				table.isUpdating = true;
 				if ( ts.isEmptyObject( c.cache ) ) {
 					// empty table, do an update instead - fixes #450
