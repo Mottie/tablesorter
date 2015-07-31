@@ -45,38 +45,43 @@
 		},
 
 		getColumns : function( c, wo ) {
-			var indx, tmp,
-				colIndex = [],
+			var list, indx, range, len, tmp,
+				editableColumns = wo.editable_columns,
 				cols = [];
-			if ( !wo.editable_columnsArray && $.type( wo.editable_columns ) === 'string' && wo.editable_columns.indexOf( '-' ) >= 0 ) {
-				// editable_columns can contain a range string ( i.e. '2-4' )
-				tmp = wo.editable_columns.split( /\s*-\s*/ );
-				indx = parseInt( tmp[ 0 ], 10 ) || 0;
-				tmp = parseInt( tmp[ 1 ], 10 ) || ( c.columns - 1 );
-				if ( tmp > c.columns ) {
-					tmp = c.columns - 1;
-				}
-				for ( ; indx <= tmp; indx++ ) {
-					colIndex.push( indx );
-					cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
-				}
-			} else if ( $.isArray( wo.editable_columns ) ) {
-				$.each( wo.editable_columnsArray || wo.editable_columns, function( i, col ) {
-					if ( col < c.columns ) {
-						colIndex.push( col );
-						cols.push( 'td:nth-child(' + ( col + 1 ) + ')' );
+			if ( typeof editableColumns === 'string' ) {
+				// editable_columns can contain a range string, or comma separated values (e.g. '1,2-4,7')
+				list = editableColumns.replace( /\s+/, '' ).split( /,/ );
+				len = list.length - 1;
+				while ( len >= 0 ) {
+					if ( list[ len ].indexOf( '-' ) >= 0 ) {
+						range = list[ len ].split( '-' );
+						indx = parseInt( range[ 0 ], 10 ) || 0;
+						range = parseInt( range[ 1 ], 10) || c.columns - 1;
+						if ( indx > range ) {
+							// in case someone does '5-3'
+							tmp = indx; indx = range; range = tmp;
+						}
+						for ( ; indx <= range; indx++ ) {
+							cols.push( 'td:nth-child(' + ( indx + 1 ) + ')' );
+						}
+					} else {
+						cols.push( 'td:nth-child(' + ( ( parseInt( list[ len ], 10 ) || 0 ) + 1 ) + ')' );
 					}
-				});
-			}
-			if ( !wo.editable_columnsArray ) {
-				wo.editable_columnsArray = colIndex;
-				wo.editable_columnsArray.sort(function(a, b){ return a - b; });
+					len--;
+				}
+			} else if ( $.isArray( editableColumns ) ) {
+				len = editableColumns.length;
+				for ( indx = 0; indx < len; indx++ ) {
+					if ( editableColumns[ indx ] < c.columns ) {
+						cols.push( 'td:nth-child(' + ( editableColumns[ indx ] + 1 ) + ')' );
+					}
+				}
 			}
 			return cols;
 		},
 
 		update: function( c, wo ) {
-			var $t,
+			var $t, $cells, cellIndex, cellLen, $editable, editableIndex, editableLen,
 				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
 				cols = tse.getColumns( c, wo ).join( ',' );
 
@@ -86,24 +91,28 @@
 
 			// IE does not allow making TR/TH/TD cells directly editable ( issue #404 )
 			// so add a div or span inside ( it's faster than using wrapInner() )
-			c.$tbodies.find( cols ).not( '.' + wo.editable_noEdit ).each( function() {
+			$cells = c.$tbodies.find( cols ).not( '.' + wo.editable_noEdit );
+			cellLen = $cells.length;
+			for ( cellIndex = 0; cellIndex < cellLen; cellIndex++ ) {
+				/*jshint loopfunc:true */
 				// test for children, if they exist, then make the children editable
-				$t = $( this );
-
+				$t = $cells.eq( cellIndex );
 				if ( tmp && $t.children( 'div, span' ).length === 0 ) {
 					$t.wrapInner( wo.editable_wrapContent );
 				}
-				if ( $t.children( 'div, span' ).length ) {
+				$editable = $t.children( 'div, span' ).not( '.' + wo.editable_noEdit );
+				editableLen = $editable.length;
+				if ( editableLen ) {
 					// make div/span children content editable
-					$t.children( 'div, span' ).not( '.' + wo.editable_noEdit ).each( function() {
-						var $this = $( this );
+					for ( editableIndex = 0; editableIndex < editableLen; editableIndex++ ) {
+						var $this = $editable.eq( editableIndex );
 						if ( wo.editable_trimContent ) {
 							$this.html( function( i, txt ) {
 								return $.trim( txt );
 							});
 						}
 						$this.prop( 'contenteditable', true );
-					});
+					}
 				} else {
 					if ( wo.editable_trimContent ) {
 						$t.html( function( i, txt ) {
@@ -112,7 +121,7 @@
 					}
 					$t.prop( 'contenteditable', true );
 				}
-			});
+			}
 		},
 
 		bindEvents: function( c, wo ) {
