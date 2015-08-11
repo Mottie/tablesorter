@@ -2,9 +2,7 @@
 * TableSorter QUnit Testing
 */
 /*jshint unused: false */
-/*global QUnit: false, JSHINT: false, ok: false, start: false, deepEqual: false, asyncTest: false,
-  strictEqual: false, jQuery: false, equal: false, $: false, expect: false, module: false,
-  test: false, stop: false, ipv6tests: false */
+/*global QUnit: false, jQuery: false, ipv6tests: false */
 
 // Accepts a function with a single argument -- deferred object, which should be resolved at some point in a function.
 // Returns a promise, wrapping this function call.
@@ -137,7 +135,7 @@ EVENTS:
 	-
 */
 
-$(function(){
+jQuery(function($){
 
 	var ts = $.tablesorter,
 		$table1 = $('#table1'),
@@ -213,7 +211,7 @@ $(function(){
 
 	$table5.tablesorter();
 
-	module('core');
+	QUnit.module('core');
 	/************************************************
 		Initialization
 	************************************************/
@@ -251,24 +249,24 @@ $(function(){
 	var d = ts.isDigit;
 	QUnit.test( 'isDigit', function(assert) {
 		assert.expect(18);
-		ok( d('-1'),   'allow negative (-1)');
-		ok( d('+1'),   'allow plus (+1)');
-		ok( d('(1)'),  'allow parenthesis (1)');
-		ok( d('123'),  "string has numbers ('123')");
-		ok( d(123),    'has numbers (123)');
-		ok( d('1.2'),  'remove decimal (1.2)');
-		ok( d('1,234'),'remove commas (1,234)');
-		ok( d("11'"),  "remove apostrophe's (11')"); // 11 feet
-		ok( d('3\'4"'),"remove quotes (3'4\")"); // 3 foot 4 inches
-		ok( d(' 12 '), 'remove spaces ( 12 )');
-		ok( !d('x'),   'non-digit alphabet');
-		ok( !d('1x'),  'digit + alphabet');
-		ok( !d('x1'),  'alphabet + digit');
-		ok( !d('@'),   'non-digit symbols');
-		ok( !d('1-'),  'negative after (1-) not allowed?');
-		ok( !d('1+'),  'plus after (1+) not allowed?');
-		ok( !d('$2'),  'no money; the currency parser will catch these');
-		ok( !d(''),    "empty string ('')");
+		assert.ok( d('-1'),   'allow negative (-1)');
+		assert.ok( d('+1'),   'allow plus (+1)');
+		assert.ok( d('(1)'),  'allow parenthesis (1)');
+		assert.ok( d('123'),  "string has numbers ('123')");
+		assert.ok( d(123),    'has numbers (123)');
+		assert.ok( d('1.2'),  'remove decimal (1.2)');
+		assert.ok( d('1,234'),'remove commas (1,234)');
+		assert.ok( d("11'"),  "remove apostrophe's (11')"); // 11 feet
+		assert.ok( d('3\'4"'),"remove quotes (3'4\")"); // 3 foot 4 inches
+		assert.ok( d(' 12 '), 'remove spaces ( 12 )');
+		assert.ok( !d('x'),   'non-digit alphabet');
+		assert.ok( !d('1x'),  'digit + alphabet');
+		assert.ok( !d('x1'),  'alphabet + digit');
+		assert.ok( !d('@'),   'non-digit symbols');
+		assert.ok( !d('1-'),  'negative after (1-) not allowed?');
+		assert.ok( !d('1+'),  'plus after (1+) not allowed?');
+		assert.ok( !d('$2'),  'no money; the currency parser will catch these');
+		assert.ok( !d(''),    "empty string ('')");
 	});
 
 	/************************************************
@@ -328,12 +326,12 @@ $(function(){
 	QUnit.test( 'isValueInArray', function(assert) {
 		var v = ts.isValueInArray;
 		assert.expect(6);
-		ok( v( 0, null ) < 0, 'null' );
-		ok( v( 0, [] ) < 0, 'Empty array' );
-		ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, 'Column found (first array)' );
-		ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, 'Column found (second array)' );
-		ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, 'Column found (third array)' );
-		ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , 'Column not found' );
+		assert.ok( v( 0, null ) < 0, 'null' );
+		assert.ok( v( 0, [] ) < 0, 'Empty array' );
+		assert.ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, 'Column found (first array)' );
+		assert.ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, 'Column found (second array)' );
+		assert.ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, 'Column found (third array)' );
+		assert.ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , 'Column not found' );
 	});
 
 	/************************************************
@@ -363,15 +361,15 @@ $(function(){
 			};
 		$table3.trigger('sorton', [[[0,0], [1,0]]]);
 		p( $table3, true );
-		ok( findClasses( true, [ 0, 1 ] ), 'Processing 2 columns' );
+		assert.ok( findClasses( true, [ 0, 1 ] ), 'Processing 2 columns' );
 		p( $table3, false );
-		ok( findClasses( false, [ -1 ] ), 'No sort' );
+		assert.ok( findClasses( false, [ -1 ] ), 'No sort' );
 		p( $table3, true, c3.$headers.eq(4) );
-		ok( findClasses( true, [ -1 ] ), 'Processing specified column not in sortList' );
+		assert.ok( findClasses( true, [ -1 ] ), 'Processing specified column not in sortList' );
 		p( $table3, true, c3.$headers.eq(1) );
-		ok( findClasses( true, [ 1 ] ), 'Processing specified column in sortList' );
+		assert.ok( findClasses( true, [ 1 ] ), 'Processing specified column in sortList' );
 		$table3.trigger('sortReset');
-		ok( findClasses( false, [ -1 ] ), 'No sort' );
+		assert.ok( findClasses( false, [ -1 ] ), 'No sort' );
 	});
 
 	/************************************************

@@ -407,7 +407,7 @@ module.exports = function( grunt ) {
 		grunt.task.run(tasks);
 	});
 
-	// update bower.json & tablesorter.jquery.json file version numbers to match the package.json version
+	// update tablesorter.jquery.json file version numbers to match the package.json version
 	grunt.registerTask( 'updateManifest', function() {
 		var i, project,
 			projectFile = [ 'tablesorter.jquery.json' ],
