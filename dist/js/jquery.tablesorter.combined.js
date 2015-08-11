@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-30-2015 (v2.22.5)*/
+/*! tablesorter (FORK) - updated 08-11-2015 (v2.22.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1282,10 +1282,11 @@
 					}
 					if (c.delayInit && ts.isEmptyObject(c.cache)) { buildCache(table); }
 					// jQuery v1.2.6 doesn't have closest()
-					cell = $.fn.closest ? $(this).closest('th, td')[0] : /TH|TD/.test(this.nodeName) ? this : $(this).parents('th, td')[0];
+					cell = $.fn.closest ? $(this).closest('th, td') : /TH|TD/.test(this.nodeName) ? this : $(this).parents('th, td');
 					// reference original table headers and find the same cell
-					cell = c.$headers[ $headers.index( cell ) ];
-					if (!cell.sortDisabled) {
+					// don't use $headers or IE8 throws an error - see #987
+					cell = c.$headers[ cell.prevAll().length ];
+					if (cell && !cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
 				});
