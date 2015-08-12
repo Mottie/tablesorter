@@ -659,7 +659,14 @@
 					if (c.debug) {
 						console.error('Pager: >> Ajax Error', xhr, exception);
 					}
-					ts.showError(table, exception.message + ' (' + xhr.status + ')');
+					ts.showError(table,
+						xhr.status === 0 ? 'Not connected, verify Network' :
+						xhr.status === 404 ? 'Requested page not found [404]' :
+						xhr.status === 500 ? 'Internal Server Error [500]' :
+						exception === 'parsererror' ? 'Requested JSON parse failed' :
+						exception === 'timeout' ? 'Time out error' :
+						exception === 'abort' ? 'Ajax Request aborted' :
+						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
 					c.$tbodies.eq(0).children('tr').detach();
 					p.totalRows = 0;
 				} else {
