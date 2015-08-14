@@ -66,7 +66,7 @@
 			$row.toggleClass( checkedClass + '-' + cellIndex, isChecked );
 			if ( isChecked ) {
 				$row.addClass( checkedClass );
-			} else if ( !( $row[0].className || '' ).match( checkedClass + '-' ) ) {
+			} else if ( $row.length && !( $row[0].className || '' ).match( checkedClass + '-' ) ) {
 				// don't remove checked class if other columns have a check
 				$row.removeClass( checkedClass );
 			}
