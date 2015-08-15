@@ -14,16 +14,7 @@
       "email": "wowmotty@gmail.com"
     }
   ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
-    },
-    {
-      "type": "GPL",
-      "url": "http://www.gnu.org/licenses/gpl.html"
-    }
-  ],
+  "license": "(MIT OR GPL-2.0+)",
   "homepage": "http://mottie.github.com/tablesorter/",
   "bugs": "https://github.com/Mottie/tablesorter/issues",
   "docs": "http://mottie.github.com/tablesorter/docs/index.html",
