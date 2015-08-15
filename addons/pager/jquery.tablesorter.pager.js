@@ -25,6 +25,11 @@
 			// modify the url after all processing has been applied
 			customAjaxUrl: function(table, url) { return url; },
 
+			// ajax error callback from $.tablesorter.showError function
+			// ajaxError: function( config, xhr, exception ){ return exception; };
+			// returning false will abort the error message
+			ajaxError: null,
+
 			// modify the $.ajax object to allow complete control over your ajax requests
 			ajaxObject: {
 				dataType: 'json'
@@ -386,20 +391,13 @@
 					hl = $table.find('thead th').length;
 
 				// Clean up any previous error.
-				ts.showError(table);
+				ts.showError( table );
 
 				if ( exception ) {
 					if (c.debug) {
 						console.error('Pager: >> Ajax Error', xhr, exception);
 					}
-					ts.showError(table,
-						xhr.status === 0 ? 'Not connected, verify Network' :
-						xhr.status === 404 ? 'Requested page not found [404]' :
-						xhr.status === 500 ? 'Internal Server Error [500]' :
-						exception === 'parsererror' ? 'Requested JSON parse failed' :
-						exception === 'timeout' ? 'Time out error' :
-						exception === 'abort' ? 'Ajax Request aborted' :
-						'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']' );
+					ts.showError( table, xhr, exception );
 					c.$tbodies.eq(0).children('tr').detach();
 					p.totalRows = 0;
 				} else {
@@ -1069,31 +1067,73 @@
 	}() });
 
 	// see #486
-	ts.showError = function(table, message) {
-		var index, $row, c, errorRow,
+	ts.showError = function( table, xhr, exception ) {
+		var $row,
 			$table = $( table ),
-			len = $table.length;
-		for ( index = 0; index < len; index++ ) {
-			c = $table[ index ].config;
-			if ( c ) {
-				errorRow = c.pager && c.pager.cssErrorRow || c.widgetOptions.pager_css && c.widgetOptions.pager_css.errorRow || 'tablesorter-errorRow';
-				if ( typeof message === 'undefined' ) {
-					c.$table.find('thead').find(c.selectorRemove).remove();
-				} else {
-					$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
-						.click(function(){
-							$(this).remove();
-						})
-						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-						.appendTo( c.$table.find('thead:first') )
-						.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
-						.attr({
-							role : 'alert',
-							'aria-live' : 'assertive'
-						});
-				}
-			}
+			c = $table[0].config,
+			wo = c && c.widgetOptions,
+			errorRow = c.pager && c.pager.cssErrorRow || wo.pager_css && wo.pager_css.errorRow || 'tablesorter-errorRow',
+			typ = typeof xhr,
+			valid = true,
+			message = '',
+			removeRow = function(){
+				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+			};
+
+		if ( !$table.length ) {
+			console.error('tablesorter showError: no table parameter passed');
+			return;
 		}
+
+		if ( typ !== 'string' ) {
+			// ajaxError callback for plugin or widget - see #992
+			if ( typeof c.pager.ajaxError === 'function' ) {
+				valid = c.pager.ajaxError( c, xhr, exception );
+				if ( valid === false ) {
+					return removeRow();
+				} else {
+					message = valid;
+				}
+			} else if ( typeof wo.pager_ajaxError === 'function' ) {
+				valid = wo.pager_ajaxError( c, xhr, exception );
+				if ( valid === false ) {
+					return removeRow();
+				} else {
+					message = valid;
+				}
+			} else {
+				message =
+					xhr.status === 0 ? 'Not connected, verify Network' :
+					xhr.status === 404 ? 'Requested page not found [404]' :
+					xhr.status === 500 ? 'Internal Server Error [500]' :
+					exception === 'parsererror' ? 'Requested JSON parse failed' :
+					exception === 'timeout' ? 'Time out error' :
+					exception === 'abort' ? 'Ajax Request aborted' :
+					'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
+			}
+		} else if ( typ !== 'undefined' ) {
+			// keep backward compatibility (external usage just passes a message string)
+			message = xhr;
+		}
+
+		if ( message === '' ) {
+			// remove all error rows
+			return removeRow();
+		}
+
+		// allow message to include HTML (must include entire row!)
+		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
+			.click( function() {
+				$( this ).remove();
+			})
+			// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+			.appendTo( c.$table.find( 'thead:first' ) )
+			.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
+			.attr({
+				role : 'alert',
+				'aria-live' : 'assertive'
+			});
+
 	};
 
 	// extend plugin scope
