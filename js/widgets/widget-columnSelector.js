@@ -35,7 +35,7 @@
 			colSel.$breakpoints = $('<style></style>').prop('disabled', true).appendTo('head');
 
 			colSel.isInitializing = true;
-			tsColSel.setupSelector(table, c, wo);
+			tsColSel.setupSelector(c, wo);
 
 			if (wo.columnSelector_mediaquery) {
 				tsColSel.setupBreakpoints(c, wo);
@@ -50,43 +50,69 @@
 
 			c.$table
 				.off('refreshColumnSelector' + namespace)
-				.on('refreshColumnSelector' + namespace, function(e, opt){
+				/* $('table').trigger('refreshColumnSelector', arguments ); showing arguments below
+					undefined = refresh current settings (update css hiding columns)
+					'selectors' = update container contents (replace inputs/labels)
+					[ [2,3,4] ] = set visible columns; turn off "auto" mode.
+					[ 'columns', [2,3,4] ] = set visible columns; turn off "auto" mode.
+					[ 'auto', [2,3,4] ] = set visible columns; turn on "auto" mode.
+					true = turn on "auto" mode.
+				*/
+				.on('refreshColumnSelector' + namespace, function( e, optName, optState ){
 					// make sure we're using current config settings
-					var i,
-						isArry = $.isArray(opt),
-						c = this.config,
-						wo = c.widgetOptions;
-					// see #798
-					if (opt && c.selector.$container.length) {
-						if (isArry) {
-							// make sure array contains numbers
-							$.each(opt, function(i, v){
-								opt[i] = parseInt(v, 10);
-							});
-							for (i = 0; i < c.columns; i++) {
-								c.selector.$container
-									.find('input[data-column=' + i + ']')
-									.prop('checked', $.inArray( i, opt ) >= 0 );
-							}
-						}
-						// if passing an array, set auto to false to allow manual column selection & update columns
-						tsColSel.updateAuto( c, wo, colSel.$container.find('input[data-column="auto"]').prop('checked', !isArry) );
-					} else {
-						tsColSel.updateBreakpoints(c, wo);
-						tsColSel.updateCols(c, wo);
-					}
+					tsColSel.refreshColumns( this.config, optName, optState );
 				});
 
 		},
 
-		setupSelector: function(table, c, wo) {
+		refreshColumns: function( c, optName, optState ) {
+			var i, arry,
+				isArry = $.isArray(optState || optName),
+				wo = c.widgetOptions;
+			// see #798
+			if (typeof optName !== 'undefined' && c.selector.$container.length) {
+				// pass "selectors" to update the all of the container contents
+				if ( optName === 'selectors' ) {
+					c.selector.$container.empty();
+					tsColSel.setupSelector(c, wo);
+					tsColSel.setupBreakpoints(c, wo);
+					// if optState is undefined, maintain the current "auto" state
+					if ( typeof optState === 'undefined' ) {
+						optState = c.selector.auto;
+					}
+				}
+				// pass an array of column zero-based indexes to turn off auto mode & toggle selected columns
+				if (isArry) {
+					arry = optState || optName;
+					// make sure array contains numbers
+					$.each(arry, function(i, v){
+						arry[i] = parseInt(v, 10);
+					});
+					for (i = 0; i < c.columns; i++) {
+						c.selector.$container
+							.find('input[data-column=' + i + ']')
+							.prop('checked', $.inArray( i, arry ) >= 0 );
+					}
+				}
+				// if passing an array, set auto to false to allow manual column selection & update columns
+				// refreshColumns( c, 'auto', true ) === refreshColumns( c, true );
+				tsColSel
+					.updateAuto( c, wo, c.selector.$container.find('input[data-column="auto"]')
+					.prop('checked', optState === true || optName === true || optName === 'auto' && optState !== false) );
+			} else {
+				tsColSel.updateBreakpoints(c, wo);
+				tsColSel.updateCols(c, wo);
+			}
+		},
+
+		setupSelector: function(c, wo) {
 			var name,
 				colSel = c.selector,
 				$container = colSel.$container,
 				useStorage = wo.columnSelector_saveColumns && ts.storage,
 				// get stored column states
-				saved = useStorage ? ts.storage( table, 'tablesorter-columnSelector' ) : [],
-				state = useStorage ? ts.storage( table, 'tablesorter-columnSelector-auto') : {};
+				saved = useStorage ? ts.storage( c.table, 'tablesorter-columnSelector' ) : [],
+				state = useStorage ? ts.storage( c.table, 'tablesorter-columnSelector-auto') : {};
 
 			// initial states
 			colSel.auto = $.isEmptyObject(state) || $.type(state.auto) !== 'boolean' ? wo.columnSelector_mediaqueryState : state.auto;
@@ -95,7 +121,7 @@
 			colSel.$wrapper = [];
 			colSel.$checkbox = [];
 			// populate the selector container
-			c.$table.children('thead').find('tr:first th', table).each(function() {
+			c.$table.children('thead').find('tr:first th', c.table).each(function() {
 				var $this = $(this),
 					// if no data-priority is assigned, default to 1, but don't remove it from the selector list
 					priority = $this.attr(wo.columnSelector_priority) || 1,
@@ -117,7 +143,6 @@
 
 				// set default col title
 				name = $this.attr(wo.columnSelector_name) || $this.text();
-
 				if ($container.length) {
 					colSel.$wrapper[colId] = $(wo.columnSelector_layout.replace(/\{name\}/g, name)).appendTo($container);
 					colSel.$checkbox[colId] = colSel.$wrapper[colId]

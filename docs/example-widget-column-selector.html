@@ -130,17 +130,17 @@
 	});
 
 	/*** Bootstrap popover demo ***/
-	
+
 	// initialize column selector using default settings
 	// note: no container is defined!
 	$(".bootstrap-popup").tablesorter({
 		theme: 'blue',
 		widgets: ['zebra', 'columnSelector', 'stickyHeaders']
 	});
-	
+
 	// call this function to copy the column selection code into the popover
 	$.tablesorter.columnSelector.attachTo( $('.bootstrap-popup'), '#popover-target');
-	
+
 	$('#popover')
 		.popover({
 			placement: 'right',
@@ -170,6 +170,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version updated">v2.22.6</span>, updated methods to allow refreshing the content of the container &amp; enchanced ability to set both auto and columns modes.</li>
 			<li>In <span class="version updated">v2.19.0</span>, the <code>refreshColumnSelector</code> method has been updated to allow passing a parameter. Pass an array of zero-based column indexes of columns to show, or any non-array to enable auto mode (if available).</li>
 			<li>In <span class="version">v2.18.4</span>, added <code>columnSelector_cssChecked</code> option which contains the class name added to checked inputs. This helps fix an issue in Chrome that rears it's ugly head when trying to use <code>input:checked</code> to change a Font Awesome icon. See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.</li>
 			<li>
@@ -384,7 +385,6 @@
 						</td>
 					</tr>
 
-
 				</tbody>
 			</table>
 
@@ -395,7 +395,34 @@
 			Refresh the breakpoints and selected columns using this method (<span class="version">v2.17.0</span>):
 			<p></p>
 			<pre class="prettyprint lang-js">$('table').trigger('refreshColumnSelector');</pre>
-			<br>
+			<p>In <span class="version updated">v2.22.6</span>, this method was expanded to allow the refreshing of the selector content &amp; set auto and column modes.</p>
+			<ul>
+				<li>Here are a few examples:
+					<table class="tablesorter-blue">
+						<thead>
+							<th>Method</th>
+							<th>Description</th>
+						</thead>
+						<tbody>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector');</code></td><td>Refresh current settings; mainly used to update the css used to hide/show columns</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ [2,3,4] ]);</code></td><td>Set visible columns; turn <em>off</em> "auto" mode (original method).</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'columns', [5,6] ]);</code></td><td>Set visible columns; turn <em>off</em> "auto" mode (alternative method).</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', true);</code></td><td>Turn <em>on</em> "auto" mode (original method).</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'auto', true ]);</code></td><td>Turn <em>on</em> "auto" mode (alternate method).</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'auto', false ]);</code></td><td>Turn <em>off</em> "auto" mode (alternate method).</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'auto', [2,3,4] ]);</code></td><td>Turn <em>on</em> "auto" mode &amp; set visible columns when "auto" is off.</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', 'selectors');</code></td><td>Refresh selector popup contents & maintain "auto" mode; this allows updating column priorities, column names & widget options.</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'selectors', [5,6] ]);</code></td><td>Refresh selector popup contents; Set visible columns &amp; turn <em>off</em> "auto" mode.</td></tr>
+							<tr><td><code class="prettyprint lang-js">$('table').trigger('refreshColumnSelector', [ 'selectors', true ]);</code></td><td>Refresh selector popup contents; Turn <em>on</em> "auto" mode</td></tr>
+						</tbody>
+					</table>
+					The function used for this method was also split out from the event handler, so if you want you can access it directly as follows:
+					<pre class="prettyprint lang-js">var config = $('table')[0].config;
+// example: refreshColumns( config, 'selectors', [5,6] );
+$.tablesorter.columnSelector.refreshColumns( config, optionName, optionState );</pre>
+				</li>
+			</ul>
+
 			In <span class="version">v2.19.0</span>, this method will now accept a parameter.
 			<p></p>
 			<ul>
