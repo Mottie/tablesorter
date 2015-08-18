@@ -1,15 +1,7 @@
 [
 	{
-		"theme_name": "base",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/base/jquery-ui.css",
-		"group": "Official",
-		"active": "yes",
-		"author": "jQuery Project",
-		"license": "//jquery.org/license"
-	},
-	{
 		"theme_name": "black-tie",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/black-tie/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/black-tie/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -17,7 +9,7 @@
 	},
 	{
 		"theme_name": "blitzer",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/blitzer/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/blitzer/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -25,7 +17,7 @@
 	},
 	{
 		"theme_name": "cupertino",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/cupertino/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -33,7 +25,7 @@
 	},
 	{
 		"theme_name": "dark-hive",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/dark-hive/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/dark-hive/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -41,7 +33,7 @@
 	},
 	{
 		"theme_name": "dot-luv",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/dot-luv/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/dot-luv/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -49,7 +41,7 @@
 	},
 	{
 		"theme_name": "eggplant",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/eggplant/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/eggplant/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -57,7 +49,7 @@
 	},
 	{
 		"theme_name": "excite-bike",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/excite-bike/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/excite-bike/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -65,7 +57,7 @@
 	},
 	{
 		"theme_name": "flick",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/flick/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/flick/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -73,7 +65,7 @@
 	},
 	{
 		"theme_name": "hot-sneaks",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/hot-sneaks/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/hot-sneaks/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -81,7 +73,7 @@
 	},
 	{
 		"theme_name": "humanity",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/humanity/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/humanity/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -89,7 +81,7 @@
 	},
 	{
 		"theme_name": "le-frog",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/le-frog/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/le-frog/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -97,7 +89,7 @@
 	},
 	{
 		"theme_name": "mint-choc",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/mint-choc/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/mint-choc/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -105,7 +97,7 @@
 	},
 	{
 		"theme_name": "overcast",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/overcast/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/overcast/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -113,7 +105,7 @@
 	},
 	{
 		"theme_name": "pepper-grinder",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/pepper-grinder/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/pepper-grinder/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -121,7 +113,7 @@
 	},
 	{
 		"theme_name": "redmond",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/redmond/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/redmond/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -129,7 +121,7 @@
 	},
 	{
 		"theme_name": "smoothness",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -137,7 +129,7 @@
 	},
 	{
 		"theme_name": "south-street",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/south-street/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/south-street/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -145,7 +137,7 @@
 	},
 	{
 		"theme_name": "start",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/start/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -153,7 +145,7 @@
 	},
 	{
 		"theme_name": "sunny",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/sunny/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/sunny/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -161,7 +153,7 @@
 	},
 	{
 		"theme_name": "swanky-purse",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/swanky-purse/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/swanky-purse/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -169,7 +161,7 @@
 	},
 	{
 		"theme_name": "trontastic",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/trontastic/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/trontastic/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -177,7 +169,7 @@
 	},
 	{
 		"theme_name": "ui-darkness",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/ui-darkness/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/ui-darkness/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -185,7 +177,7 @@
 	},
 	{
 		"theme_name": "ui-lightness",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/ui-lightness/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",
@@ -193,7 +185,7 @@
 	},
 	{
 		"theme_name": "vader",
-		"theme_url": "//code.jquery.com/ui/1.11.2/themes/vader/jquery-ui.css",
+		"theme_url": "//code.jquery.com/ui/1.11.4/themes/vader/jquery-ui.css",
 		"group": "Official",
 		"active": "yes",
 		"author": "jQuery Project",

@@ -24,8 +24,9 @@
 
 	<script id="js">$(function(){
 
+	var $table = $('table'),
 	// define pager options
-	var pagerOptions = {
+	pagerOptions = {
 		// target the pager markup - see the HTML block below
 		container: $(".pager"),
 		// output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
@@ -42,7 +43,7 @@
 
 	// Initialize tablesorter
 	// ***********************
-	$("table")
+	$table
 		.tablesorter({
 			theme: 'blue',
 			headerTemplate : '{content} {icon}', // new in v2.7. Needed to add the bootstrap icon!
@@ -74,7 +75,7 @@
 			});
 			num = num + 2;
 			$row = $(r);
-			$('table')
+			$table
 				.find('tbody').append($row)
 				.trigger('addRows', [$row]);
 			return false;
@@ -82,14 +83,14 @@
 
 		// Delete a row
 		// *************
-		$('table').delegate('button.remove', 'click' ,function(){
-			var t = $('table');
+		$table.delegate('button.remove', 'click' ,function(){
+			// NOTE this special treatment is only needed if `removeRows` is `true`
 			// disabling the pager will restore all table rows
-			t.trigger('disable.pager');
+			$table.trigger('disablePager');
 			// remove chosen row
 			$(this).closest('tr').remove();
 			// restore pager
-			t.trigger('enable.pager');
+			$table.trigger('enablePager');
 		});
 
 		// Destroy pager / Restore pager
@@ -98,10 +99,10 @@
 			// Exterminate, annhilate, destroy! http://www.youtube.com/watch?v=LOqn8FxuyFs
 			var $t = $(this);
 			if (/Destroy/.test( $t.text() )){
-				$('table').trigger('destroy.pager');
+				$table.trigger('destroyPager');
 				$t.text('Restore Pager');
 			} else {
-				$('table').tablesorterPager(pagerOptions);
+				$table.tablesorterPager(pagerOptions);
 				$t.text('Destroy Pager');
 			}
 			return false;
@@ -111,11 +112,12 @@
 		// **************
 		$('.toggle').click(function(){
 			var mode = /Disable/.test( $(this).text() );
-			$('table').trigger( (mode ? 'disable' : 'enable') + '.pager');
+			// triggering disablePager or enablePager
+			$table.trigger( (mode ? 'disable' : 'enable') + 'Pager');
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 			return false;
 		});
-		$('table').bind('pagerChange', function(){
+		$table.bind('pagerChange', function(){
 			// pager automatically enables when table is sorted.
 			$('.toggle').text('Disable');
 		});
@@ -135,6 +137,13 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
+				<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
+					<ul>
+						<li><code>destroy.pager</code> is now <code>destroyPager</code></li>
+						<li><code>disable.pager</code> is now <code>disablePager</code></li>
+						<li><code>enable.pager</code> is now <code>enablePager</code></li>
+					</ul>
+				</li>
 				<li>When using this pager plugin with the filter widget, make sure that the <code>removeRows</code> option is set to <code>false</code> or it won't work.</li>
 				<li>This combination was not possible in tablesorter versions prior to version 2.4.</li>
 				<li>This combination can not be applied to the original tablesorter.</li>

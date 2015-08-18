@@ -2,9 +2,7 @@
 * TableSorter QUnit Testing
 */
 /*jshint unused: false */
-/*global QUnit: false, JSHINT: false, ok: false, start: false, deepEqual: false, asyncTest: false,
-  strictEqual: false, jQuery: false, equal: false, $: false, expect: false, module: false,
-  test: false, stop: false, ipv6tests: false */
+/*global QUnit: false, jQuery: false, ipv6tests: false */
 
 // Accepts a function with a single argument -- deferred object, which should be resolved at some point in a function.
 // Returns a promise, wrapping this function call.
@@ -137,7 +135,7 @@ EVENTS:
 	-
 */
 
-$(function(){
+jQuery(function($){
 
 	var ts = $.tablesorter,
 		$table1 = $('#table1'),
@@ -213,7 +211,7 @@ $(function(){
 
 	$table5.tablesorter();
 
-	module('core');
+	QUnit.module('core');
 	/************************************************
 		Initialization
 	************************************************/
@@ -251,24 +249,24 @@ $(function(){
 	var d = ts.isDigit;
 	QUnit.test( 'isDigit', function(assert) {
 		assert.expect(18);
-		ok( d('-1'),   'allow negative (-1)');
-		ok( d('+1'),   'allow plus (+1)');
-		ok( d('(1)'),  'allow parenthesis (1)');
-		ok( d('123'),  "string has numbers ('123')");
-		ok( d(123),    'has numbers (123)');
-		ok( d('1.2'),  'remove decimal (1.2)');
-		ok( d('1,234'),'remove commas (1,234)');
-		ok( d("11'"),  "remove apostrophe's (11')"); // 11 feet
-		ok( d('3\'4"'),"remove quotes (3'4\")"); // 3 foot 4 inches
-		ok( d(' 12 '), 'remove spaces ( 12 )');
-		ok( !d('x'),   'non-digit alphabet');
-		ok( !d('1x'),  'digit + alphabet');
-		ok( !d('x1'),  'alphabet + digit');
-		ok( !d('@'),   'non-digit symbols');
-		ok( !d('1-'),  'negative after (1-) not allowed?');
-		ok( !d('1+'),  'plus after (1+) not allowed?');
-		ok( !d('$2'),  'no money; the currency parser will catch these');
-		ok( !d(''),    "empty string ('')");
+		assert.ok( d('-1'),   'allow negative (-1)');
+		assert.ok( d('+1'),   'allow plus (+1)');
+		assert.ok( d('(1)'),  'allow parenthesis (1)');
+		assert.ok( d('123'),  "string has numbers ('123')");
+		assert.ok( d(123),    'has numbers (123)');
+		assert.ok( d('1.2'),  'remove decimal (1.2)');
+		assert.ok( d('1,234'),'remove commas (1,234)');
+		assert.ok( d("11'"),  "remove apostrophe's (11')"); // 11 feet
+		assert.ok( d('3\'4"'),"remove quotes (3'4\")"); // 3 foot 4 inches
+		assert.ok( d(' 12 '), 'remove spaces ( 12 )');
+		assert.ok( !d('x'),   'non-digit alphabet');
+		assert.ok( !d('1x'),  'digit + alphabet');
+		assert.ok( !d('x1'),  'alphabet + digit');
+		assert.ok( !d('@'),   'non-digit symbols');
+		assert.ok( !d('1-'),  'negative after (1-) not allowed?');
+		assert.ok( !d('1+'),  'plus after (1+) not allowed?');
+		assert.ok( !d('$2'),  'no money; the currency parser will catch these');
+		assert.ok( !d(''),    "empty string ('')");
 	});
 
 	/************************************************
@@ -328,12 +326,12 @@ $(function(){
 	QUnit.test( 'isValueInArray', function(assert) {
 		var v = ts.isValueInArray;
 		assert.expect(6);
-		ok( v( 0, null ) < 0, 'null' );
-		ok( v( 0, [] ) < 0, 'Empty array' );
-		ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, 'Column found (first array)' );
-		ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, 'Column found (second array)' );
-		ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, 'Column found (third array)' );
-		ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , 'Column not found' );
+		assert.ok( v( 0, null ) < 0, 'null' );
+		assert.ok( v( 0, [] ) < 0, 'Empty array' );
+		assert.ok( v( 1, [[ 1,0 ], [ 0,0 ]] ) === 0, 'Column found (first array)' );
+		assert.ok( v( 1, [[ 0,0 ], [ 1,0 ]] ) === 1, 'Column found (second array)' );
+		assert.ok( v( 4, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) === 2, 'Column found (third array)' );
+		assert.ok( v( 3, [[ 0,0 ], [ 1,0 ], [ 4,0 ]] ) < 0 , 'Column not found' );
 	});
 
 	/************************************************
@@ -363,15 +361,15 @@ $(function(){
 			};
 		$table3.trigger('sorton', [[[0,0], [1,0]]]);
 		p( $table3, true );
-		ok( findClasses( true, [ 0, 1 ] ), 'Processing 2 columns' );
+		assert.ok( findClasses( true, [ 0, 1 ] ), 'Processing 2 columns' );
 		p( $table3, false );
-		ok( findClasses( false, [ -1 ] ), 'No sort' );
+		assert.ok( findClasses( false, [ -1 ] ), 'No sort' );
 		p( $table3, true, c3.$headers.eq(4) );
-		ok( findClasses( true, [ -1 ] ), 'Processing specified column not in sortList' );
+		assert.ok( findClasses( true, [ -1 ] ), 'Processing specified column not in sortList' );
 		p( $table3, true, c3.$headers.eq(1) );
-		ok( findClasses( true, [ 1 ] ), 'Processing specified column in sortList' );
+		assert.ok( findClasses( true, [ 1 ] ), 'Processing specified column in sortList' );
 		$table3.trigger('sortReset');
-		ok( findClasses( false, [ -1 ] ), 'No sort' );
+		assert.ok( findClasses( false, [ -1 ] ), 'No sort' );
 	});
 
 	/************************************************
@@ -658,7 +656,7 @@ $(function(){
 		test update methods
 	************************************************/
 	QUnit.test( 'parser cache; update methods & callbacks', function(assert) {
-		assert.expect(10);
+		assert.expect(12);
 		var oldColMax;
 		c1.ignoreCase = true;
 		// updateAll
@@ -673,14 +671,28 @@ $(function(){
 		.trigger('updateAll', [false, function(){
 			updateCallback++;
 			var nw = $table1.find('th:eq(1)')[0],
+				ht = c1.$headers.eq(1).text() === 'num'
 				hc = c1.headerContent[1] === 'num',
 				hd = c1.$headers[1] === nw,
 				hl = c1.headerList[1] === nw,
 				p1 = c1.parsers[1].id === 'digit';
-			assert.equal(hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
+			assert.equal(ht && hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
 			assert.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
 			                                      'testc', 4, 'testb', 5, 'testa', 6, '', 0 ], 'updateAll - tbody' );
 		}]);
+
+		// updateHeader v2.23.0
+		$table1
+			.find('th:eq(1)').html('x-num').end()
+			.trigger('updateHeaders', function(){
+				updateCallback++;
+				var nw = $table1.find('th:eq(1)')[0],
+					ht = c1.$headers.eq(1).text() === 'x-num',
+					hc = c1.headerContent[1] === 'x-num',
+					hd = c1.$headers[1] === nw,
+					hl = c1.headerList[1] === nw;
+				assert.equal(ht && hc && hd && hl, true, 'testing header cache: updateHeaders');
+			});
 
 		// addRows
 		t = $('<tr class="temp"><td>testd</td><td>7</td></tr>');
@@ -692,6 +704,18 @@ $(function(){
 			assert.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
 			                                      'testd', 7, 'testc', 4, 'testb', 5, 'testa', 6, '', 0 ], 'addRows method' );
 		}]);
+		// the next two methods shouldn't do anything; especially not cause a javascript error!
+		$table1.trigger('addRows', [null, true]);
+		$table1.trigger('addRows', [$('<tr>'), true]);
+
+		// addRows as string to table with only one tbody
+		t = '<tr class="temp"><td>g</td><td>h</td><td>i</td><td>j</td></tr>';
+		$table2.trigger('addRows', [t, true, function(){
+			assert.cacheCompare( table2, 'all', [ 'a', 'b', 'c', 'd',
+			                                      'z', 'y', 'x', 'w',
+			                                      'g', 'h', 'i', 'j' ], 'addRows as string method' );
+		}]);
+		$table2.find('tr.temp').remove();
 
 		// updateCell
 		t = $table1.find('td:contains("7")');

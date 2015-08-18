@@ -124,6 +124,7 @@ td.editable_updated {
 		<ul>
 			<li>This widget can not be applied to the original plugin and requires jQuery 1.7+ and a browser that supports <a href="http://caniuse.com/#feat=contenteditable"><code>contenteditable</code> attributes</a> (almost all modern browsers).</li>
 			<li><span class="label warning">Important</span>: In Internet Explorer, please wrap the cell content with a DIV or SPAN as <a href="http://msdn.microsoft.com/en-us/library/ie/ms533690(v=vs.85).aspx">it is not possible to make table cells directly contenteditable</a>. Wrapping the content in the markup is much more efficient than using javascript to do it for you (especially in IE).<br><br></li>
+			<li>In <span class="version">v2.23.0</span>, the <code>editable_columns</code> option will now accept a string with both ranges and single columns, e.g. <code>'1,3-5,7'</code>.</li>
 			<li>In <span class="version">v2.22.2</span>,
 				<ul>
 					<li><kbd>Shift</kbd>+<kbd>Enter</kbd> can now be used to start a new line even if <code>editable_enterToAccept</code> is <code>true</code>.</li>
@@ -232,10 +233,11 @@ td.editable_updated {
 
 					<tr id="editable-columns">
 						<td><a href="#" class="permalink">editable_columns</a></td>
-						<td>Contains an array (or range string) of columns numbers you want to have editable content (zero-based index).
+						<td>Contains an array (or range string) of columns numbers you want to have editable content (zero-based index) (<span class="version updated">v2.23.0</span>).
 							<div class="collapsible">
 							<ul>
-								<li>In tablesorter core <span class="version">v2.14.2</span>, this widget was updated to allow passing a range string in this option, i.e. <code>"0-2"</code> instead of <code>[0,1,2]</code>.</li>
+								<li>In <span class="version">v2.23.0</span>, this option will now accept both range &amp; comma separated values, e.g. <code>'1,3-5,7'</code>.</li>
+								<li>In tablesorter core <span class="version">v2.14.2</span>, this widget was updated to allow passing a range string in this option, i.e. <code>'0-2'</code> instead of <code>[0,1,2]</code>.</li>
 								<li><code>contenteditable="true"</code> is added to cells within these columns.</li>
 							</ul>
 							Default value: <code>[]</code> (empty array)

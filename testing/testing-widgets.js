@@ -1,9 +1,7 @@
-/*!
+﻿/*!
 * TableSorter QUnit Testing - filter widget
 */
 /*jshint unused: false */
-/*global start: false, asyncTest: false, equal: false, $: false, expect: false, module: false,
-  tester: false, test: false, stop: false */
 
 /*
 Filter widget tested parts
@@ -40,8 +38,8 @@ EVENTS:
 	filterStart
 */
 
-$(function(){
-	module('Widgets', {
+jQuery(function($){
+	QUnit.module('Widgets', {
 		beforeEach: function(assert) {
 			this.ts = $.tablesorter;
 

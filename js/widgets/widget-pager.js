@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 7/28/2015 (v2.22.4) */
+/*! Widget: Pager - updated 8/17/2015 (v2.23.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -61,6 +61,11 @@
 
 			// modify the url after all processing has been applied
 			pager_customAjaxUrl: function(table, url) { return url; },
+
+			// ajax error callback from $.tablesorter.showError function
+			// pager_ajaxError: function( config, xhr, exception ){ return exception; };
+			// returning false will abort the error message
+			pager_ajaxError: null,
 
 			// modify the $.ajax object to allow complete control over your ajax requests
 			pager_ajaxObject: {
@@ -144,9 +149,7 @@
 					last: {},
 					// save original pager size
 					setSize: wo.pager_size,
-					setPage: wo.pager_startPage,
-					events: 'filterInit filterStart filterEnd sortEnd disable enable destroy updateComplete ' +
-						'pageSize pageSet pageAndSize pagerUpdate refreshComplete '
+					setPage: wo.pager_startPage
 				}, c.pager);
 
 			// pager initializes multiple times before table has completed initialization
@@ -236,7 +239,7 @@
 				s = wo.pager_selectors;
 
 			c.$table
-				.off( $.trim(p.events.split(' ').join(namespace + ' ')) )
+				.off( namespace )
 				.on('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 					// don't change page if filters are the same (pager updating, etc)
@@ -257,15 +260,15 @@
 						c.$table.trigger('applyWidgets');
 					}
 				})
-				.on('disable' + namespace, function(e){
+				.on('disablePager' + namespace, function(e){
 					e.stopPropagation();
 					tsp.showAllRows(table, c);
 				})
-				.on('enable' + namespace, function(e){
+				.on('enablePager' + namespace, function(e){
 					e.stopPropagation();
 					tsp.enablePager(table, c, true);
 				})
-				.on('destroy' + namespace, function(e, refreshing){
+				.on('destroyPager' + namespace, function(e, refreshing){
 					e.stopPropagation();
 					tsp.destroyPager(table, c, refreshing);
 				})
@@ -655,13 +658,13 @@
 					hl = $table.find('thead th').length;
 
 				// Clean up any previous error.
-				ts.showError(table);
+				ts.showError( table );
 
 				if ( exception ) {
 					if (c.debug) {
 						console.error('Pager: >> Ajax Error', xhr, exception);
 					}
-					ts.showError(table, exception.message + ' (' + xhr.status + ')');
+					ts.showError( table, xhr, exception );
 					c.$tbodies.eq(0).children('tr').detach();
 					p.totalRows = 0;
 				} else {
@@ -1073,17 +1076,25 @@
 
 		destroyPager: function(table, c, refreshing){
 			var p = c.pager,
+				s = c.widgetOptions.pager_selectors,
+				ctrls = [ s.first, s.prev, s.next, s.last, s.gotoPage, s.pageSize ].join( ',' ),
 				namespace = c.namespace + 'pager';
 			p.initialized = false;
-			c.$table.off( $.trim(p.events.split(' ').join(namespace + ' ')) );
-			if (refreshing) { return; }
+			c.$table.off( namespace );
+			p.$container
+				// hide pager
+				.hide()
+				// unbind pager controls
+				.find( ctrls )
+				.off( namespace );
+			if ( refreshing ) { return; }
 			tsp.showAllRows(table, c);
-			p.$container.hide(); // hide pager
 			c.appender = null; // remove pager appender function
-			delete table.config.rowsCopy;
 			if (ts.storage) {
 				ts.storage(table, c.widgetOptions.pager_storageKey, '');
 			}
+			delete table.config.pager;
+			delete table.config.rowsCopy;
 		},
 
 		enablePager: function(table, c, triggered){
@@ -1131,32 +1142,73 @@
 	};
 
 	// see #486
-	ts.showError = function( table, message ) {
-		var index, $row, c, wo, errorRow,
+	ts.showError = function( table, xhr, exception ) {
+		var $row,
 			$table = $( table ),
-			len = $table.length;
-		for ( index = 0; index < len; index++ ) {
-			c = $table[ index ].config;
-			if ( c ) {
-				wo = c.widgetOptions;
-				errorRow = c.pager && c.pager.cssErrorRow || wo.pager_css && wo.pager_css.errorRow || 'tablesorter-errorRow';
-				if ( typeof message === 'undefined' ) {
-					c.$table.find('thead').find(c.selectorRemove).remove();
-				} else {
-					$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
-						.click(function(){
-							$(this).remove();
-						})
-						// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-						.appendTo( c.$table.find('thead:first') )
-						.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
-						.attr({
-							role : 'alert',
-							'aria-live' : 'assertive'
-						});
-				}
-			}
+			c = $table[0].config,
+			wo = c && c.widgetOptions,
+			errorRow = c.pager && c.pager.cssErrorRow || wo.pager_css && wo.pager_css.errorRow || 'tablesorter-errorRow',
+			typ = typeof xhr,
+			valid = true,
+			message = '',
+			removeRow = function(){
+				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+			};
+
+		if ( !$table.length ) {
+			console.error('tablesorter showError: no table parameter passed');
+			return;
 		}
+
+		if ( typ !== 'string' ) {
+			// ajaxError callback for plugin or widget - see #992
+			if ( typeof c.pager.ajaxError === 'function' ) {
+				valid = c.pager.ajaxError( c, xhr, exception );
+				if ( valid === false ) {
+					return removeRow();
+				} else {
+					message = valid;
+				}
+			} else if ( typeof wo.pager_ajaxError === 'function' ) {
+				valid = wo.pager_ajaxError( c, xhr, exception );
+				if ( valid === false ) {
+					return removeRow();
+				} else {
+					message = valid;
+				}
+			} else {
+				message =
+					xhr.status === 0 ? 'Not connected, verify Network' :
+					xhr.status === 404 ? 'Requested page not found [404]' :
+					xhr.status === 500 ? 'Internal Server Error [500]' :
+					exception === 'parsererror' ? 'Requested JSON parse failed' :
+					exception === 'timeout' ? 'Time out error' :
+					exception === 'abort' ? 'Ajax Request aborted' :
+					'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
+			}
+		} else if ( typ !== 'undefined' ) {
+			// keep backward compatibility (external usage just passes a message string)
+			message = xhr;
+		}
+
+		if ( message === '' ) {
+			// remove all error rows
+			return removeRow();
+		}
+
+		// allow message to include HTML (must include entire row!)
+		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
+			.click( function() {
+				$( this ).remove();
+			})
+			// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+			.appendTo( c.$table.find( 'thead:first' ) )
+			.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
+			.attr({
+				role : 'alert',
+				'aria-live' : 'assertive'
+			});
+
 	};
 
 })(jQuery);

@@ -24,7 +24,9 @@
 
 	<script id="js">$(function(){
 
-	$("table")
+	var $table = $('table');
+
+	$table
 
 		// Initialize tablesorter
 		// ***********************
@@ -145,7 +147,7 @@
 			});
 			num = num + 2;
 			$row = $(r);
-			$('table')
+			$table
 				.find('tbody').append($row)
 				.trigger('addRows', [$row]);
 			return false;
@@ -153,15 +155,14 @@
 
 		// Delete a row
 		// *************
-		$('table').delegate('button.remove', 'click' ,function(){
-			var t = $('table');
+		$table.delegate('button.remove', 'click' ,function(){
 			// disabling the pager will restore all table rows
-			// t.trigger('disable.pager');
+			// $table.trigger('disablePager');
 			// remove chosen row
 			$(this).closest('tr').remove();
 			// restore pager
-			// t.trigger('enable.pager');
-			t.trigger('update');
+			// $table.trigger('enablePager');
+			$table.trigger('update');
 			return false;
 		});
 
@@ -171,13 +172,13 @@
 			// Exterminate, annhilate, destroy! http://www.youtube.com/watch?v=LOqn8FxuyFs
 			var $t = $(this);
 			if (/Destroy/.test( $t.text() )){
-				$('table')[0].config.widgets = ['zebra'];
-				$('table').trigger('refreshWidgets');
-				//.trigger('destroy.pager');
+				$table[0].config.widgets = ['zebra'];
+				$table.trigger('refreshWidgets');
+				//.trigger('destroyPager');
 				$t.text('Restore Pager');
 			} else {
-				$('table')[0].config.widgets = ['zebra', 'pager'];
-				$('table').trigger('applyWidgets');
+				$table[0].config.widgets = ['zebra', 'pager'];
+				$table.trigger('applyWidgets');
 				$t.text('Destroy Pager');
 			}
 			return false;
@@ -187,11 +188,12 @@
 		// **************
 		$('.toggle').click(function(){
 			var mode = /Disable/.test( $(this).text() );
-			$('table').trigger( (mode ? 'disable' : 'enable') + '.pager');
+			// using disablePager or enablePager
+			$table.trigger( (mode ? 'disable' : 'enable') + 'Pager');
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 			return false;
 		});
-		$('table').bind('pagerChange', function(){
+		$table.bind('pagerChange', function(){
 			// pager automatically enables when table is sorted.
 			$('.toggle').text('Disable Pager');
 		});
@@ -200,7 +202,7 @@
 		$('.clear-pager-data').click(function(){
 			// clears user set page & size from local storage, so on page
 			// reload the page & size resets to the original settings
-			$.tablesorter.storage( $('table'), 'tablesorter-pager', '' );
+			$.tablesorter.storage( $table, 'tablesorter-pager', '' );
 		});
 
 		// go to page 1 showing 10 rows
@@ -208,7 +210,7 @@
 			// triggering "pageAndSize" without parameters will reset the
 			// pager to page 1 and the original set size (10 by default)
 			// $('table').trigger('pageAndSize')
-			$('table').trigger('pageAndSize', [1, 10]);
+			$table.trigger('pageAndSize', [1, 10]);
 		});
 
 });</script>
