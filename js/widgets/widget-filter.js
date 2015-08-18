@@ -987,7 +987,8 @@
 				} else {
 					if ( wo.filter_startsWith ) {
 						showRow = false;
-						columnIndex = c.columns;
+						// data.rowArray may not contain all columns
+						columnIndex = Math.min( c.columns, data.rowArray.length );
 						while ( !showRow && columnIndex > 0 ) {
 							columnIndex--;
 							showRow = showRow || data.rowArray[ columnIndex ].indexOf( data.iFilter ) === 0;
