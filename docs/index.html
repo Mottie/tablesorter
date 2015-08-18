@@ -478,7 +478,7 @@
 
 		<li><span class="label label-info">Beta</span> <a href="example-widget-chart.html">Chart Widget</a> (<span class="version">v2.19.0</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns highlight widget</a> (v2.0.17)</li>
-		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.22.6</span>).</li>
+		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.23.0</span>).</li>
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.22.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.22.1</span>):
@@ -3832,12 +3832,12 @@ $('table').trigger('search', false);</pre></div>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This callback allows you to customize the error message displayed in the <code>thead</code> (<span class="version">v2.22.6</span>).
+					This callback allows you to customize the error message displayed in the <code>thead</code> (<span class="version">v2.23.0</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxError</code><br>
 					<br>
-					When there is an ajax error, the <a href="#function-showError"><code>$.tablesorter.showError</code></a> function is called. In <span class="version">v2.22.6</span>, that function now checks this callback to allow adding a custom error message.<br>
+					When there is an ajax error, the <a href="#function-showError"><code>$.tablesorter.showError</code></a> function is called. In <span class="version">v2.23.0</span>, that function now checks this callback to allow adding a custom error message.<br>
 					<br>
 					Use it as follows:
 					<pre class="prettyprint lang-js">$(function(){
@@ -6957,10 +6957,10 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 
 			<tr id="function-showError">
 				<td><a href="#" class="permalink">showError</a></td>
-				<td>This function allows adding/removing a row to the thead, to display any errors (<span class="version">v2.15</span>; <span class="version updated">v2.22.6</span>).
+				<td>This function allows adding/removing a row to the thead, to display any errors (<span class="version">v2.15</span>; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
 						<p>This function is ONLY included within the <code>widget-pager.js</code> and <code>jquery.tablesorter.pager.js</code> files; in version 3+, I plan to add it as a selectable option in a build.</p>
-						<p>In <span class="version updated">v2.22.6</span>, this function will accept <code>xhr</code> and <code>exception</code> parameters provided by ajax error messages. To maintain backward compatibility, if <code>xhr</code> is a string, it will be treated as previous <code>message</code> parameter and displayed in the error row without modification.</p>
+						<p>In <span class="version updated">v2.23.0</span>, this function will accept <code>xhr</code> and <code>exception</code> parameters provided by ajax error messages. To maintain backward compatibility, if <code>xhr</code> is a string, it will be treated as previous <code>message</code> parameter and displayed in the error row without modification.</p>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.showError( table, xhr, exception );</pre>
 						<ul>
@@ -6975,7 +6975,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 							<li>HTML row string - <code>'&lt;tr&gt;&lt;td colspan=&quot;' + table.config.columns + '&quot;&gt;yeah, instead of showing your data... I am taking a nap&lt;/td&gt;&lt;/tr&gt;'</code> (the <a href="#variable-columns"><code>table.config.columns</code> variable</a> contains the number of table columns; use as needed)</li>
 							<li>undefined - completely leave out a message parameter <code>$.tablesorter.showError( table );</code> to remove all error rows from the table thead.</li>
 						</ol>
-						As of <span class="version updated">v2.22.6</span>,
+						As of <span class="version updated">v2.23.0</span>,
 						<ul>
 							<li><span class="label label-warning">*WARNING*</span> the <code>table</code> parameter no longer accepts multiple tables.</li>
 							<li>If the <code>xhr</code> parameter is not a string, then the pager <a href="#pager-ajaxerror"><code>ajaxError</code></a> callback is called to allow modification of the displayed message.</li>

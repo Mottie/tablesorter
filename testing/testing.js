@@ -681,7 +681,7 @@ jQuery(function($){
 			                                      'testc', 4, 'testb', 5, 'testa', 6, '', 0 ], 'updateAll - tbody' );
 		}]);
 
-		// updateHeader v2.22.6
+		// updateHeader v2.23.0
 		$table1
 			.find('th:eq(1)').html('x-num').end()
 			.trigger('updateHeaders', function(){
