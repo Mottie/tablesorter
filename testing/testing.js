@@ -656,7 +656,7 @@ jQuery(function($){
 		test update methods
 	************************************************/
 	QUnit.test( 'parser cache; update methods & callbacks', function(assert) {
-		assert.expect(11);
+		assert.expect(12);
 		var oldColMax;
 		c1.ignoreCase = true;
 		// updateAll
@@ -671,14 +671,28 @@ jQuery(function($){
 		.trigger('updateAll', [false, function(){
 			updateCallback++;
 			var nw = $table1.find('th:eq(1)')[0],
+				ht = c1.$headers.eq(1).text() === 'num'
 				hc = c1.headerContent[1] === 'num',
 				hd = c1.$headers[1] === nw,
 				hl = c1.headerList[1] === nw,
 				p1 = c1.parsers[1].id === 'digit';
-			assert.equal(hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
+			assert.equal(ht && hc && hd && hl && p1, true, 'testing header cache: updateAll - thead');
 			assert.cacheCompare( table1, 'all', [ 'test3', 1, 'test2', 2, 'test1', 3,
 			                                      'testc', 4, 'testb', 5, 'testa', 6, '', 0 ], 'updateAll - tbody' );
 		}]);
+
+		// updateHeader v2.22.6
+		$table1
+			.find('th:eq(1)').html('x-num').end()
+			.trigger('updateHeaders', function(){
+				updateCallback++;
+				var nw = $table1.find('th:eq(1)')[0],
+					ht = c1.$headers.eq(1).text() === 'x-num',
+					hc = c1.headerContent[1] === 'x-num',
+					hd = c1.$headers[1] === nw,
+					hl = c1.headerList[1] === nw;
+				assert.equal(ht && hc && hd && hl, true, 'testing header cache: updateHeaders');
+			});
 
 		// addRows
 		t = $('<tr class="temp"><td>testd</td><td>7</td></tr>');

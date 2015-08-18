@@ -420,9 +420,8 @@
 				return (/^d/i.test(v) || v === 1);
 			}
 
-			function buildHeaders(table) {
-				var ch, $t, h, i, t, lock, time, indx,
-					c = table.config;
+			function buildHeaders( c ) {
+				var ch, $t, h, i, t, lock, time, indx;
 				c.headerList = [];
 				c.headerContent = [];
 				if (c.debug) {
@@ -433,12 +432,12 @@
 				// add icon if cssIcon option exists
 				i = c.cssIcon ? '<i class="' + ( c.cssIcon === ts.css.icon ? ts.css.icon : c.cssIcon + ' ' + ts.css.icon ) + '"></i>' : '';
 				// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
-				c.$headers = $( $.map( $(table).find(c.selectorHeaders), function(elem, index) {
+				c.$headers = $( $.map( c.$table.find(c.selectorHeaders), function(elem, index) {
 					$t = $(elem);
 					// ignore cell (don't add it to c.$headers) if row has ignoreRow class
 					if ($t.parent().hasClass(c.cssIgnoreRow)) { return; }
 					// make sure to get header cell & not column indexed cell
-					ch = ts.getColumnData( table, c.headers, index, true );
+					ch = ts.getColumnData( c.table, c.headers, index, true );
 					// save original header content
 					c.headerContent[index] = $t.html();
 					// if headerTemplate is empty, don't reformat the header cell
@@ -480,12 +479,12 @@
 					// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
 					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').filter(':last') : $t.filter(':last');
 				}
-				$(table).find(c.selectorHeaders).attr({
+				c.$table.find(c.selectorHeaders).attr({
 					scope: 'col',
 					role : 'columnheader'
 				});
 				// enable/disable sorting
-				updateHeader(table);
+				updateHeader(c.table);
 				if (c.debug) {
 					console.log( 'Built headers:' + ts.benchmark( time ) );
 					console.log( c.$headers );
@@ -851,8 +850,9 @@
 			function bindMethods( table ){
 				var c = table.config,
 					$table = c.$table,
-					events = ( 'sortReset update updateRows updateCell updateAll addRows updateComplete sorton appendCache ' +
-						'updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave ' ).split( ' ' )
+					events = ( 'sortReset update updateRows updateAll updateHeaders addRows updateCell updateComplete ' +
+						'sorton appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup ' +
+						'mouseleave ' ).split( ' ' )
 						.join( c.namespace + ' ' );
 				// apply easy methods that trigger bound events
 				$table
@@ -869,6 +869,10 @@
 				.bind( 'update' + c.namespace + ' updateRows' + c.namespace, function( e, resort, callback ) {
 					e.stopPropagation();
 					ts.update( this.config, resort, callback );
+				})
+				.bind( 'updateHeaders' + c.namespace, function( e, callback ) {
+					e.stopPropagation();
+					ts.updateHeaders( this.config, callback );
 				})
 				.bind( 'updateCell' + c.namespace, function(e, cell, resort, callback ) {
 					e.stopPropagation();
@@ -1016,7 +1020,7 @@
 				// change textExtraction via data-attribute
 				c.textExtraction = c.$table.attr('data-text-extraction') || c.textExtraction || 'basic';
 				// build headers
-				buildHeaders(table);
+				buildHeaders( c );
 				// fixate columns if the users supplies the fixedWidth option
 				// do this after theme has been applied
 				ts.fixColumnWidth(table);
@@ -1305,7 +1309,7 @@
 				var table = c.table;
 				table.isUpdating = true;
 				ts.refreshWidgets( table, true, true );
-				buildHeaders( table );
+				buildHeaders( c );
 				ts.bindEvents( table, c.$headers, true );
 				bindMethods( table);
 				commonUpdate( table, resort, callback );
@@ -1317,6 +1321,14 @@
 				// update sorting (if enabled/disabled)
 				updateHeader( table );
 				commonUpdate( table, resort, callback );
+			};
+
+			// simple header update - see #989
+			ts.updateHeaders = function( c, callback ) {
+				c.table.isUpdating = true;
+				buildHeaders( c );
+				ts.bindEvents( c.table, c.$headers, true );
+				resortComplete( c, callback );
 			};
 
 			ts.updateCell = function( c, cell, resort, callback ) {
@@ -1352,10 +1364,7 @@
 					} else {
 						// don't reapply widgets is resort is false, just in case it causes
 						// problems with element focus
-						if ( $.isFunction( callback ) ) {
-							callback( table );
-						}
-						c.$table.trigger( 'updateComplete', c.table );
+						resortComplete( c, callback );
 					}
 				}
 			};
@@ -1536,8 +1545,9 @@
 				// remove widget added rows, just in case
 				$h.find('tr').not($r).remove();
 				// disable tablesorter
-				events = 'sortReset update updateAll updateRows updateCell addRows updateComplete sorton appendCache updateCache ' +
-					'applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress sortBegin sortEnd resetToLoadState '.split(' ')
+				events = 'sortReset update updateRows updateAll updateHeaders updateCell addRows updateComplete sorton ' +
+					'appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress ' +
+					'sortBegin sortEnd resetToLoadState '.split(' ')
 					.join(c.namespace + ' ');
 				$t
 					.removeData('tablesorter')

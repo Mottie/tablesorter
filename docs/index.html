@@ -4863,6 +4863,45 @@ $("table")
 				<td></td>
 			</tr>
 
+			<tr id="updateheaders">
+				<td><a href="#" class="permalink">updateHeaders</a></td>
+				<td>Refresh table headers only (<span class="version">v2.23.0</span>).
+					<div class="collapsible">
+						<h4>Direct method:</h4>
+						<p>In <span class="version">v2.23.0</span>, this method can be called directly as follows:</p>
+						<pre class="prettyprint lang-js">var config = $( 'table' )[ 0 ].config,
+	callback = function( table ) {
+		// do something
+	};
+$.tablesorter.updateHeaders( config, callback );</pre>
+						<h4>Triggered event method:</h4>
+						<pre class="prettyprint lang-js">$(function() {
+  $( 'table' ).tablesorter();
+
+  // click on a button somewhere on the page to update header index
+  $( 'button' ).click( function() {
+    // Do something after the cell update in this callback function
+    var $headerCell = $('thead th:eq(1)'),
+      index = $headerCell.data( 'counter' ) || 0,
+      callback = function( table ) {
+          /* do something */
+        };
+
+    // change header text
+    $headerCell
+      .html( 'header click #' + index )
+      // update header data
+      .data( 'counter', index++ );
+
+    // update the header, includes rebinding events & using the header template
+    $( 'table' ).trigger( 'updateHeaders', callback );
+    return false;
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="updatecell">
 				<td><a href="#" class="permalink">updateCell</a></td>
 				<td>Update a table cell in the tablesorter data (<span class="version updated">v2.23.0</span>).
