@@ -69,6 +69,11 @@
 					return url;
 			},
 
+			// ajax error callback from $.tablesorter.showError function
+			// ajaxError: function( config, xhr, settings, exception ){ return exception; };
+			// returning false will abort the error message
+			ajaxError: null,
+
 			// add more ajax settings here
 			// see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
 			ajaxObject: {
