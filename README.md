@@ -85,11 +85,14 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 #### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
 
 * Core
+  * Prevent js error when `$.tablesorter.showError` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
   * Updated `$.tablesorter.showError` function by including a `settings` parameter; a parameter passed by jQuery's `.ajaxError()` method, but was previously omitted.
 
     ```js
     $.tablesorter.showError( table, xhr, settings, exception );
     ```
+
+    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
 
 * Pager
   * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
@@ -97,10 +100,6 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
     ```js
     ajaxError: function( config, xhr, settings, exception ){ return exception; };
     ```
-
-    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
-
-  * Prevent js error when `$.tablesorter.showError()` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
 
 #### <a name="v2.23.0">Version 2.23.0</a> (8/17/2015)
 
