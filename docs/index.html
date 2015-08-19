@@ -3832,9 +3832,14 @@ $('table').trigger('search', false);</pre></div>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					This callback allows you to customize the error message displayed in the <code>thead</code> (<span class="version">v2.23.0</span>).
+					This callback allows you to customize the error message displayed in the <code>thead</code> (<span class="version">v2.23.0</span>; <span class="version updated">v2.23.1</span>).
 					<div class="collapsible">
 					<br>
+					In <span class="version updated">v2.23.1</span>
+						<ul>
+							<li>A <code>settings</code> parameter was added <em>before</em> the <code>exception</code> parameter to exactly match the parameters returned by the jQuery <a href="http://api.jquery.com/ajaxError/">.ajaxError()</a> method.</li>
+							<li>This function is now always called, even if the <code>$.tablesorter.showError</code> function is called by an external function with only a string.</li>
+						</ul>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxError</code><br>
 					<br>
 					When there is an ajax error, the <a href="#function-showError"><code>$.tablesorter.showError</code></a> function is called. In <span class="version">v2.23.0</span>, that function now checks this callback to allow adding a custom error message.<br>
@@ -3844,7 +3849,7 @@ $('table').trigger('search', false);</pre></div>
   $("table")
     .tablesorter()
     .tablesorterPager({
-      ajaxError: function( config, xhr, exception ) {
+      ajaxError: function( config, xhr, settings, exception ) {
         // returning false will abort the error message
         // the code below is the default behavior when this callback is set to `null`
         return
@@ -6960,12 +6965,14 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 				<td>This function allows adding/removing a row to the thead, to display any errors (<span class="version">v2.15</span>; <span class="version updated">v2.23.0</span>).
 					<div class="collapsible">
 						<p>This function is ONLY included within the <code>widget-pager.js</code> and <code>jquery.tablesorter.pager.js</code> files; in version 3+, I plan to add it as a selectable option in a build.</p>
+						<p>In <span class="version updated">v2.23.1</span>, a <code>settings</code> parameter was included to make it match the parametered returned by the jQuery <a href="http://api.jquery.com/ajaxError/"><code>.ajaxError()</code> method</a>.</p>
 						<p>In <span class="version updated">v2.23.0</span>, this function will accept <code>xhr</code> and <code>exception</code> parameters provided by ajax error messages. To maintain backward compatibility, if <code>xhr</code> is a string, it will be treated as previous <code>message</code> parameter and displayed in the error row without modification.</p>
 						Use it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.showError( table, xhr, exception );</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.showError( table, xhr, settings, exception );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of the table.</li>
 							<li><code>xhr</code> - a plain string, string of an HTML row, or the XMLHttpRequest (XHR) object from ajax error message.</li>
+							<li><code>settings</code> - a plain object containing the ajax settings, as returned by the ajaxError method.</li>
 							<li><code>exception</code> - exception string passed from the ajax error message.</li>
 						</ul>
 						This function will add a table row to the thead, with a class name from either the pager plugin <code>cssErrorRow</code> option setting, or the pager widget <code>pager_css.errorRow</code> option (the default class name is <code>&quot;tablesorter-errorRow&quot;</code>; and styled within each theme css file).

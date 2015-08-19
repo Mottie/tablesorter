@@ -80,6 +80,11 @@
 						return url;
 				},
 
+				// ajax error callback from $.tablesorter.showError function
+				// pager_ajaxError: function( config, xhr, settings, exception ){ return exception; };
+				// returning false will abort the error message
+				pager_ajaxError: null,
+
 				// modify the $.ajax object to allow complete control over your ajax requests
 				pager_ajaxObject: {
 					dataType: 'json'

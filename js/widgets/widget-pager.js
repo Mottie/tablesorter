@@ -63,7 +63,7 @@
 			pager_customAjaxUrl: function(table, url) { return url; },
 
 			// ajax error callback from $.tablesorter.showError function
-			// pager_ajaxError: function( config, xhr, exception ){ return exception; };
+			// pager_ajaxError: function( config, xhr, settings, exception ){ return exception; };
 			// returning false will abort the error message
 			pager_ajaxError: null,
 
@@ -645,7 +645,7 @@
 			}
 		},
 
-		renderAjax: function(data, table, c, xhr, exception){
+		renderAjax: function(data, table, c, xhr, settings, exception) {
 			var p = c.pager,
 				wo = c.widgetOptions;
 			// process data
@@ -662,9 +662,9 @@
 
 				if ( exception ) {
 					if (c.debug) {
-						console.error('Pager: >> Ajax Error', xhr, exception);
+						console.error('Pager: >> Ajax Error', xhr, settings, exception);
 					}
-					ts.showError( table, xhr, exception );
+					ts.showError( table, xhr, settings, exception );
 					c.$tbodies.eq(0).children('tr').detach();
 					p.totalRows = 0;
 				} else {
@@ -782,7 +782,7 @@
 					ts.isProcessing(table, true); // show loading icon
 				}
 				$doc.on('ajaxError' + namespace, function(e, xhr, settings, exception) {
-					tsp.renderAjax(null, table, c, xhr, exception);
+					tsp.renderAjax(null, table, c, xhr, settings, exception);
 					$doc.off('ajaxError' + namespace);
 				});
 				counter = ++p.ajaxCounter;
@@ -1142,12 +1142,14 @@
 	};
 
 	// see #486
-	ts.showError = function( table, xhr, exception ) {
+	ts.showError = function( table, xhr, settings, exception ) {
 		var $row,
 			$table = $( table ),
 			c = $table[0].config,
 			wo = c && c.widgetOptions,
-			errorRow = c.pager && c.pager.cssErrorRow || wo.pager_css && wo.pager_css.errorRow || 'tablesorter-errorRow',
+			errorRow = c.pager && c.pager.cssErrorRow ||
+				wo && wo.pager_css && wo.pager_css.errorRow ||
+				'tablesorter-errorRow',
 			typ = typeof xhr,
 			valid = true,
 			message = '',
@@ -1160,23 +1162,25 @@
 			return;
 		}
 
-		if ( typ !== 'string' ) {
-			// ajaxError callback for plugin or widget - see #992
-			if ( typeof c.pager.ajaxError === 'function' ) {
-				valid = c.pager.ajaxError( c, xhr, exception );
-				if ( valid === false ) {
-					return removeRow();
-				} else {
-					message = valid;
-				}
-			} else if ( typeof wo.pager_ajaxError === 'function' ) {
-				valid = wo.pager_ajaxError( c, xhr, exception );
-				if ( valid === false ) {
-					return removeRow();
-				} else {
-					message = valid;
-				}
+		// ajaxError callback for plugin or widget - see #992
+		if ( typeof c.pager.ajaxError === 'function' ) {
+			valid = c.pager.ajaxError( c, xhr, settings, exception );
+			if ( valid === false ) {
+				return removeRow();
 			} else {
+				message = valid;
+			}
+		} else if ( typeof wo.pager_ajaxError === 'function' ) {
+			valid = wo.pager_ajaxError( c, xhr, settings, exception );
+			if ( valid === false ) {
+				return removeRow();
+			} else {
+				message = valid;
+			}
+		}
+
+		if ( message === '' ) {
+			if ( typ === 'object' ) {
 				message =
 					xhr.status === 0 ? 'Not connected, verify Network' :
 					xhr.status === 404 ? 'Requested page not found [404]' :
@@ -1185,18 +1189,16 @@
 					exception === 'timeout' ? 'Time out error' :
 					exception === 'abort' ? 'Ajax Request aborted' :
 					'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
+			} else if ( typ === 'string'  ) {
+				// keep backward compatibility (external usage just passes a message string)
+				message = xhr;
+			} else {
+				// remove all error rows
+				return removeRow();
 			}
-		} else if ( typ !== 'undefined' ) {
-			// keep backward compatibility (external usage just passes a message string)
-			message = xhr;
 		}
 
-		if ( message === '' ) {
-			// remove all error rows
-			return removeRow();
-		}
-
-		// allow message to include HTML (must include entire row!)
+		// allow message to include entire row HTML!
 		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
 			.click( function() {
 				$( this ).remove();
