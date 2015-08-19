@@ -82,6 +82,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
+
+* Pager
+  * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
+
+    ```js
+    ajaxError: function( config, xhr, settings, exception ){ return exception; };
+    ```
+
+    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
+
+  * Prevent js error when `$.tablesorter.showError()` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
+
 #### <a name="v2.23.0">Version 2.23.0</a> (8/17/2015)
 
 * Core:
@@ -141,49 +154,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Overall:
  * Set JSHint "undef" & "unused" options. Fixed issues.
  * The math widget was throwing a javascript error after missing a changed variable name & JSHint wasn't catching it, until now.
-
-#### <a name="v2.22.4">Version 2.22.4</a> (7/28/2015)
-
-* Overall
-  * update debug logging. `console` is now called directly & includes grouping, tables, warning & errors.
-* Core
-  * Replace `tbody` placeholder use of a `<span>` with a `<colgroup>`. Attempt to resolve IE error reported in [issue #938](https://github.com/Mottie/tablesorter/issues/938).
-  * Fix `$.tablesorter.hasWidget` error introduced when fixing jscs issues.
-  * Fix `$.tablesorter.isProcessing` error introduced when fixing jscs issues.
-  * Update `isValueInArray` function to prevent js errors with invalid input.
-* Docs
-  * Remove duplicate section in math widget docs.
-  * Add resizable widget note about leaving `widthFixed` set to `false`. See [issue #958](https://github.com/Mottie/tablesorter/issues/958).
-  * Update to use jQuery v1.11.3.
-  * Change deprecated window load function.
-  * Improve [two-digit year parser demo](http://mottie.github.io/tablesorter/docs/example-parsers-dates.html).
-  * Minor updates.
-* Filter
-  * Prevent invalid RegExp errors which occur while typing in an incomplete query.
-* Math
-  * Ignored rows are now properly ignored in columns. Fixes [issue #976](https://github.com/Mottie/tablesorter/issues/976).
-* Output
-  * Add `output_formatContent` callback - see [Stackoverflow](http://stackoverflow.com/q/31457323/145346).
-  * Make compatible with the scroller widget when it hides columns. See [pull #970](https://github.com/Mottie/tablesorter/pull/970), thanks [VictorT83](https://github.com/VictorT83)!
-* Pager
-  * Bind using unique event namespace. See [issue #961](https://github.com/Mottie/tablesorter/issues/961).
-* Scroller
-  * Prevent error on destroy when not applied. See [issue #965](https://github.com/Mottie/tablesorter/issues/965).
-  * Fix js error in old IE.
-  * Delay resize after updateAll.
-  * Include `sortEnd` in fixed column updates. See [issue #977](https://github.com/Mottie/tablesorter/issues/977).
-* Sort2Hash
-  * This widget updates the location hash based on the table sort, and sets the table sort on initialization. [demo](http://mottie.github.io/tablesorter/docs/example-widget-sort-to-hash.html).
-  * A user can share a link with others and have the table in the same sorted order.
-  * The hash can be set to use header text and any text to indicate an ascending or descending sort.
-  * Add text & saveSort override options. Fixes [issue #962](https://github.com/Mottie/tablesorter/issues/962).
-  * Other minor revisions.
-* Parsers
-  * Checkbox in multiple columns now toggles the row class correctly.
-* Grunt build: Add jscs checking & fix reported style issues.
-* Testing
-  * Update QUnit to 1.18.0.
-  * Add `removeWidget` test.
-  * Add `isValueInArray` tests.
-  * Add `isProcessing` tests.
-* Extras - dropping support for [quicksearch](https://github.com/riklomas/quicksearch) plugin.
