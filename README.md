@@ -84,6 +84,13 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 
 #### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
 
+* Core
+  * Updated `$.tablesorter.showError` function by including a `settings` parameter; a parameter passed by jQuery's `.ajaxError()` method, but was previously omitted.
+
+    ```js
+    $.tablesorter.showError( table, xhr, settings, exception );
+    ```
+
 * Pager
   * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
 
