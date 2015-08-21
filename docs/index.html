@@ -481,7 +481,7 @@
 		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.23.0</span>).</li>
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.23.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.23.0</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.23.2</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.22.2</span>)</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.22.0</span>)</li>
@@ -7012,6 +7012,7 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 							<li><code>$els</code> - jQuery object of all input (search) elements to bind.</li>
 							<li><code>false</code> - boolean flag to force a new search.</li>
 						</ul>
+						<p>The <code>table</code> element will only process one table. So if you pass in a jQuery object, only the <em>first table</em> will be bound to the elements (<code>$els</code>).</p>
 						The external elements (<code>$els</code>) will allow searching the table using "search" and "keyup" events (enter to start &amp; escape to cancel the search), and uses the <a href="#widget-filter-livesearch"><code>filter_liveSearch</code></a> option, or delayed search.<br>
 						<br>
 						Include a <code>data-column="#"</code> attribute (where <code>#</code> is the column number) in the search input, to specify to which column the search should apply ~ see <a href="example-widget-filter-external-inputs.html">this demo</a> for a full example. <span class="label label-warning">Warning!</span>, if no <code>data-column</code> attribute is added to the input, the input will be ignored.<br>

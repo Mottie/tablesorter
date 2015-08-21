@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 08-19-2015 (v2.23.1)*/
+/*! tablesorter (FORK) - updated 08-21-2015 (v2.23.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1113,7 +1113,8 @@
 				ts.filter.searching( table, true, true );
 			})
 			.bind( 'search change keypress '.split( ' ' ).join( namespace + ' ' ), function( event ) {
-				var column = $( this ).data( 'column' );
+				// don't get cached data, in case data-column changes dynamically
+				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( event.which === 13 || event.type === 'search' ||
 					event.type === 'change' && this.value !== c.lastSearch[column] ) {
@@ -1264,6 +1265,9 @@
 				targets = wo.filter_initialized || !$input.filter( wo.filter_anyColumnSelector ).length,
 				columns = [],
 				val = $.trim( ts.filter.getLatestSearch( $input ).attr( 'data-column' ) || '' );
+			if ( !/[,-]/.test(val) && val.length === 1 ) {
+				return parseInt( val, 10 );
+			}
 			// process column range
 			if ( targets && /-/.test( val ) ) {
 				ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
@@ -1321,16 +1325,23 @@
 			return filterMatched;
 		},
 		processRow: function( c, data, vars ) {
-			var columnIndex, hasSelect, result, val, filterMatched,
+			var hasSelect, result, val, filterMatched,
 				fxn, ffxn, txt,
 				regex = ts.filter.regex,
 				wo = c.widgetOptions,
-				showRow = true;
+				showRow = true,
+
+				// if wo.filter_$anyMatch data-column attribute is changed dynamically
+				// we don't want to do an "anyMatch" search on one column using data
+				// for the entire row - see #998
+				columnIndex = wo.filter_$anyMatch && wo.filter_$anyMatch.length ?
+					// look for multiple columns '1-3,4-6,8'
+					ts.filter.multipleColumns( c, wo.filter_$anyMatch ) :
+					[];
+
 			data.$cells = data.$row.children();
 
-			if ( data.anyMatchFlag ) {
-				// look for multiple columns '1-3,4-6,8'
-				columnIndex = ts.filter.multipleColumns( c, wo.filter_$anyMatch );
+			if ( data.anyMatchFlag && columnIndex.length > 1 ) {
 				data.anyMatch = true;
 				data.isMatch = true;
 				data.rowArray = data.$cells.map( function( i ) {
