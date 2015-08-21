@@ -224,7 +224,7 @@
 			}
 			// trigger columnUpdate if auto is true (it gets skipped in updateCols()
 			if (colSel.auto) {
-				c.$table.trigger('columnUpdate');
+				c.$table.trigger(wo.columnSelector_updated);
 			}
 		},
 
@@ -299,7 +299,7 @@
 			if (wo.columnSelector_saveColumns && ts.storage) {
 				ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 			}
-			c.$table.trigger('columnUpdate');
+			c.$table.trigger(wo.columnSelector_updated);
 		},
 
 		attachTo : function(table, elm) {
@@ -370,7 +370,9 @@
 			columnSelector_priority : 'data-priority',
 			// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
 			// applied icons; use this class name (input.checked) instead of input:checked
-			columnSelector_cssChecked : 'checked'
+			columnSelector_cssChecked : 'checked',
+			// event triggered when columnSelector completes
+			columnSelector_updated : 'columnUpdate'
 
 		},
 		init: function(table, thisWidget, c, wo) {
