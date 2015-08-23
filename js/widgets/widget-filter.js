@@ -61,7 +61,7 @@
 			$table
 				.removeClass( 'hasFilters' )
 				// add .tsfilter namespace to all BUT search
-				.unbind( events.replace( /\s+/g, ' ' ) )
+				.unbind( events.replace( ts.regex.spaces, ' ' ) )
 				// remove the filter row even if refreshing, because the column might have been moved
 				.find( '.' + tscss.filterRow ).remove();
 			if ( refreshing ) { return; }
@@ -85,9 +85,13 @@
 			filtered  : /filtered/, // filtered (hidden) row class name; updated in the script
 			type      : /undefined|number/, // check type
 			exact     : /(^[\"\'=]+)|([\"\'=]+$)/g, // exact match (allow '==')
-			nondigit  : /[^\w,. \-()]/g, // replace non-digits (from digit & currency parser)
 			operators : /[<>=]/g, // replace operators
-			query     : '(q|query)' // replace filter queries
+			query     : '(q|query)', // replace filter queries
+			wild01    : /\?/g, // wild card match 0 or 1
+			wild0More : /\*/g, // wild care match 0 or more
+			quote     : /\"/g,
+			isNeg1    : /(>=?\s*-\d)/,
+			isNeg2    : /(<=?\s*\d)/
 		},
 		// function( c, data ) { }
 		// c = table.config
@@ -104,7 +108,7 @@
 		// data.parsed = array ( by column ) of boolean values ( from filter_useParsedData or 'filter-parsed' class )
 		types: {
 			or : function( c, data, vars ) {
-				if ( /\|/.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
+				if ( ts.filter.regex.orTest.test( data.iFilter ) || ts.filter.regex.orSplit.test( data.filter ) ) {
 					var indx, filterMatched, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
@@ -154,7 +158,7 @@
 						data2.iFilter = '' + ( ts.filter.parseFilter( c, iFilter[ indx ], index, parsed ) || '' );
 						query = ( '(' + ( ts.filter.parseFilter( c, data2.filter, index, parsed ) || '' ) + ')' )
 							// replace wild cards since /(a*)/i will match anything
-							.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' );
+							.replace( ts.filter.regex.wild01, '\\S{1}' ).replace( ts.filter.regex.wild0More, '\\S*' );
 						try {
 							// use try/catch just in case RegExp is invalid
 							regex = new RegExp( data.isMatch ? query : '^' + query + '$', c.widgetOptions.filter_ignoreCase ? 'i' : '' );
@@ -198,7 +202,7 @@
 			// Look for operators >, >=, < or <=
 			operators: function( c, data ) {
 				// ignore empty strings... because '' < 10 is true
-				if ( /^[<>]=?/.test( data.iFilter ) && data.iExact !== '' ) {
+				if ( ts.filter.regex.operTest.test( data.iFilter ) && data.iExact !== '' ) {
 					var cachedValue, result, txt,
 						table = c.table,
 						index = data.index,
@@ -218,13 +222,13 @@
 						typeof data.cache !== 'undefined' ) {
 						cachedValue = data.cache;
 					} else {
-						txt = isNaN( data.iExact ) ? data.iExact.replace( ts.filter.regex.nondigit, '' ) : data.iExact;
+						txt = isNaN( data.iExact ) ? data.iExact.replace( ts.regex.nondigit, '' ) : data.iExact;
 						cachedValue = ts.formatFloat( txt, table );
 					}
-					if ( />/.test( data.iFilter ) ) {
-						result = />=/.test( data.iFilter ) ? cachedValue >= query : cachedValue > query;
-					} else if ( /</.test( data.iFilter ) ) {
-						result = /<=/.test( data.iFilter ) ? cachedValue <= query : cachedValue < query;
+					if ( ts.filter.regex.gtTest.test( data.iFilter ) ) {
+						result = ts.filter.regex.gteTest.test( data.iFilter ) ? cachedValue >= query : cachedValue > query;
+					} else if ( ts.filter.regex.ltTest.test( data.iFilter ) ) {
+						result = ts.filter.regex.lteTest.test( data.iFilter ) ? cachedValue <= query : cachedValue < query;
 					}
 					// keep showing all rows if nothing follows the operator
 					if ( !result && savedSearch === '' ) {
@@ -236,7 +240,7 @@
 			},
 			// Look for a not match
 			notMatch: function( c, data ) {
-				if ( /^\!/.test( data.iFilter ) ) {
+				if ( ts.filter.regex.notTest.test( data.iFilter ) ) {
 					var indx,
 						txt = data.iFilter.replace( '!', '' ),
 						filter = ts.filter.parseFilter( c, txt, data.index, data.parsed[data.index] ) || '';
@@ -271,9 +275,9 @@
 						// make sure the dash is for a range and not indicating a negative number
 						query = data.iFilter.split( ts.filter.regex.toSplit );
 
-					tmp = query[0].replace( ts.filter.regex.nondigit, '' ) || '';
+					tmp = query[0].replace( ts.regex.nondigit, '' ) || '';
 					range1 = ts.formatFloat( ts.filter.parseFilter( c, tmp, index, parsed ), table );
-					tmp = query[1].replace( ts.filter.regex.nondigit, '' ) || '';
+					tmp = query[1].replace( ts.regex.nondigit, '' ) || '';
 					range2 = ts.formatFloat( ts.filter.parseFilter( c, tmp, index, parsed ), table );
 					// parse filter value in case we're comparing numbers ( dates )
 					if ( parsed || c.parsers[index].type === 'numeric' ) {
@@ -285,7 +289,7 @@
 					if ( ( parsed || c.parsers[ index ].type === 'numeric' ) && !isNaN( range1 ) && !isNaN( range2 ) ) {
 						result = data.cache;
 					} else {
-						tmp = isNaN( data.iExact ) ? data.iExact.replace( ts.filter.regex.nondigit, '' ) : data.iExact;
+						tmp = isNaN( data.iExact ) ? data.iExact.replace( ts.regex.nondigit, '' ) : data.iExact;
 						result = ts.formatFloat( tmp, table );
 					}
 					if ( range1 > range2 ) {
@@ -297,18 +301,18 @@
 			},
 			// Look for wild card: ? = single, * = multiple, or | = logical OR
 			wild : function( c, data ) {
-				if ( /[\?\*\|]/.test( data.iFilter ) ) {
+				if ( ts.filter.regex.wildOrTest.test( data.iFilter ) ) {
 					var index = data.index,
 						parsed = data.parsed[ index ],
 						query = '' + ( ts.filter.parseFilter( c, data.iFilter, index, parsed ) || '' );
 					// look for an exact match with the 'or' unless the 'filter-match' class is found
-					if ( !/\?\*/.test( query ) && data.nestedFilters ) {
+					if ( !ts.filter.regex.wildTest.test( query ) && data.nestedFilters ) {
 						query = data.isMatch ? query : '^(' + query + ')$';
 					}
 					// parsing the filter may not work properly when using wildcards =/
 					try {
 						return new RegExp(
-							query.replace( /\?/g, '\\S{1}' ).replace( /\*/g, '\\S*' ),
+							query.replace( ts.filter.regex.wild01, '\\S{1}' ).replace( ts.filter.regex.wild0More, '\\S*' ),
 							c.widgetOptions.filter_ignoreCase ? 'i' : ''
 						)
 						.test( data.exact );
@@ -320,7 +324,7 @@
 			},
 			// fuzzy text search; modified from https://github.com/mattyork/fuzzy ( MIT license )
 			fuzzy: function( c, data ) {
-				if ( /^~/.test( data.iFilter ) ) {
+				if ( ts.filter.regex.fuzzyTest.test( data.iFilter ) ) {
 					var indx,
 						patternIndx = 0,
 						len = data.iExact.length,
@@ -368,9 +372,20 @@
 				toSplit : new RegExp( '(?:\\s+(?:-|' + ts.language.to + ')\\s+)', 'gi' ),
 				andTest : new RegExp( '\\s+(' + ts.language.and + '|&&)\\s+', 'i' ),
 				andSplit : new RegExp( '(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi' ),
+				orTest : /\|/,
 				orSplit : new RegExp( '(?:\\s+(?:' + ts.language.or + ')\\s+|\\|)', 'gi' ),
 				iQuery : new RegExp( val, 'i' ),
-				igQuery : new RegExp( val, 'ig' )
+				igQuery : new RegExp( val, 'ig' ),
+				operTest : /^[<>]=?/,
+				gtTest  : />/,
+				gteTest : />=/,
+				ltTest  : /</,
+				lteTest : /<=/,
+				notTest : /^\!/,
+				wildOrTest : /[\?\*\|]/,
+				wildTest : /\?\*/,
+				fuzzyTest : /^~/,
+				exactTest : /[=\"\|!]/
 			});
 
 			// don't build filter row if columnFilters is false or all columns are set to 'filter-false'
@@ -500,7 +515,7 @@
 			if ( c.showProcessing ) {
 				txt = 'filterStart filterEnd '.split( ' ' ).join( c.namespace + 'filter ' );
 				c.$table
-					.unbind( txt.replace( /\s+/g, ' ' ) )
+					.unbind( txt.replace( ts.regex.spaces, ' ' ) )
 					.bind( txt, function( event, columns ) {
 					// only add processing to certain columns to all columns
 					$header = ( columns ) ?
@@ -520,7 +535,7 @@
 			// add default values
 			txt = 'tablesorter-initialized pagerBeforeInitialized '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table
-			.unbind( txt.replace( /\s+/g, ' ' ) )
+			.unbind( txt.replace( ts.regex.spaces, ' ' ) )
 			.bind( txt, function() {
 				// redefine 'wo' as it does not update properly inside this callback
 				var wo = this.config.widgetOptions;
@@ -716,7 +731,7 @@
 			// use data attribute instead of jQuery data since the head is cloned without including
 			// the data/binding
 			.attr( 'data-lastSearchTime', new Date().getTime() )
-			.unbind( tmp.replace( /\s+/g, ' ' ) )
+			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
 			// include change for select - fixes #473
 			.bind( 'keyup' + namespace, function( event ) {
 				$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
@@ -1228,10 +1243,10 @@
 								// if there is NOT a logical 'or', or range ( 'to' or '-' ) in the string
 								!regex.alreadyFiltered.test( val ) &&
 								// if we are not doing exact matches, using '|' ( logical or ) or not '!'
-								!/[=\"\|!]/.test( val ) &&
+								!regex.exactTest.test( val ) &&
 								// don't search only filtered if the value is negative
 								// ( '> -10' => '> -100' will ignore hidden rows )
-								!( /(>=?\s*-\d)/.test( val ) || /(<=?\s*\d)/.test( val ) ) &&
+								!( regex.isNeg1.test( val ) || regex.isNeg2.test( val ) ) &&
 								// if filtering using a select without a 'filter-match' class ( exact match ) - fixes #593
 								!( val !== '' && c.$filters && c.$filters.eq( indx ).find( 'select' ).length &&
 									!c.$headerIndexed[indx].hasClass( 'filter-match' ) );
@@ -1484,7 +1499,7 @@
 			if ( $.isArray( arry ) ) {
 				// build option list
 				for ( indx = 0; indx < arry.length; indx++ ) {
-					txt = arry[indx] = ( '' + arry[indx] ).replace( /\"/g, '&quot;' );
+					txt = arry[indx] = ( '' + arry[indx] ).replace( ts.filter.regex.quote, '&quot;' );
 					val = txt;
 					// allow including a symbol in the selectSource array
 					// 'a-z|A through Z' so that 'a-z' becomes the option value
