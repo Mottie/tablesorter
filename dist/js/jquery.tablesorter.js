@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.23.1 *//*
+/*! TableSorter (FORK) v2.23.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -36,7 +36,7 @@
 
 			var ts = this;
 
-			ts.version = '2.23.1';
+			ts.version = '2.23.2';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -159,6 +159,15 @@
 				nextAsc  : 'activate to apply an ascending sort',
 				nextDesc : 'activate to apply a descending sort',
 				nextNone : 'activate to remove the sort'
+			};
+
+			ts.regex = {
+				templateContent : /\{content\}/g,
+				templateIcon    : /\{icon\}/g,
+				templateName    : /\{name\}/i,
+				spaces          : /\s+/g,
+				nonWord         : /\W/g,
+				formElements    : /(input|select|button|textarea)/i
 			};
 
 			// These methods can be applied on table.config instance
@@ -453,7 +462,9 @@
 					// if headerTemplate is empty, don't reformat the header cell
 					if ( c.headerTemplate !== '' && !$t.find('.' + ts.css.headerIn).length ) {
 						// set up header template
-						t = c.headerTemplate.replace(/\{content\}/g, $t.html()).replace(/\{icon\}/g, $t.find('.' + ts.css.icon).length ? '' : i);
+						t = c.headerTemplate
+							.replace(ts.regex.templateContent, $t.html())
+							.replace(ts.regex.templateIcon, $t.find('.' + ts.css.icon).length ? '' : i);
 						if (c.onRenderTemplate) {
 							h = c.onRenderTemplate.apply( $t, [ index, t ] );
 							if (h && typeof h === 'string') { t = h; } // only change t if something is returned
@@ -866,7 +877,7 @@
 						.join( c.namespace + ' ' );
 				// apply easy methods that trigger bound events
 				$table
-				.unbind( events.replace( /\s+/g, ' ' ) )
+				.unbind( events.replace( ts.regex.spaces, ' ' ) )
 				.bind( 'sortReset' + c.namespace, function( e, callback ) {
 					e.stopPropagation();
 					// using this.config to ensure functions are getting a non-cached version of the config
@@ -1013,7 +1024,7 @@
 					c.namespace = '.tablesorter' + Math.random().toString(16).slice(2);
 				} else {
 					// make sure namespace starts with a period & doesn't have weird characters
-					c.namespace = '.' + c.namespace.replace(/\W/g, '');
+					c.namespace = '.' + c.namespace.replace(ts.regex.nonWord, '');
 				}
 
 				c.$table.children().children('tr').attr('role', 'row');
@@ -1241,7 +1252,7 @@
 					}
 				}
 				t = ( c.pointerDown + ' ' + c.pointerUp + ' ' + c.pointerClick + ' sort keyup ' )
-					.replace(/\s+/g, ' ')
+					.replace(ts.regex.spaces, ' ')
 					.split(' ')
 					.join(c.namespace + ' ');
 				// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
@@ -1275,7 +1286,7 @@
 					}
 					downTarget = null;
 					// prevent sort being triggered on form elements
-					if ( /(input|select|button|textarea)/i.test(e.target.nodeName) ||
+					if ( ts.regex.formElements.test(e.target.nodeName) ||
 						// nosort class name, or elements within a nosort container
 						$target.hasClass(c.cssNoSort) || $target.parents('.' + c.cssNoSort).length > 0 ||
 						// elements within a button
@@ -1561,13 +1572,13 @@
 					.join(c.namespace + ' ');
 				$t
 					.removeData('tablesorter')
-					.unbind( events.replace(/\s+/g, ' ') );
+					.unbind( events.replace(ts.regex.spaces, ' ') );
 				c.$headers.add($f)
 					.removeClass( [ ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone ].join(' ') )
 					.removeAttr('data-column')
 					.removeAttr('aria-label')
 					.attr('aria-disabled', 'true');
-				$r.find(c.selectorSort).unbind( ('mousedown mouseup keypress '.split(' ').join(c.namespace + ' ')).replace(/\s+/g, ' ') );
+				$r.find(c.selectorSort).unbind( ('mousedown mouseup keypress '.split(' ').join(c.namespace + ' ')).replace(ts.regex.spaces, ' ') );
 				ts.restoreHeaders(table);
 				$t.toggleClass(ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false);
 				// clear flag in case the plugin is initialized again
@@ -1583,11 +1594,9 @@
 
 			// *** sort functions ***
 			// regex used in natural sort
-			ts.regex = {
-				chunk : /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi, // chunk/tokenize numbers & letters
-				chunks: /(^\\0|\\0$)/, // replace chunks @ ends
-				hex: /^0x[0-9a-f]+$/i // hex
-			};
+			ts.regex.chunk = /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi; // chunk/tokenize numbers & letters
+			ts.regex.chunks = /(^\\0|\\0$)/; // replace chunks @ ends
+			ts.regex.hex = /^0x[0-9a-f]+$/i; // hex
 
 			// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
 			// this function will only accept strings, or you'll see 'TypeError: undefined is not a function'
@@ -1814,7 +1823,7 @@
 				if (c.debug) { time = new Date(); }
 				// look for widgets to apply from in table class
 				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-				wd = new RegExp( '\\s' + c.widgetClass.replace( /\{name\}/i, '([\\w-]+)' ) + '\\s', 'g' );
+				wd = new RegExp( '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s', 'g' );
 				if ( tableClass.match( wd ) ) {
 					// extract out the widget id from the table class (widget id's can include dashes)
 					w = tableClass.match( wd );
@@ -2040,6 +2049,10 @@
 				return $.trim(val);
 			};
 
+			ts.regex.comma = /,/g;
+			ts.regex.digitNonUS = /[\s|\.]/g;
+			ts.regex.digitNegativeTest = /^\s*\([.\d]+\)/;
+			ts.regex.digitNegativeReplace = /^\s*\(([.\d]+)\)/;
 			ts.formatFloat = function(s, table) {
 				if (typeof s !== 'string' || s === '') { return s; }
 				// allow using formatFloat without a table; defaults to US number format
@@ -2048,24 +2061,28 @@
 						typeof table !== 'undefined' ? table : true;
 				if (t) {
 					// US Format - 1,234,567.89 -> 1234567.89
-					s = s.replace(/,/g, '');
+					s = s.replace(ts.regex.comma, '');
 				} else {
 					// German Format = 1.234.567,89 -> 1234567.89
 					// French Format = 1 234 567,89 -> 1234567.89
-					s = s.replace(/[\s|\.]/g, '').replace(/,/g, '.');
+					s = s.replace(ts.regex.digitNonUS, '').replace(ts.regex.comma, '.');
 				}
-				if (/^\s*\([.\d]+\)/.test(s)) {
+				if (ts.regex.digitNegativeTest.test(s)) {
 					// make (#) into a negative number -> (10) = -10
-					s = s.replace(/^\s*\(([.\d]+)\)/, '-$1');
+					s = s.replace(ts.regex.digitNegativeReplace, '-$1');
 				}
 				i = parseFloat(s);
 				// return the text instead of zero
 				return isNaN(i) ? $.trim(s) : i;
 			};
 
+			ts.regex.digitTest = /^[\-+(]?\d+[)]?$/;
+			ts.regex.digitReplace = /[,.'"\s]/g;
 			ts.isDigit = function(s) {
 				// replace all unwanted chars and match
-				return isNaN(s) ? (/^[\-+(]?\d+[)]?$/).test(s.toString().replace(/[,.'"\s]/g, '')) : s !== '';
+				return isNaN(s) ?
+					ts.regex.digitTest.test( s.toString().replace( ts.regex.digitReplace, '' ) ) :
+					s !== '';
 			};
 
 		}()
@@ -2124,65 +2141,76 @@
 		type: 'text'
 	});
 
+	ts.regex.nondigit = /[^\w,. \-()]/g;
 	ts.addParser({
 		id: 'digit',
 		is: function(s) {
 			return ts.isDigit(s);
 		},
 		format: function(s, table) {
-			var n = ts.formatFloat((s || '').replace(/[^\w,. \-()]/g, ''), table);
+			var n = ts.formatFloat((s || '').replace(ts.regex.nondigit, ''), table);
 			return s && typeof n === 'number' ? n :
 				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
 		},
 		type: 'numeric'
 	});
 
+	ts.regex.currencyReplace = /[+\-,. ]/g;
+	ts.regex.currencyTest = /^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/;
 	ts.addParser({
 		id: 'currency',
 		is: function(s) {
-			s = (s || '').replace(/[+\-,. ]/g, '');
+			s = (s || '').replace(ts.regex.currencyReplace, '');
 			// test for £$€¤¥¢
-			return (/^\(?\d+[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]|[\u00a3$\u20ac\u00a4\u00a5\u00a2?.]\d+\)?$/).test(s);
+			return ts.regex.currencyTest.test(s);
 		},
 		format: function(s, table) {
-			var n = ts.formatFloat((s || '').replace(/[^\w,. \-()]/g, ''), table);
+			var n = ts.formatFloat((s || '').replace(ts.regex.nondigit, ''), table);
 			return s && typeof n === 'number' ? n :
 				s ? $.trim( s && table.config.ignoreCase ? s.toLocaleLowerCase() : s ) : s;
 		},
 		type: 'numeric'
 	});
 
+	// too many protocols to add them all https://en.wikipedia.org/wiki/URI_scheme
+	// now, this regex can be updated before initialization
+	ts.regex.urlProtocolTest =   /^(https?|ftp|file):\/\//;
+	ts.regex.urlProtocolReplace = /(https?|ftp|file):\/\//;
 	ts.addParser({
 		id: 'url',
 		is: function(s) {
-			return (/^(https?|ftp|file):\/\//).test(s);
+			return ts.regex.urlProtocolTest.test(s);
 		},
 		format: function(s) {
-			return s ? $.trim(s.replace(/(https?|ftp|file):\/\//, '')) : s;
+			return s ? $.trim(s.replace(ts.regex.urlProtocolReplace, '')) : s;
 		},
 		parsed : true, // filter widget flag
 		type: 'text'
 	});
 
+	ts.regex.dash = /-/g;
+	ts.regex.isoDate = /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/;
 	ts.addParser({
 		id: 'isoDate',
 		is: function(s) {
-			return (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/).test(s);
+			return ts.regex.isoDate.test(s);
 		},
 		format: function(s, table) {
-			var date = s ? new Date( s.replace(/-/g, '/') ) : s;
+			var date = s ? new Date( s.replace(ts.regex.dash, '/') ) : s;
 			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: 'numeric'
 	});
 
+	ts.regex.percent = /%/g;
+	ts.regex.percentTest = /(\d\s*?%|%\s*?\d)/;
 	ts.addParser({
 		id: 'percent',
 		is: function(s) {
-			return (/(\d\s*?%|%\s*?\d)/).test(s) && s.length < 15;
+			return ts.regex.percentTest.test(s) && s.length < 15;
 		},
 		format: function(s, table) {
-			return s ? ts.formatFloat(s.replace(/%/g, ''), table) : s;
+			return s ? ts.formatFloat(s.replace(ts.regex.percent, ''), table) : s;
 		},
 		type: 'numeric'
 	});
@@ -2200,27 +2228,35 @@
 		type: 'text'
 	});
 
+	ts.regex.dateReplace = /(\S)([AP]M)$/i; // used by usLongDate & time parser
+	ts.regex.usLongDateTest1 = /^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i;
+	ts.regex.usLongDateTest2 = /^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i;
 	ts.addParser({
 		id: 'usLongDate',
 		is: function(s) {
 			// two digit years are not allowed cross-browser
 			// Jan 01, 2013 12:34:56 PM or 01 Jan 2013
-			return (/^[A-Z]{3,10}\.?\s+\d{1,2},?\s+(\d{4})(\s+\d{1,2}:\d{2}(:\d{2})?(\s+[AP]M)?)?$/i).test(s) ||
-				(/^\d{1,2}\s+[A-Z]{3,10}\s+\d{4}/i).test(s);
+			return ts.regex.usLongDateTest1.test(s) || ts.regex.usLongDateTest2.test(s);
 		},
 		format: function(s, table) {
-			var date = s ? new Date( s.replace(/(\S)([AP]M)$/i, '$1 $2') ) : s;
+			var date = s ? new Date( s.replace(ts.regex.dateReplace, '$1 $2') ) : s;
 			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: 'numeric'
 	});
 
+	// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
+	ts.regex.shortDateTest = /(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/;
+	// escaped "-" because JSHint in Firefox was showing it as an error
+	ts.regex.shortDateReplace = /[\-.,]/g;
+	// XXY covers MDY & DMY formats
+	ts.regex.shortDateXXY = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/;
+	ts.regex.shortDateYMD = /(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/;
 	ts.addParser({
 		id: 'shortDate', // 'mmddyyyy', 'ddmmyyyy' or 'yyyymmdd'
 		is: function(s) {
-			s = (s || '').replace(/\s+/g, ' ').replace(/[\-.,]/g, '/');
-			// testing for ##-##-#### or ####-##-##, so it's not perfect; time can be included
-			return (/(^\d{1,2}[\/\s]\d{1,2}[\/\s]\d{4})|(^\d{4}[\/\s]\d{1,2}[\/\s]\d{1,2})/).test(s);
+			s = (s || '').replace(ts.regex.spaces, ' ').replace(ts.regex.shortDateReplace, '/');
+			return ts.regex.shortDateTest.test(s);
 		},
 		format: function(s, table, cell, cellIndex) {
 			if (s) {
@@ -2230,14 +2266,13 @@
 					format = ci.length && ci[0].dateFormat ||
 						ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat') ||
 						c.dateFormat;
-				// escaped "-" because JSHint in Firefox was showing it as an error
-				d = s.replace(/\s+/g, ' ').replace(/[\-.,]/g, '/');
+				d = s.replace(ts.regex.spaces, ' ').replace(ts.regex.shortDateReplace, '/');
 				if (format === 'mmddyyyy') {
-					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, '$3/$1/$2');
+					d = d.replace(ts.regex.shortDateXXY, '$3/$1/$2');
 				} else if (format === 'ddmmyyyy') {
-					d = d.replace(/(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/, '$3/$2/$1');
+					d = d.replace(ts.regex.shortDateXXY, '$3/$2/$1');
 				} else if (format === 'yyyymmdd') {
-					d = d.replace(/(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/, '$1/$2/$3');
+					d = d.replace(ts.regex.shortDateYMD, '$1/$2/$3');
 				}
 				date = new Date(d);
 				return date instanceof Date && isFinite(date) ? date.getTime() : s;
@@ -2247,13 +2282,14 @@
 		type: 'numeric'
 	});
 
+	ts.regex.timeTest = /^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i;
 	ts.addParser({
 		id: 'time',
 		is: function(s) {
-			return (/^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i).test(s);
+			return ts.regex.timeTest.test(s);
 		},
 		format: function(s, table) {
-			var date = s ? new Date( '2000/01/01 ' + s.replace(/(\S)([AP]M)$/i, '$1 $2') ) : s;
+			var date = s ? new Date( '2000/01/01 ' + s.replace(ts.regex.dateReplace, '$1 $2') ) : s;
 			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: 'numeric'

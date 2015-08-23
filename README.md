@@ -82,7 +82,32 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.2">Version 2.23.2</a> (8/23/2015)
+
+* Readme
+  * Corrections for last update
+* Docs
+  * Add parsed values function no longer wraps empty content.
+* Core
+  * Cache regular expressions.
+* ColumnSelector
+  * Add `columnSelector_updated` option (triggered event name).
+* Filter
+  * Allow dynamically changing the "any match" filter. Fixes [issue #998](https://github.com/Mottie/tablesorter/issues/998).
+  * Cache regular expressions.
+  * Add reference to widget code to make the file more compressible.
+
 #### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
+
+* Core
+  * Prevent js error when `$.tablesorter.showError` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
+  * Updated `$.tablesorter.showError` function by including a `settings` parameter; a parameter passed by jQuery's `.ajaxError()` method, but was previously omitted.
+
+    ```js
+    $.tablesorter.showError( table, xhr, settings, exception );
+    ```
+
+    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
 
 * Pager
   * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
@@ -90,10 +115,6 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
     ```js
     ajaxError: function( config, xhr, settings, exception ){ return exception; };
     ```
-
-    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
-
-  * Prevent js error when `$.tablesorter.showError()` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
 
 #### <a name="v2.23.0">Version 2.23.0</a> (8/17/2015)
 
@@ -148,9 +169,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Miscellaneous cleanup of testing code.
   * Add empty `ignore` entry to bower.json. Fixes [issue #991](https://github.com/Mottie/tablesorter/issues/991).
   * Fix license in package.json to match the new spdx license expression syntax.
-
-#### <a name="v2.22.5">Version 2.22.5</a> (7/28/2015)
-
-* Overall:
- * Set JSHint "undef" & "unused" options. Fixed issues.
- * The math widget was throwing a javascript error after missing a changed variable name & JSHint wasn't catching it, until now.
