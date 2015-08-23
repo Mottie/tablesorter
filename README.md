@@ -82,6 +82,21 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.2">Version 2.23.2</a> (8/23/2015)
+
+* Readme
+  * Corrections for last update
+* Docs
+  * Add parsed values function no longer wraps empty content.
+* Core
+  * Cache regular expressions.
+* ColumnSelector
+  * Add `columnSelector_updated` option (triggered event name).
+* Filter
+  * Allow dynamically changing the "any match" filter. Fixes [issue #998](https://github.com/Mottie/tablesorter/issues/998).
+  * Cache regular expressions.
+  * Add reference to widget code to make the file more compressible.
+
 #### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
 
 * Core
@@ -154,9 +169,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Miscellaneous cleanup of testing code.
   * Add empty `ignore` entry to bower.json. Fixes [issue #991](https://github.com/Mottie/tablesorter/issues/991).
   * Fix license in package.json to match the new spdx license expression syntax.
-
-#### <a name="v2.22.5">Version 2.22.5</a> (7/28/2015)
-
-* Overall:
- * Set JSHint "undef" & "unused" options. Fixed issues.
- * The math widget was throwing a javascript error after missing a changed variable name & JSHint wasn't catching it, until now.
