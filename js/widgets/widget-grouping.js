@@ -55,9 +55,13 @@
 		update : function(table, c, wo){
 			if ($.isEmptyObject(c.cache)) { return; }
 			var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, norm_rows, saveName, direction,
+				hasSort = typeof c.sortList[0] !== 'undefined',
 				group = '',
+				groupIndex = 0,
 				savedGroup = false,
-				column = c.sortList[0] ? c.sortList[0][0] : -1;
+				column = typeof wo.group_forceColumn[0] !== 'undefined' ?
+					( wo.group_enforceSort && !hasSort ? -1 : wo.group_forceColumn[0] ) :
+					( hasSort ? c.sortList[0][0] : -1 );
 			c.$table
 				.find('tr.group-hidden').removeClass('group-hidden').end()
 				.find('tr.group-header').remove();
@@ -65,7 +69,7 @@
 				// clear pager saved spacer height (in case the rows are collapsed)
 				c.$table.data('pagerSavedHeight', 0);
 			}
-			if (column >= 0 && !c.$headerIndexed[column].hasClass('group-false')) {
+			if (column >= 0 && column < c.columns && !c.$headerIndexed[column].hasClass('group-false')) {
 				wo.group_currentGroup = ''; // save current groups
 				wo.group_currentGroups = {};
 
@@ -77,10 +81,10 @@
 				// save current grouping
 				if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
 					wo.group_currentGroups = ts.storage( table, 'tablesorter-groups' ) || {};
-					// include direction when grouping numbers > 1 (reversed direction shows different range values)
-					direction = (grouping[1] === 'number' && grouping[2] > 1) ? 'dir' + c.sortList[0][1] : '';
+					// include direction when saving groups (reversed numbers shows different range values)
+					direction = 'dir' + c.sortList[0][1];
 					// combine column, sort direction & grouping as save key
-					saveName = wo.group_currentGroup = '' + column + direction + grouping.join('');
+					saveName = wo.group_currentGroup = '' + c.sortList[0][0] + direction + grouping.join('');
 					if (!wo.group_currentGroups[saveName]) {
 						wo.group_currentGroups[saveName] = [];
 					} else {
@@ -109,9 +113,11 @@
 										currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 									}
 									$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
-										'" unselectable="on"' + ( c.tabIndex ? ' tabindex="0"' : '' ) + '><td colspan="' +
-										c.columns + '">' + (wo.group_collapsible ? '<i/>' : '') + '<span class="group-name">' +
-										currentGroup + '</span><span class="group-count"></span></td></tr>');
+										'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
+										( groupIndex++ ) + '"><td colspan="' + c.columns + '">' +
+										( wo.group_collapsible ? '<i/>' : '' ) +
+										'<span class="group-name">' + currentGroup + '</span>' +
+										'<span class="group-count"></span></td></tr>');
 									if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
 										// all groups start collapsed
 										wo.group_currentGroups[wo.group_currentGroup].push(currentGroup);
@@ -138,8 +144,8 @@
 							}
 						}
 					}
-					if (wo.group_saveGroups && wo.group_currentGroups.length && wo.group_currentGroups[wo.group_currentGroup].length) {
-						name = $row.find('.group-name').text().toLowerCase();
+					if (wo.group_saveGroups && !$.isEmptyObject(wo.group_currentGroups) && wo.group_currentGroups[wo.group_currentGroup].length) {
+						name = $row.find('.group-name').text().toLowerCase() + $row.attr('data-group-index');
 						isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
 						$row.toggleClass('collapsed', isHidden);
 						$rows.toggleClass('group-hidden', isHidden);
@@ -162,7 +168,7 @@
 					if (event.type === 'keyup' && event.which !== 13) { return; }
 					var isCollapsed, $groups, indx,
 						$this = $(this),
-						name = $this.find('.group-name').text().toLowerCase();
+						name = $this.find('.group-name').text().toLowerCase() + $this.attr('data-group-index');
 					// use shift-click to toggle ALL groups
 					if (event.shiftKey && (event.type === 'click' || event.type === 'keyup')) {
 						$this.siblings('.group-header').trigger('toggleGroup');
@@ -219,6 +225,10 @@
 			group_formatter   : null, // function(txt, column, table, c, wo) { return txt; }
 			group_callback    : null, // function($cell, $rows, column, table){}, callback allowing modification of the group header labels
 			group_complete    : 'groupingComplete', // event triggered on the table when the grouping widget has finished work
+
+			// apply the grouping widget only to selected column
+			group_forceColumn : [],   // only the first value is used; set as an array for future expansion
+			group_enforceSort : true, // only apply group_forceColumn when a sort is applied to the table
 
 			// checkbox parser text used for checked/unchecked values
 			group_checkbox    : [ 'checked', 'unchecked' ],
