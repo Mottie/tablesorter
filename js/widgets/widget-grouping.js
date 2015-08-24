@@ -55,7 +55,6 @@
 		update : function(table, c, wo){
 			if ($.isEmptyObject(c.cache)) { return; }
 			var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, norm_rows, saveName, direction,
-				lang = wo.grouping_language,
 				group = '',
 				savedGroup = false,
 				column = c.sortList[0] ? c.sortList[0][0] : -1;
@@ -98,7 +97,7 @@
 							if (ts.grouping.types[grouping[1]]) {
 								currentGroup = norm_rows[rowIndex] ?
 									ts.grouping.types[grouping[1]]( c, c.$headerIndexed[column], norm_rows[rowIndex][column], /date/.test(groupClass) ?
-									grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group, lang ) : currentGroup;
+									grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group ) : currentGroup;
 								if (group !== currentGroup) {
 									group = currentGroup;
 									// show range if number > 1
