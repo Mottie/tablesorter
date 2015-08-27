@@ -17,7 +17,6 @@
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false */
 ;(function($){
 	'use strict';
 	$.extend({

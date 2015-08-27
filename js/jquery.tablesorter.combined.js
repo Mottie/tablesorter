@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 08-26-2015 (v2.23.2)*/
+/*! tablesorter (FORK) - updated 08-27-2015 (v2.23.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -35,7 +35,6 @@
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false */
 ;(function($){
 	'use strict';
 	$.extend({
@@ -3474,8 +3473,8 @@
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( event.which === 13 || event.type === 'search' ||
-					event.type === 'change' && this.value !== c.lastSearch[column] ) {
+				if ( wo.filter_initialized && ( event.which === 13 || event.type === 'search' ||
+					event.type === 'change' && this.value !== c.lastSearch[column] ) ) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
@@ -4321,7 +4320,8 @@
 							}
 							$column
 								.val( setFilters[ i ] )
-								.trigger( 'change' );
+								// must include a namespace here; but not c.namespace + 'filter'?
+								.trigger( 'change' + c.namespace );
 						} else {
 							filters[i] = $column.val() || '';
 							// don't change the first... it will move the cursor
