@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 08-27-2015 (v2.23.2)*/
+/*! tablesorter (FORK) - updated 08-31-2015 (v2.23.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1299,7 +1299,9 @@
 					$cell = $.fn.closest ? $(this).closest('th, td') : /TH|TD/.test(this.nodeName) ? $(this) : $(this).parents('th, td');
 					// reference original table headers and find the same cell
 					// don't use $headers or IE8 throws an error - see #987
-					cell = c.$headers[ $cell.prevAll().length ];
+					temp = $headers.index( $cell );
+					// use column index if $headers is undefined
+					cell = c.$headers[ ( temp < 0 ) ? $cell.attr('data-column') : temp ];
 					if (cell && !cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
