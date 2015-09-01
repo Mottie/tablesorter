@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 09-01-2015 (v2.23.2)*/
+/*! tablesorter (FORK) - updated 09-01-2015 (v2.23.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.23.2 *//*
+/*! TableSorter (FORK) v2.23.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -37,7 +37,7 @@
 
 			var ts = this;
 
-			ts.version = '2.23.2';
+			ts.version = '2.23.3';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -2712,7 +2712,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 8/23/2015 (v2.23.2) *//*
+/*! Widget: filter - updated 9/1/2015 (v2.23.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
