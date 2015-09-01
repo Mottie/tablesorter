@@ -567,8 +567,10 @@
 				for (i = 0; i < len; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
-						// multicolumn sorting updating - choose the :last in case there are nested columns
-						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (len === 1 ? ':last' : '') );
+						// multicolumn sorting updating - see #1005
+						f = c.lastClickedIndex > 0 ? c.$headers.filter(':gt(' + ( c.lastClickedIndex - 1 ) + ')') : c.$headers;
+						// choose the :last in case there are nested columns
+						f = f.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (len === 1 ? ':last' : '') );
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
@@ -1298,8 +1300,9 @@
 					// reference original table headers and find the same cell
 					// don't use $headers or IE8 throws an error - see #987
 					temp = $headers.index( $cell );
+					c.lastClickedIndex = ( temp < 0 ) ? $cell.attr('data-column') : temp;
 					// use column index if $headers is undefined
-					cell = c.$headers[ ( temp < 0 ) ? $cell.attr('data-column') : temp ];
+					cell = c.$headers[ c.lastClickedIndex ];
 					if (cell && !cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
