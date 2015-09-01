@@ -82,6 +82,20 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.3">Version 2.23.3</a> (9/1/2015)
+
+* Docs:
+  * Correction to `dateFormat` demo.
+* Core:
+  * Corrected sorting of col/rowspan in `thead`. Fixes [issue #1005](https://github.com/Mottie/tablesorter/issues/1005).
+  * Correct header sort indicators in row/colspans. Fixes [issue #1005](https://github.com/Mottie/tablesorter/issues/1005).
+* Filter:
+  * Use namespacing when binding reset. Fixes [issue #1001](https://github.com/Mottie/tablesorter/issues/1001).
+  * Restore triggered change namespace & prevent search before init. Fixes [issue #1002](https://github.com/Mottie/tablesorter/issues/1002).
+* Group:
+  * Remove unused variable.
+  * Add `group_forceColumn` & `group_enforceSort` options. Fixes [issue #1000](https://github.com/Mottie/tablesorter/issues/1000).
+
 #### <a name="v2.23.2">Version 2.23.2</a> (8/23/2015)
 
 * Readme
@@ -115,57 +129,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
     ```js
     ajaxError: function( config, xhr, settings, exception ){ return exception; };
     ```
-
-#### <a name="v2.23.0">Version 2.23.0</a> (8/17/2015)
-
-* Core:
-  * Prevent `addRows` error. See [issue #979](https://github.com/Mottie/tablesorter/issues/979).
-  * Make all updating methods public
-    * Call a function instead of triggering an event on the table. Changes include:
-      * `$.tablesorter.addRows` - called by `addRows` method.
-      * `$.tablesorter.appendCache` - renamed from `appendToTable`; appends cache
-          to DOM, called by `appendCache` method.
-      * `$.tablesorter.isEmptyObject` - clone of `$.isEmptyObject` (jQuery v1.4).
-      * `$.tablesorter.sortOn` - called by `sortOn` method.
-      * `$.tablesorter.sortReset` - called by `sortReset` method.
-      * `$.tablesorter.updateAll` - called by `updateAll` method.
-      * `$.tablesorter.updateCache` - called by `updateCache` method.
-      * `$.tablesorter.updateCell` - called by `updateCell` method.
-      * `$.tablesorter.update` - called by `update` and `updateRows` method.
-  * `addRows` now accepts a row string *if only one tbody exists* in the table.
-    * The one tbody does not include information only tbodies (which have a class name from `cssInfoBlock`).
-    * Previously, you had to make a jQuery object, append it to the table, then pass a reference containing the new rows.
-    * This method doesn't work if a table has multiple tbodies, because the plugin doesn't know where you want to add the rows.
-    * Also, updated the debug message for this method.
-  * Use header cells instead of references to prevent IE8 error. Fixes [issue #987](https://github.com/Mottie/tablesorter/issues/987).
-  * Fix above header cell targetting causing a javascript error in jQuery v1.2.6. Fixes [issue #995](https://github.com/Mottie/tablesorter/issues/995).
-  * Add `updateHeaders` method
-    * Triggered event & public api function.
-    * `$.tablesorter.updateHeaders` - called by `updateHeaders` method.
-    * Fixes [issue #989](https://github.com/Mottie/tablesorter/issues/989).
-* Docs:
-  * Update jQuery UI theme switcher URLs.
-* ColumnSelector:
-  * Modify `refreshColumnSelector` method so it also updates the contents of the container in case of changes to the header text, column priorities, etc.
-  * See examples of these changes in the column selector [methods section](http://mottie.github.io/tablesorter/docs/example-widget-column-selector.html#methods).
-  * Fixes [issue #985](https://github.com/Mottie/tablesorter/issues/985).
-* Editable:
-  * Improve column option parsing. Fixes issues [#982](https://github.com/Mottie/tablesorter/issues/982) & [#979](https://github.com/Mottie/tablesorter/issues/979).
-* Filter:
-  * Fix js error caused when limiting search columns - external "any" filter targeting specific columns; see [Stackoverflow](http://stackoverflow.com/q/32052986/145346).
-* Pager:
-  * Widget only: No more javascript error in widget ajax error message.
-  * Addon only: replace use of `$.isEmptyObject` which was not available in jQuery v1.2.6.
-  * Change enable, disable & destroy trigger methods.
-    * Previously, these methods had to include a `.pager` namespace: `enable.pager`, `disable.pager` & `destroy.pager`.
-    * These methods stopped working when unique pager namespaces were added.
-    * New trigger methods are named as follows: `enablePager`, `disablePager` & `destroyPager`.
-    * Fixes [issue #980](https://github.com/Mottie/tablesorter/issues/980).
-  * Unbind pager controls on destroy. Fixes [issue #981](https://github.com/Mottie/tablesorter/issues/981).
-  * Add `ajaxError` callback function. Fixes [issue #992](https://github.com/Mottie/tablesorter/issues/992).
-* Parsers:
-  * parser-input-select: fix javascript error when no rows returned.
-* Misc & Testing
-  * Miscellaneous cleanup of testing code.
-  * Add empty `ignore` entry to bower.json. Fixes [issue #991](https://github.com/Mottie/tablesorter/issues/991).
-  * Fix license in package.json to match the new spdx license expression syntax.

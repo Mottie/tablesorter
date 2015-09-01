@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 08-23-2015 (v2.23.2)*/
+/*! tablesorter (FORK) - updated 09-01-2015 (v2.23.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.23.2 *//*
+/*! TableSorter (FORK) v2.23.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -35,7 +35,6 @@
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
-/*global console:false */
 ;(function($){
 	'use strict';
 	$.extend({
@@ -44,7 +43,7 @@
 
 			var ts = this;
 
-			ts.version = '2.23.2';
+			ts.version = '2.23.3';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -576,8 +575,10 @@
 				for (i = 0; i < len; i++) {
 					// direction = 2 means reset!
 					if (list[i][1] !== 2) {
-						// multicolumn sorting updating - choose the :last in case there are nested columns
-						f = c.$headers.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (len === 1 ? ':last' : '') );
+						// multicolumn sorting updating - see #1005
+						f = c.lastClickedIndex > 0 ? c.$headers.filter(':gt(' + ( c.lastClickedIndex - 1 ) + ')') : c.$headers;
+						// choose the :last in case there are nested columns
+						f = f.not('.sorter-false').filter('[data-column="' + list[i][0] + '"]' + (len === 1 ? ':last' : '') );
 						if (f.length) {
 							for (j = 0; j < f.length; j++) {
 								if (!f[j].sortDisabled) {
@@ -1306,7 +1307,10 @@
 					$cell = $.fn.closest ? $(this).closest('th, td') : /TH|TD/.test(this.nodeName) ? $(this) : $(this).parents('th, td');
 					// reference original table headers and find the same cell
 					// don't use $headers or IE8 throws an error - see #987
-					cell = c.$headers[ $cell.prevAll().length ];
+					temp = $headers.index( $cell );
+					c.lastClickedIndex = ( temp < 0 ) ? $cell.attr('data-column') : temp;
+					// use column index if $headers is undefined
+					cell = c.$headers[ c.lastClickedIndex ];
 					if (cell && !cell.sortDisabled) {
 						initSort(table, cell, e);
 					}
@@ -2714,7 +2718,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 8/23/2015 (v2.23.2) *//*
+/*! Widget: filter - updated 9/1/2015 (v2.23.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -2777,7 +2781,7 @@
 					.split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
-				// add .tsfilter namespace to all BUT search
+				// add filter namespace to all BUT search
 				.unbind( events.replace( ts.regex.spaces, ' ' ) )
 				// remove the filter row even if refreshing, because the column might have been moved
 				.find( '.' + tscss.filterRow ).remove();
@@ -2788,7 +2792,7 @@
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 			if ( wo.filter_reset ) {
-				$( document ).undelegate( wo.filter_reset, 'click.tsfilter' );
+				$( document ).undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' );
 			}
 		}
 	});
@@ -3158,8 +3162,8 @@
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
 					$( document )
-						.undelegate( wo.filter_reset, 'click.tsfilter' )
-						.delegate( wo.filter_reset, 'click.tsfilter', function() {
+						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
+						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
 							c.$table.trigger( 'filterReset' );
 						});
@@ -3474,8 +3478,8 @@
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( event.which === 13 || event.type === 'search' ||
-					event.type === 'change' && this.value !== c.lastSearch[column] ) {
+				if ( wo.filter_initialized && ( event.which === 13 || event.type === 'search' ||
+					event.type === 'change' && this.value !== c.lastSearch[column] ) ) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
@@ -4321,7 +4325,8 @@
 							}
 							$column
 								.val( setFilters[ i ] )
-								.trigger( 'change.tsfilter' );
+								// must include a namespace here; but not c.namespace + 'filter'?
+								.trigger( 'change' + c.namespace );
 						} else {
 							filters[i] = $column.val() || '';
 							// don't change the first... it will move the cursor

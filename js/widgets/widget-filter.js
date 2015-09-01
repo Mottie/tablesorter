@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 8/23/2015 (v2.23.2) *//*
+/*! Widget: filter - updated 9/1/2015 (v2.23.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -61,7 +61,7 @@
 					.split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
-				// add .tsfilter namespace to all BUT search
+				// add filter namespace to all BUT search
 				.unbind( events.replace( ts.regex.spaces, ' ' ) )
 				// remove the filter row even if refreshing, because the column might have been moved
 				.find( '.' + tscss.filterRow ).remove();
@@ -72,7 +72,7 @@
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 			if ( wo.filter_reset ) {
-				$( document ).undelegate( wo.filter_reset, 'click.tsfilter' );
+				$( document ).undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' );
 			}
 		}
 	});
@@ -442,8 +442,8 @@
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
 					$( document )
-						.undelegate( wo.filter_reset, 'click.tsfilter' )
-						.delegate( wo.filter_reset, 'click.tsfilter', function() {
+						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
+						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
 							c.$table.trigger( 'filterReset' );
 						});
@@ -758,8 +758,8 @@
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( event.which === 13 || event.type === 'search' ||
-					event.type === 'change' && this.value !== c.lastSearch[column] ) {
+				if ( wo.filter_initialized && ( event.which === 13 || event.type === 'search' ||
+					event.type === 'change' && this.value !== c.lastSearch[column] ) ) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
@@ -1605,7 +1605,8 @@
 							}
 							$column
 								.val( setFilters[ i ] )
-								.trigger( 'change.tsfilter' );
+								// must include a namespace here; but not c.namespace + 'filter'?
+								.trigger( 'change' + c.namespace );
 						} else {
 							filters[i] = $column.val() || '';
 							// don't change the first... it will move the cursor

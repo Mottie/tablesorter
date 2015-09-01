@@ -86,6 +86,10 @@ tr.group-header.collapsed td i {
 			group_saveReset   : '.group_reset', // element to clear saved collapsed groups
 			group_count       : " ({num})", // if not false, the "{num}" string is replaced with the number of rows in the group
 
+			// apply the grouping widget only to selected column
+			group_forceColumn : [],   // only the first value is used; set as an array for future expansion
+			group_enforceSort : true, // only apply group_forceColumn when a sort is applied to the table
+
 			// checkbox parser text used for checked/unchecked values
 			group_checkbox    : [ 'checked', 'unchecked' ],
 
@@ -151,6 +155,12 @@ tr.group-header.collapsed td i {
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.<br><br></li>
+			<li>In <span class="version">v2.23.3</span>
+				<ul>
+					<li>Added <code>group_forceColumn</code> &amp; <code>group_enforceSort</code> options for force column grouping.</li>
+					<li>Updated method used to save collapsed groups, so any previously collapsed groups will be ignored after this update.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.22.0</span>, group headers are now keyboard accessible using <kbd>Tab</kbd>; and pressing <kbd>Enter</kbd> while the header has focus will toggle the group header, or use <kbd>Shift</kbd> + <kbd>Enter</kbd> to toggle all groups.</li>
 			<li>In <span class="version">v2.21.0</span>
 				<ul>
@@ -301,10 +311,30 @@ group_separator : /[/.]/</pre>
 						</td>
 					</tr>
 
+					<tr id="group_forcecolumn">
+						<td><a href="#" class="permalink">group_forceColumn</a></td>
+						<td><code><code>[]</code></td>
+						<td>
+							Force the group widget to only apply to one column (<span class="version">v2.23.3</span>).
+							<div class="collapsible">
+								<p>When this option is set, only the first value in the array is used; <em>it is set up as an array for future expansion</em>.</p>
+								<p>When set, the set column will be the only column grouped by this widget.</p>
+								<p>If the <code>group_enforceSort</code> option is set to <code>false</code>, the column will be grouped without a sort applied to the table.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="group_enforcesort">
+						<td><a href="#" class="permalink">group_enforceSort</a></td>
+						<td><code>true</code></td>
+						<td>
+							Only allow <code>group_forceColumn</code> to work when a sort is applied to the table (<span class="version">v2.23.3</span>).
+						</td>
+					</tr>
 
 					<tr id="group_checkbox">
 						<td><a href="#" class="permalink">group_checkbox</a></td>
-						<td>see description)</td>
+						<td>(see description)</td>
 						<td>
 							Set checkbox parser text (<span class="version">v2.21.0</span>)
 							<div class="collapsible">
@@ -457,7 +487,7 @@ group_dateString : function(date) {
 			<th class="group-letter-1">Animals (first <span>letter</span>)</th>
 			<th class="group-word-1">Natural Sort (first word)</th>
 			<th class="group-word-2">Inputs (second word)</th>
-			<!-- try "group-date", "group-date-year", "group-date-month", "group-date-day", "group-date-week" or "group-date-time" -->
+			<!-- try "group-date", "group-date-year", "group-date-month", "group-data-monthyear", "group-date-day", "group-date-week" or "group-date-time" -->
 			<th class="group-date">Date (<span>Full</span>)</th>
 		</tr>
 	</thead>

@@ -50,13 +50,13 @@
 			<li>The dateFormat option will ONLY work with the <code>shortDate</code> parser.</li>
 			<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
 			<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</li>
-			<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
+			<li>In versions 2.3+, date formats can be set by column using any of the following methods (they all do the same thing), in order of priority:
 				<ul>
 					<li>jQuery data <code>data-date-format="mmddyyyy"</code> (see the Javascript block below on how to set it directly; <code>data-dateFormat</code> is equivalent to <code>data-date-format</code>).</li>
 					<li>metadata <code>class="{ dateFormat: "mmddyyyy" }"</code>. This requires the metadata plugin.</li>
 					<li>headers option <code>headers : { 0 : { dateFormat: "mmddyyyy" } }</code>.</li>
 					<li>header class name <code>class="dateFormat-mmddyyyy"</code>.</li>
-					<li>overall <code>dateFormat</code> option setting.</li>
+					<li>Global (all columns) <code>dateFormat</code> option setting.</li>
 				</ul>
 			</li>
 		</ul>
