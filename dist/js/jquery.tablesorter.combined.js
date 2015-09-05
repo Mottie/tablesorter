@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 09-01-2015 (v2.23.3)*/
+/*! tablesorter (FORK) - updated 09-05-2015 (v2.23.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1804,13 +1804,12 @@
 
 			ts.applyWidgetOptions = function( table, c ){
 				var indx, widget,
-					len = c.widgets.length,
-					wo = c.widgetOptions;
+					len = c.widgets.length;
 				if (len) {
 					for (indx = 0; indx < len; indx++) {
 						widget = ts.getWidgetById( c.widgets[indx] );
 						if ( widget && 'options' in widget ) {
-							wo = table.config.widgetOptions = $.extend( true, {}, widget.options, wo );
+							c.widgetOptions = $.extend( true, {}, widget.options, c.widgetOptions );
 						}
 					}
 				}
@@ -1820,7 +1819,6 @@
 				table = $(table)[0]; // in case this is called externally
 				var indx, len, names, widget, name, applied,
 					c = table.config,
-					wo = c.widgetOptions,
 					tableClass = ' ' + c.table.className + ' ',
 					widgets = [],
 					time, time2, w, wd;
@@ -1878,14 +1876,14 @@
 								c.widgetInit[ name ] = true;
 								if (table.hasInitialized) {
 									// don't reapply widget options on tablesorter init
-									ts.applyWidgetOptions( table, c );
+									ts.applyWidgetOptions( table, table.config );
 								}
 								if ( 'init' in widget ) {
 									applied = true;
 									if (c.debug) {
 										console[ console.group ? 'group' : 'log' ]( 'Initializing ' + name + ' widget' );
 									}
-									widget.init(table, widget, c, wo);
+									widget.init(table, widget, table.config, table.config.widgetOptions);
 								}
 							}
 							if ( !init && 'format' in widget ) {
@@ -1893,7 +1891,7 @@
 								if (c.debug) {
 									console[ console.group ? 'group' : 'log' ]( 'Updating ' + name + ' widget' );
 								}
-								widget.format(table, c, wo, false);
+								widget.format(table, table.config, table.config.widgetOptions, false);
 							}
 							if (c.debug) {
 								if (applied) {
@@ -3071,7 +3069,7 @@
 			c.$table.addClass( 'hasFilters' );
 
 			// define timers so using clearTimeout won't cause an undefined error
-			wo.searchTimer = null;
+			wo.filter_searchTimer = null;
 			wo.filter_initTimer = null;
 			wo.filter_formatterCount = 0;
 			wo.filter_formatterInit = [];
@@ -3483,10 +3481,10 @@
 		},
 		searching: function( table, filter, skipFirst ) {
 			var wo = table.config.widgetOptions;
-			clearTimeout( wo.searchTimer );
+			clearTimeout( wo.filter_searchTimer );
 			if ( typeof filter === 'undefined' || filter === true ) {
 				// delay filtering
-				wo.searchTimer = setTimeout( function() {
+				wo.filter_searchTimer = setTimeout( function() {
 					tsf.checkFilters( table, filter, skipFirst );
 				}, wo.filter_liveSearch ? wo.filter_searchDelay : 10 );
 			} else {
