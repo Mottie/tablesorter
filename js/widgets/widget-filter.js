@@ -357,7 +357,7 @@
 			c.$table.addClass( 'hasFilters' );
 
 			// define timers so using clearTimeout won't cause an undefined error
-			wo.searchTimer = null;
+			wo.filter_searchTimer = null;
 			wo.filter_initTimer = null;
 			wo.filter_formatterCount = 0;
 			wo.filter_formatterInit = [];
@@ -769,10 +769,10 @@
 		},
 		searching: function( table, filter, skipFirst ) {
 			var wo = table.config.widgetOptions;
-			clearTimeout( wo.searchTimer );
+			clearTimeout( wo.filter_searchTimer );
 			if ( typeof filter === 'undefined' || filter === true ) {
 				// delay filtering
-				wo.searchTimer = setTimeout( function() {
+				wo.filter_searchTimer = setTimeout( function() {
 					tsf.checkFilters( table, filter, skipFirst );
 				}, wo.filter_liveSearch ? wo.filter_searchDelay : 10 );
 			} else {
