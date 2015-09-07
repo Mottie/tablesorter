@@ -285,13 +285,13 @@ jQuery(function($){
 			this.c.$table.find('.tablesorter-filter-row select:first option').each(function(){
 				opts.push( $.trim( $(this).text() ) );
 			});
-			assert.equal ( opts.length === 3 && opts.join('') === '< 10> 10', true, 'filter_functions set' );
+			assert.equal ( 'len=' + opts.length + ',' + opts.join(''), 'len=3,< 10> 10', 'filter_functions set' );
 
 			opts = [];
 			$t.find('option').each(function(){
 				opts.push( $.trim( $(this).text() ) );
 			});
-			assert.equal ( opts.length === 4 && opts.join('') === 'abcdefzyx', true, 'filter_selectSource set' );
+			assert.equal ( 'len=' + opts.length + ',' + opts.join(''), 'len=4,abcdefzyx', 'filter_selectSource set' );
 
 		});
 

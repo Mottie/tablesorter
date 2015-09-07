@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 09-05-2015 (v2.23.3)*/
+/*! tablesorter (FORK) - updated 09-07-2015 (v2.23.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1606,7 +1606,7 @@
 
 			// *** sort functions ***
 			// regex used in natural sort
-			ts.regex.chunk = /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi; // chunk/tokenize numbers & letters
+			ts.regex.chunk = /(^([+\-]?(?:\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi; // chunk/tokenize numbers & letters
 			ts.regex.chunks = /(^\\0|\\0$)/; // replace chunks @ ends
 			ts.regex.hex = /^0x[0-9a-f]+$/i; // hex
 
@@ -3208,7 +3208,7 @@
 								.find( 'select.' + tscss.filter + '[data-column="' + column + '"]' )
 								.append( options );
 							txt = wo.filter_selectSource;
-							fxn = $.isFunction( txt ) ? true : ts.getColumnData( table, txt, column );
+							fxn = typeof txt === 'function' ? true : ts.getColumnData( table, txt, column );
 							if ( fxn ) {
 								// updating so the extra options are appended
 								tsf.buildSelect( c.table, column, '', true, $header.hasClass( wo.filter_onlyAvail ) );
@@ -3227,7 +3227,7 @@
 			}
 
 			if ( wo.filter_hideFilters ) {
-				tsf.hideFilters( table, c );
+				tsf.hideFilters( c );
 			}
 
 			// show processing icon
@@ -3354,7 +3354,7 @@
 			return parsed ? c.parsers[column].format( filter, c.table, [], column ) : filter;
 		},
 		buildRow: function( table, c, wo ) {
-			var col, column, $header, buildSelect, disabled, name, ffxn, tmp,
+			var col, column, $header, makeSelect, disabled, name, ffxn, tmp,
 				// c.columns defined in computeThIndexes()
 				cellFilter = wo.filter_cellFilter,
 				columns = c.columns,
@@ -3378,14 +3378,14 @@
 				// assuming last cell of a column is the main column
 				$header = c.$headerIndexed[ column ];
 				ffxn = ts.getColumnData( table, wo.filter_functions, column );
-				buildSelect = ( wo.filter_functions && ffxn && typeof ffxn !== 'function' ) ||
+				makeSelect = ( wo.filter_functions && ffxn && typeof ffxn !== 'function' ) ||
 					$header.hasClass( 'filter-select' );
 				// get data from jQuery data, metadata, headers option or header class name
 				col = ts.getColumnData( table, c.headers, column );
 				disabled = ts.getData( $header[0], col, 'filter' ) === 'false' ||
 					ts.getData( $header[0], col, 'parser' ) === 'false';
 
-				if ( buildSelect ) {
+				if ( makeSelect ) {
 					buildFilter = $( '<select>' ).appendTo( c.$filters.eq( column ) );
 				} else {
 					ffxn = ts.getColumnData( table, wo.filter_formatter, column );
@@ -3548,7 +3548,7 @@
 				return false;
 			}
 		},
-		hideFilters: function( table, c ) {
+		hideFilters: function( c ) {
 			var timer;
 			c.$table
 				.find( '.' + tscss.filterRow )
@@ -4072,14 +4072,12 @@
 		},
 		getOptionSource: function( table, column, onlyAvail ) {
 			table = $( table )[0];
-			var cts, txt, indx, len,
-				c = table.config,
+			var c = table.config,
 				wo = c.widgetOptions,
-				parsed = [],
 				arry = false,
 				source = wo.filter_selectSource,
 				last = c.$table.data( 'lastSearch' ) || [],
-				fxn = $.isFunction( source ) ? true : ts.getColumnData( table, source, column );
+				fxn = typeof source === 'function' ? true : ts.getColumnData( table, source, column );
 
 			if ( onlyAvail && last[column] !== '' ) {
 				onlyAvail = false;
@@ -4098,10 +4096,24 @@
 				// custom select source function for a SPECIFIC COLUMN
 				arry = fxn( table, column, onlyAvail );
 			}
+
 			if ( arry === false ) {
 				// fall back to original method
 				arry = tsf.getOptions( table, column, onlyAvail );
 			}
+
+			return tsf.processOptions( table, column, arry );
+
+		},
+		processOptions: function( table, column, arry ) {
+			if ( !$.isArray( arry ) ) {
+				return false;
+			}
+			table = $( table )[0];
+			var cts, txt, indx, len,
+				c = table.config,
+				validColumn = typeof column !== 'undefined' && column !== null && column >= 0 && column < c.columns,
+				parsed = [];
 
 			// get unique elements and sort the list
 			// if $.tablesorter.sortText exists ( not in the original tablesorter ),
@@ -4110,7 +4122,7 @@
 				return $.inArray( value, arry ) === indx;
 			});
 
-			if ( c.$headerIndexed[ column ].hasClass( 'filter-select-nosort' ) ) {
+			if ( validColumn && c.$headerIndexed[ column ].hasClass( 'filter-select-nosort' ) ) {
 				// unsorted select options
 				return arry;
 			} else {
@@ -4123,7 +4135,8 @@
 					parsed.push({
 						t : txt,
 						// check parser length - fixes #934
-						p : c.parsers && c.parsers.length && c.parsers[ column ].format( txt, table, [], column ) || txt
+						p : validColumn && c.parsers && c.parsers.length &&
+							c.parsers[ column ].format( txt, table, [], column ) || txt
 					});
 				}
 
@@ -4133,10 +4146,10 @@
 					// sortNatural breaks if you don't pass it strings
 					var x = a.p.toString(),
 						y = b.p.toString();
-					if ( $.isFunction( cts ) ) {
+					if ( validColumn && typeof cts === 'function' ) {
 						// custom OVERALL text sorter
 						return cts( x, y, true, column, table );
-					} else if ( typeof cts === 'object' && cts.hasOwnProperty( column ) ) {
+					} else if ( validColumn && typeof cts === 'object' && cts.hasOwnProperty( column ) ) {
 						// custom text sorter for a SPECIFIC COLUMN
 						return cts[column]( x, y, true, column, table );
 					} else if ( ts.sortNatural ) {
@@ -4194,6 +4207,7 @@
 			if ( !table.config.cache || $.isEmptyObject( table.config.cache ) ) {
 				return;
 			}
+
 			var indx, val, txt, t, $filters, $filter,
 				c = table.config,
 				wo = c.widgetOptions,
@@ -4209,6 +4223,7 @@
 					.find( 'thead' )
 					.find( 'select.' + tscss.filter + '[data-column="' + column + '"]' )
 					.val();
+
 			// nothing included in arry ( external source ), so get the options from
 			// filter_selectSource or column data
 			if ( typeof arry === 'undefined' || arry === '' ) {

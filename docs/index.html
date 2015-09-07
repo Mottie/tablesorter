@@ -2965,7 +2965,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.21.5</span>).
+					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.23.4</span>).
 					<div class="collapsible">
 					<br>
 					In <span class="version updated">v2.21.5</span>, this option will now override the <code>filter_function</code> options (<em>so you need to add them back!</em>), allowing the addition of custom select options and still maintain basic filtering action - see <a href="http://jsfiddle.net/Mottie/856bzzeL/117/">this demo</a> (<a href="http://stackoverflow.com/a/29506523/145346">ref</a>).<br>
@@ -2996,17 +2996,29 @@ $('table').trigger('search', false);</pre></div>
   });
 });</pre>
 						</li>
-						<li>An object containing column keys set with a function - when the option is set in this manner, a function can be applied to a specific column
+						<li>An object containing column keys set with a function - when the option is set in this manner, a function can be applied to a specific column.
+							<p>This example was updated in <span class="version">v2.23.4</span> to use the <code>buildSelect</code> function directly (<a href="https://github.com/Mottie/tablesorter/issues/1010">ref</a>)</p>
 							<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     widgets: ["filter"],
     widgetOptions : {
       filter_selectSource : {
         0 : function(table, column, onlyAvail){
-          return $.getJSON('ajax/options.json', function(data) {
-            // return false if there is a problem and the select
-            // will display the original defaults
-            return data.hasOwnProperty('options') ? data.options : false;
+          // call ajax after tablesorter has initialized; this prevents
+          // multiple ajax calls during initialization
+          if (table.hasInitialized) {
+            $.getJSON('ajax/options.json', function(data) {
+              // return false if there is a problem and the select
+              // will display the original defaults
+              var result = data.hasOwnProperty('options') ? data.options : false;
+              // if not already done on the server-side & you want to sort & remove duplicates
+              // from the results, use the processOptions function (added 2.23.4)
+              result = $.tablesorter.filter.processOptions( table, column, result );
+              // call the buildSelect function; pass `true` to replace the contents of the select
+              $.tablesorter.filter.buildSelect( table, column, result, true, onlyAvail );
+            });
+          }
+          return false;
         }
       }
     }
@@ -7046,6 +7058,63 @@ $.tablesorter.filter.buildSelect( $('table'), 0, [ 1, 2, 3, 4 ], true );
 // append "Aaron" and "Fred" to the second column's filter select options. These options will remain unsorted.
 $.tablesorter.filter.buildSelect( $('table'), 1, $('&lt;option&gt;Aaron&lt;/option&gt;&lt;option&gt;Fred&lt;/option&gt;'), false );</pre>
 						Please be aware that this function will allow you to modify the select options, but as soon as the user filters any column, all of the select options will refresh and obtain options from the table column, or from the <code>filter_selectSource</code> function.
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-getoptions">
+				<td><a href="#" class="permalink">getOptions</a></td>
+				<td>This filter widget function returns all the cached values of the set table column (<span class="version">v2.16.0</span>):
+					<div class="collapsible"><br>
+						This function respects the parsed data setting for the column, so it uses the <code>filter_useParsedData</code> option, <code>"filter-parsed"</code> class on the header, or the parser <code>parsed</code> flag settinng (<a href="example-parsers.html">ref</a>).
+						<p>Use it as follows:</p>
+						<pre class="prettyprint lang-js">$.tablesorter.filter.getOptions( table, column, onlyAvail );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>column</code> - zero-based column index.</li>
+							<li><code>onlyAvail</code> - an optional boolean flag, which will be ignored if the <code>options</code> parameter is defined or is an empty string; otherwise it is the value passed to the function which finds all table column values; if <code>true</code>, only the available options will be diplayed.</li>
+						</ul>
+						Use this function as follows:<br>
+						<pre class="prettyprint lang-js">// external filter select
+var index, len,
+	opts = '',
+	$table = $('table'),
+	column = 0, // first column
+	onlyAvail = false, // if true, available rows (visible rows after filtering) are returned
+	array = $.tablesorter.filter.getOptions( $table, column, onlyAvail );
+
+// process array; sort & remove duplicates (added v2.23.4)
+arry = $.tablesorter.filter.processOptions( $table, column, array );
+len = arry.length;
+
+// build options
+for ( index = 0; index < len; index++ ) {
+	opts += '<option value="' + array[ index ] + '">' + array[ index ] + '</option>';
+}
+$('select.external').html( opts );</pre>
+						<p>Please be aware that this function does not process the array, so the array may contain duplicates and will not be sorted.</p>
+						The filter <a href="#function-processoptions"><code>processOptions</code></a> function was added in <span class="version">v2.23.4</span> which performs those actions.
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-processoptions">
+				<td><a href="#" class="permalink">processOptions</a></td>
+				<td>This filter widget function returns an array of sorted column data will duplicates removed (<span class="version">v2.23.4</span>).
+					<div class="collapsible"><br>
+						Use it as follows:
+						<pre class="prettyprint lang-js">$.tablesorter.filter.processOptions( table, column, array );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>column</code> - zero-based column index (optional).</li>
+							<li><code>array</code> - An array of items to process.</li>
+						</ul>
+						The <code>column</code> parameter is optional, but if included it is used:
+						<ul>
+							<li>To check the column header for a <code>filter-select-nosort</code> class name to prevent the sorting of options.</li>
+							<li>To check tablesorter's <code>textSorter</code> option in case there are column specific sorting algorhithms set.</li>
+						</ul>
+						See the <a href="#function-getoptions"><code>getOptions</code></a> function description or the <a href="#widget-filter-selectsource"><code>filter_selectSource</code></a> option (under "An object containing column keys"; getJSON) for examples which use this function.
 					</div>
 				</td>
 			</tr>
