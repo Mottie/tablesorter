@@ -1588,7 +1588,7 @@
 
 			// *** sort functions ***
 			// regex used in natural sort
-			ts.regex.chunk = /(^([+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi; // chunk/tokenize numbers & letters
+			ts.regex.chunk = /(^([+\-]?(?:\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?)?$|^0x[0-9a-f]+$|\d+)/gi; // chunk/tokenize numbers & letters
 			ts.regex.chunks = /(^\\0|\\0$)/; // replace chunks @ ends
 			ts.regex.hex = /^0x[0-9a-f]+$/i; // hex
 
