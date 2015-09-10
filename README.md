@@ -1,5 +1,6 @@
-tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
-tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
+tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes. tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
+
+[![Bower Version][bower-image]][bower-url] [![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url]  [![zenhub-image]][zenhub-url]
 
 ### Notice!
 
@@ -41,7 +42,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 ### Download
 
-* Get [all files](https://github.com/Mottie/tablesorter/archive/master.zip)
+* Get [all files](//github.com/Mottie/tablesorter/archive/master.zip)
 * Use [bower](http://bower.io/): `bower install jquery.tablesorter`
 * Use [node.js](http://nodejs.org/): `npm install tablesorter`
 * CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter)
@@ -77,6 +78,15 @@ If you would like to contribute, please...
 * If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
 * Ask your question at [Stackoverflow](//stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
 * Please don't open a [new issue](//github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
+
+[npm-url]: https://npmjs.org/package/tablesorter
+[npm-image]: https://img.shields.io/npm/v/tablesorter.svg
+[david-dev-url]: https://david-dm.org/Mottie/tablesorter#info=devDependencies
+[david-dev-image]: https://img.shields.io/david/dev/Mottie/tablesorter.svg
+[bower-url]: http://bower.io/search/?q=jquery.tablesorter
+[bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
+[zenhub-url]: https://zenhub.io
+[zenhub-image]: https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png
 
 ### Recent Changes
 
