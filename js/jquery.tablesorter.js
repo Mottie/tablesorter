@@ -2089,7 +2089,7 @@
 	});
 
 	// set up debug logs
-	if ( !( console && console.log ) ) {
+	if ( !( window.console && window.console.log ) ) {
 		ts.logs = [];
 		/*jshint -W020 */
 		console = {};

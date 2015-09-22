@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 09-07-2015 (v2.23.3)*/
+/*! tablesorter (FORK) - updated 09-22-2015 (v2.23.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2101,7 +2101,7 @@
 	});
 
 	// set up debug logs
-	if ( !( console && console.log ) ) {
+	if ( !( window.console && window.console.log ) ) {
 		ts.logs = [];
 		/*jshint -W020 */
 		console = {};
