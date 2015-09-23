@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Grouping + Filter widget with child rows</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<!-- grouping widget -->
+	<script src="../js/widgets/widget-filter.js"></script>
+	<script src="../js/widgets/widget-grouping.js"></script>
+
+
+	<style id="css">/* disable child row group hover */
+.tablesorter-blue tbody > tr.hover > td,
+.tablesorter-blue tbody > tr:hover > td {
+	background-color: #d9d9d9;
+}
+.tablesorter-blue tbody > tr:hover + tr.odd.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr:hover + tr.odd.tablesorter-childRow + tr.tablesorter-childRow > td {
+	background-color: #ebf2fa;
+}
+.tablesorter-blue tbody > tr:hover + tr.even.tablesorter-childRow > td,
+.tablesorter-blue tbody > tr:hover + tr.even.tablesorter-childRow + tr.tablesorter-childRow > td {
+	background-color: #fff;
+}
+
+/* Grouping widget css */
+tr.group-header td {
+	background: #eee;
+}
+.group-name {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.group-count {
+	color: #999;
+}
+.group-hidden {
+	display: none !important;
+}
+.group-header, .group-header td {
+	user-select: none;
+	-moz-user-select: none;
+}
+/* collapsed arrow */
+tr.group-header td i {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid #888;
+	border-right: 4px solid #888;
+	border-left: 4px solid transparent;
+	margin-right: 7px;
+	user-select: none;
+	-moz-user-select: none;
+}
+tr.group-header.collapsed td i {
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 5px solid #888;
+	border-right: 0;
+	margin-right: 10px;
+}</style>
+
+	<script id="js">$(function() {
+
+	var $table = $('table');
+
+	$table.tablesorter({
+		theme : 'blue',
+		sortList : [[ 1, 0 ]],
+		widgets: [ 'filter', 'group', 'zebra' ],
+		widgetOptions: {
+			filter_childRows     : true,
+			filter_childByColumn : true,
+			filter_childWithSibs : false,
+			group_collapsible    : true,
+			group_collapsed      : false,
+			group_count          : false
+		}
+	});
+
+	$table.on('click', '.toggle', function() {
+		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
+		return false;
+	});
+
+	$('button').click(function(){
+		var wo = $table[0].config.widgetOptions,
+			set = !wo.filter_childWithSibs;
+		wo.filter_childWithSibs = set;
+		$('.setting').html( '' + set );
+		// update search
+		$table.trigger( 'search', false );
+	});
+
+});</script>
+</head>
+<body id="group">
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Grouping + Filter widget with child rows</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+<h1>Demo</h1>
+
+<button type="button">Toggle</button> <code>filter_childWithSibs</code> : <code class="setting">false</code>
+
+<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="Customer group-false"></th>
+			<th class="group-word">Country</th>
+			<th class="group-false filter-parsed">Stock</th>
+			<th class="group-false filter-parsed">Price</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr><td><a href="#" class="toggle">Good Toys</a></td><td>USA</td><td>80%</td><td>$2</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget A</td><td>USA</td><td>22%</td><td>$5</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget B</td><td>USA</td><td>10%</td><td>$55</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget C</td><td>USA</td><td>9%</td><td>$52</td></tr>
+
+		<tr><td><a href="#" class="toggle">Cycle Clearance</a></td><td>FRANCE</td><td>80%</td><td>$7</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 3</td><td>FRANCE</td><td>11%</td><td>$3</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 4</td><td>FRANCE</td><td>45%</td><td>$25</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 0</td><td>FRANCE</td><td>21%</td><td>$32</td></tr>
+
+		<tr><td><a href="#" class="toggle">François Cycle</a></td><td>FRANCE</td><td>20%</td><td>$4</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 77</td><td>FRANCE</td><td>21%</td><td>$17</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 64</td><td>FRANCE</td><td>22%</td><td>$22</td></tr>
+
+		<tr><td><a href="#" class="toggle">Cycle Initial Bike Company</a></td><td>USA</td><td>36%</td><td>$3</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 1</td><td>USA</td><td>72%</td><td>$74</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 2</td><td>USA</td><td>42%</td><td>$95</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 5</td><td>USA</td><td>54%</td><td>$53</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 7</td><td>USA</td><td>66%</td><td>$34</td></tr>
+
+		<tr><td><a href="#" class="toggle">Sports Store</a></td><td>USA</td><td>24%</td><td>$8</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 99</td><td>USA</td><td>85%</td><td>$64</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 31</td><td>USA</td><td>31%</td><td>$35</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 44</td><td>USA</td><td>62%</td><td>$23</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget 12</td><td>USA</td><td>53%</td><td>$51</td></tr>
+
+		<tr><td><a href="#" class="toggle">Lucky Toys</a></td><td>UK</td><td>54%</td><td>$6</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget Z</td><td>UK</td><td>35%</td><td>$44</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget Y</td><td>UK</td><td>31%</td><td>$45</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget X</td><td>UK</td><td>32%</td><td>$43</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget W</td><td>UK</td><td>33%</td><td>$41</td></tr>
+
+		<tr><td><a href="#" class="toggle">Locks Company</a></td><td>UK</td><td>64%</td><td>$9</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget T</td><td>UK</td><td>15%</td><td>$64</td></tr>
+		<tr class="tablesorter-childRow"><td>Widget V</td><td>UK</td><td>11%</td><td>$65</td></tr>
+
+	</tbody>
+</table>
+</div>
+
+	<h1>Script</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-js"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

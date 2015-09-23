@@ -1,5 +1,6 @@
-tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
-tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
+tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes. tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
+
+[![Bower Version][bower-image]][bower-url] [![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url] [![zenhub-image]][zenhub-url]
 
 ### Notice!
 
@@ -31,7 +32,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+, Chrome 5.0+.
 * Small code size, starting at 25K minified
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
-* Works with jQuery 1.9+ ($.browser.msie was removed; needed in the original version).
+* Works with jQuery 1.9+ (`$.browser.msie` was removed; needed in the original version).
 
 ### Licensing
 
@@ -41,7 +42,7 @@ tablesorter can successfully parse and sort many types of data including linked 
 
 ### Download
 
-* Get [all files](https://github.com/Mottie/tablesorter/archive/master.zip)
+* Get all files: [zip](//github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](//github.com/Mottie/tablesorter/archive/master.tar.gz)
 * Use [bower](http://bower.io/): `bower install jquery.tablesorter`
 * Use [node.js](http://nodejs.org/): `npm install tablesorter`
 * CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter)
@@ -78,9 +79,32 @@ If you would like to contribute, please...
 * Ask your question at [Stackoverflow](//stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
 * Please don't open a [new issue](//github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
+[npm-url]: https://npmjs.org/package/tablesorter
+[npm-image]: https://img.shields.io/npm/v/tablesorter.svg
+[david-dev-url]: https://david-dm.org/Mottie/tablesorter#info=devDependencies
+[david-dev-image]: https://img.shields.io/david/dev/Mottie/tablesorter.svg
+[bower-url]: http://bower.io/search/?q=jquery.tablesorter
+[bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
+[zenhub-url]: https://zenhub.io
+[zenhub-image]: https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png
+
 ### Recent Changes
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.23.4">Version 2.23.4</a> (9/23/2015)
+
+* Core:
+  * Ensure widgets don't get cached options. Fixes [issue #946](https://github.com/Mottie/tablesorter/issues/946).
+  * Update natural sort regular expression for chunking data.
+  * Use `window.console` check to prevent IE9 error. Fixes [issue #1019](https://github.com/Mottie/tablesorter/issues/1019).
+* Filter:
+  * Modified internal variable.
+  * Add internal processOptions function & code cleanup.
+  * Fix external filters not allowing columns > 9. See [pull #1021](https://github.com/Mottie/tablesorter/pull/1021); thanks [a-mair](https://github.com/a-mair)!
+  * Add `filter_childWithSIbs` option. Fixes [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
+* Build
+  * Update dependencies.
 
 #### <a name="v2.23.3">Version 2.23.3</a> (9/1/2015)
 
@@ -110,22 +134,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Allow dynamically changing the "any match" filter. Fixes [issue #998](https://github.com/Mottie/tablesorter/issues/998).
   * Cache regular expressions.
   * Add reference to widget code to make the file more compressible.
-
-#### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
-
-* Core
-  * Prevent js error when `$.tablesorter.showError` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
-  * Updated `$.tablesorter.showError` function by including a `settings` parameter; a parameter passed by jQuery's `.ajaxError()` method, but was previously omitted.
-
-    ```js
-    $.tablesorter.showError( table, xhr, settings, exception );
-    ```
-
-    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
-
-* Pager
-  * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
-
-    ```js
-    ajaxError: function( config, xhr, settings, exception ){ return exception; };
-    ```

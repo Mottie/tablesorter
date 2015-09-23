@@ -465,6 +465,10 @@
 					}, 40 );
 				});
 			wo.math_isUpdating = false;
+			// math widget initialized after table - see #946
+			if ( table.hasInitialized ) {
+				math.recalculate( c, wo, true );
+			}
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+

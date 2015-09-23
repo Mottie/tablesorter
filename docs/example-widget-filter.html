@@ -50,6 +50,9 @@
 			// if true, filter child row content by column; filter_childRows must also be true
 			filter_childByColumn : false,
 
+			// if true, include matching child row siblings
+			filter_childWithSibs : true,
+
 			// if true, a filter will be added to the top of each table column;
 			// disabled by using -> headers: { 1: { filter: false } } OR add class="filter-false"
 			// if you set this to false, make sure you perform a search using the second method below
@@ -336,6 +339,17 @@ $(function(){
 								<br>
 								If <code>false</code>, and the <code>filter_childRows</code> option is <code>true</code>, then queries in <em>any column</em> will search all child content, as before this option was added.
 						</div>
+						</td>
+					</tr>
+
+					<tr id="filter-child-with-sibs">
+						<td><a href="#" class="permalink">filter_childWithSibs</a></td>
+						<td>true</td>
+						<td>if <code>true</code>, all sibling rows of the matching child row will also be visible (<span class="version">v2.23.4</span>).
+							<div class="collapsible">
+								<p>Both <code>filter_childRows</code> &amp; <code>filter_childByColumn</code> options must be set to <code>true</code> for this option to work.</p>
+								If <code>false</code>, this option will only show the child row that matches the filter; and its parent row.
+							</div>
 						</td>
 					</tr>
 
