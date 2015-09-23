@@ -907,7 +907,7 @@
 				targets = wo.filter_initialized || !$input.filter( wo.filter_anyColumnSelector ).length,
 				columns = [],
 				val = $.trim( tsf.getLatestSearch( $input ).attr( 'data-column' ) || '' );
-			if ( !/[,-]/.test(val) && val.length === 1 ) {
+			if ( /^[0-9]+$/.test(val)) {
 				return parseInt( val, 10 );
 			}
 			// process column range
