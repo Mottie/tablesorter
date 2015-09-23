@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Grouping + Filter widget with child rows</title>
+	<title>jQuery plugin: Tablesorter 2.0 - Filter widget with child rows (+ Grouping)</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -98,7 +98,7 @@ tr.group-header.collapsed td i {
 		return false;
 	});
 
-	$('button').click(function(){
+	$('.toggle').click(function(){
 		var wo = $table[0].config.widgetOptions,
 			set = !wo.filter_childWithSibs;
 		wo.filter_childWithSibs = set;
@@ -107,20 +107,43 @@ tr.group-header.collapsed td i {
 		$table.trigger( 'search', false );
 	});
 
+	$('.search').click(function(){
+		var filter = [],
+			$this = $(this),
+			col = parseInt( $this.attr('data-column'), 10 );
+		filter[ col ] = $this.text();
+		$.tablesorter.setFilters( $table, filter, true );
+	});
+
 });</script>
 </head>
 <body id="group">
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Grouping + Filter widget with child rows</h2>
+	<h2>Filter widget with child rows (+ Grouping)</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
 <div id="main">
 
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>Added <code>filter_childWithSibs</code> in <span class="version">v2.23.4</span>, to see what it does:
+				<ul>
+					<li>Search the "Stock" (<button class="search" type="button" data-column="2">11%</button>) or "Price" (<button class="search" type="button" data-column="3">&lt;$10</button>) column.</li>
+					<li>Use the "Toggle" button to change the setting.</li>
+					<li>When <code>filter_childWithSibs</code> is <code>false</code>, only the child rows that match the filter are visible.</li>
+					<li>When it is <code>true</code>, all sibling child rows will be visible.</li>
+					<li>The parent row will always be visible.</li>
+				</ul>
+			</li>
+		</ul>
+	<p>
+
 <h1>Demo</h1>
 
-<button type="button">Toggle</button> <code>filter_childWithSibs</code> : <code class="setting">false</code>
+<button class="toggle" type="button">Toggle</button> <code>filter_childWithSibs</code> : <code class="setting">false</code>
 
 <div id="demo"><table class="tablesorter">
 	<thead>
