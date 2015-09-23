@@ -481,14 +481,15 @@
 		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.23.2</span>).</li>
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.23.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.23.3</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.23.4</span>):
 			<ul>
-				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.22.2</span>)</li>
+				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.23.4</span>)</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.22.0</span>)</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>)</li>
 				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.22.0</span>)</li>
 				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.22.0</span>)</li>
 				<li><a href="example-widget-filter-custom-search2.html">custom search (example #2)</a> (<span class="version">v2.19.1</span>; <span class="version updated">v2.21.0</span>)</li>
+				<li><a href="example-widget-filter-childrows.html">child rows</a> (<span class="version">v2.23.4</span>)</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.21.3</span>)</li>
 			</ul>
@@ -1881,6 +1882,8 @@ $(function(){
       filter_childRows     : false,
       // filter child row content by column, if true; filter_childRows must also be true!
       filter_childByColumn : false,
+      // if true, include matching child row siblings
+      filter_childWithSibs : true,
       // show column filters
       filter_columnFilters : true,
       // extra css class name (string or array) added to the filter element (input or select)
@@ -2298,7 +2301,7 @@ $(function(){
 						<p>If <code>false</code>, and the <code>filter_childRows</code> option is <code>true</code>, then queries in <em>any column</em> will search all child content, as before this option was added.</p>
 						<p></p>
 						Use the <a href="#widget-filter-child-by-column"><code>filter_childByColumn</code></a> option as follows:
-					<pre class="prettyprint lang-js">$(function(){
+						<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     widgets: ["filter"],
     widgetOptions : {
@@ -2312,7 +2315,33 @@ $(function(){
 				<td><a href="example-child-rows-filtered.html#child-by-column">Example</a></td>
 			</tr>
 
-			<tr id="widget-filter-columnFilters">
+			<tr id="widget-filter-child-with-sibs">
+				<td><a href="#" class="permalink">filter_childWithSibs</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: include all sibling rows of the matching child row (<span class="version">v2.23.4</span>).
+					<div class="collapsible">
+						<p>Both <code>filter_childRows</code> &amp; <code>filter_childByColumn</code> options must be set to <code>true</code> for this option to work.</p>
+						<p>If <code>false</code>, this option will only show the child row that matches the filter; and its parent row.</p>
+						Use the <a href="#widget-filter-child-with-sibs"><code>filter_childWithSibs</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: [ "filter" ],
+    widgetOptions : {
+      filter_childRows     : true,
+      filter_childByColumn : true,
+      // only show matching child row & parent
+      filter_childWithSibs : false
+    }
+  });
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="widget-filter-columnfilters">
 				<td><a href="#" class="permalink">filter_columnFilters</a></td>
 				<td>Boolean</td>
 				<td>true</td>

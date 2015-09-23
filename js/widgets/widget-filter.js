@@ -21,6 +21,7 @@
 		options : {
 			filter_childRows     : false, // if true, filter includes child row content in the search
 			filter_childByColumn : false, // ( filter_childRows must be true ) if true = search child rows by column; false = search all child row text grouped
+			filter_childWithSibs : true,  // if true, include matching child row siblings
 			filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 			filter_columnAnyMatch: true,  // if true, allows using '#:{query}' in AnyMatch searches ( column:query )
 			filter_cellFilter    : '',    // css class name added to the filter cell ( string or array )
@@ -1121,7 +1122,7 @@
 				!table.config.widgetOptions.filter_initialized ) {
 				return;
 			}
-			var len, norm_rows, rowData, $rows, rowIndex, tbodyIndex, $tbody, columnIndex,
+			var len, norm_rows, rowData, $rows, $row, rowIndex, tbodyIndex, $tbody, columnIndex,
 				isChild, childRow, lastSearch, showRow, time, val, indx,
 				notFiltered, searchFiltered, query, injected, res, id, txt,
 				storedFilters = $.extend( [], filters ),
@@ -1309,24 +1310,37 @@
 								'';
 						}
 
-						showRow = tsf.processRow( c, data, vars );
+						showRow = false;
+						val = tsf.processRow( c, data, vars );
 						childRow = rowData.$row.filter( ':gt( 0 )' );
-
 						if ( wo.filter_childRows && childRow.length ) {
+							if ( !wo.filter_childWithSibs ) {
+								// hide all child rows
+								childRow.addClass( wo.filter_filteredRow );
+							}
 							if ( wo.filter_childByColumn ) {
 								// cycle through each child row
 								for ( indx = 0; indx < childRow.length; indx++ ) {
 									data.$row = childRow.eq( indx );
 									data.cacheArray = rowData.child[ indx ];
 									data.rawArray = data.cacheArray;
+									val = tsf.processRow( c, data, vars );
 									// use OR comparison on child rows
-									showRow = showRow || tsf.processRow( c, data, vars );
+									showRow = showRow || val;
+									if ( !wo.filter_childWithSibs && val ) {
+										childRow.eq( indx ).removeClass( wo.filter_filteredRow );
+									}
 								}
 							}
-							childRow.toggleClass( wo.filter_filteredRow, !showRow );
+						} else {
+							showRow = val;
 						}
-
-						rowData.$row
+						$row = rowData.$row;
+						// if only showing resulting child row, only include parent
+						if ( !wo.filter_childWithSibs ) {
+							$row = $row.eq( 0 );
+						}
+						$row
 							.toggleClass( wo.filter_filteredRow, !showRow )[0]
 							.display = showRow ? '' : 'none';
 					}

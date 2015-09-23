@@ -22,7 +22,8 @@ EVENTS:
 Not yet tested
 =========================
 OPTIONS:
-	filter_childRows, filter_columnFilters, filter_cssFilter, filter_external,
+	filter_childRows, filter_childByColumn, filter_childWithSibs,
+	filter_columnFilters, filter_cssFilter, filter_external,
 	filter_filteredRow, filter_formatter, filter_hideEmpty,
 	filter_hideEmpty, filter_liveSearch, filter_onlyAvail, filter_placeholder,
 	filter_reset, filter_saveFilters, filter_searchDelay,
