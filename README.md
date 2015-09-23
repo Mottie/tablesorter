@@ -92,6 +92,20 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.4">Version 2.23.4</a> (9/23/2015)
+
+* Core:
+  * Ensure widgets don't get cached options. Fixes [issue #946](https://github.com/Mottie/tablesorter/issues/946).
+  * Update natural sort regular expression for chunking data.
+  * Use `window.console` check to prevent IE9 error. Fixes [issue #1019](https://github.com/Mottie/tablesorter/issues/1019).
+* Filter:
+  * Modified internal variable.
+  * Add internal processOptions function & code cleanup.
+  * Fix external filters not allowing columns > 9. See [pull #1021](https://github.com/Mottie/tablesorter/pull/1021); thanks [a-mair](https://github.com/a-mair)!
+  * Add `filter_childWithSIbs` option. Fixes [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
+* Build
+  * Update dependencies.
+
 #### <a name="v2.23.3">Version 2.23.3</a> (9/1/2015)
 
 * Docs:
@@ -120,22 +134,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Allow dynamically changing the "any match" filter. Fixes [issue #998](https://github.com/Mottie/tablesorter/issues/998).
   * Cache regular expressions.
   * Add reference to widget code to make the file more compressible.
-
-#### <a name="v2.23.1">Version 2.23.1</a> (8/19/2015)
-
-* Core
-  * Prevent js error when `$.tablesorter.showError` is called without a string. Fixes [issue #997](https://github.com/Mottie/tablesorter/issues/997).
-  * Updated `$.tablesorter.showError` function by including a `settings` parameter; a parameter passed by jQuery's `.ajaxError()` method, but was previously omitted.
-
-    ```js
-    $.tablesorter.showError( table, xhr, settings, exception );
-    ```
-
-    I didn't bump the minor version as this is somewhat on the edge of calling this a breaking change.
-
-* Pager
-  * Include `settings` parameter from ajaxError method, between the `xhr` and `exception` parameters to match the order of parameters returned by jQuery [`.ajaxError()` method](http://api.jquery.com/ajaxError/).
-
-    ```js
-    ajaxError: function( config, xhr, settings, exception ){ return exception; };
-    ```

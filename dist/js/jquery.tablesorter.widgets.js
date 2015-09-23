@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 09-23-2015 (v2.23.3)*/
+/*! tablesorter (FORK) - updated 09-23-2015 (v2.23.4)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -366,7 +366,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 9/1/2015 (v2.23.3) *//*
+/*! Widget: filter - updated 9/23/2015 (v2.23.4) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
