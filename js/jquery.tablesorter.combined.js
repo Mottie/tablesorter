@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀   ▀▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 09-23-2015 (v2.23.4)*/
+/*! tablesorter (FORK) - updated 09-24-2015 (v2.23.4)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -4021,7 +4021,7 @@
 							// a match anywhere in the child row, then it will make the row visible
 							// checked here so the option can be changed dynamically
 							for ( indx = 0; indx < childRow.length; indx++ ) {
-								txt += ' ' + childRow[indx].join( '' ) || '';
+								txt += ' ' + childRow[indx].join( ' ' ) || '';
 							}
 							data.childRowText = wo.filter_childRows ?
 								( wo.filter_ignoreCase ? txt.toLowerCase() : txt ) :
@@ -4030,15 +4030,19 @@
 
 						showRow = false;
 						showParent = tsf.processRow( c, data, vars );
+						$row = rowData.$row;
+
 						// don't pass reference to val
 						val = showParent ? true : false;
 						childRow = rowData.$row.filter( ':gt( 0 )' );
 						if ( wo.filter_childRows && childRow.length ) {
-							if ( !wo.filter_childWithSibs ) {
-								// hide all child rows
-								childRow.addClass( wo.filter_filteredRow );
-							}
 							if ( wo.filter_childByColumn ) {
+								if ( !wo.filter_childWithSibs ) {
+									// hide all child rows
+									childRow.addClass( wo.filter_filteredRow );
+									// if only showing resulting child row, only include parent
+									$row = $row.eq( 0 );
+								}
 								// cycle through each child row
 								for ( indx = 0; indx < childRow.length; indx++ ) {
 									data.$row = childRow.eq( indx );
@@ -4056,11 +4060,6 @@
 							showRow = showRow || showParent;
 						} else {
 							showRow = val;
-						}
-						$row = rowData.$row;
-						// if only showing resulting child row, only include parent
-						if ( !wo.filter_childWithSibs ) {
-							$row = $row.eq( 0 );
 						}
 						$row
 							.toggleClass( wo.filter_filteredRow, !showRow )[0]
