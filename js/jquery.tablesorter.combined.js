@@ -3841,7 +3841,7 @@
 				return;
 			}
 			var len, norm_rows, rowData, $rows, $row, rowIndex, tbodyIndex, $tbody, columnIndex,
-				isChild, childRow, lastSearch, showRow, time, val, indx,
+				isChild, childRow, lastSearch, showRow, showParent, time, val, indx,
 				notFiltered, searchFiltered, query, injected, res, id, txt,
 				storedFilters = $.extend( [], filters ),
 				regex = tsf.regex,
@@ -4029,7 +4029,9 @@
 						}
 
 						showRow = false;
-						val = tsf.processRow( c, data, vars );
+						showParent = tsf.processRow( c, data, vars );
+						// don't pass reference to val
+						val = showParent ? true : false;
 						childRow = rowData.$row.filter( ':gt( 0 )' );
 						if ( wo.filter_childRows && childRow.length ) {
 							if ( !wo.filter_childWithSibs ) {
@@ -4050,6 +4052,8 @@
 									}
 								}
 							}
+							// keep parent row match even if no child matches... see #1020
+							showRow = showRow || showParent;
 						} else {
 							showRow = val;
 						}
