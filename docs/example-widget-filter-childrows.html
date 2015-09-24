@@ -84,6 +84,7 @@ tr.group-header.collapsed td i {
 		sortList : [[ 1, 0 ]],
 		widgets: [ 'filter', 'group', 'zebra' ],
 		widgetOptions: {
+			filter_reset         : '.reset',
 			filter_childRows     : true,
 			filter_childByColumn : true,
 			filter_childWithSibs : false,
@@ -142,7 +143,8 @@ tr.group-header.collapsed td i {
 	<p>
 
 <h1>Demo</h1>
-
+<p></p>
+<button class="reset" type="button">Reset Filters</button>
 <button class="toggle" type="button">Toggle</button> <code>filter_childWithSibs</code> : <code class="setting">false</code>
 
 <div id="demo"><table class="tablesorter">
