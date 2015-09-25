@@ -618,8 +618,7 @@
 				}
 				$t.trigger('pagerChange', p);
 			}
-
-			if ( !p.removeRows ) {
+			if ( !p.removeRows && !p.showAll ) {
 				hideRows(table, p);
 			} else {
 				ts.clearTableBody(table);
@@ -656,17 +655,18 @@
 			if ( p.ajax ) {
 				pagerArrows(p, true);
 			} else {
-				p.isDisabled = true;
 				$.data(table, 'pagerLastPage', p.page);
 				$.data(table, 'pagerLastSize', p.size);
 				p.page = 0;
 				p.size = p.totalRows;
 				p.totalPages = 1;
+				p.showAll = true;
 				$(table)
 					.addClass('pagerDisabled')
 					.removeAttr('aria-describedby')
 					.find('tr.pagerSavedHeightSpacer').remove();
 				renderTable(table, table.config.rowsCopy, p);
+				p.isDisabled = true;
 				$(table).trigger('applyWidgets');
 				if (table.config.debug) {
 					console.log('Pager: Disabled');
@@ -826,6 +826,7 @@
 				.removeAttr('disabled')
 				.attr('aria-disabled', 'false');
 			p.isDisabled = false;
+			p.showAll = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || p.settings.size || 10;
 			p.$size.val(p.size); // set page size
@@ -882,6 +883,7 @@
 				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
 				c.appender = $this.appender;
 				p.initializing = true;
+				p.showAll = false;
 				if (p.savePages && ts.storage) {
 					t = ts.storage(table, p.storageKey) || {}; // fixes #387
 					p.page = isNaN(t.page) ? p.page : t.page;
