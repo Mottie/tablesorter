@@ -143,28 +143,7 @@
 						}
 					}
 				});
-				// hash is not a jQuery selector
-				if ( /[=,]/.test(hash) ) {
-					return false;
-				}
-				// open parent accordion of nested accordion
-				if ( $this.find(hash).length && !$this.children(hash).length ) {
-					// div should have an id of ui-accordion-#-panel-#
-					id = $(hash).closest('.ui-accordion-content').attr('id').match(/\d+$/);
-					if (id && id.length) {
-						$this.accordion('option', 'active', Number(id[0]) - 1);
-					}
-
-				// open table row of nested accordion
-				} else if ( ($this.find(hash).closest('tr').attr('id') || '') !== '') {
-					t = $this.find(hash).closest('tr');
-					t.find('.collapsible').show();
-					if (t.closest('table').hasClass('hasStickyHeaders')) {
-						setTimeout(function(){
-							window.scrollTo( 0, t.offset().top - t.parents('table')[0].config.widgetOptions.$sticky.outerHeight() );
-						}, 200);
-					}
-				}
+				openAccordion( hash, $this );
 			});
 
 			$t.find('table.options').not('.tablesorter-jui').tablesorter({
@@ -172,9 +151,51 @@
 				widgets: ['stickyHeaders']
 			});
 
+			$('.intlink').click(function(){
+				openAccordion( $(this).attr('href') );
+			});
+
 		}
 
 	});
+
+	function openAccordion( hash, $accordion ) {
+		// hash is not a jQuery selector
+		if ( /[=,]/.test(hash) ) {
+			return false;
+		}
+		var t, id, $hash;
+		if ( !$accordion ) {
+			$accordion = $(hash).closest('.accordion');
+		}
+		$hash = $accordion.find(hash);
+
+		if ( $hash.length ) {
+			if ( $hash.hasClass('ui-accordion-header') && !$hash.hasClass('ui-accordion-header-active') ) {
+				$hash.click();
+
+			// open parent accordion of nested accordion
+			} else if ( !$accordion.children(hash).length ) {
+				// div should have an id of ui-accordion-#-panel-#
+				id = $(hash).closest('.ui-accordion-content').attr('id').match(/\d+$/);
+				if (id && id.length) {
+					$accordion.accordion('option', 'active', Number(id[0]) - 1);
+				}
+			}
+
+			// open table row of nested accordion
+			if ( ($accordion.find(hash).closest('tr').attr('id') || '') !== '') {
+				t = $accordion.find(hash).closest('tr');
+				t.find('.collapsible').show();
+				if (t.closest('table').hasClass('hasStickyHeaders')) {
+					setTimeout(function(){
+						window.scrollTo( 0, t.offset().top - t.parents('table')[0].config.widgetOptions.$sticky.outerHeight() );
+					}, 200);
+				}
+			}
+
+		}
+	}
 
 	function showProperty(){
 		var prop, $t, wo, stickyHt,

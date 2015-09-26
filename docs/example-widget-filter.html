@@ -230,18 +230,18 @@ $(function(){
 			<ul>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
-						<li>The <code>getFilters</code> function will now target the last used filter properly.</li>
-						<li>The <code>selectSource</code> option now ignores parsers if none are set.</li>
+						<li>The <a class="intlink" href="#method-get-filters"><code>getFilters</code></a> function will now target the last used filter properly.</li>
+						<li>The <a class="intlink" href="#filter-select-source"><code>filter_selectSource</code></a> option now ignores parsers if none are set.</li>
 						<li>Added the ability to nest filter types with a logical "OR" or a logical "AND". Try these filters: <button data-filter-column="1">a && !o</button> (<span class="label warning">*NOTE*</span> try this with and without the filter-match class applied), <button data-filter-column="3">&lt10 or &gt;40</button> or <button data-filter-column="3">&gt;20 && &lt;40</button></li>
 					</ul>
 				</li>
 				<li>In <span class="version">v2.22.0</span>
 					<ul>
 						<li>Regex filter searches now cache the created regex object for each query to optimize speed & a regex search now properly uses case-sensitive content.</li>
-						<li>Add <code>data</code> parameter to <code>filter_functions</code> (<a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">get more details</a>).</li>
+						<li>Add <code>data</code> parameter to <a class="intlink" href="#filter-functions"><code>filter_functions</code></a> (<a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">get more details</a>).</li>
 						<li>Any match searches which target specific columns will no longer save each filter to its respective column; see <a href="example-widget-filter-any-match.html#anymatch_searches">"AnyMatch Searches"</a> documentation.</li>
 						<li>Operator filter searchs now ignore empty strings (because <code>"" &lt; 10</code> is <code>true</code>).</li>
-						<li>Added <code>filter_childByColumn</code> option which allows the filtering columns in both the parent & child rows. Demo added to the <a href="example-child-rows-filtered.html#child-by-column">filtered child rows demo</a></li>
+						<li>Added <a class="intlink" href="#filter-child-by-column"><code>filter_childByColumn</code></a> option which allows the filtering columns in both the parent & child rows. Demo added to the <a href="example-child-rows-filtered.html#child-by-column">filtered child rows demo</a></li>
 					</ul>
 				</li>
 				<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
@@ -251,31 +251,32 @@ $(function(){
 				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 				<div>
 					<ul>
-						<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a "filter-match" class added.</li>
+						<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a <a class="intlink" href="#classes"><code>"filter-match"</code></a> class added.</li>
 						<li>In <span class="version">v2.17.1</span>, added a not exact match (<code>!=</code>) filter type.</li>
 						<li>In <span class="version updated">v2.16+</span>,
 							<ul>
-								<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <code>textSorter</code> setting, and falls back to an alphanumeric sort (<span class="version updated">v2.16.3</span>).</li>
-								<li>Adding a class of <code>"filter-select-nosort"</code> will now leave the select options unsorted (<span class="version">v2.16.3</span>).</li>
-								<li>Added <code>filter_placeholder</code> option (<span class="version">v2.16.0</span>).</li>
-								<li>Added <code>filter_selectSource</code> option (<span class="version">v2.16.3</span>).</li>
-								<li>updated <code>filter_reset</code> option (<span class="version updated">v2.16.3</span>).</li>
+								<li>When a default filter select is added to a column, it is now parsed from the assigned parser, then sorted using the <a href="index.html#textsorter"><code>textSorter</code></a> setting, and falls back to an alphanumeric sort (<span class="version updated">v2.16.3</span>).</li>
+								<li>Adding a class of <a class="intlink" href="#classes"><code>"filter-select-nosort"</code></a> will now leave the select options unsorted (<span class="version">v2.16.3</span>).</li>
+								<li>Added <a class="intlink" href="#filter-placeholder"><code>filter_placeholder</code></a> option (<span class="version">v2.16.0</span>).</li>
+								<li>Added <a class="intlink" href="#filter-select-source"><code>filter_selectSource</code></a> option (<span class="version">v2.16.3</span>).</li>
+								<li>updated <a class="intlink" href="#filter-reset"><code>filter_reset</code></a> option (<span class="version updated">v2.16.3</span>).</li>
 							</ul>
 						</li>
 						<li>In <span class="version updated">v2.15</span>,
 							<ul>
-								<li>The <code>filter_anyMatch</code> widget option was completely <span class="label alert">removed</span>. Sorry for not deprecating this option, but the filter any match code was completely rewritten.</li>
-								<li>Added a <code>filter_external</code> widget option to only accept a jQuery selector string/object; please see the updated <a href="example-widget-filter-any-match.html">filter any match</a> demo for more details.</li>
+								<li>The <a class="intlink" href="#filter-any-match"><code>filter_anyMatch</code></a> widget option was completely <span class="label alert">removed</span>. Sorry for not deprecating this option, but the filter any match code was completely rewritten.</li>
+								<li>Added a <a class="intlink" href="#filter-external"><code>filter_external</code></a> widget option to only accept a jQuery selector string/object; please see the updated <a href="example-widget-filter-any-match.html">filter any match</a> demo for more details.</li>
 							</ul>
 						</li>
-						<li>Added &amp; set <code>filter_saveFilters</code> to <code>true</code> (default is <code>false</code>) in this demo (<span class="version">v2.14</span>).</li>
+						<li>Added &amp; set <a class="intlink" href="#filter-save-filters"><code>filter_saveFilters</code></a> to <code>true</code> (default is <code>false</code>) in this demo (<span class="version">v2.14</span>).</li>
 					</ul>
 				</div>
 			</div>
 
 			<ul>
-				<li><span class="label alert">*NOTE*</span> If using a custom theme, make sure to add the class set in the <code>filter_filteredRow</code> option (set to <code>filtered</code> by default) in the css, and set it to <code>display:none</code>. When filtering rows, the filter widget adds the "filtered" class to hide the row; all available themes include this definition.</li>
-				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <code>filter_hideFilters</code> option to <code>false</code>.</li>
+				<li><span class="label alert">*NOTE*</span> The filter widget is set to use extracted (parsed) content as parsed values and the raw cell content as unparsed values; and most of the time the filter is searching unparsed content (see <a class="intlink" href="#classes"><code>filter-parsed</code></a> class and <a class="intlink" href="#filter-use-parsed-data"><code>filter_useParsedData</code></a> option. But, when a data-attribute is used (see <a href="index.html#textattribute"><code>textAttribute</code></a> option), both the parsed and raw cached data will contain the <em>exact same content</em> (<a href="https://github.com/Mottie/tablesorter/issues/983">ref</a>)!</li>
+				<li><span class="label alert">*NOTE*</span> If using a custom theme, make sure to add the class set in the <a class="intlink" href="#filter-filtered-row"><code>filter_filteredRow</code></a> option (set to <code>filtered</code> by default) in the css, and set it to <code>display:none</code>. When filtering rows, the filter widget adds the <a class="intlink" href="#filter-filtered-row"><code>"filtered"</code></a> class to hide the row; all available themes include this definition.</li>
+				<li>Hover over the grey bar below the table header to open the filter row. Disable this by setting <a class="intlink" href="#filter-hide-filters"><code>filter_hideFilters</code></a> option to <code>false</code>.</li>
 				<li>This widget uses jQuery's <code>.nextUntil()</code> function which is only available is jQuery version 1.4+.</li>
 				<li>This widget <em>does NOT</em> work with tablesorter v2.0.5.</li>
 				<li>Using the built-in filters (<a href="example-widget-filter-custom-search.html">learn how to customize them here</a> - demo created <span class="version">v2.17.5</span>):
@@ -283,29 +284,28 @@ $(function(){
 						<thead>
 							<tr>
 								<th style="width:1%">Priority</th>
-								<th style="width:9%">Type <small class="bright">(1)(2)</small></th>
+								<th style="width:9%">Type <small class="bright">(1)</small></th>
 								<th style="width:30%">Description</th>
 								<th style="width:60%">Examples</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr><td class="center">1</td><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar <small class="bright">(3)</small>.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;);<button data-filter-column="1">Alex|Peter</button> (Find text that contains either &quot;Alex&quot; or &quot;Peter&quot;); <button data-filter-column="3">&lt10 or &gt;40</button></td></tr>
+							<tr><td class="center">1</td><td class="center"><code>|</code> or <code>&nbsp;OR&nbsp;</code></td><td>Logical &quot;or&quot; (Vertical bar). Filter the column for content that matches text from either side of the bar <small class="bright">(2)</small>.</td><td><code>box|bat</code> (matches a column cell with either &quot;box&quot; or &quot;bat&quot;);<button data-filter-column="1">Alex|Peter</button> (Find text that contains either &quot;Alex&quot; or &quot;Peter&quot;); <button data-filter-column="3">&lt10 or &gt;40</button></td></tr>
 							<tr><td class="center">2</td><td class="center"><code>&nbsp;&&&nbsp;</code> or <code>&nbsp;AND&nbsp;</code></td><td>Logical &quot;and&quot;. Filter the column for content that matches text from either side of the operator.</td><td><code>box && bat</code> (matches a column cell that contains both &quot;box&quot; and &quot;bat&quot;), <button data-filter-column="1">Br && c</button> (Find text that contains both &quot;br&quot; and &quot;c&quot;), <button data-filter-column="3">&gt;20 && &lt;40</button> or <button data-filter-column="1">a and !o</button> (When "filter-match" is set, find content with the letter "a", but not the letter "o")</td></tr>
 							<tr><td class="center">3</td><td class="center"><code>/\d/</code></td><td>Add any regex to the query to use in the query ("mig" flags can be included <code>/\w/mig</code>)</td><td><code>/b[aeiou]g/i</code> (finds &quot;bag&quot;, &quot;beg&quot;, &quot;BIG&quot;, &quot;Bug&quot;, etc);<button data-filter-column="1">/r$/</button> (matches text that ends with an &quot;r&quot;)</td></tr>
-							<tr><td class="center">4</td><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(2)</small>.</td><td><button data-filter-column="5">&gt;= 10</button> (find values greater than or equal to 10)</td></tr>
+							<tr><td class="center">4</td><td class="center"><code>&lt; &lt;= &gt;= &gt;</code></td><td>Find alphabetical or numerical values less than or greater than or equal to the filtered query <small class="bright">(1)</small>.</td><td><button data-filter-column="5">&gt;= 10</button> (find values greater than or equal to 10)</td></tr>
 							<tr><td class="center">5</td><td class="center"><code>!</code> or <code>!=</code></td><td>Not operator, or not exactly match. Filter the column with content that <strong>do not</strong> match the query. Include an equal (<code>=</code>), single (<code>'</code>) or double quote (<code>&quot;</code>) to exactly <em>not</em> match a filter (<span class="version">v2.17.1</span>).</td><td><code>!fe</code> (hide rows with &quot;female&quot; in that column, but shows rows with &quot;male&quot;);<button data-filter-column="1">!a</button> (find text that doesn't contain an &quot;a&quot;);<button data-filter-column="1">!"Bruce"</button> (find content that does not exactly match "Bruce")</td></tr>
 							<tr><td class="center">6</td><td class="center"><code>&quot;</code> or <code>=</code></td><td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query</td><td><code>abc&quot;</code> or <code>abc=</code> (exactly match &quot;abc&quot;);<button data-filter-column="1">John&quot;</button> or <button data-filter-column="1">John=</button> (exactly match &quot;John&quot;)</td></tr>
-							<tr><td class="center">7</td><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(4)</small>.</td><td><button data-filter-column="3">10 - 30</button> or <button data-filter-column="4">10 to 30</button> (match values between 10 and 30)</td></tr>
+							<tr><td class="center">7</td><td class="center"><code>&nbsp;-&nbsp;</code> or <code>&nbsp;to&nbsp;</code></td><td>Find a range of values. Make sure there is a space before and after the dash (or the word &quot;to&quot;) <small class="bright">(3)</small>.</td><td><button data-filter-column="3">10 - 30</button> or <button data-filter-column="4">10 to 30</button> (match values between 10 and 30)</td></tr>
 							<tr><td class="center">8</td><td class="center"><code>?</code></td><td>Wildcard for a single, non-space character.</td><td><code>J?n</code> (finds &quot;Jan&quot; and &quot;Jun&quot;, but not &quot;Joan&quot;);<button data-filter-column="2">a?s</button> (finds &quot;Dumass&quot; and &quot;Evans&quot;, but not &quot;McMasters&quot;)</td></tr>
 							<tr><td class="center">8</td><td class="center"><code>*</code></td><td>Wildcard for zero or more non-space characters.</td><td><code>B*k</code> (matches &quot;Black&quot; and &quot;Book&quot;);<button data-filter-column="2">a*s</button> (matches &quot;Dumass&quot;, &quot;Evans&quot; and &quot;McMasters&quot;)</td></tr>
 							<tr><td class="center">9</td><td class="center"><code>~</code></td><td>Perform a fuzzy search (matches sequential characters) by adding a tilde to the beginning of the query (<span class="version">v2.13.3</span>)</td><td><button data-filter-column="1">~bee</button> (matches &quot;Bruce Lee&quot; and &quot;Brenda Dexter&quot;), or <button data-filter-column="1">~piano</button> (matches &quot;Philip Aaron Wong&quot;)</td></tr>
 							<tr><td class="center">10</td><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds &quot;abc&quot;, &quot;abcd&quot;, &quot;abcde&quot;, etc);<button data-filter-column="1">Aaron</button> (finds &quot;Aaron&quot; and &quot;Philip Aaron Wong&quot;)</td></tr>
 						</tbody>
 					</table>
-					<span class="bright">(1)</span> You cannot combine these operators with each other (except for the wildcards).<br>
-					<span class="bright">(2)</span> The filter order (or precendence) of how searches are checked in "priority" (first column) order; so an exact match will override "range" searches </span> (*NOTE* order changed in <span class="version updated">v2.15</span>, operators prioritized before exact; see <a href="https://github.com/Mottie/tablesorter/issues/465">issue #465</a>; order changed again in <span class="version updated">v2.17.1</span> to move "not match" before "exact" and allow for exact not matches; see <a href="https://github.com/Mottie/tablesorter/issues/628">issue #628</a>). In <span class="version updated">v2.22.2</span>, the "or" and "and" types can combine any of the other filter types together.<br>
-					<span class="bright">(3)</span> Logical "or" comparisons can now show exact matches (by default; <span class="version">v2.10.1</span>) or just match cell contents.<br>
-					<span class="bright">(4)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).
+					<span class="bright">(1)</span> The filter order (or precendence) of how searches are checked in "priority" (first column) order; so an exact match will override "range" searches </span> (*NOTE* order changed in <span class="version updated">v2.15</span>, operators prioritized before exact; see <a href="https://github.com/Mottie/tablesorter/issues/465">issue #465</a>; order changed again in <span class="version updated">v2.17.1</span> to move "not match" before "exact" and allow for exact not matches; see <a href="https://github.com/Mottie/tablesorter/issues/628">issue #628</a>). In <span class="version updated">v2.22.2</span>, the "or" and "and" types can combine any of the other filter types together.<br>
+					<span class="bright">(2)</span> Logical "or" comparisons can now show exact matches (by default; <span class="version">v2.10.1</span>) or just match cell contents.<br>
+					<span class="bright">(3)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).
 				</li>
 			</ul>
 		</div>
@@ -597,7 +597,7 @@ $(function(){
 
 		<h3><a href="#">Methods</a></h3>
 		<div>
-			<h3>Set Filter Placeholder Text</h3>
+			<h3 id="method-placeholder">Set Filter Placeholder Text</h3>
 			<blockquote>
 			Set a <code>data-placeholder</code> attribute on the associated table header with your desired placeholder text
 			<pre class="prettyprint lang-html">&lt;th data-placeholder=&quot;Enter Something&quot;&gt;Name&lt;/th&gt;</pre>
@@ -605,7 +605,7 @@ $(function(){
 			<pre class="prettyprint lang-javascript">$('.tablesorter th:eq(0)').data('placeholder', 'Search for...')</pre>
 			</blockquote>
 
-			<h3>Set Filter Initial Searches</h3>
+			<h3 id="method-initial-search">Set Filter Initial Searches</h3>
 			<blockquote>
 			Set a <code>data-value</code> attribute (data-attribute name set by the <code>filter_defaultAttrib</code> option) on the associated table header with the desired initial search value.
 			<pre class="prettyprint lang-html">&lt;th data-value=&quot;&lt;=100&quot;&gt;Price&lt;/th&gt;</pre>
@@ -613,7 +613,7 @@ $(function(){
 			<pre class="prettyprint lang-javascript">$('.tablesorter th:eq(0)').data('value', '&lt;=100')</pre>
 			</blockquote>
 
-			<h3>filterReset</h3>
+			<h3 id="method-reset">filterReset</h3>
 			<blockquote>
 			Use the <code>filterReset</code> method to reset (clear) all of the current filters using this method
 			<pre class="prettyprint lang-javascript">$('table').trigger('filterReset');</pre>
@@ -622,7 +622,7 @@ $(function(){
 			<span class="label label-info">*NOTE*</span> delegated event bindings are used so these "reset" elements can be dynamically added and removed from the document.
 			</blockquote>
 
-			<h3>Search</h3>
+			<h3 id="method-search">Search</h3>
 			<blockquote>
 			With this method, you can pass an array of filter values:
 			<pre class="prettyprint lang-javascript">// apply &quot;2?%&quot; filter to the fifth column (zero-based index)
@@ -638,7 +638,7 @@ $('table').trigger('search', [ columns ]);</pre>
 $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in any column</pre>
 			</blockquote>
 
-			<h3>Get current filters</h3>
+			<h3 id="method-get-filters">Get current filters</h3>
 			<blockquote>
 			Get an array of the currently applied filters (<span class="version">v2.9</span>).
 			<pre class="prettyprint lang-javascript">$.tablesorter.getFilters( $('table') ); // or $('table.hasFilters')</pre>
@@ -653,7 +653,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 var filters = $.tablesorter.getFilters( $('table') );</pre>
 			</blockquote>
 
-			<h3>Set current filters</h3>
+			<h3 id="method-set-filters">Set current filters</h3>
 			<blockquote>
 			Set the values of the actual filters using this method; include a <code>true</code> boolean to actually apply the search (<span class="version">v2.9</span>).
 			<pre class="prettyprint lang-javascript">// update filters, but don't apply the search
@@ -669,7 +669,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pr
 $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '', '11' ], true );</pre>
 		</blockquote>
 
-		<h3>Bind external filter</h3>
+		<h3 id="method-bind-filters">Bind external filter</h3>
 		<blockquote>
 		Use this method to bind external search filters
 		<ul>
@@ -710,7 +710,7 @@ $(".search").bind('search keyup', function (e) {
 
 		<h3><a href="#">Changes</a></h3>
 		<div class="inner">
-			Moved to the wiki pages - <a href="https://github.com/Mottie/tablesorter/wiki/Changes">filter change log</a>.
+			Moved to the wiki pages - <a href="https://github.com/Mottie/tablesorter/wiki/Changes">change log</a>.
 		</div>
 
 		<h3><a href="#">Localization</a></h3>

@@ -1598,6 +1598,7 @@ $.extend($.tablesorter.themes.jui, {
 						This option contains the name of the data-attribute used by the <a href="#textextraction"><code>textExtraction</code></a> function. Add it to the cell(s) as follows:
 						<pre class="prettyprint lang-html">&lt;td data-text="1"&gt;First repository&lt;/td&gt;</pre>
 						<span class="label label-info">Note</span> This option only works when the <a href="#textextraction"><code>textExtraction</code></a> option is set to "basic".
+						<p><span class="label alert">*NOTE*</span> It is important to know that the filter widget is set to use extracted (parsed) content as a parsed value and the raw cell content as unparsed values; and most of the time the filter widget is searching unparsed content. But, when a data-attribute is used, both the parsed and raw cached data will contain the <em>exact same content</em> (<a href="https://github.com/Mottie/tablesorter/issues/983">ref</a>)!</p>
 					</div>
 				</td>
 				<td></td>
