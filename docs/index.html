@@ -4,9 +4,6 @@
 <meta charset="utf-8">
 <title>jQuery plugin: Tablesorter 2.0</title>
 
-<!-- jQuery -->
-<script src="js/jquery-latest.min.js"></script>
-
 <!-- Demo stuff -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
@@ -14,28 +11,7 @@
 <link rel="stylesheet" href="css/jq.css">
 <link rel="stylesheet" href="css/menu.css">
 <link href="css/prettify.css" rel="stylesheet">
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/prettify.js"></script>
-<script src="js/docs.js"></script>
-<script src="js/search.js"></script>
-<!--[if lte IE 8]>
-<script src="js/search-ie.js"></script>
-<![endif]-->
-
-<!-- Tablesorter: required -->
 <link href="../css/theme.blue.css" rel="stylesheet">
-<script src="../js/jquery.tablesorter.combined.js"></script>
-<script>
-	$(function() {
-		$.extend( $.tablesorter.defaults, {
-			theme: 'blue',
-			widthFixed: true
-		});
-		$('.compatibility').tablesorter();
-		$('#tablesorter-demo').tablesorter({widgets:['zebra']});
-		$('table.options, table.api').tablesorter({widgets:['stickyHeaders']});
-	});
-</script>
 
 </head>
 <body id="root">
@@ -7400,6 +7376,28 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 		<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>
 	</p>
 </div>
+
+<!-- jQuery -->
+<script src="js/jquery-latest.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/prettify.js"></script>
+<script src="js/docs.js"></script>
+<script src="js/search.js"></script>
+<!--[if lte IE 8]>
+<script src="js/search-ie.js"></script>
+<![endif]-->
+
+<!-- Tablesorter: required -->
+<script src="../js/jquery.tablesorter.combined.js"></script>
+<script>
+$.extend( $.tablesorter.defaults, {
+	theme: 'blue',
+	widthFixed: true
+});
+$('.compatibility').tablesorter();
+$('#tablesorter-demo').tablesorter({widgets:['zebra']});
+$('table.options, table.api').tablesorter({widgets:['stickyHeaders']});
+</script>
 
 </body>
 </html>
