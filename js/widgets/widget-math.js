@@ -86,6 +86,27 @@
 					}
 					index--;
 				}
+			} else if (type === 'below') {
+				
+				len = $rows.length;
+				// index + 1 to ignore starting node
+				for (index = $rows.index( $row ) + 1; index < len; index++ ) {
+					
+					$t = $rows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
+					
+					if ($t.filter( '[' + wo.math_dataAttrib + '^=below]' ).length)
+						break;
+					
+					if ( ( !$rows.eq( index ).hasClass( filtered ) &&
+						$rows.eq( index ).not( '[' + wo.math_dataAttrib + '=ignore]' ).length)) {
+						
+						if ( $t.length ) {
+							arry.push( math.processText( c, $t ) );
+						}
+					}
+					
+				}
+				
 			} else {
 				$mathRows = $rows.not( '[' + wo.math_dataAttrib + '=ignore]' ); // .each(function(){
 				len = $mathRows.length;
@@ -436,7 +457,7 @@
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
 			// order of calculation; 'all' is last
-			math_priority : [ 'row', 'above', 'col' ],
+			math_priority : [ 'row', 'above', 'below', 'col' ],
 			// template for or just prepend the mask prefix & suffix with this HTML
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
