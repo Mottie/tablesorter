@@ -92,6 +92,23 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.23.5">Version 2.23.5</a> (10/4/2015)
+
+* Core:
+  * Remove `tabindex` when sort is disabled. See
+* Docs:
+  * Add instructions on how to use the new filter option ([`filter_childWithSibs`](http://mottie.github.io/tablesorter/docs/example-widget-filter-childrows.html)).
+  * Include filter reset in above demo.
+  * Fixed spelling mistake x2. See pull [#1024](https://github.com/Mottie/tablesorter/pull/1024) & [#1025](https://github.com/Mottie/tablesorter/pull/1025); thanks [OmgImAlexis](https://github.com/OmgImAlexis)!
+  * Add note data-attribute values added to both parsed & raw data. Closes [issue #983](https://github.com/Mottie/tablesorter/issues/983).
+  * Move all javascript to page bottom.
+* Filter:
+  * Keep parent match when no child rows match. See [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
+  * Ignore `filter_childWithSibs` when `filter_childByColumn` is `false`. See [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
+  * Select includes child rows when `filter_childByColumn` is set.
+* Pager
+  * Prevent hiding child rows when disabling or destroying the pager. See [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
+
 #### <a name="v2.23.4">Version 2.23.4</a> (9/23/2015)
 
 * Core:
@@ -119,18 +136,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Group:
   * Remove unused variable.
   * Add `group_forceColumn` & `group_enforceSort` options. Fixes [issue #1000](https://github.com/Mottie/tablesorter/issues/1000).
-
-#### <a name="v2.23.2">Version 2.23.2</a> (8/23/2015)
-
-* Readme
-  * Corrections for last update
-* Docs
-  * Add parsed values function no longer wraps empty content.
-* Core
-  * Cache regular expressions.
-* ColumnSelector
-  * Add `columnSelector_updated` option (triggered event name).
-* Filter
-  * Allow dynamically changing the "any match" filter. Fixes [issue #998](https://github.com/Mottie/tablesorter/issues/998).
-  * Cache regular expressions.
-  * Add reference to widget code to make the file more compressible.

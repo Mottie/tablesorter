@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.23.4 *//*
+/*! TableSorter (FORK) v2.23.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -35,7 +35,7 @@
 
 			var ts = this;
 
-			ts.version = '2.23.4';
+			ts.version = '2.23.5';
 
 			ts.parsers = [];
 			ts.widgets = [];
@@ -523,19 +523,27 @@
 			}
 
 			function updateHeader(table) {
-				var index, s, $th, col,
+				var index, isDisabled, $th, col,
 					c = table.config,
 					len = c.$headers.length;
 				for ( index = 0; index < len; index++ ) {
 					$th = c.$headers.eq( index );
 					col = ts.getColumnData( table, c.headers, index, true );
 					// add 'sorter-false' class if 'parser-false' is set
-					s = ts.getData( $th, col, 'sorter' ) === 'false' || ts.getData( $th, col, 'parser' ) === 'false';
-					$th[0].sortDisabled = s;
-					$th[ s ? 'addClass' : 'removeClass' ]('sorter-false').attr('aria-disabled', '' + s);
+					isDisabled = ts.getData( $th, col, 'sorter' ) === 'false' || ts.getData( $th, col, 'parser' ) === 'false';
+					$th[0].sortDisabled = isDisabled;
+					$th[ isDisabled ? 'addClass' : 'removeClass' ]( 'sorter-false' ).attr( 'aria-disabled', '' + isDisabled );
+					// disable tab index on disabled cells
+					if ( c.tabIndex ) {
+						if ( isDisabled ) {
+							$th.removeAttr( 'tabindex' );
+						} else {
+							$th.attr( 'tabindex', '0' );
+						}
+					}
 					// aria-controls - requires table ID
 					if (table.id) {
-						if (s) {
+						if ( isDisabled ) {
 							$th.removeAttr('aria-controls');
 						} else {
 							$th.attr('aria-controls', table.id);
