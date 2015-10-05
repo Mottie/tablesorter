@@ -59,7 +59,7 @@
 				group = '',
 				groupIndex = 0,
 				savedGroup = false,
-				column = typeof wo.group_forceColumn[0] !== 'undefined' ?
+				column = $.isArray( wo.group_forceColumn ) && typeof wo.group_forceColumn[0] !== 'undefined' ?
 					( wo.group_enforceSort && !hasSort ? -1 : wo.group_forceColumn[0] ) :
 					( hasSort ? c.sortList[0][0] : -1 );
 			c.$table
