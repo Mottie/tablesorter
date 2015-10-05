@@ -424,7 +424,7 @@
 					if (d instanceof jQuery) {
 						if (p.processAjaxOnInit) {
 							// append jQuery object
-							c.$tbodies.eq(0).children('tr').detach();
+							c.$tbodies.eq(0).empty();
 							c.$tbodies.eq(0).append(d);
 						}
 					} else if (l) {
@@ -441,6 +441,9 @@
 						if (p.processAjaxOnInit) {
 							c.$tbodies.eq(0).html( tds );
 						}
+					} else {
+						// nothing returned by ajax, empty out the table; see #1032
+						c.$tbodies.eq(0).empty();
 					}
 					p.processAjaxOnInit = true;
 					// only add new header text if the length matches
