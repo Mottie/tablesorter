@@ -6,7 +6,7 @@
   },
   "main": [
     "dist/js/jquery.tablesorter.combined.js",
-    "dist/css/theme.blue.css"
+    "dist/css/theme.blue.min.css"
   ],
   "ignore": []
 }
