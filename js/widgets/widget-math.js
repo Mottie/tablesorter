@@ -87,24 +87,18 @@
 					index--;
 				}
 			} else if (type === 'below') {
-				
 				len = $rows.length;
 				// index + 1 to ignore starting node
-				for (index = $rows.index( $row ) + 1; index < len; index++ ) {
-					
+				for ( index = $rows.index( $row ) + 1; index < len; index++ ) {
 					$t = $rows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
-					
-					if ($t.filter( '[' + wo.math_dataAttrib + '^=below]' ).length)
+					if ( $t.filter( '[' + wo.math_dataAttrib + '^=below]' ).length ) {
 						break;
-					
-					if ( ( !$rows.eq( index ).hasClass( filtered ) &&
-						$rows.eq( index ).not( '[' + wo.math_dataAttrib + '=ignore]' ).length)) {
-						
-						if ( $t.length ) {
-							arry.push( math.processText( c, $t ) );
-						}
 					}
-					
+					if ( !$rows.eq( index ).hasClass( filtered ) &&
+							$rows.eq( index ).not( '[' + wo.math_dataAttrib + '=ignore]' ).length &&
+							$t.length ) {
+						arry.push( math.processText( c, $t ) );
+					}
 				}
 				
 			} else {
@@ -176,8 +170,14 @@
 				wo.math_isUpdating = true;
 				if ( c.debug ) {
 					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
+					var time = new Date();
 				}
+				
 				c.$table.trigger( 'update' );
+				
+				if ( c.debug ) {
+					console.log( 'update completed' + ts.benchmark(time) );
+				}
 			}
 		},
 
@@ -203,6 +203,8 @@
 						}
 						for ( index = 0; index < len; index++ ) {
 							$el = $targetCells.eq( index );
+							// Row ir filtered off, no need to do further checking
+							if ( $el.parent().hasClass( wo.filter_filteredRow || 'filtered' ) ) { continue; }
 							formula = ( $el.attr( wo.math_dataAttrib ) || '' ).replace( type + '-', '' );
 							arry = ( type === 'row' ) ? math.getRow( c, $el ) :
 								( type === 'all' ) ? getAll : math.getColumn( c, $el, type );
