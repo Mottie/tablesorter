@@ -605,6 +605,16 @@
 				}
 			}
 		},
+		// encode or decode filters for storage; see #1026
+		processFilters: function( filters, encode ) {
+			var indx,
+				mode = encode ? encodeURIComponent : decodeURIComponent,
+				len = filters.length;
+			for ( indx = 0; indx < len; indx++ ) {
+				filters[ indx ] = mode( filters[ indx ] );
+			}
+			return filters;
+		},
 		setDefaults: function( table, c, wo ) {
 			var isArray, saved, indx, col, $filters,
 				// get current ( default ) filters
@@ -614,7 +624,7 @@
 				isArray = $.isArray( saved );
 				// make sure we're not just getting an empty array
 				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
-					filters = saved;
+					filters = tsf.processFilters( saved );
 				}
 			}
 			// if no filters saved, then check default settings
@@ -1358,7 +1368,7 @@
 			c.lastSearch = storedFilters;
 			c.$table.data( 'lastSearch', storedFilters );
 			if ( wo.filter_saveFilters && ts.storage ) {
-				ts.storage( table, 'tablesorter-filters', storedFilters );
+				ts.storage( table, 'tablesorter-filters', tsf.processFilters( storedFilters, true ) );
 			}
 			if ( c.debug ) {
 				console.log( 'Completed filter widget search' + ts.benchmark(time) );
