@@ -147,6 +147,11 @@
 		recalculate : function(c, wo, init) {
 			if ( c && ( !wo.math_isUpdating || init ) ) {
 
+				var time, mathAttr, $mathCells;
+				if ( c.debug ) {
+					time = new Date();
+				}
+
 				// add data-column attributes to all table cells
 				if ( init ) {
 					ts.computeColumnIndex( c.$table.children( 'tbody' ).children() );
@@ -156,8 +161,8 @@
 				wo.math_dataAttrib = 'data-' + (wo.math_data || 'math');
 
 				// all non-info tbody cells
-				var mathAttr = wo.math_dataAttrib,
-					$mathCells = c.$tbodies.find( '[' + mathAttr + ']' );
+				mathAttr = wo.math_dataAttrib;
+				$mathCells = c.$tbodies.find( '[' + mathAttr + ']' );
 				math.mathType( c, $mathCells, wo.math_priority );
 
 				// only info tbody cells
@@ -173,7 +178,6 @@
 				wo.math_isUpdating = true;
 				if ( c.debug ) {
 					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
-					var time = new Date();
 				}
 
 				c.$table.trigger( 'update' );
