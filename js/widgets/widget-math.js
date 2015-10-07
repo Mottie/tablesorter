@@ -86,7 +86,7 @@
 					}
 					index--;
 				}
-			} else if (type === 'below') {
+			} else if ( type === 'below' ) {
 				len = $rows.length;
 				// index + 1 to ignore starting node
 				for ( index = $rows.index( $row ) + 1; index < len; index++ ) {
@@ -100,14 +100,14 @@
 						arry.push( math.processText( c, $t ) );
 					}
 				}
-				
+
 			} else {
-				$mathRows = $rows.not( '[' + wo.math_dataAttrib + '=ignore]' ); // .each(function(){
+				$mathRows = $rows.not( '[' + wo.math_dataAttrib + '=ignore]' );
 				len = $mathRows.length;
 				for ( index = 0; index < len; index++ ) {
 					$t = $mathRows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
 					if ( !$mathRows.eq( index ).hasClass( filtered ) &&
-						$t.not( '[' + wo.math_dataAttrib + '^=above],[' + wo.math_dataAttrib + '^=col]' ).length &&
+						$t.not( '[' + wo.math_dataAttrib + '^=above],[' + wo.math_dataAttrib + '^=below],[' + wo.math_dataAttrib + '^=col]' ).length &&
 						!$t.is( $el ) ) {
 						arry.push( math.processText( c, $t ) );
 					}
@@ -172,11 +172,11 @@
 					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
 					var time = new Date();
 				}
-				
+
 				c.$table.trigger( 'update' );
-				
+
 				if ( c.debug ) {
-					console.log( 'update completed' + ts.benchmark(time) );
+					console.log( 'Math widget update completed' + ts.benchmark( time ) );
 				}
 			}
 		},
@@ -193,7 +193,7 @@
 				if (c.debug) {
 					console[ console.group ? 'group' : 'log' ]( 'Tablesorter Math widget recalculation' );
 				}
-				// $.each is okay here... only 3 priorities
+				// $.each is okay here... only 4 priorities
 				$.each( priority, function( i, type ) {
 					$targetCells = $cells.filter( '[' + wo.math_dataAttrib + '^=' + type + ']' );
 					len = $targetCells.length;
@@ -203,8 +203,10 @@
 						}
 						for ( index = 0; index < len; index++ ) {
 							$el = $targetCells.eq( index );
-							// Row ir filtered off, no need to do further checking
-							if ( $el.parent().hasClass( wo.filter_filteredRow || 'filtered' ) ) { continue; }
+							// Row is filtered, no need to do further checking
+							if ( $el.parent().hasClass( wo.filter_filteredRow || 'filtered' ) ) {
+								continue;
+							}
 							formula = ( $el.attr( wo.math_dataAttrib ) || '' ).replace( type + '-', '' );
 							arry = ( type === 'row' ) ? math.getRow( c, $el ) :
 								( type === 'all' ) ? getAll : math.getColumn( c, $el, type );

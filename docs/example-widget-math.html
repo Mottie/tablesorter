@@ -114,14 +114,14 @@
 	// Demo #2 - Default & Custom equations
 	// * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	// adding a custom equation... named "custom"
-	// access from data-math="row-custom" (or "above-custom", or "col-custom")
+	// access from data-math="row-custom" (or "above-custom", "below-custom", or "col-custom")
 	$.tablesorter.equations['custom'] = function(arry) {
 		// (a+b+c)*d - (e/f)*100
 		return (arry[0] + arry[1] + arry[2]) * arry[3] - (arry[4]/arry[5]) * 100;
 	};
 
 	// adding a custom equation... named "product"
-	// access from data-math="row-product" (or "above-product", or "col-product")
+	// access from data-math="row-product" (or "above-product", "below-product", or "col-product")
 	$.tablesorter.equations['product'] = function(arry) {
 		// multiple all array values together
 		var product = 1;
@@ -176,6 +176,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version updated">v2.23.6</span>, added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
 			<li>In <span class="version updated">v2.22.0</span>,
 				<ul>
 					<li>Fixed an issue with a sum column encountering a cell without a defined "data-math" attribute returning an empty string instead of zero. See <a href="https://github.com/Mottie/tablesorter/issues/873">issue #873</a>.</li>
@@ -328,9 +329,9 @@ math_complete : function($cell, wo, result, value, arry){
 
 					<tr id="math_priority">
 						<td><a href="#" class="permalink">math_priority</a></td>
-						<td><code>[ 'row', 'above', 'col' ]</code></td>
+						<td><code>[ 'row', 'above', 'below', 'col' ]</code></td>
 						<td>
-							This is the order of calculations.
+							This is the order of calculations (<span class="version updated">v2.23.6</span>).
 							<div class="collapsible">
 							<ul>
 								<li>By default, the widget cycles through the calculated cells as follows:
@@ -403,11 +404,12 @@ math_suffix : '{content}<span class="red">!</span>'
 		<div>
 			The math widget data-attibute setting requires two parts: type &amp; formula
 			<pre class="prettyprint lang-html">&lt;td data-math="{type}-{formula}"&gt;&lt;/td&gt;</pre>
-			When set, the data is gathered based on the math type ("row", "column", "above" or "all") and passed to the formula as an array.
+			When set, the data is gathered based on the math type ("row", "column", "above", "below" or "all") and passed to the formula as an array.
 			<h3><code>{type}</code> (data gathering)</h3>
 			<ul>
 				<li><code>row</code> - gather the table cell values from the same row as the <code>data-math</code> attribute.</li>
 				<li><code>above</code> - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the first table cell is reached, or when another cell with a data-attribute with an "above" type is reached; see the first table demo below to see why this is useful.</li>
+				<li><code>below</code> (<span class="version">v2.23.6</span>) - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the last table cell is reached, or when another cell with a data-attribute with a "below" type is reached.</li>
 				<li><code>col</code> - gather the table cell values from the same column as the <code>data-math</code> attribute.</li>
 				<li><code>all</code> - gather all table cell values with a data-math attribute that start with "all".</li>
 			</ul>
@@ -431,7 +433,7 @@ math_suffix : '{content}<span class="red">!</span>'
 						<li>Return your result after making whatever calculation from the array of data passed to the formula</li>
 						<li>For example:
 							<pre class="prettyprint lang-js">// adding a custom equation... named "product"
-// access from data-math="row-product" (or "above-product", or "col-product")
+// access from data-math="row-product" (or "above-product", "below-product" or "col-product")
 $.tablesorter.equations['product'] = function(arry) {
     // multiple all array values together
     var product = 1;
