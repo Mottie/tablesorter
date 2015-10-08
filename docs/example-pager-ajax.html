@@ -50,7 +50,8 @@
 			// target the pager markup - see the HTML block below
 			container: $(".pager"),
 
-			// use this format: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
+			// If you want to use ajaxUrl placeholders, here is an example:
+			// ajaxUrl: "http:/mydatabase.com?page={page}&size={size}&{sortList:col}"
 			// where {page} is replaced by the page number (or use {page+1} to get a one-based index),
 			// {size} is replaced by the number of records to show,
 			// {sortList:col} adds the sortList to the url into a "col" array, and {filterList:fcol} adds
@@ -59,11 +60,12 @@
 			// and a filterList = [[2,Blue],[3,13]] becomes "&fcol[2]=Blue&fcol[3]=13" in the url
 			ajaxUrl : 'assets/City{page}.json?{filterList:filter}&{sortList:column}',
 
-			// modify the url after all processing has been applied
+			// use this option to manipulate and/or add additional parameters to the ajax url
 			customAjaxUrl: function(table, url) {
 					// manipulate the url string as you desire
-					// url += '&cPage=' + window.location.pathname;
-					// trigger my custom event
+					// url += '&currPage=' + window.location.pathname;
+
+					// trigger a custom event; if you want
 					$(table).trigger('changingUrl', url);
 					// send the server the current page
 					return url;
