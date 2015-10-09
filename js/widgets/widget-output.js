@@ -355,7 +355,7 @@
 			output_popupStyle     : 'width=500,height=300',
 			output_saveFileName   : 'mytable.csv',
 			// format $cell content callback
-			output_formatContent  : null, // function(config, data){ return data.content; }
+			output_formatContent  : null, // function(config, widgetOptions, data){ return data.content; }
 			// callback executed when processing completes
 			// return true to continue download/output
 			// return false to stop delivery & do something else with the data
