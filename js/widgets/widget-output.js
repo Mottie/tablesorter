@@ -138,7 +138,7 @@
 
 			// get header cells
 			$this = $el
-				.find('thead tr')
+				.children('thead').children('tr')
 				.not('.' + (ts.css.filterRow || 'tablesorter-filter-row') )
 				.filter( function() {
 					return wo.output_hiddenColumns || $(this).css('display') !== 'none';
