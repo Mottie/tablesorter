@@ -1040,7 +1040,7 @@
 				// get data from jQuery data, metadata, headers option or header class name
 				col = ts.getColumnData( table, c.headers, column );
 				disabled = ts.getData( $header[0], col, 'filter' ) === 'false' ||
-					ts.getData( $header[0], col, 'parser' ) === 'false';
+					ts.getData( $header[0], col, 'parser' ) === 'false' || !$header[0];
 
 				if ( makeSelect ) {
 					buildFilter = $( '<select>' ).appendTo( c.$filters.eq( column ) );
