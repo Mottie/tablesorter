@@ -12,6 +12,7 @@
 
 		event      : 'printTable',
 		basicStyle : 'table, tr, td, th { border : solid 1px black; border-collapse : collapse; } td, th { padding: 2px; }',
+		popupStyle : 'width=500,height=300',
 
 		init : function(c) {
 			c.$table
@@ -28,9 +29,9 @@
 				$table = $('<div/>').append(c.$table.clone()),
 				printStyle = printTable.basicStyle + 'table { width: 100% }' +
 					// hide filter row
-					'.tablesorter-filter-row { display: none }' +
+					'.' + ( ts.css.filterRow || 'tablesorter-filter-row' ) + ' { display: none }' +
 					// hide sort arrows
-					'.tablesorter-header { background-image: none !important; }';
+					'.' + ( ts.css.header || 'tablesorter-header' ) + ' { background-image: none !important; }';
 
 			// replace content with data-attribute content
 			$table.find('[' + wo.print_dataAttrib + ']').each(function(){
@@ -46,7 +47,7 @@
 				printStyle += 'tbody tr { display: table-row !important; }';
 			} else if (/f/i.test(wo.print_rows)) {
 				// add definition to show all non-filtered rows (cells hidden by the pager)
-				printStyle += 'tbody tr:not(.' + (wo.filter_filteredRow || 'filtered') + ') { display: table-row !important; }';
+				printStyle += 'tbody tr:not(.' + ( wo.filter_filteredRow || 'filtered' ) + ') { display: table-row !important; }';
 			}
 
 			// === columns ===
@@ -74,7 +75,7 @@
 
 		printOutput : function(c, data, style) {
 			var wo = c.widgetOptions,
-				generator = window.open('', wo.print_title, 'width=500,height=300'),
+				generator = window.open( '', wo.print_title, printTable.popupStyle ),
 				t = wo.print_title || c.$table.find('caption').text() || c.$table[0].id || document.title || 'table';
 			generator.document.write(
 				'<html><head><title>' + t + '</title>' +
