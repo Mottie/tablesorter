@@ -144,6 +144,16 @@
 			return arry;
 		},
 
+		setColumnIndexes : function( c ) {
+			c.$table.after( '<div id="_tablesorter_table_placeholder"></div>' );
+			// detach table from DOM to speed up column indexing
+			var $table = c.$table.detach();
+			ts.computeColumnIndex( $table.children( 'tbody' ).children() );
+			$( '#_tablesorter_table_placeholder' )
+				.after( $table )
+				.remove();
+		},
+
 		recalculate : function(c, wo, init) {
 			if ( c && ( !wo.math_isUpdating || init ) ) {
 
@@ -154,7 +164,7 @@
 
 				// add data-column attributes to all table cells
 				if ( init ) {
-					ts.computeColumnIndex( c.$table.children( 'tbody' ).children() );
+					math.setColumnIndexes( c ) ;
 				}
 
 				// data-attribute name (defaults to data-math)
@@ -486,7 +496,7 @@
 					if ( !wo.math_isUpdating || init ) {
 						if ( !/filter/.test( e.type ) ) {
 							// redo data-column indexes on update
-							ts.computeColumnIndex( c.$table.children('tbody').children() );
+							math.setColumnIndexes( c ) ;
 						}
 						math.recalculate( c, wo, init );
 					}
