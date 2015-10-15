@@ -1158,8 +1158,7 @@
 			ts.computeColumnIndex = function(trs) {
 				var i, j, k, l, $cell, cell, cells, rowIndex, cellId, rowSpan, colSpan, firstAvailCol,
 					matrix = [],
-					matrixrow = [],
-					lookup = {};
+					matrixrow = [];
 				for (i = 0; i < trs.length; i++) {
 					cells = trs[i].cells;
 					for (j = 0; j < cells.length; j++) {
@@ -1179,9 +1178,9 @@
 								break;
 							}
 						}
-						lookup[cellId] = firstAvailCol;
 						// add data-column
-						$cell.attr({ 'data-column' : firstAvailCol }); // 'data-row' : rowIndex
+						// $cell.attr({ 'data-column' : firstAvailCol });
+						$cell[0].setAttribute( 'data-column', firstAvailCol );
 						for (k = rowIndex; k < rowIndex + rowSpan; k++) {
 							if (typeof matrix[k] === 'undefined') {
 								matrix[k] = [];
