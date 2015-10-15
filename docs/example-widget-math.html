@@ -99,8 +99,11 @@
 			math_data     : 'math', // data-math attribute
 			math_ignore   : [0, 1],
 			math_mask     : '#,##0.00',
+			math_none     : 'N/A', // no matching math elements found (text added to cell)
 			math_complete : function($cell, wo, result, value, arry) {
-				var txt = '<span class="align-decimal">$ ' + result + '</span>';
+				var txt = '<span class="align-decimal">' +
+					( value === wo.math_none ? '' : '$ ' ) +
+					result + '</span>';
 				if ($cell.attr('data-math') === 'all-sum') {
 					// when the "all-sum" is processed, add a count to the end
 					return txt + ' (Sum of ' + arry.length + ' cells)';
@@ -176,7 +179,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version updated">v2.23.6</span>, added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
+			<li>In <span class="version">v2.23.6</span>
+				<ul>
+					<li>Added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
+					<li>Added <code>math_none</code> option which allows customizing the text added to a cell when there are no matching math elements (.</li>
+				</ul>
+			</li>
 			<li>In <span class="version updated">v2.22.0</span>,
 				<ul>
 					<li>Fixed an issue with a sum column encountering a cell without a defined "data-math" attribute returning an empty string instead of zero. See <a href="https://github.com/Mottie/tablesorter/issues/873">issue #873</a>.</li>
@@ -249,6 +257,23 @@
 							To ignore the first and second columns in a table, set this option using zero-based column indexs as follows:
 							<pre class="prettyprint lang-js">// column index(es) to ignore
 math_ignore : [0,1]</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_none">
+						<td><a href="#" class="permalink">math_none</a></td>
+						<td><code>'N/A'</code></td>
+						<td>
+							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.23.6</span>).
+							<div class="collapsible">
+							<p>To understand when this text is used, select a Region in the "Row & Column Sums" table below. The totals for hidden rows will display this text.</p>
+							<p>Use it as follows:</p>
+							<pre class="prettyprint lang-js">math_none : 'N/A',
+math_complete : function($cell, wo, result, value, arry) {
+  // don't include currency symbol when no result is available
+  return value === wo.math_none ? value : '$ ' + value;
+}</pre>
 							</div>
 						</td>
 					</tr>

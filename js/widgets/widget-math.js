@@ -18,11 +18,11 @@
 		},
 
 		// value returned when calculation is not possible, e.g. no values, dividing by zero, etc.
-		invalid : function( name, errorIndex ) {
+		invalid : function( c, name, errorIndex ) {
 			// name = function returning invalid results
 			// errorIndex = math.error index with an explanation of the error
 			console.log( name, math.error[ errorIndex ] );
-			return 'none'; // text for cell
+			return c.widgetOptions.math_none; // text for cell
 		},
 
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
@@ -236,7 +236,7 @@
 									}
 								} else {
 									// mean will return a divide by zero error, everything else shows an undefined error
-									result = math.invalid( formula, formula === 'mean' ? 0 : 'undef' );
+									result = math.invalid( c, formula, formula === 'mean' ? 0 : 'undef' );
 								}
 								math.output( $el, wo, result, arry );
 							}
@@ -395,7 +395,7 @@
 				half = Math.floor( len / 2 );
 				return ( len % 2 ) ? arry[ half ] : ( arry[ half - 1 ] + arry[ half ] ) / 2;
 			}
-			return math.invalid( 'median', 1 );
+			return math.invalid( c, 'median', 1 );
 		},
 		mode : function( arry ) {
 			// http://stackoverflow.com/a/3451640/145346
@@ -440,7 +440,7 @@
 			}
 			divisor = ( arry.length - ( population ? 0 : 1 ) );
 			if ( divisor === 0 ) {
-				return math.invalid( 'variance', 0 );
+				return math.invalid( c, 'variance', 0 );
 			}
 			v /= divisor;
 			return v;
@@ -484,6 +484,8 @@
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
 			math_suffix   : '',
+			// no matching math elements found (text added to cell)
+			math_none     : 'N/A',
 			math_event    : 'recalculate'
 		},
 		init : function( table, thisWidget, c, wo ) {
