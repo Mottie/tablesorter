@@ -86,8 +86,12 @@
 				'</head><body>' + data + '</body></html>'
 			);
 			generator.document.close();
-			generator.print();
-			generator.close();
+			// use timeout to allow browser to build DOM before printing
+			// Print preview in Chrome doesn't work without this code
+			setTimeout( function() {
+				generator.print();
+				generator.close();
+			}, 10 );
 			return true;
 		},
 
