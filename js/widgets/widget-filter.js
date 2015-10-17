@@ -647,71 +647,81 @@
 			return parsed ? c.parsers[column].format( filter, c.table, [], column ) : filter;
 		},
 		buildRow: function( table, c, wo ) {
-			var col, column, $header, makeSelect, disabled, name, ffxn, tmp,
+			var $filter, col, column, $header, makeSelect, disabled, name, ffxn, tmp,
 				// c.columns defined in computeThIndexes()
 				cellFilter = wo.filter_cellFilter,
 				columns = c.columns,
 				arry = $.isArray( cellFilter ),
 				buildFilter = '<tr role="row" class="' + tscss.filterRow + ' ' + c.cssIgnoreRow + '">';
 			for ( column = 0; column < columns; column++ ) {
-				buildFilter += '<td';
-				if ( arry ) {
-					buildFilter += ( cellFilter[ column ] ? ' class="' + cellFilter[ column ] + '"' : '' );
-				} else {
-					buildFilter += ( cellFilter !== '' ? ' class="' + cellFilter + '"' : '' );
+				if ( c.$headerIndexed[ column ].length ) {
+					buildFilter += '<td data-column="' + column + '"';
+					// account for entire column set with colspan. See #1047
+					tmp = c.$headerIndexed[ column ] && c.$headerIndexed[ column ][0].colSpan || 0;
+					if ( tmp > 1 ) {
+						buildFilter += ' colspan="' + tmp + '"';
+					}
+					if ( arry ) {
+						buildFilter += ( cellFilter[ column ] ? ' class="' + cellFilter[ column ] + '"' : '' );
+					} else {
+						buildFilter += ( cellFilter !== '' ? ' class="' + cellFilter + '"' : '' );
+					}
+					buildFilter += '></td>';
 				}
-				buildFilter += '></td>';
 			}
 			c.$filters = $( buildFilter += '</tr>' )
 				.appendTo( c.$table.children( 'thead' ).eq( 0 ) )
-				.find( 'td' );
+				.children( 'td' );
 			// build each filter input
 			for ( column = 0; column < columns; column++ ) {
 				disabled = false;
 				// assuming last cell of a column is the main column
 				$header = c.$headerIndexed[ column ];
-				ffxn = ts.getColumnData( table, wo.filter_functions, column );
-				makeSelect = ( wo.filter_functions && ffxn && typeof ffxn !== 'function' ) ||
-					$header.hasClass( 'filter-select' );
-				// get data from jQuery data, metadata, headers option or header class name
-				col = ts.getColumnData( table, c.headers, column );
-				disabled = ts.getData( $header[0], col, 'filter' ) === 'false' ||
-					ts.getData( $header[0], col, 'parser' ) === 'false';
+				if ( $header && $header.length ) {
+					$filter = c.$filters.filter( '[data-column="' + column + '"]' );
+					ffxn = ts.getColumnData( table, wo.filter_functions, column );
+					makeSelect = ( wo.filter_functions && ffxn && typeof ffxn !== 'function' ) ||
+						$header.hasClass( 'filter-select' );
+					// get data from jQuery data, metadata, headers option or header class name
+					col = ts.getColumnData( table, c.headers, column );
+					disabled = ts.getData( $header[0], col, 'filter' ) === 'false' ||
+						ts.getData( $header[0], col, 'parser' ) === 'false';
 
-				if ( makeSelect ) {
-					buildFilter = $( '<select>' ).appendTo( c.$filters.eq( column ) );
-				} else {
-					ffxn = ts.getColumnData( table, wo.filter_formatter, column );
-					if ( ffxn ) {
-						wo.filter_formatterCount++;
-						buildFilter = ffxn( c.$filters.eq( column ), column );
-						// no element returned, so lets go find it
-						if ( buildFilter && buildFilter.length === 0 ) {
-							buildFilter = c.$filters.eq( column ).children( 'input' );
-						}
-						// element not in DOM, so lets attach it
-						if ( buildFilter && ( buildFilter.parent().length === 0 ||
-							( buildFilter.parent().length && buildFilter.parent()[0] !== c.$filters[column] ) ) ) {
-							c.$filters.eq( column ).append( buildFilter );
-						}
+					if ( makeSelect ) {
+						buildFilter = $( '<select>' ).appendTo( $filter );
 					} else {
-						buildFilter = $( '<input type="search">' ).appendTo( c.$filters.eq( column ) );
+						ffxn = ts.getColumnData( table, wo.filter_formatter, column );
+						if ( ffxn ) {
+							wo.filter_formatterCount++;
+							buildFilter = ffxn( $filter, column );
+							// no element returned, so lets go find it
+							if ( buildFilter && buildFilter.length === 0 ) {
+								buildFilter = $filter.children( 'input' );
+							}
+							// element not in DOM, so lets attach it
+							if ( buildFilter && ( buildFilter.parent().length === 0 ||
+								( buildFilter.parent().length && buildFilter.parent()[0] !== $filter[0] ) ) ) {
+								$filter.append( buildFilter );
+							}
+						} else {
+							buildFilter = $( '<input type="search">' ).appendTo( $filter );
+						}
+						if ( buildFilter ) {
+							tmp = $header.data( 'placeholder' ) ||
+								$header.attr( 'data-placeholder' ) ||
+								wo.filter_placeholder.search || '';
+							buildFilter.attr( 'placeholder', tmp );
+						}
 					}
 					if ( buildFilter ) {
-						tmp = $header.data( 'placeholder' ) ||
-							$header.attr( 'data-placeholder' ) ||
-							wo.filter_placeholder.search || '';
-						buildFilter.attr( 'placeholder', tmp );
-					}
-				}
-				if ( buildFilter ) {
-					// add filter class name
-					name = ( $.isArray( wo.filter_cssFilter ) ?
-						( typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '' ) :
-						wo.filter_cssFilter ) || '';
-					buildFilter.addClass( tscss.filter + ' ' + name ).attr( 'data-column', column );
-					if ( disabled ) {
-						buildFilter.attr( 'placeholder', '' ).addClass( tscss.filterDisabled )[0].disabled = true;
+						// add filter class name
+						name = ( $.isArray( wo.filter_cssFilter ) ?
+							( typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '' ) :
+							wo.filter_cssFilter ) || '';
+						buildFilter.addClass( tscss.filter + ' ' + name ).attr( 'data-column', column );
+						if ( disabled ) {
+							buildFilter.attr( 'placeholder', '' ).addClass( tscss.filterDisabled )[0].disabled = true;
+						}
 					}
 				}
 			}
@@ -1261,7 +1271,7 @@
 								// ( '> -10' => '> -100' will ignore hidden rows )
 								!( regex.isNeg1.test( val ) || regex.isNeg2.test( val ) ) &&
 								// if filtering using a select without a 'filter-match' class ( exact match ) - fixes #593
-								!( val !== '' && c.$filters && c.$filters.eq( indx ).find( 'select' ).length &&
+								!( val !== '' && c.$filters && c.$filters.filter( '[data-column="' + indx + '"]' ).find( 'select' ).length &&
 									!c.$headerIndexed[indx].hasClass( 'filter-match' ) );
 						}
 					}

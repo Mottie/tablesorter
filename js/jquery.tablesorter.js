@@ -253,7 +253,7 @@
 			};
 
 			function buildParserCache( c, $tbodies ) {
-				var rows, list, l, i, h, ch, np, p, e, time, tb, len,
+				var rows, list, span, max, colIndex, i, h, ch, np, p, e, time, tb, len,
 					table = c.table,
 					j = 0,
 					debug = {};
@@ -274,39 +274,48 @@
 				while (j < len) {
 					rows = tb[j].rows;
 					if (rows.length) {
-						l = c.columns; // rows[j].cells.length;
-						for (i = 0; i < l; i++) {
-							h = c.$headerIndexed[i];
-							// get column indexed table cell
-							ch = ts.getColumnData( table, c.headers, i );
-							// get column parser/extractor
-							e = ts.getParserById( ts.getData(h, ch, 'extractor') );
-							p = ts.getParserById( ts.getData(h, ch, 'sorter') );
-							np = ts.getData(h, ch, 'parser') === 'false';
-							// empty cells behaviour - keeping emptyToBottom for backwards compatibility
-							c.empties[i] = ( ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' ) ).toLowerCase();
-							// text strings behaviour in numerical sorts
-							c.strings[i] = ( ts.getData(h, ch, 'string') || c.stringTo || 'max' ).toLowerCase();
-							if (np) {
-								p = ts.getParserById('no-parser');
+						colIndex = 0;
+						max = c.columns; // rows[j].cells.length;
+						for (i = 0; i < max; i++) {
+							h = c.$headerIndexed[ colIndex ];
+							if ( h && h.length ) {
+								// get column indexed table cell
+								ch = ts.getColumnData( table, c.headers, colIndex );
+								// get column parser/extractor
+								e = ts.getParserById( ts.getData(h, ch, 'extractor') );
+								p = ts.getParserById( ts.getData(h, ch, 'sorter') );
+								np = ts.getData(h, ch, 'parser') === 'false';
+								// empty cells behaviour - keeping emptyToBottom for backwards compatibility
+								c.empties[colIndex] = ( ts.getData(h, ch, 'empty') || c.emptyTo || (c.emptyToBottom ? 'bottom' : 'top' ) ).toLowerCase();
+								// text strings behaviour in numerical sorts
+								c.strings[colIndex] = ( ts.getData(h, ch, 'string') || c.stringTo || 'max' ).toLowerCase();
+								if (np) {
+									p = ts.getParserById('no-parser');
+								}
+								if (!e) {
+									// For now, maybe detect someday
+									e = false;
+								}
+								if (!p) {
+									p = detectParserForColumn(c, rows, -1, i);
+								}
+								if (c.debug) {
+									debug[ '(' + colIndex + ') ' + h.text() ] = {
+										parser : p.id,
+										extractor : e ? e.id : 'none',
+										string : c.strings[colIndex],
+										empty  : c.empties[colIndex]
+									};
+								}
+								list.parsers[colIndex] = p;
+								list.extractors[colIndex] = e;
+								span = h[0].colSpan - 1;
+								if ( span > 0 ) {
+									colIndex += span;
+									max += span;
+								}
 							}
-							if (!e) {
-								// For now, maybe detect someday
-								e = false;
-							}
-							if (!p) {
-								p = detectParserForColumn(c, rows, -1, i);
-							}
-							if (c.debug) {
-								debug[ '(' + i + ') ' + h.text() ] = {
-									parser : p.id,
-									extractor : e ? e.id : 'none',
-									string : c.strings[i],
-									empty  : c.empties[i]
-								};
-							}
-							list.parsers[i] = p;
-							list.extractors[i] = e;
+							colIndex++;
 						}
 					}
 					j += (list.parsers.length) ? len : 1;
@@ -326,8 +335,8 @@
 
 			/* utils */
 			function buildCache(table, callback, $tbodies) {
-				var cc, t, v, i, j, k, $tb, $row, cols, cacheTime,
-					totalRows, rowData, prevRowData, colMax,
+				var cc, t, v, i, j, k, $tb, $row, cols, cell, cacheTime,
+					totalRows, rowData, prevRowData, colMax, span, cacheIndex, max,
 					c = table.config,
 					parsers = c.parsers;
 				// update tbody variable
@@ -379,29 +388,52 @@
 							t = prevRowData.child.length;
 							prevRowData.child[ t ] = [];
 							// child row content does not account for colspans/rowspans; so indexing may be off
-							for ( j = 0; j < c.columns; j++ ) {
-								prevRowData.child[ t ][ j ] = ts.getParsedText( c, v[ j ], j );
+							cacheIndex = 0;
+							max = c.columns;
+							for ( j = 0; j < max; j++ ) {
+								cell = v[ j ];
+								if ( cell ) {
+									prevRowData.child[ t ][ j ] = ts.getParsedText( c, cell, j );
+									span = v[ j ].colSpan - 1;
+									if ( span > 0 ) {
+										cacheIndex += span;
+										max += span
+									}
+								}
+								cacheIndex++;
 							}
 							// go to the next for loop
 							continue;
 						}
 						rowData.$row = $row;
 						rowData.order = i; // add original row position to rowCache
-						for ( j = 0; j < c.columns; ++j ) {
-							if (typeof parsers[ j ] === 'undefined') {
-								if ( c.debug ) {
-									console.warn( 'No parser found for cell:', $row[ 0 ].cells[ j ], 'does it have a header?' );
+						cacheIndex = 0;
+						max = c.columns;
+						for ( j = 0; j < max; ++j ) {
+							cell = $row[ 0 ].cells[ j ];
+							if ( cell ) {
+								if (typeof parsers[ cacheIndex ] === 'undefined') {
+									if ( c.debug ) {
+										console.warn( 'No parser found for cell:', cell, 'does it have a header?' );
+									}
+									continue;
 								}
-								continue;
+								t = ts.getElementText( c, cell, cacheIndex );
+								rowData.raw[ cacheIndex ] = t; // save original row text
+								v = ts.getParsedText( c, cell, cacheIndex, t );
+								cols[ cacheIndex ] =  v;
+								if ( ( parsers[ cacheIndex ].type || '' ).toLowerCase() === 'numeric' ) {
+									// determine column max value (ignore sign)
+									colMax[ j ] = Math.max( Math.abs( v ) || 0, colMax[ cacheIndex ] || 0 );
+								}
+								// allow colSpan in tbody
+								span = cell.colSpan - 1;
+								if ( span > 0 ) {
+									cacheIndex += span;
+									max += span;
+								}
 							}
-							t = ts.getElementText( c, $row[ 0 ].cells[j], j );
-							rowData.raw.push( t ); // save original row text
-							v = ts.getParsedText( c, $row[ 0 ].cells[ j ], j, t );
-							cols.push( v );
-							if ( ( parsers[ j ].type || '' ).toLowerCase() === 'numeric' ) {
-								// determine column max value (ignore sign)
-								colMax[ j ] = Math.max( Math.abs( v ) || 0, colMax[ j ] || 0 );
-							}
+							cacheIndex++;
 						}
 						// ensure rowData is always in the same location (after the last column)
 						cols[ c.columns ] = rowData;
@@ -487,7 +519,9 @@
 					$t = c.$headers.filter('[data-column="' + indx + '"]');
 					// target sortable column cells, unless there are none, then use non-sortable cells
 					// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
-					c.$headerIndexed[indx] = $t.not('.sorter-false').length ? $t.not('.sorter-false').filter(':last') : $t.filter(':last');
+					c.$headerIndexed[indx] = $t.length ?
+						$t.not('.sorter-false').length ? $t.not('.sorter-false').filter(':last') : $t.filter(':last') :
+						$();
 				}
 				c.$table.find(c.selectorHeaders).attr({
 					scope: 'col',
