@@ -22,7 +22,7 @@
 			// name = function returning invalid results
 			// errorIndex = math.error index with an explanation of the error
 			console.log( name, math.error[ errorIndex ] );
-			return c.widgetOptions.math_none; // text for cell
+			return c && c.widgetOptions.math_none || 'none'; // text for cell
 		},
 
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
@@ -230,7 +230,7 @@
 								( type === 'all' ) ? getAll : math.getColumn( c, $el, type );
 							if ( equations[ formula ] ) {
 								if ( arry.length ) {
-									result = equations[ formula ]( arry );
+									result = equations[ formula ]( arry, c );
 									if ( c.debug ) {
 										console.log( $el.attr( mathAttr ), arry, '=', result );
 									}
@@ -386,7 +386,7 @@
 			var total = ts.equations.sum( arry );
 			return total / arry.length;
 		},
-		median : function( arry ) {
+		median : function( arry, c ) {
 			var half,
 				len = arry.length;
 			if ( len > 1 ) {
@@ -430,7 +430,7 @@
 		},
 		// common variance equation
 		// (not accessible via data-attribute setting)
-		variance: function( arry, population ) {
+		variance: function( arry, population, c ) {
 			var divisor,
 				avg = ts.equations.mean( arry ),
 				v = 0,
@@ -446,21 +446,21 @@
 			return v;
 		},
 		// variance (population)
-		varp : function( arry ) {
-			return ts.equations.variance( arry, true );
+		varp : function( arry, c ) {
+			return ts.equations.variance( arry, true, c );
 		},
 		// variance (sample)
-		vars : function( arry ) {
-			return ts.equations.variance( arry );
+		vars : function( arry, c ) {
+			return ts.equations.variance( arry, false, c );
 		},
 		// standard deviation (sample)
-		stdevs : function( arry ) {
-			var vars = ts.equations.variance( arry );
+		stdevs : function( arry, c ) {
+			var vars = ts.equations.variance( arry, false, c );
 			return Math.sqrt( vars );
 		},
 		// standard deviation (population)
-		stdevp : function( arry ) {
-			var varp = ts.equations.variance( arry, true );
+		stdevp : function( arry, c ) {
+			var varp = ts.equations.variance( arry, true, c );
 			return Math.sqrt( varp );
 		}
 	};

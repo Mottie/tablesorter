@@ -459,7 +459,8 @@ math_suffix : '{content}<span class="red">!</span>'
 						<li>For example:
 							<pre class="prettyprint lang-js">// adding a custom equation... named "product"
 // access from data-math="row-product" (or "above-product", "below-product" or "col-product")
-$.tablesorter.equations['product'] = function(arry) {
+// config parameter added v2.23.6 to allow access to table settings
+$.tablesorter.equations['product'] = function(arry, config) {
     // multiple all array values together
     var product = 1;
     $.each(arry, function(i,v){
