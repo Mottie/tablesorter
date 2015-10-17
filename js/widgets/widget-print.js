@@ -27,9 +27,11 @@
 		process : function(c, wo) {
 			var $this,
 				$table = $('<div/>').append(c.$table.clone()),
-				printStyle = printTable.basicStyle + 'table { width: 100% }' +
+				printStyle = printTable.basicStyle + 'table { width: 100%; }' +
 					// hide filter row
-					'.' + ( ts.css.filterRow || 'tablesorter-filter-row' ) + ' { display: none }' +
+					'.' + ( ts.css.filterRow || 'tablesorter-filter-row' ) +
+					// hide filtered rows
+					', .' + ( wo.filter_filteredRow || 'filtered' ) + ' { display: none; }' +
 					// hide sort arrows
 					'.' + ( ts.css.header || 'tablesorter-header' ) + ' { background-image: none !important; }';
 
