@@ -1171,7 +1171,7 @@
 					.index( $.fn.closest ? $cell.closest( 'tbody' ) : $cell.parents( 'tbody' ).filter( ':first' ) ),
 				tbcache = c.cache[ tbodyIndex ],
 				$row = $.fn.closest ? $cell.closest( 'tr' ) : $cell.parents( 'tr' ).filter( ':first' );
-				cell = $cell[ 0 ]; // in case cell is a jQuery object
+			cell = $cell[ 0 ]; // in case cell is a jQuery object
 			// tbody may not exist if update is initialized while tbody is removed for processing
 			if ( $tbodies.length && tbodyIndex >= 0 ) {
 				row = $tbodies.eq( tbodyIndex ).find( 'tr' ).index( $row );
