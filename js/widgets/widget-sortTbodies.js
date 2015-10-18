@@ -116,10 +116,10 @@
 								colMax = c.$headerIndexed[ col ].attr( 'data-ts-col-max-value' ) ||
 									1.79E+308; // close to Number.MAX_VALUE
 								// sort strings in numerical columns
-								if ( typeof ( c.string[ c.strings[ col ] ] ) === 'boolean' ) {
-									num = ( dir ? 1 : -1 ) * ( c.string[ c.strings[ col ] ] ? -1 : 1 );
+								if ( typeof ( ts.string[ c.strings[ col ] ] ) === 'boolean' ) {
+									num = ( dir ? 1 : -1 ) * ( ts.string[ c.strings[ col ] ] ? -1 : 1 );
 								} else {
-									num = ( c.strings[ col ] ) ? c.string[ c.strings[ col ] ] || 0 : 0;
+									num = ( c.strings[ col ] ) ? ts.string[ c.strings[ col ] ] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
 								// var sort = $.tablesorter['sort' + s](a, b, dir, colMax, table);
