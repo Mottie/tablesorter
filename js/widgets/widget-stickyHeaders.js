@@ -262,7 +262,7 @@
 				ts.filter.bindSearch( $table, $stickyCells.find('.' + ts.css.filter) );
 				// support hideFilters
 				if (wo.filter_hideFilters) {
-					ts.filter.hideFilters($stickyTable, c);
+					ts.filter.hideFilters(c, $stickyTable);
 				}
 			}
 

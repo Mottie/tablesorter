@@ -851,10 +851,10 @@
 				return false;
 			}
 		},
-		hideFilters: function( c ) {
-			var timer;
-			c.$table
-				.find( '.' + tscss.filterRow )
+		hideFilters: function( c, $table ) {
+			var timer,
+				$row = ( $table || c.$table ).find( '.' + tscss.filterRow ).addClass( tscss.filterRowHide );
+			$row
 				.bind( 'mouseenter mouseleave', function( e ) {
 					// save event object - http://bugs.jquery.com/ticket/12140
 					var event = e,
