@@ -1008,9 +1008,19 @@
 				// direction = 2 means reset!
 				if ( list[ indx ][ 1 ] !== 2 ) {
 					// multicolumn sorting updating - see #1005
-					$sorted = c.lastClickedIndex > 0 ?
-						c.$headers.filter( ':gt(' + ( c.lastClickedIndex - 1 ) + ')' ) :
-						c.$headers;
+					// .not(function(){}) needs jQuery 1.4
+					$sorted = c.$headers.filter( function( i, el ) {
+						// only include headers that are in the sortList (this includes colspans)
+						var include = true,
+							$el = $( el ),
+							col = parseInt( $el.attr( 'data-column' ), 10 ),
+							end = col + el.colSpan;
+						for ( ; col < end; col++ ) {
+							include = include ? ts.isValueInArray( col, c.sortList ) > -1 : false;
+						}
+						return include;
+					});
+
 					// choose the :last in case there are nested columns
 					$sorted = $sorted
 						.not( '.sorter-false' )
