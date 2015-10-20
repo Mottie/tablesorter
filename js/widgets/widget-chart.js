@@ -213,7 +213,7 @@
 					}
 
 					if (value !== false) {
-						if ( /s/i.test( '' + wo.chart_layout[row.length] ) ) {
+						if ( /s/i.test( '' + wo.chart_layout[indx] ) ) {
 							row.push( value );
 							chart_series[objIndex].data.push( value );
 							chart_dataset[objIndex].data.push( value );
