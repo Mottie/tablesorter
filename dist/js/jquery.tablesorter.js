@@ -245,6 +245,7 @@
 			// ensure case insensitivity
 			c.emptyTo = c.emptyTo.toLowerCase();
 			c.stringTo = c.stringTo.toLowerCase();
+			c.last = { sortList : [], clickedIndex : -1 };
 			// add table theme class only if there isn't already one there
 			if ( !/tablesorter\-/.test( $table.attr( 'class' ) ) ) {
 				tmp = ( c.theme !== '' ? ' tablesorter-' + c.theme : '' );
@@ -492,9 +493,9 @@
 				// reference original table headers and find the same cell
 				// don't use $headers or IE8 throws an error - see #987
 				temp = $headers.index( $cell );
-				c.lastClickedIndex = ( temp < 0 ) ? $cell.attr( 'data-column' ) : temp;
+				c.last.clickedIndex = ( temp < 0 ) ? $cell.attr( 'data-column' ) : temp;
 				// use column index if $headers is undefined
-				cell = c.$headers[ c.lastClickedIndex ];
+				cell = c.$headers[ c.last.clickedIndex ];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
 				}
@@ -1389,7 +1390,7 @@
 					ts.initSort( c, cell, event );
 				}, 50 );
 			}
-			var arry, indx, headerIndx, col, order, s, $header,
+			var arry, indx, headerIndx, col, dir, temp, tmp, $header,
 				notMultiSort = !event[ c.sortMultiSortKey ],
 				table = c.table,
 				len = c.$headers.length;
@@ -1399,86 +1400,107 @@
 			cell.count = event[ c.sortResetKey ] ? 2 : ( cell.count + 1 ) % ( c.sortReset ? 3 : 2 );
 			// reset all sorts on non-current column - issue #30
 			if ( c.sortRestart ) {
-				indx = cell;
+				tmp = cell;
 				for ( headerIndx = 0; headerIndx < len; headerIndx++ ) {
 					$header = c.$headers.eq( headerIndx );
 					// only reset counts on columns that weren't just clicked on and if not included in a multisort
-					if ( $header[ 0 ] !== indx &&
+					if ( $header[ 0 ] !== tmp &&
 						( notMultiSort || !$header.is( '.' + ts.css.sortDesc + ',.' + ts.css.sortAsc ) ) ) {
 						$header[ 0 ].count = -1;
 					}
 				}
 			}
 			// get current column index
-			indx = parseInt( $( cell ).attr( 'data-column' ), 10 );
+			col = parseInt( $( cell ).attr( 'data-column' ), 10 );
 			// user only wants to sort on one column
 			if ( notMultiSort ) {
 				// flush the sort list
 				c.sortList = [];
+				c.last.sortList = [];
 				if ( c.sortForce !== null ) {
 					arry = c.sortForce;
-					for ( col = 0; col < arry.length; col++ ) {
-						if ( arry[ col ][ 0 ] !== indx ) {
-							c.sortList.push( arry[ col ] );
+					for ( indx = 0; indx < arry.length; indx++ ) {
+						if ( arry[ indx ][ 0 ] !== col ) {
+							c.sortList.push( arry[ indx ] );
 						}
 					}
 				}
 				// add column to sort list
-				order = cell.order[ cell.count ];
-				if ( order < 2 ) {
-					c.sortList.push( [ indx, order ] );
+				dir = cell.order[ cell.count ];
+				if ( dir < 2 ) {
+					c.sortList.push( [ col, dir ] );
 					// add other columns if header spans across multiple
 					if ( cell.colSpan > 1 ) {
-						for ( col = 1; col < cell.colSpan; col++ ) {
-							c.sortList.push( [ indx + col, order ] );
+						for ( indx = 1; indx < cell.colSpan; indx++ ) {
+							c.sortList.push( [ col + indx, dir ] );
 						}
 					}
 				}
 				// multi column sorting
 			} else {
 				// get rid of the sortAppend before adding more - fixes issue #115 & #523
-				if ( c.sortAppend && c.sortList.length > 1 ) {
-					for ( col = 0; col < c.sortAppend.length; col++ ) {
-						s = ts.isValueInArray( c.sortAppend[ col ][ 0 ], c.sortList );
-						if ( s >= 0 ) {
-							c.sortList.splice( s, 1 );
-						}
-					}
-				}
+				c.sortList = $.extend( [], c.last.sortList );
+
 				// the user has clicked on an already sorted column
-				if ( ts.isValueInArray( indx, c.sortList ) >= 0 ) {
+				if ( ts.isValueInArray( col, c.sortList ) >= 0 ) {
 					// reverse the sorting direction
-					for ( col = 0; col < c.sortList.length; col++ ) {
-						s = c.sortList[ col ];
-						order = c.$headerIndexed[ s[ 0 ] ] && c.$headerIndexed[ s[ 0 ] ][ 0 ];
-						if ( typeof order !== 'undefined' && s[ 0 ] === indx ) {
+					for ( indx = 0; indx < c.sortList.length; indx++ ) {
+						tmp = c.sortList[ indx ];
+						temp = c.$headerIndexed[ tmp[ 0 ] ] && c.$headerIndexed[ tmp[ 0 ] ][ 0 ];
+						if ( typeof temp !== 'undefined' && tmp[ 0 ] === col ) {
 							// order.count seems to be incorrect when compared to cell.count
-							s[ 1 ] = order.order[ cell.count ];
-							if ( s[1] === 2 ) {
-								c.sortList.splice( col, 1 );
-								order.count = -1;
+							tmp[ 1 ] = temp.order[ cell.count ];
+							if ( tmp[1] === 2 ) {
+								c.sortList.splice( indx, 1 );
+								temp.count = -1;
 							}
 						}
 					}
 				} else {
 					// add column to sort list array
-					order = cell.order[ cell.count ];
-					if ( order < 2 ) {
-						c.sortList.push( [ indx, order ] );
+					dir = cell.order[ cell.count ];
+					if ( dir < 2 ) {
+						c.sortList.push( [ col, dir ] );
 						// add other columns if header spans across multiple
 						if ( cell.colSpan > 1 ) {
-							for ( col = 1; col < cell.colSpan; col++ ) {
-								c.sortList.push( [ indx + col, order ] );
+							for ( indx = 1; indx < cell.colSpan; indx++ ) {
+								c.sortList.push( [ col + indx, dir ] );
 							}
 						}
 					}
 				}
 			}
-			if ( c.sortAppend !== null ) {
-				arry = c.sortAppend;
-				for ( col = 0; col < arry.length; col++ ) {
-					if ( arry[ col ][ 0 ] !== indx ) {
-						c.sortList.push( arry[ col ] );
+			// save sort before applying sortAppend
+			c.last.sortList = $.extend( [], c.sortList );
+			if ( c.sortList.length && c.sortAppend ) {
+				arry = $.isArray( c.sortAppend ) ? c.sortAppend : c.sortAppend[ c.sortList[ 0 ][ 0 ] ];
+				if ( !ts.isEmptyObject( arry ) ) {
+					for ( indx = 0; indx < arry.length; indx++ ) {
+						if ( arry[ indx ][ 0 ] !== col && ts.isValueInArray( arry[ indx ][ 0 ], c.sortList ) < 0 ) {
+							dir = arry[ indx ][ 1 ];
+							temp = ( '' + dir ).match( /^(a|d|s|o|n)/ );
+							if ( temp ) {
+								tmp = c.sortList[ 0 ][ 1 ];
+								switch ( temp[ 0 ] ) {
+									case 'd' :
+										dir = 1;
+										break;
+									case 's' :
+										dir = tmp;
+										break;
+									case 'o' :
+										dir = tmp === 0 ? 1 : 0;
+										break;
+									case 'n' :
+										dir = ( tmp + 1 ) % ( c.sortReset ? 3 : 2 );
+										break;
+									default:
+										dir = 0;
+										break;
+								}
+							}
+							c.sortList.push( [ arry[ indx ][ 0 ], dir ] );
+						}
 					}
 				}
 			}

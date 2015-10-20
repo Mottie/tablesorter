@@ -328,7 +328,7 @@
 		<li>Modify a sort:
 			<ul>
 				<li><a href="example-option-sort-force.html">Force a default sorting order</a> (<a href="#sortforce"><code>sortForce</code></a>)</li>
-				<li><a href="example-option-sort-append.html">Append a sort to the selected sorting order</a> (<a href="#sortappend"><code>sortAppend</code></a>)</li>
+				<li><a href="example-option-sort-append.html">Append a sort to the selected sorting order</a> (<a href="#sortappend"><code>sortAppend</code></a>; <span class="version updated">v2.23.6</span>)</li>
 				<li><a href="example-option-sort-empty.html">Sorting empty cells</a> (<a href="#emptyto"><code>emptyTo</code></a>; v2.1.11)</li>
 			</ul>
 		</li>
@@ -1270,7 +1270,7 @@ From the example function above, you'll end up with something similar to this HT
 					<ol>
 						<li><a href="#sortforce"><code>sortForce</code></a> forces the user to have this/these column(s) sorted first (null by default).</li>
 						<li><a href="#sortlist"><code>SortList</code></a> is the initial sort order of the columns.</li>
-						<li><a href="#sortappend"><code>SortAppend</code></a> is the default sort that is added to the end of the users sort selection (null by default).</li>
+						<li><a href="#sortappend"><code>SortAppend</code></a> is the default sort that is added to the end of the users sort selection (null by default; <span class="version updated">v2.23.6</span>).</li>
 					</ol>
 					The value of these sort options is an array of arrays and can include one or more columns. The format is an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where <code>columnIndex</code> is a zero-based index for your columns left-to-right and <code>sortDirection</code> is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>.
 				<pre class="prettyprint lang-js">$(function(){
@@ -1314,14 +1314,29 @@ From the example function above, you'll end up with something similar to this HT
 
 			<tr id="sortappend">
 				<td><a href="#" class="permalink">sortAppend</a></td>
-				<td>Array</td>
+				<td>Array or Object</td>
 				<td>null</td>
-				<td>Use to add an additional forced sort that will be appended to the dynamic selections by the user.
+				<td>Use to add an additional forced sort that will be appended to the dynamic selections by the user (<span class="version updated">v2.23.6</span>).
 					<div class="collapsible">
 					<br>
 					For example, can be used to sort people alphabetically after some other user-selected sort that results in rows with the same value like dates or money due. It can help prevent data from appearing as though it has a random secondary sort.<br>
-				<br>
-				The value contains an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where <code>columnIndex</code> is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code>sortForce</code></a> for more details on other sort order options.
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    sortAppend : [[1,0], [2,0]] // always append sorting of 2nd and 3rd column
+  });
+});</pre>
+					The value contains an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where <code>columnIndex</code> is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code>sortForce</code></a> for more details on other sort order options.
+					<p>In <span class="version updated">v2.23.6</span>, the <code>sortAppend</code> option now accepts an object containing column indexes.</p>
+					<p>Also, the sort direction can be set using "a" (ascending), "d" (descending), "n" (next), "s" (same) &amp; "o" (opposite):</p>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    sortAppend: {
+      0 : [[ 1,'a' ]], // always apply ascending sort
+      2 : [[ 3,'o' ]], // sort "o"pposite of column 2 direction
+      4 : [[ 5,'s' ], [ 0,'s' ]]  // sort "s"ame as column 4 direction
+    }
+  });
+});</pre>
 				</div>
 				</td>
 				<td><a href="example-option-sort-append.html">Example</a></td>

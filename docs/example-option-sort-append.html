@@ -15,20 +15,52 @@
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
+	<style>
+	th { width: 16.7%; }
+	#result1, #result2 { color: red; font-size: .8em; font-weight: normal; vertical-align: text-top; }
+	</style>
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<!-- Tablesorter: optional -->
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 
 <script id="js">$(function() {
-	// call the tablesorter plugin
-	$("table").tablesorter({
+	$('#table1').tablesorter({
 		theme : 'blue',
 
 		// add sort on the first column and in ascending order AFTER the selected column
 		sortAppend: [[0,0]]
 	});
+
+	$('#table2').tablesorter({
+		theme : 'blue',
+
+		// append different sort based on the first column sorted
+		sortAppend: {
+			0 : [[ 1, 'a' ]], // always apply ascending sort
+			2 : [[ 3, 'o' ]], // sort "o"pposite of column 2 direction
+			4 : [[ 5, 's' ], [ 0, 's' ] ]  // sort "s"ame as column 4 direction
+		}
+	});
 });</script>
+<script>
+$(function() {
+	// show sortList
+	$('table').on('sortEnd', function(){
+		var indx,
+			list = '&nbsp;[ ',
+			sortList = this.config.sortList,
+			id = '#result' + this.id.match(/\d/);
+		for ( indx = 0; indx < sortList.length; indx++ ) {
+			list += '[ ' + sortList[ indx ].join( ',' ) + ' ]';
+			if ( indx < sortList.length - 1 ) {
+				list += ', ';
+			}
+		}
+		$(id).html( list + ' ]' );
+	});
+});
+</script>
 </head>
 <body>
 
@@ -43,65 +75,39 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-			<ul>
-				<li>Click to sort any column header to see the the first column sort is appended to the selected sort order.</li>
-				<li>This option is part of the original plugin</li>
-			</ul>
+		<ul>
+			<li>In <span class="version">v2.23.6</span>, <code>sortAppend</code> can now be applied based on the primary column sort.</li>
+			<li>Click to sort any column header to see the the first column sort is appended to the selected sort order.</li>
+			<li>This option is part of the original plugin</li>
+		</ul>
 	<p>
 
 	<h1>Demo</h1>
-	<div id="demo"><table class="tablesorter">
+	<div id="demo"><h4>"First Name" column ascending sort appended to any other sort: <small id="result1"></small></h4>
+<table id="table1" class="tablesorter">
 	<thead>
-		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Age</th>
-			<th>Total</th>
-			<th>Discount</th>
-			<th>Date</th>
-		</tr>
+		<tr><th>First Name</th><th>Last Name</th><th>Age</th><th>Total</th><th>Discount</th><th>Date</th></tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td>Peter</td>
-			<td>Parker</td>
-			<td>28</td>
-			<td>$9.99</td>
-			<td>20%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>John</td>
-			<td>Evans</td>
-			<td>33</td>
-			<td>$9.99</td>
-			<td>25%</td>
-			<td>Dec 10, 2002 5:14 AM</td>
-		</tr>
-		<tr>
-			<td>Clark</td>
-			<td>Kent</td>
-			<td>22</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 12, 2003 11:14 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Almighty</td>
-			<td>45</td>
-			<td>$15.89</td>
-			<td>44%</td>
-			<td>Jan 18, 2001 9:12 AM</td>
-		</tr>
-		<tr>
-			<td>Bruce</td>
-			<td>Evans</td>
-			<td>22</td>
-			<td>$13.19</td>
-			<td>11%</td>
-			<td>Jul 6, 2006 8:14 AM</td>
-		</tr>
+		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>John</td><td>Evans</td><td>33</td><td>$9.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent</td><td>22</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$15.89</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+	</tbody>
+</table>
+
+<h4>Append sorted column based on initially sorted column: <small id="result2"></small></h4>
+<table id="table2" class="tablesorter">
+	<thead>
+		<tr><th>First Name (+Last)</th><th>Last Name</th><th>Age (+Total)</th><th>Total</th><th>Discount (+Date & First)</th><th>Date</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>John</td><td>Evans</td><td>33</td><td>$9.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent</td><td>22</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$15.89</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jul 6, 2006 8:14 AM</td></tr>
 	</tbody>
 </table></div>
 
