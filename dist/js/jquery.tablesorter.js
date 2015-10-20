@@ -938,7 +938,7 @@
 			}
 		},
 
-		getColumnText : function( table, column, callback ) {
+		getColumnText : function( table, column, callback, rowFilter ) {
 			table = $( table )[0];
 			var tbodyIndex, rowIndex, cache, row, tbodyLen, rowLen, raw, parsed, $cell, result,
 				hasCallback = typeof callback === 'function',
@@ -955,8 +955,11 @@
 					cache = c.cache[ tbodyIndex ].normalized;
 					rowLen = cache.length;
 					for ( rowIndex = 0; rowIndex < rowLen; rowIndex++ ) {
+						row = cache[ rowIndex ];
+						if ( rowFilter && !row[ c.columns ].$row.is( rowFilter ) ) {
+							continue;
+						}
 						result = true;
-						row =	cache[ rowIndex ];
 						parsed = ( allColumns ) ? row.slice( 0, c.columns ) : row[ column ];
 						row = row[ c.columns ];
 						raw = ( allColumns ) ? row.raw : row.raw[ column ];

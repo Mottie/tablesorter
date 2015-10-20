@@ -32,7 +32,7 @@ pre.lang-js, pre.lang-javascript {border-left-color: #f1bf26;}
 pre.lang-html {border-left-color: #ef6328;}
 pre.lang-css {border-left-color: #27aae2;}
 pre,#display {background-color:#eee;font-size:small;list-style:none;}
-pre.prettyprint {padding:5px;}
+pre.prettyprint {padding:5px; white-space: pre-wrap; word-break: break-all; }
 code {background-color: #e6e6e6; padding: 1px 5px;}
 a code {text-decoration:underline;}
 pre.normal {background-color:transparent;border:none;border-left-width:0;overflow-x:auto;}

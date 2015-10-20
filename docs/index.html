@@ -6832,15 +6832,16 @@ textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textEx
 
 			<tr id="function-getcolumntext">
 				<td><a href="#" class="permalink">getColumnText</a></td>
-				<td>This utility function returns the entire column text (raw and parsed) as well as other data (<span class="version">v2.21.4</span>).
+				<td>This utility function returns the entire column text (raw and parsed) as well as other data (<span class="version">v2.21.4</span>; <span class="updated version">v2.23.6</span>).
 					<div class="collapsible">
 					<br>
 						Use it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.getColumnText( table, column, callback );</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.getColumnText( table, column, callback, rowFilter );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object).</li>
 							<li><code>column</code> - zero-based column index or <code>'all'</code>.</li>
 							<li><code>callback</code> - callback function that is called while obtaining data for each cell within the specified column.</li>
+							<li><code>rowFilter</code> - can be a jQuery selector, function or element to allow targeting specific rows (e.g. <code>":visible"</code> or <code>":not(.child-row)"</code>); this parameter is used in a jQuery <code><a class="external" href="http://api.jquery.com/is/">.is()</a></code> function (<span class="version">v2.23.6</span>).</li>
 						</ul>
 						When using the callback, there is only one argument (object) passed to this function; it contains the following:
 						<ul>
@@ -6876,6 +6877,16 @@ $.tablesorter.getColumnText( table, 3, function( data ) {
 						<pre class="prettyprint lang-js">var table = $('table')[0],
   // targeting the 4th column (zero-based index)
   columnText = $.tablesorter.getColumnText( table, 3 );
+  // columnText = {
+  //   raw    : [ 'cell1', 'cell2', ..., 'celln' ],
+  //   parsed : [ 'cell1', 'cell2', ..., 'celln' ],
+  //   $cell  : [ $cell1,  $cell2,  ..., $celln  ]
+  // }
+</pre>
+						When using the filter widget, you can ignore filtered rows using the following code:
+						<pre class="prettyprint lang-js">var table = $('table')[0],
+  // targeting the 4th column (zero-based index); callback function is an empty string & therefore ignored
+  columnText = $.tablesorter.getColumnText( table, 3, '', ':not(.filtered)' );
   // columnText = {
   //   raw    : [ 'cell1', 'cell2', ..., 'celln' ],
   //   parsed : [ 'cell1', 'cell2', ..., 'celln' ],
