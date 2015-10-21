@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>jQuery plugin: Tablesorter 2.0</title>
@@ -71,11 +71,11 @@
 	</div>
 </div>
 
-<div id="main">
+<label for="main-nav-check" class="tooltip-right toggle-menu main-header" onclick="" title="Click to toggle the side menu">
+	<span></span>
+</label>
 
-	<label for="main-nav-check" class="tooltip-right toggle-menu main-header" onclick="" title="Click to toggle the side menu">
-		<span></span>
-	</label>
+<div id="main">
 
 	<div id="banner">
 		<h1>table<em>sorter</em> <small>(unofficial fork)</small></h1>
@@ -7120,8 +7120,8 @@ arry = $.tablesorter.filter.processOptions( $table, column, array );
 len = arry.length;
 
 // build options
-for ( index = 0; index < len; index++ ) {
-	opts += '<option value="' + array[ index ] + '">' + array[ index ] + '</option>';
+for ( index = 0; index &lt; len; index++ ) {
+	opts += '&lt;option value="' + array[ index ] + '"&gt;' + array[ index ] + '&lt;/option&gt;';
 }
 $('select.external').html( opts );</pre>
 						<p>Please be aware that this function does not process the array, so the array may contain duplicates and will not be sorted.</p>
