@@ -1,7 +1,6 @@
 /* top menu - http://codepen.io/jetpacmonkey/pen/ktIJz */
 *{box-sizing:border-box;}
 html,body{min-height:100%;}
-body { overflow-x:hidden; }
 a{text-decoration:none;}
 #main{transition: transform .3s ease; }
 .main-nav{position:fixed;top:0;left:0;width:250px;height:100%;background:#3B3B3B;color:#fff;overflow:hidden;transition:transform .3s ease;transform:translateX(-250px);}

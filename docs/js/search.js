@@ -33,6 +33,7 @@ jQuery(function($){
 		search = window.location.search,
 		$results = [],
 		index = 0,
+		menuWidth = 250,
 		$window = $(window),
 		$main = $('#main'),
 		$search = $('.search').val(''), // Firefox retains the input value
@@ -66,7 +67,7 @@ jQuery(function($){
 		},
 		jumpTo = function(){
 			if (resultsLength) {
-				var resultPosition, parentPosition,
+				var resultPosition, parentPosition, leftPosition,
 					$current = $results.eq(index),
 					$collapsible = $current.closest('.collapsible, tr[id]');
 				if ($collapsible.length && $collapsible.is(':hidden')) {
@@ -78,7 +79,11 @@ jQuery(function($){
 					if (parentPosition + $(window).height() < resultPosition) {
 						parentPosition = resultPosition;
 					}
-					$window.scrollTop( parentPosition - 28 );
+					leftPosition = 0;
+					if ( $current.position().left > $(window).width() - menuWidth ) {
+						leftPosition = $(window).width();
+					}
+					window.scrollTo( leftPosition, parentPosition - 28 );
 				}
 			}
 			updateStatus();
