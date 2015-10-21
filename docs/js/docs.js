@@ -225,6 +225,13 @@
 		}
 	}
 
+	// update stickyHeader when menu closes
+	$('#main-nav-check').on('change', function(){
+		setTimeout(function(){
+			$(window).scroll();
+		}, 350); // transition animation 300ms
+	});
+
 	$(window).bind('load', function(){
 		if ($('#root').length) {
 			$(window).bind('hashchange', function(){
