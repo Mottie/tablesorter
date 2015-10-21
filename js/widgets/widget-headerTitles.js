@@ -54,15 +54,16 @@
 			c.$headers.each(function(){
 				var t = this,
 					$this = $(this),
-					sortType = wo.headerTitle_type[t.column] || c.parsers[ t.column ].type || 'text',
+					col = parseInt( $this.attr( 'data-column' ), 10 ),
+					sortType = wo.headerTitle_type[ col ] || c.parsers[ col ].type || 'text',
 					sortDirection = $this.hasClass(ts.css.sortAsc) ? 0 : $this.hasClass(ts.css.sortDesc) ? 1 : 2,
-					sortNext = t.order[(t.count + 1) % (c.sortReset ? 3 : 2)];
+					sortNext = c.sortVars[ col ].order[ ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
 				if (wo.headerTitle_useAria) {
 					txt = $this.hasClass('sorter-false') ? wo.headerTitle_output_nosort : $this.attr('aria-label') || '';
 				} else {
 					txt = (wo.headerTitle_prefix || '') + // now deprecated
 						($this.hasClass('sorter-false') ? wo.headerTitle_output_nosort :
-						ts.isValueInArray( t.column, c.sortList ) >= 0 ? wo.headerTitle_output_sorted : wo.headerTitle_output_unsorted);
+						ts.isValueInArray( col, c.sortList ) >= 0 ? wo.headerTitle_output_sorted : wo.headerTitle_output_unsorted);
 					txt = txt.replace(/\{(current|next|name)\}/gi, function(m){
 						return {
 							'{name}'    : $this.text(),

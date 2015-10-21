@@ -506,6 +506,7 @@
 			var $temp, icon, timer, indx;
 			c.headerList = [];
 			c.headerContent = [];
+			c.sortVars = [];
 			if ( c.debug ) {
 				timer = new Date();
 			}
@@ -517,7 +518,7 @@
 				'';
 			// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
 			c.$headers = $( $.map( c.$table.find( c.selectorHeaders ), function( elem, index ) {
-				var configHeaders, header, template, tmp,
+				var configHeaders, header, column, template, tmp,
 					$elem = $( elem );
 				// ignore cell (don't add it to c.$headers) if row has ignoreRow class
 				if ( $elem.parent().hasClass( c.cssIgnoreRow ) ) { return; }
@@ -543,17 +544,21 @@
 				if ( c.onRenderHeader ) {
 					c.onRenderHeader.apply( $elem, [ index, c, c.$table ] );
 				}
-				// *** remove this.column value if no conflicts found
-				elem.column = parseInt( $elem.attr( 'data-column' ), 10 );
+				column = parseInt( $elem.attr( 'data-column' ), 10 );
+				elem.column = column;
 				tmp = ts.getData( $elem, configHeaders, 'sortInitialOrder' ) || c.sortInitialOrder;
-				elem.order = ts.formatSortingOrder( tmp ) ?
-					[ 1, 0, 2 ] : // desc, asc, unsorted
-					[ 0, 1, 2 ];  // asc, desc, unsorted
-				elem.count = -1; // set to -1 because clicking on the header automatically adds one
-				elem.lockedOrder = false;
+				// this may get updated numerous times if there are multiple rows
+				c.sortVars[ column ] = {
+					count : -1, // set to -1 because clicking on the header automatically adds one
+					order: ts.formatSortingOrder( tmp ) ?
+						[ 1, 0, 2 ] : // desc, asc, unsorted
+						[ 0, 1, 2 ],  // asc, desc, unsorted
+					lockedOrder : false
+				};
 				tmp = ts.getData( $elem, configHeaders, 'lockedOrder' ) || false;
 				if ( typeof tmp !== 'undefined' && tmp !== false ) {
-					elem.order = elem.lockedOrder = ts.formatSortingOrder( tmp ) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
+					c.sortVars[ column ].lockedOrder = true;
+					c.sortVars[ column ].order = ts.formatSortingOrder( tmp ) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
 				}
 				// add cell to headerList
 				c.headerList[ index ] = elem;
@@ -895,7 +900,7 @@
 							val = ts.getElementText( c, cell, cacheIndex );
 							rowData.raw[ cacheIndex ] = val; // save original row text
 							txt = ts.getParsedText( c, cell, cacheIndex, val );
-							cols[ cacheIndex ] =  txt;
+							cols[ cacheIndex ] = txt;
 							if ( ( parsers[ cacheIndex ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
 								colMax[ cacheIndex ] = Math.max( Math.abs( txt ) || 0, colMax[ cacheIndex ] || 0 );
@@ -1056,7 +1061,8 @@
 				$header = $headers.eq( indx );
 				if ( $header.length ) {
 					header = $headers[ indx ];
-					nextSort = header.order[ ( header.count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
+					column = parseInt( $header.attr( 'data-column' ), 10 );
+					nextSort = c.sortVars[ column ].order[ ( c.sortVars[ column ].count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
 						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone';
@@ -1099,7 +1105,7 @@
 		},
 
 		updateHeaderSortCount : function( c, list ) {
-			var col, dir, group, header, indx, primary, temp, val,
+			var col, dir, group, indx, primary, temp, val, order,
 				sortList = list || c.sortList,
 				len = sortList.length;
 			c.sortList = [];
@@ -1108,10 +1114,8 @@
 				// ensure all sortList values are numeric - fixes #127
 				col = parseInt( val[ 0 ], 10 );
 				// prevents error if sorton array is wrong
-				if ( col < c.columns && c.$headerIndexed[ col ] ) {
-					// make sure header exists
-					header = c.$headerIndexed[ col ][ 0 ];
-					// o.count = o.count + 1;
+				if ( col < c.columns ) {
+					order = c.sortVars[ col ].order;
 					dir = ( '' + val[ 1 ] ).match( /^(1|d|s|o|n)/ );
 					dir = dir ? dir[ 0 ] : '';
 					// 0/(a)sc (default), 1/(d)esc, (s)ame, (o)pposite, (n)ext
@@ -1124,13 +1128,12 @@
 							dir = primary || 0;
 							break;
 						case 'o' :
-							temp = header.order[ ( primary || 0 ) % ( c.sortReset ? 3 : 2 ) ];
+							temp = order[ ( primary || 0 ) % ( c.sortReset ? 3 : 2 ) ];
 							// opposite of primary column; but resets if primary resets
 							dir = temp === 0 ? 1 : temp === 1 ? 0 : 2;
 							break;
 						case 'n' :
-							header.count = header.count + 1;
-							dir = header.order[ ( header.count ) % ( c.sortReset ? 3 : 2 ) ];
+							dir = order[ ( ++c.sortVars[ col ].count ) % ( c.sortReset ? 3 : 2 ) ];
 							break;
 						default : // ascending
 							dir = 0;
@@ -1139,8 +1142,8 @@
 					primary = indx === 0 ? dir : primary;
 					group = [ col, parseInt( dir, 10 ) || 0 ];
 					c.sortList.push( group );
-					dir = $.inArray( group[ 1 ], header.order ); // fixes issue #167
-					header.count = dir >= 0 ? dir : group[ 1 ] % ( c.sortReset ? 3 : 2 );
+					dir = $.inArray( group[ 1 ], order ); // fixes issue #167
+					c.sortVars[ col ].count = dir >= 0 ? dir : group[ 1 ] % ( c.sortReset ? 3 : 2 );
 				}
 			}
 		},
@@ -1380,14 +1383,19 @@
 					ts.initSort( c, cell, event );
 				}, 50 );
 			}
-			var arry, indx, headerIndx, col, dir, temp, tmp, $header,
+			var arry, indx, headerIndx, dir, temp, tmp, $header,
 				notMultiSort = !event[ c.sortMultiSortKey ],
 				table = c.table,
-				len = c.$headers.length;
+				len = c.$headers.length,
+				// get current column index
+				col = parseInt( $( cell ).attr( 'data-column' ), 10 ),
+				order = c.sortVars[ col ].order;
+
 			// Only call sortStart if sorting is enabled
 			c.$table.trigger( 'sortStart', table );
 			// get current column sort order
-			cell.count = event[ c.sortResetKey ] ? 2 : ( cell.count + 1 ) % ( c.sortReset ? 3 : 2 );
+			c.sortVars[ col ].count =
+				event[ c.sortResetKey ] ? 2 : ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 );
 			// reset all sorts on non-current column - issue #30
 			if ( c.sortRestart ) {
 				tmp = cell;
@@ -1396,12 +1404,10 @@
 					// only reset counts on columns that weren't just clicked on and if not included in a multisort
 					if ( $header[ 0 ] !== tmp &&
 						( notMultiSort || !$header.is( '.' + ts.css.sortDesc + ',.' + ts.css.sortAsc ) ) ) {
-						$header[ 0 ].count = -1;
+						c.sortVars[ col ].count = -1;
 					}
 				}
 			}
-			// get current column index
-			col = parseInt( $( cell ).attr( 'data-column' ), 10 );
 			// user only wants to sort on one column
 			if ( notMultiSort ) {
 				// flush the sort list
@@ -1416,13 +1422,15 @@
 					}
 				}
 				// add column to sort list
-				dir = cell.order[ cell.count ];
+				dir = order[ c.sortVars[ col ].count ];
 				if ( dir < 2 ) {
 					c.sortList.push( [ col, dir ] );
 					// add other columns if header spans across multiple
 					if ( cell.colSpan > 1 ) {
 						for ( indx = 1; indx < cell.colSpan; indx++ ) {
 							c.sortList.push( [ col + indx, dir ] );
+							// update count on columns in colSpan
+							c.sortVars[ col + indx ].count = $.inArray( dir, order );
 						}
 					}
 				}
@@ -1436,25 +1444,26 @@
 					// reverse the sorting direction
 					for ( indx = 0; indx < c.sortList.length; indx++ ) {
 						tmp = c.sortList[ indx ];
-						temp = c.$headerIndexed[ tmp[ 0 ] ] && c.$headerIndexed[ tmp[ 0 ] ][ 0 ];
-						if ( typeof temp !== 'undefined' && tmp[ 0 ] === col ) {
+						if ( tmp[ 0 ] === col ) {
 							// order.count seems to be incorrect when compared to cell.count
-							tmp[ 1 ] = temp.order[ cell.count ];
+							tmp[ 1 ] = order[ c.sortVars[ col ].count ];
 							if ( tmp[1] === 2 ) {
 								c.sortList.splice( indx, 1 );
-								temp.count = -1;
+								c.sortVars[ col ].count = -1;
 							}
 						}
 					}
 				} else {
 					// add column to sort list array
-					dir = cell.order[ cell.count ];
+					dir = order[ c.sortVars[ col ].count ];
 					if ( dir < 2 ) {
 						c.sortList.push( [ col, dir ] );
 						// add other columns if header spans across multiple
 						if ( cell.colSpan > 1 ) {
 							for ( indx = 1; indx < cell.colSpan; indx++ ) {
 								c.sortList.push( [ col + indx, dir ] );
+								// update count on columns in colSpan
+								c.sortVars[ col + indx ].count = $.inArray( dir, order );
 							}
 						}
 					}
