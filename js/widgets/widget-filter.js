@@ -811,9 +811,9 @@
 			if ( $.isEmptyObject( c.cache ) ) {
 				// update cache if delayInit set & pager has initialized ( after user initiates a search )
 				if ( c.delayInit && c.pager && c.pager.initialized ) {
-					c.$table.trigger( 'updateCache', [ function() {
+					ts.updateCache( c, function() {
 						tsf.checkFilters( table, false, skipFirst );
-					} ] );
+					});
 				}
 				return;
 			}
@@ -1387,7 +1387,7 @@
 				c.$table.trigger( 'filterEnd', c );
 			}
 			setTimeout( function() {
-				c.$table.trigger( 'applyWidgets' ); // make sure zebra widget is applied
+				ts.applyWidget( c.table ); // make sure zebra widget is applied
 			}, 0 );
 		},
 		getOptionSource: function( table, column, onlyAvail ) {

@@ -190,7 +190,8 @@
 					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
 				}
 
-				c.$table.trigger( 'update' );
+				// update internal cache
+				ts.update( c );
 
 				if ( c.debug ) {
 					console.log( 'Math widget update completed' + ts.benchmark( time ) );

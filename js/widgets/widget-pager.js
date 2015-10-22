@@ -203,7 +203,7 @@
 			} else {
 				p.ajax = false;
 				// Regular pager; all rows stored in memory
-				c.$table.trigger('appendCache', [ {}, true ]);
+				ts.appendCache( c, true ); // true = don't apply widgets
 			}
 
 		},
@@ -224,7 +224,7 @@
 			if (c.debug) {
 				console.log('Pager: Triggering pagerInitialized');
 			}
-			c.$table.trigger('pagerInitialized', c);
+			c.$table.trigger( 'pagerInitialized', c );
 			// filter widget not initialized; it will update the output display & fire off the pagerComplete event
 			if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
 				// if ajax, then don't fire off pagerComplete
@@ -258,7 +258,7 @@
 						}
 						tsp.updatePageDisplay(table, c, false);
 						// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
-						c.$table.trigger('applyWidgets');
+						ts.applyWidget( table );
 					}
 				})
 				.on('disablePager' + namespace, function(e){
@@ -293,7 +293,7 @@
 					// update without triggering pagerComplete
 					tsp.updatePageDisplay(table, c, false);
 					// make sure widgets are applied - fixes #450
-					c.$table.trigger('applyWidgets');
+					ts.applyWidget( table );
 					tsp.updatePageDisplay(table, c);
 				})
 				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, v){
@@ -754,7 +754,8 @@
 				p.initializing = false;
 				// update display without triggering pager complete... before updating cache
 				tsp.updatePageDisplay(table, c, false);
-				$table.trigger('updateCache', [ function(){
+				// tablesorter core updateCache (not pager)
+				ts.updateCache( c, function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
@@ -762,16 +763,15 @@
 							if (c.debug) {
 								console.log('Pager: Triggering pagerChange');
 							}
-							$table
-								.trigger('applyWidgets')
-								.trigger('pagerChange', p);
+							$table.trigger( 'pagerChange', p );
+							ts.applyWidget( table );
 							tsp.updatePageDisplay(table, c);
 						}, 0);
 					}
-				} ]);
+				});
 			}
 			if (!p.initialized) {
-				c.$table.trigger('applyWidgets');
+				ts.applyWidget( table );
 			}
 		},
 
@@ -880,7 +880,7 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pagerChange');
 				}
-				c.$table.trigger('pagerChange', c);
+				c.$table.trigger( 'pagerChange', c );
 			}
 			if ( !wo.pager_removeRows && !p.showAll ) {
 				tsp.hideRows(table, c);
@@ -937,7 +937,7 @@
 					.find('tr.pagerSavedHeightSpacer').remove();
 				tsp.renderTable(table, c.rowsCopy);
 				p.isDisabled = true;
-				c.$table.trigger('applyWidgets');
+				ts.applyWidget( table );
 				if (c.debug) {
 					console.log('Pager: Disabled');
 				}
@@ -959,7 +959,8 @@
 		updateCache: function(table) {
 			var c = table.config,
 				p = c.pager;
-			c.$table.trigger('updateCache', [ function(){
+			// tablesorter core updateCache (not pager)
+			ts.updateCache( c, function(){
 				if ( !$.isEmptyObject(table.config.cache) ) {
 					var i,
 						rows = [],
@@ -973,7 +974,7 @@
 					// clear out last search to force an update
 					p.last.currentFilters = [ ' ' ];
 				}
-			} ]);
+			});
 		},
 
 		moveToPage: function(table, p, pageMoved) {
@@ -1030,9 +1031,8 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pageMoved');
 				}
-				c.$table
-					.trigger('pageMoved', c)
-					.trigger('applyWidgets');
+				c.$table.trigger('pageMoved', c);
+				ts.applyWidget( table );
 				if (!p.ajax && table.isUpdating) {
 					if (c.debug) {
 						console.log('Pager: Triggering updateComplete');
@@ -1119,7 +1119,8 @@
 			}
 			tsp.changeHeight(table, c);
 			if ( triggered ) {
-				c.$table.trigger('updateRows');
+				// tablesorter core update table
+				ts.update( c );
 				tsp.setPageSize(table, p.size, c);
 				tsp.hideRowsSetup(table, c);
 				if (c.debug) {

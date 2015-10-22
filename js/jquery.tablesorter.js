@@ -295,7 +295,7 @@
 			ts.applyWidget( table, true );
 			// if user has supplied a sort list to constructor
 			if ( c.sortList.length > 0 ) {
-				$table.trigger( 'sorton', [ c.sortList, {}, !c.initWidgets, true ] );
+				ts.sortOn( c, c.sortList, {}, !c.initWidgets );
 			} else {
 				ts.setHeadersCss( c );
 				if ( c.initWidgets ) {
@@ -1602,14 +1602,14 @@
 			// this will catch spamming of the updateCell method
 			if ( resrt !== false && !c.serverSideSorting && !c.table.isProcessing ) {
 				if ( sortList.length ) {
-					c.$table.trigger( 'sorton', [ sortList, function() {
+					ts.sortOn( c, sortList, function() {
 						ts.resortComplete( c, callback );
-					}, true ] );
+					}, true );
 				} else {
-					c.$table.trigger( 'sortReset', [ function() {
+					ts.sortReset( c, function() {
 						ts.resortComplete( c, callback );
 						ts.applyWidget( c.table, false );
-					} ] );
+					} );
 				}
 			} else {
 				ts.resortComplete( c, callback );

@@ -484,7 +484,8 @@
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				updatePageDisplay(table, p, false);
-				$table.trigger('updateCache', [ function(){
+				// tablesorter core updateCache (not pager)
+				ts.updateCache( c, function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
@@ -492,13 +493,12 @@
 							if (c.debug) {
 								console.log('Pager: Triggering pagerChange');
 							}
-							$table
-								.trigger('applyWidgets')
-								.trigger('pagerChange', p);
+							$table.trigger( 'pagerChange', p );
+							ts.applyWidget( table );
 							updatePageDisplay(table, p, true);
 						}, 0);
 					}
-				} ]);
+				});
 
 			}
 			if (!p.initialized) {
@@ -507,9 +507,8 @@
 				if (table.config.debug) {
 					console.log('Pager: Triggering pagerInitialized');
 				}
-				$(table)
-					.trigger('applyWidgets')
-					.trigger('pagerInitialized', p);
+				$(table).trigger( 'pagerInitialized', p );
+				ts.applyWidget( table );
 				updatePageDisplay(table, p);
 			}
 		},
@@ -619,7 +618,7 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pagerChange');
 				}
-				$t.trigger('pagerChange', p);
+				$t.trigger( 'pagerChange', p );
 			}
 			if ( !p.removeRows && !p.showAll ) {
 				hideRows(table, p);
@@ -670,7 +669,7 @@
 					.find('tr.pagerSavedHeightSpacer').remove();
 				renderTable(table, table.config.rowsCopy, p);
 				p.isDisabled = true;
-				$(table).trigger('applyWidgets');
+				ts.applyWidget( table );
 				if (table.config.debug) {
 					console.log('Pager: Disabled');
 				}
@@ -691,7 +690,8 @@
 		updateCache = function(table) {
 			var c = table.config,
 				p = c.pager;
-			c.$table.trigger('updateCache', [ function(){
+			// tablesorter core updateCache (not pager)
+			ts.updateCache( c, function(){
 				var i,
 					rows = [],
 					n = table.config.cache[0].normalized;
@@ -701,7 +701,7 @@
 				}
 				c.rowsCopy = rows;
 				moveToPage(table, p, true);
-			} ]);
+			});
 		},
 
 		moveToPage = function(table, p, pageMoved) {
@@ -753,9 +753,8 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pageMoved');
 				}
-				$t
-					.trigger('pageMoved', p)
-					.trigger('applyWidgets');
+				$t.trigger('pageMoved', p);
+				ts.applyWidget( table );
 				if (table.isUpdating) {
 					if (c.debug) {
 						console.log('Pager: Triggering updateComplete');
@@ -842,7 +841,8 @@
 			}
 			changeHeight(table, p);
 			if ( triggered ) {
-				c.$table.trigger('updateRows');
+				// tablesorter core update table
+				ts.update( c );
 				setPageSize(table, p.size, p);
 				hideRowsSetup(table, p);
 				if (c.debug) {
@@ -917,7 +917,7 @@
 							}
 							updatePageDisplay(table, p, false);
 							moveToPage(table, p, false);
-							c.$table.trigger('applyWidgets');
+							ts.applyWidget( table );
 						}
 					})
 					.bind('disablePager' + namespace, function(e){
@@ -1046,7 +1046,7 @@
 				} else {
 					p.ajax = false;
 					// Regular pager; all rows stored in memory
-					$(this).trigger('appendCache', true);
+					ts.appendCache( c, true ); // true = don't apply widgets
 					hideRowsSetup(table, p);
 				}
 
@@ -1058,7 +1058,7 @@
 					if (c.debug) {
 						console.log('Pager: Triggering pagerInitialized');
 					}
-					c.$table.trigger('pagerInitialized', p);
+					c.$table.trigger( 'pagerInitialized', p );
 					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
 						updatePageDisplay(table, p, false);
 					}

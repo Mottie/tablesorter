@@ -37,13 +37,13 @@
 				.bind( 'updateComplete' + namespace, function() {
 					// find parsers for each column
 					ts.sortTbodies.setTbodies( c, wo );
-					c.$table.trigger( 'updateCache', [ null, c.$tbodies ] );
+					ts.updateCache( c, null, c.$tbodies );
 				});
 
 			// detect parsers - in case the table contains only info-only tbodies
 			if ( $.isEmptyObject( c.parsers ) || c.$tbodies.length !== $tbodies.length ) {
 				ts.sortTbodies.setTbodies( c, wo );
-				c.$table.trigger( 'updateCache', [ null, c.$tbodies ] );
+				ts.updateCache( c, null, c.$tbodies );
 			}
 
 			// find colMax; this only matter for numeric columns
@@ -138,7 +138,7 @@
 									sort = cts[ col ]( x, y, dir, col, table );
 								} else {
 									// fall back to natural sort
-									sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, col, table, c );
+									sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, col, c );
 								}
 							}
 							if ( sort ) { return sort; }

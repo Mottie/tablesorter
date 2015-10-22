@@ -99,7 +99,7 @@
         }
         */
 
-        $table.trigger('updateAll', [ false, function() {
+        ts.updateAll( c, false, function() {
           if ( hasFilters ) {
             setTimeout( function() {
               // just update the filter values
@@ -111,7 +111,7 @@
               }
             }, 10 );
           }
-        } ]);
+        });
       }
     },
     getOrder : function( table ) {

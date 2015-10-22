@@ -62,7 +62,7 @@
 				.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') )
 				.bind('updateComplete.tsstaticrows ' + wo.staticRow_event, function(){
 					addIndexes(table);
-					c.$table.trigger('applyWidgets');
+					ts.applyWidget( table );
 				});
 		},
 

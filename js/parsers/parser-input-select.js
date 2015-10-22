@@ -175,12 +175,12 @@
 						return;
 					}
 					// ignore change event if nothing changed
-					if ( val !== $target.data( 'ts-original-value' ) || event.target.type === 'checkbox' ) {
+					if ( c && val !== $target.data( 'ts-original-value' ) || event.target.type === 'checkbox' ) {
 						$target.data( 'ts-original-value', val );
 						// pass undefined resort value so it falls back to config.resort setting
-						$table.trigger( 'updateCell', [ $cell, undef, function() {
+						$.tablesorter.updateCell( c, $cell, undef, function() {
 							updateServer( event, $table, $target );
-						} ]);
+						});
 					}
 				}
 			});

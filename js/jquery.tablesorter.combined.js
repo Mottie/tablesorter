@@ -313,7 +313,7 @@
 			ts.applyWidget( table, true );
 			// if user has supplied a sort list to constructor
 			if ( c.sortList.length > 0 ) {
-				$table.trigger( 'sorton', [ c.sortList, {}, !c.initWidgets, true ] );
+				ts.sortOn( c, c.sortList, {}, !c.initWidgets );
 			} else {
 				ts.setHeadersCss( c );
 				if ( c.initWidgets ) {
@@ -1620,14 +1620,14 @@
 			// this will catch spamming of the updateCell method
 			if ( resrt !== false && !c.serverSideSorting && !c.table.isProcessing ) {
 				if ( sortList.length ) {
-					c.$table.trigger( 'sorton', [ sortList, function() {
+					ts.sortOn( c, sortList, function() {
 						ts.resortComplete( c, callback );
-					}, true ] );
+					}, true );
 				} else {
-					c.$table.trigger( 'sortReset', [ function() {
+					ts.sortReset( c, function() {
 						ts.resortComplete( c, callback );
 						ts.applyWidget( c.table, false );
-					} ] );
+					} );
 				}
 			} else {
 				ts.resortComplete( c, callback );
@@ -3759,9 +3759,9 @@
 			if ( $.isEmptyObject( c.cache ) ) {
 				// update cache if delayInit set & pager has initialized ( after user initiates a search )
 				if ( c.delayInit && c.pager && c.pager.initialized ) {
-					c.$table.trigger( 'updateCache', [ function() {
+					ts.updateCache( c, function() {
 						tsf.checkFilters( table, false, skipFirst );
-					} ] );
+					});
 				}
 				return;
 			}
@@ -4335,7 +4335,7 @@
 				c.$table.trigger( 'filterEnd', c );
 			}
 			setTimeout( function() {
-				c.$table.trigger( 'applyWidgets' ); // make sure zebra widget is applied
+				ts.applyWidget( c.table ); // make sure zebra widget is applied
 			}, 0 );
 		},
 		getOptionSource: function( table, column, onlyAvail ) {
@@ -5407,7 +5407,7 @@
 					c.sortList = sortList;
 				} else if (table.hasInitialized && sortList && sortList.length > 0) {
 					// update sort change
-					$table.trigger('sorton', [ sortList ]);
+					ts.sortOn( c, sortList );
 				}
 			}
 		},
