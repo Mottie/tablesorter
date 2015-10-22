@@ -5360,6 +5360,27 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td></td>
 			</tr>
 
+			<tr id="tablesorterready">
+				<td><a href="#" class="permalink">tablesorter-ready</a></td>
+				<td>This event fires after tablesorter has complete applying all widgets and is ready for its next action (<span class="version">v2.23.6</span>).
+					<div class="collapsible">
+						This event occurs after an "updateComplete" and "pagerComplete" event. There may be some other table interaction if a widget includes any <code>setTimeout</code> functions.
+						<pre class="prettyprint lang-js">$(function(){
+
+  // initialize the tablesorter plugin
+  $('table')
+    .tablesorter()
+    // bind to sort events
+
+    .bind('tablesorter-ready', function(e, table) {
+      // do something after tablesorter has finished interacting with the table;
+    });
+
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="refreshcomplete">
 				<td><a href="#" class="permalink">refreshComplete</a></td>
 				<td>This event fires after tablesorter has completed executing the <a href="#refreshwidgets">refreshWidget</a> method (<span class="version">v2.19.0</span>)

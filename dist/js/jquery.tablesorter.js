@@ -1899,6 +1899,7 @@
 			setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
+				c.$table.trigger('tablesorter-ready');
 			}, 0 );
 			if ( c.debug ) {
 				widget = c.widgets.length;
