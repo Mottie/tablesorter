@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - View Widget</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<link rel="stylesheet" href="css/jq.css">
+	<link rel="stylesheet" href="css/prettify.css">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+	<!--<script src="js/bootstrap.min.js"></script>-->
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.widgets.js"></script>
+
+	<script src="../js/widgets/widget-pager.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
+	<script src="../js/widgets/widget-view.js"></script>
+
+	<style>
+	h1 { font-size: 28px; }
+	/* override jQuery UI overriding Bootstrap */
+	.accordion .ui-widget-content a {
+		color: #337ab7;
+	}
+	/* .spacer in docs css is set to height:800px for stickyHeader demo */
+	#pager .spacer { height: auto; }
+	.wrapper { padding: 5px; }
+
+	/* override doc style; not sure why form > font-size: 10pt?! */
+	#pager form { font-size: 16px; }
+	.thumb { width: 135px; }
+	.part-number { width: 10%; }
+	.part-name { width: 10%;  }
+	.part-price { width: 10%; }
+	</style>
+
+<style id="css">#demo {
+	font-size: 12px;
+	font-family: Tahoma, Arial, sans-serif;
+	color: #333;
+}
+
+#demo img {
+	border: 0;
+}
+
+#demo h1,
+#demo h3 {
+	font-weight: normal;
+	line-height: 1em;
+	color: #545454;
+	letter-spacing: -0.04em;
+	padding: 0;
+	margin: 0;
+	text-decoration: none;
+	border: none !important;
+	white-space: nowrap;
+}
+
+#demo h1 {
+	font-size: 3em;
+	position: relative;
+	top: 8px;
+}
+
+#demo .filtered {
+	display: none !important;
+}
+
+#viewHeader {
+	position: relative;
+	height: 35px;
+}
+
+#viewHeader section.left {
+	display: block;
+	float: left;
+	width: 200px;
+	position: relative;
+	padding-left: 20px;
+}
+
+#viewHeader section.right {
+	display: block;
+	float: right;
+	margin-right: 10px;
+	width: 400px;
+	text-align: right;
+}
+
+.hasPrice:before {
+	content: attr(data-currencysym) " ";
+}
+
+.hasPrice:after {
+	content: " " attr(data-currencycode);
+}
+
+#pager {
+	width: 100%;
+	text-align: center;
+	font-size: 1.35em;
+}
+
+#tablesearch {
+	font-size: 1.5em;
+}
+
+#ts-view {
+	width 100%;
+	display: block;
+}
+
+#ts-view-toolbar {
+	display: inline-block;
+}
+
+.ts-view-switcher {
+	font-size: 24px;
+	color: #fff;
+	padding-left: 5px;
+}
+
+.ts-view-switcher:last-child {
+	padding-right: 15px;
+}
+
+.ts-view-switcher i,
+.mybutton {
+	padding: 5px;
+	border-radius: 5px;
+	text-shadow: 0 1px 1px #777;
+	box-shadow: 0 1px 2px 0 #777;
+	color: #fff;
+	text-transform: uppercase;
+	border: 0;
+	background: rgb(70, 74, 88);
+	background: -webkit-linear-gradient(top, rgba(70, 74, 88, 1) 0%, rgba(43, 47, 58, 1) 100%);
+	background: linear-gradient(to bottom, rgba(70, 74, 88, 1) 0%, rgba(43, 47, 58, 1) 100%);
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#464a58', endColorstr='#2b2f3a', GradientType=0);
+}
+
+.ts-view-switcher:hover i,
+.mybutton:not(.nohover):hover {
+	background: rgb(252, 172, 94);
+	background: -webkit-linear-gradient(top, rgba(252, 172, 94, 1) 0%, rgba(221, 135, 49, 1) 100%);
+	background: linear-gradient(to bottom, rgba(252, 172, 94, 1) 0%, rgba(221, 135, 49, 1) 100%);
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#fcac5e', endColorstr='#dd8731', GradientType=0);
+}
+
+.ts-view-switcher.active i,
+.mybutton.active {
+	background: rgb(235, 181, 111);
+	background: -webkit-linear-gradient(top, rgba(235, 181, 111, 1) 0%, rgba(203, 145, 68, 1) 100%);
+	background: linear-gradient(to bottom, rgba(235, 181, 111, 1) 0%, rgba(203, 145, 68, 1) 100%);
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ebb56f', endColorstr='#cb9144', GradientType=0);
+}
+
+.mybutton {
+	margin-left: 8px;
+	padding: 8px;
+	width: 100px;
+	cursor: pointer;
+}
+
+/** list view **/
+ul.list {
+	list-style: none;
+	width: 100%;
+	padding: 0;
+	padding-bottom: 10px;
+}
+
+ul.list li {
+	display: block;
+	background: #c9d0d1;
+	padding: 10px 15px;
+}
+
+ul.list li.odd {
+	background: #d7dfe0;
+}
+
+ul.list li section.left {
+	display: block;
+	float: left;
+	width: 70%;
+	position: relative;
+	padding-left: 20px;
+}
+
+ul.list li section.right {
+	display: block;
+	float: right;
+	margin-right: 10px;
+	width: 250px;
+	text-align: right;
+}
+
+ul.list li section.left img.thumb {
+	float: left;
+	margin-right: 10px;
+	width: 80px;
+}
+
+ul.list li section.left img.featured-banner {
+	position: absolute;
+	left: -18px;
+	top: -3px;
+	width: 100px;
+}
+
+ul.list li section.left h3 {
+	font-family: "Trebuchet MS", Arial, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #707375;
+	font-size: 1.4em;
+	line-height: 1.6em;
+}
+
+ul.list li section.left span.meta {
+	color: #93989b;
+	font-weight: normal;
+	font-size: 1.1em;
+}
+
+ul.list li section.right span.price {
+	font-weight: bold;
+	display: block;
+	margin-bottom: 15px;
+	color: #ad3939;
+	font-size: 1.6em;
+	text-align: right;
+}
+
+ul.list li section.right a.firstbtn {
+	margin-right: 7px;
+}
+
+/** grid view **/
+ul.grid {
+	list-style: none;
+	margin: 0 auto;
+	padding: 0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	display: block;
+	width: 680px;
+}
+
+ul.grid li {
+	position: relative;
+	display: inline-table;
+	width: 220px;
+	height: 200px;
+	border-right: 1px solid #b6bdbe;
+	padding: 5px 22px;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+ul.grid li:nth-child(3n+3) {
+	border: 0;
+}
+
+ul.grid li section.left {
+	position: relative;
+}
+
+ul.grid li section.right {
+	/* nothing */
+}
+
+ul.grid li section.left img.thumb {
+	margin: 0 18px;
+	width: 140px;
+}
+
+ul.grid li section.left img.featured-banner {
+	position: absolute;
+	top: -3px;
+	left: 16px;
+}
+
+ul.grid li section.left h3 {
+	font-family: "Trebuchet MS", Arial, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #707375;
+	font-size: 1.4em;
+	line-height: 1.5em;
+}
+
+ul.grid li section.left span.meta {
+	display: block;
+	color: #93989b;
+	font-weight: normal;
+	font-size: 1.1em;
+	margin-bottom: 7px;
+}
+
+ul.grid li section.right span.price {
+	font-weight: bold;
+	display: block;
+	margin-bottom: 5px;
+	color: #ad3939;
+	font-size: 1.75em;
+}
+
+ul.grid li section.right span.darkview {
+	opacity: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 190px;
+	height: 100%;
+	margin: 0 15px;
+	border-radius: 6px;
+	background: rgba(40, 45, 55, 0.75);
+	overflow: hidden;
+	text-align: center;
+	padding-top: 35px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	transition: opacity 0.2s linear 0s;
+	-webkit-transition: opacity 0.2s linear 0s;
+}
+
+ul.grid li:hover section.right span.darkview {
+	opacity: 1;
+}
+
+ul.grid li section.right span.darkview a.firstbtn {
+	display: block;
+	margin-bottom: 10px;
+}
+
+/** clearfix **/
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+</style>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>View Widget (beta)</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+	<p></p>
+	<br>
+	<div id="root" class="accordion">
+
+		<h3 id="notes"><a href="#">Notes</a></h3>
+		<div>
+			<ul>
+				<li>This widget will <strong>only work</strong> in tablesorter version 2.23.6+ and jQuery version 1.7+.</li>
+				<li>When it's done building the view 'viewComplete' will be tiggered</li>
+			</ul>
+		</div>
+
+		<h3 id="options"><a href="#">Options</a></h3>
+		<div>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+
+			<table class="options tablesorter-blue">
+				<thead>
+					<tr>
+						<th class="option">Option</th>
+						<th class="defaults">Default</th>
+						<th class="sorter-false">Description</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr id="view-toolbar">
+						<td><a href="#" class="permalink">view_toolbar</a></td>
+						<td>'#ts-view-toolbar'</span></td>
+						<td>Element to insert toolbar (view buttons) into.
+							<div class="collapsible">
+								<p></p>
+								This option allows you to select which element the view buttons will be injected into.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="view-container">
+						<td><a href="#" class="permalink">view_container</a></td>
+						<td>'#ts-view'</td>
+						<td>Element to insert the view into.
+							<div class="collapsible">
+								<p></p>
+								This option allows you to select which element the view will be injected into.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="view-caption">
+						<td><a href="#" class="permalink">view_caption</a></td>
+						<td>'#ts-view-caption'</td>
+						<td>Element to copy the tabel caption into curing views.
+							<div class="collapsible">
+								<p></p>
+								This option allows you to select which element to copy thre caption into during views.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="view-switcher-class">
+						<td><a href="#" class="permalink">view_switcher_class</a></td>
+						<td>'ts-view-switcher'</td>
+						<td>Class name to be added to all view buttons.
+							<div class="collapsible">
+								<p></p>
+								Name of the class to be added to all view buttons.
+								<p></p>
+								<span class="label warning">* Note *</span> Just put in the name of the class do NOT put a . in front of it.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="view-layout">
+						<td><a href="#" class="permalink">view_layout</a></td>
+						<td>false</td>
+						<td>Default view to display on startup.
+							<div class="collapsible">
+								<p></p>
+								Default view to display on startup, false means none.  The value must be an object in <a href="#view-layouts">view_layouts</a>.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="view-layouts">
+						<td><a href="#" class="permalink">view_layouts</a></td>
+						<td>{&nbsp;'view':&nbsp;{&nbsp;&lt;options&gt;&nbsp;}&nbsp;}</td>
+						<td>List of available layouts and it's options.
+							<div class="collapsible">
+								<p></p>
+								In this object you setup each view.
+								<ul>
+									<li><code>icon</code> - This is the class for the view button</li>
+									<li><code>title</code> - Title of this view</li>
+									<li><code>container</code> - Wrapper node for this view</li>
+									<li><code>tpml</code> - HTML layout for this view, {col<i>n</i>} will be replaced with the value in that col <i>n</i></li>
+									<li><code>raw</code> - This is in case you want the raw table data, <code>container</code> and <code>tpml</code> are ignored when raw is <code>true</code>.</li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+	<p></p>
+
+	<h1>View Demo</h1>
+	<p></p>
+	<div id="demo"><!-- View Widget -->
+<div>
+	<div id="viewHeader">
+		<section class="left">
+			<h1 id="ts-view-caption"></h1>
+		</section>
+		<section class="right">
+			<input type="search" id="tablesearch" placeholder="Search..." data-column="1,2,3" />
+			<div id="ts-view-toolbar"></div>
+		</section>
+	</div>
+	<div id="ts-view"></div>
+</div>
+
+<!-- Table -->
+<table id="table" class="tablesorter">
+	<caption>Our Products</caption>
+	<thead>
+		<tr>
+			<th class="thumb"></th>
+			<th class="part-number">PN</th>
+			<th class="part-name">Name</th>
+			<th class="part-descript">Description</th>
+			<th class="part-price">Price</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10001</td>
+			<td>Widget 1</td>
+			<td>This is Widget 1, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">19.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10002</td>
+			<td>Widget 2</td>
+			<td>This is Widget 2, it's nice fluffy and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">1.99</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="img/sale-banner.png" alt="on sale" class="featured-banner">
+				<img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" />
+			</td>
+			<td>001-10003</td>
+			<td>Widget 3</td>
+			<td>This is Widget 3, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">89.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10004</td>
+			<td>Widget 4</td>
+			<td>This is Widget 4, it's nice soft and unique.  I'ts also a little fluffy but not nice and fluffy.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">49.99</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="img/new-product-banner.png" alt="on sale" class="featured-banner">
+				<img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" />
+			</td>
+			<td>001-10005</td>
+			<td>Widget 5</td>
+			<td>This is Widget 5, it's nice soft and unique. This one also have a unique smell and texture. Not for human consumption.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">18.49</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10006</td>
+			<td>Widget 6</td>
+			<td>This is Widget 6, it's nice soft and unique.  Nothing special here but I do want a longer description so I can see how things line up, or in this case don't line up.  Oh but this is the only Widget we have in purple!</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">69.98</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10007</td>
+			<td>Widget 7</td>
+			<td>This is Widget 7, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">4.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10008</td>
+			<td>Widget 8</td>
+			<td>This is Widget 8, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">17.89</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10009</td>
+			<td>Widget 9</td>
+			<td>This is Widget 9, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">17.49</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10010</td>
+			<td>Widget 10</td>
+			<td>This is Widget 10, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">119.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10011</td>
+			<td>Widget 11</td>
+			<td>This is Widget 11, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">18.88</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10012</td>
+			<td>Widget 12</td>
+			<td>This is Widget 12, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">19.97</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10013</td>
+			<td>Widget 13</td>
+			<td>This is Widget 13, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">9.98</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10014</td>
+			<td>Widget 14</td>
+			<td>This is Widget 14, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">29.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10015</td>
+			<td>Widget 15</td>
+			<td>This is Widget 15, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">44.95</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10016</td>
+			<td>Widget 16</td>
+			<td>This is Widget 16, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">8.69</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10017</td>
+			<td>Widget 17</td>
+			<td>This is Widget 17, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">17.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10018</td>
+			<td>Widget 18</td>
+			<td>This is Widget 18, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">219.99</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10019</td>
+			<td>Widget 19</td>
+			<td>This is Widget 19, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">1.98</td>
+		</tr>
+		<tr>
+			<td><img src="img/grid-default-thumb.png" alt="default thumb" class="thumb" /></td>
+			<td>001-10020</td>
+			<td>Widget 20</td>
+			<td>This is Widget 20, it's nice soft and unique.</td>
+			<td class="hasPrice" data-currencysym="$" data-currencycode="CAD">9.97</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Pager -->
+<div id="pager" class="pager">
+	<form>
+		<i class="fa fa-step-backward first clickable" title="First page"></i>
+		<i class="fa fa-backward prev clickable" title="Previous page"></i>
+		<span class="pagedisplay"></span>
+		<i class="fa fa-forward next clickable" title="Next page"></i>
+		<i class="fa fa-step-forward last clickable" title="Last page"></i>
+		<select class="pagesize">
+			<option value="6">6</option>
+			<option value="9">9</option>
+			<option value="12">12</option>
+		</select>
+	</form>
+</div>
+</div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">
+&lt;!-- jQuery --&gt;
+&lt;script src=&quot;js/jquery-latest.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Demo stuff --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css&quot;&gt;
+
+&lt;!-- Tablesorter: required --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-view.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Tablesorter: optional --&gt;
+&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-filter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../js/widgets/widget-pager.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+<script id="js">$(function(){
+	/* Initial settings */
+	var template = '<li class="clearfix">' +
+		'<section class="left">{col0}' +
+			'<h3>{col2}</h3>' +
+			'<span class="meta">Product ID: {col1}</span>' +
+			'<p>{col3}</p>' +
+		'</section>' +
+		'<section class="right">' +
+			'<span class="price">{col4}</span>' +
+			'<span class="darkview">' +
+				'<button class="mybutton nohover" title="Read More..." >More</button>' +
+				'<button class="mybutton nohover active" title="Add to Cart" >Add To Cart</button>' +
+			'</span>' +
+		'</section>' +
+	'</li>',
+
+	views = {
+		grid: {
+			icon: 'fa fa-th',
+			title: 'GridView',
+			container: '<ul>',
+			tmpl: template
+		},
+
+		list: {
+			icon: 'fa fa-th-list',
+			title: 'ListView',
+			container: '<ul>',
+			tmpl: template
+		},
+
+		table: {
+			icon: 'fa fa-table',
+			title: 'Orignal TableSorter View',
+			raw: true
+		}
+
+	};
+
+	$('#table').tablesorter({
+		theme: 'blue',
+		widthFixed: true,
+		sortList: [[1, 0]],
+		widgets: ['pager', 'zebra', 'filter', 'view'],
+		widgetOptions: {
+			filter_external: '#tablesearch',
+			filter_columnFilters: false,
+
+			pager_selectors: { container: '#pager' },
+			pager_output: 'Showing {startRow} to {endRow} of {filteredRows} results',
+			pager_size: 6,
+
+			view_layout: 'list',
+			view_layouts: views
+		}
+	});
+
+});</script>
+
+<script>
+$(function(){
+	$('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
+</body>
+</html>
