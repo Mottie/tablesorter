@@ -477,7 +477,14 @@ html[xmlns] .clearfix {
 						<td>List of available layouts and it's options.
 							<div class="collapsible">
 							<p></p>
-							FIXME add details for options
+							In this object you setup each view.
+							<ul>
+								<li>icon - This is the class for the view button</li>
+								<li>title - Title of this view</li>
+								<li>container - Wrapper node for this view</li>
+								<li>tpml - HTML layout for this view, {col<i>n</i>} will be replaced with the value in that col <i>n</i></li>
+								<li>raw - This is incase you want the raw table data, container and tpml are ignored when raw is true.</li>
+							</ul>
 							</div>
 						</td>
 					</tr>
