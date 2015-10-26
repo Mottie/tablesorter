@@ -2057,8 +2057,12 @@
 							break;
 						}
 					}
-					// add data-column
-					cell.setAttribute( 'data-column', firstAvailCol );
+					// add data-column (setAttribute = IE8+)
+					if ( cell.setAttribute ) {
+						cell.setAttribute( 'data-column', firstAvailCol );
+					} else {
+						$cell.attr( 'data-column', firstAvailCol );
+					}
 					for ( k = rowIndex; k < rowIndex + rowSpan; k++ ) {
 						if ( typeof matrix[ k ] === 'undefined' ) {
 							matrix[ k ] = [];
