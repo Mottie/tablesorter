@@ -1,11 +1,10 @@
-/* Widget: view (beta) - updated 2/7/2015 (v2.19.0) */
-/*
+/* Widget: view (beta) - updated 10/26/2015 (v2.23.6) */
+/* By Justin F. Hallett (https://github.com/TheSin-)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;
-(function($) {
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -98,7 +97,6 @@
 						$.each(v.attributes, function(idx, attr) {
 							attrs[attr.nodeName] = attr.nodeValue;
 						});
-						console.log(v, attrs);
 						var content = $(v).html();
 						// Add 2 spans, one is dropped when using .html()
 						var span = $('<span />').append($('<span/>', attrs).append(content));
@@ -190,4 +188,5 @@
 			view.remove(c, wo);
 		}
 	});
+
 })(jQuery);
