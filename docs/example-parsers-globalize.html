@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Parsers Globalize</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/parsers/parser-globalize.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/event.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/supplemental.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/unresolved.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/number.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/date.js"></script>
+
+	<script id="js">$(function () {
+
+	// data loaded from CLDR (https://github.com/unicode-cldr)
+	Globalize.load(data);
+	// set up Globalize language per column (only using "en" {English} in this demo)
+	var en = Globalize('en');
+
+	$('table').tablesorter({
+		theme: 'blue',
+		widthFixed: true,
+		// globalize options
+		globalize: {
+			1: { lang : en },
+			3: { lang : en, raw: 'MMM d, y G' }
+		},
+		headers: {
+			1: { sorter: 'globalize-number' },
+			3: { sorter: 'globalize-date' }
+		}
+	});
+
+	// *** FOR DEMO ONLY ***
+	// add parsed values to Globalize numeric & date columns
+	addParsedValues( $( 'table' ), [ 1, 3 ] );
+
+});
+</script>
+<script>
+/* only a small portion of the CLDR JavaScript Library
+(https://github.com/unicode-cldr) is included below */
+var data = {
+	"main": {
+		"en": {
+			"identity": {
+				"version": {
+					"_cldrVersion": "25",
+					"_number": "$Revision: 91 $"
+				},
+				"generation": {
+					"_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+				},
+				"language": "en"
+			},
+			"dates": {
+				"calendars": {
+					"gregorian": {
+						"months": {
+							"format": {
+								"abbreviated": {
+									"1": "Jan",
+									"2": "Feb",
+									"3": "Mar",
+									"4": "Apr",
+									"5": "May",
+									"6": "Jun",
+									"7": "Jul",
+									"8": "Aug",
+									"9": "Sep",
+									"10": "Oct",
+									"11": "Nov",
+									"12": "Dec"
+								}
+							}
+						},
+						"dayPeriods": {
+							"format": {
+								"wide": {
+									"am": "AM",
+									"am-alt-variant": "am",
+									"noon": "noon",
+									"pm": "PM",
+									"pm-alt-variant": "pm"
+								}
+							}
+						},
+						"eras": {
+							"eraAbbr": {
+								"0": "BC",
+								"0-alt-variant": "BCE",
+								"1": "AD",
+								"1-alt-variant": "CE"
+							}
+						},
+						"dateFormats": {
+							"medium": "MMM d, y"
+						},
+						"timeFormats": {
+							"medium": "h:mm:ss a",
+						},
+						"dateTimeFormats": {
+							"medium": "{1}, {0}",
+							"availableFormats": {
+								"E": "ccc",
+								"EHm": "E HH:mm",
+								"EHms": "E HH:mm:ss",
+								"Ed": "d E",
+								"Ehm": "E h:mm a",
+								"Ehms": "E h:mm:ss a",
+								"Gy": "y G",
+								"GyMMM": "MMM y G",
+								"GyMMMEd": "E, MMM d, y G",
+								"GyMMMd": "MMM d, y G",
+								"H": "HH",
+								"Hm": "HH:mm",
+								"Hms": "HH:mm:ss",
+								"M": "L",
+								"MEd": "E, M/d",
+								"MMM": "LLL",
+								"MMMEd": "E, MMM d",
+								"MMMd": "MMM d",
+								"Md": "M/d",
+								"d": "d",
+								"h": "h a",
+								"hm": "h:mm a",
+								"hms": "h:mm:ss a",
+								"ms": "mm:ss",
+								"y": "y",
+								"yM": "M/y",
+								"yMEd": "E, M/d/y",
+								"yMMM": "MMM y",
+								"yMMMEd": "E, MMM d, y",
+								"yMMMd": "MMM d, y",
+								"yMd": "M/d/y",
+								"yQQQ": "QQQ y",
+								"yQQQQ": "QQQQ y"
+							}
+						}
+					}
+				},
+				"fields": {
+					"second": {
+						"displayName": "Second",
+						"relative-type-0": "now",
+						"relativeTime-type-future": {
+							"relativeTimePattern-count-one": "in {0} second",
+							"relativeTimePattern-count-other": "in {0} seconds"
+						},
+						"relativeTime-type-past": {
+							"relativeTimePattern-count-one": "{0} second ago",
+							"relativeTimePattern-count-other": "{0} seconds ago"
+						}
+					}
+				}
+			},
+			"numbers": {
+				"currencies": {
+					"USD": {
+						"symbol": "$"
+					}
+				},
+				"defaultNumberingSystem": "latn",
+				"symbols-numberSystem-latn": {
+					"decimal": ".",
+					"exponential": "E",
+					"group": ",",
+					"infinity": "∞",
+					"minusSign": "-",
+					"nan": "NaN",
+					"percentSign": "%",
+					"perMille": "‰",
+					"plusSign": "+",
+					"timeSeparator": ":"
+				},
+				"decimalFormats-numberSystem-latn": {
+					"standard": "#,##0.###"
+				},
+				"currencyFormats-numberSystem-latn": {
+					"currencySpacing": {
+						"beforeCurrency": {
+							"currencyMatch": "[:^S:]",
+							"surroundingMatch": "[:digit:]",
+							"insertBetween": " "
+						},
+						"afterCurrency": {
+							"currencyMatch": "[:^S:]",
+							"surroundingMatch": "[:digit:]",
+							"insertBetween": " "
+						}
+					},
+					"standard": "¤#,##0.00"
+				}
+			}
+		}
+	},
+	"supplemental": {
+		"version": {
+			"_cldrVersion": "25",
+			"_number": "$Revision: 91 $"
+		},
+		"currencyData": {
+			"fractions": {
+				"DEFAULT": {
+					"_rounding": "0",
+					"_digits": "2"
+				}
+			}
+		},
+		"timeData": {
+			"001": {
+				"_allowed": "H h",
+				"_preferred": "H"
+			}
+		},
+		"likelySubtags": {
+			"en": "en-Latn-US",
+		},
+		"plurals-type-cardinal": {
+			"en": {
+				"pluralRule-count-one": "i = 1 and v = 0 @integer 1",
+				"pluralRule-count-other": " @integer 0, 2~16, 100, 1000, 10000, 100000, 1000000, … @decimal 0.0~1.5, 10.0, 100.0, 1000.0, 10000.0, 100000.0, 1000000.0, …"
+			}
+		}
+	}
+};
+</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Parsers Globalize</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li><a href="https://github.com/jquery/globalize">jQuery Globalize</a> supports the parsing of locale specific data, including <a href="https://github.com/jquery/globalize/blob/master/doc/api/number/number-parser.md">numerous number formats</a> (including Arabic, Chinese &amp; Japanese) and <a href="https://github.com/jquery/globalize/blob/master/doc/api/date/date-parser.md">custom date formats</a>.</li>
+			<li>This is a very basic example using English only. For more details on how to set up Globalize, see the <a href="example-widget-grouping.html#globalization">Grouping widget documentation about Globalization</a>.</li>
+		</ul>
+	<p>
+
+	<h1>Demo</h1>
+	<div id="demo"><button type="button" class="toggleparsedvalue">toggle</button> parsed values within the column
+
+<table class="tablesorter">
+	<thead>
+		<tr><th>AlphaNumeric</th><th>Numeric (Globalize)</th><th>Animals</th><th>Date (Globalize)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>abc 123</td><td>12,735.00</td><td>Koala</td><td>Jan 22, 2015 AD</td></tr>
+		<tr><td>abc 1</td><td>65.34</td><td>Ox</td><td>Mar 30, 2015 AD</td></tr>
+		<tr><td>abc 9</td><td>∞</td><td>Girafee</td><td>Dec 31, 2014 AD</td></tr>
+		<tr><td>zyx 24</td><td>-∞</td><td>Bison</td><td>Apr 13, 2015 AD</td></tr>
+		<tr><td>abc 11</td><td>0.44</td><td>Chimp</td><td>Oct 31, 2015 AD</td></tr>
+		<tr><td>abc 2</td><td>5.6</td><td>Elephant</td><td>May 3, 2015 AD</td></tr>
+		<tr><td>abc 9</td><td>1,345,155</td><td>Lion</td><td>Jun 30, 2014 AD</td></tr>
+		<tr><td>ABC 10</td><td>2,875.33</td><td>Zebra</td><td>Feb 14, 2015 AD</td></tr>
+		<tr><td>zyx 1</td><td>99.9</td><td>Koala</td><td>Mar 20, 2015 AD</td></tr>
+		<tr><td>zyx 12</td><td>1.2</td><td>Llama</td><td>Mar 2, 2015 AD</td></tr>
+	</tbody>
+</table>
+</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
