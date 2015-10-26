@@ -98,6 +98,11 @@ tr.group-header.collapsed td i {
 			group_week        : [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
 			group_time        : [ "AM", "PM" ],
 
+			// use 12 vs 24 hour time
+			group_time24Hour  : false,
+			// group header text added for invalid dates
+			group_dateInvalid : 'Invalid Date',
+
 			// this function is used when "group-date" is set to create the date string
 			// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
 			// reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter
@@ -155,6 +160,17 @@ tr.group-header.collapsed td i {
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.<br><br></li>
+			<li>In <span class="version">v2.23.6</span>
+				<ul>
+					<li>Added <code>group_time24Hour</code> (set 12 vs 24 hour time) &amp; <code>group_dateInvalid</code> (group header text) options.</li>
+					<li>Improved compatibility of the group widget with jQuery Globalize.</li>
+					<li>The <code>group_months</code> option will now accept a zero or one-based array or object of month names.</li>
+					<li>The <code>group_week</code> option will now accept an object using three-letter English weekday abbreviations as a key.</li>
+					<li>The <code>group_time</code> option will now accept an object using "am" or "pm" as a key.</li>
+					<li>For more detail, see the description column for the option in the Options section below.</li>
+					<li>For information on how to load &amp; use Globalize, see the Globalization section below.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.23.3</span>
 				<ul>
 					<li>Added <code>group_forceColumn</code> &amp; <code>group_enforceSort</code> options for force column grouping.</li>
@@ -313,7 +329,7 @@ group_separator : /[/.]/</pre>
 
 					<tr id="group_forcecolumn">
 						<td><a href="#" class="permalink">group_forceColumn</a></td>
-						<td><code><code>[]</code></td>
+						<td><code>[]</code></td>
 						<td>
 							Force the group widget to only apply to one column (<span class="version">v2.23.3</span>).
 							<div class="collapsible">
@@ -347,32 +363,105 @@ group_separator : /[/.]/</pre>
 					</tr>
 
 					<tr id="group_months">
-						<td>
-							<a href="#" class="permalink">group_months</a><br>
-							group_week<br>
-							group_time
-						</td>
+						<td><a href="#" class="permalink">group_months</a></td>
 						<td>(see description)</td>
 						<td>
-							Name arrays included so that the language of the date groups can be modified easily. Defaults (English):
-							<ul>
-								<li>group_months: (<code>[ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</code>) - Month names.</li>
-								<li>group_week: (<code>[ &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot; ]</code>) - Named days of the week.</li>
-								<li>group_time: (<code>[ &quot;AM&quot;, &quot;PM&quot; ]</code>) - Time of day.</li>
-							</ul>
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" section for details).
+							<div class="collapsible">
+								<p>Showing defaults (English):</p>
+								<pre class="prettyprint lang-js">// zero-based array
+group_months: [ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</pre>
+								As of <span class="version">v2.23.6</span>, this option will also work with an object with a one-base "index":
+								<pre class="prettyprint lang-js">// get Months list from CLDR (see Globalization section for more info)
+var months = new Cldr( 'en' ).main([ "dates/calendars/gregorian/months", "format", "abbreviated" ]);
+// one-based object (CLDR output example)
+// months = { 1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec" }
+// then in the widgetOptions,
+group_months: months</pre>
+								A one-based array of month names will also work.
+								<pre class="prettyprint lang-js">group_months: [ "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]</pre>
+							</div>
 						</td>
 					</tr>
+
+					<tr id="group_week">
+						<td><a href="#" class="permalink">group_week</a></td>
+						<td>(see description)</td>
+						<td>
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" for details).
+							<div class="collapsible">
+								<p>Showing defaults (English):</p>
+								<pre class="prettyprint lang-js">// zero-based index
+group_week: [ &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot; ]</pre>
+								As of <span class="version">v2.23.6</span>, this option will also work with an object using a three-letter English weekday abbreviated names as a key:
+								<pre class="prettyprint lang-js">// get weekdays list from CLDR (see Globalization section for more info)
+var weekdays = new Cldr( 'en' ).main([ "dates/calendars/gregorian/days", "format", "abbreviated" ]);
+// week-abbreviation based object
+// weekdays = { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat" }
+// then in the widgetOptions,
+group_week: weekdays</pre>
+								At this point, if you're going to use Globalization, it would be best to use the <code>group_dateString</code> to use <code>globalize.dateFormatter</code> to format the date because not all locales start their week on Sunday.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="group_time">
+						<td><a href="#" class="permalink">group_time</a></td>
+						<td>(see description)</td>
+						<td>
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" for details).
+							<div class="collapsible">
+								<p>Defaults (English):</p>
+								<pre class="prettyprint lang-js">group_time: [ &quot;AM&quot;, &quot;PM&quot; ]</pre>
+								As of <span class="version">v2.23.6</span>, this option will also work with an object in this format:
+								<pre class="prettyprint lang-js">// get time of day list from CLDR (see Globalization section for more info)
+var periods = cldr.main([ "dates/calendars/gregorian/dayPeriods", "format", "abbreviated" ]);
+/* time of day: CLDR returns this object:
+peroids = {
+	afternoon1: "in the afternoon",
+	am: "AM",
+	am-alt-variant: "am",
+	evening1: "in the evening",
+	midnight: "midnight",
+	morning1: "in the morning",
+	night1: "at night",
+	noon: "noon",
+	pm: "PM",
+	pm-alt-variant: "pm"
+}
+then in the widgetOptions,*/
+group_time: periods</pre>
+								If you want to use a time of day other than "am" or "pm", then you'll need to use the <code>group_dateString</code> to format the date; see the example in the Globalization section below.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="group_time24hour">
+						<td><span class="permalink">group_time24Hour</span></td>
+						<td><code>false</code></td>
+						<td>Set to <code>true</code> to display time in 24 hour format (<span class="version">v2.23.6</span>).</td>
+					</tr>
+
+					<tr id="group_dateinvalid">
+						<td><span class="permalink">group_dateInvalid</span></td>
+						<td><code>'Invalid Date'</code></td>
+						<td>Message added to the Group header if a date is invalid (<span class="version">v2.23.6</span>).</td>
+					</tr>
+
 					<tr id="group_datestring">
 						<td><a href="#" class="permalink">group_dateString</a></td>
 						<td>(see description)</td>
 						<td>
-						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string. This is the default function:
+						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string (<span class="version updated">v2.23.6</span>).
 						<div class="collapsible">
-						<pre class="prettyprint lang-js">// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
-group_dateString : function(date) {
+							<p>This is the default function:</p>
+							<pre class="prettyprint lang-js">// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
+group_dateString : function(date, config, $header ) {
   return date.toLocaleString();
 }</pre>
 							Other functions that can be used are <code>date</code> (alone), <code>date.toLocaleString()</code>, <code>date.toLocaleDateString()</code> or <code>d.toLocaleTimeString()</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter">this reference</a> for more details.
+							<p>In <span class="version">v2.23.6</span>, this widget was updated to make it easier to use with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</p>
+							<p>Additionally, two new parameters were added: <a href="index.html#config"><code>config</code></a> and <code>$header</code> (a jQuery object of the associated header cell).</p>
 							</div>
 						</td>
 					</tr>
@@ -466,6 +555,178 @@ group_dateString : function(date) {
 			</table>
 			<span class="remark">*</span> When sorting some columns, different group headers with the same group name may exist (try "group-date-week" and "group-date-time"). To make these columns sort specifically by the group you want, you'll need to modify the parser.
 		</div>
+
+		<h3><a href="#">Globalization</a></h3>
+		<div>
+			<h3>jQuery Globalize</h3>
+			These instructions are specific to <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.
+			<p><a href="http://jsfiddle.net/Mottie/4ac5kr3o/15/">Here is a demo</a> showing how all the code comes together; there is no official site with JSON files available to load into the demo, so only the required snippets of CLDR data are included in the demo.</p>
+			<h4>Make sure to include files from:</h4>
+			<ul>
+				<li>jQuery Globalize:
+					<ul>
+						<li>Process CLDR data into usable formats.</li>
+						<li>Install from npm (<code>npm install globalize cldr-data</code>), bower (<code>bower install globalize</code>), or</li>
+						<li>Download from <a href="https://github.com/jquery/globalize">https://github.com/jquery/globalize</a>.</li>
+						<li>Depending on the data in your table, you'll need to <a href="https://github.com/jquery/globalize#pick-the-modules-you-need">pick which modules</a> to include; currently for the date module, you'll need to load the number module first (<a href="https://github.com/jquery/globalize/issues/543">ref</a>).</li>
+						<li>Here is an example of how to load all files from Cdnjs (make sure to use the most recent version):
+							<pre class="prettyprint lang-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/currency.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/number.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/date.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/message.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/plural.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/globalize/1.0.0/globalize/relative-time.min.js"&gt;&lt;/script&gt;
+</pre>
+						</li>
+					</ul>
+				</li>
+				<li>cldrjs:
+					<ul>
+						<li>Needed by Globalize to traverse CLDR data.</li>
+						<li>Install from npm (<code>npm install cldrjs</code>), bower (<code>bower install cldrjs</code>), or</li>
+						<li>Download from <a href="https://github.com/rxaviers/cldrjs">https://github.com/rxaviers/cldrjs</a>.</li>
+						<li>You will likely need to include all files: <code>cldr.js</code>, <code>event.js</code>, <code>supplemental.js</code> and <code>unresolved.js</code>.</li>
+						<li>Here is an example of how to load all files from Cdnjs (make sure to use the most recent version):
+							<pre class="prettyprint lang-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/event.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/supplemental.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/cldrjs/0.4.3/cldr/unresolved.min.js"&gt;&lt;/script&gt;
+</pre>
+						</li>
+					</ul>
+				</li>
+				<li>CLDR data:
+					<ul>
+						<li>Needed by Globalize &amp; cldrjs.</li>
+						<li>Install from npm (<code>npm install cldr-data</code>), bower (<code>bower install cldr-data</code>), or</li>
+						<li>Find the latest version from here: <a href="http://cldr.unicode.org/index/downloads">http://cldr.unicode.org/index/downloads</a></li>
+						<li>And download the files from here: <a href="http://unicode.org/Public/cldr/">http://unicode.org/Public/cldr/</a> (it is really hard to find this page).</li>
+						<li>For more information on which json files you'll need to include, check out <a href="https://github.com/jquery/globalize#2-cldr-content">these instructions</a>.</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Initialization</h4>
+			The next step is loading the CLDR data into Globalize; please see <a href="https://github.com/jquery/globalize/blob/master/doc/cldr.md#how-do-i-load-cldr-data-into-globalize">this page</a> for more details.
+
+			<pre class="prettyprint lang-js">
+// code to show how to load a language using jQuery (make sure it was loaded)
+$(function() {
+	var hasInitialized = false,
+		loadLanguage = function( lang ) {
+			// Use $.getJSON instead of $.get if your server is not configured to return the
+			// right MIME type for .json files.
+			var files = [];
+			if ( !hasInitialized ) {
+				files = [
+					/* core */
+					$.getJSON( 'cldr-data/supplemental/likelySubtags.json' ),
+					/* currency */
+					$.getJSON( 'cldr-data/supplemental/currencyData.json' ),
+					/* date */
+					$.getJSON( 'cldr-data/supplemental/timeData.json' ),
+					$.getJSON( 'cldr-data/supplemental/weekData.json' ),
+					/* number */
+					$.getJSON( 'cldr-data/supplemental/numberingSystems.json' ),
+					/* plural */
+					$.getJSON( 'cldr-data/supplemental/plurals.json' ),
+					$.getJSON( 'cldr-data/supplemental/ordinals.json' )
+				];
+			}
+			files = files.concat([
+				/* currency */
+				$.getJSON( 'cldr-data/main/' + lang + '/currencies.json' ),
+				/* date */
+				$.getJSON( 'cldr-data/main/' + lang + '/ca-gregorian.json' ),
+				$.getJSON( 'cldr-data/main/' + lang + '/timeZoneNames.json' ),
+				/* number */
+				$.getJSON( 'cldr-data/main/' + lang + '/numbers.json' ),
+				/* relative time */
+				$.getJSON( 'cldr-data/main/' + lang + '/dateFields.json' ),
+				/* unit */
+				$.getJSON( 'cldr-data/main/' + lang + '/units.json' )
+			]);
+			$.when
+				.apply( $, files )
+				.then( function() {
+					// Normalize $.get results, we only need the JSON, not the request statuses.
+					return [].slice.apply( arguments, [ 0 ] ).map( function( result ) {
+						return result[ 0 ];
+					});
+				})
+				.then( Globalize.load )
+				.then( function() {
+					if ( !hasInitialized ) {
+						// initialization code goes here
+					}
+					hasInitialized = true;
+					// code to run after each new language has loaded goes here
+				});
+		};
+
+	// initial language load
+	loadLanguage( 'en' );
+});
+</pre>
+
+			<h4>Usage</h4>
+			Use Globalize with tablesorter &amp; the group widget inside of the <code>group_dateString</code> callback function.
+			<p>In <span class="version">v2.23.6</span></p>
+				<ul>
+					<li>The <code>group_months</code>, <code>group_week</code> &amp; <code>group_time</code> options were modified to work with CLDR data.</li>
+					<li><code>group_months</code> option will work with either a zero-based array of month names (basic use), or an object with a key using a one-based indexed with a month name value pair (the CLDR format; see the "months" comment in code example below).</li>
+					<li><code>group_week</code> option will work with either a zero-based array of weekday names (basic use), or an object with a key using three letter abbreviations of English weekday names with a localized weekday name value pair (the CLDR format; see the "days of week" comment in the code below).</li>
+					<li><code>group_time</code> option will now accept an object using "am" or "pm" (both lower case) as a key.<br><br></li>
+
+					<li>The <code>group_dateString</code> callback function was updated with two additional parameters to allow access to table data. See the "Options" section above for more details.</li>
+					<li>Check out <a href="http://jsfiddle.net/Mottie/4ac5kr3o/15/">this demo</a> using the code below</li>
+				</ul>
+			<pre class="prettyprint lang-js">$( function() {
+	// using an english example
+	var lang = 'en',
+		cldr = new Cldr( lang ),
+		// Globalize.load already done!!
+		globalize = Globalize.locale( lang ),
+		// months: CLDR returns an object { 1: "Jan", 2: "Feb", 3: "Mar", ..., 12: "Dec" }
+		months = cldr.main([ "dates/calendars/gregorian/months", "format", "abbreviated" ]),
+		// days of week: CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
+		week = cldr.main([ "dates/calendars/gregorian/days", "format", "abbreviated" ]),
+		/* time of day: CLDR returns
+			{ afternoon1: "in the afternoon", am: "AM", am-alt-variant: "am", evening1: "in the evening", midnight: "midnight",
+			  morning1: "in the morning", night1: "at night", noon: "noon", pm: "PM", pm-alt-variant: "pm" } */
+		periods = cldr.main([ "dates/calendars/gregorian/dayPeriods", "format", "abbreviated" ]);
+
+	$( 'table' ).tablesorter({
+		theme : 'blue',
+		widgets: [ 'group', 'zebra' ],
+		widgetOptions : {
+			group_months     : months,
+			group_week       : week,
+			// setting group_times to an empty string forces "group-time" to use group_dateString function
+			group_time       : periods,
+			group_dateString : function ( date, c, $column ) {
+				// see https://github.com/jquery/globalize/blob/master/doc/api/date/date-formatter.md
+				var hour = date.getHours(),
+					min = date.getMinutes(),
+					format = globalize.dateFormatter({ datetime: "full" })( date ),
+					time = globalize.dateFormatter({ time: "full" })( date );
+				// replace special times with time period
+				if ( hour === 0 && min === 0 ) {
+					// midnight: this method may not work in all locales!
+					return format.replace( time, periods.midnight );
+				} else if ( hour === 12 && min === 0 ) {
+					// noon: this method may not work in all locales!
+					return format.replace( time, periods.noon );
+				}
+				return format;
+			}
+		}
+	});
+
+});</pre>
+		</div>
+
 	</div>
 
 	<p></p>
