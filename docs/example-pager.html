@@ -236,6 +236,7 @@
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
 			<ul>
+				<li>In <span class="version updated">2.23.6</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
 				<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
 					<ul>
 						<li><code>destroy.pager</code> is now <code>destroyPager</code></li>
@@ -275,6 +276,7 @@
 			<option value="20">20</option>
 			<option value="30">30</option>
 			<option value="40">40</option>
+			<option value="all">All Rows</option>
 		</select>
 		<select class="gotoPage" title="Select page number"></select>
 	</div>
@@ -369,6 +371,7 @@
 		<option value="20">20</option>
 		<option value="30">30</option>
 		<option value="40">40</option>
+		<option value="all">All Rows</option>
 	</select>
 	<select class="gotoPage" title="Select page number"></select>
 </div>
@@ -442,6 +445,7 @@ td.tablesorter-pager {
       &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
       &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
       &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
+      &lt;option value=&quot;all&quot;&gt;All Rows&lt;/option&gt;
     &lt;/select&gt;
   &lt;/form&gt;
 &lt;/div&gt;</pre>

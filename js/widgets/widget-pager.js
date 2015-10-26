@@ -296,27 +296,27 @@
 					ts.applyWidget( table );
 					tsp.updatePageDisplay(table, c);
 				})
-				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, v){
+				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 					e.stopPropagation();
-					tsp.setPageSize(table, parseInt(v, 10) || p.setSize || 10, c);
+					tsp.setPageSize(table, tsp.parsePageSize( p, size, 'get' ) || p.setSize || 10, c);
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
 				})
-				.on('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, v){
+				.on('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
 					e.stopPropagation();
 					// force pager refresh
 					if (e.type === 'pagerUpdate') {
-						v = typeof v === 'undefined' ? p.page + 1 : v;
+						num = typeof num === 'undefined' ? p.page + 1 : num;
 						p.last.page = true;
 					}
-					p.page = (parseInt(v, 10) || 1) - 1;
+					p.page = (parseInt(num, 10) || 1) - 1;
 					tsp.moveToPage(table, p, true);
 					tsp.updatePageDisplay(table, c, false);
 				})
 				.on('pageAndSize' + namespace, function(e, page, size){
 					e.stopPropagation();
 					p.page = (parseInt(page, 10) || 1) - 1;
-					tsp.setPageSize(table, parseInt(size, 10) || p.setSize || 10, c);
+					tsp.setPageSize(table, tsp.parsePageSize( p, size, 'get' ) || p.setSize || 10, c);
 					tsp.moveToPage(table, p, true);
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
@@ -364,9 +364,10 @@
 				p.$size
 					.off('change' + namespace)
 					.on('change' + namespace, function() {
-						p.$size.val( $(this).val() ); // in case there are more than one pagers
 						if ( !$(this).hasClass(wo.pager_css.disabled) ) {
-							tsp.setPageSize(table, parseInt( $(this).val(), 10 ), c);
+							var size = $(this).val();
+							p.$size.val( size ); // in case there are more than one pagers
+							tsp.setPageSize(table, size, c);
 							tsp.changeHeight(table, c);
 						}
 						return false;
@@ -634,8 +635,9 @@
 
 		hideRowsSetup: function(table, c){
 			var p = c.pager,
-				namespace = c.namespace + 'pager';
-			p.size = parseInt( p.$size.val(), 10 ) || p.size || p.setSize || 10;
+				namespace = c.namespace + 'pager',
+				size = p.$size.val();
+			p.size = tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
 			$.data(table, 'pagerLastSize', p.size);
 			tsp.pagerArrows(c);
 			if ( !c.widgetOptions.pager_removeRows ) {
@@ -1042,10 +1044,19 @@
 			}
 		},
 
+		// set to either set or get value
+		parsePageSize: function( p, size, mode ) {
+			var s = parseInt( size, 10 );
+			return /all/i.test( size ) || s === p.totalRows ?
+				// "get" to set `p.size` or "set" to set `p.$size.val()`
+				( mode === 'get' ? p.totalRows : 'all' ) :
+				( mode === 'get' ? s : p.size );
+		},
+
 		setPageSize: function(table, size, c) {
 			var p = c.pager;
-			p.size = size || p.size || p.setSize || 10;
-			p.$size.val(p.size);
+			p.size = tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
+			p.$size.val( tsp.parsePageSize( p, p.size, 'set' ) );
 			$.data(table, 'pagerLastPage', p.page);
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -1103,12 +1114,14 @@
 		},
 
 		enablePager: function(table, c, triggered){
-			var info, p = c.pager;
+			var info, size,
+				p = c.pager;
 			p.isDisabled = false;
 			p.showAll = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
-			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || p.setSize || 10;
-			p.$size.val(p.size); // set page size
+			size = p.$size.find('option[selected]').val();
+			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
+			p.$size.val( tsp.parsePageSize( p, size, 'set' ) ); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			c.$table.removeClass('pagerDisabled');
 			// if table id exists, include page display with aria info

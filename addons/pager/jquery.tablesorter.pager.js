@@ -368,7 +368,7 @@
 		},
 
 		hideRowsSetup = function(table, p){
-			p.size = parseInt( p.$size.val(), 10 ) || p.size || p.settings.size || 10;
+			p.size = parsePageSize( p, p.$size.val(), 'get' ) || p.size || p.settings.size || 10;
 			$.data(table, 'pagerLastSize', p.size);
 			pagerArrows(p);
 			if ( !p.removeRows ) {
@@ -764,9 +764,18 @@
 			}
 		},
 
+		// set to either set or get value
+		parsePageSize = function( p, size, mode ) {
+			var s = parseInt( size, 10 );
+			return /all/i.test( size ) || s === p.totalRows ?
+				// "get" to set `p.size` or "set" to set `p.$size.val()`
+				( mode === 'get' ? p.totalRows : 'all' ) :
+				( mode === 'get' ? s : p.size );
+		},
+
 		setPageSize = function(table, size, p) {
-			p.size = size || p.size || p.settings.size || 10;
-			p.$size.val(p.size);
+			p.size = parsePageSize( p, size, 'get' ) || p.size || p.settings.size || 10;
+			p.$size.val( parsePageSize( p, size, 'set' ) );
 			$.data(table, 'pagerLastPage', p.page);
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -821,7 +830,7 @@
 		},
 
 		enablePager = function(table, p, triggered) {
-			var info,
+			var info, size,
 				c = table.config;
 			p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page'))
 				.removeClass(p.cssDisabled)
@@ -830,8 +839,9 @@
 			p.isDisabled = false;
 			p.showAll = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
-			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || p.settings.size || 10;
-			p.$size.val(p.size); // set page size
+			size = p.$size.find('option[selected]').val();
+			p.size = $.data(table, 'pagerLastSize') || parsePageSize( p, size, 'get' ) || p.size || p.settings.size || 10;
+			p.$size.val( parsePageSize( p, size, 'set' ) ); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			// if table id exists, include page display with aria info
 			if ( table.id ) {
@@ -951,27 +961,27 @@
 						changeHeight(table, p);
 						updatePageDisplay(table, p, true);
 					})
-					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, v){
+					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 						e.stopPropagation();
-						setPageSize(table, parseInt(v, 10) || p.settings.size || 10, p);
+						setPageSize(table, parsePageSize( p, size, 'get' ) || p.settings.size || 10, p);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					})
-					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, v){
+					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
 						e.stopPropagation();
 						// force pager refresh
 						if (e.type === 'pagerUpdate') {
-							v = typeof v === 'undefined' ? p.page + 1 : v;
+							num = typeof num === 'undefined' ? p.page + 1 : num;
 							p.last.page = true;
 						}
-						p.page = (parseInt(v, 10) || 1) - 1;
+						p.page = (parseInt(num, 10) || 1) - 1;
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					})
 					.bind('pageAndSize' + namespace, function(e, page, size){
 						e.stopPropagation();
 						p.page = (parseInt(page, 10) || 1) - 1;
-						setPageSize(table, parseInt(size, 10) || p.settings.size || 10, p);
+						setPageSize(table, parsePageSize( p, size, 'get' ) || p.settings.size || 10, p);
 						moveToPage(table, p, true);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
@@ -1018,9 +1028,10 @@
 					// setting an option as selected appears to cause issues with initial page size
 					p.$size.find('option').removeAttr('selected');
 					p.$size.unbind('change' + namespace).bind('change' + namespace, function() {
-						p.$size.val( $(this).val() ); // in case there are more than one pagers
 						if ( !$(this).hasClass(p.cssDisabled) ) {
-							setPageSize(table, parseInt( $(this).val(), 10 ), p);
+							var size = $(this).val();
+							p.$size.val( size ); // in case there are more than one pagers
+							setPageSize(table, size, p);
 							changeHeight(table, p);
 						}
 						return false;

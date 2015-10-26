@@ -233,6 +233,7 @@
 		<p class="tip">
 			<em>NOTE!</em>
 			<ul>
+				<li>In <span class="version updated">2.23.6</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
 				<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
 				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.<p></p></li>
 
@@ -275,6 +276,7 @@
 			<option value="20">20</option>
 			<option value="30">30</option>
 			<option value="40">40</option>
+			<option value="all">All Rows</option>
 		</select>
 		<select class="gotoPage" title="Select page number"></select>
 	</div>
@@ -369,6 +371,7 @@
 		<option value="20">20</option>
 		<option value="30">30</option>
 		<option value="40">40</option>
+		<option value="all">All Rows</option>
 	</select>
 	<select class="gotoPage" title="Select page number"></select>
 </div>
@@ -454,6 +457,7 @@ td.tablesorter-pager {
       &lt;option value=&quot;20&quot;&gt;20&lt;/option&gt;
       &lt;option value=&quot;30&quot;&gt;30&lt;/option&gt;
       &lt;option value=&quot;40&quot;&gt;40&lt;/option&gt;
+      &lt;option value=&quot;all&quot;&gt;All Rows&lt;/option&gt;
     &lt;/select&gt;
   &lt;/form&gt;
 &lt;/div&gt;</pre>

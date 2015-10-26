@@ -485,9 +485,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.23.5</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.23.6</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.23.5</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.23.6</span>).<br>
 			<br>
 		</li>
 
@@ -5136,11 +5136,13 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 		<tbody>
 			<tr id="pagesize">
 				<td><a href="#" class="permalink">pageSize</a></td>
-				<td>Trigger the pager to change the page size (v2.7.4).
+				<td>Trigger the pager to change the page size (v2.7.4; <span class="version updated">2.23.6</span>).
 					<div class="collapsible">
 						<pre class="prettyprint lang-js">$(function(){
   $('table').trigger('pageSize', 15);
-});</pre></div>
+});</pre>
+						In <span class="version updated">2.23.6</span>, this option will now accept "all" as a setting, and in turn display all rows.
+					</div>
 				</td>
 				<td></td>
 			</tr>
@@ -5158,13 +5160,15 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 			</tr>
 			<tr id="pageandsize">
 				<td><a href="#" class="permalink">pageAndSize</a></td>
-				<td>Trigger the pager to change the current page &amp; size (<span class="version">v2.19.0</span>).
+				<td>Trigger the pager to change the current page &amp; size (<span class="version">v2.19.0</span>; ; <span class="version updated">2.23.6</span>).
 					<div class="collapsible">
 						<br>
 						If no value is passed, the pager will reset to page 1 with the original pager size setting; otherwise, pass a "one-based" index of the desired page and the pager size as an array
 						<pre class="prettyprint lang-js">$(function(){
   $('table').trigger('pageAndSize', [ 2, 20 ]); // pass a one-based page index & page size
-});</pre></div>
+});</pre>
+					In <span class="version updated">2.23.6</span>, this option will now accept "all" as a page size setting, and in turn display all rows; the page number will be force to page one.
+					</div>
 				</td>
 				<td></td>
 			</tr>
