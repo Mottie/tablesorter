@@ -178,8 +178,7 @@
 			var $t = $(this);
 			if (/Destroy/.test( $t.text() )){
 				$table[0].config.widgets = ['zebra'];
-				$table.trigger('refreshWidgets');
-				//.trigger('destroyPager');
+				$table.trigger('destroyPager');
 				$t.text('Restore Pager');
 			} else {
 				$table[0].config.widgets = ['zebra', 'pager'];
