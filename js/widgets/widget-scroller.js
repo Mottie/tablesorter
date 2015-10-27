@@ -88,7 +88,7 @@
 		}
 	});
 
-	/* Add window resizeEnd event */
+	/* Add window resizeEnd event (also used by columnSelector widget) */
 	ts.window_resize = function() {
 		if ( ts.timer_resize ) {
 			clearTimeout( ts.timer_resize );

@@ -35,6 +35,7 @@
 			colSel.$breakpoints = $('<style></style>').prop('disabled', true).appendTo('head');
 
 			colSel.isInitializing = true;
+			tsColSel.setUpColspan(c, wo);
 			tsColSel.setupSelector(c, wo);
 
 			if (wo.columnSelector_mediaquery) {
@@ -103,10 +104,11 @@
 				tsColSel.updateBreakpoints(c, wo);
 				tsColSel.updateCols(c, wo);
 			}
+			tsColSel.adjustColspans( c, wo );
 		},
 
 		setupSelector: function(c, wo) {
-			var name,
+			var index, name,
 				colSel = c.selector,
 				$container = colSel.$container,
 				useStorage = wo.columnSelector_saveColumns && ts.storage,
@@ -121,19 +123,19 @@
 			colSel.$wrapper = [];
 			colSel.$checkbox = [];
 			// populate the selector container
-			c.$table.children('thead').find('tr:first th', c.table).each(function() {
-				var $this = $(this),
+			for ( index = 0; index < c.columns; index++ ) {
+				var $header = c.$headerIndexed[ index ],
 					// if no data-priority is assigned, default to 1, but don't remove it from the selector list
-					priority = $this.attr(wo.columnSelector_priority) || 1,
-					colId = $this.attr('data-column'),
+					priority = $header.attr(wo.columnSelector_priority) || 1,
+					colId = $header.attr('data-column'),
 					col = ts.getColumnData( c.table, c.headers, colId ),
-					state = ts.getData(this, col, 'columnSelector');
+					state = ts.getData( $header, col, 'columnSelector');
 
 				// if this column not hidable at all
 				// include getData check (includes 'columnSelector-false' class, data attribute, etc)
 				if ( isNaN(priority) && priority.length > 0 || state === 'disable' ||
 					( wo.columnSelector_columns[colId] && wo.columnSelector_columns[colId] === 'disable') ) {
-					return true; // goto next
+					continue; // goto next
 				}
 
 				// set default state; storage takes priority
@@ -143,7 +145,7 @@
 				colSel.$column[colId] = $(this);
 
 				// set default col title
-				name = $this.attr(wo.columnSelector_name) || $this.text();
+				name = $header.attr(wo.columnSelector_name) || $header.text();
 				if ($container.length) {
 					colSel.$wrapper[colId] = $(wo.columnSelector_layout.replace(/\{name\}/g, name)).appendTo($container);
 					colSel.$checkbox[colId] = colSel.$wrapper[colId]
@@ -153,15 +155,17 @@
 						.toggleClass( wo.columnSelector_cssChecked, colSel.states[colId] )
 						.prop('checked', colSel.states[colId])
 						.on('change', function(){
-							colSel.states[colId] = this.checked;
+							// ensure states is accurate
+							var colId = $(this).attr('data-column');
+							c.selector.states[colId] = this.checked;
 							tsColSel.updateCols(c, wo);
 						}).change();
 				}
-			});
+			}
 
 		},
 
-		setupBreakpoints: function(c, wo){
+		setupBreakpoints: function(c, wo) {
 			var colSel = c.selector;
 
 			// add responsive breakpoints
@@ -223,6 +227,7 @@
 			if (wo.columnSelector_saveColumns && ts.storage) {
 				ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
 			}
+			tsColSel.adjustColspans( c, wo );
 			// trigger columnUpdate if auto is true (it gets skipped in updateCols()
 			if (colSel.auto) {
 				c.$table.trigger(wo.columnSelector_updated);
@@ -312,7 +317,68 @@
 			if (wo.columnSelector_saveColumns && ts.storage) {
 				ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 			}
+			tsColSel.adjustColspans( c, wo );
 			c.$table.trigger(wo.columnSelector_updated);
+		},
+
+		setUpColspan: function(c, wo) {
+			var index, span, nspace,
+				hasSpans = false,
+				$cells = c.$table
+					.add( $(c.namespace + '_extra_table') )
+					.children('thead, tfoot')
+					.children('tr')
+					.children('th, td'),
+				len = $cells.length;
+			for ( index = 0; index < len; index++ ) {
+				span = $cells[ index ].colSpan;
+				if ( span > 1 ) {
+					hasSpans = true;
+					$cells.eq( index )
+						.addClass( c.namespace.slice( 1 ) + 'columnselectorHasSpan' )
+						.attr( 'data-col-span', span );
+				}
+			}
+			// only add resize end if using media queries
+			if ( hasSpans && wo.columnSelector_mediaquery ) {
+				nspace = c.namespace.slice( 1 ) + 'columnselector';
+				// Setup window.resizeEnd event
+				$( window )
+					.off( nspace )
+					.on( 'resize' + nspace, ts.window_resize )
+					.on( 'resizeEnd' + nspace, function() {
+						// IE calls resize when you modify content, so we have to unbind the resize event
+						// so we don't end up with an infinite loop. we can rebind after we're done.
+						$win.off( 'resize' + nspace, ts.window_resize );
+						tsColSel.adjustColspans( c, wo );
+						$win.on( 'resize' + nspace, ts.window_resize );
+					});
+			}
+		},
+		adjustColspans: function(c, wo) {
+			var index, cols, col, span, end,
+				colSel = c.selector,
+				autoModeOn = colSel.auto,
+				$colspans = $( c.namespace + 'columnselectorHasSpan' ),
+				len = $colspans.length;
+			if ( len ) {
+				for ( index = 0; index < len; index++ ) {
+					col = parseInt( $colspans.eq(index).attr('data-column'), 10 );
+					span = parseInt( $colspans.eq(index).attr('data-col-span'), 10 );
+					end = col + span;
+					for ( cols = col; cols < end; cols++ ) {
+						if ( !autoModeOn && colSel.states[ cols ] === false ||
+							autoModeOn && c.$headerIndexed[ cols ] && !c.$headerIndexed[ cols ].is(':visible') ) {
+							span--;
+						}
+					}
+					if ( span ) {
+						$colspans.eq(index).show()[0].colSpan = span;
+					} else {
+						$colspans.eq(index).hide();
+					}
+				}
+			}
 		},
 
 		attachTo : function(table, elm) {
@@ -347,6 +413,16 @@
 			}
 		}
 
+	};
+
+	/* Add window resizeEnd event (also used by scroller widget) */
+	ts.window_resize = function() {
+		if ( ts.timer_resize ) {
+			clearTimeout( ts.timer_resize );
+		}
+		ts.timer_resize = setTimeout( function() {
+			$( window ).trigger( 'resizeEnd' );
+		}, 250 );
 	};
 
 	ts.addWidget({
