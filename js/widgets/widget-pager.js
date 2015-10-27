@@ -129,7 +129,7 @@
 
 		init: function(table) {
 			// check if tablesorter has initialized
-			if (table.hasInitialized && table.config.pager.initialized) { return; }
+			if (table.hasInitialized && table.config.pager && table.config.pager.initialized) { return; }
 			var t,
 				c = table.config,
 				wo = c.widgetOptions,
@@ -171,7 +171,6 @@
 			p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 			c.appender = tsp.appender;
 			p.initializing = true;
-			p.showAll = false;
 			if (wo.pager_savePages && ts.storage) {
 				t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
 				p.page = ( isNaN(t.page) ? p.page : t.page ) || p.setPage || 0;
@@ -271,7 +270,8 @@
 				})
 				.on('destroyPager' + namespace, function(e, refreshing){
 					e.stopPropagation();
-					tsp.destroyPager(table, c, refreshing);
+					// call removeWidget to make sure internal flags are modified.
+					ts.removeWidget( table, 'pager', false );
 				})
 				.on('updateComplete' + namespace, function(e, table, triggered){
 					e.stopPropagation();
@@ -884,7 +884,7 @@
 				}
 				c.$table.trigger( 'pagerChange', c );
 			}
-			if ( !wo.pager_removeRows && !p.showAll ) {
+			if ( !wo.pager_removeRows ) {
 				tsp.hideRows(table, c);
 			} else {
 				ts.clearTableBody(table);
@@ -932,7 +932,6 @@
 				p.page = 0;
 				p.size = p.totalRows;
 				p.totalPages = 1;
-				p.showAll = true;
 				c.$table
 					.addClass('pagerDisabled')
 					.removeAttr('aria-describedby')
@@ -1117,7 +1116,6 @@
 			var info, size,
 				p = c.pager;
 			p.isDisabled = false;
-			p.showAll = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			size = p.$size.find('option[selected]').val();
 			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
