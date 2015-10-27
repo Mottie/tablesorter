@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 10-22-2015 (v2.23.5)*/
+/*! tablesorter (FORK) - updated 10-27-2015 (v2.23.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2075,8 +2075,12 @@
 							break;
 						}
 					}
-					// add data-column
-					cell.setAttribute( 'data-column', firstAvailCol );
+					// add data-column (setAttribute = IE8+)
+					if ( cell.setAttribute ) {
+						cell.setAttribute( 'data-column', firstAvailCol );
+					} else {
+						$cell.attr( 'data-column', firstAvailCol );
+					}
 					for ( k = rowIndex; k < rowIndex + rowSpan; k++ ) {
 						if ( typeof matrix[ k ] === 'undefined' ) {
 							matrix[ k ] = [];
@@ -3515,8 +3519,9 @@
 		// $cell parameter, but not the config, is passed to the filter_formatters,
 		// so we have to work with it instead
 		formatterUpdated: function( $cell, column ) {
-			var wo = $cell.closest( 'table' )[0].config.widgetOptions;
-			if ( !wo.filter_initialized ) {
+			// prevent error if $cell is undefined - see #1056
+			var wo = $cell && $cell.closest( 'table' )[0].config.widgetOptions;
+			if ( wo && !wo.filter_initialized ) {
 				// add updates by column since this function
 				// may be called numerous times before initialization
 				wo.filter_formatterInit[ column ] = 1;
