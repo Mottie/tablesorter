@@ -577,6 +577,10 @@
 			// cache headers per column
 			c.$headerIndexed = [];
 			for ( indx = 0; indx < c.columns; indx++ ) {
+				// colspan in header making a column undefined
+				if ( ts.isEmptyObject( c.sortVars[ indx ] ) ) {
+					c.sortVars[ indx ] = {};
+				}
 				$temp = c.$headers.filter( '[data-column="' + indx + '"]' );
 				// target sortable column cells, unless there are none, then use non-sortable cells
 				// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
@@ -661,7 +665,7 @@
 								extractor = false;
 							}
 							if ( !parser ) {
-								parser = ts.detectParserForColumn( c, rows, -1, indx );
+								parser = ts.detectParserForColumn( c, rows, -1, colIndex );
 							}
 							if ( c.debug ) {
 								debug[ '(' + colIndex + ') ' + header.text() ] = {
@@ -890,13 +894,11 @@
 					max = c.columns;
 					for ( colIndex = 0; colIndex < max; ++colIndex ) {
 						cell = $row[ 0 ].cells[ colIndex ];
-						if ( cell ) {
-							if ( typeof parsers[ cacheIndex ] === 'undefined' ) {
-								if ( c.debug ) {
-									console.warn( 'No parser found for cell:', cell, 'does it have a header?' );
-								}
-								continue;
+						if ( typeof parsers[ cacheIndex ] === 'undefined' ) {
+							if ( c.debug ) {
+								console.warn( 'No parser found for column ' + colIndex + '; cell:', cell, 'does it have a header?' );
 							}
+						} else if ( cell ) {
 							val = ts.getElementText( c, cell, cacheIndex );
 							rowData.raw[ cacheIndex ] = val; // save original row text
 							txt = ts.getParsedText( c, cell, cacheIndex, val );
