@@ -87,7 +87,8 @@
 
 		update : function(table, c, wo){
 			if ($.isEmptyObject(c.cache)) { return; }
-			var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, norm_rows, saveName, direction,
+			var rowIndex, tbodyIndex, currentGroup, $row, groupClass, grouping, norm_rows, saveName, direction, end,
+				hasPager = ts.hasWidget( table, 'pager' ),
 				hasSort = typeof c.sortList[0] !== 'undefined',
 				group = '',
 				groupIndex = 0,
@@ -127,9 +128,11 @@
 				for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 					norm_rows = c.cache[tbodyIndex].normalized;
 					group = ''; // clear grouping across tbodies
-					$rows = c.$tbodies.eq(tbodyIndex).children('tr').not('.' + c.cssChildRow);
-					for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
-						if ( $rows.eq(rowIndex).is(':visible') ) {
+					rowIndex = hasPager ? c.pager.startRow - 1 : 0;
+					end = hasPager ? c.pager.endRow : norm_rows.length;
+					for ( ; rowIndex < end; rowIndex++ ) {
+						$row = norm_rows[ rowIndex ][ c.columns ].$row;
+						if ( $row.is(':visible') ) {
 							// fixes #438
 							if (ts.grouping.types[grouping[1]]) {
 								currentGroup = norm_rows[rowIndex] ?
@@ -145,7 +148,7 @@
 									if ($.isFunction(wo.group_formatter)) {
 										currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
 									}
-									$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
+									$row.before('<tr class="group-header ' + c.selectorRemove.slice(1) +
 										'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
 										( groupIndex++ ) + '"><td colspan="' + c.columns + '">' +
 										( wo.group_collapsible ? '<i/>' : '' ) +

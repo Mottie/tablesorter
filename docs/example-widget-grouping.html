@@ -162,6 +162,7 @@ tr.group-header.collapsed td i {
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.<br><br></li>
 			<li>In <span class="version">v2.23.6</span>
 				<ul>
+					<li>This widget now works properly when used with a pager that has the `removeRows` option set to `true`.</li>
 					<li>Added <code>group_time24Hour</code> (set 12 vs 24 hour time) &amp; <code>group_dateInvalid</code> (group header text) options.</li>
 					<li>Improved compatibility of the group widget with jQuery Globalize.</li>
 					<li>The <code>group_months</code> option will now accept a zero or one-based array or object of month names.</li>
@@ -254,10 +255,13 @@ tr.group-header.collapsed td i {
 						</td>
 					</tr>
 					<tr id="group_count">
-						<td><span class="permalink">group_count</span></td>
+						<td><a href="#" class="permalink">group_count</a></td>
 						<td><code>&quot; ({num})&quot;</code></td>
 						<td>
 							Allows you to add custom formatting, or remove, the group count within the group header. Set it to <code>false</code> or an empty string to remove the count.
+							<div class="collapsible">
+								<p><span class="label warning">*NOTE*</span> The value that replaces the <code>{num}</code> placeholder only counts the number of <em>visible</em> rows.</p>
+							</div>
 						</td>
 					</tr>
 					<tr id="group_separator">
