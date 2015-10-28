@@ -202,10 +202,19 @@
 			wo.scroller_saved = [ 0, 0 ];
 			wo.scroller_isBusy = true;
 
-			// set scrollbar width & allow setting width to zero
-			wo.scroller_barSetWidth = wo.scroller_barWidth !== null ?
-				wo.scroller_barWidth :
-				( tsScroller.getBarWidth() || 15 );
+			// set scrollbar width to one of the following (1) explicitly set scroller_barWidth option,
+			// (2) detected scrollbar width or (3) fallback of 15px
+			if (wo.scroller_barWidth !== null)
+			    wo.scroller_barSetWidth = wo.scroller_barWidth;
+			else {
+			    var detectedWidth = tsScroller.getBarWidth();
+			    if (detectedWidth !== null){
+			        wo.scroller_barSetWidth = detectedWidth;
+			    }
+			    else {
+			        wo.scroller_barSetWidth = 15;
+			    }
+			}
 
 			maxHt = wo.scroller_height || 300;
 
