@@ -186,7 +186,7 @@
 		},
 
 		setup : function( c, wo ) {
-			var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp,
+			var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp, detectedWidth,
 				$win = $( window ),
 				tsScroller = ts.scroller,
 				namespace = c.namespace + 'tsscroller',
@@ -204,15 +204,11 @@
 
 			// set scrollbar width to one of the following (1) explicitly set scroller_barWidth option,
 			// (2) detected scrollbar width or (3) fallback of 15px
-			if (wo.scroller_barWidth !== null) {
-			    wo.scroller_barSetWidth = wo.scroller_barWidth;
+			if ( wo.scroller_barWidth !== null ) {
+				wo.scroller_barSetWidth = wo.scroller_barWidth;
 			} else {
-			    var detectedWidth = tsScroller.getBarWidth();
-			    if (detectedWidth !== null){
-			        wo.scroller_barSetWidth = detectedWidth;
-			    } else {
-			        wo.scroller_barSetWidth = 15;
-			    }
+				detectedWidth = tsScroller.getBarWidth();
+				wo.scroller_barSetWidth = detectedWidth !== null ? detectedWidth : 15;
 			}
 
 			maxHt = wo.scroller_height || 300;
