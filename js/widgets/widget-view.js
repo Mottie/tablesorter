@@ -64,7 +64,7 @@
 
 						if (wo.view_layouts[wo.view_layout].raw === true) {
 							view.remove(c, wo);
-							view.buildToolBar(c, wo)
+							view.buildToolBar(c, wo);
 						} else {
 							if (is_hidden === false) {
 								view.hideTable(c, wo);
