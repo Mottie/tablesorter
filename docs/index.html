@@ -2364,8 +2364,15 @@ $(function(){
 					<div class="collapsible"><br>
 						When the filter row is built, each table cell (<code>&lt;td&gt;</code>) will get the class name from this option.
 						<ul>
-							<li>If this option is a plain string, all filter row cells will get the text applied as a class name.</li>
-							<li>If this option is an array, then each filter row cell will get the text from the associate array element applied as a class name.</li>
+							<li>If this option is a plain string, all filter row cells will get the text applied as a class name.
+								<pre class="prettyprint lang-js">// "table-filter" class added to all filter row td's
+filter_cssFilter : 'table-filter'</pre>
+							</li>
+							<li>If this option is an array, then each filter row cell will get the text from the associate array element applied as a class name.
+								<pre class="prettyprint lang-css">.hidden { display: none; }</pre>
+								<pre class="prettyprint lang-js">// hiding second & fourth columns using associated css
+filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
+							</li>
 						</ul>
 						<p>Use the <a href="#widget-filter-cellfilter"><code>filter_cellFilter</code></a> option to add an extra css class name as follows:</p>
 						<pre class="prettyprint lang-js">$(function(){
@@ -2391,7 +2398,7 @@ $(function(){
 					<div class="collapsible"><br>
 						As of v2.15, this option can also contain an array of class names that are to be applied to input filters.<br>
 						<br>
-						Changed to empty string in v2.11, as the <code>&quot;tablesorter-filter&quot;</code> class will always be added to the filter; this option now contains any additional class names to add.
+						Changed default to an empty string in v2.11, as the <code>&quot;tablesorter-filter&quot;</code> class will always be added to the filter; this option now contains any additional class names to add.
 						<p>Use the <a href="#widget-filter-cssfilter"><code>filter_cssFilter</code></a> option to add an extra css class name as follows:</p>
 						<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
