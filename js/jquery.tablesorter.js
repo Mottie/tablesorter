@@ -272,8 +272,10 @@
 			// fixate columns if the users supplies the fixedWidth option
 			// do this after theme has been applied
 			ts.fixColumnWidth( table );
+			// add widgets from class name
+			ts.addWidgetFromClass( table );
 			// add widget options before parsing (e.g. grouping widget has parser settings)
-			ts.applyWidgetOptions( table, c );
+			ts.applyWidgetOptions( table );
 			// try to auto detect column type, and store in tables config
 			ts.setupParsers( c );
 			// start total row count at zero
@@ -1181,7 +1183,6 @@
 			c.$table.find( c.selectorRemove ).remove();
 			// get position from the dom
 			var tmp, indx, row, icell, cache, len,
-				table = c.table,
 				$tbodies = c.$tbodies,
 				$cell = $( cell ),
 				// update cache - format: function( s, table, cell, cellIndex )
@@ -1784,8 +1785,9 @@
 			}
 		},
 
-		applyWidgetOptions : function( table, c ) {
+		applyWidgetOptions : function( table ) {
 			var indx, widget,
+				c = table.config,
 				len = c.widgets.length;
 			if ( len ) {
 				for ( indx = 0; indx < len; indx++ ) {
@@ -1797,28 +1799,34 @@
 			}
 		},
 
-		applyWidget : function( table, init, callback ) {
-			table = $( table )[ 0 ]; // in case this is called externally
-			var indx, len, names, widget, name, applied, time, time2, widgetClass,
+		addWidgetFromClass : function( table ) {
+			var len, indx,
 				c = table.config,
-				tableClass = ' ' + c.table.className + ' ',
-				widgets = [];
-			// prevent numerous consecutive widget applications
-			if ( init !== false && table.hasInitialized && ( table.isApplyingWidgets || table.isUpdating ) ) {
-				return;
-			}
-			if ( c.debug ) { time = new Date(); }
-			// look for widgets to apply from table class
-			// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-			widgetClass = new RegExp( '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s', 'g' );
-			// extract out the widget id from the table class (widget id's can include dashes)
-			widget = tableClass.match( widgetClass );
+				// look for widgets to apply from table class
+				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
+				regex = '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s',
+				widgetClass = new RegExp( regex, 'g' ),
+				// extract out the widget id from the table class (widget id's can include dashes)
+				widget = ( ' ' + c.table.className + ' ' ).match( widgetClass );
 			if ( widget ) {
 				len = widget.length;
 				for ( indx = 0; indx < len; indx++ ) {
 					c.widgets.push( widget[ indx ].replace( widgetClass, '$1' ) );
 				}
 			}
+		},
+
+		applyWidget : function( table, init, callback ) {
+			table = $( table )[ 0 ]; // in case this is called externally
+			var indx, len, names, widget, name, applied, time, time2,
+				c = table.config,
+				widgets = [];
+			// prevent numerous consecutive widget applications
+			if ( init !== false && table.hasInitialized && ( table.isApplyingWidgets || table.isUpdating ) ) {
+				return;
+			}
+			if ( c.debug ) { time = new Date(); }
+			ts.addWidgetFromClass( table );
 			if ( c.widgets.length ) {
 				table.isApplyingWidgets = true;
 				// ensure unique widget ids
@@ -1857,7 +1865,7 @@
 							c.widgetInit[ name ] = true;
 							if ( table.hasInitialized ) {
 								// don't reapply widget options on tablesorter init
-								ts.applyWidgetOptions( table, table.config );
+								ts.applyWidgetOptions( table );
 							}
 							if ( typeof widget.init === 'function' ) {
 								applied = true;
