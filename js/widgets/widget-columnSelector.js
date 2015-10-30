@@ -108,7 +108,7 @@
 		},
 
 		setupSelector: function(c, wo) {
-			var index, name,
+			var index, name, $header, priority, col, colId,
 				colSel = c.selector,
 				$container = colSel.$container,
 				useStorage = wo.columnSelector_saveColumns && ts.storage,
@@ -124,12 +124,12 @@
 			colSel.$checkbox = [];
 			// populate the selector container
 			for ( index = 0; index < c.columns; index++ ) {
-				var $header = c.$headerIndexed[ index ],
-					// if no data-priority is assigned, default to 1, but don't remove it from the selector list
-					priority = $header.attr(wo.columnSelector_priority) || 1,
-					colId = $header.attr('data-column'),
-					col = ts.getColumnData( c.table, c.headers, colId ),
-					state = ts.getData( $header, col, 'columnSelector');
+				$header = c.$headerIndexed[ index ];
+				// if no data-priority is assigned, default to 1, but don't remove it from the selector list
+				priority = $header.attr(wo.columnSelector_priority) || 1;
+				colId = $header.attr('data-column');
+				col = ts.getColumnData( c.table, c.headers, colId );
+				state = ts.getData( $header, col, 'columnSelector');
 
 				// if this column not hidable at all
 				// include getData check (includes 'columnSelector-false' class, data attribute, etc)
@@ -323,6 +323,7 @@
 
 		setUpColspan: function(c, wo) {
 			var index, span, nspace,
+				$window = $( window ),
 				hasSpans = false,
 				$cells = c.$table
 					.add( $(c.namespace + '_extra_table') )
@@ -343,15 +344,15 @@
 			if ( hasSpans && wo.columnSelector_mediaquery ) {
 				nspace = c.namespace.slice( 1 ) + 'columnselector';
 				// Setup window.resizeEnd event
-				$( window )
+				$window
 					.off( nspace )
 					.on( 'resize' + nspace, ts.window_resize )
 					.on( 'resizeEnd' + nspace, function() {
 						// IE calls resize when you modify content, so we have to unbind the resize event
 						// so we don't end up with an infinite loop. we can rebind after we're done.
-						$win.off( 'resize' + nspace, ts.window_resize );
+						$window.off( 'resize' + nspace, ts.window_resize );
 						tsColSel.adjustColspans( c, wo );
-						$win.on( 'resize' + nspace, ts.window_resize );
+						$window.on( 'resize' + nspace, ts.window_resize );
 					});
 			}
 		},
