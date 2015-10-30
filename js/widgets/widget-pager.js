@@ -426,6 +426,7 @@
 			p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for 'pageSize' method
 			c.totalRows = p.totalRows;
+			tsp.parsePageNumber( p );
 			tsp.calcFilters(table, c);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
@@ -983,17 +984,15 @@
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject(table.config.cache)) {
 				return tsp.updateCache(table);
 			}
-			var pg, c = table.config,
+			var c = table.config,
 				wo = c.widgetOptions,
 				l = p.last;
 
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && !wo.filter_initialized && ts.hasWidget(table, 'filter')) { return; }
 
+			tsp.parsePageNumber( p );
 			tsp.calcFilters(table, c);
-			pg = Math.min( p.totalPages, p.filteredPages );
-			if ( p.page < 0 ) { p.page = 0; }
-			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 
 			// fixes issue where one current filter is [] and the other is [ '', '', '' ],
 			// making the next if comparison think the filters as different. Fixes #202.
@@ -1052,11 +1051,19 @@
 				( mode === 'get' ? s : p.size );
 		},
 
+		parsePageNumber: function( p ) {
+			var min = Math.min( p.totalPages, p.filteredPages ) - 1;
+			p.page = parseInt( p.page, 10 );
+			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
+			if ( p.page > min && p.page !== 0 ) { p.page = min; }
+			return p.page;
+		},
+
 		setPageSize: function(table, size, c) {
 			var p = c.pager;
 			p.size = tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
 			p.$size.val( tsp.parsePageSize( p, p.size, 'set' ) );
-			$.data(table, 'pagerLastPage', p.page);
+			$.data(table, 'pagerLastPage', tsp.parsePageNumber( p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			p.filteredPages = Math.ceil( p.filteredRows / p.size );

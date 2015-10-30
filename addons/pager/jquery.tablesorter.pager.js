@@ -169,6 +169,7 @@
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			c.totalRows = p.totalRows;
+			parsePageNumber( p );
 			calcFilters(table, p);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
@@ -705,7 +706,7 @@
 
 		moveToPage = function(table, p, pageMoved) {
 			if ( p.isDisabled ) { return; }
-			var pg, c = table.config,
+			var c = table.config,
 				$t = $(table),
 				l = p.last;
 			if ( pageMoved !== false && p.initialized && ts.isEmptyObject(c.cache)) {
@@ -713,10 +714,9 @@
 			}
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && ts.hasWidget(table, 'filter') && !c.widgetOptions.filter_initialized) { return; }
+
+			parsePageNumber( p );
 			calcFilters(table, p);
-			pg = Math.min( p.totalPages, p.filteredPages );
-			if ( p.page < 0 ) { p.page = 0; }
-			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
 			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
 			l.currentFilters = (l.currentFilters || []).join('') === '' ? [] : l.currentFilters;
@@ -772,10 +772,18 @@
 				( mode === 'get' ? s : p.size );
 		},
 
+		parsePageNumber = function( p ) {
+			var min = Math.min( p.totalPages, p.filteredPages ) - 1;
+			p.page = parseInt( p.page, 10 );
+			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
+			if ( p.page > min && p.page !== 0 ) { p.page = min; }
+			return p.page;
+		},
+
 		setPageSize = function(table, size, p) {
 			p.size = parsePageSize( p, size, 'get' ) || p.size || p.settings.size || 10;
 			p.$size.val( parsePageSize( p, size, 'set' ) );
-			$.data(table, 'pagerLastPage', p.page);
+			$.data(table, 'pagerLastPage', parsePageNumber( p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			p.filteredPages = Math.ceil( p.filteredRows / p.size );
