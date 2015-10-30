@@ -1,7 +1,7 @@
 /*! Parser: jQuery Globalize - updated 10/26/2015 (v2.23.6) */
 /* Extract localized data using jQuery's Globalize parsers; set
  Globalize.locale( 'xx' ) in the globalize settings */
-/*jshint jquery:true */
+/*jshint jquery:true, newcap: false */
 /*global Globalize:false */
 ;( function( $ ) {
 	'use strict';
