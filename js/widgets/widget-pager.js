@@ -210,8 +210,7 @@
 		initComplete: function(table, c){
 			var p = c.pager;
 			tsp.bindEvents(table, c);
-			tsp.setPageSize(table, 0, c); // page size 0 is ignored
-
+			tsp.setPageSize(c, 0); // page size 0 is ignored
 			if (!p.ajax) {
 				tsp.hideRowsSetup(table, c);
 			}
@@ -298,7 +297,7 @@
 				})
 				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 					e.stopPropagation();
-					tsp.setPageSize(table, tsp.parsePageSize( p, size, 'get' ) || p.setSize || 10, c);
+					tsp.setPageSize(c, tsp.parsePageSize( c, size, 'get' ));
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
 				})
@@ -316,7 +315,7 @@
 				.on('pageAndSize' + namespace, function(e, page, size){
 					e.stopPropagation();
 					p.page = (parseInt(page, 10) || 1) - 1;
-					tsp.setPageSize(table, tsp.parsePageSize( p, size, 'get' ) || p.setSize || 10, c);
+					tsp.setPageSize(c, tsp.parsePageSize( c, size, 'get' ));
 					tsp.moveToPage(table, p, true);
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
@@ -367,7 +366,7 @@
 						if ( !$(this).hasClass(wo.pager_css.disabled) ) {
 							var size = $(this).val();
 							p.$size.val( size ); // in case there are more than one pagers
-							tsp.setPageSize(table, size, c);
+							tsp.setPageSize(c, size);
 							tsp.changeHeight(table, c);
 						}
 						return false;
@@ -421,7 +420,7 @@
 				wo = c.widgetOptions,
 				p = c.pager,
 				namespace = c.namespace + 'pager',
-				sz = p.size || p.setSize || 10; // don't allow dividing by zero
+				sz = tsp.parsePageSize( c, p.size, 'get' ); // don't allow dividing by zero
 			if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
 			p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for 'pageSize' method
@@ -638,7 +637,8 @@
 			var p = c.pager,
 				namespace = c.namespace + 'pager',
 				size = p.$size.val();
-			p.size = tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
+			p.size = tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
 			$.data(table, 'pagerLastSize', p.size);
 			tsp.pagerArrows(c);
 			if ( !c.widgetOptions.pager_removeRows ) {
@@ -750,7 +750,7 @@
 				}
 				// make sure last pager settings are saved, prevents multiple server side calls with
 				// the same parameters
-				p.totalPages = Math.ceil( p.totalRows / ( p.size || p.setSize || 10 ) );
+				p.totalPages = Math.ceil( p.totalRows / tsp.parsePageSize( c, p.size, 'get' ) );
 				p.last.totalRows = p.totalRows;
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
@@ -1043,11 +1043,14 @@
 		},
 
 		// set to either set or get value
-		parsePageSize: function( p, size, mode ) {
-			var s = parseInt( size, 10 );
+		parsePageSize: function( c, size, mode ) {
+			var p = c.pager,
+				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10,
+				// if select does not contain an "all" option, use size
+				setAll = p.$size.find( 'option[value="all"]' ).length ? 'all' : p.totalRows;
 			return /all/i.test( size ) || s === p.totalRows ?
 				// "get" to set `p.size` or "set" to set `p.$size.val()`
-				( mode === 'get' ? p.totalRows : 'all' ) :
+				( mode === 'get' ? p.totalRows : setAll ) :
 				( mode === 'get' ? s : p.size );
 		},
 
@@ -1059,10 +1062,11 @@
 			return p.page;
 		},
 
-		setPageSize: function(table, size, c) {
-			var p = c.pager;
-			p.size = tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
-			p.$size.val( tsp.parsePageSize( p, p.size, 'set' ) );
+		setPageSize: function(c, size) {
+			var p = c.pager,
+				table = c.table;
+			p.size = tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
 			$.data(table, 'pagerLastPage', tsp.parsePageNumber( p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -1125,8 +1129,8 @@
 			p.isDisabled = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			size = p.$size.find('option[selected]').val();
-			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( p, size, 'get' ) || p.size || p.setSize || 10;
-			p.$size.val( tsp.parsePageSize( p, size, 'set' ) ); // set page size
+			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) ); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			c.$table.removeClass('pagerDisabled');
 			// if table id exists, include page display with aria info
@@ -1139,7 +1143,7 @@
 			if ( triggered ) {
 				// tablesorter core update table
 				ts.update( c );
-				tsp.setPageSize(table, p.size, c);
+				tsp.setPageSize(c, p.size);
 				tsp.hideRowsSetup(table, c);
 				if (c.debug) {
 					console.log('Pager: Enabled');

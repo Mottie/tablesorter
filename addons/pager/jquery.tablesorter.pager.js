@@ -165,7 +165,7 @@
 			var s, t, $out, indx, len, options,
 				c = table.config,
 				namespace = c.namespace + 'pager',
-				sz = p.size || p.settings.size || 10; // don't allow dividing by zero
+				sz = parsePageSize( p, p.size, 'get' ); // don't allow dividing by zero
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			c.totalRows = p.totalRows;
@@ -369,7 +369,8 @@
 		},
 
 		hideRowsSetup = function(table, p){
-			p.size = parsePageSize( p, p.$size.val(), 'get' ) || p.size || p.settings.size || 10;
+			p.size = parsePageSize( p, p.$size.val(), 'get' );
+			p.$size.val( parsePageSize( p, p.size, 'set' ) );
 			$.data(table, 'pagerLastSize', p.size);
 			pagerArrows(p);
 			if ( !p.removeRows ) {
@@ -480,7 +481,7 @@
 				}
 				// make sure last pager settings are saved, prevents multiple server side calls with
 				// the same parameters
-				p.totalPages = Math.ceil( p.totalRows / ( p.size || p.settings.size || 10 ) );
+				p.totalPages = Math.ceil( p.totalRows / parsePageSize( p, p.size, 'get' ) );
 				p.last.totalRows = p.totalRows;
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
@@ -765,10 +766,12 @@
 
 		// set to either set or get value
 		parsePageSize = function( p, size, mode ) {
-			var s = parseInt( size, 10 );
+			var s = parseInt( size, 10 ) || p.size || p.settings.size || 10,
+				// if select does not contain an "all" option, use size
+				setAll = p.$size.find( 'option[value="all"]' ).length ? 'all' : p.totalRows;
 			return /all/i.test( size ) || s === p.totalRows ?
 				// "get" to set `p.size` or "set" to set `p.$size.val()`
-				( mode === 'get' ? p.totalRows : 'all' ) :
+				( mode === 'get' ? p.totalRows : setAll ) :
 				( mode === 'get' ? s : p.size );
 		},
 
@@ -781,8 +784,8 @@
 		},
 
 		setPageSize = function(table, size, p) {
-			p.size = parsePageSize( p, size, 'get' ) || p.size || p.settings.size || 10;
-			p.$size.val( parsePageSize( p, size, 'set' ) );
+			p.size = parsePageSize( p, size, 'get' );
+			p.$size.val( parsePageSize( p, p.size, 'set' ) );
 			$.data(table, 'pagerLastPage', parsePageNumber( p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
@@ -846,8 +849,8 @@
 			p.isDisabled = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 			size = p.$size.find('option[selected]').val();
-			p.size = $.data(table, 'pagerLastSize') || parsePageSize( p, size, 'get' ) || p.size || p.settings.size || 10;
-			p.$size.val( parsePageSize( p, size, 'set' ) ); // set page size
+			p.size = $.data(table, 'pagerLastSize') || parsePageSize( p, p.size, 'get' );
+			p.$size.val( parsePageSize( p, p.size, 'set' ) ); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			// if table id exists, include page display with aria info
 			if ( table.id ) {
@@ -968,7 +971,7 @@
 					})
 					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 						e.stopPropagation();
-						setPageSize(table, parsePageSize( p, size, 'get' ) || p.settings.size || 10, p);
+						setPageSize(table, parsePageSize( p, size, 'get' ), p);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					})
@@ -986,7 +989,7 @@
 					.bind('pageAndSize' + namespace, function(e, page, size){
 						e.stopPropagation();
 						p.page = (parseInt(page, 10) || 1) - 1;
-						setPageSize(table, parsePageSize( p, size, 'get' ) || p.settings.size || 10, p);
+						setPageSize(table, parsePageSize( p, size, 'get' ), p);
 						moveToPage(table, p, true);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
