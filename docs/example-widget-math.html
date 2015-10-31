@@ -179,7 +179,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version">v2.23.6</span>
+			<li>In <span class="version">v2.24.0</span>
 				<ul>
 					<li>Added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
 					<li>Added <code>math_none</code> option which allows customizing the text added to a cell when there are no matching math elements (.</li>
@@ -265,7 +265,7 @@ math_ignore : [0,1]</pre>
 						<td><a href="#" class="permalink">math_none</a></td>
 						<td><code>'N/A'</code></td>
 						<td>
-							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.23.6</span>).
+							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.24.0</span>).
 							<div class="collapsible">
 							<p>To understand when this text is used, select a Region in the "Row & Column Sums" table below. The totals for hidden rows will display this text.</p>
 							<p>Use it as follows:</p>
@@ -356,7 +356,7 @@ math_complete : function($cell, wo, result, value, arry){
 						<td><a href="#" class="permalink">math_priority</a></td>
 						<td><code>[ 'row', 'above', 'below', 'col' ]</code></td>
 						<td>
-							This is the order of calculations (<span class="version updated">v2.23.6</span>).
+							This is the order of calculations (<span class="version updated">v2.24.0</span>).
 							<div class="collapsible">
 							<ul>
 								<li>By default, the widget cycles through the calculated cells as follows:
@@ -434,7 +434,7 @@ math_suffix : '{content}<span class="red">!</span>'
 			<ul>
 				<li><code>row</code> - gather the table cell values from the same row as the <code>data-math</code> attribute.</li>
 				<li><code>above</code> - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the first table cell is reached, or when another cell with a data-attribute with an "above" type is reached; see the first table demo below to see why this is useful.</li>
-				<li><code>below</code> (<span class="version">v2.23.6</span>) - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the last table cell is reached, or when another cell with a data-attribute with a "below" type is reached.</li>
+				<li><code>below</code> (<span class="version">v2.24.0</span>) - gather the table cell values from the same column as the <code>data-math</code> attribute, but stop when the last table cell is reached, or when another cell with a data-attribute with a "below" type is reached.</li>
 				<li><code>col</code> - gather the table cell values from the same column as the <code>data-math</code> attribute.</li>
 				<li><code>all</code> - gather all table cell values with a data-math attribute that start with "all".</li>
 			</ul>
@@ -459,7 +459,7 @@ math_suffix : '{content}<span class="red">!</span>'
 						<li>For example:
 							<pre class="prettyprint lang-js">// adding a custom equation... named "product"
 // access from data-math="row-product" (or "above-product", "below-product" or "col-product")
-// config parameter added v2.23.6 to allow access to table settings
+// config parameter added v2.24.0 to allow access to table settings
 $.tablesorter.equations['product'] = function(arry, config) {
     // multiple all array values together
     var product = 1;

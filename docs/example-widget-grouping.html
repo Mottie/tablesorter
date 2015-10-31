@@ -160,7 +160,7 @@ tr.group-header.collapsed td i {
 		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.<br><br></li>
-			<li>In <span class="version">v2.23.6</span>
+			<li>In <span class="version">v2.24.0</span>
 				<ul>
 					<li>This widget now works properly when used with a pager that has the `removeRows` option set to `true`.</li>
 					<li>Added <code>group_time24Hour</code> (set 12 vs 24 hour time) &amp; <code>group_dateInvalid</code> (group header text) options.</li>
@@ -370,12 +370,12 @@ group_separator : /[/.]/</pre>
 						<td><a href="#" class="permalink">group_months</a></td>
 						<td>(see description)</td>
 						<td>
-							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" section for details).
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.24.0</span>; see "Globalization" section for details).
 							<div class="collapsible">
 								<p>Showing defaults (English):</p>
 								<pre class="prettyprint lang-js">// zero-based array
 group_months: [ &quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;, &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot; ]</pre>
-								As of <span class="version">v2.23.6</span>, this option will also work with an object with a one-base "index":
+								As of <span class="version">v2.24.0</span>, this option will also work with an object with a one-base "index":
 								<pre class="prettyprint lang-js">// get Months list from CLDR (see Globalization section for more info)
 var months = new Cldr( 'en' ).main([ "dates/calendars/gregorian/months", "format", "abbreviated" ]);
 // one-based object (CLDR output example)
@@ -392,12 +392,12 @@ group_months: months</pre>
 						<td><a href="#" class="permalink">group_week</a></td>
 						<td>(see description)</td>
 						<td>
-							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" for details).
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.24.0</span>; see "Globalization" for details).
 							<div class="collapsible">
 								<p>Showing defaults (English):</p>
 								<pre class="prettyprint lang-js">// zero-based index
 group_week: [ &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot; ]</pre>
-								As of <span class="version">v2.23.6</span>, this option will also work with an object using a three-letter English weekday abbreviated names as a key:
+								As of <span class="version">v2.24.0</span>, this option will also work with an object using a three-letter English weekday abbreviated names as a key:
 								<pre class="prettyprint lang-js">// get weekdays list from CLDR (see Globalization section for more info)
 var weekdays = new Cldr( 'en' ).main([ "dates/calendars/gregorian/days", "format", "abbreviated" ]);
 // week-abbreviation based object
@@ -413,11 +413,11 @@ group_week: weekdays</pre>
 						<td><a href="#" class="permalink">group_time</a></td>
 						<td>(see description)</td>
 						<td>
-							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.23.6</span>; see "Globalization" for details).
+							Name arrays included so that the language of the date groups can be modified easily (<span class="version updated">v2.24.0</span>; see "Globalization" for details).
 							<div class="collapsible">
 								<p>Defaults (English):</p>
 								<pre class="prettyprint lang-js">group_time: [ &quot;AM&quot;, &quot;PM&quot; ]</pre>
-								As of <span class="version">v2.23.6</span>, this option will also work with an object in this format:
+								As of <span class="version">v2.24.0</span>, this option will also work with an object in this format:
 								<pre class="prettyprint lang-js">// get time of day list from CLDR (see Globalization section for more info)
 var periods = cldr.main([ "dates/calendars/gregorian/dayPeriods", "format", "abbreviated" ]);
 /* time of day: CLDR returns this object:
@@ -443,20 +443,20 @@ group_time: periods</pre>
 					<tr id="group_time24hour">
 						<td><span class="permalink">group_time24Hour</span></td>
 						<td><code>false</code></td>
-						<td>Set to <code>true</code> to display time in 24 hour format (<span class="version">v2.23.6</span>).</td>
+						<td>Set to <code>true</code> to display time in 24 hour format (<span class="version">v2.24.0</span>).</td>
 					</tr>
 
 					<tr id="group_dateinvalid">
 						<td><span class="permalink">group_dateInvalid</span></td>
 						<td><code>'Invalid Date'</code></td>
-						<td>Message added to the Group header if a date is invalid (<span class="version">v2.23.6</span>).</td>
+						<td>Message added to the Group header if a date is invalid (<span class="version">v2.24.0</span>).</td>
 					</tr>
 
 					<tr id="group_datestring">
 						<td><a href="#" class="permalink">group_dateString</a></td>
 						<td>(see description)</td>
 						<td>
-						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string (<span class="version updated">v2.23.6</span>).
+						When the <code>&quot;group-date&quot;</code> class name is set on a column, this function is used to format the date string (<span class="version updated">v2.24.0</span>).
 						<div class="collapsible">
 							<p>This is the default function:</p>
 							<pre class="prettyprint lang-js">// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
@@ -464,7 +464,7 @@ group_dateString : function(date, config, $header ) {
   return date.toLocaleString();
 }</pre>
 							Other functions that can be used are <code>date</code> (alone), <code>date.toLocaleString()</code>, <code>date.toLocaleDateString()</code> or <code>d.toLocaleTimeString()</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter">this reference</a> for more details.
-							<p>In <span class="version">v2.23.6</span>, this widget was updated to make it easier to use with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</p>
+							<p>In <span class="version">v2.24.0</span>, this widget was updated to make it easier to use with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</p>
 							<p>Additionally, two new parameters were added: <a href="index.html#config"><code>config</code></a> and <code>$header</code> (a jQuery object of the associated header cell).</p>
 							</div>
 						</td>
@@ -676,7 +676,7 @@ $(function() {
 
 			<h4>Usage</h4>
 			Use Globalize with tablesorter &amp; the group widget inside of the <code>group_dateString</code> callback function.
-			<p>In <span class="version">v2.23.6</span></p>
+			<p>In <span class="version">v2.24.0</span></p>
 				<ul>
 					<li>The <code>group_months</code>, <code>group_week</code> &amp; <code>group_time</code> options were modified to work with CLDR data.</li>
 					<li><code>group_months</code> option will work with either a zero-based array of month names (basic use), or an object with a key using a one-based indexed with a month name value pair (the CLDR format; see the "months" comment in code example below).</li>

@@ -1,4 +1,4 @@
-/*! Parser: jQuery Globalize - updated 10/26/2015 (v2.23.6) */
+/*! Parser: jQuery Globalize - updated 10/31/2015 (v2.24.0) */
 /* Extract localized data using jQuery's Globalize parsers; set
  Globalize.locale( 'xx' ) in the globalize settings */
 /*jshint jquery:true, newcap: false */

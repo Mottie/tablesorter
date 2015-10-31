@@ -1,4 +1,4 @@
-/*! Widget: headerTitles - updated 3/5/2014 (v2.15.6) *//*
+/*! Widget: headerTitles - updated 10/31/2015 (v2.24.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

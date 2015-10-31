@@ -1,4 +1,4 @@
-/*! widget: staticRow - updated 2/9/2015 (v2.19.1) *//*
+/*! widget: staticRow - updated 10/31/2015 (v2.24.0) *//*
  * Version 1.2 mod by Rob Garrison (requires tablesorter v2.16+)
  * Requires:
  *  jQuery v1.4+

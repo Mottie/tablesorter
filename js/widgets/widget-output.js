@@ -1,4 +1,4 @@
-/*! Widget: output - updated 7/28/2015 (v2.22.4) *//*
+/*! Widget: output - updated 10/31/2015 (v2.24.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
