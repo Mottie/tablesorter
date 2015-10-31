@@ -92,7 +92,7 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.24.0">Version 2.24.0</a> (10/27/2015)
+#### <a name="v2.24.0">Version 2.24.0</a> (10/31/2015)
 
 * Docs
   * Fix mixed content using GitHub buttons on main page. See [pull #1029](https://github.com/Mottie/tablesorter/pull/1029); thanks [OmgImAlexis](https://github.com/OmgImAlexis)!
