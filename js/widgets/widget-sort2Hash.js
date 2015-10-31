@@ -193,11 +193,7 @@
 				str += value;
 			});
 			// add updated hash
-			try {
-				window.history.pushState( null, null, window.location.pathname + wo.sort2Hash_hash + str );
-			} catch ( err ) {
-				window.location.hash = ( ( window.location.hash || '' ).replace( '#', '' ).length ? hash : wo.sort2Hash_hash ) + str;
-			}
+			window.location.hash = ( ( window.location.hash || '' ).replace( '#', '' ).length ? hash : wo.sort2Hash_hash ) + str;
 		}
 	};
 
