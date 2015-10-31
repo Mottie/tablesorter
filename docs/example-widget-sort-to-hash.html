@@ -21,11 +21,14 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-sort2Hash.js"></script>
 
+	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
+	<script src="../js/widgets/widget-pager.js"></script>
+
 <script id="js">$(function() {
 
 	$( 'table' ).tablesorter({
 		theme: 'blue',
-		widgets: [ 'zebra', 'sort2Hash' ],
+		widgets: [ 'zebra', 'sort2Hash', 'filter' ],
 		widgetOptions : {
 			// hash prefix
 			sort2Hash_hash              : '#',
@@ -33,14 +36,57 @@
 			sort2Hash_separator         : ',',
 			// this option > table ID > table index on page
 			sort2Hash_tableId           : null,
-			// if true, show header cell text instead of a zero-based column index
-			sort2Hash_useHeaderText     : false,
-			// allow processing of text if sort2Hash_useHeaderText: true
-			sort2Hash_processHeaderText : null, // function( text, config, columnIndex ) {},
+			// data attribute containing alternate header text
+			sort2Hash_headerTextAttr    : 'data-header',
 			// direction text shown in the URL e.g. [ 'asc', 'desc' ]
 			sort2Hash_directionText     : [ 0, 1 ], // default values
 			// if true, override saveSort widget sort, if used & stored sort is available
-			sort2Hash_overrideSaveSort  : true // default = false
+			sort2Hash_overrideSaveSort  : true, // default = false
+			sort2Hash_encodeHash        : null,
+			/* how to use encodeHash
+			sort2Hash_encodeHash : function( config, tableId, component, value, rawValue ) {
+				// config = table.config settings
+				// tableId = processed table ID
+				// component: 'sort', 'page', 'size' or 'filter'
+				// value = string value that has encodeURIComponent applied
+				// rawValue = value ( array or number )
+				// return false to let the widget encode the string
+				return '&' + component + '[' + tableId + ']=' + value;
+			},
+			*/
+			sort2Hash_decodeHash        : null,
+			/*
+			sort2Hash_decodeHash : function( config, tableId, component ) {
+				// config = table.config settings
+				// tableId = processed table ID
+				// component: 'sort', 'page', 'size' or 'filter'
+				// return false to let the widget decode the hash
+				var regex = new RegExp( '[\\#&]' + component + '\\[' + tableId + '\\]=([^&]*)' ),
+					result = regex.exec( window.location.hash );
+				return result ? decodeURIComponent( result[1] ) : '';
+			}
+			*/
+			sort2Hash_cleanHash         : null,
+			/*
+			sort2Hash_cleanHash : function( config, tableId, component, hash ) {
+				var index,
+					result = [],
+					regex = new RegExp( component + '\\[' + tableId + '\\]=([^&]*)' );
+					parts = ( hash || '' ).slice(1).split( '&' ),
+					len = parts.length,
+				for ( index = 0; index < len; index++ ) {
+					if ( !regex.test( parts[ index ] ) ) {
+						result.push( parts[ index ] );
+					}
+				}
+				// if we still have something left, join the components back together
+				// and return it so the next component can be processed
+				// we don't update the window.location.hash, or the page jumps to the top!
+				return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+			}
+			*/
+			pager_output : '{startRow:input} to {endRow} ({filteredRows})',
+			pager_size   : 2
 		}
 	});
 
@@ -63,6 +109,15 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">2.23.6</span>, lots of changes were made:
+				<ul>
+					<li>Removed <code class="alert">sort2Hash_useHeaderText</code> and <code class="alert">sort2Hash_processHeaderText</code> options.</li>
+					<li>Added <code>sort2Hash_headerTextAttr</code> option to replace the above two options.</li>
+					<li>Added <code>sort2Hash_encodeHash</code>, <code>sort2Hash_decodeHash</code> and <code>sort2Hash_cleanHash</code> options to allow custom value to hash processing.</li>
+					<li>This widget now works with the pager &amp; filter, so the hash now includes pager current page, pager page size and current filters in the hash.</li>
+					<li>Lots of internal tweaks.</li>
+				</ul>
+			</li>
 			<li>Added <span class="version">v2.22.4</span>. Instead of using the <a href="example-widget-savesort.html">saveSort</a> widget, this widget updates the hash tag to allow saving &amp; sharing a sort applied to a tablesorter table.</li>
 			<li>Sort the tables in the demo below. Notice the changes made to the location hash, then reload the page to have the hash applied to the tables.</li>
 			<li>This widget requires jQuery version 1.7+.</li>
@@ -117,40 +172,17 @@
 						</td>
 					</tr>
 
-					<tr id="sort2hash_useheadertext">
-						<td><a href="#" class="permalink">sort2Hash_useHeaderText</a></td>
-						<td><code>false</code></td>
+					<tr id="sort2hash_headertextattr">
+						<td><a href="#" class="permalink">sort2Hash_headerTextAttr</a></td>
+						<td><code>'data-header'</code></td>
 						<td>
-							If <code>true</code>, text from the header is used instead of a zero-based column index.
+							Data attribute on header cell containing alternate column identifier added to location hash.
 							<div class="collapsible">
-							<br>
-							Please be aware that if the column text contains spaces or special characters, they will be encoded in the URL. So, <code>"First &#xa3;$&#x20ac;&#x00a4;&#x00a5;&#xa2; Name"</code> will become <code>"First%20%C2%A3$%E2%82%AC%C2%A4%C2%A5%C2%A2%20Name"</code>. This would make the hash very difficult to read.
-							<p>Further processing of this header cell text can be done using the <code>sort2Hash_processHeaderText</code> function.</p>
-							</div>
-						</td>
-					</tr>
-
-					<tr id="sort2hash_processheadertext">
-						<td><a href="#" class="permalink">sort2Hash_processHeaderText</a></td>
-						<td><code>null</code></td>
-						<td>
-							If the <code>sort2Hash_useHeaderText</code> option is <code>true</code>, a function here will further process the header cell text.
-							<div class="collapsible">
-							<br>
-							Use this function to perform any processing on the header cell text, as desired.
-							<p>At this point, the header cell text has not been encoded.</p>
-							<p>Here is one example:</p>
-							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
-  // remove all non-alphanumeric characters (including spaces)
-  return text.replace( /[^a-z0-9]/gi, '' );
-}</pre>
-							Another example:
-							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
-  // completely custom text to use for the hash
-  // this method assumes that the table layout is constant
-  // (i.e. columns are not added, removed or rearranged)
-  return [ 'first', 'last', 'age', 'total', 'disc', 'date' ][ columnIndex ];
-}</pre>
+								<br>
+								This option replaces both <code>sort2Hash_useHeaderText</code> and <code>sort2Hash_processHeaderText</code> options.
+								<p>The contents of this attribute will be used in the hash to identify a sorted column.</p>
+								<p>Use the header attribute as follows:</p>
+								<pre class="prettyprint lang-js">&lt;th data-header="first"&gt;First Name&lt;/th&gt;</pre>
 							</div>
 						</td>
 					</tr>
@@ -176,14 +208,179 @@
 						<td>if <code>true</code>, the hash sort will override any stored sort (saveSort widget).</td>
 					</tr>
 
+					<tr id="sort2hash_encodehash">
+						<td><a href="#" class="permalink">sort2Hash_encodeHash</a></td>
+						<td><code>null</code></td>
+						<td>
+							Add a function to create a custom hash.
+							<div class="collapsible">
+								<br>
+								The following example is a duplicate of the internal code that encodes the hash. Adapt to fit your needs:
+								<pre class="prettyprint lang-js">sort2Hash_encodeHash : function( config, tableId, component, value, rawValue ) {
+  // config = table.config settings
+  // tableId = processed table ID
+  // component: 'sort', 'page', 'size' or 'filter'
+  // value = string value that has encodeURIComponent applied
+  // rawValue = value ( array or number )
+  // return false to let the widget encode the string
+  return '&' + component + '[' + tableId + ']=' + value;
+}</pre>
+								Return a string to add to the <code>window.location.hash</code> directly.
+								<p>If this function returns <code>false</code>, then the internal code will encode the hash for that component. This was done in case only one parameter needs special handling:</p>
+								<pre class="prettyprint lang-js">sort2Hash_encodeHash : function( config, tableId, component, value, rawValue ) {
+  // only the filter gets special handling
+  if ( component === 'filter' ) {
+    // if working with rawValue, make sure to use
+    // encodeURIComponent on the results
+    var newValue = encodeURIComponent( rawValue.join( '--' ) );
+    return tableId + 'filter=' + newValue;
+  }
+  return false;
+}</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_decodehash">
+						<td><a href="#" class="permalink">sort2Hash_decodeHash</a></td>
+						<td><code>null</code></td>
+						<td>
+							Add a function to process a custom hash.
+							<div class="collapsible">
+								<br>
+								The following example is a duplicate of the internal code that decodes the hash. Adapt to fit your needs:
+								<pre class="prettyprint lang-js">sort2Hash_decodeHash : function( config, tableId, component ) {
+  // config = table.config settings
+  // tableId = processed table ID
+  // component: 'sort', 'page', 'size' or 'filter'
+  // return false to let the widget decode the hash
+  var regex = new RegExp( '[\\#&]' + component + '\\[' + tableId + '\\]=([^&]*)' ),
+    result = regex.exec( window.location.hash );
+  return result ? result[1] : '';
+}</pre>
+								Return the component value or an empty string.
+								<p>If this function returns <code>false</code>, then the internal code will attempt to decode the hash for that component. This was done in case only one parameter needs special handling:</p>
+								<pre class="prettyprint lang-js">sort2Hash_decodeHash : function( config, tableId, component ) {
+  // only the filter gets special handling
+  var result, regex;
+  if ( component === 'filter' ) {
+    regex = new RegExp( '[\\#&]' + tableId + 'filter=([^&]*)' );
+    result = regex.exec( window.location.hash );
+    // make sure to use decodeURIComponent on the result
+    return result ? decodeURIComponent( result[1] ) : '';
+  }
+  return false;
+}</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_cleanhash">
+						<td><a href="#" class="permalink">sort2Hash_cleanHash</a></td>
+						<td><code>null</code></td>
+						<td>
+							Add a function to remove a custom hash
+							<div class="collapsible">
+								<br>
+								The following example is a duplicate of the internal code that removes unused values in the hash. Adapt to fit your needs:
+								<pre class="prettyprint lang-js">sort2Hash_cleanHash : function( config, tableId, component, hash ) {
+  var index,
+    result = [],
+    // regular expression to match the component & value
+    regex = new RegExp( component + '\\[' + tableId + '\\]=([^&]*)' );
+    // split hash into component parts
+    parts = ( hash || '' ).slice(1).split( '&' ),
+    len = parts.length,
+  // cycle through each component part
+  for ( index = 0; index < len; index++ ) {
+    // if the component doesn't match the regular expression...
+    if ( !regex.test( parts[ index ] ) ) {
+      // then save it
+      result.push( parts[ index ] );
+    }
+  }
+  // if we still have something left, join the components back together
+  // and return it so the next component can be processed
+  // we don't update the window.location.hash, or the page jumps to the top!
+  return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+}</pre>
+								Return a string of the remaining components or an empty string.
+								<p>If this function returns <code>false</code>, then the internal code will attempt to clean the hash for that component. This was done in case only one parameter needs special handling:</p>
+								<pre class="prettyprint lang-js">sort2Hash_cleanHash : function( config, tableId, component, hash ) {
+  if ( component === 'filter' ) {
+    var index,
+      result = [],
+      regex = new RegExp( tableId + 'filter=([^&]*)' );
+      parts = ( hash || '' ).slice(1).split( '&' ),
+      len = parts.length,
+    for ( index = 0; index < len; index++ ) {
+      if ( !regex.test( parts[ index ] ) ) {
+        result.push( parts[ index ] );
+      }
+    }
+    return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+  }
+  return false;
+}</pre>
+							</div>
+						</td>
+					</tr>
+
 				</tbody>
+
+				<!-- non-sorting tbody -->
+				<tbody id="deprecated" class="tablesorter-infoOnly">
+					<tr><th colspan="5">Deprecated/Removed Options</th></tr>
+				</tbody>
+
+				<tbody>
+					<tr id="sort2hash_useheadertext">
+						<td><a href="#" class="permalink alert">sort2Hash_useHeaderText</a></td>
+						<td><code>false</code></td>
+						<td>
+							This option has been <span class="label alert">removed</span> in v2.23.6! It has been replaced by <a href="#"><code>sort2Hash_headerTextAttr</code></a>.
+							<div class="collapsible">
+							<p>If <code>true</code>, text from the header is used instead of a zero-based column index.</p>
+							Please be aware that if the column text contains spaces or special characters, they will be encoded in the URL. So, <code>"First &#xa3;$&#x20ac;&#x00a4;&#x00a5;&#xa2; Name"</code> will become <code>"First%20%C2%A3$%E2%82%AC%C2%A4%C2%A5%C2%A2%20Name"</code>. This would make the hash very difficult to read.
+							<p>Further processing of this header cell text can be done using the <code>sort2Hash_processHeaderText</code> function.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="sort2hash_processheadertext">
+						<td><a href="#" class="permalink alert">sort2Hash_processHeaderText</a></td>
+						<td><code>null</code></td>
+						<td>
+							This option has been <span class="label alert">removed</span> in v2.23.6! It has been replaced by <a href="#"><code>sort2Hash_headerTextAttr</code></a>.
+							<div class="collapsible">
+							<p>If the <code>sort2Hash_useHeaderText</code> option is <code>true</code>, a function here will further process the header cell text.</p>
+							Use this function to perform any processing on the header cell text, as desired.
+							<p>At this point, the header cell text has not been encoded.</p>
+							<p>Here is one example:</p>
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // remove all non-alphanumeric characters (including spaces)
+  return text.replace( /[^a-z0-9]/gi, '' );
+}</pre>
+							Another example:
+							<pre class="prettyprint lang-js">sort2Hash_processHeaderText : function( text, config, columnIndex ) {
+  // completely custom text to use for the hash
+  // this method assumes that the table layout is constant
+  // (i.e. columns are not added, removed or rearranged)
+  return [ 'first', 'last', 'age', 'total', 'disc', 'date' ][ columnIndex ];
+}</pre>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+
 			</table>
 		</div>
 
 	</div>
 
 	<h1>Demo</h1>
-	<div id="demo"><table>
+	<div id="demo"><h3>Basic Usage <sup class="results">&dagger;</sup></h3>
+<table>
 	<thead>
 		<tr>
 			<th>First Name</th>
@@ -192,6 +389,28 @@
 			<th>Total</th>
 			<th>Discount</th>
 			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
+		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
+		<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
+		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
+		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+	</tbody>
+</table>
+<span class="results">&dagger;</span> <span class="xsmall">This table shows up as "table2" because there is no ID assigned, and it is the third table (zero-based index) on the page. The first table is in the "Options" section. The second is actually the stickyheader table for "Options".</span>
+
+<h3>Data Header (Using symbols for headers)</h3>
+<table id="second">
+	<thead>
+		<tr>
+			<th data-header="^">First Name (^)</th>
+			<th data-header="&">Last Name (&)</th>
+			<th data-header="#">Age (#)</th>
+			<th data-header="$">Total ($)</th>
+			<th data-header="%">Discount (%)</th>
+			<th data-header="*">Date (*)</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -203,25 +422,99 @@
 	</tbody>
 </table>
 
-<table id="second">
+<hr>
+<h3>Pager (page &amp; size)</h3>
+<div class="pager">
+	<img src="../addons/pager/icons/first.png" class="first" alt="First" />
+	<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />
+	<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+	<img src="../addons/pager/icons/next.png" class="next" alt="Next" />
+	<img src="../addons/pager/icons/last.png" class="last" alt="Last" />
+	<select class="pagesize" title="Select page size">
+		<option value="10">10</option>
+		<option value="20">20</option>
+		<option value="30">30</option>
+		<option value="all">All rows</option>
+	</select>
+	<select class="gotoPage" title="Select page number"></select>
+</div>
+<table id="third" class="widget-pager">
 	<thead>
 		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Age</th>
-			<th>Total</th>
-			<th>Discount</th>
-			<th>Date</th>
+			<th data-header="name">Name</th>
+			<th data-header="major">Major</th>
+			<th data-header="gender">Sex</th>
+			<th data-header="english">English</th>
+			<th data-header="japanese">Japanese</th>
+			<th data-header="calculus">Calculus</th>
+			<th data-header="geometry">Geometry</th>
 		</tr>
 	</thead>
+	<tfoot>
+		<tr>
+			<th>Name</th>
+			<th>Major</th>
+			<th>Sex</th>
+			<th>English</th>
+			<th>Japanese</th>
+			<th>Calculus</th>
+			<th>Geometry</th>
+		</tr>
+	</tfoot>
 	<tbody>
-		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
-		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>
-		<tr><td>Clark</td><td>Kent</td><td>18</td><td>$15.89</td><td>44%</td><td>Jan 12, 2003 11:14 AM</td></tr>
-		<tr><td>Bruce</td><td>Almighty</td><td>45</td><td>$153.19</td><td>44%</td><td>Jan 18, 2001 9:12 AM</td></tr>
-		<tr><td>Bruce</td><td>Evans</td><td>22</td><td>$13.19</td><td>11%</td><td>Jan 18, 2007 9:12 AM</td></tr>
+		<tr><td>Student01</td><td>Languages</td><td>male</td><td>80</td><td>70</td><td>75</td><td>80</td></tr>
+		<tr><td>Student02</td><td>Mathematics</td><td>male</td><td>90</td><td>88</td><td>100</td><td>90</td></tr>
+		<tr><td>Student03</td><td>Languages</td><td>female</td><td>85</td><td>95</td><td>80</td><td>85</td></tr>
+		<tr><td>Student04</td><td>Languages</td><td>male</td><td>60</td><td>55</td><td>100</td><td>100</td></tr>
+		<tr><td>Student05</td><td>Languages</td><td>female</td><td>68</td><td>80</td><td>95</td><td>80</td></tr>
+		<tr><td>Student06</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student07</td><td>Mathematics</td><td>male</td><td>85</td><td>68</td><td>90</td><td>90</td></tr>
+		<tr><td>Student08</td><td>Languages</td><td>male</td><td>100</td><td>90</td><td>90</td><td>85</td></tr>
+		<tr><td>Student09</td><td>Mathematics</td><td>male</td><td>80</td><td>50</td><td>65</td><td>75</td></tr>
+		<tr><td>Student10</td><td>Languages</td><td>male</td><td>85</td><td>100</td><td>100</td><td>90</td></tr>
+		<tr><td>Student11</td><td>Languages</td><td>male</td><td>86</td><td>85</td><td>100</td><td>100</td></tr>
+		<tr><td>Student12</td><td>Mathematics</td><td>female</td><td>100</td><td>75</td><td>70</td><td>85</td></tr>
+		<tr><td>Student13</td><td>Languages</td><td>female</td><td>100</td><td>80</td><td>100</td><td>90</td></tr>
+		<tr><td>Student14</td><td>Languages</td><td>female</td><td>50</td><td>45</td><td>55</td><td>90</td></tr>
+		<tr><td>Student15</td><td>Languages</td><td>male</td><td>95</td><td>35</td><td>100</td><td>90</td></tr>
+		<tr><td>Student16</td><td>Languages</td><td>female</td><td>100</td><td>50</td><td>30</td><td>70</td></tr>
+		<tr><td>Student17</td><td>Languages</td><td>female</td><td>80</td><td>100</td><td>55</td><td>65</td></tr>
+		<tr><td>Student18</td><td>Mathematics</td><td>male</td><td>30</td><td>49</td><td>55</td><td>75</td></tr>
+		<tr><td>Student19</td><td>Languages</td><td>male</td><td>68</td><td>90</td><td>88</td><td>70</td></tr>
+		<tr><td>Student20</td><td>Mathematics</td><td>male</td><td>40</td><td>45</td><td>40</td><td>80</td></tr>
+		<tr><td>Student21</td><td>Languages</td><td>male</td><td>50</td><td>45</td><td>100</td><td>100</td></tr>
+		<tr><td>Student22</td><td>Mathematics</td><td>male</td><td>100</td><td>99</td><td>100</td><td>90</td></tr>
+		<tr><td>Student23</td><td>Mathematics</td><td>male</td><td>82</td><td>77</td><td>0</td><td>79</td></tr>
+		<tr><td>Student24</td><td>Languages</td><td>female</td><td>100</td><td>91</td><td>13</td><td>82</td></tr>
+		<tr><td>Student25</td><td>Mathematics</td><td>male</td><td>22</td><td>96</td><td>82</td><td>53</td></tr>
+		<tr><td>Student26</td><td>Languages</td><td>female</td><td>37</td><td>29</td><td>56</td><td>59</td></tr>
+		<tr><td>Student27</td><td>Mathematics</td><td>male</td><td>86</td><td>82</td><td>69</td><td>23</td></tr>
+		<tr><td>Student28</td><td>Languages</td><td>female</td><td>44</td><td>25</td><td>43</td><td>1</td></tr>
+		<tr><td>Student29</td><td>Mathematics</td><td>male</td><td>77</td><td>47</td><td>22</td><td>38</td></tr>
+		<tr><td>Student30</td><td>Languages</td><td>female</td><td>19</td><td>35</td><td>23</td><td>10</td></tr>
+		<tr><td>Student31</td><td>Mathematics</td><td>male</td><td>90</td><td>27</td><td>17</td><td>50</td></tr>
+		<tr><td>Student32</td><td>Languages</td><td>female</td><td>60</td><td>75</td><td>33</td><td>38</td></tr>
+		<tr><td>Student33</td><td>Mathematics</td><td>male</td><td>4</td><td>31</td><td>37</td><td>15</td></tr>
+		<tr><td>Student34</td><td>Languages</td><td>female</td><td>77</td><td>97</td><td>81</td><td>44</td></tr>
+		<tr><td>Student35</td><td>Mathematics</td><td>male</td><td>5</td><td>81</td><td>51</td><td>95</td></tr>
+		<tr><td>Student36</td><td>Languages</td><td>female</td><td>70</td><td>61</td><td>70</td><td>94</td></tr>
+		<tr><td>Student37</td><td>Mathematics</td><td>male</td><td>60</td><td>3</td><td>61</td><td>84</td></tr>
+		<tr><td>Student38</td><td>Languages</td><td>female</td><td>63</td><td>39</td><td>0</td><td>11</td></tr>
+		<tr><td>Student39</td><td>Mathematics</td><td>male</td><td>50</td><td>46</td><td>32</td><td>38</td></tr>
+		<tr><td>Student40</td><td>Languages</td><td>female</td><td>51</td><td>75</td><td>25</td><td>3</td></tr>
+		<tr><td>Student41</td><td>Mathematics</td><td>male</td><td>43</td><td>34</td><td>28</td><td>78</td></tr>
+		<tr><td>Student42</td><td>Languages</td><td>female</td><td>11</td><td>89</td><td>60</td><td>95</td></tr>
+		<tr><td>Student43</td><td>Mathematics</td><td>male</td><td>48</td><td>92</td><td>18</td><td>88</td></tr>
+		<tr><td>Student44</td><td>Languages</td><td>female</td><td>82</td><td>2</td><td>59</td><td>73</td></tr>
+		<tr><td>Student45</td><td>Mathematics</td><td>male</td><td>91</td><td>73</td><td>37</td><td>39</td></tr>
+		<tr><td>Student46</td><td>Languages</td><td>female</td><td>4</td><td>8</td><td>12</td><td>10</td></tr>
+		<tr><td>Student47</td><td>Mathematics</td><td>male</td><td>89</td><td>10</td><td>6</td><td>11</td></tr>
+		<tr><td>Student48</td><td>Languages</td><td>female</td><td>90</td><td>32</td><td>21</td><td>18</td></tr>
+		<tr><td>Student49</td><td>Mathematics</td><td>male</td><td>42</td><td>49</td><td>49</td><td>72</td></tr>
+		<tr><td>Student50</td><td>Languages</td><td>female</td><td>56</td><td>37</td><td>67</td><td>54</td></tr>
 	</tbody>
 </table>
+
 </div>
 
 	<h1>Javascript</h1>
