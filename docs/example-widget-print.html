@@ -80,7 +80,7 @@
 
 			print_title      : '',          // this option > caption > table id > "table"
 			print_dataAttrib : 'data-name', // header attrib containing modified header name
-			print_rows       : 'f',         // (a)ll, (v)isible or (f)iltered
+			print_rows       : 'f',         // (a)ll, (v)isible, (f)iltered, or custom css selector
 			print_columns    : 's',         // (a)ll, (v)isible or (s)elected (columnSelector widget)
 			print_extraCSS   : '',          // add any extra css definitions for the popup window here
 			print_styleSheet : '../css/theme.blue.css', // add the url of your print stylesheet
@@ -118,6 +118,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version updated">v2.24.1</span>, the <code>print_rows</code> option will allow using a custom css selector.</li>
 				<li>In <span class="version">v2.17.2</span>, the print popup window now closes with the dialog window &amp; jQuery version requirement was changed from v1.7+ to v1.2+.</li>
 				<li>
 					In <span class="version">v2.17.0</span>, added the <code>print_callback</code> option.<br>
@@ -169,7 +170,7 @@
 						<td><a href="#" class="permalink">print_rows</a></td>
 						<td><code>'filtered'</code></td>
 						<td>
-							Set this option to designate which rows are printed.
+							Set this option to designate which rows are printed (<span class="version updated">v2.24.1</span>).
 							<div class="collapsible">
 								<br>
 								This option has three settings (only the first letter is necessary):
@@ -177,6 +178,20 @@
 									<li><code>'all'</code> or <code>'a'</code> - always print all rows (this will not work if the pager has `removeRows` set to `true`).</li>
 									<li><code>'filtered'</code> or <code>'f'</code> - only filtered rows are printed (even if the pager is applied).</li>
 									<li><code>'visible'</code> or <code>'v'</code> - only visible rows are printed (the current pager page).</li>
+									<li>css selector - include a css selector to apply to a row (<span class="version">v2.24.1</span>).
+										<ul>
+											<li>For example, <code>'.checked'</code>, <code>'[data-region~="west"]</code>, <code>':nth-child(2n)'</code></li>
+											<li>For reference, internally, this option is added immediately after (no space) a <code>'tr'</code> css selector.</li>
+											<li>For this option to be used as a css selector, a check of the following characters at the start of the string is done:
+												<ul>
+													<li><code>'.'</code> (class selector)</li>
+													<li><code>'#'</code> (id selector)</li>
+													<li><code>':'</code> (pseudo selector)</li>
+													<li><code>'['</code> (start of an attribute selector)</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
 								</ul>
 								<span class="label label-info">Note</span> only rows contained within the table are printed; i.e. if ajax is being used to populate the table, only the currently loaded rows will print.
 							</div>

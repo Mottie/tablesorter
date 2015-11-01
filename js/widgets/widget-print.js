@@ -44,12 +44,16 @@
 			// === rows ===
 			// Assume 'visible' means rows hidden by the pager (rows set to 'display:none')
 			// or hidden by a class name which is added to the wo.print_extraCSS definition
-			if (/a/i.test(wo.print_rows)) {
-				// force show of all rows
-				printStyle += 'tbody tr { display: table-row !important; }';
-			} else if (/f/i.test(wo.print_rows)) {
-				// add definition to show all non-filtered rows (cells hidden by the pager)
+			// look for jQuery filter selector in wo.print_rows & use if found
+			if ( /^f/i.test( wo.print_rows ) ) {
 				printStyle += 'tbody tr:not(.' + ( wo.filter_filteredRow || 'filtered' ) + ') { display: table-row !important; }';
+			} else if ( /^a/i.test( wo.print_rows ) ) {
+				// default force show of all rows
+				printStyle += 'tbody tr { display: table-row !important; }';
+			} else if ( /^[.#:\[]/.test( wo.print_rows ) ) {
+				// look for '.' (class selector), '#' (id selector),
+				// ':' (basic filters, e.g. ':not()') or '[' (attribute selector start)
+				printStyle += 'tbody tr' + wo.print_rows + ' { display: table-row !important; }';
 			}
 
 			// === columns ===
@@ -106,8 +110,8 @@
 		options: {
 			print_title      : '',          // this option > caption > table id > 'table'
 			print_dataAttrib : 'data-name', // header attrib containing modified header name
-			print_rows       : 'filtered',  // (a)ll, (v)isible or (f)iltered
-			print_columns    : 'selected',  // (a)ll or (s)elected (if columnSelector widget is added)
+			print_rows       : 'filtered',  // (a)ll, (v)isible, (f)iltered or custom css selector
+			print_columns    : 'selected',  // (a)ll, (v)isbible or (s)elected (if columnSelector widget is added)
 			print_extraCSS   : '',          // add any extra css definitions for the popup window here
 			print_styleSheet : '',          // add the url of your print stylesheet
 			// callback executed when processing completes
