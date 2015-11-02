@@ -13,7 +13,7 @@
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 	<style>
-	th { width: 20%; }
+	th { width: 14%; }
 	</style>
 
 	<link href="../css/theme.blue.css" rel="stylesheet">
@@ -30,9 +30,53 @@
 
 	<script id="js">$(function() {
 
+	// See http://mottie.github.io/tablesorter/docs/example-widget-grouping.html
+	// for details on how to use CLDR data for a locale to add data for this parser
+	// CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
+
+	// or copy the data directly as it is shown here:
+	// ************************
+	// French localization modified from days "abbreviated" format
+	// https://github.com/unicode-cldr/cldr-dates-modern/blob/master/main/fr/ca-gregorian.json
+	// It does *not* include the periods
+	$.tablesorter.dates.weekdays.fr = {
+		"sun" : "Dim",
+		"mon" : "Lun",
+		"tue" : "Mar",
+		"wed" : "Mer",
+		"thu" : "Jeu",
+		"fri" : "Ven",
+		"sat" : "Sam"
+	};
+
+	// CLDR returns an object { 1: "Jan", 2: "Feb", 3: "Mar", ..., 12: "Dec" }
+	// French localization modified from months "abbreviated" format
+	// https://github.com/unicode-cldr/cldr-dates-modern/blob/master/main/fr/ca-gregorian.json
+	// It does *not* include the periods
+	$.tablesorter.dates.months.fr = {
+		"1"  : "Janv",
+		"2"  : "Févr",
+		"3"  : "Mars",
+		"4"  : "Avr",
+		"5"  : "Mai",
+		"6"  : "Juin",
+		"7"  : "Juil",
+		"8"  : "Août",
+		"9"  : "Sept",
+		"10" : "Oct",
+		"11" : "Nov",
+		"12" : "Déc"
+	};
+
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		theme : 'blue',
+		// option used by weekday, month & globalize parsers (v2.24.1)
+		globalize : {
+			// columns that use French data
+			2 : { lang: 'fr' },
+			4 : { lang: 'fr' }
+		},
 		widgets : ["zebra"],
 		// date range used by the two-digit year parser (added v2.14.0)
 		dateRange : 30
@@ -52,6 +96,12 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version">v2.24.1</span>,
+				<ul>
+					<li>Updated weekday &amp; month parsers to better integrate with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</li>
+					<li>This demo now includes a column for French named weekdays &amp; months.</li>
+				</ul>
+			</li>
 			<li>Parse Dates with these parsers
 				<ul>
 					<li>The "Date" column is using the <a href="http://sugarjs.com/dates#comparing_dates">sugar</a> library to parse dates. Make sure to include the sugar library and the sugar-date-parser.</li>
@@ -79,22 +129,24 @@
 		<tr>
 			<th class="sorter-sugar">Date</th>
 			<th class="sorter-weekday">Weekday</th>
+			<th class="sorter-weekday">Weekday (French)</th>
 			<th class="sorter-month">Month</th>
+			<th class="sorter-month">Month (French)</th>
 			<th class="sorter-mmddyy">MM/DD/YY</th> <!-- "sorter-ddmmyy" also available -->
 			<th class="sorter-time">Time</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>next friday</td><td>Friday</td><td>Aug</td><td>02/1/16</td><td>12:00 PM</td></tr>
-		<tr><td>today</td><td>Thurs</td><td>September</td><td>1/2/16</td><td>00:00</td></tr>
-		<tr><td>last Tuesday</td><td>Fri</td><td>Mar</td><td>11/1/15</td><td>18:00</td></tr>
-		<tr><td>the day after tomorrow</td><td>Wed</td><td>July</td><td>01/1/16</td><td>13:00</td></tr>
-		<tr><td>2010-05-25T12:30:40.299+01:00</td><td>Monday</td><td>Jan</td><td>1/11/15</td><td>1:30 PM</td></tr>
-		<tr><td>May 25th of next year</td><td>Tues</td><td>Nov</td><td>1/1/15</td><td>14:00</td></tr>
-		<tr><td>25 May 2010</td><td>Tuesday</td><td>November</td><td>3/1/15</td><td>1:58 PM</td></tr>
-		<tr><td>the last day of March</td><td>Mon</td><td>December</td><td>1/15/15</td><td>2:10 PM</td></tr>
-		<tr><td>last month</td><td>Wednesday</td><td>April</td><td>11/11/16</td><td>13:50</td></tr>
-		<tr><td>one day before yesterday</td><td>Thursday</td><td>Feb</td><td>5/1/15</td><td>4:00 AM</td></tr>
+		<tr><td>next friday</td><td>Friday</td><td>Vendredi</td><td>Aug</td><td>Août</td><td>02/1/16</td><td>12:00 PM</td></tr>
+		<tr><td>today</td><td>Sunday</td><td>Dim</td><td>September</td><td>Septembre</td><td>1/2/16</td><td>00:00</td></tr>
+		<tr><td>last Tuesday</td><td>Fri</td><td>Ven</td><td>Mar</td><td>Mars</td><td>11/1/15</td><td>18:00</td></tr>
+		<tr><td>the day after tomorrow</td><td>Wed</td><td>Mer</td><td>July</td><td>Juillet</td><td>01/1/16</td><td>13:00</td></tr>
+		<tr><td>2010-05-25T12:30:40.299+01:00</td><td>Monday</td><td>Lun</td><td>Jan</td><td>Janvier</td><td>1/11/15</td><td>1:30 PM</td></tr>
+		<tr><td>May 25th of next year</td><td>Tues</td><td>Mardi</td><td>Nov</td><td>Novembre</td><td>1/1/15</td><td>14:00</td></tr>
+		<tr><td>25 May 2010</td><td>Tuesday</td><td>Mar</td><td>November</td><td>Nov</td><td>3/1/15</td><td>1:58 PM</td></tr>
+		<tr><td>the last day of March</td><td>Sat</td><td>Sam</td><td>December</td><td>Décembre</td><td>1/15/15</td><td>2:10 PM</td></tr>
+		<tr><td>last month</td><td>Wednesday</td><td>Mercredi</td><td>April</td><td>Avr</td><td>11/11/16</td><td>13:50</td></tr>
+		<tr><td>one day before yesterday</td><td>Thursday</td><td>Jeudi</td><td>Feb</td><td>Février</td><td>5/1/15</td><td>4:00 AM</td></tr>
 	</tbody>
 </table></div>
 

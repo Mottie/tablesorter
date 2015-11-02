@@ -516,14 +516,14 @@
 	<h4 id="custom-parsers">Custom Parsers</h4>
 	<ul>
 		<li><a href="example-parsers-duration.html">Countdown parser</a> (<span class="version">v2.19.0</span>).</li>
-		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.18.0</span>; includes weekday, month, two-digit year &amp; <a href="http://sugarjs.com/dates">sugar.js</a> date parsers).</li>
+		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.24.1</span>; includes weekday, month, two-digit year &amp; <a href="http://sugarjs.com/dates">sugar.js</a> date parsers).</li>
 		<li><a href="example-parsers-date-range.html">Date range parsers</a> (<span class="version">v2.21.0</span>); if filters, include the <a href="example-widget-filter-custom-search2.html">insideRange</a> filter search type.</li>
 		<li><a href="example-parsers-duration.html">Duration parser</a> (<span class="version">v2.17.8</span>).</li>
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-file-type.html">File type parser</a> (<span class="version">v2.13</span>).</li>
 		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore &quot;A&quot;, &quot;An&quot; and &quot;The&quot; in titles) (<span class="version">v2.8</span>).</li>
 		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.24.0</span>).</li>
-		<li><a href="example-parsers-globalize.html">jQuery Globalize</a> (number &amp; date parsers; <span class="version">v2.22.0</span>; <span class="version updated">v2.24.0</span>).</li>
+		<li><a href="example-parsers-globalize.html">jQuery Globalize</a> (number &amp; date parsers; <span class="version">v2.22.0</span>; <span class="version updated">v2.24.1</span>).</li>
 		<li><a href="example-parsers-metric.html">Metric parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-named-numbers.html">Named Numbers parser</a> (<span class="version">v2.18.0</span>; <span class="version updated">v2.22.0</span>).</li>
 		<li><a href="example-parsers-ip-address.html">Network (IPv4, IPv6 and MAC address parser</a> (<span class="version">v2.12</span>; <span class="version updated">v2.22.0</span>).</li>
@@ -933,6 +933,31 @@
 					</div>
 				</td>
 				<td><a href="example-option-sort-empty.html">Example</a></td>
+			</tr>
+
+			<tr id="globalize">
+				<td><a href="#" class="permalink">globalize</a></td>
+				<td>object</td>
+				<td>null</td>
+				<td>
+					This option is used by parsers to localize the language (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.1</span>).
+					<div class="collapsible"><br>
+						This option is meant to be used with the <a href="https://github.com/jquery/globalize">jQuery Globalize</a> library along with CLDR data.
+						<p>See the <a href="example-widget-grouping.html#globalization">Globalization</a> section in the group widget demo for details on how to set it up.</p>
+						<p>Currently, the globalize, month &amp; weekday parsers utilize this option.</p>
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    // globalize : { lang: 'en' } // for ALL columns
+    // or, per column by using the column index
+    globalize : {
+      0 : { lang: 'fr', Globalize : Globalize('fr'), raw: 'MMM d, y G' },
+      2 : { lang: 'fr' }
+    }
+  });
+});</pre>
+					</div>
+				</td>
+				<td><a href="example-parsers-globalize.html">2</a> <a href="example-parsers-dates.html">2</a></td>
 			</tr>
 
 			<tr id="headers">

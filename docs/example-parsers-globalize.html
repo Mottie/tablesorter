@@ -15,6 +15,7 @@
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
+	<style>th { width: 25%; }</style>
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/parsers/parser-globalize.js"></script>
 
@@ -38,8 +39,9 @@
 		widthFixed: true,
 		// globalize options
 		globalize: {
-			1: { lang : en },
-			3: { lang : en, raw: 'MMM d, y G' }
+			// in v2.24.1, use Globalize to cache the object; lang should only contain the string
+			1: { lang : 'en', Globalize : en },
+			3: { lang : 'en', Globalize : en, raw: 'MMM d, y G' }
 		},
 		headers: {
 			1: { sorter: 'globalize-number' },
@@ -254,8 +256,15 @@ var data = {
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>In <span class="version updated">v2.24.1</span>,
+				<ul>
+					<li>An internal change made it necessary to change the <code>lang</code> option to only hold a string of the set language.</li>
+					<li>To cache the Globalize object, save it as a <code>Globalize</code> option (see code example below).</li>
+				</ul>
+			</li>
 			<li><a href="https://github.com/jquery/globalize">jQuery Globalize</a> supports the parsing of locale specific data, including <a href="https://github.com/jquery/globalize/blob/master/doc/api/number/number-parser.md">numerous number formats</a> (including Arabic, Chinese &amp; Japanese) and <a href="https://github.com/jquery/globalize/blob/master/doc/api/date/date-parser.md">custom date formats</a>.</li>
-			<li>This is a very basic example using English only. For more details on how to set up Globalize, see the <a href="example-widget-grouping.html#globalization">Grouping widget documentation about Globalization</a>.</li>
+			<li>This is a very basic example using English only. For another example, see the <a href="example-parsers-dates.html">weekday &amp; month parsers</a>.</li>
+			<li>For more details on how to set up Globalize, see the <a href="example-widget-grouping.html#globalization">Grouping widget documentation about Globalization</a>.</li>
 		</ul>
 	<p>
 
