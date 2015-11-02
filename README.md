@@ -92,6 +92,11 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.24.2">Version 2.24.2</a> (11/2/2015)
+
+* Misc
+  * Restory empty bower.json ignore setting... bower is installing an empty dist folder.
+
 #### <a name="v2.24.1">Version 2.24.1</a> (11/2/2015)
 
 * Core
