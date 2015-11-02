@@ -505,15 +505,16 @@ jQuery(function($){
 	QUnit.test( 'testing parsers', function(assert) {
 		assert.expect(parserTests);
 		report(assert, sample1);
+		var $t = $(th0);
 
 		c1.sortLocaleCompare = true;
 		c1.ignoreCase = false;
 		c1.usNumberFormat = false;
-		th0.dateFormat = c1.dateFormat = 'ddmmyyyy';
+		$t.data('dateFormat', 'ddmmyyyy');
 		report(assert, sample2);
 
 		c1.usNumberFormat = true;
-		th0.dateFormat = c1.dateFormat = 'yyyymmdd';
+		$t.data('dateFormat', 'yyyymmdd');
 		report(assert, sample3);
 
 		// undocumented sortValue
