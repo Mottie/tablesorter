@@ -1,4 +1,4 @@
-/*! Widget: sort2Hash (BETA) - updated 10/31/2015 (v2.24.0) */
+/*! Widget: sort2Hash (BETA) - updated 11/2/2015 (v2.24.1) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

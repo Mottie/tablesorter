@@ -92,6 +92,24 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.24.1">Version 2.24.1</a> (11/2/2015)
+
+* Core
+  * Cache "shortDate" parser & time parser now extracts the time.
+* Group
+  * Add optimizations from [pull #830](https://github.com/Mottie/tablesorter/pull/830); thanks to [VorontsovIE](https://github.com/VorontsovIE)!
+  * Update [demo](http://mottie.github.io/tablesorter/docs/example-widget-grouping.html) to use new "weekday-index" parser when "group-date-week" is set, and updated "time" parser when "group-date-time" is set.
+* Print
+  * Rows option now accepts custom css selectors.
+* Sort2Hash
+  * Remove history push state as it ignored other tables on the page.
+* Parsers
+  * Globalization parser now caches the `Globalize` object in a same named option.
+  * Convert month & weekday parsers to utilize globalization data.
+  * Add "weekday-index" parser - this parser ignores the actual date but saves the weekday from a date object
+* Misc
+  * Revert bower.json changes in [pull #1063](https://github.com/Mottie/tablesorter/pull/1063); Fixes [issue #1068](https://github.com/Mottie/tablesorter/issues/1068).
+
 #### <a name="v2.24.0">Version 2.24.0</a> (10/31/2015)
 
 * Docs
@@ -191,17 +209,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Select includes child rows when `filter_childByColumn` is set.
 * Pager
   * Prevent hiding child rows when disabling or destroying the pager. See [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
-
-#### <a name="v2.23.4">Version 2.23.4</a> (9/23/2015)
-
-* Core:
-  * Ensure widgets don't get cached options. Fixes [issue #946](https://github.com/Mottie/tablesorter/issues/946).
-  * Update natural sort regular expression for chunking data.
-  * Use `window.console` check to prevent IE9 error. Fixes [issue #1019](https://github.com/Mottie/tablesorter/issues/1019).
-* Filter:
-  * Modified internal variable.
-  * Add internal processOptions function & code cleanup.
-  * Fix external filters not allowing columns > 9. See [pull #1021](https://github.com/Mottie/tablesorter/pull/1021); thanks [a-mair](https://github.com/a-mair)!
-  * Add `filter_childWithSIbs` option. Fixes [issue #1020](https://github.com/Mottie/tablesorter/issues/1020).
-* Build
-  * Update dependencies.

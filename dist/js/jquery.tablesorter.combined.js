@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 10-31-2015 (v2.24.0)*/
+/*! tablesorter (FORK) - updated 11-02-2015 (v2.24.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.24.0 *//*
+/*! TableSorter (FORK) v2.24.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -33,7 +33,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.24.0',
+		version : '2.24.1',
 
 		parsers : [],
 		widgets : [],
@@ -2497,6 +2497,21 @@
 	// XXY covers MDY & DMY formats
 	ts.regex.shortDateXXY = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{4})/;
 	ts.regex.shortDateYMD = /(\d{4})[\/\s](\d{1,2})[\/\s](\d{1,2})/;
+	ts.convertFormat = function( dateString, format ) {
+		dateString = ( dateString || '' )
+			.replace( ts.regex.spaces, ' ' )
+			.replace( ts.regex.shortDateReplace, '/' );
+		if ( format === 'mmddyyyy' ) {
+			dateString = dateString.replace( ts.regex.shortDateXXY, '$3/$1/$2' );
+		} else if ( format === 'ddmmyyyy' ) {
+			dateString = dateString.replace( ts.regex.shortDateXXY, '$3/$2/$1' );
+		} else if ( format === 'yyyymmdd' ) {
+			dateString = dateString.replace( ts.regex.shortDateYMD, '$1/$2/$3' );
+		}
+		var date = new Date( dateString );
+		return date instanceof Date && isFinite( date ) ? date.getTime() : '';
+	};
+
 	ts.addParser({
 		id : 'shortDate', // 'mmddyyyy', 'ddmmyyyy' or 'yyyymmdd'
 		is : function( str ) {
@@ -2505,37 +2520,45 @@
 		},
 		format : function( str, table, cell, cellIndex ) {
 			if ( str ) {
-				var date, d,
-					c = table.config,
-					ci = c.$headerIndexed[ cellIndex ],
-					format = ci.length && ci[ 0 ].dateFormat ||
-						ts.getData( ci, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat' ) ||
+				var c = table.config,
+					$header = c.$headerIndexed[ cellIndex ],
+					format = $header.length && $header.data( 'dateFormat' ) ||
+						ts.getData( $header, ts.getColumnData( table, c.headers, cellIndex ), 'dateFormat' ) ||
 						c.dateFormat;
-				d = str.replace( ts.regex.spaces, ' ' ).replace( ts.regex.shortDateReplace, '/' );
-				if ( format === 'mmddyyyy' ) {
-					d = d.replace( ts.regex.shortDateXXY, '$3/$1/$2' );
-				} else if ( format === 'ddmmyyyy' ) {
-					d = d.replace( ts.regex.shortDateXXY, '$3/$2/$1' );
-				} else if ( format === 'yyyymmdd' ) {
-					d = d.replace( ts.regex.shortDateYMD, '$1/$2/$3' );
+				// save format because getData can be slow...
+				if ( $header.length ) {
+					$header.data( 'dateFormat', format );
 				}
-				date = new Date( d );
-				return date instanceof Date && isFinite( date ) ? date.getTime() : str;
+				return ts.convertFormat( str, format ) || str;
 			}
 			return str;
 		},
 		type : 'numeric'
 	});
 
-	ts.regex.timeTest = /^(([0-2]?\d:[0-5]\d)|([0-1]?\d:[0-5]\d\s?([AP]M)))$/i;
+	// match 24 hour time & 12 hours time + am/pm - see http://regexr.com/3c3tk
+	ts.regex.timeTest = /^([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)$/i;
+	ts.regex.timeMatch = /([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)/i;
 	ts.addParser({
 		id : 'time',
 		is : function( str ) {
 			return ts.regex.timeTest.test( str );
 		},
 		format : function( str, table ) {
-			var date = str ? new Date( '2000/01/01 ' + str.replace( ts.regex.dateReplace, '$1 $2' ) ) : str;
-			return date instanceof Date && isFinite( date ) ? date.getTime() : str;
+			// isolate time... ignore month, day and year
+			var temp,
+				timePart = ( str || '' ).match( ts.regex.timeMatch ),
+				orig = new Date( str ),
+				// no time component? default to 00:00 by leaving it out, but only if str is defined
+				time = str && ( timePart !== null ? timePart[ 0 ] : '00:00 AM' ),
+				date = time ? new Date( '2000/01/01 ' + time.replace( ts.regex.dateReplace, '$1 $2' ) ) : time;
+			if ( date instanceof Date && isFinite( date ) ) {
+				temp = orig instanceof Date && isFinite( orig ) ? orig.getTime() : 0;
+				// if original string was a valid date, add it to the decimal so the column sorts in some kind of order
+				// luckily new Date() ignores the decimals
+				return temp ? parseFloat( date.getTime() + '.' + orig.getTime() ) : date.getTime();
+			}
+			return str;
 		},
 		type : 'numeric'
 	});
