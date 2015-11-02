@@ -99,7 +99,7 @@ span.alert { padding: 1px 3px; }
 table th.nobold { font-weight: normal; }
 table th a { text-decoration: underline; color: #000; }
 #group .ui-slider,#align .ui-slider { width: 100px; height: 3px; font-size: 0.8em; display: inline-block; margin-left: 10px; }
-#group .demo-label,#align .demo-label { display: inline-block; min-width: 120px; }
+#group .demo-label,#align .demo-label { display: inline-block; min-width: 125px; }
 #align .demo-label { display: inline-block; min-width: 150px; }
 @media all and (max-width: 700px) {
  table.compatibility, div.box { float: none; width: 100%; margin: 0; }
