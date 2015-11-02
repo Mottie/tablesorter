@@ -8,21 +8,5 @@
     "dist/js/jquery.tablesorter.combined.js",
     "dist/css/theme.blue.min.css"
   ],
-  "ignore": [
-      "node_modules",
-      "bower_components",
-      ".git",
-      "addons",
-      "beta-testing",
-      "css",
-      "docs",
-      "js",
-      "testing",
-      "Gruntfile.js",
-      "package.json",
-      "*.txt",
-      "*.md",
-      "*.html",
-      "tablesorter.jquery.json"
-  ]
+  "ignore": []
 }
