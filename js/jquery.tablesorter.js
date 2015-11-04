@@ -1019,12 +1019,13 @@
 				if ( list[ indx ][ 1 ] !== 2 ) {
 					// multicolumn sorting updating - see #1005
 					// .not(function(){}) needs jQuery 1.4
-					$sorted = c.$headers.filter( function( i, el ) {
+					// filter(function(i, el){}) <- el is undefined in jQuery v1.2.6
+					$sorted = c.$headers.filter( function( i ) {
 						// only include headers that are in the sortList (this includes colspans)
 						var include = true,
-							$el = $( el ),
+							$el = c.$headers.eq( i ),
 							col = parseInt( $el.attr( 'data-column' ), 10 ),
-							end = col + el.colSpan;
+							end = col + c.$headers[ i ].colSpan;
 						for ( ; col < end; col++ ) {
 							include = include ? ts.isValueInArray( col, c.sortList ) > -1 : false;
 						}
