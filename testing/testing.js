@@ -632,6 +632,31 @@ jQuery(function($){
 
 	});
 
+	QUnit.test( 'sort Restart', function(assert) {
+		assert.expect(1);
+		var done = assert.async();
+		c1.sortRestart = true;
+		$.tablesorter.sortReset( c1, function(){
+			// 1) click on header one
+			$table1.one('sortEnd', function(){
+				// 2) click on header zero
+				$table1.one('sortEnd', function(){
+					// 3) click on header one, sortRestart should have set it back to ascending sort
+					// see #1072
+					$table1.one('sortEnd', function(){
+						assert.equal( c1.$headers[1].className.indexOf( ts.css.sortAsc ) > -1, true );
+						c1.sortRestart = false;
+						done();
+					});
+					c1.$headers.eq(1).click();
+				});
+				c1.$headers.eq(0).click();
+			});
+			c1.$headers.eq(1).click();
+		});
+
+	});
+
 	QUnit.test( 'sort Events', function(assert) {
 		assert.expect(1);
 

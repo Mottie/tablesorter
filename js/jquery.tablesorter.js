@@ -1407,8 +1407,8 @@
 					$header = c.$headers.eq( headerIndx );
 					// only reset counts on columns that weren't just clicked on and if not included in a multisort
 					if ( $header[ 0 ] !== tmp &&
-						( notMultiSort || !$header.is( '.' + ts.css.sortDesc + ',.' + ts.css.sortAsc ) ) ) {
-						c.sortVars[ col ].count = -1;
+						( notMultiSort || $header.hasClass( ts.css.sortNone ) ) ) {
+						c.sortVars[ $header.attr( 'data-column' ) ].count = -1;
 					}
 				}
 			}
