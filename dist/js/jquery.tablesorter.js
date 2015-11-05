@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.24.2 *//*
+/*! TableSorter (FORK) v2.24.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.24.2',
+		version : '2.24.3',
 
 		parsers : [],
 		widgets : [],
@@ -1029,12 +1029,13 @@
 				if ( list[ indx ][ 1 ] !== 2 ) {
 					// multicolumn sorting updating - see #1005
 					// .not(function(){}) needs jQuery 1.4
-					$sorted = c.$headers.filter( function( i, el ) {
+					// filter(function(i, el){}) <- el is undefined in jQuery v1.2.6
+					$sorted = c.$headers.filter( function( i ) {
 						// only include headers that are in the sortList (this includes colspans)
 						var include = true,
-							$el = $( el ),
+							$el = c.$headers.eq( i ),
 							col = parseInt( $el.attr( 'data-column' ), 10 ),
-							end = col + el.colSpan;
+							end = col + c.$headers[ i ].colSpan;
 						for ( ; col < end; col++ ) {
 							include = include ? ts.isValueInArray( col, c.sortList ) > -1 : false;
 						}
@@ -1416,8 +1417,8 @@
 					$header = c.$headers.eq( headerIndx );
 					// only reset counts on columns that weren't just clicked on and if not included in a multisort
 					if ( $header[ 0 ] !== tmp &&
-						( notMultiSort || !$header.is( '.' + ts.css.sortDesc + ',.' + ts.css.sortAsc ) ) ) {
-						c.sortVars[ col ].count = -1;
+						( notMultiSort || $header.hasClass( ts.css.sortNone ) ) ) {
+						c.sortVars[ $header.attr( 'data-column' ) ].count = -1;
 					}
 				}
 			}

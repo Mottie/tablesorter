@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 11-02-2015 (v2.24.2)*/
+/*! tablesorter (FORK) - updated 11-04-2015 (v2.24.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -366,7 +366,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 10/31/2015 (v2.24.0) *//*
+/*! Widget: filter - updated 11/4/2015 (v2.24.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1206,6 +1206,8 @@
 				c.lastCombinedFilter = null;
 				c.lastSearch = [];
 			}
+			// convert filters to strings (maybe not the best method)- see #1070
+			filters = filters.join( '\u0000' ).split( '\u0000' );
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterStart', [ filters ] );
 			}
@@ -2076,6 +2078,10 @@
 	ts.setFilters = function( table, filter, apply, skipFirst ) {
 		var c = table ? $( table )[0].config : '',
 			valid = ts.getFilters( table, true, filter, skipFirst );
+		// default apply to "true"
+		if ( typeof apply === 'undefined' ) {
+			apply = true;
+		}
 		if ( c && apply ) {
 			// ensure new set filters are applied, even if the search is the same
 			c.lastCombinedFilter = null;
@@ -2377,7 +2383,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 6/26/2015 (v2.22.2) */
+/*! Widget: resizable - updated 11/4/2015 (v2.24.3) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -2481,10 +2487,8 @@
 						.bind( 'selectstart', false );
 				}
 			}
-			$table.one('tablesorter-initialized', function() {
-				ts.resizable.setHandlePosition( c, wo );
-				ts.resizable.bindings( this.config, this.config.widgetOptions );
-			});
+			ts.resizable.setHandlePosition( c, wo );
+			ts.resizable.bindings( c, wo );
 		},
 
 		updateStoredSizes : function( c, wo ) {
@@ -2567,9 +2571,9 @@
 		},
 
 		// prevent text selection while dragging resize bar
-		toggleTextSelection : function( c, toggle ) {
+		toggleTextSelection : function( c, wo, toggle ) {
 			var namespace = c.namespace + 'tsresize';
-			c.widgetOptions.resizable_vars.disabled = toggle;
+			wo.resizable_vars.disabled = toggle;
 			$( 'body' ).toggleClass( ts.css.resizableNoSelect, toggle );
 			if ( toggle ) {
 				$( 'body' )
@@ -2606,7 +2610,7 @@
 
 				vars.mouseXPosition = event.pageX;
 				ts.resizable.updateStoredSizes( c, wo );
-				ts.resizable.toggleTextSelection( c, true );
+				ts.resizable.toggleTextSelection(c, wo, true );
 			});
 
 			$( document )
@@ -2625,7 +2629,7 @@
 				})
 				.bind( 'mouseup' + namespace, function() {
 					if (!wo.resizable_vars.disabled) { return; }
-					ts.resizable.toggleTextSelection( c, false );
+					ts.resizable.toggleTextSelection( c, wo, false );
 					ts.resizable.stopResize( c, wo );
 					ts.resizable.setHandlePosition( c, wo );
 				});
@@ -2730,7 +2734,7 @@
 					.unbind( 'contextmenu' + namespace );
 
 				wo.$resizable_container.remove();
-				ts.resizable.toggleTextSelection( c, false );
+				ts.resizable.toggleTextSelection( c, wo, false );
 				ts.resizableReset( table, refreshing );
 				$( document ).unbind( 'mousemove' + namespace + ' mouseup' + namespace );
 			}
