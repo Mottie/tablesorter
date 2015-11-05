@@ -838,8 +838,12 @@
 				c.lastCombinedFilter = null;
 				c.lastSearch = [];
 			}
-			// convert filters to strings (maybe not the best method)- see #1070
-			filters = filters.join( '\u0000' ).split( '\u0000' );
+			// convert filters to strings - see #1070
+			filters = Array.prototype.map ?
+				filters.map( String ) :
+				// for IE8 & older browsers - maybe not the best method
+				filters.join( '\u0000' ).split( '\u0000' );
+
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterStart', [ filters ] );
 			}
