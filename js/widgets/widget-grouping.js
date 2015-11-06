@@ -223,7 +223,7 @@
 			if ( data.group !== data.currentGroup ) {
 				data.group = data.currentGroup;
 				if ( $.isFunction( wo.group_formatter ) ) {
-					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo ) || data.group;
+					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo, data ) || data.group;
 				}
 				data.$row.before( tsg.groupHeaderHTML( c, wo, data ) );
 				if ( wo.group_saveGroups && !data.savedGroup && wo.group_collapsed && wo.group_collapsible ) {
