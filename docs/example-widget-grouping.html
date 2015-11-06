@@ -112,9 +112,10 @@ tr.group-header.collapsed td i {
 				return date.toLocaleString();
 			},
 
-			group_formatter   : function(txt, col, table, c, wo) {
+			group_formatter   : function(txt, col, table, c, wo, data) { console.log( txt, col, data );
 				// txt = current text; col = current column
 				// table = current table (DOM); c = table.config; wo = table.config.widgetOptions
+				// data = group data including both group & row data
 				if (col === 7 && txt.indexOf("GMT") > 0) {
 					// remove "GMT-0000 (Xxxx Standard Time)" from the end of the full date
 					// this code is needed if group_dateString returns date.toString(); (not localeString)
@@ -313,8 +314,21 @@ group_separator : /[/.]/</pre>
 								<li><code>table</code> - current table (DOM).</li>
 								<li><code>c</code> - table configuration data from <code>table.config</code>.</li>
 								<li><code>wo</code> - table widget options from <code>table.config.widgetOptions</code>.</li>
+								<li><code>data</code> - group &amp; row data. This includes:
+									<ul>
+										<li><code>data.group</code> - (String) Current Group Name. Same as <code>txt</code>.</li>
+										<li><code>data.column</code> - (Number) Current column. Same as <code>col</code>.</li>
+										<li><code>data.$row</code> - (jQuery object) Row at the start of a group (group header is inserted before this row).</li>
+										<li><code>data.rowData</code> - (Array) Parsed data from <code>data.$row</code>; <code>data.rowData[ c.columns ]</code> contains raw row data & any associated child rows.</li>
+										<li><code>data.groupIndex</code> - (Number) <span class="label warning">Do not change</span> - Current group header index.</li>
+										<li><code>data.groupClass</code> - (Array) <span class="label warning">Do not change</span> - Class name applied to the header cell, e.g. <code>'group-letter-1'</code>.</li>
+										<li><code>data.grouping</code> - (Array) <span class="label warning">Do not change</span> - This is the <code>data.groupClass</code> split into its components, e.g. <code>['group','letter','1']</code>.</li>
+										<li><code>data.savedGroup</code> - (Boolean) <span class="label warning">Do not change</span> - Value is <code>true</code> if the group is collapsed & saved to storage.</li>
+										<li><code>data.currentGroup</code> - (String) <span class="label warning">Do not use</span> This value is immediately replaced by the <code>group_formatter</code> returned value.</li>
+									</ul>
+								</li>
 							</ul>
-							<pre class="prettyprint lang-js">group_formatter : function(txt, col, table, c, wo) {
+							<pre class="prettyprint lang-js">group_formatter : function(txt, col, table, c, wo, data) {
   // If there are empty cells, name the group "Empty"
   return txt === "" ? "Empty" : txt;
 }</pre>
