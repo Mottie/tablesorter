@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 11-04-2015 (v2.24.3)*/
+/*! tablesorter (FORK) - updated 11-06-2015 (v2.24.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1206,8 +1206,12 @@
 				c.lastCombinedFilter = null;
 				c.lastSearch = [];
 			}
-			// convert filters to strings (maybe not the best method)- see #1070
-			filters = filters.join( '\u0000' ).split( '\u0000' );
+			// convert filters to strings - see #1070
+			filters = Array.prototype.map ?
+				filters.map( String ) :
+				// for IE8 & older browsers - maybe not the best method
+				filters.join( '\u0000' ).split( '\u0000' );
+
 			if ( wo.filter_initialized ) {
 				c.$table.trigger( 'filterStart', [ filters ] );
 			}
