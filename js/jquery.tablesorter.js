@@ -1402,13 +1402,12 @@
 				event[ c.sortResetKey ] ? 2 : ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 );
 			// reset all sorts on non-current column - issue #30
 			if ( c.sortRestart ) {
-				tmp = cell;
 				for ( headerIndx = 0; headerIndx < len; headerIndx++ ) {
 					$header = c.$headers.eq( headerIndx );
+					tmp = parseInt( $header.attr( 'data-column' ), 10 );
 					// only reset counts on columns that weren't just clicked on and if not included in a multisort
-					if ( $header[ 0 ] !== tmp &&
-						( notMultiSort || $header.hasClass( ts.css.sortNone ) ) ) {
-						c.sortVars[ $header.attr( 'data-column' ) ].count = -1;
+					if ( col !== tmp && ( notMultiSort || $header.hasClass( ts.css.sortNone ) ) ) {
+						c.sortVars[ tmp ].count = -1;
 					}
 				}
 			}
