@@ -1,11 +1,11 @@
-/*! Widget: sort2Hash (BETA) - updated 11/2/2015 (v2.24.1) */
+/*! Widget: sort2Hash (BETA) - updated 11/8/2015 (v2.24.4) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
 ;( function( $ ) {
 	'use strict';
 	var ts = $.tablesorter || {},
-	s2h = {
+	s2h = ts.sort2Hash = {
 		init : function( c, wo ) {
 			var filter, temp, page, size,
 				table = c.table,
