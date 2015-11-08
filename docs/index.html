@@ -297,7 +297,7 @@
 });</pre>
 
 	<p class="tip">
-		<span class="label label-info">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-adresses for more information see <a href="#Examples">Examples</a>
+		<span class="label label-info">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-addresses for more information see <a href="#Examples">Examples</a>
 	<p>
 
 	<a id="Examples"></a>
@@ -5737,17 +5737,18 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 			<tr id="variable-language">
 				<td><a href="#" class="permalink">$.tablesorter.language</a></td>
 				<td>Object</td>
-				<td>This object contains the phrases (in English by default) added to the <code>aria-label</code> on each header column.<br>
+				<td>This object contains the phrases (in English by default) added to the <code>aria-label</code> on each header column (<span class="version updated">v2.24.4</span>).
 					<div class="collapsible">
-						<br>
+						<p>In <span class="version updated">v2.24.4</span>, <code>sortDisabled</code> was added to the language settings. It is added to disabled columns which may have a sort applied; so, instead of "nextAsc", "nextDesc" or "nextNone" being appended to the sort message, the "sortDisabled" content is added.</p>
 						This is how the object is set up:
 						<pre class="prettyprint lang-js">$.tablesorter.language = {
-  sortAsc  : 'Ascending sort applied, ',
-  sortDesc : 'Descending sort applied, ',
-  sortNone : 'No sort applied, ',
-  nextAsc  : 'activate to apply an ascending sort',
-  nextDesc : 'activate to apply a descending sort',
-  nextNone : 'activate to remove the sort'
+  sortAsc      : 'Ascending sort applied, ',
+  sortDesc     : 'Descending sort applied, ',
+  sortNone     : 'No sort applied, ',
+  sortDisabled : 'sorting is disabled', // added v2.24.4
+  nextAsc      : 'activate to apply an ascending sort',
+  nextDesc     : 'activate to apply a descending sort',
+  nextNone     : 'activate to remove the sort'
 };</pre>
 					So, as an example, in the following situation:
 					<ul>
@@ -5765,22 +5766,28 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 "Account #: Ascending sort applied, activate to apply a descending sort"</pre>
 					If the next click were to reset the sort (<code>sortReset</code> applied), then the message would use <code>$.tablesorter.language.nextNone</code>.<br>
 					<br>
+					In <span class="version updated">v2.24.4</span>, if sorting is disabled but the column has a sort applied, the label will be built as follows:
+					<pre class="prettyprint lang-js">// "Header Name" + $.tablesorter.language.sortDesc + $.tablesorter.language.sortDisabled
+"Account #: Descending sort applied, sorting is disabled"</pre>
 					Use this variable to change the language as follows:
 					<pre class="prettyprint lang-js">$(function(){
 
   $.tablesorter.language = {
-    sortAsc  : "sorting from a to z, ",
-    sortDesc : "sorting from z to a, ",
-    sortNone : "not sorted, but ",
-    nextAsc  : "click to sort from a to z",
-    nextDesc : "click to sort from z to a",
-    nextNone : "click to clear the sort"
+    sortAsc      : 'sorting from a to z, ',
+    sortDesc     : 'sorting from z to a, ',
+    sortNone     : 'not sorted, but ',
+    sortDisabled : 'sorting is disabled',
+    nextAsc      : 'click to sort from a to z',
+    nextDesc     : 'click to sort from z to a',
+    nextNone     : 'click to clear the sort'
   }
-  $("table").tablesorter();
+  $('table').tablesorter();
 });</pre>
 					</div>
 				</td>
-				<td></td>
+				<td>
+					<a href="example-widget-header-titles.html">1</a>
+				</td>
 			</tr>
 			<tr id="variable-instanceMethods">
 				<td><a href="#" class="permalink">$.tablesorter.instanceMethods</a></td>
@@ -7453,7 +7460,8 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 			<li><a href="https://github.com/thezoggy">thezoggy</a></li>
 			<li><a href="https://github.com/TheSin-">TheSin-</a></li>
 			<li><a href="https://github.com/NickCraver">NickCraver</a></li>
-			<li><a href="https://github.com/prijutme4ty">prijutme4ty</a></li>
+			<li><a href="https://github.com/themilkman"themilkman</a> (maintains <a href="https://github.com/themilkman/jquery-tablesorter-rails">jquery-tablesorter-rails</a>)</li>
+			<li><a href="https://github.com/VorontsovIE">VorontsovIE</a></li>
 			<li>and <a href="https://github.com/Mottie/tablesorter/graphs/contributors">all the contributors</a>!</li>
 		</ul>
 	<p>

@@ -139,12 +139,13 @@
 
 		// labels applied to sortable headers for accessibility (aria) support
 		language : {
-			sortAsc  : 'Ascending sort applied, ',
-			sortDesc : 'Descending sort applied, ',
-			sortNone : 'No sort applied, ',
-			nextAsc  : 'activate to apply an ascending sort',
-			nextDesc : 'activate to apply a descending sort',
-			nextNone : 'activate to remove the sort'
+			sortAsc      : 'Ascending sort applied, ',
+			sortDesc     : 'Descending sort applied, ',
+			sortNone     : 'No sort applied, ',
+			sortDisabled : 'sorting is disabled',
+			nextAsc      : 'activate to apply an ascending sort',
+			nextDesc     : 'activate to apply a descending sort',
+			nextNone     : 'activate to remove the sort'
 		},
 
 		regex : {
@@ -993,7 +994,7 @@
 		▀████▀ ██     █████▀ ██  ██   ██   ██████
 		*/
 		setHeadersCss : function( c ) {
-			var $sorted, header, indx, column, $header, nextSort, txt, tmp,
+			var $sorted, indx, column,
 				list = c.sortList,
 				len = list.length,
 				none = ts.css.sortNone + ' ' + c.cssNone,
@@ -1061,50 +1062,62 @@
 			}
 			// add verbose aria labels
 			len = c.$headers.length;
-			$headers = c.$headers.not( '.sorter-false' );
 			for ( indx = 0; indx < len; indx++ ) {
-				$header = $headers.eq( indx );
-				if ( $header.length ) {
-					header = $headers[ indx ];
-					column = parseInt( $header.attr( 'data-column' ), 10 );
-					nextSort = c.sortVars[ column ].order[ ( c.sortVars[ column ].count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
+				ts.setColumnAriaLabel( c, c.$headers.eq( indx ) );
+			}
+		},
+
+		// nextSort (optional), lets you disable next sort text
+		setColumnAriaLabel : function( c, $header, nextSort ) {
+			if ( $header.length ) {
+				var column = parseInt( $header.attr( 'data-column' ), 10 ),
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
-						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone';
-					txt = $.trim( $header.text() ) + ': ' +
-						ts.language[ tmp ] +
-						ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
-					$header.attr( 'aria-label', txt );
+						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone',
+					txt = $.trim( $header.text() ) + ': ' + ts.language[ tmp ];
+				if ( $header.hasClass( 'sorter-false' ) || nextSort === false ) {
+					txt += ts.language.sortDisabled;
+				} else {
+					nextSort = c.sortVars[ column ].order[ ( c.sortVars[ column ].count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
+					// if nextSort
+					txt += ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 				}
+				$header.attr( 'aria-label', txt );
 			}
 		},
 
 		updateHeader : function( c ) {
-			var index, isDisabled, $th, col,
+			var index, isDisabled, $header, col,
 				table = c.table,
 				len = c.$headers.length;
 			for ( index = 0; index < len; index++ ) {
-				$th = c.$headers.eq( index );
+				$header = c.$headers.eq( index );
 				col = ts.getColumnData( table, c.headers, index, true );
 				// add 'sorter-false' class if 'parser-false' is set
-				isDisabled = ts.getData( $th, col, 'sorter' ) === 'false' || ts.getData( $th, col, 'parser' ) === 'false';
-				$th[ 0 ].sortDisabled = isDisabled;
-				$th[ isDisabled ? 'addClass' : 'removeClass' ]( 'sorter-false' ).attr( 'aria-disabled', '' + isDisabled );
-				// disable tab index on disabled cells
-				if ( c.tabIndex ) {
-					if ( isDisabled ) {
-						$th.removeAttr( 'tabindex' );
-					} else {
-						$th.attr( 'tabindex', '0' );
-					}
+				isDisabled = ts.getData( $header, col, 'sorter' ) === 'false' || ts.getData( $header, col, 'parser' ) === 'false';
+				ts.setColumnSort( c, $header, isDisabled );
+			}
+		},
+
+		setColumnSort : function( c, $header, isDisabled ) {
+			var id = c.table.id;
+			$header[ 0 ].sortDisabled = isDisabled;
+			$header[ isDisabled ? 'addClass' : 'removeClass' ]( 'sorter-false' )
+				.attr( 'aria-disabled', '' + isDisabled );
+			// disable tab index on disabled cells
+			if ( c.tabIndex ) {
+				if ( isDisabled ) {
+					$header.removeAttr( 'tabindex' );
+				} else {
+					$header.attr( 'tabindex', '0' );
 				}
-				// aria-controls - requires table ID
-				if ( table.id ) {
-					if ( isDisabled ) {
-						$th.removeAttr( 'aria-controls' );
-					} else {
-						$th.attr( 'aria-controls', table.id );
-					}
+			}
+			// aria-controls - requires table ID
+			if ( id ) {
+				if ( isDisabled ) {
+					$header.removeAttr( 'aria-controls' );
+				} else {
+					$header.attr( 'aria-controls', id );
 				}
 			}
 		},
@@ -2166,14 +2179,14 @@
 
 		// *** Process table ***
 		// add processing indicator
-		isProcessing : function( $table, toggle, $ths ) {
+		isProcessing : function( $table, toggle, $headers ) {
 			$table = $( $table );
 			var c = $table[ 0 ].config,
 				// default to all headers
-				$header = $ths || $table.find( '.' + ts.css.header );
+				$header = $headers || $table.find( '.' + ts.css.header );
 			if ( toggle ) {
-				// don't use sortList if custom $ths used
-				if ( typeof $ths !== 'undefined' && c.sortList.length > 0 ) {
+				// don't use sortList if custom $headers used
+				if ( typeof $headers !== 'undefined' && c.sortList.length > 0 ) {
 					// get headers from the sortList
 					$header = $header.filter( function() {
 						// get data-column from attr to keep compatibility with jQuery 1.2.6
