@@ -654,6 +654,12 @@
 				wo = c.widgetOptions;
 			// process data
 			if ( $.isFunction(wo.pager_ajaxProcessing) ) {
+
+				// in case nothing is returned by ajax, empty out the table; see #1032
+				// but do it before calling pager_ajaxProcessing because that function may add content
+				// directly to the table
+				c.$tbodies.eq(0).empty();
+
 				// ajaxProcessing result: [ total, rows, headers ]
 				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len,
 					$table = c.$table,
@@ -712,9 +718,6 @@
 						if (wo.pager_processAjaxOnInit) {
 							c.$tbodies.eq(0).html( tds );
 						}
-					} else {
-						// nothing returned by ajax, empty out the table; see #1032
-						c.$tbodies.eq(0).empty();
 					}
 					wo.pager_processAjaxOnInit = true;
 					// only add new header text if the length matches
