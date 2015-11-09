@@ -104,7 +104,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version">v2.24.4</span>, added a <code>getParam</code> (get URL parameter) &amp; a <code>removeParam</code>  utility function to help deal with parameters in the URL hash. See the "Functions" section below for more details.</li>
+			<li>In <span class="version">v2.24.4</span>,
+				<ul>
+					<li>Added a <code>getParam</code> (get URL parameter) &amp; a <code>removeParam</code>  utility function to help deal with parameters in the URL hash. See the "Functions" section below for more details.</li>
+					<li><a href="https://github.com/alexweissman">Alex Weissman</a> has also provided code for a custom hash transformation in <a href="https://gist.github.com/alexweissman/04eebe93706d3c64d89b">this gist</a>; this code sets hash parameters that include the table id &amp; named columns, e.g. <code>&filter[table0][first_name]=foobar</code>.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.24.0</span>, lots of changes were made:
 				<ul>
 					<li>Removed <code class="alert">sort2Hash_useHeaderText</code> and <code class="alert">sort2Hash_processHeaderText</code> options.</li>
