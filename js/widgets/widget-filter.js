@@ -110,7 +110,9 @@
 		// data.parsed = array ( by column ) of boolean values ( from filter_useParsedData or 'filter-parsed' class )
 		types: {
 			or : function( c, data, vars ) {
-				if ( tsf.regex.orTest.test( data.iFilter ) || tsf.regex.orSplit.test( data.filter ) ) {
+				// look for "|", but not if it is inside of a regular expression
+				if ( ( tsf.regex.orTest.test( data.iFilter ) || tsf.regex.orSplit.test( data.filter ) ) &&
+					!tsf.regex.regex.test( data.filter ) ) {
 					var indx, filterMatched, query, regex,
 						// duplicate data but split filter
 						data2 = $.extend( {}, data ),
