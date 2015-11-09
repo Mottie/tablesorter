@@ -567,7 +567,7 @@ line,value1,value2,value3
 									<ul>
 										<li>For example, <code>'.checked'</code>, <code>'.checked:visible'</code> or <code>:not(.checked)</code> can be used; these examples match the class set by the checkbox parser <code>table.config.checkboxClass</code> class setting.</li>
 										<li>For reference, internally, the rows are filtered using this setting: <code>$rows.filter( wo.output_saveRows )</code>.</li>
-										<li>Instead of checking to see if <code>output_saveRows</code> works as a filter, the option is checked to see if it contains any of the following characters before it is used as a filter:
+										<li>Instead of checking to see if <code>output_saveRows</code> works as a filter, the option is checked to see if it <em>starts</em> with any of the following characters before it is used as a filter:
 											<ul>
 												<li><code>'.'</code> (class selector)</li>
 												<li><code>'#'</code> (id selector)</li>
