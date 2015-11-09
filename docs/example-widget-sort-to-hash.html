@@ -61,28 +61,23 @@
 				// tableId = processed table ID
 				// component: 'sort', 'page', 'size' or 'filter'
 				// return false to let the widget decode the hash
-				var regex = new RegExp( '[\\#&]' + component + '\\[' + tableId + '\\]=([^&]*)' ),
-					result = regex.exec( window.location.hash );
-				return result ? decodeURIComponent( result[1] ) : '';
+
+				// $.tablesorter.sort2Hash.getParam( parameter, url ); function added in v2.24.4
+				// parameter = desired parameter to extract
+				// url (optional) = hash or href string to extract the parameter value from
+				return $.tablesorter.sort2Hash.getParam( component + '[' + tableId + ']' ) || '';
 			}
 			*/
 			sort2Hash_cleanHash         : null,
 			/*
 			sort2Hash_cleanHash : function( config, tableId, component, hash ) {
-				var index,
-					result = [],
-					regex = new RegExp( component + '\\[' + tableId + '\\]=([^&]*)' );
-					parts = ( hash || '' ).slice(1).split( '&' ),
-					len = parts.length,
-				for ( index = 0; index < len; index++ ) {
-					if ( !regex.test( parts[ index ] ) ) {
-						result.push( parts[ index ] );
-					}
-				}
-				// if we still have something left, join the components back together
-				// and return it so the next component can be processed
-				// we don't update the window.location.hash, or the page jumps to the top!
-				return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+				// config = table.config settings
+				// tableId = processed table ID
+				// component: 'sort', 'page', 'size' or 'filter'
+				// return false to let the widget decode the hash
+
+				// removeParam function added v2.24.4
+				return $.tablesorter.sort2Hash.removeParam( component + '[' + tableId + ']' );
 			}
 			*/
 			pager_output : '{startRow:input} to {endRow} ({filteredRows})',
@@ -109,6 +104,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.24.4</span>, added a <code>getParam</code> (get URL parameter) &amp; a <code>removeParam</code>  utility function to help deal with parameters in the URL hash. See the "Functions" section below for more details.</li>
 			<li>In <span class="version">v2.24.0</span>, lots of changes were made:
 				<ul>
 					<li>Removed <code class="alert">sort2Hash_useHeaderText</code> and <code class="alert">sort2Hash_processHeaderText</code> options.</li>
@@ -212,7 +208,7 @@
 						<td><a href="#" class="permalink">sort2Hash_encodeHash</a></td>
 						<td><code>null</code></td>
 						<td>
-							Add a function to create a custom hash.
+							Add a function to create a custom hash (<span class="version updated">v2.24.4</span>).
 							<div class="collapsible">
 								<br>
 								The following example is a duplicate of the internal code that encodes the hash. Adapt to fit your needs:
@@ -245,7 +241,7 @@
 						<td><a href="#" class="permalink">sort2Hash_decodeHash</a></td>
 						<td><code>null</code></td>
 						<td>
-							Add a function to process a custom hash.
+							Add a function to process a custom hash (<span class="version updated">v2.24.4</span>).
 							<div class="collapsible">
 								<br>
 								The following example is a duplicate of the internal code that decodes the hash. Adapt to fit your needs:
@@ -254,20 +250,18 @@
   // tableId = processed table ID
   // component: 'sort', 'page', 'size' or 'filter'
   // return false to let the widget decode the hash
-  var regex = new RegExp( '[\\#&]' + component + '\\[' + tableId + '\\]=([^&]*)' ),
-    result = regex.exec( window.location.hash );
-  return result ? result[1] : '';
+
+  // $.tablesorter.sort2Hash.getParam( parameter, url ); function added in v2.24.4
+  // parameter = desired parameter to extract
+  // url (optional) = hash or href string to extract the parameter value from
+  return $.tablesorter.sort2Hash.getParam( component + '[' + tableId + ']' ) || '';
 }</pre>
 								Return the component value or an empty string.
 								<p>If this function returns <code>false</code>, then the internal code will attempt to decode the hash for that component. This was done in case only one parameter needs special handling:</p>
 								<pre class="prettyprint lang-js">sort2Hash_decodeHash : function( config, tableId, component ) {
   // only the filter gets special handling
-  var result, regex;
   if ( component === 'filter' ) {
-    regex = new RegExp( '[\\#&]' + tableId + 'filter=([^&]*)' );
-    result = regex.exec( window.location.hash );
-    // make sure to use decodeURIComponent on the result
-    return result ? decodeURIComponent( result[1] ) : '';
+    return $.tablesorter.sort2Hash.getParam( tableId + 'filter' ) || '';
   }
   return false;
 }</pre>
@@ -279,46 +273,46 @@
 						<td><a href="#" class="permalink">sort2Hash_cleanHash</a></td>
 						<td><code>null</code></td>
 						<td>
-							Add a function to remove a custom hash
+							Add a function to remove a custom hash (<span class="version updated">v2.24.4</span>).
 							<div class="collapsible">
 								<br>
 								The following example is a duplicate of the internal code that removes unused values in the hash. Adapt to fit your needs:
 								<pre class="prettyprint lang-js">sort2Hash_cleanHash : function( config, tableId, component, hash ) {
-  var index,
-    result = [],
-    // regular expression to match the component & value
-    regex = new RegExp( component + '\\[' + tableId + '\\]=([^&]*)' );
-    // split hash into component parts
-    parts = ( hash || '' ).slice(1).split( '&' ),
-    len = parts.length,
-  // cycle through each component part
-  for ( index = 0; index < len; index++ ) {
-    // if the component doesn't match the regular expression...
-    if ( !regex.test( parts[ index ] ) ) {
-      // then save it
-      result.push( parts[ index ] );
-    }
-  }
-  // if we still have something left, join the components back together
-  // and return it so the next component can be processed
-  // we don't update the window.location.hash, or the page jumps to the top!
-  return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+  // removeParam function added v2.24.4
+  return $.tablesorter.sort2Hash.removeParam( component + '[' + tableId + ']' );
 }</pre>
 								Return a string of the remaining components or an empty string.
 								<p>If this function returns <code>false</code>, then the internal code will attempt to clean the hash for that component. This was done in case only one parameter needs special handling:</p>
 								<pre class="prettyprint lang-js">sort2Hash_cleanHash : function( config, tableId, component, hash ) {
+  // config = table.config settings
+  // tableId = processed table ID
+  // component: 'sort', 'page', 'size' or 'filter'
+  // return false to let the widget decode the hash
+
   if ( component === 'filter' ) {
+    // removeParam function added v2.24.4
+    return $.tablesorter.sort2Hash.removeParam( tableId + 'filter' );
+    /* ORIGINAL METHOD, use if the "getParam" function doesn't work on your custom parameter
     var index,
       result = [],
+      // regular expression to match the component & value
       regex = new RegExp( tableId + 'filter=([^&]*)' );
+      // split hash into component parts
       parts = ( hash || '' ).slice(1).split( '&' ),
-      len = parts.length,
+      len = parts.length;
+    // cycle through each component part
     for ( index = 0; index < len; index++ ) {
+      // if the component doesn't match the regular expression...
       if ( !regex.test( parts[ index ] ) ) {
+        // then save it
         result.push( parts[ index ] );
       }
     }
+    // if we still have something left, join the components back together
+    // and return it so the next component can be processed
+    // we don't update the window.location.hash, or the page jumps to the top!
     return result.length ? c.widgetOptions.sort2Hash_hash + result.join( '&' ) : '';
+    */
   }
   return false;
 }</pre>
@@ -373,6 +367,54 @@
 					</tr>
 				</tbody>
 
+			</table>
+		</div>
+
+		<h3><a href="#">Functions</a></h3>
+		<div>
+			<h3>Sort2Hash utility functions (added to <code>$.tablesorter.sort2Hash</code>)</h3>
+			<div class="tip">
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="tablesorter-blue options">
+				<thead>
+					<tr><th>Function</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="getparam">
+						<td><a href="#" class="permalink">getParam</a></td>
+						<td>
+							Get URL Parameter (getParam) function
+							<div class="collapsible">
+								<p>This function will extract the value of the name passed to the function. Use it as follows:</p>
+								<pre class="prettyprint lang-js">// $.tablesorter.sort2Hash.getParam( name, hash );
+// name = parameter name (key)
+// hash = (optional) if undefined, it will get the string value from window.location.hash
+var hash = '&sort[table-users][user_name]=asc&page[table-users]=1&size[table-users]=10&filter[table-users][user_name]=ad',
+	result = $.tablesorter.sort2Hash.getParam( 'filter[table-users][user_name]', hash );
+// result = "ad";</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="removeparam">
+						<td><a href="#" class="permalink">removeParam</a></td>
+						<td>
+							Remove parameter from hash
+							<div class="collapsible">
+								<p>This function will remove the key &amp; value from the passed hash. Use it as follows:</p>
+								<pre class="prettyprint lang-js">// $.tablesorter.sort2Hash.removeParam( name, hash );
+// name = parameter name (key)
+// hash = (optional) if undefined, it will get the string value from window.location.hash
+var hash = '&sort[table-users][user_name]=asc&page[table-users]=1&size[table-users]=10&filter[table-users][user_name]=ad',
+	result = $.tablesorter.sort2Hash.removeParam( 'filter[table-users][user_name]', hash );
+// result = "&sort[table-users][user_name]=asc&page[table-users]=1&size[table-users]=10";</pre>
+								<span class="label warning">*NOTE*</span> This function does not update <code>window.location.hash</code>.
+							</div>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 

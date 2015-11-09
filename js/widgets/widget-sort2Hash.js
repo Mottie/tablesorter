@@ -17,7 +17,7 @@
 			}
 			if ( ts.hasWidget( c.table, 'pager' ) ) {
 				temp = parseInt( s2h.decodeHash( c, wo, 'page' ), 10 );
-				page = pager.page = ( temp < 0 ? 0 : ( temp > pager.totalPages ? pager.totalPages - 1 : temp ) ) + 1;
+				page = pager.page = ( temp < 0 ? 0 : ( temp > pager.totalPages ? pager.totalPages - 1 : temp ) );
 				size = pager.size = parseInt( s2h.decodeHash( c, wo, 'size' ), 10 );
 			}
 			if ( ts.hasWidget( table, 'filter' ) ) {
@@ -33,9 +33,13 @@
 						}, 100 );
 					});
 				}
-			} else {
-				c.$table.trigger( 'pageAndSize', [ page, size ] );
 			}
+			if ( !filter ) {
+				c.$table.one( 'tablesorter-ready', function() {
+					c.$table.trigger( 'pageAndSize', [ page, size ] );
+				});
+			}
+
 			c.$table.on( 'sortEnd.sort2hash filterEnd.sort2hash pagerComplete.sort2Hash', function() {
 				if ( this.hasInitialized ) {
 					s2h.setHash( this.config, this.config.widgetOptions );
@@ -125,6 +129,33 @@
 			return sort.join( wo.sort2Hash_separator );
 		},
 
+		// Get URL Parameters (getParam)
+		// modified from http://www.netlobo.com/url_query_string_javascript.html
+		getParam : function ( name, hash, returnRegex ) {
+			if ( !hash ) { hash = window.location.hash; }
+			var regex = new RegExp( '[\\?&]' + s2h.regexEscape( name ) + '=([^&#]*)' ),
+				match = regex.exec( hash );
+			if ( returnRegex ) { return regex; }
+			return match === null ? '' : decodeURIComponent( match[ 1 ] );
+		},
+
+		// remove parameter from hash
+		removeParam : function( name, hash ) {
+			if ( !hash ) { hash = window.location.hash; }
+			var index,
+				regex = s2h.getParam( name, hash, true ),
+				result = [],
+				parts = hash.split( '&' ),
+				len = parts.length;
+			for ( index = 0; index < len; index++ ) {
+				// regex expects a leading '&'...
+				if ( !regex.test( '&' + parts[ index ] ) ) {
+					result.push( parts[ index ] );
+				}
+			}
+			return result.length ? result.join( '&' ) : '';
+		},
+
 		encodeHash : function( c, wo, component, value, rawValue ) {
 			var result = false,
 				tableId = s2h.getTableId( c, wo );
@@ -138,39 +169,30 @@
 		},
 
 		decodeHash : function( c, wo, component ) {
-			var regex,
-				result = false,
+			var result = false,
 				tableId = s2h.getTableId( c, wo );
 			if ( typeof wo.sort2Hash_decodeHash === 'function' ) {
+				// return a string
 				result = wo.sort2Hash_decodeHash( c, tableId, component );
 			}
 			if ( result === false ) {
-				regex = new RegExp( '[\\#&]' + component + '\\[' + s2h.regexEscape( tableId ) + '\\]=([^&]*)' ),
-				/*jshint -W030 */
-				result = regex.exec( window.location.hash );
+				result = s2h.getParam( component + '[' + tableId + ']' );
 			}
-			return result ? decodeURIComponent( result[ 1 ] ) : '';
+			return result || '';
 		},
 
 		cleanHash : function( c, wo, component, hash ) {
-			var index, len, parts, regex,
-				result = false,
+			var result = false,
 				tableId = s2h.getTableId( c, wo );
 			if ( typeof wo.sort2Hash_cleanHash === 'function' ) {
+				// can return an array or string
 				result = wo.sort2Hash_cleanHash( c, tableId, component, hash );
 			}
 			if ( result === false ) {
-				result = [];
-				parts = ( hash || '' ).slice(1).split( '&' );
-				len = parts.length;
-				regex = new RegExp( component + '\\[' + s2h.regexEscape( tableId ) + '\\]=([^&]*)' );
-				for ( index = 0; index < len; index++ ) {
-					if ( !regex.test( parts[ index ] ) ) {
-						result.push( parts[ index ] );
-					}
-				}
+				// parameter example: 'sort[table0]=0,0'
+				result = s2h.removeParam( component + '[' + tableId + ']', hash );
 			}
-			return result.length ? '#' + result.join( '&' ) : '';
+			return result || '';
 		},
 
 		setHash : function( c, wo ) {
