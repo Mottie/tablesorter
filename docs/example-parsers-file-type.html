@@ -96,9 +96,9 @@
 	// This demo uses the group widget to organize the file type equivalents
 	$("table").tablesorter({
 		theme: 'blue',
-		widgets : [ 'group', 'zebra' ],
+		widgets : [ 'group', 'zebra', 'columns' ],
 		widgetOptions: {
-			group_separator : '-' // default setting
+			group_separator : /[-.]/
 		}
 	});
 
@@ -113,10 +113,8 @@
 </div>
 <div id="main">
 
-	<p></p>
-	<br>
-
 	<ul>
+		<li>In <span class="version">v2.24.4</span>, added a "file-extension" parser.</li>
 		<li>If this parser finds the file type extension within the equivalents list, it will add the equivalents group name to the beginning of the file so that during sorting, those file names will sort by the group they are in.</li>
 		<li>Please look in the javascript code section below for a full list of default equivalents. This list is by no means extensive, but it can be easily modified or extended as needed.</li>
 		<li>To add a new group to the equivalents list, just define a new group, <em>before initializing tablesorter</em>, as follows:
@@ -132,30 +130,31 @@ $.tablesorter.fileTypes.equivalents["Fonts"] += '|svg'; // just add it to the en
 	<h1>Demo</h1>
 	<div id="demo">
 
-<button>Swap</button> (swap media column between "group-separator-1" &amp; "group-separator-2")
+<button>Switch</button> (switch media column between "group-separator-1" &amp; "group-separator-2")
 
 <table class="tablesorter">
 	<thead>
 		<tr>
 			<th class="sorter-filetype group-separator">Desktop Files</th>
 			<th class="sorter-filetype group-separator-1">Tablesorter Files</th>
+			<th class="sorter-file-extension group-separator-1">Extensions</th>
 			<th id="media" class="group-separator-2">Media</th>
 			<th class="sorter-filetype group-separator-1">Media Files</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>github.url</td><td>package.json</td><td>Music Disc #1 - Green Day - Boulevard of Broken Dreams</td><td>Muse - Supermassive Black Hole.mp3</td></tr>
-		<tr><td>tablesorter.zip</td><td>readme.md</td><td>Music Disc #1 - Green Day - Holiday</td><td>Gorillaz - Feel Good Inc.mp3</td></tr>
-		<tr><td>learn-git.pdf</td><td>index.html</td><td>Music Disc #1 - M83 - Midnight City</td><td>M83 - Midnight City.mp4</td></tr>
-		<tr><td>pancake-cat.jpg</td><td>jquery.tablesorter.js</td><td>Music Disc #1 - Bob Marley - Everything is Gonna Be Alright</td><td>Radiohead - Creep.ogg</td></tr>
-		<tr><td>to-do-list.txt</td><td>theme.blue.css</td><td>Music Disc #1 - Bob Marley - Jamming</td><td>Ellie Goulding - Lights.flv</td></tr>
-		<tr><td>css-tips.docx</td><td>theme.less</td><td>Music Disc #1 - Bob Marley - Oh, Baby I Love Your Way</td><td>Imagine Dragons - Radioactive.avi</td></tr>
-		<tr><td>frisbee-cat.png</td><td>black-asc.gif</td><td>Music Disc #1 - Bob Marley - Red Red Wine</td><td>Muse - Supermassive Black Hole.avi</td></tr>
-		<tr><td>Diablo.lnk</td><td>green-unsorted.psd</td><td>Music Disc #1 - Bob Marley - No Woman No Cry</td><td>Alex Clare - Too Close.wma</td></tr>
-		<tr><td>Warcraft.lnk</td><td>jquery.tablesorter.widgets.js</td><td>Music Disc #2 - Sublime - Santeria</td><td>The XX - Intro.mp3</td></tr>
-		<tr><td>google.url</td><td>glyphicons-halflings.png</td><td>Music Disc #2 - Sublime - What I Got</td><td>AWOLNATION - Sail.wmv</td></tr>
-		<tr><td>swimming-cat.gif</td><td>component.json</td><td>Music Disc #2 - Massive Attack - Teardrop</td><td>Of Monsters and Men - Little Talks.m4a</td></tr>
-		<tr><td>photo-album.zip</td><td>themes.html</td><td>Music Disc #2 - Massive Attack - Dissolved Girl</td><td>Nina Simone - Feeling Good.flac</td></tr>
+		<tr><td>github.url</td><td>package.json</td><td>readme.md</td><td>Music Disc #1 - Green Day - Boulevard of Broken Dreams</td><td>Muse - Supermassive Black Hole.mp3</td></tr>
+		<tr><td>tablesorter.zip</td><td>readme.md</td><td>license.md</td><td>Music Disc #1 - Green Day - Holiday</td><td>Gorillaz - Feel Good Inc.mp3</td></tr>
+		<tr><td>learn-git.pdf</td><td>index.html</td><td>contributions.md</td><td>Music Disc #1 - M83 - Midnight City</td><td>M83 - Midnight City.mp4</td></tr>
+		<tr><td>pancake-cat.jpg</td><td>jquery.tablesorter.js</td><td>logo.png</td><td>Music Disc #1 - Bob Marley - Everything is Gonna Be Alright</td><td>Radiohead - Creep.ogg</td></tr>
+		<tr><td>to-do-list.txt</td><td>theme.blue.css</td><td>emote.png</td><td>Music Disc #1 - Bob Marley - Jamming</td><td>Ellie Goulding - Lights.flv</td></tr>
+		<tr><td>css-tips.docx</td><td>theme.less</td><td>script.js</td><td>Music Disc #1 - Bob Marley - Oh, Baby I Love Your Way</td><td>Imagine Dragons - Radioactive.avi</td></tr>
+		<tr><td>frisbee-cat.png</td><td>black-asc.gif</td><td>symbols.png</td><td>Music Disc #1 - Bob Marley - Red Red Wine</td><td>Muse - Supermassive Black Hole.avi</td></tr>
+		<tr><td>Diablo.lnk</td><td>green-unsorted.psd</td><td>jquery.js</td><td>Music Disc #1 - Bob Marley - No Woman No Cry</td><td>Alex Clare - Too Close.wma</td></tr>
+		<tr><td>Warcraft.lnk</td><td>jquery.tablesorter.widgets.js</td><td>jquery-ui.css</td><td>Music Disc #2 - Sublime - Santeria</td><td>The XX - Intro.mp3</td></tr>
+		<tr><td>google.url</td><td>glyphicons-halflings.png</td><td>tooltip.js</td><td>Music Disc #2 - Sublime - What I Got</td><td>AWOLNATION - Sail.wmv</td></tr>
+		<tr><td>swimming-cat.gif</td><td>component.json</td><td>style.css</td><td>Music Disc #2 - Massive Attack - Teardrop</td><td>Of Monsters and Men - Little Talks.m4a</td></tr>
+		<tr><td>photo-album.zip</td><td>themes.html</td><td>jquery-ui.js</td><td>Music Disc #2 - Massive Attack - Dissolved Girl</td><td>Nina Simone - Feeling Good.flac</td></tr>
 	</tbody>
 </table>
 </div>
@@ -174,7 +173,7 @@ $.tablesorter.fileTypes.equivalents["Fonts"] += '|svg'; // just add it to the en
 	$(function(){
 		$('button').click(function(){
 			$('#media').toggleClass('group-separator-1 group-separator-2');
-			$('table').trigger('sorton', [ [[2,0]] ]);
+			$('table').trigger('sorton', [ [[3,0]] ]);
 		});
 	});
 	</script>
