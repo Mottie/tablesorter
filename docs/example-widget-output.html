@@ -116,7 +116,7 @@
 			output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
 			output_headerRows    : true,        // output all header rows (multiple rows)
 			output_delivery      : 'p',         // (p)opup, (d)ownload
-			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered or jQuery filter selector
+			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered or jQuery filter selector (string only)
 			output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
 			output_replaceQuote  : '\u201c;',   // change quote to left double quote
 			output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
@@ -563,7 +563,7 @@ line,value1,value2,value3
 							<ul>
 								<li><code>'filtered'</code> - output rows that have not been filtered by the filter widget (i.e. rows that do not have the "filtered" class applied; this class name is set by the <a href="index.html#widget-filter-filteredrow"><code>filter_filteredRow</code> widget option</a>).</li>
 								<li><code>'visible'</code> - only output rows that are currently visible; rows hidden by pagination will not be included.</li>
-								<li>jQuery filter selector - output all rows that match the jQuery filter.
+								<li>jQuery filter selector - output all rows that match the jQuery filter (use a string; not a jQuery object).
 									<ul>
 										<li>For example, <code>'.checked'</code>, <code>'.checked:visible'</code> or <code>:not(.checked)</code> can be used; these examples match the class set by the checkbox parser <code>table.config.checkboxClass</code> class setting.</li>
 										<li>For reference, internally, the rows are filtered using this setting: <code>$rows.filter( wo.output_saveRows )</code>.</li>

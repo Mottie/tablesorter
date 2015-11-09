@@ -13,7 +13,7 @@
 		priority: 55, // load pager after filter widget
 		options : {
 			// output default: '{page}/{totalPages}'
-			// possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+			// possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
 			pager_output: '{startRow} to {endRow} of {totalRows} rows', // '{page}/{totalPages}'
 
 			// apply disabled classname to the pager arrows when the rows at either extreme is visible
