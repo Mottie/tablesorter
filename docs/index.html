@@ -468,6 +468,7 @@
 				<li><a href="example-widget-filter-childrows.html">child rows</a> (<span class="version">v2.23.4</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.21.3</span>).</li>
+				<li><a href="example-widget-filter-selectmenu.html">Using jQuery UI Selectmenu</a> (<span class="version">v2.24.4</span>).</li>
 			</ul>
 		</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-formatter.html">Formatter widget</a> (<span class="version">v2.19.1</span>).</li>
@@ -3026,7 +3027,7 @@ $('table').trigger('search', false);</pre></div>
 					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.24.4</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.24.4</span>, this option will now accept an array of objects which can contain extra information for each option. Here is an example:
+					In <span class="version updated">v2.24.4</span>, this option will now accept an array of objects which can contain extra information for each option. Here is an example modified from the <a href="example-widget-filter-selectmenu.html">filter selectmenu demo</a>:
 					<pre class="prettyprint lang-js">filter_selectSource  : {
   0 : [
     { value : '/\\.js$/',            'data-class' : 'ui-icon-script',   text : 'javascript' },
@@ -3113,7 +3114,7 @@ $('table').trigger('search', false);</pre></div>
 					<span class="label label-info">Important</span> Return an array of values which will be added to the filter select dropdown. This array will automatically be stripped of any duplicate values and sorted alphanumerically before being added to the select. If for some reason the custom <code>filter_selectSource</code> function does not obtain the desired array of values, return <code>false</code> and the original method of obtaining column cell content will be used.
 					</div>
 				</td>
-				<td><a href="example-widget-filter-formatter-select2.html">Example</a></td>
+				<td><a href="example-widget-filter-formatter-select2.html">1</a> <a href="example-widget-filter-selectmenu.html">2</a></td>
 			</tr>
 
 			<tr id="widget-filter-selectsource-separator">

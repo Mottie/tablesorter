@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget + jQuery UI Selectmenu</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	th { width: 50%; }
+	</style>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
+
+	<script id="js">$( function() {
+
+	// modified from http://jqueryui.com/selectmenu/#custom_render
+	$.widget( 'custom.iconselectmenu', $.ui.selectmenu, {
+		_renderItem: function( ul, item ) {
+			var hasClass,
+				li = $( '<li>', { text: item.label } );
+			if ( item.disabled ) {
+				li.addClass( 'ui-state-disabled' );
+			}
+			hasClass = item.element.attr( 'data-class' );
+			$( '<span>', {
+				style : item.element.attr( 'data-style' ),
+				'class' : hasClass ? 'ui-icon ' + item.element.attr( 'data-class' ) : ''
+			})
+			.appendTo( li );
+			return li.appendTo( ul );
+		}
+	});
+
+	var $table = $( '#table' ),
+		selectmenuClass = 'selectmenu';
+
+	// reinitialize on "updateComplete" just-in-case an "updateAll" was called
+	$table.bind( 'tablesorter-initialized updateComplete', function() {
+		$table
+			.find( '.' + selectmenuClass )
+			.iconselectmenu({
+				change: function(){
+					// start a new search
+					$table.trigger( 'search' );
+				}
+			})
+			.iconselectmenu( 'menuWidget' )
+			.addClass( 'ui-menu-icons customicons' );
+	});
+
+	$table.tablesorter({
+		theme : 'blue',
+		widthFixed : true,
+		widgets : [ 'zebra', 'filter' ],
+		ignoreCase : false,
+		widgetOptions : {
+			// add 'selectmenu' class name to first filter
+			filter_cssFilter: [ selectmenuClass ],
+			filter_selectSource  : {
+				0 : [
+					{ value : '/\\.js$/',            'data-class' : 'ui-icon-script',   text : 'javascript' },
+					{ value : '/\\.(jpg|png|gif)$/', 'data-class' : 'ui-icon-image',    text : 'Image' },
+					// plain strings are also acceptable - the string is added to both the text & value attribute
+					// 'foobar',
+					{ value : '.css',                'data-class' : 'ui-icon-note',     text : 'CSS' },
+					{ value : '.html',               'data-class' : 'ui-icon-document', text : 'HTML page' },
+					{ value : '/\\.(json|txt|md)$/', 'data-class' : 'ui-icon-help',     text : 'Misc' }
+				]
+			}
+		}
+	});
+
+});</script>
+
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Filter Widget + jQuery UI Selectmenu</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<ul>
+			<li>Demo added <span class="version">v2.24.4</span>, to demonstrate how to use <a href="http://jqueryui.com/selectmenu/#custom_render">jQuery UI Selectmenu widget</a> on a filter row select.</li>
+			<li><span class="label warning">*NOTE*</span> - Selectmenu will not work properly in all circumstances:
+				<ul>
+					<li>When an "updateAll" method is triggered on the table, the filter row is removed &amp; replaced due to the possibility of a column being added or removed. Selectmenu initialization will need to be performed again.</li>
+					<li>If using selectmenu along with a widget that constantly removes & rebuilds extra table headers &amp; filter rows (e.g. the scroller widget), the selectmenu initialization will need to be performed again, or just avoid using those widgets.</li>
+				</ul>
+			</li>
+		</ul>
+	<p>
+
+	<h1>Demo</h1>
+
+	<div id="demo">
+<table id="table" class="tablesorter">
+	<thead>
+		<tr>
+			<th class="filter-select">File Name</th>
+			<th>Updated</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>jquery.js</td><td>11/5/2015</td></tr>
+		<tr><td>jquery-ui.js</td><td>11/5/2015</td></tr>
+		<tr><td>map.jpg</td><td>10/22/2015</td></tr>
+		<tr><td>tooltips.js</td><td>8/5/2015</td></tr>
+		<tr><td>jquery-ui.css</td><td>11/5/2015</td></tr>
+		<tr><td>index.html</td><td>11/9/2015</td></tr>
+		<tr><td>smiley.gif</td><td>8/14/2015</td></tr>
+		<tr><td>demo.html</td><td>11/7/2015</td></tr>
+		<tr><td>theme.blue.css</td><td>10/17/2015</td></tr>
+		<tr><td>tablesorter.js</td><td>11/9/2015</td></tr>
+		<tr><td>readme.md</td><td>11/9/2015</td></tr>
+		<tr><td>package.json</td><td>11/8/2015</td></tr>
+		<tr><td>contributions.md</td><td>10/8/2015</td></tr>
+		<tr><td>license.txt</td><td>10/2/2015</td></tr>
+		<tr><td>logo.png</td><td>11/1/2015</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- jQuery & jQuery UI --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/jquery-ui.min.css&quot;&gt;
+&lt;script src=&quot;js/jquery-latest.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/jquery-ui.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- tablesorter plugin --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/theme.blue.css&quot;&gt;
+&lt;script src=&quot;js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- tablesorter filter widget - loaded after the plugin --&gt;
+&lt;script src=&quot;/js/widgets/widget-filter.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
