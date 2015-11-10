@@ -172,17 +172,18 @@
 
 				// all non-info tbody cells
 				mathAttr = wo.math_dataAttrib;
-				$mathCells = c.$tbodies.find( '[' + mathAttr + ']' );
+				$mathCells = c.$tbodies.children( 'tr' ).children( '[' + mathAttr + ']' );
 				math.mathType( c, $mathCells, wo.math_priority );
 
 				// only info tbody cells
 				$mathCells = c.$table
 					.children( '.' + c.cssInfoBlock + ', tfoot' )
-					.find( '[' + mathAttr + ']' );
+					.children( 'tr' )
+					.children( '[' + mathAttr + ']' );
 				math.mathType( c, $mathCells, wo.math_priority );
 
 				// find the 'all' total
-				$mathCells = c.$table.find( '[' + mathAttr + '^=all]' );
+				$mathCells = c.$table.children().children( 'tr' ).children( '[' + mathAttr + '^=all]' );
 				math.mathType( c, $mathCells, [ 'all' ] );
 
 				wo.math_isUpdating = true;
@@ -522,7 +523,7 @@
 			if ( refreshing ) { return; }
 			c.$table
 				.off( ( math.events + ' updateComplete.tsmath ' + wo.math_event ).replace( /\s+/g, ' ' ) )
-				.find( '[data-' + wo.math_data + ']' ).empty();
+				.children().children( 'tr' ).children( '[data-' + wo.math_data + ']' ).empty();
 		}
 	});
 
