@@ -1,4 +1,4 @@
-﻿/*! Parser: filetype *//*
+﻿/*! Parser: filetype - updated 11/10/2015 (v2.24.4) *//*
  * When a file type extension is found, the equivalent name is
  * prefixed into the parsed data, so sorting occurs in groups
  */

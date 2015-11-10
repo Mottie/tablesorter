@@ -1,4 +1,4 @@
-/*! tablesorter enable/disable sort & filter (BETA) - 11/8/2015 (v2.24.4)
+/*! tablesorter enable/disable sort & filter (BETA) - 11/10/2015 (v2.24.4)
  * Requires tablesorter v2.24.4+ & jQuery 1.7+
  * by Rob Garrison
  */
