@@ -112,6 +112,7 @@
 			or : function( c, data, vars ) {
 				// look for "|", but not if it is inside of a regular expression
 				if ( ( tsf.regex.orTest.test( data.iFilter ) || tsf.regex.orSplit.test( data.filter ) ) &&
+					// this test for regex has potential to slow down the overall search
 					!tsf.regex.regex.test( data.filter ) ) {
 					var indx, filterMatched, query, regex,
 						// duplicate data but split filter
@@ -997,7 +998,7 @@
 			return filterMatched;
 		},
 		processRow: function( c, data, vars ) {
-			var hasSelect, result, val, filterMatched,
+			var result, filterMatched,
 				fxn, ffxn, txt,
 				regex = tsf.regex,
 				wo = c.widgetOptions,
@@ -1096,21 +1097,13 @@
 						data.filter = ts.replaceAccents( data.filter );
 					}
 
-					val = true;
-					if ( wo.filter_defaultFilter && regex.iQuery.test( vars.defaultColFilter[ columnIndex ] ) ) {
-						data.filter = tsf.defaultFilter( data.filter, vars.defaultColFilter[ columnIndex ] );
-						// val is used to indicate that a filter select is using a default filter;
-						// so we override the exact & partial matches
-						val = false;
-					}
 					// data.iFilter = case insensitive ( if wo.filter_ignoreCase is true ),
 					// data.filter = case sensitive
 					data.iFilter = wo.filter_ignoreCase ? ( data.filter || '' ).toLowerCase() : data.filter;
 					fxn = vars.functions[ columnIndex ];
-					hasSelect = c.$headerIndexed[ columnIndex ].hasClass( 'filter-select' );
 					filterMatched = null;
-					if ( fxn || ( hasSelect && val ) ) {
-						if ( fxn === true || hasSelect ) {
+					if ( fxn ) {
+						if ( fxn === true ) {
 							// default selector uses exact match unless 'filter-match' class is found
 							filterMatched = data.isMatch ?
 								// data.iExact may be a number
@@ -1425,7 +1418,6 @@
 				// custom select source function for a SPECIFIC COLUMN
 				arry = fxn( table, column, onlyAvail );
 			}
-
 			if ( arry === false ) {
 				// fall back to original method
 				arry = tsf.getOptions( table, column, onlyAvail );
@@ -1439,18 +1431,19 @@
 				return false;
 			}
 			table = $( table )[0];
-			var cts, txt, indx, len,
+			var cts, txt, indx, len, parsedTxt, str,
 				c = table.config,
 				validColumn = typeof column !== 'undefined' && column !== null && column >= 0 && column < c.columns,
 				parsed = [];
-
 			// get unique elements and sort the list
 			// if $.tablesorter.sortText exists ( not in the original tablesorter ),
 			// then natural sort the list otherwise use a basic sort
 			arry = $.grep( arry, function( value, indx ) {
+				if ( value.text ) {
+					return true;
+				}
 				return $.inArray( value, arry ) === indx;
 			});
-
 			if ( validColumn && c.$headerIndexed[ column ].hasClass( 'filter-select-nosort' ) ) {
 				// unsorted select options
 				return arry;
@@ -1459,22 +1452,30 @@
 				// parse select option values
 				for ( indx = 0; indx < len; indx++ ) {
 					txt = arry[ indx ];
+					// check for object
+					str = txt.text ? txt.text : txt;
+					// sortNatural breaks if you don't pass it strings
+					parsedTxt = ( validColumn && c.parsers && c.parsers.length &&
+						c.parsers[ column ].format( str, table, [], column ) || str ).toString();
+					parsedTxt = c.widgetOptions.filter_ignoreCase ? parsedTxt.toLowerCase() : parsedTxt;
 					// parse array data using set column parser; this DOES NOT pass the original
 					// table cell to the parser format function
-					parsed.push({
-						t : txt,
-						// check parser length - fixes #934
-						p : validColumn && c.parsers && c.parsers.length &&
-							c.parsers[ column ].format( txt, table, [], column ) || txt
-					});
+					if ( txt.text ) {
+						txt.parsed = parsedTxt;
+						parsed.push( txt );
+					} else {
+						parsed.push({
+							text : txt,
+							// check parser length - fixes #934
+							parsed : parsedTxt
+						});
+					}
 				}
-
 				// sort parsed select options
 				cts = c.textSorter || '';
 				parsed.sort( function( a, b ) {
-					// sortNatural breaks if you don't pass it strings
-					var x = a.p.toString(),
-						y = b.p.toString();
+					var x = a.parsed,
+						y = b.parsed;
 					if ( validColumn && typeof cts === 'function' ) {
 						// custom OVERALL text sorter
 						return cts( x, y, true, column, table );
@@ -1492,7 +1493,7 @@
 				arry = [];
 				len = parsed.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					arry.push( parsed[indx].t );
+					arry.push( parsed[indx] );
 				}
 				return arry;
 			}
@@ -1552,7 +1553,7 @@
 				return;
 			}
 
-			var indx, val, txt, t, $filters, $filter,
+			var indx, val, txt, t, $filters, $filter, option,
 				c = table.config,
 				wo = c.widgetOptions,
 				node = c.$headerIndexed[ column ],
@@ -1577,23 +1578,45 @@
 			if ( $.isArray( arry ) ) {
 				// build option list
 				for ( indx = 0; indx < arry.length; indx++ ) {
-					txt = arry[indx] = ( '' + arry[indx] ).replace( tsf.regex.quote, '&quot;' );
-					val = txt;
-					// allow including a symbol in the selectSource array
-					// 'a-z|A through Z' so that 'a-z' becomes the option value
-					// and 'A through Z' becomes the option text
-					if ( txt.indexOf( wo.filter_selectSourceSeparator ) >= 0 ) {
-						t = txt.split( wo.filter_selectSourceSeparator );
-						val = t[0];
-						txt = t[1];
+					option = arry[ indx ];
+					if ( option.text ) {
+						// OBJECT!! add data-function-name in case the value is set in filter_functions
+						option['data-function-name'] = typeof option.value === 'undefined' ? option.text : option.value;
+
+						// support jQuery < v1.8, otherwise the below code could be shortened to
+						// options += $( '<option>', option )[ 0 ].outerHTML;
+						options += '<option';
+						for ( val in option ) {
+							if ( option.hasOwnProperty( val ) && val !== 'text' ) {
+								options += ' ' + val + '="' + option[ val ] + '"';
+							}
+						}
+						if ( !option.value ) {
+							options += ' value="' + option.text + '"';
+						}
+						options += '>' + option.text + '</option>';
+						// above code is needed in jQuery < v1.8
+
+						// make sure we don't turn an object into a string (objects without a "text" property)
+					} else if ( '' + option !== '[object Object]' ) {
+						txt = option = ( '' + option ).replace( tsf.regex.quote, '&quot;' );
+						val = txt;
+						// allow including a symbol in the selectSource array
+						// 'a-z|A through Z' so that 'a-z' becomes the option value
+						// and 'A through Z' becomes the option text
+						if ( txt.indexOf( wo.filter_selectSourceSeparator ) >= 0 ) {
+							t = txt.split( wo.filter_selectSourceSeparator );
+							val = t[0];
+							txt = t[1];
+						}
+						// replace quotes - fixes #242 & ignore empty strings
+						// see http://stackoverflow.com/q/14990971/145346
+						options += option !== '' ?
+							'<option ' +
+								( val === txt ? '' : 'data-function-name="' + option + '" ' ) +
+								'value="' + val + '">' + txt +
+							'</option>' : '';
 					}
-					// replace quotes - fixes #242 & ignore empty strings
-					// see http://stackoverflow.com/q/14990971/145346
-					options += arry[indx] !== '' ?
-						'<option ' +
-							( val === txt ? '' : 'data-function-name="' + arry[indx] + '" ' ) +
-							'value="' + val + '">' + txt +
-						'</option>' : '';
 				}
 				// clear arry so it doesn't get appended twice
 				arry = [];

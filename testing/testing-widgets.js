@@ -214,8 +214,8 @@ jQuery(function($){
 				function(){ ts.setFilters( table, ['', '', '' , '>20 && <40'], true ); },
 				function(){ assert.cacheCompare( table, 3, [25, 28, 33, 24, 22, 25], 'search ">20 && <40"', true ); }
 			).nextTask(
-				function(){ ts.setFilters( table, ['', '', '' , '<10 or >40'], true ); },
-				function(){ assert.cacheCompare( table, 3, [51, 45, 65], 'search "<10 or >40"', true ); }
+				function(){ ts.setFilters( table, ['', '', '' , '<15 or >40'], true ); },
+				function(){ assert.cacheCompare( table, 3, [12, 51, 45, 13, 65], 'search "<15 or >40"', true ); }
 			).nextTask(
 				function(){ ts.setFilters( table, ['', 'alex|br*'], true ); },
 				function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search OR match', true ); }
