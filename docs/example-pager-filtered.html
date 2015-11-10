@@ -116,12 +116,12 @@
 			var mode = /Disable/.test( $(this).text() );
 			// triggering disablePager or enablePager
 			$table.trigger( (mode ? 'disable' : 'enable') + 'Pager');
-			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
+			$(this).text( ( mode ? 'Enable' : 'Disable' ) + ' Pager');
 			return false;
 		});
 		$table.bind('pagerChange', function(){
 			// pager automatically enables when table is sorted.
-			$('.toggle').text('Disable');
+			$('.toggle').text( 'Disable Pager' );
 		});
 
 });</script>

@@ -37,6 +37,8 @@
 			$t.html( cleanupCode( $t.html() ) );
 		});
 
+		// apply prettyprint in several settimeouts
+		window['PR_SHOULD_USE_CONTINUATION'] = true;
 		if (typeof prettyPrint !== 'undefined') { prettyPrint(); }
 
 		// hide child rows
