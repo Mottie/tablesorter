@@ -92,6 +92,10 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.24.5">Version 2.24.5</a> (11/10/2015)
+
+* Pager: Fix javascript error in pager addon when using ajax.
+
 #### <a name="v2.24.4">Version 2.24.4</a> (11/10/2015)
 
 * Core
