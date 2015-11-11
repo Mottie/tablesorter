@@ -1,6 +1,6 @@
 /*!
  * tablesorter (FORK) pager plugin
- * updated 11/10/2015 (v2.24.4)
+ * updated 11/10/2015 (v2.24.5)
  */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -389,7 +389,7 @@
 				// in case nothing is returned by ajax, empty out the table; see #1032
 				// but do it before calling pager_ajaxProcessing because that function may add content
 				// directly to the table
-				c.$tbodies.eq(0).empty();
+				table.config.$tbodies.eq(0).empty();
 
 				// ajaxProcessing result: [ total, rows, headers ]
 				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len,
