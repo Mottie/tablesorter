@@ -124,7 +124,7 @@
 								// fall back to built-in numeric sort
 								// var sort = $.tablesorter['sort' + s](a, b, dir, colMax, table);
 								sort = c.numberSorter ? c.numberSorter( colA, colB, dir, colMax, table ) :
-									ts[ 'sortNumeric' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, num, colMax, col, table );
+									ts[ 'sortNumeric' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, num, colMax, col, c );
 							} else {
 								// set a & b depending on sort direction
 								x = dir ? colA : colB;
