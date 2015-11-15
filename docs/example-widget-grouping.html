@@ -112,7 +112,7 @@ tr.group-header.collapsed td i {
 				return date.toLocaleString();
 			},
 
-			group_formatter   : function(txt, col, table, c, wo, data) { console.log( txt, col, data );
+			group_formatter   : function(txt, col, table, c, wo, data) {
 				// txt = current text; col = current column
 				// table = current table (DOM); c = table.config; wo = table.config.widgetOptions
 				// data = group data including both group & row data
@@ -125,7 +125,7 @@ tr.group-header.collapsed td i {
 				return txt === "" ? "Empty" : txt;
 			},
 
-			group_callback    : function($cell, $rows, column, table){
+			group_callback    : function($cell, $rows, column, table) {
 				// callback allowing modification of the group header labels
 				// $cell = current table cell (containing group header cells ".group-name" & ".group-count"
 				// $rows = all of the table rows for the current group; table = current table (DOM)

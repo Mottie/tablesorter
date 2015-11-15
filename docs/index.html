@@ -526,7 +526,7 @@
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-file-type.html">File type &amp extension parsers</a> (<span class="version">v2.13</span>; <span class="version updated">v2.24.4</span>).</li>
 		<li><a href="example-parsers-ignore-articles.html">Ignore leading articles parser</a> (Ignore &quot;A&quot;, &quot;An&quot; and &quot;The&quot; in titles) (<span class="version">v2.8</span>).</li>
-		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.24.0</span>).</li>
+		<li><a href="example-widget-grouping.html">Input/select parsers</a> (used by Grouping rows widget) (<span class="version">v2.8</span>; <span class="version updated">v2.24.6</span>).</li>
 		<li><a href="example-parsers-globalize.html">jQuery Globalize</a> (number &amp; date parsers; <span class="version">v2.22.0</span>; <span class="version updated">v2.24.1</span>).</li>
 		<li><a href="example-parsers-metric.html">Metric parser</a> (<span class="version">v2.8</span>).</li>
 		<li><a href="example-parsers-named-numbers.html">Named Numbers parser</a> (<span class="version">v2.18.0</span>; <span class="version updated">v2.22.0</span>).</li>
@@ -581,20 +581,6 @@
 				<td>true</td>
 				<td>Indicates if tablesorter should disable selection of text in the table header (TH).  Makes header behave more like a button.</td>
 				<td></td>
-			</tr>
-
-			<tr id="checkboxclass">
-				<td><a href="#" class="permalink">checkboxClass</a></td>
-				<td>String</td>
-				<td>"checked"</td>
-				<td>Used by the "checkbox" parser in the <code>parser-input-select.js</code> file (<span class="version">v2.22.2</span>).
-					<div class="collapsible">
-						<p>When using the checkbox parser, this class name is added to the row along with this class name plus the column index when the targeted checkbox is checked.</p>
-						<p>For example, if the named parser file has been loaded &amp; "sorter-checkbox" class is added to the first column header, then any checked checkbox in the first column will have <code>"checked checked-0"</code> class names added to the row.</p>
-						Checkboxes in any other column, not targeted by the parser, will be ignored and no extra row class names will be added.
-					</div>
-				</td>
-				<td><a href="example-widget-output.html">Example</a></td>
 			</tr>
 
 			<tr id="cssasc">
@@ -939,31 +925,6 @@
 				<td><a href="example-option-sort-empty.html">Example</a></td>
 			</tr>
 
-			<tr id="globalize">
-				<td><a href="#" class="permalink">globalize</a></td>
-				<td>object</td>
-				<td>null</td>
-				<td>
-					This option is used by parsers to localize the language (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.1</span>).
-					<div class="collapsible"><br>
-						This option is meant to be used with the <a href="https://github.com/jquery/globalize">jQuery Globalize</a> library along with CLDR data.
-						<p>See the <a href="example-widget-grouping.html#globalization">Globalization</a> section in the group widget demo for details on how to set it up.</p>
-						<p>Currently, the globalize, month &amp; weekday parsers utilize this option.</p>
-						<pre class="prettyprint lang-js">$(function(){
-  $('table').tablesorter({
-    // globalize : { lang: 'en' } // for ALL columns
-    // or, per column by using the column index
-    globalize : {
-      0 : { lang: 'fr', Globalize : Globalize('fr'), raw: 'MMM d, y G' },
-      2 : { lang: 'fr' }
-    }
-  });
-});</pre>
-					</div>
-				</td>
-				<td><a href="example-parsers-globalize.html">2</a> <a href="example-parsers-dates.html">2</a></td>
-			</tr>
-
 			<tr id="headers">
 				<td><a href="#" class="permalink">headers</a></td>
 				<td>Object</td>
@@ -1070,28 +1031,6 @@
 				<td>Boolean</td>
 				<td>true</td>
 				<td>When true, text sorting will ignore the character case. If false, upper case characters will sort before lower case. (v2.2).</td>
-				<td></td>
-			</tr>
-
-			<tr id="imgattr">
-				<td><a href="#" class="permalink">imgAttr</a></td>
-				<td>String</td>
-				<td>"alt"</td>
-				<td>
-					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>; moved to tablesorter core in <span class="version updated">v2.18.0</span>; see <a href="#parsers"><code>config.parsers</code></a>).
-					<div class="collapsible"><br>
-						Change this setting to grab a different image attribute to be used for sorting:
-						<pre class="prettyprint lang-js">$(function(){
-  $('table').tablesorter({
-    // parse image title (value to be used while sorting & filtering)
-    imgAttr : 'title',
-    headers : {
-      0 : { sorter: 'image' } // this parser is auto-detected, but will only work on the first image
-    }
-  });
-});</pre>
-					</div>
-				</td>
 				<td></td>
 			</tr>
 
@@ -2031,11 +1970,38 @@ $(function(){
 
 		<tbody>
 
+			<tr id="checkboxclass">
+				<td><a href="#" class="permalink">checkboxClass</a></td>
+				<td>String</td>
+				<td>"checked"</td>
+				<td>Used by the "checkbox" parser in the <code>parser-input-select.js</code> file (<span class="version">v2.22.2</span>).
+					<div class="collapsible">
+						<p>When using the checkbox parser, this class name is added to the row along with this class name plus the column index when the targeted checkbox is checked.</p>
+						<p>For example, if the named parser file has been loaded &amp; "sorter-checkbox" class is added to the first column header, then any checked checkbox in the first column will have <code>"checked checked-0"</code> class names added to the row.</p>
+						Checkboxes in any other column, not targeted by the parser, will be ignored and no extra row class names will be added.
+					</div>
+				</td>
+				<td><a href="example-widget-output.html">Example</a></td>
+			</tr>
+
+			<tr id="checkboxvisible">
+				<td><a href="#" class="permalink">checkboxVisible</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>Used by the "checkbox" parser in the <code>parser-input-select.js</code> file (<span class="version updated">v2.24.6</span>).
+					<div class="collapsible">
+						<p>When using the checkbox parser, this setting is used when a checkbox inside a header cell is changed; if <code>true</code>, only same column checkboxes within visible rows are modified to match the header checkbox.</p>
+						<p>If <code>false</code>, same column checkboxes in <em>all</em> rows are modified to match the status of the header checkbox.</p>
+					</div>
+				</td>
+				<td><a href="example-widget-output.html">Example</a></td>
+			</tr>
+
 			<tr id="data">
 				<td><span class="permalink">data</span></td>
 				<td>Object, Array</td>
 				<td>undefined</td>
-				<td>Storage for processed table build widget data (array, object, string) (<span class="version">v2.11</span>).</td>
+				<td>Storage for processed table build widget (<code>widget-build-table.js</code>) data (array, object, string) (<span class="version">v2.11</span>).</td>
 				<td><a href="widget-build-table.html">Example</a></td>
 			</tr>
 
@@ -2044,8 +2010,55 @@ $(function(){
 				<td>Numeric</td>
 				<td>50</td>
 				<td>
-					Used by the two digit year parser to set the date range (<span class="version">v2.14</span>).</td>
+					Used by the two digit year parser (<code>parser-date-two-digit-year.js</code>) to set the date range (<span class="version">v2.14</span>).</td>
 				<td><a href="example-parsers-dates.html">Example</a></td>
+			</tr>
+
+			<tr id="globalize">
+				<td><a href="#" class="permalink">globalize</a></td>
+				<td>object</td>
+				<td>null</td>
+				<td>
+					This option is used by multiple parsers to localize the language (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.1</span>).
+					<div class="collapsible"><br>
+						This option is meant to be used with the <a href="https://github.com/jquery/globalize">jQuery Globalize</a> library along with CLDR data.
+						<p>See the <a href="example-widget-grouping.html#globalization">Globalization</a> section in the group widget demo for details on how to set it up.</p>
+						<p>Currently, the globalize (<code>parser-globalize.js</code>), month (<code>parser-date-month.js</code>) &amp; weekday (<code>parser-date-weekday.js</code>) parsers utilize this option.</p>
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    // globalize : { lang: 'en' } // for ALL columns
+    // or, per column by using the column index
+    globalize : {
+      0 : { lang: 'fr', Globalize : Globalize('fr'), raw: 'MMM d, y G' },
+      2 : { lang: 'fr' }
+    }
+  });
+});</pre>
+					</div>
+				</td>
+				<td><a href="example-parsers-globalize.html">2</a> <a href="example-parsers-dates.html">2</a></td>
+			</tr>
+
+			<tr id="imgattr">
+				<td><a href="#" class="permalink">imgAttr</a></td>
+				<td>String</td>
+				<td>"alt"</td>
+				<td>
+					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>; moved to tablesorter core in <span class="version updated">v2.18.0</span>; see <a href="#parsers"><code>config.parsers</code></a>).
+					<div class="collapsible"><br>
+						Change this setting to grab a different image attribute to be used for sorting:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    // parse image title (value to be used while sorting & filtering)
+    imgAttr : 'title',
+    headers : {
+      0 : { sorter: 'image' } // this parser is auto-detected, but will only work on the first image
+    }
+  });
+});</pre>
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 		</tbody>
