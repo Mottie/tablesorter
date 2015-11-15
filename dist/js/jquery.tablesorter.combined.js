@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 11-10-2015 (v2.24.5)*/
+/*! tablesorter (FORK) - updated 11-14-2015 (v2.24.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -324,10 +324,10 @@
 				$table
 				.unbind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace )
 				.bind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace, function( e ) {
-					clearTimeout( c.processTimer );
+					clearTimeout( c.timerProcessing );
 					ts.isProcessing( table );
 					if ( e.type === 'sortBegin' ) {
-						c.processTimer = setTimeout( function() {
+						c.timerProcessing = setTimeout( function() {
 							ts.isProcessing( table, true );
 						}, 500 );
 					}
@@ -1852,6 +1852,8 @@
 			}
 			if ( c.debug ) { time = new Date(); }
 			ts.addWidgetFromClass( table );
+			// prevent "tablesorter-ready" from firing multiple times in a row
+			clearTimeout( c.timerReady );
 			if ( c.widgets.length ) {
 				table.isApplyingWidgets = true;
 				// ensure unique widget ids
@@ -1921,11 +1923,11 @@
 					callback( table );
 				}
 			}
-			setTimeout( function() {
+			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
-				c.$table.trigger('tablesorter-ready');
-			}, 0 );
+				c.$table.trigger( 'tablesorter-ready' );
+			}, 10 );
 			if ( c.debug ) {
 				widget = c.widgets.length;
 				console.log( 'Completed ' +
