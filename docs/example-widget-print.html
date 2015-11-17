@@ -71,6 +71,11 @@
 
 	<script id="js">$(function() {
 
+	// v2.24.6, change popup print & close button text
+	// See print_now description
+	$.tablesorter.language.button_print = "Print";
+	$.tablesorter.language.button_close = "Close";
+
 	$(".tablesorter").tablesorter({
 		theme: 'blue',
 		widgets: ["zebra", "filter", "print", "columnSelector"],
@@ -84,6 +89,7 @@
 			print_columns    : 's',         // (a)ll, (v)isible or (s)elected (columnSelector widget)
 			print_extraCSS   : '',          // add any extra css definitions for the popup window here
 			print_styleSheet : '../css/theme.blue.css', // add the url of your print stylesheet
+			print_now        : true,        // Open the print dialog immediately if true
 			// callback executed when processing completes - default setting is null
 			print_callback   : function(config, $table, printStyle){
 				// do something to the $table (jQuery object of table wrapped in a div)
@@ -118,6 +124,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.24.6</span>, added <code>print_now</code> option.</li>
 				<li>In <span class="version updated">v2.24.1</span>, the <code>print_rows</code> option will allow using a custom css selector.</li>
 				<li>In <span class="version">v2.17.2</span>, the print popup window now closes with the dialog window &amp; jQuery version requirement was changed from v1.7+ to v1.2+.</li>
 				<li>
@@ -237,6 +244,26 @@
 								<br>
 								Use this option as follows:
 								<pre class="prettyprint lang-js">print_styleSheet : "../css/theme.blue.css"</pre>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="print_now">
+						<td><a href="#" class="permalink">print_now</a></td>
+						<td><code>true</code></td>
+						<td>
+							If <code>true</code>, the browser print dialog will open immediately (<span class="version">v2.24.6</span>).
+							<div class="collapsible">
+								<br>
+								If <code>false</code>, the popup window will open with two additional controls:
+								<ul>
+									<li>A "Print" button - open the print dialog inside of the popup window.</li>
+									<li>A "Close" button - close the popup window.</li>
+								</ul>
+								To change the text of the buttons, use the following settings:
+								<pre class="prettyprint lang-js">$.tablesorter.language.button_print = "Imprimer";
+$.tablesorter.language.button_close = "Ferme";</pre>
+								The above code can be added before or after initializing tablesorter. It doesn't matter because the values are only accessed when the user initiates a print.
 							</div>
 						</td>
 					</tr>
