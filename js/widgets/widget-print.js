@@ -86,9 +86,9 @@
 				lang = ts.language,
 				generator = window.open( '', wo.print_title, printTable.popupStyle ),
 				t = wo.print_title || c.$table.find('caption').text() || c.$table[0].id || document.title || 'table',
-				button = wo.print_now ? '' : '<div class="print_widget_hidden"><button type="button" data-action="print">' +
-					lang.button_print + '</button> <button type="button" data-action="close">' + lang.button_close +
-					'</button><hr></div>';
+				button = wo.print_now ? '' : '<div class="print_widget_hidden"><a href="javascript:window.print();">' +
+					'<button type="button">' + lang.button_print + '</button></a> <a href="javascript:window.close();">' +
+					'<button type="button">' + lang.button_close + '</button></a><hr></div>';
 			generator.document.write(
 				'<html><head><title>' + t + '</title>' +
 				( wo.print_styleSheet ? '<link rel="stylesheet" href="' + wo.print_styleSheet + '">' : '' ) +
@@ -103,13 +103,6 @@
 					generator.print();
 					generator.close();
 				}, 10 );
-			} else {
-				$(generator.document)
-					.find('.print_widget_hidden')
-					.find('button').click(function(){
-						generator[ $(this).attr('data-action') ]();
-						return false;
-					});
 			}
 			return true;
 		},
