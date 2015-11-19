@@ -392,7 +392,7 @@
 			}
 		},
 
-		calcFilters: function(table, c) {
+		calcFilters: function( c ) {
 			var normalized, indx, len,
 				wo = c.widgetOptions,
 				p = c.pager,
@@ -425,8 +425,8 @@
 			p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for 'pageSize' method
 			c.totalRows = p.totalRows;
-			tsp.parsePageNumber( p );
-			tsp.calcFilters(table, c);
+			tsp.parsePageNumber( c, p );
+			tsp.calcFilters( c );
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
@@ -994,8 +994,8 @@
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && !wo.filter_initialized && ts.hasWidget(table, 'filter')) { return; }
 
-			tsp.parsePageNumber( p );
-			tsp.calcFilters(table, c);
+			tsp.parsePageNumber( c, p );
+			tsp.calcFilters( c );
 
 			// fixes issue where one current filter is [] and the other is [ '', '', '' ],
 			// making the next if comparison think the filters as different. Fixes #202.
@@ -1057,8 +1057,8 @@
 				( mode === 'get' ? s : p.size );
 		},
 
-		parsePageNumber: function( p ) {
-			var min = Math.min( p.totalPages, p.filteredPages ) - 1;
+		parsePageNumber: function( c, p ) {
+			var min = ( ts.hasWidget( c.table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages ) - 1;
 			p.page = parseInt( p.page, 10 );
 			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
 			if ( p.page > min && p.page !== 0 ) { p.page = min; }
@@ -1070,7 +1070,7 @@
 				table = c.table;
 			p.size = tsp.parsePageSize( c, size, 'get' );
 			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
-			$.data(table, 'pagerLastPage', tsp.parsePageNumber( p ) );
+			$.data(table, 'pagerLastPage', tsp.parsePageNumber( c, p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			p.filteredPages = Math.ceil( p.filteredRows / p.size );

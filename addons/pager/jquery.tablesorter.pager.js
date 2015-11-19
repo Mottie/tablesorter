@@ -170,7 +170,7 @@
 			if (p.countChildRows) { t.push(c.cssChildRow); }
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for "pageSize" method
 			c.totalRows = p.totalRows;
-			parsePageNumber( p );
+			parsePageNumber( table, p );
 			calcFilters(table, p);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
@@ -720,7 +720,7 @@
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && ts.hasWidget(table, 'filter') && !c.widgetOptions.filter_initialized) { return; }
 
-			parsePageNumber( p );
+			parsePageNumber( table, p );
 			calcFilters(table, p);
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
 			// making the next if comparison think the filters are different (joined by commas). Fixes #202.
@@ -779,8 +779,8 @@
 				( mode === 'get' ? s : p.size );
 		},
 
-		parsePageNumber = function( p ) {
-			var min = Math.min( p.totalPages, p.filteredPages ) - 1;
+		parsePageNumber = function( table, p ) {
+			var min = ( ts.hasWidget( table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages ) - 1;
 			p.page = parseInt( p.page, 10 );
 			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
 			if ( p.page > min && p.page !== 0 ) { p.page = min; }
@@ -790,7 +790,7 @@
 		setPageSize = function(table, size, p) {
 			p.size = parsePageSize( p, size, 'get' );
 			p.$size.val( parsePageSize( p, p.size, 'set' ) );
-			$.data(table, 'pagerLastPage', parsePageNumber( p ) );
+			$.data(table, 'pagerLastPage', parsePageNumber( table, p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			p.filteredPages = Math.ceil( p.filteredRows / p.size );
