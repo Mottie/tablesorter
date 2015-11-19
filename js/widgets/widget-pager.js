@@ -382,7 +382,7 @@
 			var p = c.pager,
 				dis = !!disable,
 				first = dis || p.page === 0,
-				tp = Math.min( p.totalPages, p.filteredPages ),
+				tp = tsp.getTotalPages( c, p ),
 				last = dis || p.page === tp - 1 || tp === 0,
 				wo = c.widgetOptions,
 				s = wo.pager_selectors;
@@ -429,7 +429,7 @@
 			tsp.calcFilters( c );
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
-			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
+			if ( tsp.getTotalPages( c, p ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows) && completed;
 				p.page = (t) ? wo.pager_pageReset || 0 : p.page;
 				p.startRow = (t) ? p.size * p.page + 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -498,7 +498,7 @@
 			// as large page set links will slow the browser on large dom inserts
 			var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
 				wo = c.widgetOptions,
-				pg = Math.min( p.totalPages, p.filteredPages ) || 1,
+				pg = tsp.getTotalPages( c, p ) || 1,
 				// make skip set size multiples of 5
 				skip_set_size = Math.ceil( ( pg / wo.pager_maxOptionSize ) / 5 ) * 5,
 				large_collection = pg > wo.pager_maxOptionSize,
@@ -1045,6 +1045,10 @@
 			}
 		},
 
+		getTotalPages: function( c, p ) {
+			return ts.hasWidget( c.table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages;
+		},
+
 		// set to either set or get value
 		parsePageSize: function( c, size, mode ) {
 			var p = c.pager,
@@ -1058,7 +1062,7 @@
 		},
 
 		parsePageNumber: function( c, p ) {
-			var min = ( ts.hasWidget( c.table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages ) - 1;
+			var min = tsp.getTotalPages( c, p ) - 1;
 			p.page = parseInt( p.page, 10 );
 			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
 			if ( p.page > min && p.page !== 0 ) { p.page = min; }
@@ -1083,14 +1087,15 @@
 		},
 
 		moveToLastPage: function(table, p) {
-			p.page = ( Math.min( p.totalPages, p.filteredPages ) - 1 );
+			p.page = tsp.getTotalPages( table.config, p ) - 1;
 			tsp.moveToPage(table, p, true);
 		},
 
 		moveToNextPage: function(table, p) {
 			p.page++;
-			if ( p.page >= ( Math.min( p.totalPages, p.filteredPages ) - 1 ) ) {
-				p.page = ( Math.min( p.totalPages, p.filteredPages ) - 1 );
+			var last = tsp.getTotalPages( table.config, p ) - 1;
+			if ( p.page >= last ) {
+				p.page = last;
 			}
 			tsp.moveToPage(table, p, true);
 		},
@@ -1134,7 +1139,7 @@
 			size = p.$size.find('option[selected]').val();
 			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( c, size, 'get' );
 			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) ); // set page size
-			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
+			p.totalPages = Math.ceil( tsp.getTotalPages( c, p ) / p.size );
 			c.$table.removeClass('pagerDisabled');
 			// if table id exists, include page display with aria info
 			if ( table.id ) {

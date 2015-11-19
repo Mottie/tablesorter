@@ -126,13 +126,13 @@
 		$this = this,
 
 		// hide arrows at extremes
-		pagerArrows = function(p, disable) {
+		pagerArrows = function( table, p, disable ) {
 			var a = 'addClass',
 			r = 'removeClass',
 			d = p.cssDisabled,
 			dis = !!disable,
 			first = ( dis || p.page === 0 ),
-			tp = Math.min( p.totalPages, p.filteredPages ),
+			tp = getTotalPages( table, p ),
 			last = ( dis || (p.page === tp - 1) || tp === 0 );
 			if ( p.updateArrows ) {
 				p.$container.find(p.cssFirst + ',' + p.cssPrev)[ first ? a : r ](d).attr('aria-disabled', first);
@@ -174,7 +174,7 @@
 			calcFilters(table, p);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
-			if ( Math.min( p.totalPages, p.filteredPages ) >= 0 ) {
+			if ( getTotalPages( table, p ) >= 0 ) {
 				t = (p.size * p.page > p.filteredRows) && completed;
 				p.page = (t) ? p.pageReset || 0 : p.page;
 				p.startRow = (t) ? p.size * p.page + 1 : (p.filteredRows === 0 ? 0 : p.size * p.page + 1);
@@ -203,7 +203,7 @@
 					});
 				if ( p.$goto.length ) {
 					t = '';
-					options = buildPageSelect(p);
+					options = buildPageSelect( table, p );
 					len = options.length;
 					for (indx = 0; indx < len; indx++) {
 						t += '<option value="' + options[indx] + '">' + options[indx] + '</option>';
@@ -221,7 +221,7 @@
 					});
 				}
 			}
-			pagerArrows(p);
+			pagerArrows( table, p );
 			fixHeight(table, p);
 			if (p.initialized && completed !== false) {
 				if (c.debug) {
@@ -238,11 +238,11 @@
 			}
 		},
 
-		buildPageSelect = function(p) {
+		buildPageSelect = function( table, p ) {
 			// Filter the options page number link array if it's larger than 'maxOptionSize'
 			// as large page set links will slow the browser on large dom inserts
 			var i, central_focus_size, focus_option_pages, insert_index, option_length, focus_length,
-				pg = Math.min( p.totalPages, p.filteredPages ) || 1,
+				pg = getTotalPages( table, p ) || 1,
 				// make skip set size multiples of 5
 				skip_set_size = Math.ceil( ( pg / p.maxOptionSize ) / 5 ) * 5,
 				large_collection = pg > p.maxOptionSize,
@@ -373,7 +373,7 @@
 			p.size = parsePageSize( p, p.$size.val(), 'get' );
 			p.$size.val( parsePageSize( p, p.size, 'set' ) );
 			$.data(table, 'pagerLastSize', p.size);
-			pagerArrows(p);
+			pagerArrows( table, p );
 			if ( !p.removeRows ) {
 				hideRows(table, p);
 				$(table).bind('sortEnd filterEnd '.split(' ').join(table.config.namespace + 'pager '), function(){
@@ -661,7 +661,7 @@
 		showAllRows = function(table, p) {
 			var index, $controls, len;
 			if ( p.ajax ) {
-				pagerArrows(p, true);
+				pagerArrows( table, p, true );
 			} else {
 				$.data(table, 'pagerLastPage', p.page);
 				$.data(table, 'pagerLastSize', p.size);
@@ -719,7 +719,6 @@
 			}
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && ts.hasWidget(table, 'filter') && !c.widgetOptions.filter_initialized) { return; }
-
 			parsePageNumber( table, p );
 			calcFilters(table, p);
 			// fixes issue where one currentFilter is [] and the other is ['','',''],
@@ -768,22 +767,26 @@
 			}
 		},
 
+		getTotalPages = function( table, p ) {
+			return ts.hasWidget( table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages;
+		},
+
 		// set to either set or get value
 		parsePageSize = function( p, size, mode ) {
 			var s = parseInt( size, 10 ) || p.size || p.settings.size || 10,
 				// if select does not contain an "all" option, use size
 				setAll = p.$size.find( 'option[value="all"]' ).length ? 'all' : p.totalRows;
 			return /all/i.test( size ) || s === p.totalRows ?
-				// "get" to set `p.size` or "set" to set `p.$size.val()`
+				// "get" to get `p.size` or "set" to set `p.$size.val()`
 				( mode === 'get' ? p.totalRows : setAll ) :
 				( mode === 'get' ? s : p.size );
 		},
 
 		parsePageNumber = function( table, p ) {
-			var min = ( ts.hasWidget( table, 'filter' ) ? Math.min( p.totalPages, p.filteredPages ) : p.totalPages ) - 1;
+			var min = getTotalPages( table, p ) - 1;
 			p.page = parseInt( p.page, 10 );
 			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
-			if ( p.page > min && p.page !== 0 ) { p.page = min; }
+			if ( p.page > min && min !== 0 ) { p.page = min; }
 			return p.page;
 		},
 
@@ -803,14 +806,15 @@
 		},
 
 		moveToLastPage = function(table, p) {
-			p.page = ( Math.min( p.totalPages, p.filteredPages ) - 1 );
+			p.page = getTotalPages( table, p ) - 1;
 			moveToPage(table, p);
 		},
 
 		moveToNextPage = function(table, p) {
 			p.page++;
-			if ( p.page >= ( Math.min( p.totalPages, p.filteredPages ) - 1 ) ) {
-				p.page = ( Math.min( p.totalPages, p.filteredPages ) - 1 );
+			var last = getTotalPages( table, p ) - 1;
+			if ( p.page >= last ) {
+				p.page = last;
 			}
 			moveToPage(table, p);
 		},
@@ -855,7 +859,7 @@
 			size = p.$size.find('option[selected]').val();
 			p.size = $.data(table, 'pagerLastSize') || parsePageSize( p, p.size, 'get' );
 			p.$size.val( parsePageSize( p, p.size, 'set' ) ); // set page size
-			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
+			p.totalPages = Math.ceil( getTotalPages( table, p ) / p.size );
 			// if table id exists, include page display with aria info
 			if ( table.id ) {
 				info = table.id + '_pager_info';
