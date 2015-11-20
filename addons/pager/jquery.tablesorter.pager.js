@@ -786,7 +786,7 @@
 			var min = getTotalPages( table, p ) - 1;
 			p.page = parseInt( p.page, 10 );
 			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
-			if ( p.page > min && min !== 0 ) { p.page = min; }
+			if ( p.page > min && min >= 0 ) { p.page = min; }
 			return p.page;
 		},
 
