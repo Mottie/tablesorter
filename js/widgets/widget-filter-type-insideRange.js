@@ -17,6 +17,8 @@
 	ts.filter.types.insideRange = function( c, data ) {
 		if ( isDigit.test( data.iFilter ) && range.test( data.iExact ) ) {
 			var t, val, low, high,
+				index = data.index,
+				cell = data.$cells[ index ],
 				parts = data.iExact.split( range ),
 				format = c.parsers[data.index].format;
 			// the cell does not contain a range
@@ -24,9 +26,9 @@
 				return null;
 			}
 			// format each side part of the range using the assigned parser
-			low = parseNumber( format( parts[0], c.table ) );
-			high = parseNumber( format( parts[1], c.table ) );
-			val = parseNumber( format( data.iFilter, c.table ) );
+			low = parseNumber( format( parts[0], c.table, cell, index ) );
+			high = parseNumber( format( parts[1], c.table, cell, index ) );
+			val = parseNumber( format( data.iFilter, c.table, cell, index ) );
 			if ( high < low ) {
 				// swap high & low
 				t = high; high = low; low = t;
