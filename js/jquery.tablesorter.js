@@ -189,6 +189,9 @@
 			bottom   : false
 		},
 
+		// placeholder date parser data (globalize)
+		dates : {},
+
 		// These methods can be applied on table.config instance
 		instanceMethods : {},
 

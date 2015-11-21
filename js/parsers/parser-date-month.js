@@ -5,27 +5,25 @@
 	'use strict';
 
 	var ts = $.tablesorter;
-	ts.dates = $.extend( {}, {
+	ts.dates.months = $.extend( {}, {
 		// See http://mottie.github.io/tablesorter/docs/example-widget-grouping.html
 		// for details on how to use CLDR data for a locale to add data for this parser
 		// CLDR returns an object { 1: "Jan", 2: "Feb", 3: "Mar", ..., 12: "Dec" }
-		months : {
-			'en' : {
-				1 : 'Jan',
-				2 : 'Feb',
-				3 : 'Mar',
-				4 : 'Apr',
-				5 : 'May',
-				6 : 'Jun',
-				7 : 'Jul',
-				8 : 'Aug',
-				9 : 'Sep',
-				10: 'Oct',
-				11: 'Nov',
-				12: 'Dec'
-			}
+		'en' : {
+			1 : 'Jan',
+			2 : 'Feb',
+			3 : 'Mar',
+			4 : 'Apr',
+			5 : 'May',
+			6 : 'Jun',
+			7 : 'Jul',
+			8 : 'Aug',
+			9 : 'Sep',
+			10: 'Oct',
+			11: 'Nov',
+			12: 'Dec'
 		}
-	}, ts.dates );
+	}, ts.dates.months );
 
 	ts.addParser({
 		id: 'month',
