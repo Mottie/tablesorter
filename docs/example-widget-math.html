@@ -421,6 +421,22 @@ math_suffix : '{content}<span class="red">!</span>'
 						</td>
 					</tr>
 
+					<tr id="math_rowfilter">
+						<td><a href="#" class="permalink">math_rowFilter</a></td>
+						<td><code>''</code></td>
+						<td>
+							Set this option apply a filter to targeted rows.
+							<div class="collapsible">
+							<p>This option applys the set filter (<a href="http://api.jquery.com/filter/">jQuery <code>.filter()</code></a> to the targeted rows.</p>
+							<p>If this option is set, rows filtered out by the filter widget are included, so you will need to include them in this selector if you wish to filter them out (e.g. <code>':visible:not(.filtered)'</code> (only include visible &amp; rows not filtered out by the filter widget)</p>
+							<pre class="prettyprint lang-js">// this option will accept any of the jQuery filter types (i.e. selector, function or elements)
+// for example, here is the functional equivalent
+// math_rowFilter : function(index, element) { return $(element).is(':visible:not(.filtered)'); }
+math_rowFilter : ':visible:not(.filtered)'</pre>
+							</div>
+						</td>
+					</tr>
+
 				</tbody>
 			</table>
 		</div>
