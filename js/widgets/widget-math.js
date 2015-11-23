@@ -45,7 +45,7 @@
 				arry = [],
 				$row = $el.closest( 'tr' ),
 				isFiltered = $row.hasClass( wo.filter_filteredRow || 'filtered' ),
-				hasFilter = wo.match_rowFilter;
+				hasFilter = wo.math_rowFilter;
 			if ( hasFilter ) {
 				$row = $row.filter( hasFilter );
 			}
@@ -66,7 +66,7 @@
 			var index, $t, $tr, len, $mathRows, mathAbove,
 				arry = [],
 				wo = c.widgetOptions,
-				hasFilter = wo.match_rowFilter,
+				hasFilter = wo.math_rowFilter,
 				mathAttr = wo.math_dataAttrib,
 				filtered = wo.filter_filteredRow || 'filtered',
 				cIndex = parseInt( $el.attr( 'data-column' ), 10 ),
@@ -80,7 +80,7 @@
 				while ( index >= 0 ) {
 					$tr = $rows.eq( index );
 					if ( hasFilter ) {
-						$tr = $tr.filter( wo.match_rowFilter );
+						$tr = $tr.filter( wo.math_rowFilter );
 					}
 					$t = $tr.children().filter( '[data-column=' + cIndex + ']' );
 					mathAbove = $t.filter( '[' + mathAttr + '^=above]' ).length;
