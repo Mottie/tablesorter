@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 11-14-2015 (v2.24.5)*/
+/*! tablesorter (FORK) - updated 11-22-2015 (v2.24.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.24.5 *//*
+/*! TableSorter (FORK) v2.24.6 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -39,7 +39,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.24.5',
+		version : '2.24.6',
 
 		parsers : [],
 		widgets : [],
@@ -206,6 +206,9 @@
 			top      : true,
 			bottom   : false
 		},
+
+		// placeholder date parser data (globalize)
+		dates : {},
 
 		// These methods can be applied on table.config instance
 		instanceMethods : {},
@@ -750,20 +753,24 @@
 		},
 
 		detectParserForColumn : function( c, rows, rowIndex, cellIndex ) {
-			var cur, $node,
+			var cur, $node, row,
 				indx = ts.parsers.length,
 				node = false,
 				nodeValue = '',
 				keepLooking = true;
 			while ( nodeValue === '' && keepLooking ) {
 				rowIndex++;
-				if ( rows[ rowIndex ] ) {
-					node = rows[ rowIndex ].cells[ cellIndex ];
-					nodeValue = ts.getElementText( c, node, cellIndex );
-					$node = $( node );
-					if ( c.debug ) {
-						console.log( 'Checking if value was empty on row ' + rowIndex + ', column: ' +
-							cellIndex + ': "' + nodeValue + '"' );
+				row = rows[ rowIndex ];
+				// stop looking after 50 empty rows
+				if ( row && rowIndex < 50 ) {
+					if ( row.className.indexOf( ts.cssIgnoreRow ) < 0 ) {
+						node = rows[ rowIndex ].cells[ cellIndex ];
+						nodeValue = ts.getElementText( c, node, cellIndex );
+						$node = $( node );
+						if ( c.debug ) {
+							console.log( 'Checking if value was empty on row ' + rowIndex + ', column: ' +
+								cellIndex + ': "' + nodeValue + '"' );
+						}
 					}
 				} else {
 					keepLooking = false;

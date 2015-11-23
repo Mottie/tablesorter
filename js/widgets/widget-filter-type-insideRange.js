@@ -1,4 +1,4 @@
-/*! Widget: filter, insideRange filter type - updated 2/23/2015 (v2.21.0) */
+/*! Widget: filter, insideRange filter type - updated 11/22/2015 (v2.24.6) */
 ;(function($){
 	'use strict';
 

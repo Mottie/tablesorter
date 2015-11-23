@@ -92,6 +92,35 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.24.6">Version 2.24.6</a> (11/22/2015)
+
+* Core
+  * Prevent "tablesorter-ready" event from firing multiple times in a row.
+  * While detecting parsers, use `cssIgnoreRow` &amp; stop after 50 rows.
+* Docs
+  * Update utility options section.
+* Math
+  * Add `math_rowFilter` option. See [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
+  * Spelling corrections to `math_rowFilter` option.
+  * Ensure internal updating flag gets cleared. Fixes [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
+* Pager
+  * Initial page no longer ignored (no filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
+  * Fix other page set issues (no filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
+  * Fix page set issues (with filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
+  * Clean up pager widget code.
+* Print
+  * Add `print_now` option. See [issue #1081](https://github.com/Mottie/tablesorter/issues/1081).
+  * Fix print &amp; close button actions.
+* SortTbodies
+  * Use config parameter for numeric sorting. See [issue #1082](https://github.com/Mottie/tablesorter/issues/1082).
+* Parsers:
+  * Update `parser-input-select.js`. See [issue #971](https://github.com/Mottie/tablesorter/issues/971).
+  * `parser-date-month.js` no longer removes other language data.
+  * Add alternate date range parser &amp; update filter insideRange filter type.
+  * Don't use `$.extend` for simple additions.
+* Misc
+  * Update grunt dependencies.
+
 #### <a name="v2.24.5">Version 2.24.5</a> (11/10/2015)
 
 * Pager: Fix javascript error in pager addon when using ajax.
@@ -128,21 +157,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Add "file-extension" parser.
 * Misc
   * Grunt: Fix uglify comment removal & update dist folder.
-
-#### <a name="v2.24.3">Version 2.24.3</a> (11/4/2015)
-
-* Core
-  * jQuery filter element parameter not defined in v1.2.6.
-  * Fix `sortRestart` preventing sort. Fixes [issue #1072](https://github.com/Mottie/tablesorter/issues/1072).
-* Filter
-  * Convert filter array to include all strings. Fixes [issue #1070](https://github.com/Mottie/tablesorter/issues/1070).
-  * `setFilter` "apply" parameter now defaults to `true`. See [issue #1071](https://github.com/Mottie/tablesorter/issues/1071).
-* Resizable
-  * Fix widget bindings after tablesorter "updateAll" event. See [pull #1073](https://github.com/Mottie/tablesorter/pull/1073); thanks [scr34m](https://github.com/scr34m)!
-* Misc
-  * One more attempt at setting `ignore` in bower.json. See [pull #1063](https://github.com/Mottie/tablesorter/pull/1063).
-
-#### <a name="v2.24.2">Version 2.24.2</a> (11/2/2015)
-
-* Misc
-  * Restory empty bower.json ignore setting... bower is installing an empty dist folder.

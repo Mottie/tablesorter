@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 10/31/2015 (v2.24.0) *//*
+/*! Parser: input & select - updated 11/22/2015 (v2.24.6) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
