@@ -735,20 +735,24 @@
 		},
 
 		detectParserForColumn : function( c, rows, rowIndex, cellIndex ) {
-			var cur, $node,
+			var cur, $node, row,
 				indx = ts.parsers.length,
 				node = false,
 				nodeValue = '',
 				keepLooking = true;
 			while ( nodeValue === '' && keepLooking ) {
 				rowIndex++;
-				if ( rows[ rowIndex ] ) {
-					node = rows[ rowIndex ].cells[ cellIndex ];
-					nodeValue = ts.getElementText( c, node, cellIndex );
-					$node = $( node );
-					if ( c.debug ) {
-						console.log( 'Checking if value was empty on row ' + rowIndex + ', column: ' +
-							cellIndex + ': "' + nodeValue + '"' );
+				row = rows[ rowIndex ];
+				// stop looking after 50 empty rows
+				if ( row && rowIndex < 50 ) {
+					if ( row.className.indexOf( ts.cssIgnoreRow ) < 0 ) {
+						node = rows[ rowIndex ].cells[ cellIndex ];
+						nodeValue = ts.getElementText( c, node, cellIndex );
+						$node = $( node );
+						if ( c.debug ) {
+							console.log( 'Checking if value was empty on row ' + rowIndex + ', column: ' +
+								cellIndex + ': "' + nodeValue + '"' );
+						}
 					}
 				} else {
 					keepLooking = false;
