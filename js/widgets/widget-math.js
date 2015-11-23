@@ -180,7 +180,7 @@
 		recalculate : function(c, wo, init) {
 			if ( c && ( !wo.math_isUpdating || init ) ) {
 
-				var time, mathAttr, $mathCells;
+				var undef, time, mathAttr, $mathCells;
 				if ( c.debug ) {
 					time = new Date();
 				}
@@ -215,12 +215,20 @@
 				}
 
 				// update internal cache
-				ts.update( c );
+				ts.update( c, undef, function(){
+					math.updateComplete( c );
+				});
 
 				if ( c.debug ) {
 					console.log( 'Math widget update completed' + ts.benchmark( time ) );
 				}
 			}
+		},
+
+		updateComplete : function( c ) {
+			var wo = c.widgetOptions;
+			if ( wo.math_isUpdating && c.debug && console.groupEnd ) { console.groupEnd(); }
+			wo.math_isUpdating = false;
 		},
 
 		mathType : function( c, $cells, priority ) {
@@ -532,8 +540,7 @@
 				})
 				.on( update + '.tsmath', function() {
 					setTimeout( function(){
-						if ( wo.math_isUpdating && c.debug && console.groupEnd ) { console.groupEnd(); }
-						wo.math_isUpdating = false;
+						math.updateComplete( c );
 					}, 40 );
 				});
 			wo.math_isUpdating = false;
