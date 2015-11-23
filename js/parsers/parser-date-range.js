@@ -1,4 +1,4 @@
-/*! Parser: date ranges - updated 2/23/2015 (v2.21.0) */
+/*! Parser: date ranges -updated 11/22/2015 (v2.24.6) */
 /* Include the 'widget-filter-type-insideRange.js' to filter ranges */
 /*jshint jquery:true */
 ;(function($){
@@ -95,25 +95,25 @@
 		type: 'text'
 	});
 
-	ts.dates.months = $.extend( {}, {
+	if ( !ts.dates ) { ts.dates = {}; }
+	if ( !ts.dates.months ) { ts.dates.months = {}; }
+	ts.dates.months.en = {
 		// See http://mottie.github.io/tablesorter/docs/example-widget-grouping.html
 		// for details on how to use CLDR data for a locale to add data for this parser
 		// CLDR returns an object { 1: "Jan", 2: "Feb", 3: "Mar", ..., 12: "Dec" }
-		'en' : {
-			1 : 'Jan',
-			2 : 'Feb',
-			3 : 'Mar',
-			4 : 'Apr',
-			5 : 'May',
-			6 : 'Jun',
-			7 : 'Jul',
-			8 : 'Aug',
-			9 : 'Sep',
-			10: 'Oct',
-			11: 'Nov',
-			12: 'Dec'
-		}
-	}, ts.dates.months );
+		1 : 'Jan',
+		2 : 'Feb',
+		3 : 'Mar',
+		4 : 'Apr',
+		5 : 'May',
+		6 : 'Jun',
+		7 : 'Jul',
+		8 : 'Aug',
+		9 : 'Sep',
+		10: 'Oct',
+		11: 'Nov',
+		12: 'Dec'
+	};
 
 	getMonthVal = function( str, c, cellIndex ) {
 		var m, month,

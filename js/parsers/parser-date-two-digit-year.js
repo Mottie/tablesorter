@@ -1,4 +1,4 @@
-/*! Parser: two digit year - updated 10/26/2014 (v2.18.0) */
+/*! Parser: two digit year - updated 11/22/2015 (v2.24.6) */
 /* Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html */
 /*jshint jquery:true */
 ;(function($){
@@ -13,10 +13,9 @@
 	ts = $.tablesorter,
 	now = new Date().getFullYear();
 
-	ts.dates = $.extend({}, ts.dates, {
-		regxxxxyy: /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/,
-		regyyxxxx: /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/
-	});
+	if ( !ts.dates ) { ts.dates = {}; }
+	ts.dates.regxxxxyy = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/;
+	ts.dates.regyyxxxx = /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/;
 
 	ts.formatDate = function(s, regex, format, table){
 		if (s) {

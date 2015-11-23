@@ -1,40 +1,38 @@
-/*! Parser: weekday - updated 11/2/2015 (v2.24.1) */
+/*! Parser: weekday - updated 11/22/2015 (v2.24.6) */
 /* Demo: http://jsfiddle.net/Mottie/abkNM/4169/ */
 /*jshint jquery:true */
 ;(function($){
 	'use strict';
 
 	var ts = $.tablesorter;
-	ts.dates = $.extend( true, {}, {
-		// See http://mottie.github.io/tablesorter/docs/example-widget-grouping.html
-		// for details on how to use CLDR data for a locale to add data for this parser
-		// CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
-		weekdays : {
-			'en' :  {
-				'sun' : 'Sun',
-				'mon' : 'Mon',
-				'tue' : 'Tue',
-				'wed' : 'Wed',
-				'thu' : 'Thu',
-				'fri' : 'Fri',
-				'sat' : 'Sat'
-			}
-		},
 
-		// set table.config.weekStarts to change weekday start date for your locale
-		// cross-reference of a date on which the week starts on a...
-		// https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
-		weekStartList : {
-			'sun' : '1995', // Sun 1/1/1995
-			'mon' : '1996', // Mon 1/1/1996
-			'fri' : '1999', // Friday 1/1/1999
-			'sat' : '2000'  // Sat 1/1/2000
-		},
-
-		// do not modify this array; it is used for cross referencing
-		weekdaysXref : [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ]
-
-	}, ts.dates );
+	if ( !ts.dates ) { ts.dates = {}; }
+	if ( !ts.dates.weekdays ) { ts.dates.weekdays = {}; }
+	// See http://mottie.github.io/tablesorter/docs/example-widget-grouping.html
+	// for details on how to use CLDR data for a locale to add data for this parser
+	// CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
+	ts.dates.weekdays.en = {
+		'sun' : 'Sun',
+		'mon' : 'Mon',
+		'tue' : 'Tue',
+		'wed' : 'Wed',
+		'thu' : 'Thu',
+		'fri' : 'Fri',
+		'sat' : 'Sat'
+	};
+	// set table.config.weekStarts to change weekday start date for your locale
+	// cross-reference of a date on which the week starts on a...
+	// https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+	// locale agnostic
+	ts.dates.weekStartList = {
+		'sun' : '1995', // Sun 1/1/1995
+		'mon' : '1996', // Mon 1/1/1996
+		'fri' : '1999', // Friday 1/1/1999
+		'sat' : '2000'  // Sat 1/1/2000
+	};
+	// do not modify this array; it is used for cross referencing weekdays
+	// locale agnostic
+	ts.dates.weekdaysXref = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];
 
 	ts.addParser({
 		id: 'weekday',
