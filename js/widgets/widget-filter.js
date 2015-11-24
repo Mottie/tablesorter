@@ -1089,7 +1089,7 @@
 
 					// data.iFilter = case insensitive ( if wo.filter_ignoreCase is true ),
 					// data.filter = case sensitive
-					data.iFilter = wo.filter_ignoreCase ? ( data.filter || '' ).toLowerCase() : data.filter;
+					data.iFilter = wo.filter_ignoreCase ? ( '' + data.filter ).toLowerCase() : data.filter;
 					fxn = vars.functions[ columnIndex ];
 					filterMatched = null;
 					if ( fxn ) {
