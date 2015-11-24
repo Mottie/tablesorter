@@ -832,6 +832,8 @@
 				c.lastCombinedFilter = null;
 				c.lastSearch = [];
 			}
+			// define filter inside it is false
+			filters = filters || [];
 			// convert filters to strings - see #1070
 			filters = Array.prototype.map ?
 				filters.map( String ) :
