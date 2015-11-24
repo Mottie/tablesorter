@@ -45,7 +45,7 @@
 				arry = [],
 				$row = $el.closest( 'tr' ),
 				isFiltered = $row.hasClass( wo.filter_filteredRow || 'filtered' ),
-				hasFilter = wo.math_rowFilter;
+				hasFilter = $row.attr( wo.math_dataAttrib + '-filter' ) || wo.math_rowFilter;
 			if ( hasFilter ) {
 				$row = $row.filter( hasFilter );
 			}
@@ -64,14 +64,14 @@
 		// get all of the column numerical values in an arry
 		getColumn : function( c, $el, type ) {
 			var index, $t, $tr, len, $mathRows, mathAbove,
-				arry = [],
 				wo = c.widgetOptions,
-				hasFilter = wo.math_rowFilter,
+				arry = [],
+				$row = $el.closest( 'tr' ),
 				mathAttr = wo.math_dataAttrib,
+				hasFilter = $row.attr( mathAttr + '-filter' ) || wo.math_rowFilter,
 				filtered = wo.filter_filteredRow || 'filtered',
 				cIndex = parseInt( $el.attr( 'data-column' ), 10 ),
-				$rows = c.$table.children( 'tbody' ).children(),
-				$row = $el.closest( 'tr' );
+				$rows = c.$table.children( 'tbody' ).children();
 			// make sure tfoot rows are AFTER the tbody rows
 			// $rows.add( c.$table.children( 'tfoot' ).children() );
 			if ( type === 'above' ) {
@@ -80,7 +80,7 @@
 				while ( index >= 0 ) {
 					$tr = $rows.eq( index );
 					if ( hasFilter ) {
-						$tr = $tr.filter( wo.math_rowFilter );
+						$tr = $tr.filter( hasFilter );
 					}
 					$t = $tr.children().filter( '[data-column=' + cIndex + ']' );
 					mathAbove = $t.filter( '[' + mathAttr + '^=above]' ).length;
