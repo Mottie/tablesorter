@@ -54,23 +54,12 @@
 		},
 		format : function( txt, table, cell, cellIndex ) {
 			var $cell = $( cell ),
-				$row = $cell.closest( 'tr' ),
 				wo = table.config.widgetOptions,
-				checkedClass = table.config.checkboxClass || 'checked',
 				// returning plain language here because this is what is shown in the
 				// group headers - change it as desired
 				status = wo.group_checkbox ? wo.group_checkbox : [ 'checked', 'unchecked' ],
 				$input = $cell.find( 'input[type="checkbox"]' ),
 				isChecked = $input.length ? $input[ 0 ].checked : '';
-			// adding class to row, indicating that a checkbox is checked; includes
-			// a column index in case more than one checkbox happens to be in a row
-			$row.toggleClass( checkedClass + '-' + cellIndex, isChecked );
-			if ( isChecked ) {
-				$row.addClass( checkedClass );
-			} else if ( $row.length && !( $row[0].className || '' ).match( checkedClass + '-' ) ) {
-				// don't remove checked class if other columns have a check
-				$row.removeClass( checkedClass );
-			}
 			return $input.length ? status[ isChecked ? 0 : 1 ] : txt;
 		},
 		parsed : true, // filter widget flag
@@ -127,6 +116,34 @@
 	// if this code interferes somehow, target the specific table $('#mytable'), instead of $('table')
 	$( function() {
 		if ( !$.fn.on ) { return; }
+		var toggleRowClass = function( $row, checkboxClass, indx, isChecked ) {
+			// adding class to row, indicating that a checkbox is checked; includes
+			// a column index in case more than one checkbox happens to be in a row
+			$row.toggleClass( checkboxClass + '-' + indx, isChecked );
+			// don't remove checked class if other columns have a check
+			if ( ( $row[0].className || '' ).match( checkboxClass + '-' ) ) {
+				$row.addClass( checkboxClass );
+			} else {
+				$row.removeClass( checkboxClass );
+			}
+		},
+		updateHeaderCheckbox = function( $table, checkboxClass ) {
+			var $rows = $table.children( 'tbody' ).children( ':visible' ), // (include child rows?)
+				len = $rows.length;
+			// set indeterminate state on header checkbox
+			$table.children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
+				var column = $( this ).closest( 'td, th' ).attr( 'data-column' ),
+					vis = $rows.filter( '.' + checkboxClass + '-' + column ).length,
+					allChecked = vis === len;
+				if ( vis === 0 || allChecked ) {
+					this.checked = allChecked;
+					this.indeterminate = false;
+				} else {
+					this.indeterminate = true;
+				}
+			});
+		};
+
 		$( 'table' ).on( 'tablesorter-initialized updateComplete', function() {
 			this.tablesorterBusy = false;
 			var namespace = '.parser-forms';
@@ -159,7 +176,7 @@
 				if ( event.type === 'change' ||
 					( event.type === 'keyup' && event.which === 13 &&
 					( event.target.nodeName === 'INPUT' || event.target.nodeName === 'TEXTAREA' && event.altKey ) ) ) {
-					var undef,
+					var undef, checkboxClass,
 						$target = $( event.target ),
 						isCheckbox = event.target.type === 'checkbox',
 						$cell = $target.closest( 'td' ),
@@ -169,9 +186,18 @@
 						busy = $table.length && $table[ 0 ].tablesorterBusy,
 						$hdr = c && c.$headerIndexed && c.$headerIndexed[ indx ] || [],
 						val = isCheckbox ? event.target.checked : $target.val();
-					// abort if not a tablesorter table, or busy, or don't use updateCell if column is set
-					// to 'sorter-false' and 'filter-false', or column is set to 'parser-false'
-					if ( $.isEmptyObject( c ) || busy !== false || $hdr.length && ( $hdr.hasClass( 'parser-false' ) ||
+					// abort if not a tablesorter table, or busy
+					if ( $.isEmptyObject( c ) || busy !== false ) {
+						return;
+					}
+					if ( isCheckbox ) {
+						checkboxClass = c.checkboxClass || 'checked';
+						toggleRowClass( $cell.closest( 'tr' ), checkboxClass, indx, val );
+						updateHeaderCheckbox( $table, checkboxClass );
+					}
+					// don't use updateCell if column is set to 'sorter-false' and 'filter-false',
+					// or column is set to 'parser-false'
+					if ( $hdr.length && ( $hdr.hasClass( 'parser-false' ) ||
 						( $hdr.hasClass( 'sorter-false' ) && $hdr.hasClass( 'filter-false' ) ) ) ||
 						// table already updating; get out of here, we might be in an endless loop (in IE)! See #971
 						( event.type === 'change' && c.table.isUpdating ) ) {
@@ -201,20 +227,8 @@
 					if ( !$.isEmptyObject( c ) ) {
 						this.tablesorterBusy = true;
 						checkboxClass = c && c.checkboxClass || 'checked';
-						$rows = $table.children( 'tbody' ).children( ':visible' ); // (include child rows?)
-						len = $rows.length;
 						// set indeterminate state on header checkbox
-						$( this ).children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
-							var column = $( this ).closest( 'td, th' ).attr( 'data-column' ),
-								vis = $rows.filter( '.' + checkboxClass + '-' + column ).length,
-								allChecked = vis === len;
-							if ( vis === 0 || allChecked ) {
-								this.checked = allChecked;
-								this.indeterminate = false;
-							} else {
-								this.indeterminate = true;
-							}
-						});
+						updateHeaderCheckbox( $table, checkboxClass );
 						this.tablesorterBusy = false;
 					}
 				})
@@ -222,13 +236,14 @@
 				.off( namespace )
 				// modified from http://jsfiddle.net/abkNM/6163/
 				.on( 'change' + namespace, 'input[type="checkbox"]', function( event ) {
-					var undef, onlyVisible, column, $target,
+					var undef, onlyVisible, column, $target, isParsed, $row, checkboxClass,
 						$checkbox = $( this ),
 						$table = $checkbox.closest( 'table' ),
 						c = $table.length && $table[ 0 ].config,
 						isChecked = this.checked;
 					if ( $table.length && c && !$table[ 0 ].tablesorterBusy ) {
 						column = parseInt( $checkbox.closest( 'td, th' ).attr( 'data-column' ), 10 );
+						isParsed = c.parsers[ column ].id === 'checkbox';
 						onlyVisible = $table.length && c.checkboxVisible;
 						$table[ 0 ].tablesorterBusy = true; // prevent "change" event from calling updateCell numerous times (see #971)
 						$target = $table
@@ -237,10 +252,23 @@
 							.children( ':nth-child(' + ( column + 1 ) + ')' )
 							.find( 'input[type="checkbox"]' )
 							.prop( 'checked', isChecked );
-						$.tablesorter.update( c, undef, function() {
+						if ( !isParsed ) {
+							// add checkbox class names
+							checkboxClass = c.checkboxClass || 'checked';
+							$target.each(function(){
+								$row = $(this).closest('tr');
+								toggleRowClass( $(this).closest( 'tr' ), checkboxClass, column, isChecked );
+							});
+							updateHeaderCheckbox( $table, checkboxClass );
 							updateServer( event, $table, $target );
 							$table[ 0 ].tablesorterBusy = false;
-						});
+						} else {
+							// only update cache if checkboxes are being sorted
+							$.tablesorter.update( c, undef, function() {
+								updateServer( event, $table, $target );
+								$table[ 0 ].tablesorterBusy = false;
+							});
+						}
 					}
 					// update already going on, don't do anything!
 					return false;
