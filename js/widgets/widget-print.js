@@ -12,7 +12,7 @@
 
 		event      : 'printTable',
 		basicStyle : 'table, tr, td, th { border : solid 1px black; border-collapse : collapse; } td, th { padding: 2px; }',
-		popupStyle : 'width=500,height=300',
+		popupStyle : 'width=500,height=300,scrollbars=1,resizable=1',
 
 		init : function(c) {
 			c.$table
