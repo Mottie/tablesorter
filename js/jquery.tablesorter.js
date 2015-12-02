@@ -1266,6 +1266,11 @@
 					// problems with element focus
 					ts.resortComplete( c, callback );
 				}
+			} else {
+				if ( c.debug ) {
+					console.error( 'updateCell aborted, tbody missing or not within the indicated table' );
+				}
+				c.table.isUpdating = false;
 			}
 		},
 
