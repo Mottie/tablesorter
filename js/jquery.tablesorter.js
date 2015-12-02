@@ -394,7 +394,10 @@
 			})
 			.bind( 'applyWidgetId' + namespace, function( e, id ) {
 				e.stopPropagation();
-				ts.getWidgetById( id ).format( this, this.config, this.config.widgetOptions );
+				var widget = ts.getWidgetById( id );
+				if ( widget ) {
+					widget.format( this, this.config, this.config.widgetOptions );
+				}
 			})
 			.bind( 'applyWidgets' + namespace, function( e, init ) {
 				e.stopPropagation();
