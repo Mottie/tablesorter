@@ -460,7 +460,7 @@
 
 			// update resizable widget handles
 			setTimeout( function() {
-				c.$table.trigger( 'resizableUpdate' );
+				c.$table.triggerHandler( 'resizableUpdate' );
 			}, 100 );
 
 		},

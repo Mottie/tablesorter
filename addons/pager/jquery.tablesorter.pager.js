@@ -217,7 +217,7 @@
 					$out.find('.ts-startRow, .ts-page').unbind('change' + namespace).bind('change' + namespace, function(){
 						var v = $(this).val(),
 							pg = $(this).hasClass('ts-startRow') ? Math.floor( v / p.size ) + 1 : v;
-						c.$table.trigger('pageSet' + namespace, [ pg ]);
+						c.$table.triggerHandler('pageSet' + namespace, [ pg ]);
 					});
 				}
 			}
@@ -227,7 +227,7 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pagerComplete');
 				}
-				c.$table.trigger('pagerComplete', p);
+				c.$table.triggerHandler('pagerComplete', p);
 				// save pager info to storage
 				if (p.savePages && ts.storage) {
 					ts.storage(table, p.storageKey, {
@@ -499,7 +499,7 @@
 							if (c.debug) {
 								console.log('Pager: Triggering pagerChange');
 							}
-							$table.trigger( 'pagerChange', p );
+							$table.triggerHandler( 'pagerChange', p );
 							ts.applyWidget( table );
 							updatePageDisplay(table, p, true);
 						}, 0);
@@ -513,7 +513,7 @@
 				if (table.config.debug) {
 					console.log('Pager: Triggering pagerInitialized');
 				}
-				$(table).trigger( 'pagerInitialized', p );
+				$(table).triggerHandler( 'pagerInitialized', p );
 				ts.applyWidget( table );
 				updatePageDisplay(table, p);
 			}
@@ -624,7 +624,7 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pagerChange');
 				}
-				$t.trigger( 'pagerChange', p );
+				$t.triggerHandler( 'pagerChange', p );
 			}
 			if ( !p.removeRows ) {
 				hideRows(table, p);
@@ -654,7 +654,7 @@
 				if (c.debug) {
 					console.log('Pager: Triggering updateComplete');
 				}
-				$t.trigger('updateComplete', [ table, true ]);
+				$t.triggerHandler('updateComplete', [ table, true ]);
 			}
 		},
 
@@ -756,13 +756,13 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pageMoved');
 				}
-				$t.trigger('pageMoved', p);
+				$t.triggerHandler('pageMoved', p);
 				ts.applyWidget( table );
 				if (table.isUpdating) {
 					if (c.debug) {
 						console.log('Pager: Triggering updateComplete');
 					}
-					$t.trigger('updateComplete', [ table, true ]);
+					$t.triggerHandler('updateComplete', [ table, true ]);
 				}
 			}
 		},
@@ -1059,7 +1059,7 @@
 				// clear initialized flag
 				p.initialized = false;
 				// before initialization event
-				$t.trigger('pagerBeforeInitialized', p);
+				$t.triggerHandler('pagerBeforeInitialized', p);
 
 				enablePager(table, p, false);
 				if ( typeof p.ajaxUrl === 'string' ) {
@@ -1085,7 +1085,7 @@
 					if (c.debug) {
 						console.log('Pager: Triggering pagerInitialized');
 					}
-					c.$table.trigger( 'pagerInitialized', p );
+					c.$table.triggerHandler( 'pagerInitialized', p );
 					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
 						updatePageDisplay(table, p, false);
 					}

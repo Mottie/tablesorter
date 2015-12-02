@@ -39,7 +39,7 @@
 					}
 				}
 				if ( headers.length && triggerEvent !== false ) {
-					c.$table.trigger( 'resize', [ headers ] );
+					c.$table.triggerHandler( 'resize', [ headers ] );
 				}
 				wo.resize_flag = false;
 			};
@@ -266,7 +266,7 @@
 				}
 			}
 
-			$table.trigger('stickyHeadersInit');
+			$table.triggerHandler('stickyHeadersInit');
 
 		},
 		remove: function(table, c, wo) {

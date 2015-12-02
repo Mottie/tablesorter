@@ -123,7 +123,7 @@
 				tsg.findColumnGroups( c, wo, data );
 				tsg.processHeaders( c, wo, data );
 
-				c.$table.trigger(wo.group_complete);
+				c.$table.triggerHandler(wo.group_complete);
 			}
 		},
 

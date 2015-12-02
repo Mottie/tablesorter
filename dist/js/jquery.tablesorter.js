@@ -342,7 +342,7 @@
 				console.log( 'Overall initialization time: ' + ts.benchmark( $.data( table, 'startoveralltimer' ) ) );
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 			}
-			$table.trigger( 'tablesorter-initialized', table );
+			$table.triggerHandler( 'tablesorter-initialized', table );
 			if ( typeof c.initialized === 'function' ) {
 				c.initialized( table );
 			}
@@ -949,7 +949,20 @@
 				ts.isProcessing( table ); // remove processing icon
 			}
 			if ( c.debug ) {
-				console.log( 'Building cache for ' + totalRows + ' rows' + ts.benchmark( cacheTime ) );
+				len = Math.min( 5, c.totalRows );
+				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + totalRows +
+					' rows (showing ' + len + ' rows)' + ts.benchmark( cacheTime ) );
+				val = {};
+				for ( colIndex = 0; colIndex < c.columns; colIndex++ ) {
+					for ( cacheIndex = 0; cacheIndex < len; cacheIndex++ ) {
+						if ( !val[ 'row: ' + cacheIndex ] ) {
+							val[ 'row: ' + cacheIndex ] = {};
+						}
+						val[ 'row: ' + cacheIndex ][ c.headerContent[ colIndex ] ] = cache.normalized[ cacheIndex ][ colIndex ];
+					}
+				}
+				console[ console.table ? 'table' : 'log' ]( val );
+				if ( console.groupEnd ) { console.groupEnd(); }
 			}
 			if ( $.isFunction( callback ) ) {
 				callback( table );
@@ -1356,7 +1369,7 @@
 			if ( ts.isEmptyObject( cache ) ) {
 				// run pager appender in case the table was just emptied
 				return c.appender ? c.appender( table, rows ) :
-					table.isUpdating ? c.$table.trigger( 'updateComplete', table ) : ''; // Fixes #532
+					table.isUpdating ? c.$table.triggerHandler( 'updateComplete', table ) : ''; // Fixes #532
 			}
 			if ( c.debug ) {
 				appendTime = new Date();
@@ -1390,7 +1403,7 @@
 				ts.applyWidget( table );
 			}
 			if ( table.isUpdating ) {
-				c.$table.trigger( 'updateComplete', table );
+				c.$table.triggerHandler( 'updateComplete', table );
 			}
 		},
 
@@ -1426,7 +1439,7 @@
 				order = c.sortVars[ col ].order;
 
 			// Only call sortStart if sorting is enabled
-			c.$table.trigger( 'sortStart', table );
+			c.$table.triggerHandler( 'sortStart', table );
 			// get current column sort order
 			c.sortVars[ col ].count =
 				event[ c.sortResetKey ] ? 2 : ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 );
@@ -1537,14 +1550,14 @@
 				}
 			}
 			// sortBegin event triggered immediately before the sort
-			c.$table.trigger( 'sortBegin', table );
+			c.$table.triggerHandler( 'sortBegin', table );
 			// setTimeout needed so the processing icon shows up
 			setTimeout( function() {
 				// set css for headers
 				ts.setHeadersCss( c );
 				ts.multisort( c );
 				ts.appendCache( c );
-				c.$table.trigger( 'sortEnd', table );
+				c.$table.triggerHandler( 'sortEnd', table );
 			}, 1 );
 		},
 
@@ -1620,7 +1633,7 @@
 
 		resortComplete : function( c, callback ) {
 			if ( c.table.isUpdating ) {
-				c.$table.trigger( 'updateComplete', c.table );
+				c.$table.triggerHandler( 'updateComplete', c.table );
 			}
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
@@ -1652,7 +1665,7 @@
 
 		sortOn : function( c, list, callback, init ) {
 			var table = c.table;
-			c.$table.trigger( 'sortStart', table );
+			c.$table.triggerHandler( 'sortStart', table );
 			// update header count index
 			ts.updateHeaderSortCount( c, list );
 			// set css for headers
@@ -1661,11 +1674,11 @@
 			if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
 				ts.buildCache( c );
 			}
-			c.$table.trigger( 'sortBegin', table );
+			c.$table.triggerHandler( 'sortBegin', table );
 			// sort the table and append it to the dom
 			ts.multisort( c );
 			ts.appendCache( c, init );
-			c.$table.trigger( 'sortEnd', table );
+			c.$table.triggerHandler( 'sortEnd', table );
 			ts.applyWidget( table );
 			if ( $.isFunction( callback ) ) {
 				callback( table );
@@ -1931,7 +1944,7 @@
 			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
-				c.$table.trigger( 'tablesorter-ready' );
+				c.$table.triggerHandler( 'tablesorter-ready' );
 			}, 10 );
 			if ( c.debug ) {
 				widget = c.widgets.length;
@@ -1987,7 +2000,7 @@
 				len = widgets.length,
 				list = [],
 				callback = function( table ) {
-					$( table ).trigger( 'refreshComplete' );
+					$( table ).triggerHandler( 'refreshComplete' );
 				};
 			// remove widgets not defined in config.widgets, unless doAll is true
 			for ( indx = 0; indx < len; indx++ ) {
@@ -2312,8 +2325,8 @@
 				$f = $t.find( 'tfoot:first > tr' ).children( 'th, td' );
 			if ( removeClasses === false && $.inArray( 'uitheme', c.widgets ) >= 0 ) {
 				// reapply uitheme classes, in case we want to maintain appearance
-				$t.trigger( 'applyWidgetId', [ 'uitheme' ] );
-				$t.trigger( 'applyWidgetId', [ 'zebra' ] );
+				$t.triggerHandler( 'applyWidgetId', [ 'uitheme' ] );
+				$t.triggerHandler( 'applyWidgetId', [ 'zebra' ] );
 			}
 			// remove widget added rows, just in case
 			$h.find( 'tr' ).not( $r ).remove();

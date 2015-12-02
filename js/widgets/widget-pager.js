@@ -193,7 +193,7 @@
 			// clear initialized flag
 			p.initialized = false;
 			// before initialization event
-			c.$table.trigger( 'pagerBeforeInitialized', c );
+			c.$table.triggerHandler( 'pagerBeforeInitialized', c );
 
 			tsp.enablePager( c, false );
 
@@ -232,7 +232,7 @@
 			if ( c.debug ) {
 				console.log( 'Pager: Triggering pagerInitialized' );
 			}
-			c.$table.trigger( 'pagerInitialized', c );
+			c.$table.triggerHandler( 'pagerInitialized', c );
 			// filter widget not initialized; it will update the output display & fire off the pagerComplete event
 			if ( !( c.widgetOptions.filter_initialized && ts.hasWidget( c.table, 'filter' ) ) ) {
 				// if ajax, then don't fire off pagerComplete
@@ -504,7 +504,7 @@
 						.on( 'change' + namespace, function() {
 							var v = $( this ).val(),
 								pg = $( this ).hasClass( 'ts-startRow' ) ? Math.floor( v / p.size ) + 1 : v;
-							c.$table.trigger( 'pageSet' + namespace, [ pg ] );
+							c.$table.triggerHandler( 'pageSet' + namespace, [ pg ] );
 						});
 				}
 			}
@@ -514,7 +514,7 @@
 				if ( c.debug ) {
 					console.log( 'Pager: Triggering pagerComplete' );
 				}
-				c.$table.trigger( 'pagerComplete', c );
+				c.$table.triggerHandler( 'pagerComplete', c );
 				// save pager info to storage
 				if ( wo.pager_savePages && ts.storage ) {
 					ts.storage( table, wo.pager_storageKey, {
@@ -811,7 +811,7 @@
 							if ( c.debug ) {
 								console.log( 'Pager: Triggering pagerChange' );
 							}
-							$table.trigger( 'pagerChange', p );
+							$table.triggerHandler( 'pagerChange', p );
 							ts.applyWidget( table );
 							tsp.updatePageDisplay( c );
 						}, 0 );
@@ -928,7 +928,7 @@
 				if ( c.debug ) {
 					console.log( 'Pager: Triggering pagerChange' );
 				}
-				c.$table.trigger( 'pagerChange', c );
+				c.$table.triggerHandler( 'pagerChange', c );
 			}
 			if ( !wo.pager_removeRows ) {
 				tsp.hideRows( c );
@@ -961,7 +961,7 @@
 				if ( c.debug ) {
 					console.log( 'Pager: Triggering updateComplete' );
 				}
-				c.$table.trigger( 'updateComplete', [ table, true ] );
+				c.$table.triggerHandler( 'updateComplete', [ table, true ] );
 			}
 
 		},
@@ -1077,13 +1077,13 @@
 				if ( c.debug ) {
 					console.log( 'Pager: Triggering pageMoved' );
 				}
-				c.$table.trigger( 'pageMoved', c );
+				c.$table.triggerHandler( 'pageMoved', c );
 				ts.applyWidget( table );
 				if ( !p.ajax && table.isUpdating ) {
 					if ( c.debug ) {
 						console.log( 'Pager: Triggering updateComplete' );
 					}
-					c.$table.trigger( 'updateComplete', [ table, true ] );
+					c.$table.triggerHandler( 'updateComplete', [ table, true ] );
 				}
 			}
 		},

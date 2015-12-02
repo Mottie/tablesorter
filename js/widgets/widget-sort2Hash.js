@@ -27,7 +27,7 @@
 					c.$table.one( 'tablesorter-ready', function() {
 						setTimeout(function(){
 							c.$table.one( 'filterEnd', function(){
-								$(this).trigger( 'pageAndSize', [ page, size ] );
+								$(this).triggerHandler( 'pageAndSize', [ page, size ] );
 							});
 							$.tablesorter.setFilters( table, filter, true );
 						}, 100 );
@@ -36,7 +36,7 @@
 			}
 			if ( !filter ) {
 				c.$table.one( 'tablesorter-ready', function() {
-					c.$table.trigger( 'pageAndSize', [ page, size ] );
+					c.$table.triggerHandler( 'pageAndSize', [ page, size ] );
 				});
 			}
 

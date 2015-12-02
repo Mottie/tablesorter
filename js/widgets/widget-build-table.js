@@ -192,7 +192,7 @@
 	};
 
 	bt.buildComplete = function(table, wo){
-		$(table).trigger(wo.build_complete);
+		$(table).triggerHandler(wo.build_complete);
 		ts.setup(table, table.config);
 	};
 

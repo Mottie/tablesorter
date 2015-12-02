@@ -148,10 +148,10 @@
 					view.hideTable(c, wo);
 				}
 
-				$(c.$table).on('tablesorter-ready', function() {
+				c.$table.on('tablesorter-ready', function() {
 					view.buildToolBar(c, wo);
 					view.buildView(c, wo);
-					$(c.$table).trigger('viewComplete');
+					c.$table.triggerHandler('viewComplete');
 				});
 			},
 

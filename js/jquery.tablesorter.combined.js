@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 11-22-2015 (v2.24.6)*/
+/*! tablesorter (FORK) - updated 12-01-2015 (v2.24.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -350,7 +350,7 @@
 				console.log( 'Overall initialization time: ' + ts.benchmark( $.data( table, 'startoveralltimer' ) ) );
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 			}
-			$table.trigger( 'tablesorter-initialized', table );
+			$table.triggerHandler( 'tablesorter-initialized', table );
 			if ( typeof c.initialized === 'function' ) {
 				c.initialized( table );
 			}
@@ -957,7 +957,20 @@
 				ts.isProcessing( table ); // remove processing icon
 			}
 			if ( c.debug ) {
-				console.log( 'Building cache for ' + totalRows + ' rows' + ts.benchmark( cacheTime ) );
+				len = Math.min( 5, c.totalRows );
+				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + totalRows +
+					' rows (showing ' + len + ' rows)' + ts.benchmark( cacheTime ) );
+				val = {};
+				for ( colIndex = 0; colIndex < c.columns; colIndex++ ) {
+					for ( cacheIndex = 0; cacheIndex < len; cacheIndex++ ) {
+						if ( !val[ 'row: ' + cacheIndex ] ) {
+							val[ 'row: ' + cacheIndex ] = {};
+						}
+						val[ 'row: ' + cacheIndex ][ c.headerContent[ colIndex ] ] = cache.normalized[ cacheIndex ][ colIndex ];
+					}
+				}
+				console[ console.table ? 'table' : 'log' ]( val );
+				if ( console.groupEnd ) { console.groupEnd(); }
 			}
 			if ( $.isFunction( callback ) ) {
 				callback( table );
@@ -1364,7 +1377,7 @@
 			if ( ts.isEmptyObject( cache ) ) {
 				// run pager appender in case the table was just emptied
 				return c.appender ? c.appender( table, rows ) :
-					table.isUpdating ? c.$table.trigger( 'updateComplete', table ) : ''; // Fixes #532
+					table.isUpdating ? c.$table.triggerHandler( 'updateComplete', table ) : ''; // Fixes #532
 			}
 			if ( c.debug ) {
 				appendTime = new Date();
@@ -1398,7 +1411,7 @@
 				ts.applyWidget( table );
 			}
 			if ( table.isUpdating ) {
-				c.$table.trigger( 'updateComplete', table );
+				c.$table.triggerHandler( 'updateComplete', table );
 			}
 		},
 
@@ -1434,7 +1447,7 @@
 				order = c.sortVars[ col ].order;
 
 			// Only call sortStart if sorting is enabled
-			c.$table.trigger( 'sortStart', table );
+			c.$table.triggerHandler( 'sortStart', table );
 			// get current column sort order
 			c.sortVars[ col ].count =
 				event[ c.sortResetKey ] ? 2 : ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 );
@@ -1545,14 +1558,14 @@
 				}
 			}
 			// sortBegin event triggered immediately before the sort
-			c.$table.trigger( 'sortBegin', table );
+			c.$table.triggerHandler( 'sortBegin', table );
 			// setTimeout needed so the processing icon shows up
 			setTimeout( function() {
 				// set css for headers
 				ts.setHeadersCss( c );
 				ts.multisort( c );
 				ts.appendCache( c );
-				c.$table.trigger( 'sortEnd', table );
+				c.$table.triggerHandler( 'sortEnd', table );
 			}, 1 );
 		},
 
@@ -1628,7 +1641,7 @@
 
 		resortComplete : function( c, callback ) {
 			if ( c.table.isUpdating ) {
-				c.$table.trigger( 'updateComplete', c.table );
+				c.$table.triggerHandler( 'updateComplete', c.table );
 			}
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
@@ -1660,7 +1673,7 @@
 
 		sortOn : function( c, list, callback, init ) {
 			var table = c.table;
-			c.$table.trigger( 'sortStart', table );
+			c.$table.triggerHandler( 'sortStart', table );
 			// update header count index
 			ts.updateHeaderSortCount( c, list );
 			// set css for headers
@@ -1669,11 +1682,11 @@
 			if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
 				ts.buildCache( c );
 			}
-			c.$table.trigger( 'sortBegin', table );
+			c.$table.triggerHandler( 'sortBegin', table );
 			// sort the table and append it to the dom
 			ts.multisort( c );
 			ts.appendCache( c, init );
-			c.$table.trigger( 'sortEnd', table );
+			c.$table.triggerHandler( 'sortEnd', table );
 			ts.applyWidget( table );
 			if ( $.isFunction( callback ) ) {
 				callback( table );
@@ -1939,7 +1952,7 @@
 			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
-				c.$table.trigger( 'tablesorter-ready' );
+				c.$table.triggerHandler( 'tablesorter-ready' );
 			}, 10 );
 			if ( c.debug ) {
 				widget = c.widgets.length;
@@ -1995,7 +2008,7 @@
 				len = widgets.length,
 				list = [],
 				callback = function( table ) {
-					$( table ).trigger( 'refreshComplete' );
+					$( table ).triggerHandler( 'refreshComplete' );
 				};
 			// remove widgets not defined in config.widgets, unless doAll is true
 			for ( indx = 0; indx < len; indx++ ) {
@@ -2320,8 +2333,8 @@
 				$f = $t.find( 'tfoot:first > tr' ).children( 'th, td' );
 			if ( removeClasses === false && $.inArray( 'uitheme', c.widgets ) >= 0 ) {
 				// reapply uitheme classes, in case we want to maintain appearance
-				$t.trigger( 'applyWidgetId', [ 'uitheme' ] );
-				$t.trigger( 'applyWidgetId', [ 'zebra' ] );
+				$t.triggerHandler( 'applyWidgetId', [ 'uitheme' ] );
+				$t.triggerHandler( 'applyWidgetId', [ 'zebra' ] );
 			}
 			// remove widget added rows, just in case
 			$h.find( 'tr' ).not( $r ).remove();
@@ -3437,7 +3450,7 @@
 				if ( wo.filter_reset instanceof $ ) {
 					// reset contains a jQuery object, bind to it
 					wo.filter_reset.click( function() {
-						c.$table.trigger( 'filterReset' );
+						c.$table.triggerHandler( 'filterReset' );
 					});
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
@@ -3445,7 +3458,7 @@
 						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
 						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
-							c.$table.trigger( 'filterReset' );
+							c.$table.triggerHandler( 'filterReset' );
 						});
 				}
 			}
@@ -3547,7 +3560,7 @@
 						ts.setFilters( table, filters, true );
 					}
 				}
-				c.$table.trigger( 'filterFomatterUpdate' );
+				c.$table.triggerHandler( 'filterFomatterUpdate' );
 				// trigger init after setTimeout to prevent multiple filterStart/End/Init triggers
 				setTimeout( function() {
 					if ( !wo.filter_initialized ) {
@@ -3557,7 +3570,7 @@
 			});
 			// if filter widget is added after pager has initialized; then set filter init flag
 			if ( c.pager && c.pager.initialized && !wo.filter_initialized ) {
-				c.$table.trigger( 'filterFomatterUpdate' );
+				c.$table.triggerHandler( 'filterFomatterUpdate' );
 				setTimeout( function() {
 					tsf.filterInitComplete( c );
 				}, 100 );
@@ -3580,7 +3593,7 @@
 				count = 0,
 				completed = function() {
 					wo.filter_initialized = true;
-					c.$table.trigger( 'filterInit', c );
+					c.$table.triggerHandler( 'filterInit', c );
 					tsf.findRows( c.table, c.$table.data( 'lastSearch' ) || [] );
 				};
 			if ( $.isEmptyObject( wo.filter_formatter ) ) {
@@ -3828,7 +3841,7 @@
 				// show/hide filter row as needed
 				c.$table
 					.find( '.' + tscss.filterRow )
-					.trigger( combinedFilters === '' ? 'mouseleave' : 'mouseenter' );
+					.triggerHandler( combinedFilters === '' ? 'mouseleave' : 'mouseenter' );
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
@@ -3839,6 +3852,8 @@
 				c.lastCombinedFilter = null;
 				c.lastSearch = [];
 			}
+			// define filter inside it is false
+			filters = filters || [];
 			// convert filters to strings - see #1070
 			filters = Array.prototype.map ?
 				filters.map( String ) :
@@ -3846,7 +3861,7 @@
 				filters.join( '\u0000' ).split( '\u0000' );
 
 			if ( wo.filter_initialized ) {
-				c.$table.trigger( 'filterStart', [ filters ] );
+				c.$table.triggerHandler( 'filterStart', [ filters ] );
 			}
 			if ( c.showProcessing ) {
 				// give it time for the processing icon to kick in
@@ -4382,7 +4397,7 @@
 				console.log( 'Completed filter widget search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
-				c.$table.trigger( 'filterEnd', c );
+				c.$table.triggerHandler( 'filterEnd', c );
 			}
 			setTimeout( function() {
 				ts.applyWidget( c.table ); // make sure zebra widget is applied
@@ -4747,7 +4762,7 @@
 			c.lastCombinedFilter = null;
 			c.lastSearch = [];
 			tsf.searching( c.table, filter, skipFirst );
-			c.$table.trigger( 'filterFomatterUpdate' );
+			c.$table.triggerHandler( 'filterFomatterUpdate' );
 		}
 		return !!valid;
 	};
@@ -4795,7 +4810,7 @@
 					}
 				}
 				if ( headers.length && triggerEvent !== false ) {
-					c.$table.trigger( 'resize', [ headers ] );
+					c.$table.triggerHandler( 'resize', [ headers ] );
 				}
 				wo.resize_flag = false;
 			};
@@ -5022,7 +5037,7 @@
 				}
 			}
 
-			$table.trigger('stickyHeadersInit');
+			$table.triggerHandler('stickyHeadersInit');
 
 		},
 		remove: function(table, c, wo) {
@@ -5350,7 +5365,7 @@
 			}
 			vars.mouseXPosition = event.pageX;
 			// dynamically update sticky header widths
-			c.$table.trigger('stickyHeadersUpdate');
+			c.$table.triggerHandler('stickyHeadersUpdate');
 		},
 
 		stopResize : function( c, wo ) {
@@ -5364,7 +5379,7 @@
 			vars.mouseXPosition = 0;
 			vars.$target = vars.$next = null;
 			// will update stickyHeaders, just in case, see #912
-			c.$table.trigger('stickyHeadersUpdate');
+			c.$table.triggerHandler('stickyHeadersUpdate');
 		}
 	};
 
@@ -5426,7 +5441,7 @@
 				}
 
 				// reset stickyHeader widths
-				c.$table.trigger( 'stickyHeadersUpdate' );
+				c.$table.triggerHandler( 'stickyHeadersUpdate' );
 				if ( ts.storage && !refreshing ) {
 					ts.storage( this, ts.css.resizableStorage, {} );
 				}

@@ -230,7 +230,7 @@
 			tsColSel.adjustColspans( c, wo );
 			// trigger columnUpdate if auto is true (it gets skipped in updateCols()
 			if (colSel.auto) {
-				c.$table.trigger(wo.columnSelector_updated);
+				c.$table.triggerHandler(wo.columnSelector_updated);
 			}
 		},
 		addSelectors: function( prefix, column ) {
@@ -318,7 +318,7 @@
 				ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 			}
 			tsColSel.adjustColspans( c, wo );
-			c.$table.trigger(wo.columnSelector_updated);
+			c.$table.triggerHandler(wo.columnSelector_updated);
 		},
 
 		setUpColspan: function(c, wo) {

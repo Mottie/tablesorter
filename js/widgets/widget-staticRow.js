@@ -109,7 +109,7 @@
 				$.tablesorter.processTbody(table, $tbody, false); // restore tbody
 			});
 
-			c.$table.trigger('staticRowsComplete', table);
+			c.$table.triggerHandler('staticRowsComplete', table);
 		},
 
 		remove : function(table, c, wo){

@@ -132,7 +132,7 @@
 		format : function(table, c, wo){
 			// reinitialize in case table is empty when first initialized
 			if (!wo.alignChar_initialized) {
-				c.$table.trigger('refreshAlign');
+				c.$table.triggerHandler('refreshAlign');
 			}
 		},
 		remove : function(table, c, wo, refreshing){
