@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 12-01-2015 (v2.24.6)*/
+/*! tablesorter (FORK) - updated 12-02-2015 (v2.24.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1455,6 +1455,11 @@
 					// replace accents - see #357
 					if ( c.sortLocaleCompare ) {
 						data.filter = ts.replaceAccents( data.filter );
+					}
+
+					// replace column specific default filters - see #1088
+					if ( wo.filter_defaultFilter && tsfRegex.iQuery.test( vars.defaultColFilter[ columnIndex ] ) ) {
+						data.filter = tsf.defaultFilter( data.filter, vars.defaultColFilter[ columnIndex ] );
 					}
 
 					// data.iFilter = case insensitive ( if wo.filter_ignoreCase is true ),

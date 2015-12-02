@@ -404,7 +404,10 @@
 			})
 			.bind( 'applyWidgetId' + namespace, function( e, id ) {
 				e.stopPropagation();
-				ts.getWidgetById( id ).format( this, this.config, this.config.widgetOptions );
+				var widget = ts.getWidgetById( id );
+				if ( widget ) {
+					widget.format( this, this.config, this.config.widgetOptions );
+				}
 			})
 			.bind( 'applyWidgets' + namespace, function( e, init ) {
 				e.stopPropagation();
@@ -1273,6 +1276,11 @@
 					// problems with element focus
 					ts.resortComplete( c, callback );
 				}
+			} else {
+				if ( c.debug ) {
+					console.error( 'updateCell aborted, tbody missing or not within the indicated table' );
+				}
+				c.table.isUpdating = false;
 			}
 		},
 
