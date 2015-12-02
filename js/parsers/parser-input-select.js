@@ -269,6 +269,8 @@
 								$table[ 0 ].tablesorterBusy = false;
 							});
 						}
+						// needed for IE8
+						return true;
 					}
 					// update already going on, don't do anything!
 					return false;
