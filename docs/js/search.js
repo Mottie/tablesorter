@@ -144,6 +144,12 @@ jQuery(function($){
 		index = $results.index(this);
 		updateStatus();
 	});
+	$('#main-nav-check').on('change', function(){
+		var isChecked = this.checked;
+		setTimeout(function(){
+			$status.tipsy( isChecked ? 'show' : 'hide' );
+		}, 250);
+	});
 
 	$('.tooltip-bottom').tipsy({ gravity: 'n' });
 	$('.tooltip-top').tipsy({ gravity: 's' });
