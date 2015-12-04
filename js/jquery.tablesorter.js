@@ -942,16 +942,17 @@
 				ts.isProcessing( table ); // remove processing icon
 			}
 			if ( c.debug ) {
-				len = Math.min( 5, c.totalRows );
-				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + totalRows +
-					' rows (showing ' + len + ' rows)' + ts.benchmark( cacheTime ) );
+				len = Math.min( 5, c.cache[ 0 ].normalized.length );
+				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + c.totalRows +
+					' rows (showing ' + len + ' rows in log)' + ts.benchmark( cacheTime ) );
 				val = {};
 				for ( colIndex = 0; colIndex < c.columns; colIndex++ ) {
 					for ( cacheIndex = 0; cacheIndex < len; cacheIndex++ ) {
 						if ( !val[ 'row: ' + cacheIndex ] ) {
 							val[ 'row: ' + cacheIndex ] = {};
 						}
-						val[ 'row: ' + cacheIndex ][ c.headerContent[ colIndex ] ] = cache.normalized[ cacheIndex ][ colIndex ];
+						val[ 'row: ' + cacheIndex ][ c.headerContent[ colIndex ] ] =
+							c.cache[ 0 ].normalized[ cacheIndex ][ colIndex ];
 					}
 				}
 				console[ console.table ? 'table' : 'log' ]( val );
