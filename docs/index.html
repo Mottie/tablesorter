@@ -7089,14 +7089,18 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 
 			<tr id="function-computecolumnindex">
 				<td><a href="#" class="permalink">computeColumnIndex</a></td>
-				<td>Adds the correct <code>data-column</code> indexing to all rows passed to this function (<span class="version">v2.16</span>).
-					<div class="collapsible"><br>
+				<td>Adds the correct <code>data-column</code> indexing to all rows passed to this function (<span class="version">v2.16</span>; <span class="version updated">v2.24.7</span>).
+					<div class="collapsible">
+						<p>In <span class="version">v2.24.7</span>, if a <code>config</code> parameter is included, this function will only add a "data-column" attribute to cells where their internal <code>cellIndex</code> doesn't match its actual column index. This does not apply to internal usage where a "data-column" attribute is set on all header &amp; footer cells.</p>
 						Use it as follows:
-						<pre class="prettyprint lang-js">$.tablesorter.computeColumnIndex($rows);</pre>
+						<pre class="prettyprint lang-js">// In v2.24.7, if a config parameter is included "data-columns" are not added
+// to cells where their cellIndex and calculated column index match
+$.tablesorter.computeColumnIndex($rows, config);</pre>
 						<ul>
-							<li><code>$rows</code> - jQuery object of rows in which to add data-column indexes</li>
+							<li><code>$rows</code> - jQuery object of rows in which to add data-column indexes.</li>
+							<li><code>config</code> - this is the <code>table.config</code> (table configuration variables) object.</li>
 						</ul>
-						Example result:<pre class="prettyprint lang-html">&lt;tr&gt;
+						Example result (without including <code>config</code>):<pre class="prettyprint lang-html">&lt;tr&gt;
 	&lt;td colspan=&quot;2&quot; data-column=&quot;0&quot;&gt;r0c0&lt;/td&gt;
 	&lt;td data-column=&quot;2&quot;&gt;r0c2&lt;/td&gt;
 &lt;/tr&gt;
@@ -7104,6 +7108,15 @@ $.tablesorter.isDigit( &quot;(2,345.67)&quot; );</pre>
 	&lt;td data-column=&quot;0&quot;&gt;r1c0&lt;/td&gt;
 	&lt;td data-column=&quot;1&quot;&gt;r1c1&lt;/td&gt;
 	&lt;td data-column=&quot;2&quot;&gt;r1c2&lt;/td&gt;
+&lt;/tr&gt;</pre>
+						Example result (including <code>config</code>):<pre class="prettyprint lang-html">&lt;tr&gt;
+	&lt;td colspan=&quot;2&quot;&gt;r0c0&lt;/td&gt; &lt;!-- data-column=&quot;0&quot; is not included because it matches the cellIndex property --&gt;
+	&lt;td data-column=&quot;2&quot;&gt;r0c2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+	&lt;td&gt;r1c0&lt;/td&gt;
+	&lt;td&gt;r1c1&lt;/td&gt;
+	&lt;td&gt;r1c2&lt;/td&gt;
 &lt;/tr&gt;</pre>
 					</div>
 				</td>
