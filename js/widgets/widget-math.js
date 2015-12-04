@@ -52,7 +52,10 @@
 			if ( !isFiltered || hasFilter ) {
 				$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
 				if ( wo.math_ignore.length ) {
-					$cells = $cells.not( '[data-column=' + wo.math_ignore.join( '],[data-column=' ) + ']' );
+					$cells = $cells.filter( function( indx ) {
+						// using $.inArray is not optimal (needed for IE8)
+						return $.inArray( math.getCellIndex( $( this ) ), wo.math_ignore ) === -1;
+					});
 				}
 				arry = $cells.not( $el ).map( function() {
 					return math.processText( c, $( this ) );
@@ -70,7 +73,7 @@
 				mathAttr = wo.math_dataAttrib,
 				hasFilter = $row.attr( mathAttr + '-filter' ) || wo.math_rowFilter,
 				filtered = wo.filter_filteredRow || 'filtered',
-				cIndex = parseInt( $el.attr( 'data-column' ), 10 ),
+				cIndex = math.getCellIndex( $el ),
 				$rows = c.$table.children( 'tbody' ).children();
 			// make sure tfoot rows are AFTER the tbody rows
 			// $rows.add( c.$table.children( 'tfoot' ).children() );
@@ -82,7 +85,9 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( '[data-column=' + cIndex + ']' );
+					$t = $tr.children().filter( function( indx ) {
+						return math.getCellIndex( $( this ) ) === cIndex;
+					});
 					mathAbove = $t.filter( '[' + mathAttr + '^=above]' ).length;
 					// ignore filtered rows & rows with data-math="ignore" (and starting row)
 					if ( ( ( !$tr.hasClass( filtered ) || hasFilter ) &&
@@ -106,7 +111,9 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( '[data-column=' + cIndex + ']' );
+					$t = $tr.children().filter( function( indx ) {
+						return math.getCellIndex( $( this ) ) === cIndex;
+					});
 					if ( $t.filter( '[' + mathAttr + '^=below]' ).length ) {
 						break;
 					}
@@ -125,7 +132,9 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( '[data-column=' + cIndex + ']' );
+					$t = $tr.children().filter( function( indx ) {
+						return math.getCellIndex( $( this ) ) === cIndex;
+					});
 					if ( ( !$tr.hasClass( filtered ) || hasFilter ) &&
 						$t.not( '[' + mathAttr + '^=above],[' + mathAttr + '^=below],[' + mathAttr + '^=col]' ).length &&
 						!$t.is( $el ) ) {
@@ -157,7 +166,7 @@
 					// $row.children().each(function(){
 					for ( cellIndex = 0; cellIndex < cellLen; cellIndex++ ) {
 						$t = $cells.eq( cellIndex );
-						col = parseInt( $t.attr( 'data-column' ), 10);
+						col = math.getCellIndex( $t );
 						if ( !$t.filter( '[' + mathAttr + ']' ).length && $.inArray( col, wo.math_ignore ) < 0 ) {
 							arry.push( math.processText( c, $t ) );
 						}
@@ -170,11 +179,40 @@
 		setColumnIndexes : function( c ) {
 			c.$table.after( '<div id="_tablesorter_table_placeholder"></div>' );
 			// detach table from DOM to speed up column indexing
-			var $table = c.$table.detach();
-			ts.computeColumnIndex( $table.children( 'tbody' ).children() );
+			var $table = c.$table.detach(),
+				last = 1,
+				// only target rows with a colspan or rows included in a rowspan
+				$rows = $table.children( 'tbody' ).children().filter( function() {
+					var cells, indx, len,
+						$this = $( this ),
+						include = $this.children( '[colspan]' ).length > 0;
+					if ( last > 1 ) {
+						last--;
+						include = true;
+					} else if ( last < 1 ) {
+						last = 1;
+					}
+					if ( $this.children( '[rowspan]' ).length > 0 ) {
+						cells = this.cells;
+						// find max rowspan (in case more than one cell has a rowspan)
+						for ( indx = 0; indx < cells.length; indx++ ) {
+							last = Math.max( cells[ indx ].rowSpan, last );
+						}
+					}
+					return include;
+				});
+			// pass `c` (table.config) to computeColumnIndex so it won't add a data-column
+			// to every tbody cell, just the ones where the .cellIndex property doesn't match
+			// the calculated cell index - hopefully fixes the lag issue in #1048
+			ts.computeColumnIndex( $rows, c );
 			$( '#_tablesorter_table_placeholder' )
 				.after( $table )
 				.remove();
+		},
+
+		getCellIndex : function( $cell ) {
+			var indx = $cell.attr( 'data-column' );
+			return typeof indx === 'undefined' ? $cell[0].cellIndex : parseInt( indx, 10 );
 		},
 
 		recalculate : function(c, wo, init) {
@@ -531,9 +569,10 @@
 				.on( math.events + ' ' + wo.math_event, function( e ) {
 					var init = e.type === 'tablesorter-initialized';
 					if ( !wo.math_isUpdating || init ) {
-						if ( !/filter/.test( e.type ) ) {
+						// don't setColumnIndexes on init here, or it gets done twice
+						if ( !/filter/.test( e.type ) && !init ) {
 							// redo data-column indexes on update
-							math.setColumnIndexes( c ) ;
+							math.setColumnIndexes( c );
 						}
 						math.recalculate( c, wo, init );
 					}

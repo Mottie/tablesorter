@@ -179,7 +179,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version">v2.24.7</span>, <code>math_rowFilter</code> can now be overridden by the row's <code>data-math-filter</code> attribute.</li>
+			<li>In <span class="version">v2.24.7</span>
+				<ul>
+					<li><code>math_rowFilter</code> can now be overridden by the row's <code>data-math-filter</code> attribute.</li>
+					<li>On initialization, only tbody cells with a <code>rowspan</code> or <code>colspan</code> are now processed and only get a "data-column" set if the internal <code>cellIndex</code> doesn't match the calculated cell index. This should improve performance and reduce lag after initialization and updating the table (see <a href="https://github.com/Mottie/tablesorter/issues/1048">issue #1048</a>.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.24.6</span>, added <code>math_rowFilter</code> option.</li>
 			<li>In <span class="version">v2.24.0</span>
 				<ul>
@@ -213,7 +218,7 @@
 			<li>The widget will update the calculations based on filtered rows, and will update if any data within the table changes (using update events).</li>
 			<li>This widget is not optimized for very large tables, for two reasons:
 				<ul>
-					<li>On initialization, it cycles through every table row, calculates the column index, and adds a <code>data-column</code> attribute.</li>
+					<li>On initialization, it cycles through every table row, calculates the column index<del>, and adds a <code>data-column</code> attribute</del> (Fixed in <span class="version updated">v2.24.7</span>).</li>
 					<li>It uses the update method whenever it recalculates values to make the results sortable. This occurs when any of the update methods are used and after the table is filtered.</li>
 				</ul>
 			</li>
