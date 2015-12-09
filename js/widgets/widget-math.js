@@ -29,10 +29,7 @@
 			'filterReset filterEnd ' ).split(' ').join('.tsmath '),
 
 		processText : function( c, $cell ) {
-			var txt = $cell.attr( c.textAttribute );
-			if ( typeof txt === 'undefined' ) {
-				txt = $cell[0].textContent || $cell.text();
-			}
+			var txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) );
 			txt = ts.formatFloat( txt.replace( /[^\w,. \-()]/g, '' ), c.table ) || 0;
 			// isNaN('') => false
 			return isNaN( txt ) ? 0 : txt;
