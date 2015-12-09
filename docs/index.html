@@ -340,11 +340,12 @@
 				<li><a href="example-locale-sort.html">Sorting Accented Characters</a> (<a href="#sortlocalecompare"><code>sortLocaleCompare</code></a>; v2.24; <a href="https://github.com/Mottie/tablesorter/wiki/Language">languages</a>).</li>
 				<li><a href="example-trigger-sort.html">Sort table using a link outside the table</a> (external link; <span class="updated version">v2.17.0</span>).</li>
 				<li><a href="example-child-rows.html">Attach child rows (rows that sort with their parent row)</a> (<span class="updated version">v2.15.12</span>).</li>
-				<li><a href="example-child-rows-filtered.html">Use child rows + filter widget</a> (<span class="updated version">v2.22.0</span>)</li>
+				<li><a href="example-child-rows-filtered.html">Use child rows + filter widget</a> (<span class="updated version">v2.22.0</span>).</li>
 				<li><a href="example-multiple-tbodies.html">Sorting with Multiple Tbodies</a> (v2.2).</li>
 				<li><a href="example-header-column-span.html">Sorting Across Multiple Columns</a> (v2.3).</li>
 				<li><a href="example-option-show-processing.html">Show a processing icon during sorting/filtering</a> (v2.4).</li>
 				<li><a href="example-option-delay-init.html">Delay table initialization</a> (<a href="#delayinit"><code>delayInit</code></a>).</li>
+				<li><a href="example-colspan.html">Sort &amp; filter with colspans</a> (<a href="#duplicatecolspan"><code>duplicateSpan</code></a>; <span class="version">v2.24.7</span>).</li>
 			</ul>
 		</li>
 	</ul>
@@ -462,9 +463,9 @@
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.23.5</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.22.0</span>).</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>).</li>
-				<li><a href="example-widget-filter-custom.html">custom</a> (v2.3.6; <span class="version updated">v2.22.0</span>).</li>
-				<li><a href="example-widget-filter-custom-search.html">custom searches</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.22.0</span>).</li>
-				<li><a href="example-widget-filter-custom-search2.html">custom search (example #2)</a> (<span class="version">v2.19.1</span>; <span class="version updated">v2.24.6</span>).</li>
+				<li><a href="example-widget-filter-custom.html">custom filter functions</a> (v2.3.6; <span class="version updated">v2.22.0</span>).</li>
+				<li><a href="example-widget-filter-custom-search.html">custom search types</a> (<span class="version">v2.17.5</span>; <span class="version updated">v2.22.0</span>).</li>
+				<li><a href="example-widget-filter-custom-search2.html">custom search type (example #2: date range)</a> (<span class="version">v2.19.1</span>; <span class="version updated">v2.24.6</span>).</li>
 				<li><a href="example-widget-filter-childrows.html">child rows</a> (<span class="version">v2.23.4</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.21.3</span>).</li>
@@ -581,6 +582,26 @@
 				<td>true</td>
 				<td>Indicates if tablesorter should disable selection of text in the table header (TH).  Makes header behave more like a button.</td>
 				<td></td>
+			</tr>
+
+			<tr id="duplicatespan">
+				<td><a href="#" class="permalink">duplicateSpan</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>Any <code>colspan</code> cells in the tbody may have its content duplicated in the cache for each spanned column (<span class="version">v2.24.7</span>).
+					<div class="collapsible">
+						<p>If <code>true</code>, the cache will contain duplicated cell contents for every column the <code>colspan</code> includes. This makes it easier to sort &amp; filter columns because a cell spanning all columns will only work with one parser. If <code>false</code>, the contents of cells that are spanned will be set to an empty string.</p>
+						<pre class="prettyprint lang-js">// this row: &lt;tr&gt;&lt;td colspan="3"&gt;foo&lt;/td&gt;&lt;td&gt;bar&lt;/td&gt;&lt;/tr&gt; results in this row cache:
+[ 'foo', 'foo', 'foo', 'bar' ] // if duplicateSpan = true
+[ 'foo', '',    '',    'bar' ] // if duplicateSpan = false</pre>
+						<span class="label warning">*NOTE*</span>
+						<ul>
+							<li>Cells in the tbody with a <code>rowspan</code> are <em>not yet supported</em> and will not sort or filter as you would expect.</li>
+							<li>Having these values in the cache does not automatically guarantee that all widgets will work as expected with <code>colspan</code>s in the tbody (e.g. scroller widget with fixed columns)</li>
+						</ul>
+					</div>
+				</td>
+				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
 			<tr id="cssasc">

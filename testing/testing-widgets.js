@@ -141,12 +141,29 @@ jQuery(function($){
 			assert.cacheCompare( this.table, 3, [ 12, 18, 13, 18 ], 'starting filter value on age column', true );
 		});
 
+		QUnit.test( 'Filter column range', function(assert) {
+			expect(10);
+			var range = $.tablesorter.filter.findRange,
+				c = { columns: 10 }; // psuedo table.config
+
+			assert.deepEqual( range( c, '6' ),         [ 6 ], '6' );
+			assert.deepEqual( range( c, '5, 6' ),      [ 5,6 ], '5, 6' );
+			assert.deepEqual( range( c, '5 - 6' ),     [ 5,6 ], '5 - 6' );
+			assert.deepEqual( range( c, '1-3,5-6,8' ), [ 1,2,3,5,6,8 ], '1-3,5-6,8' );
+			assert.deepEqual( range( c, '6- 3, 2,4' ), [ 3,4,5,6,2,4 ], '6- 3,2,4 (dupes included)' );
+			assert.deepEqual( range( c, '-1-3, 11' ),  [ 1,2,3 ], '-1-3, 11 (negative & out of range ignored)' );
+			assert.deepEqual( range( c, '8-12' ),      [ 8,9 ], '8-12 (not out of range)' );
+			assert.deepEqual( range( c, 'all' ),       [ 0,1,2,3,4,5,6,7,8,9 ], 'all' );
+			assert.deepEqual( range( c, 'any-text' ),  [ 0,1,2,3,4,5,6,7,8,9 ], 'text with dash -> all columns' );
+			assert.deepEqual( range( c, 'a-b-c,100' ), [ 0,1,2,3,4,5,6,7,8,9 ], 'text with dashes & commas -> all columns' );
+		});
+
 		QUnit.test( 'Filter searches', function(assert) {
 			var ts = this.ts,
-					c = this.c,
-					wo = this.wo,
-					$table = this.$table,
-					table = this.table;
+				c = this.c,
+				wo = this.wo,
+				$table = this.$table,
+				table = this.table;
 			expect(33);
 
 			return QUnit.SequentialRunner(

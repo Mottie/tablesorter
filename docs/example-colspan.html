@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+	<title>jQuery plugin: Tablesorter 2.0 - Sorting &amp; Filtering with Colspans</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<style id="css">.tablesorter-blue td[colspan] { color: red; } /* for demo purposes */</style>
+
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
+
+	<script>
+	$(function(){
+		var dupe = true;
+		$( '#dupe' ).click( function() {
+			dupe = !dupe;
+			$( this ).text( '' + dupe );
+			$( 'table' )[0].config.duplicateSpan = dupe;
+			$( 'table' ).trigger( 'update' );
+		});
+		$('table').on('filterEnd', function( event, c ) {
+			$( '#show-filter' ).html( '[ "' + c.lastSearch.join('", "') + '" ]' );
+		});
+		$('.search').click(function(){
+			var $this = $(this),
+				filter = [],
+				col = $this.attr( 'data-column' );
+			if ( col === 'all' ) {
+				col = $('table')[0].config.columns;
+			}
+			filter[ col ] = $this.text();
+			$.tablesorter.setFilters( $('table'), filter );
+		});
+	});
+	</script>
+
+	<script id="js">$( function() {
+	$( 'table' ).tablesorter({
+		theme : 'blue',
+
+		duplicateSpan : true, // default setting
+
+		widthFixed: true,
+		widgets : [ 'zebra', 'filter' ],
+		widgetOptions : {
+			filter_external: 'input.search',
+			filter_reset: '.reset'
+		}
+	});
+
+	$('.sort').click(function() {
+		// it is still possible to use 'a', 'd', 'n', 's' or 'o' on the second column
+		// see http://mottie.github.io/tablesorter/docs/#sorton
+		$('table').trigger('sorton', [ [[ $(this).text(), 'n' ]] ]);
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Sorting &amp; Filtering with Colspans</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+		<ul>
+			<li>Having a <code>colspan</code> in the tbody is not fully supported by all widgets, and there are still some minor issues to work out.</li>
+			<li><span class="label alert">Alert</span> Cells with a <code>rowspan</code> are <em>not</em> currently supported.</li>
+			<li><span class="label warning">Warning</span> Cells with a <code>colspan</code> will attempt to use the parser set for that column and <em>will not</em> use the parser for another column while sorting or filtering - try this <button class="search" data-column="3" type="button">&gt;10</button> - the "17 Koala" cell is not parsed as a numeric value and is thus considered a string.</li>
+			<li>The <code>duplicateSpan</code> option (storing of cache data) is a preliminary step in providing <code>colspan</code> support, it is by no means complete.</li>
+			<li>This demo requires tablesorter v2.24.7+, as well the corresponding version of the filter widget.<br><br></li>
+
+			<li>Follow the demo steps to hopefully get the full understanding of how to use <code>colspan</code>s in the tbody.</li>
+			<li>Ultimately, with the issues noted below, I would not recommend including an entire column in the tbody that does not have a corresponding header cell - <em>don't do what I did in this demo for the first two colums</em>.</li>
+		</ul>
+	<p>
+
+<h1>Demo</h1>
+<div id="demo"><ul>
+	<li>Sort Column <button class="sort" type="button">0</button> <button class="sort" type="button">1</button>
+		(toggle sort direction) - There is no method to use the UI to sort the second column because it has no header; use "sorton" instead.
+	</li>
+	<li>Search:
+		<button class="search" type="button" data-column="2">zyx</button>
+		<button class="search" type="button" data-column="3">7</button>
+		<button class="search" type="button" data-column="4">Koala</button>
+		<button class="search" type="button" data-column="5">edu</button>,
+		then toggle <code>duplicateSpan</code> : <button id="dupe" type="button">true</button>.
+	</li>
+	<li>Searching the first two columns <sup class="results xsmall">&dagger;</sup>:
+		<ul>
+			<li>Search using column <code>0</code> (zero):<br>
+				<button class="search" type="button" data-column="0">4</button> (nothing visible in column filter)<br>
+				<button class="search" type="button" data-column="1">&gt;4</button> (search second column, nothing visible in filter)
+			</li>
+			<li>Search using column <code>6</code> (used by "all" filter):<br>
+				<button class="search" type="button" data-column="6">4</button> (search both index columns)<sup class="results xsmall">&Dagger;</sup><br>
+				<button class="search" type="button" data-column="6">1:4</button> (only search "Group" column)<br>
+				<button class="search" type="button" data-column="6">2:&gt;4</button> (search second column)
+				</li>
+		</ul>
+	</li>
+</ul>
+
+Search:
+<input type="search" class="search" data-column="all" placeholder="Search all columns"><sup class="results xsmall">&Dagger;</sup>
+<button class="reset">Reset</button>
+<code id="show-filter"></code>
+
+<p class="xsmall"><span class="results">&dagger;</span> The reason for this issue is that the filter input in the index column has this setting:
+<code>data-column="0-1"</code>, and it has not yet been worked out how to properly target that input.<br>
+<span class="results">&Dagger;</span> It is still being investigated as to why the search using the button targeting column 6 and the "all" input have different results (Enter "4" in the input and 4 rows will appear in the result, then click on the "4" to search both index columns - one less row).
+</p>
+
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th rowspan="2" colspan="2">Index (colspan 2)</th>
+			<th colspan="4">Products</th>
+		</tr>
+		<tr>
+			<th>Product ID</th>
+			<th>Numeric</th>
+			<th>Animals</th>
+			<th >Url</th>
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			<th colspan="2">Index</th>
+			<th>Product ID</th>
+			<th>Numeric</th>
+			<th id="test">Animals</th>
+			<th >Url</th>
+		</tr>
+	</tfoot>
+	<tbody>
+		<tr><td>Group 1</td><td style="width:100px">6</td><td>abc 9</td><td>155</td><td>Lion</td><td>http://www.nytimes.com/</td></tr>
+		<tr><td>Group 4</td><td>1</td><td>abc 1</td><td>237</td><td colspan="2">Ox http://www.yahoo.com</td></tr>
+		<tr><td>Group 1</td><td>2</td><td colspan="4">zyx 1 957 Koala http://www.mit.edu/</td></tr>
+		<tr><td>Group 0</td><td>5</td><td>abc 2</td><td>56</td><td>Elephant</td><td>http://www.wikipedia.org/</td></tr>
+		<tr><td>Group 3</td><td>0</td><td>abc 123</td><td colspan="2">17 Koala</td><td>http://www.google.com</td></tr>
+		<tr><td>Group 2</td><td>8</td><td>zyx 9</td><td>10</td><td>Girafee</td><td>http://www.facebook.com</td></tr>
+		<tr><td>Group 1</td><td>3</td><td colspan="2">zyx 4 767</td><td>Bison</td><td>http://www.whitehouse.gov/</td></tr>
+		<tr><td>Group 2</td><td>4</td><td>abc 11</td><td>3</td><td>Chimp</td><td>http://www.ucla.edu/</td></tr>
+		<tr><td>Group 4</td><td>7</td><td colspan="2">ABC 10 87</td><td>Zebra</td><td>http://www.google.com</td></tr>
+		<tr><td>Group 3</td><td>9</td><td>zyx 12</td><td>0</td><td>Koala</td><td>http://www.nasa.gov/</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>
+

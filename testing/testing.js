@@ -143,11 +143,13 @@ jQuery(function($){
 		$table3 = $('#table3'),
 		$table4 = $('#table4'),
 		$table5 = $('#table5'), // empty table
+		$table6 = $('#table6'), // colspan table
 		table1 = $table1[0],
 		table2 = $table2[0],
 		table3 = $table3[0],
 		table4 = $table4[0],
 		table5 = $table5[0],
+		table6 = $table6[0],
 		th0 = $table1.find('th')[0], // first table header cell
 		init = false,
 		sortIndx = 0,
@@ -210,6 +212,7 @@ jQuery(function($){
 	});
 
 	$table5.tablesorter();
+	$table6.tablesorter();
 
 	QUnit.module('core');
 	/************************************************
@@ -607,6 +610,42 @@ jQuery(function($){
 		assert.deepEqual( t.sort($.tablesorter.sortNatural), [ '', 'a1', 'a02', 'a10', 'a33', 'a43', 'a55', 'a87', 'a102', 'a255' ], 'test sortNatural function directly' );
 
 		assert.cacheCompare( table4, 6, [ '', '', '', '', '', '', '', '', '', '' ], 'parser-false does not extract text' );
+
+	});
+
+
+	QUnit.test( 'colspan parsing', function(assert) {
+		assert.expect(2);
+
+		t = [
+			'g1', '6', 'a9', 155, 'l', 'nytimes',
+			'g1', '2', 'z1 957 K mit', 'z1 957 K mit', 'z1 957 K mit', 'z1 957 K mit', // colspan 4
+			'g3', '0', 'a13', '17 K', '17 K', 'google',
+			'g2', '8', 'z9', 10, 'g', 'facebook',
+			'g1', '3', 'z24 67', 'z24 67', 'b', 'whitehouse',
+			'g4', '7 A10', '7 A10', 87, 'z', 'google',
+			'g3', '9', 'z12', 0, 'K nasa', 'K nasa'
+		];
+		assert.cacheCompare( table6,'all', t, 'colspans in tbody (duplicateSpan:true)' );
+
+		$('#testblock').html('<table class="tablesorter">' +
+			'<thead><tr><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>' +
+			'<tbody>' +
+				'<tr><td>1</td><td colspan="2">2</td><td>3</td></tr>' +
+				'<tr><td colspan="3">y</td><td>z</td></tr>' +
+				'<tr><td>a</td><td>b</td><td colspan="2">c</td></tr>' +
+			'</tbody></table>')
+			.find('table')
+			.tablesorter({
+				headers : { '*' : { sorter: 'text' } },
+				duplicateSpan: false
+			});
+		t = [
+			'1', '2', '',  '3',
+			'y', '',  '',  'z',
+			'a', 'b', 'c', ''
+		];
+		assert.cacheCompare( $('#testblock table')[0], 'all', t, 'colspans not duplicated in cache (duplicateSpan:false)' );
 
 	});
 

@@ -62,6 +62,7 @@
 
 			emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero, emptyMax, emptyMin
 			stringTo         : 'max',      // sort strings in numerical column as max, min, top, bottom, zero
+			duplicateSpan    : true,       // colspan cells in the tbody will have duplicated content in the cache for each spanned column
 			textExtraction   : 'basic',    // text extraction method/function - function( node, table, cellIndex ){}
 			textAttribute    : 'data-text',// data-attribute that contains alternate cell text (used in default textExtraction function)
 			textSorter       : null,       // choose overall or specific column sorter function( a, b, direction, table, columnIndex ) [alt: ts.sortText]
@@ -209,7 +210,7 @@
 					if ( table.hasInitialized ) {
 						console.warn( 'Stopping initialization. Tablesorter has already been initialized' );
 					} else {
-						console.error( 'Stopping initialization! No table, thead or tbody' );
+						console.error( 'Stopping initialization! No table, thead or tbody', table );
 					}
 				}
 				return;
@@ -561,7 +562,7 @@
 				// this may get updated numerous times if there are multiple rows
 				c.sortVars[ column ] = {
 					count : -1, // set to -1 because clicking on the header automatically adds one
-					order: ts.formatSortingOrder( tmp ) ?
+					order: ts.getOrder( tmp ) ?
 						[ 1, 0, 2 ] : // desc, asc, unsorted
 						[ 0, 1, 2 ],  // asc, desc, unsorted
 					lockedOrder : false
@@ -569,7 +570,7 @@
 				tmp = ts.getData( $elem, configHeaders, 'lockedOrder' ) || false;
 				if ( typeof tmp !== 'undefined' && tmp !== false ) {
 					c.sortVars[ column ].lockedOrder = true;
-					c.sortVars[ column ].order = ts.formatSortingOrder( tmp ) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
+					c.sortVars[ column ].order = ts.getOrder( tmp ) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
 				}
 				// add cell to headerList
 				c.headerList[ index ] = elem;
@@ -692,6 +693,12 @@
 							if ( span > 0 ) {
 								colIndex += span;
 								max += span;
+								while ( span + 1 > 0 ) {
+									// set colspan columns to use the same parsers & extractors
+									list.parsers[ colIndex - span ] = parser;
+									list.extractors[ colIndex - span ] = extractor;
+									span--;
+								}
 							}
 						}
 						colIndex++;
@@ -834,7 +841,7 @@
 		buildCache : function( c, callback, $tbodies ) {
 			var cache, val, txt, rowIndex, colIndex, tbodyIndex, $tbody, $row,
 				cols, $cells, cell, cacheTime, totalRows, rowData, prevRowData,
-				colMax, span, cacheIndex, max, len,
+				colMax, span, cacheIndex, hasParser, max, len, index,
 				table = c.table,
 				parsers = c.parsers;
 			// update tbody variable
@@ -909,22 +916,31 @@
 					max = c.columns;
 					for ( colIndex = 0; colIndex < max; ++colIndex ) {
 						cell = $row[ 0 ].cells[ colIndex ];
-						if ( typeof parsers[ cacheIndex ] === 'undefined' ) {
-							if ( c.debug ) {
-								console.warn( 'No parser found for column ' + colIndex + '; cell:', cell, 'does it have a header?' );
+						if ( cell && cacheIndex < c.columns ) {
+							hasParser = typeof parsers[ cacheIndex ] !== 'undefined';
+							if ( !hasParser && c.debug ) {
+								console.warn( 'No parser found for row: ' + rowIndex + ', column: ' + colIndex +
+									'; cell containing: "' + $(cell).text() + '"; does it have a header?' );
 							}
-						} else if ( cell ) {
 							val = ts.getElementText( c, cell, cacheIndex );
 							rowData.raw[ cacheIndex ] = val; // save original row text
+							// save raw column text even if there is no parser set
 							txt = ts.getParsedText( c, cell, cacheIndex, val );
 							cols[ cacheIndex ] = txt;
-							if ( ( parsers[ cacheIndex ].type || '' ).toLowerCase() === 'numeric' ) {
+							if ( hasParser && ( parsers[ cacheIndex ].type || '' ).toLowerCase() === 'numeric' ) {
 								// determine column max value (ignore sign)
 								colMax[ cacheIndex ] = Math.max( Math.abs( txt ) || 0, colMax[ cacheIndex ] || 0 );
 							}
 							// allow colSpan in tbody
 							span = cell.colSpan - 1;
 							if ( span > 0 ) {
+								index = 0;
+								while ( index <= span ) {
+									// duplicate text (or not) to spanned columns
+									rowData.raw[ cacheIndex + index ] = c.duplicateSpan || index === 0 ? val : '';
+									cols[ cacheIndex + index ] = c.duplicateSpan || index === 0 ? val : '';
+									index++;
+								}
 								cacheIndex += span;
 								max += span;
 							}
@@ -953,7 +969,7 @@
 						if ( !val[ 'row: ' + cacheIndex ] ) {
 							val[ 'row: ' + cacheIndex ] = {};
 						}
-						val[ 'row: ' + cacheIndex ][ c.headerContent[ colIndex ] ] =
+						val[ 'row: ' + cacheIndex ][ c.$headerIndexed[ colIndex ].text() ] =
 							c.cache[ 0 ].normalized[ cacheIndex ][ colIndex ];
 					}
 				}
@@ -1054,7 +1070,7 @@
 							col = parseInt( $el.attr( 'data-column' ), 10 ),
 							end = col + c.$headers[ i ].colSpan;
 						for ( ; col < end; col++ ) {
-							include = include ? ts.isValueInArray( col, c.sortList ) > -1 : false;
+							include = include ? include || ts.isValueInArray( col, c.sortList ) > -1 : false;
 						}
 						return include;
 					});
@@ -1159,6 +1175,14 @@
 				col = parseInt( val[ 0 ], 10 );
 				// prevents error if sorton array is wrong
 				if ( col < c.columns ) {
+
+					// set order if not already defined - due to colspan header without associated header cell
+					// adding this check prevents a javascript error
+					if ( !c.sortVars[ col ].order ) {
+						order = c.sortVars[ col ].order = ts.getOrder( c.sortInitialOrder ) ? [ 1, 0, 2 ] : [ 0, 1, 2 ];
+						c.sortVars[ col ].count = 0;
+					}
+
 					order = c.sortVars[ col ].order;
 					dir = ( '' + val[ 1 ] ).match( /^(1|d|s|o|n)/ );
 					dir = dir ? dir[ 0 ] : '';
@@ -1437,6 +1461,7 @@
 					ts.initSort( c, cell, event );
 				}, 50 );
 			}
+
 			var arry, indx, headerIndx, dir, temp, tmp, $header,
 				notMultiSort = !event[ c.sortMultiSortKey ],
 				table = c.table,
@@ -1708,7 +1733,7 @@
 			return ( parsers && parsers[ column ] ) ? parsers[ column ].type || '' : '';
 		},
 
-		formatSortingOrder : function( val ) {
+		getOrder : function( val ) {
 			// look for 'd' in 'desc' order; return true
 			return ( /^d/i.test( val ) || val === 1 );
 		},
