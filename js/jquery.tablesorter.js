@@ -394,10 +394,7 @@
 			})
 			.bind( 'applyWidgetId' + namespace, function( e, id ) {
 				e.stopPropagation();
-				var widget = ts.getWidgetById( id );
-				if ( widget ) {
-					widget.format( this, this.config, this.config.widgetOptions );
-				}
+				ts.applyWidgetId( this, id );
 			})
 			.bind( 'applyWidgets' + namespace, function( e, init ) {
 				e.stopPropagation();
@@ -1859,9 +1856,50 @@
 			}
 		},
 
+		applyWidgetId : function( table, id, init ) {
+			var applied, time, name,
+				c = table.config,
+				wo = c.widgetOptions,
+				widget = ts.getWidgetById( id );
+			if ( widget ) {
+				name = widget.id;
+				applied = false;
+				if ( c.debug ) { time = new Date(); }
+
+				if ( init || !( c.widgetInit[ name ] ) ) {
+					// set init flag first to prevent calling init more than once (e.g. pager)
+					c.widgetInit[ name ] = true;
+					if ( table.hasInitialized ) {
+						// don't reapply widget options on tablesorter init
+						ts.applyWidgetOptions( table );
+					}
+					if ( typeof widget.init === 'function' ) {
+						applied = true;
+						if ( c.debug ) {
+							console[ console.group ? 'group' : 'log' ]( 'Initializing ' + name + ' widget' );
+						}
+						widget.init( table, widget, c, wo );
+					}
+				}
+				if ( !init && typeof widget.format === 'function' ) {
+					applied = true;
+					if ( c.debug ) {
+						console[ console.group ? 'group' : 'log' ]( 'Updating ' + name + ' widget' );
+					}
+					widget.format( table, c, wo, false );
+				}
+				if ( c.debug ) {
+					if ( applied ) {
+						console.log( 'Completed ' + ( init ? 'initializing ' : 'applying ' ) + name + ' widget' + ts.benchmark( time ) );
+						if ( console.groupEnd ) { console.groupEnd(); }
+					}
+				}
+			}
+		},
+
 		applyWidget : function( table, init, callback ) {
 			table = $( table )[ 0 ]; // in case this is called externally
-			var indx, len, names, widget, name, applied, time, time2,
+			var indx, len, names, widget, time,
 				c = table.config,
 				widgets = [];
 			// prevent numerous consecutive widget applications
@@ -1900,40 +1938,7 @@
 				}
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = widgets[ indx ];
-					if ( widget ) {
-						name = widget.id;
-						applied = false;
-						if ( c.debug ) { time2 = new Date(); }
-
-						if ( init || !( c.widgetInit[ name ] ) ) {
-							// set init flag first to prevent calling init more than once (e.g. pager)
-							c.widgetInit[ name ] = true;
-							if ( table.hasInitialized ) {
-								// don't reapply widget options on tablesorter init
-								ts.applyWidgetOptions( table );
-							}
-							if ( typeof widget.init === 'function' ) {
-								applied = true;
-								if ( c.debug ) {
-									console[ console.group ? 'group' : 'log' ]( 'Initializing ' + name + ' widget' );
-								}
-								widget.init( table, widget, table.config, table.config.widgetOptions );
-							}
-						}
-						if ( !init && typeof widget.format === 'function' ) {
-							applied = true;
-							if ( c.debug ) {
-								console[ console.group ? 'group' : 'log' ]( 'Updating ' + name + ' widget' );
-							}
-							widget.format( table, table.config, table.config.widgetOptions, false );
-						}
-						if ( c.debug ) {
-							if ( applied ) {
-								console.log( 'Completed ' + ( init ? 'initializing ' : 'applying ' ) + name + ' widget' + ts.benchmark( time2 ) );
-								if ( console.groupEnd ) { console.groupEnd(); }
-							}
-						}
-					}
+					ts.applyWidgetId( table, widget.id, init );
 				}
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 				// callback executed on init only
@@ -2112,9 +2117,11 @@
 							break;
 						}
 					}
+					// jscs:disable disallowEmptyBlocks
 					if ( columns && cell.cellIndex === firstAvailCol ) {
 						// don't to anything
 					} else if ( cell.setAttribute ) {
+						// jscs:enable disallowEmptyBlocks
 						// add data-column (setAttribute = IE8+)
 						cell.setAttribute( 'data-column', firstAvailCol );
 					} else {
