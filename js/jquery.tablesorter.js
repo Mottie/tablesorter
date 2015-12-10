@@ -1864,6 +1864,10 @@
 			if ( widget ) {
 				name = widget.id;
 				applied = false;
+				// add widget name to option list so it gets reapplied after sorting, filtering, etc
+				if ( $.inArray( name, c.widgets ) < 0 ) {
+					c.widgets.push( name );
+				}
 				if ( c.debug ) { time = new Date(); }
 
 				if ( init || !( c.widgetInit[ name ] ) ) {
