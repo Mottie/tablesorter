@@ -8,6 +8,7 @@
 bin/
 tmp/
 *_test*.*
+*_idea*.*
 *.tmp
 *.bak
 *.swp
