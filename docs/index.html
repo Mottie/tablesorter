@@ -5071,15 +5071,20 @@ $.tablesorter.updateCell( config, $cell, resort, callback );</pre>
 
 			<tr id="applywidgetid">
 				<td><a href="#" class="permalink">applyWidgetId</a></td>
-				<td>Apply the selected widget to the table, but the widget will not continue to be applied after each sort. See the example, it's easier than describing it.
+				<td>Apply the selected widget to the table, but the widget will not continue to be applied after each sort. See the example, it's easier than describing it (<span class="version updated">v2.24.7</span>).
 					<div class="collapsible">
+						<p>In <span class="version updated">v2.24.7</span>, this method ensures that the widget initialization code is executed as well as the format function. So now a widget that was not previously initialized or had been previously removed, can be reapplied.</p>
+						<p>Only <em>one</em> widget can be applied at a time using this method.</p>
+						<h4>Direct method:</h4>
+						<pre class="prettyprint lang-js">$.tablesorter.applyWidgetId( $( 'table' ), 'zebra' );</pre>
+						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">$(function(){
   // initialize tablesorter without the widget
   $("table").tablesorter();
 
   // click a button to apply the zebra striping
   $("button").click(function(){
-    $('table').trigger('applyWidgetId', ['zebra']);
+    $('table').trigger('applyWidgetId', 'zebra');
     return false;
   });
 
@@ -5092,14 +5097,46 @@ $.tablesorter.updateCell( config, $cell, resort, callback );</pre>
 				<td><a href="#" class="permalink">applyWidgets</a></td>
 				<td>Apply the set widgets to the table (<span class="version updated">v2.16.0</span>).
 					<div class="collapsible">
-						This method can be used after a table has been initialized, but it won't work unless you update the configuration settings. See the example, it's easier than describing it.
-						<pre class="prettyprint lang-js">// Update the list of widgets to apply to the table (add or remove)
-// $("table").data("tablesorter").widgets = ["zebra"]; // works the same as
-$("table")[0].config.widgets = ["zebra"];
-
-// This method applies the widget - no need to keep updating
+						<p>This method only updates the widgets listed in the <a href="#widgets"><code>table.config.widgets</code></a> option.</p>
+						<pre class="prettyprint lang-js">// This method applies the widgets already added to tablesorter
 $('table').trigger('applyWidgets');
+</pre>
+						Use this method can be used to add multiple widgets to the table.
+						<pre class="prettyprint lang-js">var $table = $( 'table' );
+$table[0].config.widgets = [ 'zebra', 'columns' ];
+$table.trigger('applyWidgets');
 </pre></div>
+				</td>
+				<td><a href="example-apply-widget.html">Example</a></td>
+			</tr>
+
+			<tr id="removewidget">
+				<td><a href="#" class="permalink">removeWidget</a></td>
+				<td>Remove the named widget from the table (<span class="version">v2.24.7</span>).
+					<div class="collapsible">
+						<p>This method will remove the named widget(s) from the table.</p>
+						<h4>Direct method:</h4>
+						<pre class="prettyprint lang-js">$.tablesorter.removeWidget( $( 'table' ), widget );</pre>
+						<h4>Triggered event method:</h4>
+						<pre class="prettyprint lang-js">$( 'table' ).trigger( 'removeWidget', widget );</pre>
+						<p>The <code>widget</code> parameter can be used as follows:</p>
+						<ul>
+							<li>Single widget name - string
+								<pre class="prettyprint lang-js">// only remove zebra widget
+$( 'table' ).trigger( 'removeWidget', 'zebra' );</pre>
+							</li>
+							<li>Multiple widgets names - array or string (space or comma separated)
+								<pre class="prettyprint lang-js">// remove multiple widgets (the below methods are all equivalent)
+$( 'table' ).trigger( 'removeWidget', 'zebra columns' );
+$( 'table' ).trigger( 'removeWidget', 'zebra, columns' );
+$( 'table' ).trigger( 'removeWidget', [ 'zebra', 'columns' ] );</pre>
+							</li>
+							<li><code>true</code> - boolean (removes all widgets; passing <code>false</code> does nothing)
+								<pre class="prettyprint lang-js">// remove all widgets
+$( 'table' ).trigger( 'removeWidget', true );</pre>
+							</li>
+						</ul>
+						</div>
 				</td>
 				<td><a href="example-apply-widget.html">Example</a></td>
 			</tr>

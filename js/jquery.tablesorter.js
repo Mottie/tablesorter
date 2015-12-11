@@ -405,6 +405,10 @@
 				e.stopPropagation();
 				ts.refreshWidgets( this, all, dontapply );
 			})
+			.bind( 'removeWidget' + namespace, function( e, name, refreshing ) {
+				e.stopPropagation();
+				ts.removeWidget( this, name, refreshing );
+			})
 			.bind( 'destroy' + namespace, function( e, removeClasses, callback ) {
 				e.stopPropagation();
 				ts.destroy( this, removeClasses, callback );
@@ -2344,10 +2348,11 @@
 			}
 			// remove widget added rows, just in case
 			$h.find( 'tr' ).not( $r ).remove();
-			// disable tablesorter
+			// disable tablesorter - not using .unbind( namespace ) because namespacing was
+			// added in jQuery v1.4.3 - see http://api.jquery.com/event.namespace/
 			events = 'sortReset update updateRows updateAll updateHeaders updateCell addRows updateComplete sorton ' +
-				'appendCache updateCache applyWidgetId applyWidgets refreshWidgets destroy mouseup mouseleave keypress ' +
-				'sortBegin sortEnd resetToLoadState '.split( ' ' )
+				'appendCache updateCache applyWidgetId applyWidgets refreshWidgets removeWidget destroy mouseup mouseleave ' +
+				'keypress sortBegin sortEnd resetToLoadState '.split( ' ' )
 				.join( c.namespace + ' ' );
 			$t
 				.removeData( 'tablesorter' )
