@@ -1219,6 +1219,12 @@
 		},
 
 		updateCell : function( c, cell, resort, callback ) {
+			if ( ts.isEmptyObject( c.cache ) ) {
+				// empty table, do an update instead - fixes #1099
+				ts.updateHeader( c );
+				ts.commonUpdate( c, resort, callback );
+				return;
+			}
 			c.table.isUpdating = true;
 			c.$table.find( c.selectorRemove ).remove();
 			// get position from the dom
