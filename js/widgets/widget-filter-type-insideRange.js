@@ -1,4 +1,4 @@
-/*! Widget: filter, insideRange filter type - updated 11/22/2015 (v2.24.6) */
+/*! Widget: filter, insideRange filter type - updated 12/10/2015 (v2.24.7) */
 ;(function($){
 	'use strict';
 
@@ -15,14 +15,15 @@
 		};
 
 	ts.filter.types.insideRange = function( c, data ) {
-		if ( isDigit.test( data.iFilter ) && range.test( data.iExact ) ) {
+		// don't look for an inside range if "any" match is enabled... multiple "-" really screw things up
+		if ( !data.anyMatch && isDigit.test( data.iFilter ) && range.test( data.iExact ) ) {
 			var t, val, low, high,
 				index = data.index,
 				cell = data.$cells[ index ],
 				parts = data.iExact.split( range ),
-				format = c.parsers[data.index].format;
-			// the cell does not contain a range
-			if ( parts && parts.length < 2 ) {
+				format = c.parsers[data.index] && c.parsers[data.index].format;
+			// the cell does not contain a range or the parser isn't defined
+			if ( parts && parts.length < 2 || typeof format !== 'function' ) {
 				return null;
 			}
 			// format each side part of the range using the assigned parser
