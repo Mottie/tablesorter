@@ -348,6 +348,7 @@
 
 			var options, string, txt, $header, column, filters, val, fxn, noSelect;
 			c.$table.addClass( 'hasFilters' );
+			c.lastSearch = [];
 
 			// define timers so using clearTimeout won't cause an undefined error
 			wo.filter_searchTimer = null;
