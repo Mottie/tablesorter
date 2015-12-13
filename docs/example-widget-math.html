@@ -451,7 +451,7 @@ math_suffix : '{content}<span class="red">!</span>'
 						<td><a href="#" class="permalink">math_rowFilter</a></td>
 						<td><code>''</code></td>
 						<td>
-							Set this option apply a filter to targeted rows (<span class="version">v2.24.6</span>).
+							Set this option apply a filter to targeted rows (<span class="version">v2.24.6</span>; <span class="version updated">v2.24.7</span>).
 							<div class="collapsible">
 							<p>This option applys the set filter (<a href="http://api.jquery.com/filter/">jQuery <code>.filter()</code></a> to the targeted rows.</p>
 							<p>If this option is set, rows filtered out by the filter widget are included, so you will need to include them in this selector if you wish to filter them out (e.g. <code>':visible:not(.filtered)'</code> (only include visible &amp; rows not filtered out by the filter widget)</p>
@@ -459,8 +459,8 @@ math_suffix : '{content}<span class="red">!</span>'
 // for example, here is the functional equivalent
 // math_rowFilter : function(index, element) { return $(element).is(':visible:not(.filtered)'); }
 math_rowFilter : ':visible:not(.filtered)'</pre>
-								In <span class="version">v2.24.7</span>, this setting my be overridden in specific rows by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option)
-								<pre class="prettyprint lang-html">&lt;tr data-math-filter=":visible"&gt;...&lt;/tr&gt;</pre>
+								In <span class="version">v2.24.7</span>, this setting my be overridden for each math type by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option) to the cell.
+								<pre class="prettyprint lang-html">&lt;td data-math-filter=":visible" data-math="all-sum"&gt;...&lt;/td&gt;</pre>
 								<span class="label label-info">Note</span> The <code>data-math-filter</code> attribute is ignored if set to an empty string; instead use <code>data-math-filter="*"</code> to target all rows as done in the first example on this page.
 							</div>
 						</td>

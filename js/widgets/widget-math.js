@@ -313,7 +313,7 @@
 							if ( $el.parent().hasClass( wo.filter_filteredRow || 'filtered' ) ) {
 								continue;
 							}
-							hasFilter = hasFilter || $el.attr( mathAttr + '-filter' ) || wo.math_rowFilter;
+							hasFilter = $el.attr( mathAttr + '-filter' ) || wo.math_rowFilter;
 							formula = ( $el.attr( mathAttr ) || '' ).replace( type + '-', '' );
 							arry = ( type === 'row' ) ? math.getRow( c, $el, hasFilter ) :
 								( type === 'all' ) ? getAll : math.getColumn( c, $el, type, hasFilter );
