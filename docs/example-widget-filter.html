@@ -727,7 +727,21 @@ $.extend($.tablesorter.language, {
 	to  : 'à|a',
 	or  : 'ou|o',
 	and : 'et|y'
-});</pre><span class="label label-info">Note</span> These changes still require the user to enter spaces in the filter to perform the search, e.g. <code>1 à 10</code> (shows rows with numbers between 1 and 10).
+});</pre>
+			<h3>Notes</h3>
+			<ul>
+				<li><span class="label label-info">Info</span> These changes still require the user to enter spaces in the filter to perform the search, e.g. <code>1 à 10</code> (shows rows with numbers between 1 and 10).</li>
+				<li>
+					<span class="label warning">Warning</span> These language values are added to a regular expression using <code>new RegExp()</code>:
+					<ul>
+						<li>So you will need to escape any special characters contained in these values (e.g. <code>. \ + * ? [ ^ ] $ ( ) { } = ! < > | : -</code>).</li>
+						<li>This function might help (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_special_characters">ref</a>):
+							<pre class="prettyprint lang-js">function escapeRegExp( string ) {
+		  return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+		}</pre></li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 
 	</div>
