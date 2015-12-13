@@ -312,8 +312,9 @@ math_ignore : [0,1]</pre>
 						<td><a href="#" class="permalink">math_none</a></td>
 						<td><code>'N/A'</code></td>
 						<td>
-							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.24.0</span>).
+							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.7</span>).
 							<div class="collapsible">
+							<p>In <span class="version updated">v2.24.7</span>, this option can now be set to an empty string.</p>
 							<p>To understand when this text is used, select a Region in the "Row & Column Sums" table below. The totals for hidden rows will display this text.</p>
 							<p>Use it as follows:</p>
 							<pre class="prettyprint lang-js">math_none : 'N/A',
@@ -329,9 +330,9 @@ math_complete : function($cell, wo, result, value, arry) {
 						<td><a href="#" class="permalink">math_mask</a></td>
 						<td><code>'#,##0.00'</code></td>
 						<td>
-							Set this option with an output formatting mask to use <sup class="remark">*</sup>
+							Set this option with an output formatting mask to use <span class="xsmall results">&dagger;</span>
 							<div class="collapsible">
-							As of <span class="version">v2.16.2</span>, you can set a mask for each math cell by adding a <code>data-math-mask</code> data-attribute (the <code>math</code> part of the data-attribute is obtained from the <code>math_data</code> setting).
+							<p>As of <span class="version">v2.16.2</span>, you can set a mask for each math cell by adding a <code>data-math-mask</code> data-attribute (the <code>math</code> part of the data-attribute is obtained from the <code>math_data</code> setting).</p>
 							<pre class="prettyprint lang-html">&lt;th data-math=&quot;all-sum&quot; data-math-mask=&quot;##0.00&quot;&gt;all-sum&lt;/th&gt;</pre>
 							<hr>
 							<h3>Javascript-number-formatter details</h3>
@@ -363,7 +364,7 @@ math_complete : function($cell, wo, result, value, arry) {
 								<li>To force a single symbol as Separator, add a trailing dot to the end like this: <code>$.tablesorter.formatMask( '#,###.', 1234567.890)</code> which will then output <code>1,234,567</code>.</li>
 								<li><a href="http://www.integraxor.com/developer/codes/js-formatter/format-sample.htm">Original plugin demo</a></li>
 							</ul>
-							<span class="remark">*</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>) - now forked on <a href="https://github.com/Mottie/javascript-number-formatter">GitHub</a>.
+							<span class="remark">&dagger;</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>) - now forked on <a href="https://github.com/Mottie/javascript-number-formatter">GitHub</a>.
 							</div>
 						</td>
 					</tr>
@@ -418,7 +419,7 @@ math_complete : function($cell, wo, result, value, arry){
 								<li>So, all row calculations are made first, followed by "above" calculations then "col" (column) calculations.</li>
 								<li>The "all" type calculations are always performed last, and therefore the type is not included in this list.</li>
 								<li>Change this order if the order of calculations needs to be made column first, followed by rows.</li>
-								<li>For more details about the differences between "col" and "above" types, see the next section.</li>
+								<li>For more details about the differences between "col" and "above" types, see the "Attribute Settings" section.</li>
 							</ul>
 							</div>
 						</td>

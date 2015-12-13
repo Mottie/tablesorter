@@ -22,7 +22,7 @@
 			// name = function returning invalid results
 			// errorIndex = math.error index with an explanation of the error
 			console.log( name, math.error[ errorIndex ] );
-			return c && c.widgetOptions.math_none || 'none'; // text for cell
+			return c && c.widgetOptions.math_none || ''; // text for cell
 		},
 
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell filterReset ' )
