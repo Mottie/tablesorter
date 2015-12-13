@@ -1383,6 +1383,7 @@
 				console.log( 'Completed filter widget search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
+				c.$table.triggerHandler( 'filterBeforeEnd', c );
 				c.$table.triggerHandler( 'filterEnd', c );
 			}
 			setTimeout( function() {
