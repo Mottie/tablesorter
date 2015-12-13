@@ -236,7 +236,7 @@
 				// all non-info tbody cells
 				mathAttr = wo.math_dataAttrib;
 				$mathCells = c.$tbodies.children( 'tr' ).children( '[' + mathAttr + ']' );
-				changed = changed || math.mathType( c, $mathCells, wo.math_priority );
+				changed = math.mathType( c, $mathCells, wo.math_priority ) || changed;
 
 				// only info tbody cells
 				$mathCells = c.$table
@@ -256,7 +256,7 @@
 					filters[ filter ] = filters[ filter ] ? filters[ filter ].add( $cell ) : $cell;
 				});
 				$.each( filters, function( hasFilter, $cells ) {
-					changed = changed || math.mathType( c, $cells, [ 'all' ], hasFilter );
+					changed = math.mathType( c, $cells, [ 'all' ], hasFilter ) || changed;
 				});
 
 				// trigger an update only if cells inside the tbody changed
