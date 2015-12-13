@@ -18,7 +18,7 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script src="../js/widgets/widget-math.js"></script>
 
@@ -182,7 +182,15 @@
 			<li>In <span class="version">v2.24.7</span>
 				<ul>
 					<li><code>math_rowFilter</code> can now be overridden by the row's <code>data-math-filter</code> attribute.</li>
-					<li>On initialization, only tbody cells with a <code>rowspan</code> or <code>colspan</code> are now processed and only get a "data-column" set if the internal <code>cellIndex</code> doesn't match the calculated cell index. This should improve performance and reduce lag after initialization and updating the table (see <a href="https://github.com/Mottie/tablesorter/issues/1048">issue #1048</a>.</li>
+					<li>
+						Lots of optimizations!
+						<ul>
+							<li>On initialization, only tbody cells with a <code>rowspan</code> or <code>colspan</code> are now processed and only get a "data-column" set if the internal <code>cellIndex</code> doesn't match the calculated cell index.</li>
+							<li>Initial calculation is no longer performed three times in a row</li>
+							<li>The cache is now only updated if cell content inside of a sortable tbody was modified.</li>
+							<li>These changes should improve performance and reduce lag after initialization and updating the table (see <a href="https://github.com/Mottie/tablesorter/issues/1048">issue #1048</a>.</li>
+						</ul>
+					</li>
 				</ul>
 			</li>
 			<li>In <span class="version">v2.24.6</span>, added <code>math_rowFilter</code> option.</li>
@@ -192,25 +200,36 @@
 					<li>Added <code>math_none</code> option which allows customizing the text added to a cell when there are no matching math elements (.</li>
 				</ul>
 			</li>
-			<li>In <span class="version updated">v2.22.0</span>,
+		</ul>
+
+		<div class="accordion start-closed">
+			<h3 id="old-notes"><a href="#">Older Notes</a></h3>
+			<div>
 				<ul>
-					<li>Fixed an issue with a sum column encountering a cell without a defined "data-math" attribute returning an empty string instead of zero. See <a href="https://github.com/Mottie/tablesorter/issues/873">issue #873</a>.</li>
-					<li>Fixed a javascript error occurring on empty tables & now all updates will reapply column indexing to tbody cells - I know this isn't ideal as it would be slow on larger tables.</li>
+					<li>In <span class="version updated">v2.22.0</span>,
+						<ul>
+							<li>Fixed an issue with a sum column encountering a cell without a defined "data-math" attribute returning an empty string instead of zero. See <a href="https://github.com/Mottie/tablesorter/issues/873">issue #873</a>.</li>
+							<li>Fixed a javascript error occurring on empty tables & now all updates will reapply column indexing to tbody cells - I know this isn't ideal as it would be slow on larger tables.</li>
+						</ul>
+					</li>
+					<li>In <span class="version">v2.19.1</span>, added <code>math_event</code> option &amp; fixed an issue with event unbinding in jQuery version &lt; 1.9.</li>
+					<li>In <span class="version">v2.17.1</span>,
+						<ul>
+							<li>Values added to the data-attribute set by the <a href="../#textattribute"><code>textAttribute</code> option</a> will now be used in the calculation instead of the actual cell content.</li>
+							<li>The Grand Total cells now shows a higher precision value to emphasize this point.</li>
+						</ul>
+					</li>
+					<li>In <span class="version">v2.16.4</span>, added:
+						<ul>
+							<li>Two new options: <code>math_prefix</code> and <code>math_suffix</code>, which will be added before or after the prefix or suffix, respectively.</li>
+							<li>Added "Mask Examples" section with examples, and how to use the <code>$.tablesorter.formatMask</code> function.</li>
+						</ul>
+					</li>
 				</ul>
-			</li>
-			<li>In <span class="version">v2.19.1</span>, added <code>math_event</code> option &amp; fixed an issue with event unbinding in jQuery version &lt; 1.9.</li>
-			<li>In <span class="version">v2.17.1</span>,
-				<ul>
-					<li>Values added to the data-attribute set by the <a href="../#textattribute"><code>textAttribute</code> option</a> will now be used in the calculation instead of the actual cell content.</li>
-					<li>The Grand Total cells now shows a higher precision value to emphasize this point.</li>
-				</ul>
-			</li>
-			<li>In <span class="version">v2.16.4</span>, added:
-				<ul>
-					<li>Two new options: <code>math_prefix</code> and <code>math_suffix</code>, which will be added before or after the prefix or suffix, respectively.</li>
-					<li>Added "Mask Examples" section with examples, and how to use the <code>$.tablesorter.formatMask</code> function.</li>
-				</ul><br>
-			</li>
+			</div>
+		</div>
+
+		<ul>
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.16+ and jQuery version 1.7+.</li>
 			<li>It adds basic math capabilities. A full list of default formulas is listed in the "Attribute Settings" section.</li>
 			<li>Add your own custom formulas which manipulating an array of values gathered from the table by row, column or a column block (above).</li>
@@ -218,7 +237,7 @@
 			<li>The widget will update the calculations based on filtered rows, and will update if any data within the table changes (using update events).</li>
 			<li>This widget is not optimized for very large tables, for two reasons:
 				<ul>
-					<li>On initialization, it cycles through every table row, calculates the column index<del>, and adds a <code>data-column</code> attribute</del> (Fixed in <span class="version updated">v2.24.7</span>).</li>
+					<li>On initialization, it cycles through every table row, calculates the column index <del>, and adds a <code>data-column</code> attribute</del> (Fixed in <span class="version updated">v2.24.7</span>).</li>
 					<li>It uses the update method whenever it recalculates values to make the results sortable. This occurs when any of the update methods are used and after the table is filtered.</li>
 				</ul>
 			</li>
@@ -442,6 +461,7 @@ math_suffix : '{content}<span class="red">!</span>'
 math_rowFilter : ':visible:not(.filtered)'</pre>
 								In <span class="version">v2.24.7</span>, this setting my be overridden in specific rows by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option)
 								<pre class="prettyprint lang-html">&lt;tr data-math-filter=":visible"&gt;...&lt;/tr&gt;</pre>
+								<span class="label label-info">Note</span> The <code>data-math-filter</code> attribute is ignored if set to an empty string; instead use <code>data-math-filter="*"</code> to target all rows as done in the first example on this page.
 							</div>
 						</td>
 					</tr>
@@ -581,8 +601,16 @@ BAD =&gt; No minus (-) here! $#,###.00 or [-] here either &lt;= BAD</textarea>
 			<th data-math="col-sum">col-sum</th>
 		</tr>
 		<tr>
+			<th colspan="5">Visible Total</th>
+			<th data-math="all-sum"></th>
+		</tr>
+		<tr>
 			<th colspan="5">Grand Total</th>
-			<th data-math="all-sum" data-math-mask="##0.0000">all-sum</th>
+			<!--
+			The "data-math-filter" attribute can not be set to an empty string AND override the widgetOptions.math_rowFilter,
+			so set to to an asterisk ("*") to target all rows.
+			-->
+			<th data-math="all-sum" data-math-filter="*" data-math-mask="##0.0000"></th>
 		</tr>
 	</tfoot>
 
