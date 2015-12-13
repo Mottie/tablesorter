@@ -1954,7 +1954,9 @@
 				}
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = widgets[ indx ];
-					ts.applyWidgetId( table, widget.id, init );
+					if ( widget && widget.id ) {
+						ts.applyWidgetId( table, widget.id, init );
+					}
 				}
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
 				// callback executed on init only
