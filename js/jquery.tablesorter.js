@@ -1564,6 +1564,7 @@
 				ts.setHeadersCss( c );
 				ts.multisort( c );
 				ts.appendCache( c );
+				c.$table.triggerHandler( 'sortBeforeEnd', table );
 				c.$table.triggerHandler( 'sortEnd', table );
 			}, 1 );
 		},
@@ -1685,6 +1686,7 @@
 			// sort the table and append it to the dom
 			ts.multisort( c );
 			ts.appendCache( c, init );
+			c.$table.triggerHandler( 'sortBeforeEnd', table );
 			c.$table.triggerHandler( 'sortEnd', table );
 			ts.applyWidget( table );
 			if ( $.isFunction( callback ) ) {
