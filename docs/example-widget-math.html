@@ -118,7 +118,7 @@
 			// math calculation priorities (default shown)... rows are first, then column above/below,
 			// then entire column, and lastly "all" which is not included because it should always be last
 			math_priority : [ 'row', 'above', 'below', 'col' ],
-			// set row filter to limit which table rows are included in the calculation (v2.24.7)
+			// set row filter to limit which table rows are included in the calculation (v2.25.0)
 			// e.g. math_rowFilter : ':visible:not(.filtered)' (default behavior when math_rowFilter isn't set)
 			// or math_rowFilter : ':visible'; default is an empty string
 			math_rowFilter : ''
@@ -191,7 +191,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
-			<li>In <span class="version">v2.24.7</span>
+			<li>In <span class="version">v2.25.0</span>
 				<ul>
 					<li><code>math_rowFilter</code> can now be overridden by the row's <code>data-math-filter</code> attribute.</li>
 					<li>
@@ -249,7 +249,7 @@
 			<li>The widget will update the calculations based on filtered rows, and will update if any data within the table changes (using update events).</li>
 			<li>This widget is not optimized for very large tables, for two reasons:
 				<ul>
-					<li>On initialization, it cycles through every table row, calculates the column index <del>, and adds a <code>data-column</code> attribute</del> (Fixed in <span class="version updated">v2.24.7</span>).</li>
+					<li>On initialization, it cycles through every table row, calculates the column index <del>, and adds a <code>data-column</code> attribute</del> (Fixed in <span class="version updated">v2.25.0</span>).</li>
 					<li>It uses the update method whenever it recalculates values to make the results sortable. This occurs when any of the update methods are used and after the table is filtered.</li>
 				</ul>
 			</li>
@@ -312,9 +312,9 @@ math_ignore : [0,1]</pre>
 						<td><a href="#" class="permalink">math_none</a></td>
 						<td><code>'N/A'</code></td>
 						<td>
-							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.7</span>).
+							This option contains the text added to a math cell when no matching elements are found (<span class="version">v2.24.0</span>; <span class="version updated">v2.25.0</span>).
 							<div class="collapsible">
-							<p>In <span class="version updated">v2.24.7</span>, this option can now be set to an empty string.</p>
+							<p>In <span class="version updated">v2.25.0</span>, this option can now be set to an empty string.</p>
 							<p>To understand when this text is used, select a Region in the "Row & Column Sums" table below. The totals for hidden rows will display this text.</p>
 							<p>Use it as follows:</p>
 							<pre class="prettyprint lang-js">math_none : 'N/A',
@@ -473,7 +473,7 @@ math_suffix : '{content}<span class="red">!</span>'
 						<td><a href="#" class="permalink">math_rowFilter</a></td>
 						<td><code>''</code></td>
 						<td>
-							Set this option apply a filter to targeted rows (<span class="version">v2.24.6</span>; <span class="version updated">v2.24.7</span>).
+							Set this option apply a filter to targeted rows (<span class="version">v2.24.6</span>; <span class="version updated">v2.25.0</span>).
 							<div class="collapsible">
 							<p>This option applys the set filter (<a href="http://api.jquery.com/filter/">jQuery <code>.filter()</code></a> to the targeted rows.</p>
 							<p>If this option is set, rows filtered out by the filter widget are included, so you will need to include them in this selector if you wish to filter them out (e.g. <code>':visible:not(.filtered)'</code> (only include visible &amp; rows not filtered out by the filter widget)</p>
@@ -481,7 +481,7 @@ math_suffix : '{content}<span class="red">!</span>'
 // for example, here is the functional equivalent
 // math_rowFilter : function(index, element) { return $(element).is(':visible:not(.filtered)'); }
 math_rowFilter : ':visible:not(.filtered)'</pre>
-								In <span class="version">v2.24.7</span>, this setting may be overridden for each math type by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option) to the cell.
+								In <span class="version">v2.25.0</span>, this setting may be overridden for each math type by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option) to the cell.
 								<pre class="prettyprint lang-html">&lt;td data-math-filter=":visible" data-math="all-sum"&gt;...&lt;/td&gt;</pre>
 								<span class="label label-info">Note</span> The <code>data-math-filter</code> attribute is ignored if set to an empty string; instead use <code>data-math-filter="*"</code> to target all rows as done in the first example on this page.
 							</div>
