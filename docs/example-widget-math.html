@@ -98,7 +98,6 @@
 		widgetOptions: {
 			math_data     : 'math', // data-math attribute
 			math_ignore   : [0, 1],
-			math_mask     : '#,##0.00',
 			math_none     : 'N/A', // no matching math elements found (text added to cell)
 			math_complete : function($cell, wo, result, value, arry) {
 				var txt = '<span class="align-decimal">' +
@@ -109,7 +108,20 @@
 					return txt + ' (Sum of ' + arry.length + ' cells)';
 				}
 				return txt;
-			}
+			},
+			// see "Mask Examples" section
+			math_mask     : '#,##0.00',
+			math_prefix   : '', // custom string added before the math_mask value (usually HTML)
+			math_suffix   : '', // custom string added after the math_mask value
+			// event triggered on the table which makes the math widget update all data-math cells (default shown)
+			math_event    : 'recalculate',
+			// math calculation priorities (default shown)... rows are first, then column above/below,
+			// then entire column, and lastly "all" which is not included because it should always be last
+			math_priority : [ 'row', 'above', 'below', 'col' ],
+			// set row filter to limit which table rows are included in the calculation (v2.24.7)
+			// e.g. math_rowFilter : ':visible:not(.filtered)' (default behavior when math_rowFilter isn't set)
+			// or math_rowFilter : ':visible'; default is an empty string
+			math_rowFilter : ''
 		}
 	});
 
@@ -266,10 +278,19 @@
 					</tr>
 
 					<tr id="math_event">
-						<td><span class="permalink">math_event</span></td>
+						<td><a href="#" class="permalink">math_event</a></td>
 						<td><code>'recalculate'</code></td>
 						<td>
 							Set this option change the name of the event that the widget listens for to perform an update.
+							<div class="collapsible">
+								<p>By default, recalculations are performed after:</p>
+									<ul>
+										<li>Tablesorter initialization.</li>
+										<li>After any triggered "update" which may change a cell value.</li>
+										<li>After a "filterReset".</li>
+										<li>And after a "filterEnd" event, <em>or</em> a "pagerComplete" event (if the pager is being used), but not both!</li>
+									</ul>
+							</div>
 						</td>
 					</tr>
 
@@ -459,7 +480,7 @@ math_suffix : '{content}<span class="red">!</span>'
 // for example, here is the functional equivalent
 // math_rowFilter : function(index, element) { return $(element).is(':visible:not(.filtered)'); }
 math_rowFilter : ':visible:not(.filtered)'</pre>
-								In <span class="version">v2.24.7</span>, this setting my be overridden for each math type by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option) to the cell.
+								In <span class="version">v2.24.7</span>, this setting may be overridden for each math type by adding a <code>data-math-filter</code> attribute (The "math" portion is set by the <code>math_data</code> option) to the cell.
 								<pre class="prettyprint lang-html">&lt;td data-math-filter=":visible" data-math="all-sum"&gt;...&lt;/td&gt;</pre>
 								<span class="label label-info">Note</span> The <code>data-math-filter</code> attribute is ignored if set to an empty string; instead use <code>data-math-filter="*"</code> to target all rows as done in the first example on this page.
 							</div>
