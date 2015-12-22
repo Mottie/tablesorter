@@ -1880,15 +1880,19 @@
 			var len, indx,
 				c = table.config,
 				// look for widgets to apply from table class
-				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-				regex = '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s',
+				// don't match from 'ui-widget-content'; use \S instead of \w to include widgets
+				// with dashes in the name, e.g. "widget-test-2" extracts out "test-2"
+				regex = '^' + c.widgetClass.replace( ts.regex.templateName, '(\\S+)+' ) + '$',
 				widgetClass = new RegExp( regex, 'g' ),
-				// extract out the widget id from the table class (widget id's can include dashes)
-				widget = ( ' ' + c.table.className + ' ' ).match( widgetClass );
-			if ( widget ) {
-				len = widget.length;
+				// split up table class (widget id's can include dashes) - stop using match
+				// otherwise one one widgetClass gets extracted, see #1109
+				widgets = ( table.className || '' ).split( ts.regex.spaces );
+			if ( widgets.length ) {
+				len = widgets.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					c.widgets.push( widget[ indx ].replace( widgetClass, '$1' ) );
+					if ( widgets[ indx ].match( widgetClass ) ) {
+						c.widgets.push( widgets[ indx ].replace( widgetClass, '$1' ) );
+					}
 				}
 			}
 		},

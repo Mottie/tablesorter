@@ -613,7 +613,6 @@ jQuery(function($){
 
 	});
 
-
 	QUnit.test( 'colspan parsing', function(assert) {
 		assert.expect(2);
 
@@ -923,6 +922,31 @@ jQuery(function($){
 
 		$table2.tablesorter();
 	});
+
+	/************************************************
+		extract widgets from table class
+	************************************************/
+	QUnit.test('extract widget names from table class', function(assert) {
+		assert.expect(2);
+		var widgets,
+		t = {
+			className: 'widget-filter widget-stickyHeaders ui-widget-content widget-test-2',
+			config: {
+				widgetClass: 'widget-{name}',
+				widgets: []
+			}
+		};
+		ts.addWidgetFromClass( t );
+		assert.deepEqual( t.config.widgets, [ 'filter', 'stickyHeaders', 'test-2' ], 'Ignored "ui-widget-content"' );
+
+		t.className = 'stickyHeaders-widgey ui-widgey-content filter-widgey test-2-widgey';
+		t.config.widgetClass = '{name}-widgey';
+		t.config.widgets = [];
+		ts.addWidgetFromClass( t );
+		assert.deepEqual( t.config.widgets, [ 'stickyHeaders', 'filter', 'test-2' ], 'Modified widgetClass option' );
+
+	});
+
 
 	/************************************************
 		ipv6 parser testing
