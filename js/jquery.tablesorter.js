@@ -1885,7 +1885,7 @@
 				regex = '^' + c.widgetClass.replace( ts.regex.templateName, '(\\S+)+' ) + '$',
 				widgetClass = new RegExp( regex, 'g' ),
 				// split up table class (widget id's can include dashes) - stop using match
-				// otherwise one one widgetClass gets extracted, see #1109
+				// otherwise only one widget gets extracted, see #1109
 				widgets = ( table.className || '' ).split( ts.regex.spaces );
 			if ( widgets.length ) {
 				len = widgets.length;
