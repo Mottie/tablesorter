@@ -842,7 +842,7 @@
 			filters = Array.prototype.map ?
 				filters.map( String ) :
 				// for IE8 & older browsers - maybe not the best method
-				filters.join( '\u0000' ).split( '\u0000' );
+				filters.join( '\ufffd' ).split( '\ufffd' );
 
 			if ( wo.filter_initialized ) {
 				c.$table.triggerHandler( 'filterStart', [ filters ] );
