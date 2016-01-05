@@ -1046,8 +1046,8 @@
 				// find the footer
 				$headers = c.$table
 					.find( 'tfoot tr' )
-					.children()
-					.add( $( c.namespace + '_extra_headers' ) )
+					.add( $( c.namespace + '_extra_headers' ).children( 'tr' ) )
+					.children( 'td, th' )
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
