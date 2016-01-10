@@ -327,7 +327,7 @@
 				hasSpans = false,
 				$cells = c.$table
 					.add( $(c.namespace + '_extra_table') )
-					.children('thead, tfoot')
+					.children()
 					.children('tr')
 					.children('th, td'),
 				len = $cells.length;
@@ -338,6 +338,8 @@
 					$cells.eq( index )
 						.addClass( c.namespace.slice( 1 ) + 'columnselectorHasSpan' )
 						.attr( 'data-col-span', span );
+					// add data-column values
+					ts.computeColumnIndex( $cells.eq( index ).parent() );
 				}
 			}
 			// only add resize end if using media queries
