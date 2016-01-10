@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget + jQuery UI Selectmenu</title>
+	<title>jQuery tablesorter 2.0 - Filter Widget + jQuery UI Selectmenu</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -95,16 +95,17 @@
 <div id="main">
 
 	<p class="tip">
-		<ul>
-			<li>Demo added <span class="version">v2.24.4</span>, to demonstrate how to use <a href="http://jqueryui.com/selectmenu/#custom_render">jQuery UI Selectmenu widget</a> on a filter row select.</li>
-			<li><span class="label warning">*NOTE*</span> - Selectmenu will not work properly in all circumstances:
-				<ul>
-					<li>When an "updateAll" method is triggered on the table, the filter row is removed &amp; replaced due to the possibility of a column being added or removed. Selectmenu initialization will need to be performed again.</li>
-					<li>If using selectmenu along with a widget that constantly removes & rebuilds extra table headers &amp; filter rows (e.g. the scroller widget), the selectmenu initialization will need to be performed again, or just avoid using those widgets.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+		<em>NOTE!</em>
+	</p>
+	<ul>
+		<li>Demo added <span class="version">v2.24.4</span>, to demonstrate how to use <a href="http://jqueryui.com/selectmenu/#custom_render">jQuery UI Selectmenu widget</a> on a filter row select.</li>
+		<li><span class="label warning">*NOTE*</span> - Selectmenu will not work properly in all circumstances:
+			<ul>
+				<li>When an "updateAll" method is triggered on the table, the filter row is removed &amp; replaced due to the possibility of a column being added or removed. Selectmenu initialization will need to be performed again.</li>
+				<li>If using selectmenu along with a widget that constantly removes & rebuilds extra table headers &amp; filter rows (e.g. the scroller widget), the selectmenu initialization will need to be performed again, or just avoid using those widgets.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 

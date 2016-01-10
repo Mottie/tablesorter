@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Sorting empty cells</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Sorting empty cells</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -49,35 +49,34 @@ $(function(){
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<p></p>
-		<ul>
-			<li>Set the <code>emptyTo</code> selector below:
-				<ul>
-					<li><code>top</code> - sort empty table cells to the top.</li>
-					<li><code>bottom</code> - sort empty table cells to the bottom.</li>
-					<li><code>none</code> or <code>zero</code>
-						<ul>
-							<li>Sort empty table cells as if the cell has the value equal to zero</li>
-							<li>None/zero has a value less than A through Z (in javascript, <code>0 &lt; 'A' && 0 &lt; 'Z'</code>); so in an alphabetical column, empty cells will sort at the top in an ascending sort &amp; at the bottom in a descending sort.</li>
-							<li>In numerical columns, empty cells will sort as if their value was zero.</li>
-						</ul>
-					</li>
-				</ul>
-				<br>
-			</li>
-			<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
-				<ul>
-					<li>jQuery data <code>data-empty="top"</code>.</li>
-					<li>metadata <code>class="{ empty: 'top'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { empty : 'top' } }</code>.</li>
-					<li>header class name <code>class="empty-top"</code>.</li>
-					<li>Overall <code>emptyTo</code> option.</li>
-				</ul>
-				<br>
-			</li>
-			<li><code>emptyToBottom</code> option was added in v2.1.11, then replaced by the <code>emptyTo</code> option in v2.1.16.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Set the <code>emptyTo</code> selector below:
+			<ul>
+				<li><code>top</code> - sort empty table cells to the top.</li>
+				<li><code>bottom</code> - sort empty table cells to the bottom.</li>
+				<li><code>none</code> or <code>zero</code>
+					<ul>
+						<li>Sort empty table cells as if the cell has the value equal to zero</li>
+						<li>None/zero has a value less than A through Z (in javascript, <code>0 &lt; 'A' && 0 &lt; 'Z'</code>); so in an alphabetical column, empty cells will sort at the top in an ascending sort &amp; at the bottom in a descending sort.</li>
+						<li>In numerical columns, empty cells will sort as if their value was zero.</li>
+					</ul>
+				</li>
+			</ul>
+			<br>
+		</li>
+		<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
+			<ul>
+				<li>jQuery data <code>data-empty="top"</code>.</li>
+				<li>metadata <code>class="{ empty: 'top'}"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { empty : 'top' } }</code>.</li>
+				<li>header class name <code>class="empty-top"</code>.</li>
+				<li>Overall <code>emptyTo</code> option.</li>
+			</ul>
+			<br>
+		</li>
+		<li><code>emptyToBottom</code> option was added in v2.1.11, then replaced by the <code>emptyTo</code> option in v2.1.16.</li>
+	</ul>
 
 <h1>Demo</h1>
 
@@ -195,4 +194,3 @@ Set <code>emptyTo</code> option: <select>
 
 </body>
 </html>
-

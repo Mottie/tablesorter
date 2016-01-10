@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Pager plugin</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Pager plugin</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -235,22 +235,22 @@
 
 		<p class="tip">
 			<em>NOTE!</em> The following are not part of the original plugin:
-			<ul>
-				<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
-				<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
-					<ul>
-						<li><code>destroy.pager</code> is now <code>destroyPager</code></li>
-						<li><code>disable.pager</code> is now <code>disablePager</code></li>
-						<li><code>enable.pager</code> is now <code>enablePager</code></li>
-					</ul>
-				</li>
-				<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
-				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
-				<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code>removeRows</code> option to false will break the sort.</li>
-				<li>There have been lots of changes made in version 2.1, please check out the <a href="https://github.com/Mottie/tablesorter/wiki/Changes">change log</a>.</li>
-				<li>In <span class="version">v2.11</span>, the <code>savePages</code> option was added to saves the current page size and number (requires storage script).</li>
-			</ul>
-		<p>
+		</p>
+		<ul>
+			<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
+			<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
+				<ul>
+					<li><code>destroy.pager</code> is now <code>destroyPager</code></li>
+					<li><code>disable.pager</code> is now <code>disablePager</code></li>
+					<li><code>enable.pager</code> is now <code>enablePager</code></li>
+				</ul>
+			</li>
+			<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
+			<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.</li>
+			<li>This pager plugin can be applied to the original tablesorter, but there is one exception - setting the <code>removeRows</code> option to false will break the sort.</li>
+			<li>There have been lots of changes made in version 2.1, please check out the <a href="https://github.com/Mottie/tablesorter/wiki/Changes">change log</a>.</li>
+			<li>In <span class="version">v2.11</span>, the <code>savePages</code> option was added to saves the current page size and number (requires storage script).</li>
+		</ul>
 
 		<h1>Triggered Events &nbsp; <button class="clear">Clear</button></h1>
 		<ul id="display">
@@ -467,4 +467,3 @@ td.tablesorter-pager {
 
 </body>
 </html>
-

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Writing custom parsers</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Writing custom parsers</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -58,42 +58,42 @@ $(function() {
 
 <div id="main">
 
-	<div class="tip">
+	<p class="tip">
 		Notes about the <code>addParser</code> template:
-		<ul>
-			<li>The <code>id</code> block is required and must be unique.</li>
-			<li>The <code>is</code> block will allow the parser to be used for autodetecting the parser
-				<ul>
-					<li>Most custom parsers are made for a specific set of data/column, so the <code>is</code> block usually just returns false telling the plugin that the parser doesn't match any columns.</li>
-					<li>If so desired, the function provides four parameters: <code>s</code> contains the text from the cell, <code>table</code> is the table DOM element, <code>cell</code> is the current cell DOM element and <code>$cell</code> is the current cell as a jQuery object (added <span class="version">v2.18.0</span>).</li>
-					<li>This function must <code>return true</code> before the plugin will use the custom parser's format block to process the column content.</li>
-					<li>In version 2.7.4, the <code>is</code> block became optional because most parsers just return false.</li>
-				</ul>
-			</li>
-			<li>The <code>format</code> block is used to normalize your data and return it to the plugin for sorting
-				<ul>
-					<li>Within this function, modify the given text from the cell (<code>s</code>) or obtain parameters and/or other data from the cell (<code>cell</code>) then return this data to the plugin.</li>
-					<li>As an example, the date parser takes the date string (e.g. <code>"12/25/2013"</code>) and converts it into a numeric value (<code>1387951200000</code>; <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date/getTime">ref</a>) to make sorting and comparing dates easier.</li>
-					<li>Use the <code>cellIndex</code> if the cells within columns contain different data - see this <a href="example-parsers-advanced.html">demo</a> for an example.</li>
-				</ul>
-			</li>
-			<li>The <code>parsed</code> block (added <span class="version">v2.15.0</span>)
-				<ul>
-					<li>This parameter is a flag used by the filter widget.</li>
-					<li>When <code>true</code>, the filter widget will only search through parsed data for matches.</li>
-					<li>If <code>false</code> (default value), the filter widget will search through the cell text for matches.</li>
-					<li>Currently, only the parsers for inputs, checkboxes and selects have this parameter set to <code>true</code>.</li>
-				</ul>
-			</li>
-			<li>The <code>type</code> block sets the type of sort to use:
-				<ul>
-					<li>Set it to either <code>"text"</code> or <code>"numeric"</code>.</li>
-					<li>This tells the plugin the type of sorter to use.</li>
-					<li>Text type sorting uses a natural sort and is a tiny bit slower than a pure numeric sort.</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
+	</p>
+	<ul>
+		<li>The <code>id</code> block is required and must be unique.</li>
+		<li>The <code>is</code> block will allow the parser to be used for autodetecting the parser
+			<ul>
+				<li>Most custom parsers are made for a specific set of data/column, so the <code>is</code> block usually just returns false telling the plugin that the parser doesn't match any columns.</li>
+				<li>If so desired, the function provides four parameters: <code>s</code> contains the text from the cell, <code>table</code> is the table DOM element, <code>cell</code> is the current cell DOM element and <code>$cell</code> is the current cell as a jQuery object (added <span class="version">v2.18.0</span>).</li>
+				<li>This function must <code>return true</code> before the plugin will use the custom parser's format block to process the column content.</li>
+				<li>In version 2.7.4, the <code>is</code> block became optional because most parsers just return false.</li>
+			</ul>
+		</li>
+		<li>The <code>format</code> block is used to normalize your data and return it to the plugin for sorting
+			<ul>
+				<li>Within this function, modify the given text from the cell (<code>s</code>) or obtain parameters and/or other data from the cell (<code>cell</code>) then return this data to the plugin.</li>
+				<li>As an example, the date parser takes the date string (e.g. <code>"12/25/2013"</code>) and converts it into a numeric value (<code>1387951200000</code>; <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date/getTime">ref</a>) to make sorting and comparing dates easier.</li>
+				<li>Use the <code>cellIndex</code> if the cells within columns contain different data - see this <a href="example-parsers-advanced.html">demo</a> for an example.</li>
+			</ul>
+		</li>
+		<li>The <code>parsed</code> block (added <span class="version">v2.15.0</span>)
+			<ul>
+				<li>This parameter is a flag used by the filter widget.</li>
+				<li>When <code>true</code>, the filter widget will only search through parsed data for matches.</li>
+				<li>If <code>false</code> (default value), the filter widget will search through the cell text for matches.</li>
+				<li>Currently, only the parsers for inputs, checkboxes and selects have this parameter set to <code>true</code>.</li>
+			</ul>
+		</li>
+		<li>The <code>type</code> block sets the type of sort to use:
+			<ul>
+				<li>Set it to either <code>"text"</code> or <code>"numeric"</code>.</li>
+				<li>This tells the plugin the type of sorter to use.</li>
+				<li>Text type sorting uses a natural sort and is a tiny bit slower than a pure numeric sort.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h3>Add Parser Template</h3>
 		<pre class="prettyprint lang-javascript">$.tablesorter.addParser({
@@ -154,7 +154,7 @@ $(function() {
 	<h1>HTML</h1>
 	<p class="tip">
 		<em>NOTE!</em> Assigning the parser using a class name was added in version 2.0.11 (it is not part of the original plugin; use the <code>headers</code> option in older versions).
-	<p>
+	</p>
 	<div id="html">
 		<pre class="prettyprint lang-html"></pre>
 	</div>
@@ -168,4 +168,3 @@ $(function() {
 
 </body>
 </html>
-

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Adding a table row</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Adding a table row</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -33,8 +33,8 @@
 		var row = '<tr><td>Frank</td><td>Smith</td><td>53</td><td>$39.95</td><td>22%</td><td>Mar 22, 2011 9:33 AM</td></tr>' +
 			'<tr><td>Inigo</td><td>Montoya</td><td>34</td><td>$19.99</td><td>15%</td><td>Sep 25, 1987 12:00PM</td></tr>',
 			$row = $(row),
-			// resort table using the current sort; set to false to prevent resort, otherwise 
-			// any other value in resort will automatically trigger the table resort. 
+			// resort table using the current sort; set to false to prevent resort, otherwise
+			// any other value in resort will automatically trigger the table resort.
 			resort = true;
 		$('table')
 			.find('tbody').append($row)
@@ -57,13 +57,13 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Click on the [ Add Rows ] button to add two new rows.</li>
-			<li>The "addRows" method was added in version 2.0.16, and is not part of the original plugin.</li>
-			<li>This example could have used the "update" method to add rows, but to remove rows only the "update" method works.</li>
-			<li>This method is better used for the <a href="example-pager.html">pager plugin</a> when not all of the rows are displayed.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Click on the [ Add Rows ] button to add two new rows.</li>
+		<li>The "addRows" method was added in version 2.0.16, and is not part of the original plugin.</li>
+		<li>This example could have used the "update" method to add rows, but to remove rows only the "update" method works.</li>
+		<li>This method is better used for the <a href="example-pager.html">pager plugin</a> when not all of the rows are displayed.</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<br>

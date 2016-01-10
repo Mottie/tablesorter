@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Semver Sorting</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Semver Sorting</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -72,16 +72,16 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>This method does not use a parser nor a widget, it uses <code>semver.js</code> to allow the sorting of <a href="http://semver.org/">semantic version numbers</a>.</li>
-			<li>But this method requires a slightly modified version of <a href="https://github.com/isaacs/node-semver">semver.js for node</a>. All modifications are signified within the file to ease updating.</li>
-			<li>The modified semver.js (<a href="../js/extras/semver-mod.js">semver-mod.js</a>) is contained in the new "extras" subfolder. Please include it if you need this specific type of sort.</li>
-			<li>Invalid version numbers be sorted using a basic text sort, so they will be grouped with their similar version numbers, but not sorted properly; this demo has some extra code to highlight invalid version numbers.</li>
-			<li>In this demo, when the semver 2.0.0 compliant version column is sorted, the order column will be in sequential order.</li>
-			<li>Semver example order, from semver.org:<br>1.0.0-alpha &lt; 1.0.0-alpha.1 &lt; 1.0.0-alpha.beta &lt; 1.0.0-beta &lt; 1.0.0-beta.2 &lt; 1.0.0-beta.11 &lt; 1.0.0-rc.1 &lt; 1.0.0</li>
-		<!-- http://jsfiddle.net/Mottie/abkNM/1626/ -->
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>This method does not use a parser nor a widget, it uses <code>semver.js</code> to allow the sorting of <a href="http://semver.org/">semantic version numbers</a>.</li>
+		<li>But this method requires a slightly modified version of <a href="https://github.com/isaacs/node-semver">semver.js for node</a>. All modifications are signified within the file to ease updating.</li>
+		<li>The modified semver.js (<a href="../js/extras/semver-mod.js">semver-mod.js</a>) is contained in the new "extras" subfolder. Please include it if you need this specific type of sort.</li>
+		<li>Invalid version numbers be sorted using a basic text sort, so they will be grouped with their similar version numbers, but not sorted properly; this demo has some extra code to highlight invalid version numbers.</li>
+		<li>In this demo, when the semver 2.0.0 compliant version column is sorted, the order column will be in sequential order.</li>
+		<li>Semver example order, from semver.org:<br>1.0.0-alpha &lt; 1.0.0-alpha.1 &lt; 1.0.0-alpha.beta &lt; 1.0.0-beta &lt; 1.0.0-beta.2 &lt; 1.0.0-beta.11 &lt; 1.0.0-rc.1 &lt; 1.0.0</li>
+	<!-- http://jsfiddle.net/Mottie/abkNM/1626/ -->
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">

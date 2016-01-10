@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter - Metric Parser</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter - Metric Parser</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -42,31 +42,31 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version update">v2.22.2</span>,
-				<ul>
-					<li>Added header data-attribute <code>data-metric-name-full</code> which will contain the full base unit name, e.g. <code>"byte|Byte|BYTE"</code>. This change should allow for different capitalizations of the base unit name.</li>
-					<li>Added header data-attribute <code>data-metric-name-abbr</code> which will contain the abbreviated base unit name, e.g. <code>"b|B"</code>. This change also should allow for different capitalizations of the base unit name.</li>
-					<li>Each name is separated by a pipe, or vertical bar, ("<code>|</code>") without spaces, because it will eventually be used in a regular expression - the vertical bar signifies an "OR" operator.</li>
-					<li>When using these new data-attributes, the value in <code>data-metric-name</code> (now deprecated) will be ignored; eventually <code>data-metric-name</code> support will be removed.</li>
-					<li>These additions were made because of <em>common misuse</em> of abbreviated capitalization in the metric units, i.e. "kB" versus "kb". The lower case "b" is for "bit", and upper case "B" is for "byte". I am guilty of this too!</li>
-				</ul>
-			</li>
-			<li>This parser will convert numbers with metric prefixes ("Mega", "Giga", etc) into appropriate values so they are sorted correctly.</li>
-			<li>The base name must be included in the header:
-				<ul>
-					<li>The base is the unit of measure, such as "byte", "meter", "liter", etc.</li>
-					<li><span class="label alert">deprecated</span> When saving the base, include both the abbreviation and full name of the base separated by a vertical bar (shift-\) <code>b|byte</code>.</li>
-					<li><span class="label alert">deprecated</span> Store this information within the header's data-attribute (<code>data-metric-name="b|byte"</code>) - this data-attribute should be considered deprecated as of v2.22.2, use <code>data-metric-name-full</code> &amp; <code>data-metric-name-abbr</code> instead.</li>
-					<li>If no base information is found, it will default to <code>m|meter</code>.</li>
-				</ul>
-			</li>
-			<li>Because metric prefixes can be applied to binary values, the parser will calculate the cached value based on the binary multiple, i.e. <code>"1 kB"</code> is actually <code>"1024 bytes"</code>. See <a href="http://en.wikipedia.org/wiki/Unit_prefix#Binary_prefixes">this article</a> for more details.</li>
-			<li>This parser does not (yet) support the IEC recommendations for binary prefixes (i.e. "kibibyte (KiB)", "mebibyte (MiB)", etc).</li>
-			<li>Supported prefixes include: Yotta (10<sup>24</sup>), Zetta (10<sup>21</sup>), Exa (10<sup>18</sup>), Peta (10<sup>15</sup>), Tera (10<sup>12</sup>), Giga (10<sup>9</sup>), Mega (10<sup>6</sup>), kilo (10<sup>3</sup>), hecto (10<sup>2</sup>), deka (10<sup>1</sup>), deci (10<sup>-1</sup>), centi (10<sup>-2</sup>), milli (10<sup>-3</sup>), micro (10<sup>-6</sup>), nano (10<sup>-9</sup>), pico (10<sup>-12</sup>), femto (10<sup>-15</sup>), atto (10<sup>-18</sup>), zepto (10<sup>-21</sup>) and yocto (10<sup>-24</sup>).</li>
-			<li>This demo includes the stored metric values within the table cells, toggle the view using the button below.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In <span class="version update">v2.22.2</span>,
+			<ul>
+				<li>Added header data-attribute <code>data-metric-name-full</code> which will contain the full base unit name, e.g. <code>"byte|Byte|BYTE"</code>. This change should allow for different capitalizations of the base unit name.</li>
+				<li>Added header data-attribute <code>data-metric-name-abbr</code> which will contain the abbreviated base unit name, e.g. <code>"b|B"</code>. This change also should allow for different capitalizations of the base unit name.</li>
+				<li>Each name is separated by a pipe, or vertical bar, ("<code>|</code>") without spaces, because it will eventually be used in a regular expression - the vertical bar signifies an "OR" operator.</li>
+				<li>When using these new data-attributes, the value in <code>data-metric-name</code> (now deprecated) will be ignored; eventually <code>data-metric-name</code> support will be removed.</li>
+				<li>These additions were made because of <em>common misuse</em> of abbreviated capitalization in the metric units, i.e. "kB" versus "kb". The lower case "b" is for "bit", and upper case "B" is for "byte". I am guilty of this too!</li>
+			</ul>
+		</li>
+		<li>This parser will convert numbers with metric prefixes ("Mega", "Giga", etc) into appropriate values so they are sorted correctly.</li>
+		<li>The base name must be included in the header:
+			<ul>
+				<li>The base is the unit of measure, such as "byte", "meter", "liter", etc.</li>
+				<li><span class="label alert">deprecated</span> When saving the base, include both the abbreviation and full name of the base separated by a vertical bar (shift-\) <code>b|byte</code>.</li>
+				<li><span class="label alert">deprecated</span> Store this information within the header's data-attribute (<code>data-metric-name="b|byte"</code>) - this data-attribute should be considered deprecated as of v2.22.2, use <code>data-metric-name-full</code> &amp; <code>data-metric-name-abbr</code> instead.</li>
+				<li>If no base information is found, it will default to <code>m|meter</code>.</li>
+			</ul>
+		</li>
+		<li>Because metric prefixes can be applied to binary values, the parser will calculate the cached value based on the binary multiple, i.e. <code>"1 kB"</code> is actually <code>"1024 bytes"</code>. See <a href="http://en.wikipedia.org/wiki/Unit_prefix#Binary_prefixes">this article</a> for more details.</li>
+		<li>This parser does not (yet) support the IEC recommendations for binary prefixes (i.e. "kibibyte (KiB)", "mebibyte (MiB)", etc).</li>
+		<li>Supported prefixes include: Yotta (10<sup>24</sup>), Zetta (10<sup>21</sup>), Exa (10<sup>18</sup>), Peta (10<sup>15</sup>), Tera (10<sup>12</sup>), Giga (10<sup>9</sup>), Mega (10<sup>6</sup>), kilo (10<sup>3</sup>), hecto (10<sup>2</sup>), deka (10<sup>1</sup>), deci (10<sup>-1</sup>), centi (10<sup>-2</sup>), milli (10<sup>-3</sup>), micro (10<sup>-6</sup>), nano (10<sup>-9</sup>), pico (10<sup>-12</sup>), femto (10<sup>-15</sup>), atto (10<sup>-18</sup>), zepto (10<sup>-21</sup>) and yocto (10<sup>-24</sup>).</li>
+		<li>This demo includes the stored metric values within the table cells, toggle the view using the button below.</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<button type="button" class="toggleparsedvalue">Toggle parsed values</button>
@@ -132,4 +132,3 @@ $(function(){
 
 </body>
 </html>
-

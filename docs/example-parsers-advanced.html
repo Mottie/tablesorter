@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Writing custom parsers, advanced use</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Writing custom parsers, advanced use</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -78,17 +78,17 @@ $(function(){
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version">v2.15.0</span>, the <code>parsed</code> parameter
-				<ul>
-					<li>This parameter is a flag used by the filter widget.</li>
-					<li>When <code>true</code>, the filter widget will only search through parsed data for matches.</li>
-					<li>If <code>false</code> (default value), the filter widget will search through the cell text for matches.</li>
-				</ul>
-			</li>
-			<li>This method of writing custom parsers will NOT work with the original tablesorter 2.0.5b plugin because the format function does not consistently provide the <code>cell</code> and <code>cellIndex</code> parameters.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In <span class="version">v2.15.0</span>, the <code>parsed</code> parameter
+			<ul>
+				<li>This parameter is a flag used by the filter widget.</li>
+				<li>When <code>true</code>, the filter widget will only search through parsed data for matches.</li>
+				<li>If <code>false</code> (default value), the filter widget will search through the cell text for matches.</li>
+			</ul>
+		</li>
+		<li>This method of writing custom parsers will NOT work with the original tablesorter 2.0.5b plugin because the format function does not consistently provide the <code>cell</code> and <code>cellIndex</code> parameters.</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table>
@@ -151,4 +151,3 @@ $(function(){
 
 </body>
 </html>
-

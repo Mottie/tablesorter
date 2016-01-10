@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Dealing with text strings in numerical sorts</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Dealing with text strings in numerical sorts</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -48,32 +48,32 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>This functionality is new as of version 2.0.10 (not part of the original plugin).</li>
-			<li>When a column is sorted numerically ( <code>sorter:"digit"</code> ) any text in that column will, by default, be given a <em>zero</em> value. Sort the last column (#9) to see the problem with this method.</li>
-			<li>Overall <code>stringTo</code> option added in version 2.1.16.</li>
-			<li>String options changed in version 2.1.16; setting the value to:
-				<ul>
-					<li><code>"max"</code> will treat any text in that column as a value greater than the <em>max</em> (more positive) value. Renamed from "max+".</li>
-					<li><code>"min"</code> will treat any text in that column as a value greater than the <em>min</em> (more negative) value. Renamed from "max-".</li>
-					<li><code>"top"</code> will always sort the text to the top of the column.</li>
-					<li><code>"bottom"</code> will always sort the text to the bottom of the column.</li>
-					<li><code>"none"</code> or <code>"zero"</code> will treat the text as if it has a value of zero.</li>
-				</ul>
-			</li>
-			<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
-				<ul>
-					<li>jQuery data <code>data-string="top"</code>.</li>
-					<li>metadata <code>class="{ string: 'top'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { string : 'top' } }</code>.</li>
-					<li>header class name <code>class="string-top"</code>.</li>
-					<li>Overall <code>stringTo</code> option.</li>
-				</ul>
-			</li>
-			<li>Sort columns three through eight to see how the sort has changed. Note that the text is sorted separately from the numeric values.</li>
-			<li>The <code>emptyTo</code> option defaults to bottom, so all empty cells will sort at the bottom of the table, except for the second column.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>This functionality is new as of version 2.0.10 (not part of the original plugin).</li>
+		<li>When a column is sorted numerically ( <code>sorter:"digit"</code> ) any text in that column will, by default, be given a <em>zero</em> value. Sort the last column (#9) to see the problem with this method.</li>
+		<li>Overall <code>stringTo</code> option added in version 2.1.16.</li>
+		<li>String options changed in version 2.1.16; setting the value to:
+			<ul>
+				<li><code>"max"</code> will treat any text in that column as a value greater than the <em>max</em> (more positive) value. Renamed from "max+".</li>
+				<li><code>"min"</code> will treat any text in that column as a value greater than the <em>min</em> (more negative) value. Renamed from "max-".</li>
+				<li><code>"top"</code> will always sort the text to the top of the column.</li>
+				<li><code>"bottom"</code> will always sort the text to the bottom of the column.</li>
+				<li><code>"none"</code> or <code>"zero"</code> will treat the text as if it has a value of zero.</li>
+			</ul>
+		</li>
+		<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
+			<ul>
+				<li>jQuery data <code>data-string="top"</code>.</li>
+				<li>metadata <code>class="{ string: 'top'}"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { string : 'top' } }</code>.</li>
+				<li>header class name <code>class="string-top"</code>.</li>
+				<li>Overall <code>stringTo</code> option.</li>
+			</ul>
+		</li>
+		<li>Sort columns three through eight to see how the sort has changed. Note that the text is sorted separately from the numeric values.</li>
+		<li>The <code>emptyTo</code> option defaults to bottom, so all empty cells will sort at the bottom of the table, except for the second column.</li>
+	</ul>
 
 <h1>Demo</h1>
 <div id="demo"><table>
@@ -222,4 +222,3 @@
 
 </body>
 </html>
-

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Changing the date format</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Changing the date format</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -45,22 +45,23 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>The dateFormat option was modified in version 2.0.23 (not part of the original plugin).</li>
-			<li>The dateFormat option will ONLY work with the <code>shortDate</code> parser.</li>
-			<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
-			<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</li>
-			<li>In versions 2.3+, date formats can be set by column using any of the following methods (they all do the same thing), in order of priority:
-				<ul>
-					<li>jQuery data <code>data-date-format="mmddyyyy"</code> (see the Javascript block below on how to set it directly; <code>data-dateFormat</code> is equivalent to <code>data-date-format</code>).</li>
-					<li>metadata <code>class="{ dateFormat: "mmddyyyy" }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { dateFormat: "mmddyyyy" } }</code>.</li>
-					<li>header class name <code>class="dateFormat-mmddyyyy"</code>.</li>
-					<li>Global (all columns) <code>dateFormat</code> option setting.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>The dateFormat option was modified in version 2.0.23 (not part of the original plugin).</li>
+		<li>The dateFormat option will ONLY work with the <code>shortDate</code> parser.</li>
+		<li>The date can be separated by any of the following: slash, dash, period, comma, space(s) or tab (/-., ).</li>
+		<li>This date format parser will only work with a four digit year. You can <a href="example-parsers.html">write your own</a> if you need a two digit year parser.</li>
+		<li>In versions 2.3+, date formats can be set by column using any of the following methods (they all do the same thing), in order of priority:
+			<ul>
+				<li>jQuery data <code>data-date-format="mmddyyyy"</code> (see the Javascript block below on how to set it directly; <code>data-dateFormat</code> is equivalent to <code>data-date-format</code>).</li>
+				<li>metadata <code>class="{ dateFormat: "mmddyyyy" }"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { dateFormat: "mmddyyyy" } }</code>.</li>
+				<li>header class name <code>class="dateFormat-mmddyyyy"</code>.</li>
+				<li>Global (all columns) <code>dateFormat</code> option setting.</li>
+			</ul>
+		</li>
+	</ul>
+
 
 <h1>Demo</h1>
 <div id="demo"><table class="tablesorter">
@@ -173,4 +174,3 @@
 
 </body>
 </html>
-

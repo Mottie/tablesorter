@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Dealing with Digits</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Dealing with Digits</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -33,14 +33,14 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Click on any column header to sort that column.</li>
-			<li>The alphanumeric sort working in the first column was added in version 2.0.6 (not part of the original plugin).</li>
-			<li>The above sort was replaced with a natural sort in version 2.2.</li>
-			<li>This example demonstrates that common table values are auto-detected (including plain text, currency, percentages, and positive &amp; negative numbers), so there is no need to set a specific parser unless you notice an issue with how a column is sorting.</li>
-			<li>Issues may arise if a column contains mixed data, e.g. "N/A" is located at the top of a numeric column; in this case the column will be detected as a text column and not a numeric column. If issues occur, add a <code>sorter-digit</code> class name to that header cell.</li> 
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Click on any column header to sort that column.</li>
+		<li>The alphanumeric sort working in the first column was added in version 2.0.6 (not part of the original plugin).</li>
+		<li>The above sort was replaced with a natural sort in version 2.2.</li>
+		<li>This example demonstrates that common table values are auto-detected (including plain text, currency, percentages, and positive &amp; negative numbers), so there is no need to set a specific parser unless you notice an issue with how a column is sorting.</li>
+		<li>Issues may arise if a column contains mixed data, e.g. "N/A" is located at the top of a numeric column; in this case the column will be detected as a text column and not a numeric column. If issues occur, add a <code>sorter-digit</code> class name to that header cell.</li>
+	</ul>
 
 <h1>Demo</h1>
 <div id="demo"><!-- the data-sortlist won't apply because it is supported by jQuery v1.4+; and this demo is using jQuery v1.2.6 -->
@@ -150,4 +150,3 @@
 
 </body>
 </html>
-

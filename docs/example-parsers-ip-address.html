@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - IP address parsers</title>
+	<title>jQuery tablesorter 2.0 - IP address parsers</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -46,29 +46,30 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>This parser can be applied to the original plugin.</li>
-			<li>The default "ipAdress" parser (IPv4) is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
-			<li>A parser for IPv6 was added in <span class="version">v2.12</span> and named "ipv6Address":
-				<ul>
-					<li>Unlike some other custom parsers, this one will auto-detect &amp; check for a valid IPv6 address since the same address can be represented in many different ways. Some examples are shown in the demo table below.</li>
-					<li>IPv6 addresses are stored in the cache in their canonical decimal form, without the colons, for faster &amp; easier numerical sorting.</li>
-					<li><a href="../test.html">Extensive unit tests</a> are included with this parser.</li>
-				</ul>
-			</li>
-			<li>If the parser doesn't auto-detect which column has IPv6 addresses, use the headers sorter option to set it:
-				<pre class="prettyprint lang-javascript">$(function(){
-  $('table').tablesorter({
-    headers: {
-      1: { sorter: 'MAC' },
-      // 2: { sorter: 'ipAddress' }, this parser is auto-detected
-      3: { sorter: 'ipv6Address' }
-    }
-  });
+	</p>
+	<ul>
+		<li>This parser can be applied to the original plugin.</li>
+		<li>The default "ipAdress" parser (IPv4) is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
+		<li>A parser for IPv6 was added in <span class="version">v2.12</span> and named "ipv6Address":
+			<ul>
+				<li>Unlike some other custom parsers, this one will auto-detect &amp; check for a valid IPv6 address since the same address can be represented in many different ways. Some examples are shown in the demo table below.</li>
+				<li>IPv6 addresses are stored in the cache in their canonical decimal form, without the colons, for faster &amp; easier numerical sorting.</li>
+				<li><a href="../test.html">Extensive unit tests</a> are included with this parser.</li>
+			</ul>
+		</li>
+		<li>If the parser doesn't auto-detect which column has IPv6 addresses, use the headers sorter option to set it:
+			<pre class="prettyprint lang-javascript">$(function(){
+$('table').tablesorter({
+  headers: {
+    1: { sorter: 'MAC' },
+    // 2: { sorter: 'ipAddress' }, this parser is auto-detected
+    3: { sorter: 'ipv6Address' }
+  }
+});
 });</pre>
-			</li>
-		</ul>
-	<p>
+		</li>
+	</ul>
+
 
 	<h1>Demo</h1>
 	<button type="button" class="toggleparsedvalue">Toggle parsed values</button>

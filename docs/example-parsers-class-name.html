@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable or set the column parser using class names</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Disable or set the column parser using class names</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -32,19 +32,19 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In tablesorter version 2.0.5 and older, only the metadata and headers options methods were available to set the parsers.</li>
-			<li>In versions 2.0.11+, parsers could be set using class names.</li>
-			<li>Currently (versions 2.3+), parsers can be set using any of the following methods (they all do the same thing), in order of priority:
-				<ul>
-					<li>jQuery data <code>data-sorter="text"</code> (see the Javascript block below on how to set it directly).</li>
-					<li>metadata <code>class="{ sorter: "text" }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { sorter: "text" } }</code>.</li>
-					<li>header class name <code>class="sorter-text"</code>.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In tablesorter version 2.0.5 and older, only the metadata and headers options methods were available to set the parsers.</li>
+		<li>In versions 2.0.11+, parsers could be set using class names.</li>
+		<li>Currently (versions 2.3+), parsers can be set using any of the following methods (they all do the same thing), in order of priority:
+			<ul>
+				<li>jQuery data <code>data-sorter="text"</code> (see the Javascript block below on how to set it directly).</li>
+				<li>metadata <code>class="{ sorter: "text" }"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { sorter: "text" } }</code>.</li>
+				<li>header class name <code>class="sorter-text"</code>.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -128,4 +128,3 @@
 
 </body>
 </html>
-

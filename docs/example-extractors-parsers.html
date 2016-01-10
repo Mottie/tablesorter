@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Using extractors with parsers</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Using extractors with parsers</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -58,25 +58,25 @@ $(function() {
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>The extractor type was added in <span class="version">v2.17.6</span> and allows you to apply two parsers to a column:
-				<ul>
-					<li>In this demo, the last column contains select dropdowns that have "good", "medium" and "bad" options.</li>
-					<li>So there is a need to use a parser to extract content from the selected option within the select and then use the grades parser to give each grade a sortable value.</li>
-					<li>Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for adding this functionality!</li>
-				</ul>
-			</li>
-			<li>The extractor <em>is always</em> used before the parser.</li>
-			<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
-				<ul>
-					<li>jQuery data <code>data-extractor="select"</code>.</li>
-					<li>metadata <code>class="{ extractor: 'select'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { extractor : 'select' } }</code>.</li>
-					<li>header class name <code>class="extractor-select"</code>.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>The extractor type was added in <span class="version">v2.17.6</span> and allows you to apply two parsers to a column:
+			<ul>
+				<li>In this demo, the last column contains select dropdowns that have "good", "medium" and "bad" options.</li>
+				<li>So there is a need to use a parser to extract content from the selected option within the select and then use the grades parser to give each grade a sortable value.</li>
+				<li>Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for adding this functionality!</li>
+			</ul>
+		</li>
+		<li>The extractor <em>is always</em> used before the parser.</li>
+		<li>Individual columns can be modified by adding the following (they all do the same thing), set in order of priority:
+			<ul>
+				<li>jQuery data <code>data-extractor="select"</code>.</li>
+				<li>metadata <code>class="{ extractor: 'select'}"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { extractor : 'select' } }</code>.</li>
+				<li>header class name <code>class="extractor-select"</code>.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -122,4 +122,3 @@ $(function() {
 
 </body>
 </html>
-

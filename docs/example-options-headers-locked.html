@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Lock sort order</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Lock sort order</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -41,19 +41,19 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>This option was part of the original plugin, but it was broken.</li>
-			<li>Sort the first, third and fifth columns to see how the sort is locked.</li>
-			<li>Columns can be locked using any of the following methods (they all do the same thing), in order of priority (v2.3+):
-				<ul>
-					<li>jQuery data <code>data-lockedorder="asc"</code>. (equivalent to <code>data-locked-order="asc"</code>).</li>
-					<li>metadata <code>class="{ lockedOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { lockedOrder: 'asc' } }</code>.</li>
-					<li>header class name <code>class="lockedOrder-asc"</code>.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>This option was part of the original plugin, but it was broken.</li>
+		<li>Sort the first, third and fifth columns to see how the sort is locked.</li>
+		<li>Columns can be locked using any of the following methods (they all do the same thing), in order of priority (v2.3+):
+			<ul>
+				<li>jQuery data <code>data-lockedorder="asc"</code>. (equivalent to <code>data-locked-order="asc"</code>).</li>
+				<li>metadata <code>class="{ lockedOrder: 'asc'}"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { lockedOrder: 'asc' } }</code>.</li>
+				<li>header class name <code>class="lockedOrder-asc"</code>.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -129,4 +129,3 @@
 
 </body>
 </html>
-

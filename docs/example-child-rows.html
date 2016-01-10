@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Child Rows</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Child Rows</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -72,21 +72,21 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Click the link in the Order # column to reveal the hidden child row cells
-		(<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>).</li>
-			<li>This option is available in the original plugin.</li>
-			<li>This demo had the default child row class name changed from "expand-child" to "tablesorter-childRow" in v2.4.</li>
-			<li>As of <span class="version updated">v2.15.12</span>,
-				<ul>
-					<li>Parents of child rows now have a <code>tablesorter-hasChildRow</code> class name added.</li>
-					<li>The last row of each page now includes any child rows. For example, on page 1, click on the "SO71783" row link and the associated child row will now show, as it should</li>
-					<li><span class="label label-info">NOTE!</span> A new css definition was added to every default theme; the "filtered" class name (set by the <code>filter_filteredRow</code> widgetOption) has been added to properly hide/show child rows when filtered. Please see the <a href="example-child-rows-filtered.html">Child Rows with Filter Widget</a> demo.</li>
-					<li>The additional code to always hide child row cells on <code>pagerChange</code> is no longer needed.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Click the link in the Order # column to reveal the hidden child row cells
+	(<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">original demo</a>).</li>
+		<li>This option is available in the original plugin.</li>
+		<li>This demo had the default child row class name changed from "expand-child" to "tablesorter-childRow" in v2.4.</li>
+		<li>As of <span class="version updated">v2.15.12</span>,
+			<ul>
+				<li>Parents of child rows now have a <code>tablesorter-hasChildRow</code> class name added.</li>
+				<li>The last row of each page now includes any child rows. For example, on page 1, click on the "SO71783" row link and the associated child row will now show, as it should</li>
+				<li><span class="label label-info">NOTE!</span> A new css definition was added to every default theme; the "filtered" class name (set by the <code>filter_filteredRow</code> widgetOption) has been added to properly hide/show child rows when filtered. Please see the <a href="example-child-rows-filtered.html">Child Rows with Filter Widget</a> demo.</li>
+				<li>The additional code to always hide child row cells on <code>pagerChange</code> is no longer needed.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Using a Custom Sort Script</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Using a Custom Sort Script</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -26,7 +26,7 @@
 	Array.AlphanumericSortIgnoreCase = true;
 	// see https://github.com/andrewplummer/Sugar/issues/382#issuecomment-41526957
 	Array.AlphanumericSortEquivalents = {};
-	
+
 	$("table").tablesorter({
 		theme : 'blue',
 		// table = table object; get config options from table.config
@@ -58,24 +58,24 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Modified the <code>textSorter</code> option to allow setting the sorter per column <span class="version">v2.12</span>:
-				<ul>
-					<li><span class="alert">*NOTE*</span> The <code>textSorter</code> function parameters have changed! It is now <code>function(a, b, direction, column, table)</code> (previously <code>function(a, b, table, column)</code>).</li>
-					<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="http://sugarjs.com/arrays#sorting">Sugar</a> library to sort:
-						<ul>
-							<li>Solved (4/28/2014)! <del>please note that at the time of this writing, there is an issue with it not sorting properly (<a href="https://github.com/andrewplummer/Sugar/issues/382">ref</a>)</del></li>
-							<li>You can tell it is working properly when you sort the Icelandic Alphabet column and the numeric column numbers are sequential (<span class="lookhere">see row #37</span>).</li>
-						</ul>
-					</li>
-					<li>The &quot;Plain Text Sort&quot; column is using a basic alphabetical sort (with localeCompare if set). Sort that column, then the last column to see how it differs from an alphanumeric sort.</li>
-					<li>The sorting of empty cells still occurs regardless of the custom <code>textSorter</code> setting.</li>
-				</ul>
-			</li>
-			<li>One custom sort used here is from the original tablesorter plugin v2.0.3. Sort the <del>first</del> "Plain Text Sort" column to see how it sorts alphanumeric data.</li>
-			<li>This option is not part of the original plugin (v2.2).</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Modified the <code>textSorter</code> option to allow setting the sorter per column <span class="version">v2.12</span>:
+			<ul>
+				<li><span class="alert">*NOTE*</span> The <code>textSorter</code> function parameters have changed! It is now <code>function(a, b, direction, column, table)</code> (previously <code>function(a, b, table, column)</code>).</li>
+				<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="http://sugarjs.com/arrays#sorting">Sugar</a> library to sort:
+					<ul>
+						<li>Solved (4/28/2014)! <del>please note that at the time of this writing, there is an issue with it not sorting properly (<a href="https://github.com/andrewplummer/Sugar/issues/382">ref</a>)</del></li>
+						<li>You can tell it is working properly when you sort the Icelandic Alphabet column and the numeric column numbers are sequential (<span class="lookhere">see row #37</span>).</li>
+					</ul>
+				</li>
+				<li>The &quot;Plain Text Sort&quot; column is using a basic alphabetical sort (with localeCompare if set). Sort that column, then the last column to see how it differs from an alphanumeric sort.</li>
+				<li>The sorting of empty cells still occurs regardless of the custom <code>textSorter</code> setting.</li>
+			</ul>
+		</li>
+		<li>One custom sort used here is from the original tablesorter plugin v2.0.3. Sort the <del>first</del> "Plain Text Sort" column to see how it sorts alphanumeric data.</li>
+		<li>This option is not part of the original plugin (v2.2).</li>
+	</ul>
 
 <h1>Demo</h1>
 
@@ -147,4 +147,3 @@
 
 </body>
 </html>
-

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - CSS Column &amp; Row Highlights</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - CSS Column &amp; Row Highlights</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -171,33 +171,33 @@ table.focus-highlight td:before {
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>The css in this demo only works with <a href="http://caniuse.com/#feat=css-gencontent">modern browsers</a> (IE9+).</li>
-			<li>This css is originally from this <a href="http://css-tricks.com/simple-css-row-column-highlighting/">CSS-Tricks</a> article; it has been modified to work with tablesorter themes.</li>
-			<li>
-				It does not work properly on cells with <code>rowspan</code> or <code>colspan</code> within the <code>tbody</code> (I am referring to info-only tbodies, since tablesorter does not yet support sorting with these spans); if you do need a script to highlight spanned columns &amp; rows, then take a look at the <a href="https://github.com/gajus/wholly">wholly</a> plugin.
-				<p></p>
-			</li>
-			<li>To add <strong class="hover-hl">Hover</strong> Highlighting:
-				<ul>
-					<li>Add a class name of <code>&quot;<span class="hover-hl">hover-highlight</span>&quot;</code> to enable hover row and column highlighting.</li>
-					<li>Include the CSS shown on this page.</li>
-					<li>If needed, modify the table background color &amp; zebra striping row colors.</li>
-					<li>Modify the hover highlight row and/or column color definitions as desired (they can be different colors).</li>
-				</ul>
-				<p></p>
-			</li>
-			<li>To add <strong class="focus-hl">Focus</strong> Highlighting:
-				<ul>
-					<li>Add a class name of <code>&quot;<span class="focus-hl">focus-highlight</span>&quot;</code> to enable focused cell with row and column highlighting.</li>
-					<li>Click on a table cell in the demo below to see the highlight; only <em>one element</em>, per page, can be active at a time.</li>
-					<li>Include the CSS and the extra javascript shown on this page to make table cells focusable.</li>
-					<li>If needed, modify the table background color &amp; zebra striping row colors.</li>
-					<li>Modify the focus highlight row and/or column color definitions as desired (they can be different colors).</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>The css in this demo only works with <a href="http://caniuse.com/#feat=css-gencontent">modern browsers</a> (IE9+).</li>
+		<li>This css is originally from this <a href="http://css-tricks.com/simple-css-row-column-highlighting/">CSS-Tricks</a> article; it has been modified to work with tablesorter themes.</li>
+		<li>
+			It does not work properly on cells with <code>rowspan</code> or <code>colspan</code> within the <code>tbody</code> (I am referring to info-only tbodies, since tablesorter does not yet support sorting with these spans); if you do need a script to highlight spanned columns &amp; rows, then take a look at the <a href="https://github.com/gajus/wholly">wholly</a> plugin.
+			<p></p>
+		</li>
+		<li>To add <strong class="hover-hl">Hover</strong> Highlighting:
+			<ul>
+				<li>Add a class name of <code>&quot;<span class="hover-hl">hover-highlight</span>&quot;</code> to enable hover row and column highlighting.</li>
+				<li>Include the CSS shown on this page.</li>
+				<li>If needed, modify the table background color &amp; zebra striping row colors.</li>
+				<li>Modify the hover highlight row and/or column color definitions as desired (they can be different colors).</li>
+			</ul>
+			<p></p>
+		</li>
+		<li>To add <strong class="focus-hl">Focus</strong> Highlighting:
+			<ul>
+				<li>Add a class name of <code>&quot;<span class="focus-hl">focus-highlight</span>&quot;</code> to enable focused cell with row and column highlighting.</li>
+				<li>Click on a table cell in the demo below to see the highlight; only <em>one element</em>, per page, can be active at a time.</li>
+				<li>Include the CSS and the extra javascript shown on this page to make table cells focusable.</li>
+				<li>If needed, modify the table background color &amp; zebra striping row colors.</li>
+				<li>Modify the focus highlight row and/or column color definitions as desired (they can be different colors).</li>
+			</ul>
+		</li>
+	</ul>
 
 <h1>Demo</h1>
 <div id="demo">

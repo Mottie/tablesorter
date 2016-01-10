@@ -261,6 +261,15 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		htmlhint: {
+			html1: {
+				options: {
+					'tag-pair': true
+				},
+				src: ['docs/*.html', 'beta-testing/*.html']
+			}
+		},
+
 		uglify: {
 			options: {
 				preserveComments: function( node, comment ){
@@ -338,6 +347,7 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
+	grunt.loadNpmTasks( 'grunt-htmlhint' );
 	grunt.loadNpmTasks( 'grunt-contrib-qunit' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
@@ -346,7 +356,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-jscs' );
 
-	grunt.registerTask( 'test', [ 'jscs', 'jshint', 'qunit' ] );
+	grunt.registerTask( 'test', [ 'jscs', 'jshint', 'htmlhint', 'qunit' ] );
 
 	tasks = [
 		'clean:build',

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - jQuery UITheme Widget (jQuery UI)</title>
+	<title>jQuery tablesorter 2.0 - jQuery UITheme Widget (jQuery UI)</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -106,27 +106,26 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version">v2.19.0</span>, this widget allows dynamic changing of themes; including switching from jQuery UI or Bootstrap to any other theme. To change a theme, do the following:
-				<pre class="prettyprint lang-js">var $table = $('table');
+	</p>
+	<ul>
+		<li>In <span class="version">v2.19.0</span>, this widget allows dynamic changing of themes; including switching from jQuery UI or Bootstrap to any other theme. To change a theme, do the following:
+			<pre class="prettyprint lang-js">var $table = $('table');
 $table[0].config.theme = 'grey';
 $table.trigger('applyWidgets');</pre>
-				To see this work, check out the <a href="example-widget-scroller.html">scroller widget demo</a>.
-			</li>
-			</li>
-			<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
-			<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code (v2.7).</li>
-			<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details (v2.1).</li>
-			<li>In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
-				<ul>
-					<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the jQuery UI theme saved to <code>$.tablesorter.themes.jui</code></li>
-					<li>The themes variable allows you to modify the class names for the table, header, sort icons, active state, hover state, filter inputs and zebra striping. See the code below on how to extend these variables.</li>
-					<li>Set the <code>uitheme</code> widget option to <code>"jui"</code> to set the widget to use the jQuery UI theme. See the <a href="example-widget-bootstrap-theme.html">bootstrap demo</a> for another example.</li>
-				</ul>
-			</li>
-			<li>Earlier widget versions required jQuery 1.4+. The UITheme widget for tablesorter 2.4+ requires jQuery 1.2.6+.</li>
-		</ul>
-	<p>
+			To see this work, check out the <a href="example-widget-scroller.html">scroller widget demo</a>.
+		</li>
+		<li>As of tablesorter version 2.9+, this widget can no longer be applied to versions of tablesorter prior to version 2.8.</li>
+		<li>You will need to modify the <code>headerTemplate</code> option to include the bootstrap icon! See the example in the code (v2.7).</li>
+		<li>The original "widgetUitheme" option has been replaced by "widgetOptions.uitheme". See the javascript block below for more details (v2.1).</li>
+		<li>In tablesorter v2.4, the <code>uitheme</code> option has changed to indicate the theme instead of an array of icons to use:
+			<ul>
+				<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the jQuery UI theme saved to <code>$.tablesorter.themes.jui</code></li>
+				<li>The themes variable allows you to modify the class names for the table, header, sort icons, active state, hover state, filter inputs and zebra striping. See the code below on how to extend these variables.</li>
+				<li>Set the <code>uitheme</code> widget option to <code>"jui"</code> to set the widget to use the jQuery UI theme. See the <a href="example-widget-bootstrap-theme.html">bootstrap demo</a> for another example.</li>
+			</ul>
+		</li>
+		<li>Earlier widget versions required jQuery 1.4+. The UITheme widget for tablesorter 2.4+ requires jQuery 1.2.6+.</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<br>

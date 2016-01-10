@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Filter Widget</title>
+	<title>jQuery tablesorter 2.0 - Filter Widget</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -303,7 +303,7 @@ $(function(){
 							<tr><td class="center">10</td><td class="center">text</td><td>Any text entered in the filter will <strong>match</strong> text found within the column</td><td><code>abc</code> (finds &quot;abc&quot;, &quot;abcd&quot;, &quot;abcde&quot;, etc);<button data-filter-column="1">Aaron</button> (finds &quot;Aaron&quot; and &quot;Philip Aaron Wong&quot;)</td></tr>
 						</tbody>
 					</table>
-					<span class="bright">(1)</span> The filter order (or precendence) of how searches are checked in "priority" (first column) order; so an exact match will override "range" searches </span> (*NOTE* order changed in <span class="version updated">v2.15</span>, operators prioritized before exact; see <a href="https://github.com/Mottie/tablesorter/issues/465">issue #465</a>; order changed again in <span class="version updated">v2.17.1</span> to move "not match" before "exact" and allow for exact not matches; see <a href="https://github.com/Mottie/tablesorter/issues/628">issue #628</a>). In <span class="version updated">v2.22.2</span>, the "or" and "and" types can combine any of the other filter types together.<br>
+					<span class="bright">(1)</span> The filter order (or precendence) of how searches are checked in "priority" (first column) order; so an exact match will override "range" searches (*NOTE* order changed in <span class="version updated">v2.15</span>, operators prioritized before exact; see <a href="https://github.com/Mottie/tablesorter/issues/465">issue #465</a>; order changed again in <span class="version updated">v2.17.1</span> to move "not match" before "exact" and allow for exact not matches; see <a href="https://github.com/Mottie/tablesorter/issues/628">issue #628</a>). In <span class="version updated">v2.22.2</span>, the "or" and "and" types can combine any of the other filter types together.<br>
 					<span class="bright">(2)</span> Logical "or" comparisons can now show exact matches (by default; <span class="version">v2.10.1</span>) or just match cell contents.<br>
 					<span class="bright">(3)</span> In tablesorter <span class="version">v2.10</span>, comparisons can be made in date columns (if properly parsed).
 				</li>
@@ -381,6 +381,7 @@ $(function(){
 							<div class="collapsible">
 							<br>
 							The filter cell (<code>&lt;td&gt;</code>) is not to be confused with the <code>filter_cssFilter</code> option which adds an extra class name to the filter inputs (<code>&lt;input&gt;</code>).
+							</div>
 						</td>
 					</tr>
 
@@ -734,11 +735,12 @@ $.extend($.tablesorter.language, {
 				<li>
 					<span class="label warning">Warning</span> These language values are added to a regular expression using <code>new RegExp()</code>:
 					<ul>
-						<li>So you will need to escape any special characters contained in these values (e.g. <code>. \ + * ? [ ^ ] $ ( ) { } = ! < > | : -</code>).</li>
+						<li>So you will need to escape any special characters contained in these values (e.g. <code>. \ + * ? [ ^ ] $ ( ) { } = ! &lt; &gt; | : -</code>).</li>
 						<li>This function might help (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_special_characters">ref</a>):
 							<pre class="prettyprint lang-js">function escapeRegExp( string ) {
 		  return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
-		}</pre></li>
+		}</pre>
+						</li>
 					</ul>
 				</li>
 			</ul>

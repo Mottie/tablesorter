@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Disable sort</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Disable sort</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -49,19 +49,19 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In tablesorter <span class="version">v2.18.1</span>, you can now target a column by the class name of an element inside of a header; note that the span has the targeted class name in the first name column.</li>
-			<li>In tablesorter v2.0.5 and older, only the metadata and headers options methods were available.</li>
-			<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
-				<ul>
-					<li>jQuery data <code>data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
-					<li>metadata <code>class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { sorter: false } }</code>.</li>
-					<li>header class name <code>class="sorter-false"</code>.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In tablesorter <span class="version">v2.18.1</span>, you can now target a column by the class name of an element inside of a header; note that the span has the targeted class name in the first name column.</li>
+		<li>In tablesorter v2.0.5 and older, only the metadata and headers options methods were available.</li>
+		<li>In versions 2.3+, columns can be disabled using any of the following methods (they all do the same thing), in order of priority:
+			<ul>
+				<li>jQuery data <code>data-sorter="false"</code> (see the Javascript block below on how to set it directly).</li>
+				<li>metadata <code>class="{ sorter: false }"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { sorter: false } }</code>.</li>
+				<li>header class name <code>class="sorter-false"</code>.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -137,4 +137,3 @@
 
 </body>
 </html>
-

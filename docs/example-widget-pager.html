@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Pager Widget</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Pager Widget</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -231,27 +231,27 @@
 
 		<p class="tip">
 			<em>NOTE!</em>
-			<ul>
-				<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
-				<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
-				<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.<p></p></li>
+		</p>
+		<ul>
+			<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
+			<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
+			<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.<p></p></li>
 
-				<li>This pager WIDGET <em>can not</em> be applied to the original tablesorter.</li>
-				<li>Do not use this widget along with the pager plugin.</li>
-				<li>The pager.css file also works with this pager widget.</li>
-				<li>This widget is still in <span class="beta">development</span> as it has not been throughly tested.</li>
-				<li>Extensive documentation has not been included, as all functioning is essentially identical to the pager addon, but here are some important differences:
-					<ul>
-						<li>All of the options are now set within the <code>widgetOptions</code>.</li>
-						<li>Pager events (pagerChange pagerComplete pagerInitialized pageMoved) now return <code>table.config</code> instead of <code>table.config.pager</code>.</li>
-						<li>Most option names have only been modified by adding <code>pager_</code> as a prefix.</li>
-						<li>Exceptions include moving all applied css class names into a <code>pager_css</code> option and all selectors into <code>pager_selectors</code>, including the original <code>container</code> option.</li>
-						<li>Because I stopped trying so hard to make widgets compatible with jQuery v1.2.6, this widget requires at least v1.3+.</li>
-						<li>See the Javascript code below for a full example.</li>
-					</ul>
-				</li>
-			</ul>
-		<p>
+			<li>This pager WIDGET <em>can not</em> be applied to the original tablesorter.</li>
+			<li>Do not use this widget along with the pager plugin.</li>
+			<li>The pager.css file also works with this pager widget.</li>
+			<li>This widget is still in <span class="beta">development</span> as it has not been throughly tested.</li>
+			<li>Extensive documentation has not been included, as all functioning is essentially identical to the pager addon, but here are some important differences:
+				<ul>
+					<li>All of the options are now set within the <code>widgetOptions</code>.</li>
+					<li>Pager events (pagerChange pagerComplete pagerInitialized pageMoved) now return <code>table.config</code> instead of <code>table.config.pager</code>.</li>
+					<li>Most option names have only been modified by adding <code>pager_</code> as a prefix.</li>
+					<li>Exceptions include moving all applied css class names into a <code>pager_css</code> option and all selectors into <code>pager_selectors</code>, including the original <code>container</code> option.</li>
+					<li>Because I stopped trying so hard to make widgets compatible with jQuery v1.2.6, this widget requires at least v1.3+.</li>
+					<li>See the Javascript code below for a full example.</li>
+				</ul>
+			</li>
+		</ul>
 
 		<h1>Triggered Events</h1>
 		<ul id="display">
@@ -475,4 +475,3 @@ td.tablesorter-pager {
 
 </body>
 </html>
-

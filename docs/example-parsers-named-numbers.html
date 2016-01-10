@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter - Named Numbers Parser</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter - Named Numbers Parser</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -42,20 +42,20 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version updated">v2.22.0</span>, this parser will now ignore commas, periods and quotes adjacent to the named number word (e.g. "10 million, three...").</li>
-			<li>This parser will convert named numbers into appropriate values so they are sorted correctly.</li>
-			<li>Named numbers include values:
-				<ul>
-					<li>zero to twenty; by one ("one", "two", "three", ..., "nineteen", "twenty")</li>
-					<li>twenty to hundred; by ten ("twenty", "thirty", "forty", ... "ninety", "hundred")</li>
-					<li>thousand (1e3) to duotrigintillion (1e99); by 10^(3n+3) value ("thousand", "million", "billion", ... "untrigintillion", "duotrigintillion")</li>
-					<li>googl (1e100)</li>
-				</ul>
-			</li>
-			<li>Even bigger named values will need to be manually added to the parser code; see <a href="http://en.wikipedia.org/wiki/Names_of_large_numbers">this wikipedia page</a> for more names.</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In <span class="version updated">v2.22.0</span>, this parser will now ignore commas, periods and quotes adjacent to the named number word (e.g. "10 million, three...").</li>
+		<li>This parser will convert named numbers into appropriate values so they are sorted correctly.</li>
+		<li>Named numbers include values:
+			<ul>
+				<li>zero to twenty; by one ("one", "two", "three", ..., "nineteen", "twenty")</li>
+				<li>twenty to hundred; by ten ("twenty", "thirty", "forty", ... "ninety", "hundred")</li>
+				<li>thousand (1e3) to duotrigintillion (1e99); by 10^(3n+3) value ("thousand", "million", "billion", ... "untrigintillion", "duotrigintillion")</li>
+				<li>googl (1e100)</li>
+			</ul>
+		</li>
+		<li>Even bigger named values will need to be manually added to the parser code; see <a href="http://en.wikipedia.org/wiki/Names_of_large_numbers">this wikipedia page</a> for more names.</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<button type="button" class="toggleparsedvalue">Toggle parsed values</button>
@@ -154,4 +154,3 @@ $(function(){
 
 </body>
 </html>
-

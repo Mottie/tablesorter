@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Sorting &amp; Filtering with Colspans</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Sorting &amp; Filtering with Colspans</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -78,17 +78,17 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Having a <code>colspan</code> in the tbody is not fully supported by all widgets, and there are still some minor issues to work out.</li>
-			<li><span class="label alert">Alert</span> Cells with a <code>rowspan</code> are <em>not</em> currently supported.</li>
-			<li><span class="label warning">Warning</span> Cells with a <code>colspan</code> will attempt to use the parser set for that column and <em>will not</em> use the parser for another column while sorting or filtering - try this <button class="search" data-column="3" type="button">&gt;10</button> - the "17 Koala" cell is not parsed as a numeric value and is thus considered a string.</li>
-			<li>The <code>duplicateSpan</code> option (storing of cache data) is a preliminary step in providing <code>colspan</code> support, it is by no means complete.</li>
-			<li>This demo requires tablesorter v2.25.0+, as well the corresponding version of the filter widget.<br><br></li>
+	</p>
+	<ul>
+		<li>Having a <code>colspan</code> in the tbody is not fully supported by all widgets, and there are still some minor issues to work out.</li>
+		<li><span class="label alert">Alert</span> Cells with a <code>rowspan</code> are <em>not</em> currently supported.</li>
+		<li><span class="label warning">Warning</span> Cells with a <code>colspan</code> will attempt to use the parser set for that column and <em>will not</em> use the parser for another column while sorting or filtering - try this <button class="search" data-column="3" type="button">&gt;10</button> - the "17 Koala" cell is not parsed as a numeric value and is thus considered a string.</li>
+		<li>The <code>duplicateSpan</code> option (storing of cache data) is a preliminary step in providing <code>colspan</code> support, it is by no means complete.</li>
+		<li>This demo requires tablesorter v2.25.0+, as well the corresponding version of the filter widget.<br><br></li>
 
-			<li>Follow the demo steps to hopefully get the full understanding of how to use <code>colspan</code>s in the tbody.</li>
-			<li>Ultimately, with the issues noted below, I would not recommend including an entire column in the tbody that does not have a corresponding header cell - <em>don't do what I did in this demo for the first two colums</em>.</li>
-		</ul>
-	<p>
+		<li>Follow the demo steps to hopefully get the full understanding of how to use <code>colspan</code>s in the tbody.</li>
+		<li>Ultimately, with the issues noted below, I would not recommend including an entire column in the tbody that does not have a corresponding header cell - <em>don't do what I did in this demo for the first two colums</em>.</li>
+	</ul>
 
 <h1>Demo</h1>
 <div id="demo"><ul>
@@ -180,4 +180,3 @@ Search:
 
 </body>
 </html>
-

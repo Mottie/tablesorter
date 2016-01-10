@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter 2.0 - Set initial sort order</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Set initial sort order</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -44,19 +44,19 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>Adding "sortInitialOrder" inside of the "headers" option was added in version 2.0.8 (not part of the original plugin).</li>
-			<li>In versions 2.3+, the initial sort order of the columns can be set using any of the following methods (they all do the same thing), in order of priority:
-				<ul>
-					<li>jQuery data <code>data-sort-initial-order="desc"</code> (equivalent to <code>data-sortinitialorder="desc"</code>).</li>
-					<li>metadata <code>class="{ sortInitialOrder: "desc" }"</code>. This requires the metadata plugin.</li>
-					<li>headers option <code>headers : { 0 : { sortInitialOrder: "desc" } }</code>.</li>
-					<li>header class name <code>class="sortInitialOrder-desc"</code>.</li>
-					<li>overall <code>sortInitialOrder</code> option setting.</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>Adding "sortInitialOrder" inside of the "headers" option was added in version 2.0.8 (not part of the original plugin).</li>
+		<li>In versions 2.3+, the initial sort order of the columns can be set using any of the following methods (they all do the same thing), in order of priority:
+			<ul>
+				<li>jQuery data <code>data-sort-initial-order="desc"</code> (equivalent to <code>data-sortinitialorder="desc"</code>).</li>
+				<li>metadata <code>class="{ sortInitialOrder: "desc" }"</code>. This requires the metadata plugin.</li>
+				<li>headers option <code>headers : { 0 : { sortInitialOrder: "desc" } }</code>.</li>
+				<li>header class name <code>class="sortInitialOrder-desc"</code>.</li>
+				<li>overall <code>sortInitialOrder</code> option setting.</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -132,4 +132,3 @@
 
 </body>
 </html>
-

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="utf-8">
-	<title>jQuery plugin: Tablesorter - Assorted date parsers</title>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter - Assorted date parsers</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -95,33 +95,33 @@
 
 	<p class="tip">
 		<em>NOTE!</em>
-		<ul>
-			<li>In <span class="version">v2.24.1</span>,
-				<ul>
-					<li>Updated weekday &amp; month parsers to better integrate with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</li>
-					<li>This demo now includes a column for French named weekdays &amp; months.</li>
-				</ul>
-			</li>
-			<li>Parse Dates with these parsers
-				<ul>
-					<li>The "Date" column is using the <a href="http://sugarjs.com/dates#comparing_dates">sugar</a> library to parse dates. Make sure to include the sugar library and the sugar-date-parser.</li>
-					<li>The "Weekday" column uses the included "weekday" parser. You can modify parser to match whatever language you are using.</li>
-					<li>The "Month" column uses the included "month" parser. You can also modify the month names within the parser to match whatever language you are using.</li>
-					<li>The "Year" column is just using the included two digit year parser:
-						<ul>
-							<li>Formats for "mmddyy", "ddmmyy" and "yymmdd" are available</li>
-							<li>Within the parser code is a <code>range</code> variable which is set to <code>50</code> years range, which sets the date be within +/- range of the listed two digit year.</li>
-							<li>So if the current year is <code>2020</code>, and the listed two digit year is <code>80</code> (<code>2080 - 2020 &gt; 50</code>), it becomes <code>1980</code>.</li>
-							<li>If the listed two digit year is <code>50</code> (<code>2050 - 2020 &lt; 50</code>), then it becomes <code>2050</code>. I hope that makes it clearer.</li>
-							<li>Try out the two digit year calculator below the table.</li>
-							<li>In <span class="version">v2.14.0</span>, the range can be set using the <code>dateRange</code> option (see the initialization code below).</li>
-						</ul>
-					</li>
-					<li>The "Time" column is using the built-in time parser which has been always been included with tablesorter .</li>
-				</ul>
-			</li>
-		</ul>
-	<p>
+	</p>
+	<ul>
+		<li>In <span class="version">v2.24.1</span>,
+			<ul>
+				<li>Updated weekday &amp; month parsers to better integrate with <a href="https://github.com/jquery/globalize">jQuery Globalize</a>.</li>
+				<li>This demo now includes a column for French named weekdays &amp; months.</li>
+			</ul>
+		</li>
+		<li>Parse Dates with these parsers
+			<ul>
+				<li>The "Date" column is using the <a href="http://sugarjs.com/dates#comparing_dates">sugar</a> library to parse dates. Make sure to include the sugar library and the sugar-date-parser.</li>
+				<li>The "Weekday" column uses the included "weekday" parser. You can modify parser to match whatever language you are using.</li>
+				<li>The "Month" column uses the included "month" parser. You can also modify the month names within the parser to match whatever language you are using.</li>
+				<li>The "Year" column is just using the included two digit year parser:
+					<ul>
+						<li>Formats for "mmddyy", "ddmmyy" and "yymmdd" are available</li>
+						<li>Within the parser code is a <code>range</code> variable which is set to <code>50</code> years range, which sets the date be within +/- range of the listed two digit year.</li>
+						<li>So if the current year is <code>2020</code>, and the listed two digit year is <code>80</code> (<code>2080 - 2020 &gt; 50</code>), it becomes <code>1980</code>.</li>
+						<li>If the listed two digit year is <code>50</code> (<code>2050 - 2020 &lt; 50</code>), then it becomes <code>2050</code>. I hope that makes it clearer.</li>
+						<li>Try out the two digit year calculator below the table.</li>
+						<li>In <span class="version">v2.14.0</span>, the range can be set using the <code>dateRange</code> option (see the initialization code below).</li>
+					</ul>
+				</li>
+				<li>The "Time" column is using the built-in time parser which has been always been included with tablesorter .</li>
+			</ul>
+		</li>
+	</ul>
 
 	<h1>Demo</h1>
 	<div id="demo"><table class="tablesorter">
@@ -224,4 +224,3 @@ $(function(){
 
 </body>
 </html>
-

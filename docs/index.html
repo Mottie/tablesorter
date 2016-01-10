@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>jQuery plugin: Tablesorter 2.0</title>
+<title>jQuery tablesorter 2.0</title>
 
 <!-- Demo stuff -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -93,7 +93,7 @@
 		<strong>Licence:</strong>
 		Dual licensed under <a class="external" href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
 		or <a class="external" href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.<br>
-	<p>
+	</p>
 
 	<a id="Contents"></a>
 	<h1>Contents</h1>
@@ -120,7 +120,7 @@
 		standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes.
 		tablesorter can successfully parse and sort many types of data including linked data in a cell.
 		It has many useful features including:
-	<p>
+	</p>
 
 	<ul>
 		<li>Multi-column sorting</li>
@@ -216,7 +216,7 @@
 
 	<p class="tip">
 		<span class="label label-info">TIP!</span>  Sort multiple columns simultaneously by holding down the <kbd>Shift</kbd> key and clicking a second, third or even fourth column header!
-	<p>
+	</p>
 
 	<a id="Getting-Started"></a>
 	<h1>Getting started</h1>
@@ -224,7 +224,7 @@
 		To use the tablesorter plugin, include the <a class="external" href="http://jquery.com">jQuery</a>
 		library and the tablesorter plugin inside the <code>&lt;head&gt;</code> tag
 		of your HTML document:
-	<p>
+	</p>
 
 	<pre class="prettyprint lang-html">&lt;!-- choose a theme file --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;/path/to/theme.default.css&quot;&gt;
@@ -236,7 +236,7 @@
 &lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
 </pre>
 
-	<p>tablesorter works on standard HTML tables.  You must include THEAD and TBODY tags:<p>
+	<p>tablesorter works on standard HTML tables.  You must include THEAD and TBODY tags:</p>
 
 	<pre class="prettyprint lang-html">&lt;table id="myTable" class="tablesorter"&gt;
   &lt;thead&gt;
@@ -280,7 +280,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;</pre>
 
-	<p>Start by telling tablesorter to sort your table when the document is loaded:<p>
+	<p>Start by telling tablesorter to sort your table when the document is loaded:</p>
 
 	<pre class="prettyprint lang-js">$(function(){
   $("#myTable").tablesorter();
@@ -290,7 +290,7 @@
 		Click on the headers and you'll see that your table is now sortable!  You can
 		also pass in configuration options when you initialize the table.  This tells
 		tablesorter to sort on the first and second column in ascending order.
-	<p>
+	</p>
 
 	<pre class="prettyprint lang-js">$(function(){
   $("#myTable").tablesorter({ sortList: [[0,0], [1,0]] });
@@ -298,14 +298,14 @@
 
 	<p class="tip">
 		<span class="label label-info">NOTE!</span> tablesorter will auto-detect most data types including numbers, dates, ip-addresses for more information see <a href="#Examples">Examples</a>.
-	<p>
+	</p>
 
 	<a id="Examples"></a>
 	<h1>Examples</h1>
 	<p>
 		These examples will show what's possible with tablesorter.  You need Javascript enabled to
 		run these samples, just like you and your users will need Javascript enabled to use tablesorter.
-	<p>
+	</p>
 
 	<div class="box">
 	<h3>Basic</h3>
@@ -7566,18 +7566,17 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 	</p>
 	<p>
 		Thanks to all that have contributed code, comments, feedback and everything else. A special thanks goes out to:
-		<ul>
-			<li><a href="https://github.com/thezoggy">thezoggy</a></li>
-			<li><a href="https://github.com/TheSin-">TheSin-</a></li>
-			<li><a href="https://github.com/NickCraver">NickCraver</a></li>
-			<li><a href="https://github.com/themilkman"themilkman</a> (maintains <a href="https://github.com/themilkman/jquery-tablesorter-rails">jquery-tablesorter-rails</a>)</li>
-			<li><a href="https://github.com/VorontsovIE">VorontsovIE</a></li>
-			<li>and <a href="https://github.com/Mottie/tablesorter/graphs/contributors">all the contributors</a>!</li>
-		</ul>
-	<p>
-	<p>
-		<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>
 	</p>
+	<ul>
+		<li><a href="https://github.com/thezoggy">thezoggy</a></li>
+		<li><a href="https://github.com/TheSin-">TheSin-</a></li>
+		<li><a href="https://github.com/NickCraver">NickCraver</a></li>
+		<li><a href="https://github.com/themilkman">themilkman</a> (maintains <a href="https://github.com/themilkman/jquery-tablesorter-rails">jquery-tablesorter-rails</a>)</li>
+		<li><a href="https://github.com/VorontsovIE">VorontsovIE</a></li>
+		<li>and <a href="https://github.com/Mottie/tablesorter/graphs/contributors">all the contributors</a>!</li>
+	</ul>
+	<p></p>
+	<a class="external" href="http://ejohn.org">John Resig</a> for the fantastic <a class="external" href="http://jquery.com">jQuery</a>
 </div>
 
 <!-- jQuery -->
