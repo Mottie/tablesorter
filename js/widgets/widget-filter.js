@@ -140,7 +140,7 @@
 						}
 					}
 					// may be null from processing types
-					return filterMatched;
+					return filterMatched || false;
 				}
 				return null;
 			},
