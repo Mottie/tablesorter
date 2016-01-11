@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 12-13-2015 (v2.25.0)*/
+/*! tablesorter (FORK) - updated 01-10-2016 (v2.25.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.0 *//*
+/*! TableSorter (FORK) v2.25.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -39,7 +39,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.0',
+		version : '2.25.1',
 
 		parsers : [],
 		widgets : [],
@@ -1064,8 +1064,8 @@
 				// find the footer
 				$headers = c.$table
 					.find( 'tfoot tr' )
-					.children()
-					.add( $( c.namespace + '_extra_headers' ) )
+					.add( $( c.namespace + '_extra_headers' ).children( 'tr' ) )
+					.children( 'td, th' )
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
@@ -1898,15 +1898,19 @@
 			var len, indx,
 				c = table.config,
 				// look for widgets to apply from table class
-				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-				regex = '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s',
+				// don't match from 'ui-widget-content'; use \S instead of \w to include widgets
+				// with dashes in the name, e.g. "widget-test-2" extracts out "test-2"
+				regex = '^' + c.widgetClass.replace( ts.regex.templateName, '(\\S+)+' ) + '$',
 				widgetClass = new RegExp( regex, 'g' ),
-				// extract out the widget id from the table class (widget id's can include dashes)
-				widget = ( ' ' + c.table.className + ' ' ).match( widgetClass );
-			if ( widget ) {
-				len = widget.length;
+				// split up table class (widget id's can include dashes) - stop using match
+				// otherwise only one widget gets extracted, see #1109
+				widgets = ( table.className || '' ).split( ts.regex.spaces );
+			if ( widgets.length ) {
+				len = widgets.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					c.widgets.push( widget[ indx ].replace( widgetClass, '$1' ) );
+					if ( widgets[ indx ].match( widgetClass ) ) {
+						c.widgets.push( widgets[ indx ].replace( widgetClass, '$1' ) );
+					}
 				}
 			}
 		},
@@ -2642,7 +2646,7 @@
 	});
 
 	// match 24 hour time & 12 hours time + am/pm - see http://regexr.com/3c3tk
-	ts.regex.timeTest = /^([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)$/i;
+	ts.regex.timeTest = /^([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)$|^((?:[01]\d|[2][0-4]):[0-5]\d)$/i;
 	ts.regex.timeMatch = /([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)/i;
 	ts.addParser({
 		id : 'time',
@@ -3082,7 +3086,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 12/13/2015 (v2.25.0) *//*
+/*! Widget: filter - updated 1/10/2016 (v2.25.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3451,7 +3455,7 @@
 				toSplit : new RegExp( '(?:\\s+(?:-|' + ts.language.to + ')\\s+)', 'gi' ),
 				andTest : new RegExp( '\\s+(' + ts.language.and + '|&&)\\s+', 'i' ),
 				andSplit : new RegExp( '(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi' ),
-				orTest : /\|/,
+				orTest : new RegExp( '(\\||\\s+' + ts.language.or + '\\s+)', 'i' ),
 				orSplit : new RegExp( '(?:\\s+(?:' + ts.language.or + ')\\s+|\\|)', 'gi' ),
 				iQuery : new RegExp( val, 'i' ),
 				igQuery : new RegExp( val, 'ig' ),
@@ -3926,7 +3930,7 @@
 			filters = Array.prototype.map ?
 				filters.map( String ) :
 				// for IE8 & older browsers - maybe not the best method
-				filters.join( '\u0000' ).split( '\u0000' );
+				filters.join( '\ufffd' ).split( '\ufffd' );
 
 			if ( wo.filter_initialized ) {
 				c.$table.triggerHandler( 'filterStart', [ filters ] );
@@ -4132,7 +4136,6 @@
 
 				vars.excludeMatch = vars.noAnyMatch;
 				filterMatched = tsf.processTypes( c, data, vars );
-
 				if ( filterMatched !== null ) {
 					showRow = filterMatched;
 				} else {
@@ -4165,13 +4168,8 @@
 				// ignore if filter is empty or disabled
 				if ( data.filter ) {
 					data.cache = data.cacheArray[ columnIndex ];
-					// check if column data should be from the cell or from parsed data
-					if ( wo.filter_useParsedData || data.parsed[ columnIndex ] ) {
-						data.exact = data.cache;
-					} else {
-						result = data.rawArray[ columnIndex ] || '';
-						data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
-					}
+					result = data.rawArray[ columnIndex ] || '';
+					data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
 					data.iExact = !tsfRegex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
 						data.exact.toLowerCase() : data.exact;
 
@@ -4226,8 +4224,7 @@
 							result = filterMatched;
 						// Look for match, and add child row data for matching
 						} else {
-							txt = ( data.iExact + data.childRowText )
-								.indexOf( tsf.parseFilter( c, data.iFilter, data ) );
+							txt = ( data.iExact + data.childRowText ).indexOf( tsf.parseFilter( c, data.iFilter, data ) );
 							result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
 						}
 					} else {
@@ -4267,18 +4264,17 @@
 				};
 
 			// parse columns after formatter, in case the class is added at that point
-			data.parsed = c.$headers.map( function( columnIndex ) {
-				return c.parsers && c.parsers[ columnIndex ] &&
-					// force parsing if parser type is numeric
-					c.parsers[ columnIndex ].parsed ||
-					// getData won't return 'parsed' if other 'filter-' class names exist
+			data.parsed = [];
+			for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
+				data.parsed[ columnIndex ] = wo.filter_useParsedData ||
+					// parser has a "parsed" parameter
+					( c.parsers && c.parsers[ columnIndex ] && c.parsers[ columnIndex ].parsed ||
+					// getData may not return 'parsed' if other 'filter-' class names exist
 					// ( e.g. <th class="filter-select filter-parsed"> )
 					ts.getData && ts.getData( c.$headerIndexed[ columnIndex ],
 						ts.getColumnData( table, c.headers, columnIndex ), 'filter' ) === 'parsed' ||
-					$( this ).hasClass( 'filter-parsed' );
-			}).get();
+					c.$headerIndexed[ columnIndex ].hasClass( 'filter-parsed' ) );
 
-			for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
 				vars.functions[ columnIndex ] =
 					ts.getColumnData( table, wo.filter_functions, columnIndex );
 				vars.defaultColFilter[ columnIndex ] =
@@ -4436,7 +4432,7 @@
 
 						// don't pass reference to val
 						val = showParent ? true : false;
-						childRow = rowData.$row.filter( ':gt( 0 )' );
+						childRow = rowData.$row.filter( ':gt(0)' );
 						if ( wo.filter_childRows && childRow.length ) {
 							if ( wo.filter_childByColumn ) {
 								if ( !wo.filter_childWithSibs ) {

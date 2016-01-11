@@ -92,6 +92,31 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.1">Version 2.25.1</a> (1/10/2016)
+
+* Docs:
+  * Update to jQuery v1.12.0.
+  * Fix HTML hint issues.
+* Core:
+  * Fix time parser detection. See [issue #1107](https://github.com/Mottie/tablesorter/issues/1107).
+  * Add multiple widgets from table class. Fixes [issue #1109](https://github.com/Mottie/tablesorter/issues/1109).
+  * Fix extra header class name updating. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
+  * Fix typo in comments.
+* ColumnSelector:
+  * Prevent remove widget js error. Fixes [issue #1106](https://github.com/Mottie/tablesorter/issues/1106).
+  * Add `tbody` colspan support. See [issue #1120](https://github.com/Mottie/tablesorter/issues/1120).
+  * Add child row colspan support. See [issue #1120](https://github.com/Mottie/tablesorter/issues/1120).
+* Filter:
+  * Use replacement character instead of null (for IE).
+  * Fix "or" test regex. Fixes [issue #1117](https://github.com/Mottie/tablesorter/issues/1117).
+  * Restore `return false` to fix unit tests.
+  * Functions now get exact data, ignoring parsed flag. Fixes [issue #1107](https://github.com/Mottie/tablesorter/issues/1107).
+  * Parsed flag now all set `true` if `filter_useParsedData` is `true` &amp; stop using `config.$headers`.
+* Output:
+  * `output_callback` can now return modified data. See [issue #1121](https://github.com/Mottie/tablesorter/issues/1121).
+* Grunt:
+  * Add HTML hint.
+
 #### <a name="v2.25.0">Version 2.25.0</a> (12/13/2015)
 
 * Global
@@ -175,7 +200,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Don't use `$.extend` for simple additions.
 * Misc
   * Update grunt dependencies.
-
-#### <a name="v2.24.5">Version 2.24.5</a> (11/10/2015)
-
-* Pager: Fix javascript error in pager addon when using ajax.

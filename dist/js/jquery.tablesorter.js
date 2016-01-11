@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.0 *//*
+/*! TableSorter (FORK) v2.25.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.0',
+		version : '2.25.1',
 
 		parsers : [],
 		widgets : [],
@@ -1056,8 +1056,8 @@
 				// find the footer
 				$headers = c.$table
 					.find( 'tfoot tr' )
-					.children()
-					.add( $( c.namespace + '_extra_headers' ) )
+					.add( $( c.namespace + '_extra_headers' ).children( 'tr' ) )
+					.children( 'td, th' )
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
@@ -1890,15 +1890,19 @@
 			var len, indx,
 				c = table.config,
 				// look for widgets to apply from table class
-				// stop using \b otherwise this matches 'ui-widget-content' & adds 'content' widget
-				regex = '\\s' + c.widgetClass.replace( ts.regex.templateName, '([\\w-]+)' ) + '\\s',
+				// don't match from 'ui-widget-content'; use \S instead of \w to include widgets
+				// with dashes in the name, e.g. "widget-test-2" extracts out "test-2"
+				regex = '^' + c.widgetClass.replace( ts.regex.templateName, '(\\S+)+' ) + '$',
 				widgetClass = new RegExp( regex, 'g' ),
-				// extract out the widget id from the table class (widget id's can include dashes)
-				widget = ( ' ' + c.table.className + ' ' ).match( widgetClass );
-			if ( widget ) {
-				len = widget.length;
+				// split up table class (widget id's can include dashes) - stop using match
+				// otherwise only one widget gets extracted, see #1109
+				widgets = ( table.className || '' ).split( ts.regex.spaces );
+			if ( widgets.length ) {
+				len = widgets.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					c.widgets.push( widget[ indx ].replace( widgetClass, '$1' ) );
+					if ( widgets[ indx ].match( widgetClass ) ) {
+						c.widgets.push( widgets[ indx ].replace( widgetClass, '$1' ) );
+					}
 				}
 			}
 		},
@@ -2634,7 +2638,7 @@
 	});
 
 	// match 24 hour time & 12 hours time + am/pm - see http://regexr.com/3c3tk
-	ts.regex.timeTest = /^([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)$/i;
+	ts.regex.timeTest = /^([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)$|^((?:[01]\d|[2][0-4]):[0-5]\d)$/i;
 	ts.regex.timeMatch = /([1-9]|1[0-2]):([0-5]\d)(\s[AP]M)|((?:[01]\d|[2][0-4]):[0-5]\d)/i;
 	ts.addParser({
 		id : 'time',
