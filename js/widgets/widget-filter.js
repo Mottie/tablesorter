@@ -1080,13 +1080,8 @@
 				// ignore if filter is empty or disabled
 				if ( data.filter ) {
 					data.cache = data.cacheArray[ columnIndex ];
-					// check if column data should be from the cell or from parsed data
-					if ( wo.filter_useParsedData || data.parsed[ columnIndex ] ) {
-						data.exact = data.cache;
-					} else {
-						result = data.rawArray[ columnIndex ] || '';
-						data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
-					}
+					result = data.rawArray[ columnIndex ] || '';
+					data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
 					data.iExact = !tsfRegex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
 						data.exact.toLowerCase() : data.exact;
 
