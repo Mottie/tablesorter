@@ -1,4 +1,4 @@
-/*! Widget: output - updated 10/31/2015 (v2.24.0) *//*
+/*! Widget: output - updated 1/10/2016 (v2.25.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -189,7 +189,14 @@
 			}
 
 			// callback; if true returned, continue processing
-			if ($.isFunction(wo.output_callback) && !wo.output_callback(c, mydata)) { return; }
+			if ($.isFunction(wo.output_callback)) {
+				tmp = wo.output_callback(c, mydata);
+				if ( tmp === false ) {
+					return;
+				} else if ( typeof tmp === 'string' ) {
+					mydata = tmp;
+				}
+			}
 
 			if ( /p/i.test( wo.output_delivery || '' ) ) {
 				output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);

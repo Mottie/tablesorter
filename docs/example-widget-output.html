@@ -135,9 +135,11 @@ table.tablesorter tbody tr.even.checked td {
 			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
 			// callback executed when processing completes
-			// return true to continue download/output
-			// return false to stop delivery & do something else with the data
-			output_callback      : function(config, data) { return true; },
+			output_callback      : function(config, data) {
+				// return false to stop delivery & do something else with the data
+				// return true OR modified data (v2.25.1) to continue download/output
+				return true;
+			},
 
 			// the need to modify this for Excel no longer exists
 			output_encoding      : 'data:application/octet-stream;charset=utf8,'
@@ -245,6 +247,7 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.25.1</span>, the <code>output_callback</code> can return modified data instead of a boolean.</li>
 				<li>In <span class="version">v2.22.4</span>, added <code>output_formatContent</code> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
@@ -739,16 +742,20 @@ line,value1,value2,value3
 					<tr id="output_callback">
 						<td><a href="#" class="permalink">output_callback</a></td>
 						<td>{see description}</td>
-						<td>Return <code>true</code> in this callback to continue the download or open the popup (<span class="version updated">v2.17.0</span>).
+						<td>Return <code>true</code> or modified data in this callback to continue the download or open the popup (<span class="version updated">v2.25.1</span>).
 							<div class="collapsible">
 								<br>
-								As of v2.17.0, the callback function was modified to pass two parameters:
+								<p>In <span class="version">v2.25.1</span>, this callback can return modified data for output.</p>
+								<p>As of v2.17.0, the callback function was modified to pass two parameters:</p>
 								<ul>
 									<li><code>config</code> - the <code>table.config</code> settings.</li>
 									<li><code>data</code> - the output data as a string</li>
 								</ul>
 								Default setting:
-								<pre class="prettyprint lang-js">function(config, data){ return true; }</pre>
+								<pre class="prettyprint lang-js">function(config, data){
+    // return data.replace( /Mary Smith/g, 'Mary Smith-Jones' ); // v2.25.1+
+    return true;
+}</pre>
 								After table processing has completed, this callback function is exectued. If <code>true</code> is not returned, the processed data will not open a popup, nor download the data.
 								<pre class="prettyprint lang-js">output_callback : function(config, data) {
     // send output to the console only
