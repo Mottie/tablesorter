@@ -102,7 +102,7 @@ QUnit.extend(QUnit.assert, {
 		});
 		// flatten array
 		flat = flat.concat.apply( flat, result.parsed );
-		QUnit.assert.deepEqual( flat, expected, 'testing parser cache: ' + txt);
+		QUnit.assert.deepEqual( flat, expected, 'Comparing parser cache: ' + txt);
 	}
 });
 
