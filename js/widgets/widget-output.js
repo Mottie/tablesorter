@@ -148,8 +148,11 @@
 			// all tbody rows
 			$rows = $el.children('tbody').children('tr');
 
-			// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
-			$rows = /^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
+			// check for a filter callback function first! because
+			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
+			$rows = typeof saveRows === 'function' ? $rows.filter(saveRows) :
+				// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
+				/^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
 				/^v/.test(saveRows) ? $rows.filter(':visible') :
 				// look for '.' (class selector), '#' (id selector),
 				// ':' (basic filters, e.g. ':not()') or '[' (attribute selector start)

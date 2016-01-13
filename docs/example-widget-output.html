@@ -124,7 +124,7 @@ table.tablesorter tbody tr.even.checked td {
 			output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
 			output_headerRows    : true,        // output all header rows (multiple rows)
 			output_delivery      : 'p',         // (p)opup, (d)ownload
-			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered or jQuery filter selector (string only)
+			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
 			output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
 			output_replaceQuote  : '\u201c;',   // change quote to left double quote
 			output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
@@ -247,6 +247,7 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.25.2</span>, updated the <code>output_saveRows</code> option to accept a function.</li>
 				<li>In <span class="version">v2.25.1</span>, the <code>output_callback</code> can return modified data instead of a boolean.</li>
 				<li>In <span class="version">v2.22.4</span>, added <code>output_formatContent</code> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 				<li>In <span class="version">v2.22.2</span>,
@@ -568,7 +569,7 @@ line,value1,value2,value3
 						<td><a href="#" class="permalink">output_saveRows</a></td>
 						<td><code>'filtered'</code></td>
 						<td>
-							Change this option to either <code>'filtered'</code>, <code>'visible'</code>, <code>'all'</code> or (<span class="version updated">v2.22.2</span>) a jQuery filter selector to set to match rows to be added to the output.
+							Change this option to either <code>'filtered'</code>, <code>'visible'</code>, <code>'all'</code>, a jQuery filter selector (<span class="version updated">v2.25.1</span>) to set to match rows to be added to the output, or a jQuery filter callback function (<span class="version updated">v2.25.2</span>).
 							<div class="collapsible">
 							<br>
 							<ul>
@@ -589,6 +590,12 @@ line,value1,value2,value3
 									</ul>
 								</li>
 								<li><code>'all'</code> - output all rows even if they are hidden. When the pager <code>removeRows</code> option is <code>true</code>, rows not visible do not exist in the DOM and therefore will not be included.</li>
+								<li><code>function</code> - (<span class="version updated">v2.25.2</span>) Include a <a href="http://api.jquery.com/filter/#filter-function">filter function</a> to test each row and return a boolean value; <code>true</code> to include the row, and <code>false</code> to exclude. For example:
+								<pre class="prettyprint lang-js">output_saveRows: function(index, element) {
+  // "this" is the same as "element"
+  // only include the row if the select element's value is set to "include".
+  return $(this).find('select').val() === 'include';
+}</pre></li>
 							</ul>
 							<p>Even if this option is set to <code>'filtered'</code> and the filter widget is not being used, all of the rows will be added to the output.</p>
 							<p><span class="label label-info">*NOTE*</span> When setting this option,</p>
@@ -596,7 +603,7 @@ line,value1,value2,value3
 									<li>Only the first letter is required for filtered (<code>'f'</code>) or visible (<code>'v'</code>) rows.
 										<pre class="prettyprint lang-js">output_saveRows : 'f'</pre>
 									</li>
-									<li>If using a jQuery selector, it won't be recognized as a selector unless one of the characters (<code>.#:[</code>) is contained in the setting; if your filter is not working, or uses a charater not listed, then please <a href="index.html#Support">contact me for support</a>.</li>
+									<li>If using a jQuery selector, it won't be recognized as a selector unless one of the characters (<code>.#:[</code>) is at the start of the string; if your filter is not working, or uses a charater not listed, then use the callback function, or you can <a href="index.html#Support">contact me for support</a>.</li>
 									<li>If no matches are found, all rows will be sent to the output.</li>
 								</ul>
 							</div>
