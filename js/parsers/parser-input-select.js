@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 12/13/2015 (v2.25.0) *//*
+/*! Parser: input & select - updated 1/13/2016 (v2.25.2) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -158,16 +158,16 @@
 					$( ':focus' ).blur();
 				}
 			})
-			.on( 'focus' + namespace, 'select, input, textarea', function() {
+			.on( 'focus' + namespace, 'select, input:not([type=checkbox]), textarea', function() {
 				$( this ).data( 'ts-original-value', this.value );
 			})
-			.on( 'blur' + namespace, 'input, textarea', function() {
+			.on( 'blur' + namespace, 'input:not([type=checkbox]), textarea', function() {
 				// restore input value;
 				// 'change' is triggered before 'blur' so this doesn't replace the new update with the original
 				this.value = $( this ).data( 'ts-original-value' );
 			})
 			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
-				if ( event.which === 27 ) {
+				if ( event.which === 27 && !( this.nodeName === 'INPUT' && this.type === 'checkbox' ) ) {
 					// escape: restore original value
 					this.value = $( this ).data( 'ts-original-value' );
 					return;
