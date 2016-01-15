@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 01-10-2016 (v2.25.1)*/
+/*! tablesorter (FORK) - updated 01-15-2016 (v2.25.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.1 *//*
+/*! TableSorter (FORK) v2.25.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -39,7 +39,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.1',
+		version : '2.25.2',
 
 		parsers : [],
 		widgets : [],
@@ -206,6 +206,10 @@
 			'null'   : 0,
 			top      : true,
 			bottom   : false
+		},
+
+		keyCodes : {
+			enter : 13
 		},
 
 		// placeholder date parser data (globalize)
@@ -476,7 +480,7 @@
 				// only recognize left clicks
 				if ( ( ( e.which || e.button ) !== 1 && !type.match( ' ' + c.pointerClick + ' | sort | keyup ' ) ) ||
 					// allow pressing enter
-					( type === ' keyup ' && e.which !== 13 ) ||
+					( type === ' keyup ' && e.which !== ts.keyCodes.enter ) ||
 					// allow triggering a click event (e.which is undefined) & ignore physical clicks
 					( type.match( ' ' + c.pointerClick + ' ' ) && typeof e.which !== 'undefined' ) ) {
 					return;
@@ -1064,8 +1068,8 @@
 				// find the footer
 				$headers = c.$table
 					.find( 'tfoot tr' )
-					.add( $( c.namespace + '_extra_headers' ).children( 'tr' ) )
 					.children( 'td, th' )
+					.add( $( c.namespace + '_extra_headers' ) )
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
@@ -3086,7 +3090,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 1/10/2016 (v2.25.1) *//*
+/*! Widget: filter - updated 1/15/2016 (v2.25.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3094,13 +3098,22 @@
 	'use strict';
 	var tsf, tsfRegex,
 		ts = $.tablesorter || {},
-		tscss = ts.css;
+		tscss = ts.css,
+		tskeyCodes = ts.keyCodes;
 
 	$.extend( tscss, {
 		filterRow      : 'tablesorter-filter-row',
 		filter         : 'tablesorter-filter',
 		filterDisabled : 'disabled',
 		filterRowHide  : 'hideme'
+	});
+
+	$.extend( tskeyCodes, {
+		backSpace : 8,
+		escape : 27,
+		space : 32,
+		left : 37,
+		down : 40
 	});
 
 	ts.addWidget({
@@ -3127,6 +3140,7 @@
 			filter_onlyAvail     : 'filter-onlyAvail', // a header with a select dropdown & this class name will only show available ( visible ) options within the drop down
 			filter_placeholder   : { search : '', select : '' }, // default placeholder text ( overridden by any header 'data-placeholder' setting )
 			filter_reset         : null,  // jQuery selector string of an element used to reset the filters
+			filter_resetOnEsc    : true,  // Reset filter input when the user presses escape - normalized across browsers
 			filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 			filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 			filter_searchFiltered: true,  // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
@@ -3835,18 +3849,25 @@
 				ts.setFilters( table, c.$table.data( 'lastSearch' ) || [], internal === false );
 			}
 			// unbind events
-			tmp = ( 'keypress keyup search change '.split( ' ' ).join( namespace + ' ' ) );
+			tmp = ( 'keypress keyup keydown search change input '.split( ' ' ).join( namespace + ' ' ) );
 			$el
 			// use data attribute instead of jQuery data since the head is cloned without including
 			// the data/binding
 			.attr( 'data-lastSearchTime', new Date().getTime() )
 			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
-			// include change for select - fixes #473
+			.bind( 'keydown' + namespace, function( event ) {
+				if ( event.which === tskeyCodes.escape && !wo.filter_resetOnEsc ) {
+					// prevent keypress event
+					return false;
+				}
+			})
 			.bind( 'keyup' + namespace, function( event ) {
+				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
 				// emulate what webkit does.... escape clears the filter
-				if ( event.which === 27 ) {
-					this.value = '';
+				if ( event.which === tskeyCodes.escape ) {
+					// make sure to restore the last value on escape
+					this.value = wo.filter_resetOnEsc ? '' : c.lastSearch[column];
 				// live search
 				} else if ( wo.filter_liveSearch === false ) {
 					return;
@@ -3855,19 +3876,21 @@
 					// liveSearch can contain a min value length; ignore arrow and meta keys, but allow backspace
 					( typeof wo.filter_liveSearch === 'number' && this.value.length < wo.filter_liveSearch ) ||
 					// let return & backspace continue on, but ignore arrows & non-valid characters
-					( event.which !== 13 && event.which !== 8 &&
-						( event.which < 32 || ( event.which >= 37 && event.which <= 40 ) ) ) ) ) {
+					( event.which !== tskeyCodes.enter && event.which !== tskeyCodes.backSpace &&
+						( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) ) ) ) {
 					return;
 				}
 				// change event = no delay; last true flag tells getFilters to skip newest timed input
 				tsf.searching( table, true, true );
 			})
-			.bind( 'search change keypress '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			// include change for select - fixes #473
+			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( wo.filter_initialized && ( event.which === 13 || event.type === 'search' ||
-					event.type === 'change' && this.value !== c.lastSearch[column] ) ) {
+				if ( wo.filter_initialized && ( event.which === tskeyCodes.enter || event.type === 'search' ||
+					// only "input" event fires in MS Edge when clicking the "x" to clear the search
+					( event.type === 'change' || event.type === 'input' ) && this.value !== c.lastSearch[column] ) ) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );

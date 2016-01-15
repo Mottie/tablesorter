@@ -92,6 +92,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.2">Version 2.25.2</a> (1/15/2016)
+
+* Docs:
+  * Update main demo & test to use jQuery 3.0.0-beta.
+* Core:
+  * Revert extra header class name updating. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
+* Filter:
+  * Add `filter_resetOnEsc` option. See [issue #1126](https://github.com/Mottie/tablesorter/issues/1126).
+* Output:
+  * `output_saveRows` now accpets a [filter callback function](http://api.jquery.com/filter/#filter-function).
+* Parsers:
+  * checkbox value should no longer change. Fixes [issue #1125](https://github.com/Mottie/tablesorter/issues/1125).
+
 #### <a name="v2.25.1">Version 2.25.1</a> (1/10/2016)
 
 * Docs:
@@ -171,32 +184,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Return `true` for header checkbox to work in IE8. See [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
 * Misc
   * gitignore file - ignore "idea" demos used for testing.
-
-#### <a name="v2.24.6">Version 2.24.6</a> (11/22/2015)
-
-* Core
-  * Prevent "tablesorter-ready" event from firing multiple times in a row.
-  * While detecting parsers, use `cssIgnoreRow` &amp; stop after 50 rows.
-* Docs
-  * Update utility options section.
-* Math
-  * Add `math_rowFilter` option. See [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
-  * Spelling corrections to `math_rowFilter` option.
-  * Ensure internal updating flag gets cleared. Fixes [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
-* Pager
-  * Initial page no longer ignored (no filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
-  * Fix other page set issues (no filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
-  * Fix page set issues (with filter widget). Fixes [issue #1085](https://github.com/Mottie/tablesorter/issues/1085).
-  * Clean up pager widget code.
-* Print
-  * Add `print_now` option. See [issue #1081](https://github.com/Mottie/tablesorter/issues/1081).
-  * Fix print &amp; close button actions.
-* SortTbodies
-  * Use config parameter for numeric sorting. See [issue #1082](https://github.com/Mottie/tablesorter/issues/1082).
-* Parsers:
-  * Update `parser-input-select.js`. See [issue #971](https://github.com/Mottie/tablesorter/issues/971).
-  * `parser-date-month.js` no longer removes other language data.
-  * Add alternate date range parser &amp; update filter insideRange filter type.
-  * Don't use `$.extend` for simple additions.
-* Misc
-  * Update grunt dependencies.
