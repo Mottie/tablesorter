@@ -112,6 +112,9 @@
 			// jQuery selector string of an element used to reset the filters
 			filter_reset : 'button.reset',
 
+			// Reset filter input when the user presses escape - normalized across browsers
+			filter_resetOnEsc : true,
+
 			// Use the $.tablesorter.storage utility to save the most recent filters (default setting is false)
 			filter_saveFilters : true,
 
@@ -228,6 +231,7 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.25.2</span>, added <a class="intlink" href="#filter-resetonesc"><code>filter_resetOnEsc</code></a> option.</li>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
 						<li>The <a class="intlink" href="#method-get-filters"><code>getFilters</code></a> function will now target the last used filter properly.</li>
@@ -511,6 +515,12 @@ $(function(){
 						<td><span class="permalink">filter_reset</span></td>
 						<td>null</td>
 						<td>jQuery selector string of an element used to reset the filters (v2.4; <span class="version updated">v2.16.0</span>).</td>
+					</tr>
+
+					<tr id="filter-resetonesc">
+						<td><span class="permalink">filter_resetOnEsc</span></td>
+						<td>true</td>
+						<td>Press escape to clear filter input - normalized across browsers (<span class="version">v2.25.2</span>).</td>
 					</tr>
 
 					<tr id="filter-save-filters">

@@ -458,7 +458,7 @@
 		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.25.1</span>).</li>
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.25.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.25.1</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.25.2</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.23.5</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.22.0</span>).</li>
@@ -1901,6 +1901,8 @@ $(function(){
       filter_placeholder   : { search : '', select : '' },
       // jQuery selector string of an element used to reset the filters.
       filter_reset         : null,
+      // Reset filter input when the user presses escape - normalized across browsers
+      filter_resetOnEsc    : true,
       // Use the $.tablesorter.storage utility to save the most recent filters
       filter_saveFilters   : false,
       // typing delay in milliseconds before starting a search.
@@ -2961,6 +2963,20 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 					</div>
 				</td>
 				<td><a href="example-widget-filter-custom.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-resetonesc">
+				<td><a href="#" class="permalink">filter_resetOnEsc</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: when <code>true</code>, normalize pressing escape to clear filter input across browsers (<span class="version">v2.25.2</span>).
+					<div class="collapsible">
+						<p>Webkit browsers automatically clear the filter search input when pressing escape, but IE and Firefox do not. Setting this option to <code>true</code>, clears the filter input when the user presses escape.</p>
+						When this option is set to <code>false</code>, pressing escape inside the search field is ignored.
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-savefilters">

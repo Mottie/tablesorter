@@ -190,6 +190,10 @@
 			bottom   : false
 		},
 
+		keyCodes : {
+			enter : 13
+		},
+
 		// placeholder date parser data (globalize)
 		dates : {},
 
@@ -458,7 +462,7 @@
 				// only recognize left clicks
 				if ( ( ( e.which || e.button ) !== 1 && !type.match( ' ' + c.pointerClick + ' | sort | keyup ' ) ) ||
 					// allow pressing enter
-					( type === ' keyup ' && e.which !== 13 ) ||
+					( type === ' keyup ' && e.which !== ts.keyCodes.enter ) ||
 					// allow triggering a click event (e.which is undefined) & ignore physical clicks
 					( type.match( ' ' + c.pointerClick + ' ' ) && typeof e.which !== 'undefined' ) ) {
 					return;
