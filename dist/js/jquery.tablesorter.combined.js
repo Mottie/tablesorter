@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 01-15-2016 (v2.25.2)*/
+/*! tablesorter (FORK) - updated 01-19-2016 (v2.25.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -3701,7 +3701,9 @@
 				mode = encode ? encodeURIComponent : decodeURIComponent,
 				len = filters.length;
 			for ( indx = 0; indx < len; indx++ ) {
-				filters[ indx ] = mode( filters[ indx ] );
+				if ( typeof filters[ indx ] !== 'undefined' ) {
+					filters[ indx ] = mode( filters[ indx ] );
+				}
 			}
 			return filters;
 		},
