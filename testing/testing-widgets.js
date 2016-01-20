@@ -158,6 +158,18 @@ jQuery(function($){
 			assert.deepEqual( range( c, 'a-b-c,100' ), [ 0,1,2,3,4,5,6,7,8,9 ], 'text with dashes & commas -> all columns' );
 		});
 
+		QUnit.test( 'Filter process filters', function(assert) {
+			expect(2);
+			var processFilters = this.ts.filter.processFilters,
+				filters = [],
+				results = [];
+			filters[1] = 5, filters[2] = 'test', filters[3] = true, filters[4] = null;
+			results[1] = '5', results[2] = 'test', results[3] = 'true', results[4] = null;
+
+			assert.deepEqual( processFilters( filters, true ),         results );
+			assert.deepEqual( processFilters( filters, false ),         results );
+		});
+
 		QUnit.test( 'Filter searches', function(assert) {
 			var ts = this.ts,
 				c = this.c,
