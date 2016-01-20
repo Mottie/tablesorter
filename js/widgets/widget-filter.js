@@ -615,7 +615,7 @@
 				mode = encode ? encodeURIComponent : decodeURIComponent,
 				len = filters.length;
 			for ( indx = 0; indx < len; indx++ ) {
-				if ( typeof filters[ indx ] !== 'undefined' ) {
+				if ( filters[ indx ] ) {
 					filters[ indx ] = mode( filters[ indx ] );
 				}
 			}
