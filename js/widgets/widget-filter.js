@@ -804,7 +804,7 @@
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, false, true );
+					tsf.searching( table, event.type !== 'keypress', true );
 				}
 			});
 		},

@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 01-20-2016 (v2.25.2)*/
+/*! tablesorter (FORK) - updated 01-21-2016 (v2.25.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -3890,7 +3890,7 @@
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, false, true );
+					tsf.searching( table, event.type !== 'keypress', true );
 				}
 			});
 		},
