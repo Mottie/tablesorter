@@ -264,8 +264,8 @@
 									</ul>
 								</li>
 							</ul>
-							<span class="label label-warning">*NOTE*</span> Setting a column to initially be visible (<code>true</code>) or invisible (<code>false</code>) will be overridden by the users saved selections if the <code>columnSelector_saveColumns</code> option is <code>true</code>.<br>
-							<br>
+							<p><span class="label label-warning">*NOTE*</span> Setting a column to initially be visible (<code>true</code>) or invisible (<code>false</code>) will be overridden by the users saved selections if the <code>columnSelector_saveColumns</code> option is <code>true</code>.</p>
+							<p><span class="label label-info">NOTE</span> If only using this widget to hide columns, set the <code>columnSelector_mediaquery</code> option to <code>false</code>. Otherwise, you'll also need to set a <code>data-priority</code> in each column header.</p>
 							Default value: <code>{}</code>; empty object
 							</div>
 						</td>
@@ -323,7 +323,10 @@
 								<li>When the "auto" checkbox is checked, all column checkboxes are disabled and media queries are active (columns will hide or show based on the browser width).</li>
 								<li>If "auto" is unchecked, media queries are disabled and column (non-critial/not disabled) visibility is based on the column checkbox setting.</li>
 							</ul>
-							Default value: <code>true</code>
+							<span class="label label-info">Note</span> When set to <code>true</code>, this option <em>requires</em> the <code>data-priority</code> attributes (name set by the <code>columnSelector_priority</code> option) be set in each header column
+							<pre class="prettyprint lang-html">&lt;th data-priority="critical"&gt;Rank&lt;/th&gt;</pre>
+							See <code>columnSelector_priority</code> for more details.
+							<p>Default value: <code>true</code></p>
 							</div>
 						</td>
 					</tr>
