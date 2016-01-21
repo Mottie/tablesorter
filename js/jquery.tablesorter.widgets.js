@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 01-21-2016 (v2.25.2)*/
+/*! tablesorter (FORK) - updated 01-21-2016 (v2.25.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -372,7 +372,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 1/15/2016 (v2.25.2) *//*
+/*! Widget: filter - updated 1/21/2016 (v2.25.3) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

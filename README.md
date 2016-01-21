@@ -92,6 +92,16 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.3">Version 2.25.3</a> (1/21/2016)
+
+* Filter:
+  * Check that filter is not undefined before encoding/decoding it & treat null and undefined filters the same. See [pull #1130](https://github.com/Mottie/tablesorter/pull/1130); thanks [tim-schilling](https://github.com/tim-schilling)!
+  * Search delay now works properly. Fixes [issue #1134](https://github.com/Mottie/tablesorter/issues/1134).
+* Docs:
+  * Add clarification about hiding columns. See [issue #1133](https://github.com/Mottie/tablesorter/issues/1133).
+* Build:
+  * Update dependencies.
+
 #### <a name="v2.25.2">Version 2.25.2</a> (1/15/2016)
 
 * Docs:
@@ -129,58 +139,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * `output_callback` can now return modified data. See [issue #1121](https://github.com/Mottie/tablesorter/issues/1121).
 * Grunt:
   * Add HTML hint.
-
-#### <a name="v2.25.0">Version 2.25.0</a> (12/13/2015)
-
-* Global
-  * Use `triggerHandler` instead of `trigger` to prevent event bubble to any outer table. See [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
-* Core
-  * Add `duplicateSpan` option (default is `true`) with unit tests ([demo](http://mottie.github.io/tablesorter/docs/example-colspan.html)).
-  * Add triggered "removeWidget" method & update docs.
-  * `applyWidgetId` now properly initializes a widget, if needed.
-  * `applyWidgetId` now adds widget name to `widgets` option.
-  * Show parsed data in debug log. See [issue #1084](https://github.com/Mottie/tablesorter/issues/1084).
-  * Prevent js error - calling "applyWidgetId" on non-existant widget.
-  * Prevent js error - trying to apply a non-existent widget.
-  * Fix "updateCell" issue. If "updateCell" is triggered on a `thead` cell, or bubbles to an outer table, tablesorter no longer gets stuck in an "isUpdating" loop.
-  * Ensure table has initialized before allowing use of "updateCell". See [issue #1099](https://github.com/Mottie/tablesorter/issues/1099).
-  * Fix cache debug log for multiple tbodies.
-  * After init, `computeColumnIndex` now only adds "data-column" attribute to mismatched indexes - lessens DOM interaction on tbody (e.g. math widget).
-  * Add "sortBeforeEnd" event for internal widget binding.
-  * Renamed `$.tablesorter.formatSortingOrder` to `$.tablesorter.getOrder`.
-  * Include `table` in console.error if an issue is encountered during initialization.
-  * Clean up warning when no parser is found for given data.
-  * Fix `config.sortVars` js error for non-existent header cells (makes second column of [this demo](http://mottie.github.io/tablesorter/docs/example-colspan.html) sortable using "sorton").
-* Docs
-  * Add reference to datejs parser. See [issue #1084](https://github.com/Mottie/tablesorter/issues/1084).
-  * Add note that reflow widget only works with HTML5.
-  * Add note in filter localization about escaping special characters in regular expressions. See [issue #1101](https://github.com/Mottie/tablesorter/issues/1101).
-  * Update &amp; add all options in math widget demo.
-  * Fix search tooltip not hiding on side menu close.
-  * Update to Bootstrap v3.3.6.
-* Editable
-  * Ensure table has initialized before allowing use of "updateCell". See [issue #1099](https://github.com/Mottie/tablesorter/issues/1099).
-* Filter
-  * Prevent js error when `columnFilters` are `false`. Fixes [issue #1091](https://github.com/Mottie/tablesorter/issues/1091).
-  * Restore column specific default filters. Fixes [issue #1088](https://github.com/Mottie/tablesorter/issues/1088).
-  * Prevent `insideRange` filter type (`widget-filter-type-insideRange.js`) searches on "all" columns.
-  * Prevent edge case js error.
-  * Add "filterBeforeEnd" event for internal widget binding.
-  * Filters that span multiple columns now have the correct "data-column" value set.
-  * Consolidated code that parsed "data-column" ranges into a `findRange` function (e.g. external filters with `data-column="1-3,4-6,8"`).
-* Math
-  * Add `"data-math-filter"` cell override of `math_rowFilter` option. See [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
-  * Limit tbody cell processing &amp; use `cellIndex` whenever possible. See [issue #1048](https://github.com/Mottie/tablesorter/issues/1048).
-  * Use core `textExtraction` on cells. See [issue #1098](https://github.com/Mottie/tablesorter/issues/1098).
-  * Initial calculation performed once - changed binding to either "filterEnd" or "pagerComplete", not both.
-  * Added change flag so a cache update is only performed when cell content inside of a sortable tbody was modified.
-  * Fix "data-math-filter" on "all" cell calculation with fixes to getRow & getColumn functions so that filters get priority over the "filtered" row check. See [issue #1083](https://github.com/Mottie/tablesorter/issues/1083).
-  * Another "data-math-filter" fix and change flag fix. See [issue #1083](https://github.com/Mottie/tablesorter/issues/1083); thanks to [@lindonb](https://github.com/lindonb) for all the feedback!
-  * `math_none` can now be set to an empty string.
-* Print
-  * Popup made resizable & scrollable. See [issue #1081](https://github.com/Mottie/tablesorter/issues/1081).
-* Parsers
-  * Checkbox row class &amp; header now work with `sorter-false` set. See [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
-  * Return `true` for header checkbox to work in IE8. See [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
-* Misc
-  * gitignore file - ignore "idea" demos used for testing.
