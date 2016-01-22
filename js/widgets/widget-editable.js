@@ -27,20 +27,25 @@
 
 		selectAll: function( cell ) {
 			setTimeout( function() {
-				// select all text in contenteditable
-				// see http://stackoverflow.com/a/6150060/145346
-				var range, selection;
-				if ( document.body.createTextRange ) {
-					range = document.body.createTextRange();
-					range.moveToElementText( cell );
-					range.select();
-				} else if ( window.getSelection ) {
-					selection = window.getSelection();
-					range = document.createRange();
-					range.selectNodeContents( cell );
-					selection.removeAllRanges();
-					selection.addRange( range );
+				if ( document.queryCommandSupported( 'SelectAll' ) ) {
+					document.execCommand( 'selectAll', false, null );
+				} else {
+					// select all text in contenteditable
+					// see http://stackoverflow.com/a/6150060/145346
+					var range, selection;
+					if ( document.body.createTextRange ) {
+						range = document.body.createTextRange();
+						range.moveToElementText( cell );
+						range.select();
+					} else if ( window.getSelection ) {
+						selection = window.getSelection();
+						range = document.createRange();
+						range.selectNodeContents( cell );
+						selection.removeAllRanges();
+						selection.addRange( range );
+					}
 				}
+			// need delay of at least 100ms or last contenteditable will get refocused
 			}, 100 );
 		},
 
