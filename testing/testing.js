@@ -45,7 +45,7 @@ QUnit.SequentialRunner = function(runnerCreator){
 		next: function(runner) {
 			this.defer = this.defer.then( QUnit.deferredCallback(runner) );
 			return this;
-		},
+		}
 	};
 	if (runnerCreator) {
 		result.nextTask = function(args) { // any argument list
