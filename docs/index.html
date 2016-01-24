@@ -487,9 +487,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.24.6</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.25.4</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.24.6</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.25.4</span>).<br>
 			<br>
 		</li>
 
@@ -1015,7 +1015,7 @@
     '.first-name' : { sorter: 'text' },
     '.disabled'   : { sorter: false }
 }</pre>
-						<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.
+						<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>&quot;th:eq()&quot;</code>, <code>&quot;:gt()&quot;</code>, <code>&quot;:lt()&quot;</code>, <code>&quot;:first&quot;</code>, <code>&quot;:last&quot;</code>, <code>&quot;:even&quot;</code> or <code>&quot;:odd&quot;</code>, <code>&quot;:first-child&quot;</code>, <code>&quot;:last-child&quot;</code>, <code>&quot;:nth-child()&quot;</code>, <code>&quot;:nth-last-child()&quot;</code>, etc.
 					</div>
 				</td>
 				<td>
@@ -1101,7 +1101,7 @@
 			<tr id="widgetclass">
 				<td><a href="#" class="permalink">widgetClass</a></td>
 				<td>String</td>
-				<td>'widget-{name}'</td>
+				<td>&quot;widget-{name}&quot;</td>
 				<td>When the table has a class name that matches the template and a widget id that matches the <code>{name}</code>, the widget will automatically be added to the table (<span class="version">v2.18.0</span>)
 					<div class="collapsible">
 					<br>
@@ -1595,7 +1595,7 @@ $.extend($.tablesorter.themes.jui, {
 					<br>
 					* <span class="label label-info">Note</span> This option accepts multiple types (String, Object or Function); see below for further details.
 					<p></p>
-					In <span class="version updated">v2.19.0</span>, the code was further optimized. When set to <code>"basic"</code> (the default), the textExtraction code will check for data-attributes, otherwise, any other string value setting will skip the data-attribute value check; because of this change, there is a noticable lessening of initialization time in Internet Explorer.
+					In <span class="version updated">v2.19.0</span>, the code was further optimized. When set to <code>&quot;basic&quot;</code> (the default), the textExtraction code will check for data-attributes, otherwise, any other string value setting will skip the data-attribute value check; because of this change, there is a noticable lessening of initialization time in Internet Explorer.
 					<p></p>
 					In <span class="version updated">v2.17.0</span>, the <code>textExtraction</code> column can also be referenced by using a jQuery selector (e.g. class name, id or column index) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">textExtraction : {
@@ -1608,7 +1608,7 @@ $.extend($.tablesorter.themes.jui, {
         return $(node).find('img').attr('title');
     }
 }</pre>
-					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>&quot;th:eq()&quot;</code>, <code>&quot;:gt()&quot;</code>, <code>&quot;:lt()&quot;</code>, <code>&quot;:first&quot;</code>, <code>&quot;:last&quot;</code>, <code>&quot;:even&quot;</code> or <code>&quot;:odd&quot;</code>, <code>&quot;:first-child&quot;</code>, <code>&quot;:last-child&quot;</code>, <code>&quot;:nth-child()&quot;</code>, <code>&quot;:nth-last-child()&quot;</code>, etc.<br>
 					<br>
 					As of version 2.16.0,
 					<ul>
@@ -1996,11 +1996,11 @@ $(function(){
 			<tr id="checkboxclass">
 				<td><a href="#" class="permalink">checkboxClass</a></td>
 				<td>String</td>
-				<td>"checked"</td>
+				<td>&quot;checked&quot;</td>
 				<td>Used by the "checkbox" parser in the <code>parser-input-select.js</code> file (<span class="version">v2.22.2</span>; <span class="version updated">v2.25.0</span>).
 					<div class="collapsible">
 						<p>When using the checkbox parser, this class name is added to the row along with this class name plus the column index when the targeted checkbox is checked.</p>
-						<p>For example, if the named parser file has been loaded &amp; "sorter-checkbox" class is added to the first column header, then any checked checkbox in the first column will have <code>"checked checked-0"</code> class names added to the row.</p>
+						<p>For example, if the named parser file has been loaded &amp; "sorter-checkbox" class is added to the first column header, then any checked checkbox in the first column will have <code>&quot;checked checked-0&quot;</code> class names added to the row.</p>
 						Checkboxes in any other column, not targeted by the parser, will be ignored and no extra row class names will be added.
 					</div>
 				</td>
@@ -2065,7 +2065,7 @@ $(function(){
 			<tr id="imgattr">
 				<td><a href="#" class="permalink">imgAttr</a></td>
 				<td>String</td>
-				<td>"alt"</td>
+				<td>&quot;alt&quot;</td>
 				<td>
 					Used by the image parser to grab the image attribute content (<span class="version">v2.17.5</span>; moved to tablesorter core in <span class="version updated">v2.18.0</span>; see <a href="#parsers"><code>config.parsers</code></a>).
 					<div class="collapsible"><br>
@@ -2513,13 +2513,13 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 					Set up the column string as follows:
 					<ul>
 						<li>Add the desired filter type symbol along with <code>{query}</code> or <code>{q}</code> to maintain positioning</li>
-						<li>Symbols can be added to the beginning <code>"~{query}"</code> (default fuzzy search) or end <code>"{q}="</code> (default exact search)</li>
+						<li>Symbols can be added to the beginning <code>&quot;~{query}&quot;</code> (default fuzzy search) or end <code>&quot;{q}=&quot;</code> (default exact search)</li>
 						<li>For symbols that separate queries, like "AND", "OR" or "-" (range):
 							<ul>
 								<li>Add one additional <code>{q}</code> tag.</li>
-								<li>For example, to add a default "OR" search, use <code>"{q} OR {q}"</code>.</li>
-								<li>If the user enters <code>"a b c d"</code> the column will be filtered using <code>"a OR b OR c OR d"</code>, so there is no need to add more <code>{q}</code> tags within the string; adding more will likely mess up the results.</li>
-								<li>If the user only enters <code>"a"</code>, then the column will be filtered using <code>"a OR a"</code> so as not to cause other issues.</li>
+								<li>For example, to add a default "OR" search, use <code>&quot;{q} OR {q}&quot;</code>.</li>
+								<li>If the user enters <code>&quot;a b c d&quot;</code> the column will be filtered using <code>&quot;a OR b OR c OR d&quot;</code>, so there is no need to add more <code>{q}</code> tags within the string; adding more will likely mess up the results.</li>
+								<li>If the user only enters <code>&quot;a&quot;</code>, then the column will be filtered using <code>&quot;a OR a&quot;</code> so as not to cause other issues.</li>
 							</ul>
 						</li>
 						<li><span class="label label-info">Note</span> It is not possible to set up a default filter search within a query. So the "wild" filter search will not work as intended (e.g. <code>{q}*</code> and <code>{q}?</code> are essentially the same as <code>{q}</code>.</li>
@@ -2556,8 +2556,8 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 });</pre>
 					Exclusion names must be separated by a comma. Here is a full list of filter type names:
 					<ul>
-						<li><code>and</code> - logical <code>" AND "</code> or <code> && </code> type filter.</li>
-						<li><code>exact</code> - exact match (using <code>"</code> or <code>=</code>).</li>
+						<li><code>and</code> - logical <code>&quot; AND &quot;</code> or <code> && </code> type filter.</li>
+						<li><code>exact</code> - exact match (using <code>&quot;</code> or <code>=</code>).</li>
 						<li><code>fuzzy</code> - fuzzy match (<code>~</code>)</li>
 						<li><code>notMatch</code> - not match (<code>!</code> or <code>!=</code>)</li>
 						<li><code>operators</code> - comparison filters (<code>&lt; &lt;= &gt;= &gt;</code>)</li>
@@ -2589,7 +2589,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
     }
   });
 });</pre>
-					These external inputs have one requirement, they must have a <code>data-column="#"</code>, where the <code>#</code> targets the column (zero-based index), pointing to a specific column to search.<br>
+					These external inputs have one requirement, they must have a <code>data-column=&quot;#&quot;</code>, where the <code>#</code> targets the column (zero-based index), pointing to a specific column to search.<br>
 					<pre class="prettyprint lang-html">&lt;input class=&quot;search&quot; type=&quot;search&quot; data-column=&quot;0&quot; placeholder=&quot;Search first column&quot;&gt;</pre>
 					If you want to search all columns, using the updated "any match" method, set the data column value to "all":<br>
 					<pre class="prettyprint lang-html">&lt;input class=&quot;search&quot; type=&quot;search&quot; data-column=&quot;all&quot; placeholder=&quot;Search entire table&quot;&gt;</pre>
@@ -2627,7 +2627,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
       });
     }
 }</pre>
-					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>&quot;th:eq()&quot;</code>, <code>&quot;:gt()&quot;</code>, <code>&quot;:lt()&quot;</code>, <code>&quot;:first&quot;</code>, <code>&quot;:last&quot;</code>, <code>&quot;:even&quot;</code> or <code>&quot;:odd&quot;</code>, <code>&quot;:first-child&quot;</code>, <code>&quot;:last-child&quot;</code>, <code>&quot;:nth-child()&quot;</code>, <code>&quot;:nth-last-child()&quot;</code>, etc.<br>
 					<br>
 					A new file has been included named "widget-filter-formatter-jui.js" &amp; "widget-filter-formatter-html5.js". The files include code to add jQuery UI and HTML5 controls via the <a href="#widget-filter-formatter"><code>filter_formatter</code></a> option.<br>
 					<br>
@@ -2698,7 +2698,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
         ...
     }
 }</pre>
-					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>&quot;th:eq()&quot;</code>, <code>&quot;:gt()&quot;</code>, <code>&quot;:lt()&quot;</code>, <code>&quot;:first&quot;</code>, <code>&quot;:last&quot;</code>, <code>&quot;:even&quot;</code> or <code>&quot;:odd&quot;</code>, <code>&quot;:first-child&quot;</code>, <code>&quot;:last-child&quot;</code>, <code>&quot;:nth-child()&quot;</code>, <code>&quot;:nth-last-child()&quot;</code>, etc.<br>
 					<br>
 					Use the <a href="#widget-filter-functions"><code>&quot;filter_functions&quot;</code></a> option in three different ways:
 					<br>
@@ -3049,7 +3049,7 @@ $('table').trigger('search', false);</pre></div>
 						<li>The last search (for all columns) was not completely empty - all rows will be searched anyway.</li>
 						<li>If there were no changes to the search from the beginning of the search string (changing the above search to "bright" will force a new search of all rows).</li>
 						<li>If the search does not contain a logical or (<code> or </code> or <code>|</code>), or a range delimiter (<code> - </code> or <code> to </code>) within the search query.</li>
-						<li>If the search is not looking for an exact match (<code>"</code> or <code>=</code>) or a logical not search (<code>!</code>).</li>
+						<li>If the search is not looking for an exact match (<code>&quot;</code> or <code>=</code>) or a logical not search (<code>!</code>).</li>
 						<li>Or, if the search is using a select dropdown without a "filter-match" class name (looking for an exact match).</li>
 						<li>If the search does not contain an operator greater than or equal to a negative number (<code>&gt;=-10</code>) or less than or equal to a positive number (<code>&lt;=10</code>).</li>
 						<li>And lastly, only search filtered rows if all rows are not hidden.</li>
@@ -3103,7 +3103,7 @@ $('table').trigger('search', false);</pre></div>
 					<pre class="prettyprint lang-js">filter_selectSource : {
   ".model-number" : [ "abc", "def", "ghi", "xyz" ]
 }</pre>
-					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>"th:eq()"</code>, <code>":gt()"</code>, <code>":lt()"</code>, <code>":first"</code>, <code>":last"</code>, <code>":even"</code> or <code>":odd"</code>, <code>":first-child"</code>, <code>":last-child"</code>, <code>":nth-child()"</code>, <code>":nth-last-child()"</code>, etc.<br>
+					<span class="label label-warning">Warning</span> What <em>won't work</em> is if you try to target the header using a filtering selector that uses an index, e.g. <code>&quot;th:eq()&quot;</code>, <code>&quot;:gt()&quot;</code>, <code>&quot;:lt()&quot;</code>, <code>&quot;:first&quot;</code>, <code>&quot;:last&quot;</code>, <code>&quot;:even&quot;</code> or <code>&quot;:odd&quot;</code>, <code>&quot;:first-child&quot;</code>, <code>&quot;:last-child&quot;</code>, <code>&quot;:nth-child()&quot;</code>, <code>&quot;:nth-last-child()&quot;</code>, etc.<br>
 					<br>
 					A column will have a filter select dropdown when a "filter-select" class name is added to the header cell, or if the <a href="#widget-filter-functions"><code>filter_functions</code></a> column value is set to <code>true</code><br>
 					<br>
@@ -3703,7 +3703,7 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="widget-storage-table-id">
 				<td><a href="#" class="permalink">storage_tableId</a></td>
 				<td>String</td>
-				<td>""</td>
+				<td>&quot;&quot;</td>
 				<td>
 					Storage widget: This option allows setting an alternate table id so multiple tables on a page have the settings grouped together
 					<div class="collapsible">
@@ -3718,12 +3718,12 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="widget-storage-group">
 				<td><a href="#" class="permalink">storage_group</a></td>
 				<td>String</td>
-				<td>""</td>
+				<td>&quot;&quot;</td>
 				<td>
 					Storage widget: Set a table (data) attribute to use to obtain a table id, which allows grouping multiple tables on one page together - they share a common saved setting.
 					<div class="collapsible">
 						<p>If a value is set in this option, the storage widget looks in that defined table data-attribute for a table id.</p>
-						<p>If this option is not defined, then the default data-attribute for the table becomes <code>"data-table-group"</code>.</p>
+						<p>If this option is not defined, then the default data-attribute for the table becomes <code>&quot;data-table-group&quot;</code>.</p>
 						<p>The value in the data-attribute sets a table id, if not found, the storage widget then looks for an id in the <a href="#widget-storage-table-id"><code>storage_tableId</code></a> option.</p>
 					</div>
 				</td>
@@ -3733,7 +3733,7 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="widget-storage-fixed-url">
 				<td><a href="#" class="permalink">storage_fixedUrl</a></td>
 				<td>String</td>
-				<td>""</td>
+				<td>&quot;&quot;</td>
 				<td>
 					Storage widget: This option allows setting an alternate table url so that tables on multiple pages will have their settings grouped together
 					<div class="collapsible">
@@ -3748,12 +3748,12 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="widget-storage-page">
 				<td><a href="#" class="permalink">storage_page</a></td>
 				<td>String</td>
-				<td>""</td>
+				<td>&quot;&quot;</td>
 				<td>
 					Storage widget: Set a table (data) attribute to use to obtain a table url, which allows grouping tables across multiple pages together - they share a common saved setting.
 					<div class="collapsible">
 						<p>If a value is set in this option, the storage widget looks in that defined table data-attribute for a table url.</p>
-						<p>If this option is not defined, then the default data-attribute for the table becomes <code>"data-table-page"</code>.</p>
+						<p>If this option is not defined, then the default data-attribute for the table becomes <code>&quot;data-table-page&quot;</code>.</p>
 						<p>The value in the data-attribute sets a table url, if not found, the storage widget then looks for a url in the <a href="#widget-storage-fixed-url"><code>storage_fixedUrl</code></a> option.</p>
 					</div>
 				</td>
@@ -3822,7 +3822,6 @@ $('table').trigger('search', false);</pre></div>
     .tablesorterPager({
       container: $(".pager")
     });
-  });
 });</pre></div>
 				</td>
 				<td><a href="example-pager.html">Example</a></td>
@@ -3839,7 +3838,7 @@ $('table').trigger('search', false);</pre></div>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxUrl</code><br>
 					<br>
 					The tags within the <code>ajaxUrl</code> string are optional. If do not want the user to change the page size, then you only need to include the page in this string:
-					<pre class="prettyprint lang-js">ajaxUrl: "http://mydatabase.com?start={page}"</pre>
+					<pre class="prettyprint lang-js">ajaxUrl: &quot;http://mydatabase.com?start={page}&quot;</pre>
 					If you need to send your server a page offset (actual starting record number), then you'll need to use the <a href="#pager-customajaxurl"><code>customAjaxUrl</code> option</a>.<br>
 					<br>
 					Here is an example of how to include the option, it should <em>always</em> be paired with an <code>ajaxProcessing</code> function:
@@ -4004,6 +4003,33 @@ $('table').trigger('search', false);</pre></div>
       }
     });
 });</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="pager-initialrows">
+				<td><a href="#" class="permalink">initialRows</a></td>
+				<td>Object</td>
+				<td>undefined</td>
+				<td>
+					When <code>processAjaxOnInit</code> is set to <code>false</code>, set this option to contain the total number of rows and filtered rows to prevent an initial ajax call (<span class="version">v2.25.4</span>).
+					<div class="collapsible">
+						<br>
+						<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_initialRows</code>
+						<p>Use this option as follows:</p>
+						<pre class="prettyprint lang-js">$(function(){
+  $("table")
+    .tablesorter()
+    .tablesorterPager({
+      processAjaxOnInit: false,
+      initialRows: {
+        total: 100,
+        filtered: 100
+      },
+      // other ajax settings...
+    });
+});</pre>
+					</div>
 				</td>
 				<td></td>
 			</tr>
@@ -4238,7 +4264,7 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="pager-output">
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
-				<td>&quot;{page}/{totalPages}&quot;</td>
+				<td>&quot;{page}/<wbr>{totalPages}&quot;</td>
 				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.17.6</span>).
 					<div class="collapsible">
 					<br>
@@ -4253,7 +4279,6 @@ $('table').trigger('search', false);</pre></div>
     .tablesorterPager({
       output: '{startRow} to {endRow} of {totalRows} rows'
     });
-  });
 });</pre>The following tags are replaced within the output string:
 <table class="info">
 	<thead>
@@ -5234,7 +5259,7 @@ or, directly add the search string to the filter input as follows:<pre class="pr
   $('table').find('input.tablesorter-filter').eq(4).val('2?%');
   $('table').trigger('search', false); // add a false flag to skip the search delay
 });</pre>
-					In <span class="version updated">v2.15</span>, one additional parameter can be added to the array to perform an "any-match" of the table; <span class="label label-warning">Warning!</span> please note that if no external input (with a <code>data-column="all"</code> is attached using <a href="#function-bindsearch"><code>bindSearch</code></a> function) is visible, the user will not know that a filter has been applied. <pre class="prettyprint lang-js">// in a table with 4 columns; set the 5th parameter to any-match
+					In <span class="version updated">v2.15</span>, one additional parameter can be added to the array to perform an &quot;any-match&quot; of the table; <span class="label label-warning">Warning!</span> please note that if no external input (with a <code>data-column=&quot;all&quot;</code> is attached using <a href="#function-bindsearch"><code>bindSearch</code></a> function) is visible, the user will not know that a filter has been applied. <pre class="prettyprint lang-js">// in a table with 4 columns; set the 5th parameter to any-match
 $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in any column</pre>
 					</div>
 				</td>
@@ -5864,7 +5889,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 };</pre>
 					So, as an example, in the following situation:
 					<ul>
-						<li>A table header is named "Account #"</li>
+						<li>A table header is named &quot;Account #&quot;</li>
 						<li>This column has an ascending sort applied</li>
 						<li>The next click on the header will be a descending sort, which means:
 							<ul>
@@ -5874,13 +5899,13 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 						</li>
 					</ul>
 					Then the label will be built as follows:
-					<pre class="prettyprint lang-js">// "Header Name" + $.tablesorter.language.sortAsc + $.tablesorter.language.nextDesc
-"Account #: Ascending sort applied, activate to apply a descending sort"</pre>
+					<pre class="prettyprint lang-js">// &quot;Header Name&quot; + $.tablesorter.language.sortAsc + $.tablesorter.language.nextDesc
+&quot;Account #: Ascending sort applied, activate to apply a descending sort&quot;</pre>
 					If the next click were to reset the sort (<code>sortReset</code> applied), then the message would use <code>$.tablesorter.language.nextNone</code>.<br>
 					<br>
 					In <span class="version updated">v2.24.4</span>, if sorting is disabled but the column has a sort applied, the label will be built as follows:
-					<pre class="prettyprint lang-js">// "Header Name" + $.tablesorter.language.sortDesc + $.tablesorter.language.sortDisabled
-"Account #: Descending sort applied, sorting is disabled"</pre>
+					<pre class="prettyprint lang-js">// &quot;Header Name&quot; + $.tablesorter.language.sortDesc + $.tablesorter.language.sortDisabled
+&quot;Account #: Descending sort applied, sorting is disabled&quot;</pre>
 					Use this variable to change the language as follows:
 					<pre class="prettyprint lang-js">$(function(){
 
@@ -6138,7 +6163,7 @@ $headers.each(function(){
 				<td>Internal list of <strong>all</strong> table header cells (<span class="version">v2.8</span>)
 					<div class="collapsible">
 					<p>
-					<span class="label label-info">*NOTE*</span> The header cells within rows with the <a href="#cssignorerow"><code>cssIgnoreRow</code></a> class (default is <code>"tablesorter-ignoreRow"</code> will not be included in this variable.</p>
+					<span class="label label-info">*NOTE*</span> The header cells within rows with the <a href="#cssignorerow"><code>cssIgnoreRow</code></a> class (default is <code>&quot;tablesorter-ignoreRow&quot;</code> will not be included in this variable.</p>
 					<p>Header cells in not-ignored rows are targeted using the jQuery selector from the <a href="#selectorheaders"><code>selectorHeaders</code></a> option</p>
 					Please note that the headers cells are simply an array of targetted header cells and should not be targeted using a column index. For example, given the following table <code>thead</code> markup, the <code>header-index</code> counts the header <code>th</code> cells and does not actually match the <code>data-column</code> index when extra rows and/or <code>colspan</code> or <code>rowspan</code> are included in any of the header cells:
 					<pre class="prettyprint lang-html">&lt;thead&gt;
@@ -6277,7 +6302,7 @@ var wo = $('#mytable').data('tablesorter').widgetOptions;
 			<tr id="variable-any-match">
 				<td><a href="#" class="permalink">wo.filter_$anyMatch</a></td>
 				<td>jQuery Object</td>
-				<td>Only available when the filter widget is active. This variable contains all external search inputs with <code>data-column="all"</code>, bound using the <a href="#function-bind-search"><code>bindSearch</code></a> function.
+				<td>Only available when the filter widget is active. This variable contains all external search inputs with <code>data-column=&quot;all&quot;</code>, bound using the <a href="#function-bind-search"><code>bindSearch</code></a> function.
 					<div class="collapsible">
 					<br>
 					The <code>table.config.widgetOptions.filter_$anyMatch</code> variable contains one more more search inputs, and is dynamically updated if the <a href="#function-bind-search"><code>bindSearch</code></a> function is called; make sure to set the flag to force a new search so that the values of the altered filters is updated appropriately.
@@ -6821,7 +6846,7 @@ myArray.sort(function(a,b) { return $.tablesorter.sortText(a, b); });</pre>
 							<li><code>string</code> - a string to process &amp; replace accented characters.</li>
 						</ul>
 						Here is a basic example of how this function is used:
-						<pre class="prettyprint lang-js">$.tablesorter.replaceAccents(&quot;&#x00e1;&#x00e0;&#x00e2;&#x00e3;&#x00e4;&quot;); // result: "aaaaa"</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.replaceAccents(&quot;&#x00e1;&#x00e0;&#x00e2;&#x00e3;&#x00e4;&quot;); // result: &quot;aaaaa&quot;</pre>
 						This function is used when the <a href="#sortlocalecompare"><code>sortLocaleCompare</code></a> option is set to <code>true</code>. Please refer to the option and <a href="example-locale-sort.html">the demo</a> for more details on the defaults values and how to add more accented characters.
 					</div>
 				</td>
@@ -6913,7 +6938,7 @@ $.tablesorter.isValueInArray(2, sortList);</pre>
 				<td>This function allows the adding of custom widget scripts to the tablesorter core (<span class="version updated">v2.19.0</span>).
 					<div class="collapsible">
 						<br>
-						In <span class="version updated">v2.19.0</span>, a <code>"refreshing"</code> parameter was added to the <code>remove</code> widget function to indicate that the widget will be refreshed so it will only be temporarily removed (see <a href="example-widgets.html">this demo</a> for more details).<br>
+						In <span class="version updated">v2.19.0</span>, a <code>&quot;refreshing&quot;</code> parameter was added to the <code>remove</code> widget function to indicate that the widget will be refreshed so it will only be temporarily removed (see <a href="example-widgets.html">this demo</a> for more details).<br>
 						<br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.addWidget(myWidget);</pre>
@@ -6969,7 +6994,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 				<td>This function removes, then reapplies all currently selected widgets on a table (v2.4; <span class="version updated">v2.19.0</span>).
 					<div class="collapsible">
 						<br>
-						In <span class="version updated">v2.19.0</span>, this function was modified to internally use the <a href="#function-removewidget">removeWidget</a> function &amp; a <a href="#refreshcomplete"><code>"refreshComplete"</code></a> event is now triggered upon completion.<br>
+						In <span class="version updated">v2.19.0</span>, this function was modified to internally use the <a href="#function-removewidget">removeWidget</a> function &amp; a <a href="#refreshcomplete"><code>&quot;refreshComplete&quot;</code></a> event is now triggered upon completion.<br>
 						<br>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.refreshWidgets( table, doAll, dontapply );</pre>
@@ -7014,7 +7039,7 @@ widget.format( table, table.config, table.config.widgetOptions );</pre>
 							<li><code>object</code> - object containing zero-based column indexes or column class names as a key (e.g. <code>table.config.headers</code> or <code>table.config.widgetOptions.filter_functions</code>; any data found as the value (of the <code>key : value</code> pair) will be returned.</li>
 							<li><code>key</code> - key to be Object key; this can be a zero-based column index or header class name/id.</li>
 						</ul>
-						As a full example, say you have a header cell with a class name of <code>"event"</code>. And you want to use the <code>textExtraction</code> function for that column, then you would use this function as follows:
+						As a full example, say you have a header cell with a class name of <code>&quot;event&quot;</code>. And you want to use the <code>textExtraction</code> function for that column, then you would use this function as follows:
 						<pre class="prettyprint lang-js">var table = $('table')[0],
 textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textExtraction, &quot;.event&quot; );</pre>
 						The <code>&quot;.event&quot;</code> key can be replaced with a zero-based column index, if the <code>textExtraction</code> option is set up using indexes.
@@ -7035,7 +7060,7 @@ textExtractionFunction = $.tablesorter.getColumnData( table, table.config.textEx
 							<li><code>table</code> - table DOM element (or jQuery object).</li>
 							<li><code>column</code> - zero-based column index or <code>'all'</code>.</li>
 							<li><code>callback</code> - callback function that is called while obtaining data for each cell within the specified column.</li>
-							<li><code>rowFilter</code> - can be a jQuery selector, function or element to allow targeting specific rows (e.g. <code>":visible"</code> or <code>":not(.child-row)"</code>); this parameter is used in a jQuery <code><a class="external" href="http://api.jquery.com/is/">.is()</a></code> function (<span class="version">v2.24.0</span>).</li>
+							<li><code>rowFilter</code> - can be a jQuery selector, function or element to allow targeting specific rows (e.g. <code>&quot;:visible&quot;</code> or <code>&quot;:not(.child-row)&quot;</code>); this parameter is used in a jQuery <code><a class="external" href="http://api.jquery.com/is/">.is()</a></code> function (<span class="version">v2.24.0</span>).</li>
 						</ul>
 						When using the callback, there is only one argument (object) passed to this function; it contains the following:
 						<ul>
@@ -7251,9 +7276,9 @@ $.tablesorter.computeColumnIndex($rows, config);</pre>
 						<p>The <code>table</code> element will only process one table. So if you pass in a jQuery object, only the <em>first table</em> will be bound to the elements (<code>$els</code>).</p>
 						The external elements (<code>$els</code>) will allow searching the table using "search" and "keyup" events (enter to start &amp; escape to cancel the search), and uses the <a href="#widget-filter-livesearch"><code>filter_liveSearch</code></a> option, or delayed search.<br>
 						<br>
-						Include a <code>data-column="#"</code> attribute (where <code>#</code> is the column number) in the search input, to specify to which column the search should apply ~ see <a href="example-widget-filter-external-inputs.html">this demo</a> for a full example. <span class="label label-warning">Warning!</span>, if no <code>data-column</code> attribute is added to the input, the input will be ignored.<br>
+						Include a <code>data-column=&quot;#&quot;</code> attribute (where <code>#</code> is the column number) in the search input, to specify to which column the search should apply ~ see <a href="example-widget-filter-external-inputs.html">this demo</a> for a full example. <span class="label label-warning">Warning!</span>, if no <code>data-column</code> attribute is added to the input, the input will be ignored.<br>
 						<br>
-						In <span class="version">v2.15</span>, use a <code>data-column="all"</code> to bind an external any-match search filter; but note that adding an external any-match filter using this method will not override the filter set by the <a href="#widget-filter-external"><code>filter_external</code></a> option.<br>
+						In <span class="version">v2.15</span>, use a <code>data-column=&quot;all&quot;</code> to bind an external any-match search filter; but note that adding an external any-match filter using this method will not override the filter set by the <a href="#widget-filter-external"><code>filter_external</code></a> option.<br>
 						<br>
 						The third function parameter, <code>false</code>, is optional. When set to <code>false</code> it forces the inputs to update their values (same as setting the <code>apply</code> flag when using the <a href="#function-setfilters"><code>setFilters</code></a> function), and reapplies (forces) the current search to be applied again, even if the filter values have not changed; this allows changing the data column attribute dynamically. See the <a href="example-widget-filter-external-inputs.html">filter external inputs demo</a> for an example.<br>
 						<br>
@@ -7290,7 +7315,7 @@ $.tablesorter.filter.buildSelect( $('table'), 1, $('&lt;option&gt;Aaron&lt;/opti
 				<td><a href="#" class="permalink">getOptions</a></td>
 				<td>This filter widget function returns all the cached values of the set table column (<span class="version">v2.16.0</span>):
 					<div class="collapsible"><br>
-						This function respects the parsed data setting for the column, so it uses the <code>filter_useParsedData</code> option, <code>"filter-parsed"</code> class on the header, or the parser <code>parsed</code> flag settinng (<a href="example-parsers.html">ref</a>).
+						This function respects the parsed data setting for the column, so it uses the <code>filter_useParsedData</code> option, <code>&quot;filter-parsed&quot;</code> class on the header, or the parser <code>parsed</code> flag settinng (<a href="example-parsers.html">ref</a>).
 						<p>Use it as follows:</p>
 						<pre class="prettyprint lang-js">$.tablesorter.filter.getOptions( table, column, onlyAvail );</pre>
 						<ul>
@@ -7357,7 +7382,7 @@ $('select.external').html( opts );</pre>
 						<pre class="prettyprint lang-js">// use $('table') or $('table.hasFilters') to make sure the table has a filter row
 // only required if the stickyHeaders or scroller widget is being used (they duplicate the table)
 $.tablesorter.getFilters( $('table') );</pre>
-						This function returns an array of filter values (e.g. <code>[ '', '', '', '', '', '2?%' ]</code>), or <code>false</code> if the selected table does not have a filter row. It will also return an additional parameter if an external input with <code>data-column="all"</code> containing the value used when matching any table column.<br>
+						This function returns an array of filter values (e.g. <code>[ '', '', '', '', '', '2?%' ]</code>), or <code>false</code> if the selected table does not have a filter row. It will also return an additional parameter if an external input with <code>data-column=&quot;all&quot;</code> containing the value used when matching any table column.<br>
 						<br>
 						In <span class="version updated">v2.15</span>, this function will also return values from any external filters (set either by the <a href="#filter-external"><code>filter_external</code> option</a> or using the <a href="#function-bindsearch"><code>bindSearch</code> function</a>) - with or without an internal filter row.<br>
 						<br>
@@ -7385,7 +7410,7 @@ $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], false );
 $.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] ); // this will now use the search method</pre>
 						This function returns <code>true</code> if the filters were sucessfully applied, or <code>false</code> if the table does not have a filter row.<br>
 						<p>In <span class="version updated">v2.24.3</span>, if the <code>apply</code> parameter is left undefined, it will now default to <code>true</code>.</p>
-						As of <span class="version updated">v2.15</span>, this function will also set values in any external filters (set either by the <a href="#filter-external"><code>filter_external</code> option</a> or using the <a href="#function-bindsearch"><code>bindSearch</code> function</a>). An additional search parameter can  be included to match any column, but please include an external input with <code>data-column="all"</code> using the <code>bindSearch</code> function so your users will know that a search has been applied.<br>
+						As of <span class="version updated">v2.15</span>, this function will also set values in any external filters (set either by the <a href="#filter-external"><code>filter_external</code> option</a> or using the <a href="#function-bindsearch"><code>bindSearch</code> function</a>). An additional search parameter can  be included to match any column, but please include an external input with <code>data-column=&quot;all&quot;</code> using the <code>bindSearch</code> function so your users will know that a search has been applied.<br>
 						<br>
 						Also, changed is that when a <code>true</code> value is passed as a third parameter, the search is forced to refresh on the table; otherwise, if the filters set in the search exactly match the previous search, it would be ignored - this was added to prevent numerous ajax calls with exactly the same search or sort parameters (when using the pager).
 					</div>
@@ -7481,7 +7506,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						The priority of table ID settings is as follows:
 						<ol>
 							<li><code>options.id</code> setting</li>
-							<li>Table data attribute (<code>"data-table-group"</code> by default) value</li>
+							<li>Table data attribute (<code>&quot;data-table-group&quot;</code> by default) value</li>
 							<li><a href="#widget-storage-table-id"><code>widgetOptions.storage_tableId</code></a> option</li>
 							<li>Table id attribute</li>
 							<li>Index of the table (compared to other tables with a "tablesorter" class name) on the page</li>
@@ -7489,7 +7514,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						The priority of table url (group) settings is as follows:
 						<ol>
 							<li><code>options.url</code> setting</li>
-							<li>Table data attribute (<code>"data-table-page"</code> by default) value</li>
+							<li>Table data attribute (<code>&quot;data-table-page&quot;</code> by default) value</li>
 							<li><a href="#widget-storage-fixed-url"><code>widgetOptions.storage_fixedUrl</code></a> option value</li>
 							<li><a href="#fixedurl" class="alert" title="deprecated"><code>config.fixedUrl</code></a> option value</li>
 							<li><code>window.location.pathname</code></li>

@@ -1030,7 +1030,8 @@
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject( c.cache ) ) {
 				return tsp.updateCache( c );
 			}
-			var table = c.table,
+			var tmp,
+				table = c.table,
 				wo = c.widgetOptions,
 				l = p.last;
 
@@ -1068,7 +1069,17 @@
 				optAjaxUrl: wo.pager_ajaxUrl
 			};
 			if ( p.ajax ) {
-				tsp.getAjax( c );
+				if ( !wo.pager_processAjaxOnInit && !$.isEmptyObject(wo.pager_initialRows) ) {
+					wo.pager_processAjaxOnInit = true;
+					tmp = wo.pager_initialRows;
+					p.totalRows = typeof tmp.total !== 'undefined' ? tmp.total :
+						( c.debug ? console.error('Pager: no initial total page set!') || 0 : 0 );
+					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
+						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
+					tsp.updatePageDisplay( c, false );
+				} else {
+					tsp.getAjax( c );
+				}
 			} else if ( !p.ajax ) {
 				tsp.renderTable( c, c.rowsCopy );
 			}

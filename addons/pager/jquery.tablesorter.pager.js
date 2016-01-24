@@ -508,14 +508,7 @@
 
 			}
 			if (!p.initialized) {
-				p.initialized = true;
-				p.initializing = false;
-				if (table.config.debug) {
-					console.log('Pager: Triggering pagerInitialized');
-				}
-				$(table).triggerHandler( 'pagerInitialized', p );
-				ts.applyWidget( table );
-				updatePageDisplay(table, p);
+				pagerInitialized(table, p);
 			}
 		},
 
@@ -711,7 +704,8 @@
 
 		moveToPage = function(table, p, pageMoved) {
 			if ( p.isDisabled ) { return; }
-			var c = table.config,
+			var tmp,
+				c = table.config,
 				$t = $(table),
 				l = p.last;
 			if ( pageMoved !== false && p.initialized && ts.isEmptyObject(c.cache)) {
@@ -747,7 +741,17 @@
 				optAjaxUrl : p.ajaxUrl || ''
 			};
 			if (p.ajax) {
-				getAjax(table, p);
+				if ( !p.processAjaxOnInit && !ts.isEmptyObject(p.initialRows) ) {
+					p.processAjaxOnInit = true;
+					tmp = p.initialRows;
+					p.totalRows = typeof tmp.total !== 'undefined' ? tmp.total :
+						( c.debug ? console.error('Pager: no initial total page set!') || 0 : 0 );
+					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
+						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
+					pagerInitialized( table, p );
+				} else {
+					getAjax(table, p);
+				}
 			} else if (!p.ajax) {
 				renderTable(table, c.rowsCopy, p);
 			}
@@ -825,6 +829,17 @@
 				p.page = 0;
 			}
 			moveToPage(table, p);
+		},
+
+		pagerInitialized = function(table, p) {
+			p.initialized = true;
+			p.initializing = false;
+			if (table.config.debug) {
+				console.log('Pager: Triggering pagerInitialized');
+			}
+			$(table).triggerHandler( 'pagerInitialized', p );
+			ts.applyWidget( table );
+			updatePageDisplay(table, p);
 		},
 
 		destroyPager = function(table, p) {
