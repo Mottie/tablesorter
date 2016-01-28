@@ -478,8 +478,8 @@
 		},
 		remove: function(table, c, wo, refreshing) {
 			var csel = c.selector;
-			if ( refreshing || !csel ) { return; }
 			csel.$container.empty();
+			if ( refreshing || !csel ) { return; }
 			if (csel.$popup) { csel.$popup.empty(); }
 			csel.$style.remove();
 			csel.$breakpoints.remove();
