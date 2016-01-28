@@ -478,7 +478,7 @@
 		},
 		remove: function(table, c, wo, refreshing) {
 			var csel = c.selector;
-			csel.$container.empty();
+			if ( csel) { csel.$container.empty(); }
 			if ( refreshing || !csel ) { return; }
 			if (csel.$popup) { csel.$popup.empty(); }
 			csel.$style.remove();

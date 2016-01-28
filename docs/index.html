@@ -4994,7 +4994,7 @@ $("table").trigger("updateAll", [ resort, callback ]);</pre></div>
 	};
 $.tablesorter.updateCache( config, callback, $tbodies );</pre>
 						<h4>Triggered event method:</h4>
-						<p>In <span class="version updated">v2.22.2</span>, a new parameter was added to allow passing a jQuery object containing tbodies (for the tbody sorting widget)</p>
+						<p><span class="label label-warning">*NOTE*</span> In <span class="version updated">v2.22.2</span>, a new parameter was added to allow passing a jQuery object containing tbodies to be added to the table (for the tbody sorting widget).</p>
 						<p>This method is used by the pager (addon &amp; widget) to update the data stored within the cache after the content has been updated using ajax.</p>
 						<pre class="prettyprint lang-js">// optional callback function
 var callback = function( table ){ /* do something */ },
