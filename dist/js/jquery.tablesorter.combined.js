@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 01-21-2016 (v2.25.3)*/
+/*! tablesorter (FORK) - updated 02-15-2016 (v2.25.4)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.3 *//*
+/*! TableSorter (FORK) v2.25.4 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -33,7 +33,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.3',
+		version : '2.25.4',
 
 		parsers : [],
 		widgets : [],
@@ -189,7 +189,7 @@
 
 		},
 
-		// digit sort text location; keeping max+/- for backwards compatibility
+		// digit sort, text location
 		string : {
 			max      : 1,
 			min      : -1,
@@ -1914,6 +1914,7 @@
 		},
 
 		applyWidgetId : function( table, id, init ) {
+			table = $(table)[0];
 			var applied, time, name,
 				c = table.config,
 				wo = c.widgetOptions,
@@ -2045,16 +2046,16 @@
 			for ( index = 0; index < len; index++ ) {
 				widget = ts.getWidgetById( name[ index ] );
 				indx = $.inArray( name[ index ], c.widgets );
+				// don't remove the widget from config.widget if refreshing
+				if ( indx >= 0 && refreshing !== true ) {
+					c.widgets.splice( indx, 1 );
+				}
 				if ( widget && widget.remove ) {
 					if ( c.debug ) {
 						console.log( ( refreshing ? 'Refreshing' : 'Removing' ) + ' "' + name[ index ] + '" widget' );
 					}
 					widget.remove( table, c, c.widgetOptions, refreshing );
 					c.widgetInit[ name[ index ] ] = false;
-				}
-				// don't remove the widget from config.widget if refreshing
-				if ( indx >= 0 && refreshing !== true ) {
-					c.widgets.splice( indx, 1 );
 				}
 			}
 		},
@@ -3084,7 +3085,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 1/21/2016 (v2.25.3) *//*
+/*! Widget: filter - updated 2/15/2016 (v2.25.4) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3885,8 +3886,9 @@
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( wo.filter_initialized && ( event.which === tskeyCodes.enter || event.type === 'search' ||
+					( event.type === 'change' ) && this.value !== c.lastSearch[column] ) ||
 					// only "input" event fires in MS Edge when clicking the "x" to clear the search
-					( event.type === 'change' || event.type === 'input' ) && this.value !== c.lastSearch[column] ) ) {
+					( event.type === 'input' && this.value === '' ) ) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
@@ -4295,7 +4297,8 @@
 					c.$headerIndexed[ columnIndex ].hasClass( 'filter-parsed' ) );
 
 				vars.functions[ columnIndex ] =
-					ts.getColumnData( table, wo.filter_functions, columnIndex );
+					ts.getColumnData( table, wo.filter_functions, columnIndex ) ||
+					c.$headerIndexed[ columnIndex ].hasClass( 'filter-select' );
 				vars.defaultColFilter[ columnIndex ] =
 					ts.getColumnData( table, wo.filter_defaultFilter, columnIndex ) || '';
 				vars.excludeFilter[ columnIndex ] =

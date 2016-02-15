@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.3 *//*
+/*! TableSorter (FORK) v2.25.4 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.3',
+		version : '2.25.4',
 
 		parsers : [],
 		widgets : [],
@@ -187,7 +187,7 @@
 
 		},
 
-		// digit sort text location; keeping max+/- for backwards compatibility
+		// digit sort, text location
 		string : {
 			max      : 1,
 			min      : -1,
@@ -1912,6 +1912,7 @@
 		},
 
 		applyWidgetId : function( table, id, init ) {
+			table = $(table)[0];
 			var applied, time, name,
 				c = table.config,
 				wo = c.widgetOptions,
@@ -2043,16 +2044,16 @@
 			for ( index = 0; index < len; index++ ) {
 				widget = ts.getWidgetById( name[ index ] );
 				indx = $.inArray( name[ index ], c.widgets );
+				// don't remove the widget from config.widget if refreshing
+				if ( indx >= 0 && refreshing !== true ) {
+					c.widgets.splice( indx, 1 );
+				}
 				if ( widget && widget.remove ) {
 					if ( c.debug ) {
 						console.log( ( refreshing ? 'Refreshing' : 'Removing' ) + ' "' + name[ index ] + '" widget' );
 					}
 					widget.remove( table, c, c.widgetOptions, refreshing );
 					c.widgetInit[ name[ index ] ] = false;
-				}
-				// don't remove the widget from config.widget if refreshing
-				if ( indx >= 0 && refreshing !== true ) {
-					c.widgets.splice( indx, 1 );
 				}
 			}
 		},

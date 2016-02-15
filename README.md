@@ -23,14 +23,14 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 * Multi-column alphanumeric sorting and filtering.
 * Multi-tbody sorting - see the [options](//mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
-* Supports [Bootstrap v2 and 3](//mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html)
+* Supports [Bootstrap v2 and 3](//mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
 * Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](//mottie.github.io/tablesorter/docs/example-parsers.html).
-* Inline editing - see [demo](//mottie.github.io/tablesorter/docs/example-widget-editable.html)
+* Inline editing - see [demo](//mottie.github.io/tablesorter/docs/example-widget-editable.html).
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
 * Extensibility via [widget system](//mottie.github.io/tablesorter/docs/example-widgets.html).
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+, Chrome 5.0+.
-* Small code size, starting at 25K minified
+* Small code size, starting at 25K minified.
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
 * Works with jQuery 1.9+ (`$.browser.msie` was removed; needed in the original version).
 
@@ -42,10 +42,10 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 ### Download
 
-* Get all files: [zip](//github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](//github.com/Mottie/tablesorter/archive/master.tar.gz)
-* Use [bower](http://bower.io/): `bower install jquery.tablesorter`
-* Use [node.js](http://nodejs.org/): `npm install tablesorter`
-* CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter)
+* Get all files: [zip](//github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](//github.com/Mottie/tablesorter/archive/master.tar.gz).
+* Use [bower](http://bower.io/): `bower install jquery.tablesorter`.
+* Use [node.js](http://nodejs.org/): `npm install tablesorter`.
+* CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter).
 
 ### Related Projects
 
@@ -92,6 +92,30 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.4">Version 2.25.4</a> (2/15/2016)
+
+* Core:
+  * Remove id from widgets option prior to remove function. See [issue #1155](https://github.com/Mottie/tablesorter/issues/1155).
+  * `applyWidgetsId` properly accepts jQuery table element.
+* ColumnSelector:
+  * Clear column container when refreshing. See [pull #1145](https://github.com/Mottie/tablesorter/pull/1145); thanks [eltharin](https://github.com/eltharin)!
+  * Prevent refresh error. See [pull #1145](https://github.com/Mottie/tablesorter/pull/1145).
+* Editable:
+  * Use `execCommand` to select all text, if supported.
+* Filter:
+  * Select defaults to exact match again. Fixes [issue #1136](https://github.com/Mottie/tablesorter/issues/1136).
+  * Fix disable of live search. See [issue #1152](https://github.com/Mottie/tablesorter/issues/1152).
+* Grouping:
+  * Reapply zebra after collapsed group opens. Fixes [issue #1156](https://github.com/Mottie/tablesorter/issues/1156).
+* Pager:
+  * Add `initialRows` option; use when `processAjaxOnInit` set to `false`. See [Stackoverflow](See http://stackoverflow.com/q/34972532/145346).
+  * Prevent js error on successive removal calls. Fixes [issue #1155](https://github.com/Mottie/tablesorter/issues/1155).
+* Docs:
+  * Add `ignoreRow` class to pager row.
+  * Show actual theme names; to use in the `themes` option.
+* Build: Update dependencies.
+* Testing: re-align code.
+
 #### <a name="v2.25.3">Version 2.25.3</a> (1/21/2016)
 
 * Filter:
@@ -114,28 +138,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * `output_saveRows` now accpets a [filter callback function](http://api.jquery.com/filter/#filter-function).
 * Parsers:
   * checkbox value should no longer change. Fixes [issue #1125](https://github.com/Mottie/tablesorter/issues/1125).
-
-#### <a name="v2.25.1">Version 2.25.1</a> (1/10/2016)
-
-* Docs:
-  * Update to jQuery v1.12.0.
-  * Fix HTML hint issues.
-* Core:
-  * Fix time parser detection. See [issue #1107](https://github.com/Mottie/tablesorter/issues/1107).
-  * Add multiple widgets from table class. Fixes [issue #1109](https://github.com/Mottie/tablesorter/issues/1109).
-  * Fix extra header class name updating. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
-  * Fix typo in comments.
-* ColumnSelector:
-  * Prevent remove widget js error. Fixes [issue #1106](https://github.com/Mottie/tablesorter/issues/1106).
-  * Add `tbody` colspan support. See [issue #1120](https://github.com/Mottie/tablesorter/issues/1120).
-  * Add child row colspan support. See [issue #1120](https://github.com/Mottie/tablesorter/issues/1120).
-* Filter:
-  * Use replacement character instead of null (for IE).
-  * Fix "or" test regex. Fixes [issue #1117](https://github.com/Mottie/tablesorter/issues/1117).
-  * Restore `return false` to fix unit tests.
-  * Functions now get exact data, ignoring parsed flag. Fixes [issue #1107](https://github.com/Mottie/tablesorter/issues/1107).
-  * Parsed flag now all set `true` if `filter_useParsedData` is `true` &amp; stop using `config.$headers`.
-* Output:
-  * `output_callback` can now return modified data. See [issue #1121](https://github.com/Mottie/tablesorter/issues/1121).
-* Grunt:
-  * Add HTML hint.
