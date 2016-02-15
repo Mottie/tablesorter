@@ -1902,6 +1902,7 @@
 		},
 
 		applyWidgetId : function( table, id, init ) {
+			table = $(table)[0];
 			var applied, time, name,
 				c = table.config,
 				wo = c.widgetOptions,

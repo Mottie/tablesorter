@@ -177,12 +177,10 @@
 			// Exterminate, annhilate, destroy! http://www.youtube.com/watch?v=LOqn8FxuyFs
 			var $t = $(this);
 			if (/Destroy/.test( $t.text() )){
-				$table[0].config.widgets = ['zebra'];
 				$table.trigger('destroyPager');
 				$t.text('Restore Pager');
 			} else {
-				$table[0].config.widgets = ['zebra', 'pager'];
-				$table.trigger('applyWidgets');
+				$('table').trigger('applyWidgetId', 'pager');
 				$t.text('Destroy Pager');
 			}
 			return false;
@@ -233,6 +231,7 @@
 			<em>NOTE!</em>
 		</p>
 		<ul>
+			<li>In <span class="version updated">v2.25.4</span>, updated example to use <code>applyWidgetId</code> to re-apply the pager widget after being destroyed.</li>
 			<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
 			<li>In <span class="version">v2.19.0</span>, added <code>pageAndSize</code> method which allows setting both the pager page &amp; size.</li>
 			<li>In <span class="version">v2.17.6</span>, added <code>{startRow:input}</code> and <code>{page:input}</code> variables to the <code>output</code> option.<p></p></li>

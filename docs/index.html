@@ -5132,19 +5132,20 @@ $.tablesorter.updateCell( config, $cell, resort, callback );</pre>
 
 			<tr id="applywidgetid">
 				<td><a href="#" class="permalink">applyWidgetId</a></td>
-				<td>Apply the selected widget to the table, but the widget will not continue to be applied after each sort. See the example, it's easier than describing it (<span class="version updated">v2.25.0</span>).
+				<td>Apply the selected widget to the table, but the widget will not continue to be applied after each sort. See the example, it's easier than describing it (<span class="version updated">v2.25.4</span>).
 					<div class="collapsible">
+						<p>In <span class="version updated">v2.25.4</span>, the direct method will now correctly accept <code>$('table')</code>. Previously, only <code>$('table')[0]</code> would work.</p>
 						<p>In <span class="version updated">v2.25.0</span>, this method ensures that the widget initialization code is executed as well as the format function. So now a widget that was not previously initialized or had been previously removed, can be reapplied.</p>
 						<p>Only <em>one</em> widget can be applied at a time using this method.</p>
 						<h4>Direct method:</h4>
-						<pre class="prettyprint lang-js">$.tablesorter.applyWidgetId( $( 'table' ), 'zebra' );</pre>
+						<pre class="prettyprint lang-js">$.tablesorter.applyWidgetId( $('table'), 'zebra' );</pre>
 						<h4>Triggered event method:</h4>
 						<pre class="prettyprint lang-js">$(function(){
   // initialize tablesorter without the widget
-  $("table").tablesorter();
+  $('table').tablesorter();
 
   // click a button to apply the zebra striping
-  $("button").click(function(){
+  $('button').click(function(){
     $('table').trigger('applyWidgetId', 'zebra');
     return false;
   });
@@ -5367,7 +5368,7 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 						<pre class="prettyprint lang-js">$(function(){
   $('table').trigger('destroyPager');
 });</pre>
-						The only way to restore the pager is to re-initialize the pager addon
+						The only way to restore the pager addon is to re-initialize the pager addon:
 						<br>
 						<pre class="prettyprint lang-js">$(function(){
   $('table').tablesorterPager(pagerOptions);
