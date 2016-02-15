@@ -45,7 +45,7 @@
 						selection.addRange( range );
 					}
 				}
-			// need delay of at least 100ms or last contenteditable will get refocused
+				// need delay of at least 100ms or last contenteditable will get refocused
 			}, 100 );
 		},
 
