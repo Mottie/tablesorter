@@ -92,9 +92,11 @@
 			return hours + ':' + min + ( wo.group_time24Hour ? '' : ' ' + ( suffix || '' ) );
 		},
 
-		update : function(table, c, wo) {
-			if ($.isEmptyObject(c.cache)) { return; }
-			var hasSort = typeof c.sortList[0] !== 'undefined',
+		update : function(table) {
+			if ($.isEmptyObject(table.config.cache)) { return; }
+			var c = table.config,
+				wo = c.widgetOptions,
+				hasSort = typeof c.sortList[0] !== 'undefined',
 				data = {},
 				column = $.isArray( wo.group_forceColumn ) && typeof wo.group_forceColumn[0] !== 'undefined' ?
 					( wo.group_enforceSort && !hasSort ? -1 : wo.group_forceColumn[0] ) :
@@ -278,14 +280,14 @@
 				tsg.clearSavedGroups(table);
 			});
 			c.$table.on('pagerChange.tsgrouping', function(){
-				tsg.update(table, c, wo);
+				tsg.update(table);
 			});
 		},
 
 		clearSavedGroups: function(table){
 			if (table && ts.storage) {
 				ts.storage(table, 'tablesorter-groups', '');
-				tsg.update(table, table.config, table.config.widgetOptions);
+				tsg.update(table);
 			}
 		}
 
@@ -330,7 +332,7 @@
 			tsg.bindEvents(table, c, wo);
 		},
 		format: function(table, c, wo) {
-			tsg.update(table, c, wo);
+			tsg.update(table);
 		},
 		remove : function(table, c, wo){
 			c.$table
