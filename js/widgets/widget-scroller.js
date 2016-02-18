@@ -214,6 +214,7 @@
 			maxHt = wo.scroller_height || 300;
 
 			$hdr = $( '<table class="' + $table.attr( 'class' ) + '" cellpadding=0 cellspacing=0>' +
+				$table.children( 'caption' )[ 0 ].outerHTML +
 				$table.children( 'thead' )[ 0 ].outerHTML + '</table>' );
 			wo.scroller_$header = $hdr.addClass( c.namespace.slice( 1 ) + '_extra_table' );
 
@@ -260,9 +261,8 @@
 			}
 
 			$table
-				.find( 'thead' )
+				.children( 'thead, caption' )
 				.addClass( tscss.scrollerHideElement );
-
 			tbHt = $tableWrap.parent().height();
 
 			// The header will always jump into view if scrolling the table body
@@ -444,7 +444,7 @@
 				.width( setWidth + temp );
 
 			// hide original table thead
-			$table.children( 'thead' ).addClass( tscss.scrollerHideElement );
+			$table.children( 'thead, caption' ).addClass( tscss.scrollerHideElement );
 
 			// update fixed column sizes
 			tsScroller.updateFixed( c, wo );
@@ -478,6 +478,8 @@
 				.addClass( tscss.scrollerFixed )
 				.removeClass( tscss.scrollerWrap )
 				.attr( 'id', '' );
+
+			$fixedColumn.find('caption').html('&nbsp;');
 
 			if ( wo.scroller_addFixedOverlay ) {
 				$fixedColumn.append( '<div class="' + tscss.scrollerFixedPanel + '">' );
