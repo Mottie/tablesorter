@@ -443,7 +443,7 @@
 				p = c.pager,
 				namespace = c.namespace + 'pager',
 				sz = tsp.parsePageSize( c, p.size, 'get' ); // don't allow dividing by zero
-			if ( wo.pager_countChildRows ) { t.push( c.cssChildRow ); }
+			if ( wo.pager_countChildRows ) { t[ t.length ] = c.cssChildRow; }
 			p.$size
 				.add( p.$goto )
 				.removeClass( wo.pager_css.disabled )
@@ -542,10 +542,10 @@
 				optionPagesStartPage = largeCollection ? skipSetSize : 1;
 
 			for ( i = optionPagesStartPage; i <= pg; ) {
-				optionPages.push( i );
+				optionPages[ optionPages.length ] = i;
 				i = i + ( largeCollection ? skipSetSize : 1 );
 			}
-			optionPages.push( pg );
+			optionPages[ optionPages.length ] = pg;
 
 			if ( largeCollection ) {
 				focusOptionPages = [];
@@ -558,7 +558,7 @@
 				if ( endPage > pg ) { endPage = pg; }
 				// construct an array to get a focus set around the current page
 				for ( i = startPage; i <= endPage ; i++ ) {
-					focusOptionPages.push( i );
+					focusOptionPages[ focusOptionPages.length ] = i;
 				}
 
 				// keep unique values
@@ -649,7 +649,7 @@
 							} else {
 								$rows[ rowIndex ].style.display = ( size >= start && size < end ) ? '' : 'none';
 								if ( last !== size && size >= start && size < end ) {
-									p.cacheIndex.push( rowIndex );
+									p.cacheIndex[ p.cacheIndex.length ] = rowIndex;
 									last = size;
 								}
 								// don't count child rows
@@ -875,7 +875,7 @@
 				sortCol = sortCol[ 1 ];
 				len = sortList.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					arry.push( sortCol + '[' + sortList[ indx ][ 0 ] + ']=' + sortList[ indx ][ 1 ] );
+					arry[ arry.length ] = sortCol + '[' + sortList[ indx ][ 0 ] + ']=' + sortList[ indx ][ 1 ];
 				}
 				// if the arry is empty, just add the col parameter... '&{sortList:col}' becomes '&col'
 				url = url.replace( /\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join( '&' ) : sortCol );
@@ -886,7 +886,7 @@
 				len = filterList.length;
 				for ( indx = 0; indx < len; indx++ ) {
 					if ( filterList[ indx ] ) {
-						arry.push( filterCol + '[' + indx + ']=' + encodeURIComponent( filterList[ indx ] ) );
+						arry[ arry.length ] = filterCol + '[' + indx + ']=' + encodeURIComponent( filterList[ indx ] );
 					}
 				}
 				// if the arry is empty, just add the fcol parameter... '&{filterList:fcol}' becomes '&fcol'
@@ -945,7 +945,7 @@
 						count++;
 						if ( count > s && added <= e ) {
 							added++;
-							p.cacheIndex.push( index );
+							p.cacheIndex[ p.cacheIndex.length ] = index;
 							$tb.append( rows[ index ] );
 						}
 					}
@@ -1015,7 +1015,7 @@
 						normalized = c.cache[ 0 ].normalized;
 					p.totalRows = normalized.length;
 					for ( index = 0; index < p.totalRows; index++ ) {
-						rows.push( normalized[ index ][ c.columns ].$row );
+						rows[ rows.length ] = normalized[ index ][ c.columns ].$row;
 					}
 					c.rowsCopy = rows;
 					tsp.moveToPage( c, p, true );
