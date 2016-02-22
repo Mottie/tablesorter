@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;( function( $ ){
+;( function( $ ) {
 	'use strict';
 
 	var tse = $.tablesorter.editable = {
@@ -165,7 +165,7 @@
 					// prevent enter from adding into the content
 					$this
 						.off( 'keydown' + namespace )
-						.on( 'keydown' + namespace, function( e ){
+						.on( 'keydown' + namespace, function( e ) {
 							if ( wo.editable_enterToAccept && e.which === 13 && !e.shiftKey ) {
 								e.preventDefault();
 							}
@@ -256,6 +256,18 @@
 						// restore original content on blur
 						$this.html( $this.data( 'original' ) );
 					}
+				})
+				// paste plain text from Excel - fixes #994
+				.on('paste' + namespace, '[contenteditable]', function() {
+					var content,
+						$this = $(this);
+					// setTimeout needed to get pasted-in content
+					setTimeout(function() {
+						if ($this.is(':focus')) {
+							content = '<div>' + $this.html() + '</div>';
+							$this.html( $(content).text().trim() );
+						}
+					}, 0);
 				});
 		},
 		destroy : function( c, wo ) {
@@ -265,7 +277,7 @@
 			tmp = ( 'updateComplete pagerComplete '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
 			c.$table.off( tmp );
 
-			tmp = ( 'focus blur focusout keydown '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
+			tmp = ( 'focus blur focusout keydown paste '.split( ' ' ).join( namespace + ' ' ) ).replace( /\s+/g, ' ' );
 			c.$tbodies
 				.off( tmp )
 				.find( cols.join( ',' ) )
@@ -284,14 +296,14 @@
 			editable_autoResort    : false,
 			editable_wrapContent   : '<div>', // wrap the cell content... makes this widget work in IE, and with autocomplete
 			editable_trimContent   : true,    // trim content inside of contenteditable ( remove tabs & carriage returns )
-			editable_validate      : null,    // function( text, originalText ){ return text; }
+			editable_validate      : null,    // function( text, originalText ) { return text; }
 			editable_focused       : null,    // function( text, columnIndex, $element ) {}
 			editable_blur          : null,    // function( text, columnIndex, $element ) { }
 			editable_selectAll     : false,   // true/false or function( text, columnIndex, $element ) { return true; }
 			editable_noEdit        : 'no-edit',
 			editable_editComplete  : 'editComplete'
 		},
-		init: function( table, thisWidget, c, wo ){
+		init: function( table, thisWidget, c, wo ) {
 			if ( !wo.editable_columns.length ) { return; }
 			tse.update( c, wo );
 			tse.bindEvents( c, wo );
