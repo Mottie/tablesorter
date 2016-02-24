@@ -7475,7 +7475,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>key</code> - name of the variable to save</li>
-							<li><code>value</code> - value of the variable that is saved (for saving only); set to <code>null</code> if wanting to get a value with options.</li>
+							<li><code>value</code> - value of the variable that is saved (for saving only); set as <code>undefined</code> if wanting to get a value with options.</li>
 							<li><code>options</code> - storage options; see below</li>
 						</ul>
 						This function attempts to give every table a unique identifier using both the page url and table id (or index on the page if no id exists), by default. Here is a usage example and a look at what is stored within the local storage:
@@ -7522,7 +7522,7 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						<br>
 						The <a href="#widget-storage-fixed-url"><code>storage_fixedUrl</code></a> widget option allows you to override the current page url (it doesn't need to be a url, just some constant value) and save data for multiple tables across a domain. The value from this option has a lower priority than the <code>options</code> id or group settings (see priority list above).<br>
 						<br>
-						When using the storage utility to <em>get</em> a value <em>and</em> use custom table options, set the <code>value</code> parameter to <code>null</code>.<br>
+						When using the storage utility to <em>get</em> a value <em>and</em> use custom table options, set the <code>value</code> parameter as <code>undefined</code>.<br>
 						<br>
 						Lastly, this storage utility function needs the <code>parseJSON</code> function available in jQuery v1.4.1+.
 					</div>
