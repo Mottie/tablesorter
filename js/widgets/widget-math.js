@@ -21,7 +21,7 @@
 		invalid : function( c, name, errorIndex ) {
 			// name = function returning invalid results
 			// errorIndex = math.error index with an explanation of the error
-			console.log( name, math.error[ errorIndex ] );
+			console.warn( name, math.error[ errorIndex ] );
 			return c && c.widgetOptions.math_none || ''; // text for cell
 		},
 
@@ -177,9 +177,7 @@
 		},
 
 		setColumnIndexes : function( c ) {
-			c.$table.after( '<div id="_tablesorter_table_placeholder"></div>' );
-			// detach table from DOM to speed up column indexing
-			var $table = c.$table.detach(),
+			var $table = c.$table,
 				last = 1,
 				// only target rows with a colspan or rows included in a rowspan
 				$rows = $table.children( 'tbody' ).children().filter( function() {
@@ -205,9 +203,6 @@
 			// to every tbody cell, just the ones where the .cellIndex property doesn't match
 			// the calculated cell index - hopefully fixes the lag issue in #1048
 			ts.computeColumnIndex( $rows, c );
-			$( '#_tablesorter_table_placeholder' )
-				.after( $table )
-				.remove();
 		},
 
 		getCellIndex : function( $cell ) {
