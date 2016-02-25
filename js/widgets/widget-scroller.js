@@ -248,8 +248,14 @@
 				.wrap( '<div class="' + tscss.scrollerHeader + '" />' )
 				.find( '.' + tscss.header );
 
-			// use max-height, so the height resizes dynamically while filtering
-			$table.wrap( '<div class="' + tscss.scrollerTable + '" style="max-height:' + maxHt + 'px;" />' );
+			// if max-height is greater than 0 use max-height, so the height resizes dynamically while filtering
+			// else let the table not have a vertical scroll
+			if(maxHt > 0){
+				$table.wrap( '<div class="' + tscss.scrollerTable + '" style="max-height:' + maxHt + 'px;" />' );
+			}
+			else {
+				$table.wrap( '<div class="' + tscss.scrollerTable + '" />' );	
+			}
 			$tableWrap = $table.parent();
 
 			// make scroller header sortable
