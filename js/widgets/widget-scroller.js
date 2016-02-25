@@ -212,9 +212,10 @@
 			}
 
 			maxHt = wo.scroller_height || 300;
+			tmp = $table.children( 'caption' );
 
 			$hdr = $( '<table class="' + $table.attr( 'class' ) + '" cellpadding=0 cellspacing=0>' +
-				$table.children( 'caption' )[ 0 ].outerHTML +
+				( tmp.length ? tmp[ 0 ].outerHTML : '' ) +
 				$table.children( 'thead' )[ 0 ].outerHTML + '</table>' );
 			wo.scroller_$header = $hdr.addClass( c.namespace.slice( 1 ) + '_extra_table' );
 
@@ -254,7 +255,7 @@
 				$table.wrap( '<div class="' + tscss.scrollerTable + '" style="max-height:' + maxHt + 'px;" />' );
 			}
 			else {
-				$table.wrap( '<div class="' + tscss.scrollerTable + '" />' );	
+				$table.wrap( '<div class="' + tscss.scrollerTable + '" />' );
 			}
 			$tableWrap = $table.parent();
 
