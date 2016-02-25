@@ -186,7 +186,7 @@
 		},
 
 		setup : function( c, wo ) {
-			var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp, detectedWidth,
+			var tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp, detectedWidth,
 				$win = $( window ),
 				tsScroller = ts.scroller,
 				namespace = c.namespace + 'tsscroller',
@@ -211,7 +211,6 @@
 				wo.scroller_barSetWidth = detectedWidth !== null ? detectedWidth : 15;
 			}
 
-			maxHt = wo.scroller_height || 300;
 			tmp = $table.children( 'caption' );
 
 			$hdr = $( '<table class="' + $table.attr( 'class' ) + '" cellpadding=0 cellspacing=0>' +
@@ -251,12 +250,8 @@
 
 			// if max-height is greater than 0 use max-height, so the height resizes dynamically while filtering
 			// else let the table not have a vertical scroll
-			if(maxHt > 0){
-				$table.wrap( '<div class="' + tscss.scrollerTable + '" style="max-height:' + maxHt + 'px;" />' );
-			}
-			else {
-				$table.wrap( '<div class="' + tscss.scrollerTable + '" />' );
-			}
+			$table.wrap( '<div class="' + tscss.scrollerTable +
+				( wo.scroller_height > 0 ? '" style="max-height:' + wo.scroller_height + 'px;">' : '">' ) );
 			$tableWrap = $table.parent();
 
 			// make scroller header sortable
