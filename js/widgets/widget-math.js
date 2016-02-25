@@ -48,7 +48,7 @@
 			if ( hasFilter || !isFiltered ) {
 				$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
 				if ( wo.math_ignore.length ) {
-					$cells = $cells.filter( function( indx ) {
+					$cells = $cells.filter( function() {
 						// using $.inArray is not optimal (needed for IE8)
 						return $.inArray( math.getCellIndex( $( this ) ), wo.math_ignore ) === -1;
 					});
@@ -87,7 +87,7 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( function( indx ) {
+					$t = $tr.children().filter( function() {
 						return math.getCellIndex( $( this ) ) === cIndex;
 					});
 					// ignore filtered rows & rows with data-math="ignore" (and starting row)
@@ -99,7 +99,7 @@
 						if ( mathAbove ) {
 							index = 0;
 						} else if ( $t.length ) {
-							arry.push( math.processText( c, $t ) );
+							arry[ arry.length ] = math.processText( c, $t );
 						}
 					}
 					index--;
@@ -115,13 +115,13 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( function( indx ) {
+					$t = $tr.children().filter( function() {
 						return math.getCellIndex( $( this ) ) === cIndex;
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$tr.not( mathIgnore ).length &&
 						$t.length ) {
-						arry.push( math.processText( c, $t ) );
+						arry[ arry.length ] = math.processText( c, $t );
 					}
 				}
 			} else {
@@ -132,13 +132,13 @@
 					if ( hasFilter ) {
 						$tr = $tr.filter( hasFilter );
 					}
-					$t = $tr.children().filter( function( indx ) {
+					$t = $tr.children().filter( function() {
 						return math.getCellIndex( $( this ) ) === cIndex;
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$t.not( mathAttrs.join( ',' ) ).length &&
 						!$t.is( $el ) ) {
-						arry.push( math.processText( c, $t ) );
+						arry[ arry.length ] = math.processText( c, $t );
 					}
 				}
 			}
@@ -168,7 +168,7 @@
 						$t = $cells.eq( cellIndex );
 						col = math.getCellIndex( $t );
 						if ( !$t.filter( '[' + mathAttr + ']' ).length && $.inArray( col, wo.math_ignore ) < 0 ) {
-							arry.push( math.processText( c, $t ) );
+							arry[ arry.length ] = math.processText( c, $t );
 						}
 					}
 				}
@@ -183,7 +183,7 @@
 				last = 1,
 				// only target rows with a colspan or rows included in a rowspan
 				$rows = $table.children( 'tbody' ).children().filter( function() {
-					var cells, indx, len,
+					var cells, indx,
 						$this = $( this ),
 						include = $this.children( '[colspan]' ).length > 0;
 					if ( last > 1 ) {
@@ -250,11 +250,11 @@
 				len = $mathCells.length;
 				// get math filter, if any
 				// hasFilter = $row.attr( mathAttr + '-filter' ) || wo.math_rowFilter;
-				$mathCells.each( function( indx, cell ) {
-					var $cell = $( cell ),
-						filter = $mathCells.eq( indx ).attr( mathAttr + '-filter' ) || wo.math_rowFilter;
+				for (indx = 0; indx < len; indx++) {
+					var $cell = $mathCells.eq( indx ),
+						filter = $cell.attr( mathAttr + '-filter' ) || wo.math_rowFilter;
 					filters[ filter ] = filters[ filter ] ? filters[ filter ].add( $cell ) : $cell;
-				});
+				}
 				$.each( filters, function( hasFilter, $cells ) {
 					changed = math.mathType( c, $cells, [ 'all' ], hasFilter ) || changed;
 				});
@@ -518,7 +518,7 @@
 					modes = [ el ];
 					maxCount = m;
 				} else if ( m === maxCount ) {
-					modes.push( el );
+					modes[ modes.length ] = el;
 					maxCount = m;
 				}
 			}
