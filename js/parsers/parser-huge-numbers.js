@@ -1,4 +1,4 @@
-/*! Parser: hugeNumbers - updated 2/23/2016 (v2.25.5) *//*
+/*! Parser: hugeNumbers - updated 3/1/2016 (v2.25.5) *//*
  * See https://github.com/Mottie/tablesorter/issues/1161
  */
 /*jshint jquery:true */

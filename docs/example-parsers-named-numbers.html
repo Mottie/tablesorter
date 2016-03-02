@@ -13,7 +13,7 @@
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
 	<style>
-	th { width: 50%; }
+	th { width: 33%; }
 	</style>
 
 	<link href="../css/theme.blue.css" rel="stylesheet">
@@ -21,6 +21,7 @@
 
 	<!-- load metric parser -->
 	<script src="../js/parsers/parser-named-numbers.js"></script>
+	<script src="../js/parsers/parser-huge-numbers.js"></script>
 
 	<script id="js">$(function() {
 
@@ -44,6 +45,12 @@
 		<em>NOTE!</em>
 	</p>
 	<ul>
+		<li>In <span class="version">v2.25.5</span>, added an example that uses the huge number parser.
+			<ul>
+				<li>The largest number (<code>MAX_SAFE_INTEGER</code>) that javascript can handle is <code>9,007,199,254,740,991</code>.</li>
+				<li>Anything larger and the number gets rounded off, so that's why this parser was created.</li>
+			</ul>
+		</li>
 		<li>In <span class="version updated">v2.22.0</span>, this parser will now ignore commas, periods and quotes adjacent to the named number word (e.g. "10 million, three...").</li>
 		<li>This parser will convert named numbers into appropriate values so they are sorted correctly.</li>
 		<li>Named numbers include values:
@@ -64,60 +71,74 @@
 		<tr>
 			<th class="sorter-namedNumbers">Numbers</th>
 			<th class="sorter-namedNumbers">Large Numbers</th>
+			<th class="sorter-hugeNumbers">Huge Numbers</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td>5 hundred</td>
 			<td>one hundred and fifty two million</td>
+			<td>110,000,000,000,000,001</td>
 		</tr>
 		<tr>
 			<td>four hundred thousand five hundred fourty three</td>
 			<td>710,231,000</td>
+			<td>110,000,000,000,000,000</td>
 		</tr>
 		<tr>
 			<td>one hundred and fifty five</td>
 			<td>10 million, three hundred sixty five thousand, four hundred and ninety one</td>
+			<td>110,000,000,000,000,005</td>
 		</tr>
 		<tr>
 			<td>negative twelve</td>
 			<td>10 million and three</td>
+			<td>110,000,000,000,000,003</td>
 		</tr>
 		<tr>
 			<td>minus three hundred and fifty seven thousand four hundred and two</td>
 			<td>6 billion eight thousand</td>
+			<td>110,000,000,000,000,012</td>
 		</tr>
 		<tr>
 			<td>zero</td>
 			<td>3 hundred quadrillion</td>
+			<td>110,000,000,000,000,002</td>
 		</tr>
 		<tr>
 			<td>three hundred twenty</td>
 			<td>145 decillion</td>
+			<td>110,000,000,000,000,010</td>
 		</tr>
 		<tr>
 			<td>forty-two</td>
 			<td>700 thousand</td>
+			<td>110,000,000,000,000,007</td>
 		</tr>
 		<tr>
 			<td>ninety-nine thousand nine hundred and ninety-nine</td>
 			<td>2.3 million</td>
+			<td>110,000,000,000,000,009</td>
 		</tr>
 		<tr>
 			<td>2.3 thousand</td>
 			<td>2.3 googl</td>
+			<td>110,000,000,000,000,008</td>
 		</tr>
 		<tr>
 			<td>minus one</td>
 			<td>8 hundred thousand</td>
+			<td>110,000,000,000,000,021</td>
 		</tr>
 		<tr>
 			<td>seven hundred fifty two</td>
 			<td>9 hundred-million</td>
+			<td>110,000,000,000,000,011</td>
 		</tr>
 		<tr>
 			<td>one hundred and thirty-three</td>
 			<td>Twenty-three trillion</td>
+			<td>110,000,000,000,000,100</td>
 		</tr>
 	</tbody>
 </table></div>

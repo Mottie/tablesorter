@@ -92,6 +92,42 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.5">Version 2.25.5</a> (3/1/2016)
+
+* Global:
+  * Replace array push functions in main loops.
+* Docs:
+  * Update storage widget changes.
+  * Various corrections.
+* Editable:
+  * Fix lint issue.
+  * Replace pasted content with plain text. Fixes [issue #994](https://github.com/Mottie/tablesorter/issues/994).
+* Filter:
+  * Correctly use parsed data when set. Fixes [issue #502](https://github.com/Mottie/tablesorter/issues/502).
+  * Add `filter_matchType` option. Fixes [issue #1170](https://github.com/Mottie/tablesorter/issues/1170).
+* Group:
+  * Use non-cached variables when added after core init. Fixes [issue #1158](https://github.com/Mottie/tablesorter/issues/1158).
+* Math:
+  * General cleanup & optimization.
+  * Leave table in place or filter input lost. Fixes [issue #903](https://github.com/Mottie/tablesorter/issues/903).
+* Print:
+  * Stop print event propagation from nested tables. Fixes [issue #1160](https://github.com/Mottie/tablesorter/issues/1160).
+* Scroller:
+  * Move caption to cloned `thead`. Fixes [issue #1141](https://github.com/Mottie/tablesorter/issues/1141).
+  * Update to remove vertical scroll. See [pull #1165](https://github.com/Mottie/tablesorter/pull/1165); thanks [jasongabel](https://github.com/jasongabel)!
+  * Fix js error when no caption exists, oops! See [issue #1141](https://github.com/Mottie/tablesorter/issues/1141).
+  * Tweak code from [pull #1165](https://github.com/Mottie/tablesorter/pull/1165) to allow setting `scroller_height` to zero. Fixes [issue #907](https://github.com/Mottie/tablesorter/issues/907).
+* StickyHeaders:
+  * Fixed memory leak in StickyHeaders. See [pull #1162](https://github.com/Mottie/tablesorter/pull/1162); thanks [Drumsticks1](https://github.com/Drumsticks1)!
+  * Modified StickyHeader widget for better performance. See [pull #1164](https://github.com/Mottie/tablesorter/pull/1164); thanks [Drumsticks1](https://github.com/Drumsticks1)!
+* Storage:
+  * Allow setting a falsy value. Fixes [issue #1163](https://github.com/Mottie/tablesorter/issues/1163).
+* Parser:
+  * Add huge number parser. See [issue #1161](https://github.com/Mottie/tablesorter/issues/1161).
+  * Huge number correction (make JSCS happy).
+* Build:
+  * Update dependencies. Several times!
+
 #### <a name="v2.25.4">Version 2.25.4</a> (2/15/2016)
 
 * Core:
@@ -125,16 +161,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Add clarification about hiding columns. See [issue #1133](https://github.com/Mottie/tablesorter/issues/1133).
 * Build:
   * Update dependencies.
-
-#### <a name="v2.25.2">Version 2.25.2</a> (1/15/2016)
-
-* Docs:
-  * Update main demo & test to use jQuery 3.0.0-beta.
-* Core:
-  * Revert extra header class name updating. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
-* Filter:
-  * Add `filter_resetOnEsc` option. See [issue #1126](https://github.com/Mottie/tablesorter/issues/1126).
-* Output:
-  * `output_saveRows` now accpets a [filter callback function](http://api.jquery.com/filter/#filter-function).
-* Parsers:
-  * checkbox value should no longer change. Fixes [issue #1125](https://github.com/Mottie/tablesorter/issues/1125).
