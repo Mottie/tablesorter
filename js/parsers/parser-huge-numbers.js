@@ -13,7 +13,7 @@
 		format : function( str ) {
 			// add commas every 12 digits; Number.MAX_SAFE_INTEGER is 16 digits long
 			// regex modified from: http://stackoverflow.com/a/2901298/145346
-			return str.replace(/\B(?=(\d{12})+(?!\d))/g, ",");
+			return str.replace(/\B(?=(\d{12})+(?!\d))/g, ',');
 		},
 		type : 'text'
 	});
