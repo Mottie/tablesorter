@@ -1102,7 +1102,7 @@
 				// ignore if filter is empty or disabled
 				if ( data.filter ) {
 					data.cache = data.cacheArray[ columnIndex ];
-					result = data.rawArray[ columnIndex ] || '';
+					result = data.parsed[ columnIndex ] ? data.cache : data.rawArray[ columnIndex ] || '';
 					data.exact = c.sortLocaleCompare ? ts.replaceAccents( result ) : result; // issue #405
 					data.iExact = !tsfRegex.type.test( typeof data.exact ) && wo.filter_ignoreCase ?
 						data.exact.toLowerCase() : data.exact;
