@@ -49,6 +49,7 @@
 		theme: 'blue',
 		widgets: ['formatter', 'filter'],
 		widgetOptions: {
+			filter_matchType : { 'input': 'match', 'select': 'exact' },
 			formatter_column: {
 				'.emphasize' : function( text, data ) {
 					return '<strong>' + text + '</strong>';
@@ -205,7 +206,7 @@ function prettyDate(date){
 	<div id="demo"><table id="table" class="tablesorter">
 	<thead>
 		<tr>
-			<th class="emphasize">Super Hero</th>
+			<th class="emphasize filter-exact">Super Hero</th>
 			<th class="supercar">Super Car</th>
 			<th class="duckify filter-select">Image Links</th>
 			<th class="date">Added</th>

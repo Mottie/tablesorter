@@ -103,6 +103,9 @@
 			// if true, search column content while the user types (with a delay)
 			filter_liveSearch : true,
 
+			// global query settings ('exact' or 'match'); overridden by "filter-match" or "filter-exact" class
+			filter_matchType : { 'input': 'exact', 'select': 'exact' },
+
 			// a header with a select dropdown & this class name will only show available (visible) options within that drop down.
 			filter_onlyAvail : 'filter-onlyAvail',
 
@@ -499,6 +502,18 @@ $(function(){
 						</td>
 					</tr>
 
+					<tr id="filter-matchtype">
+						<td><a href="#" class="permalink">filter_matchType</a></td>
+						<td>{ 'input': 'exact', 'select': 'exact' }</td>
+						<td>
+							This option sets the global setting that applied to either input or select filters (<span class="version">v2.25.5</span>)
+							<div class="collapsible">
+							<br>
+							There are only two options: "exact" and "match"; and it defaults to "exact" if anything else is entered.
+							</div>
+						</td>
+					</tr>
+
 					<tr id="filter-only-avail">
 						<td><span class="permalink">filter_onlyAvail</span></td>
 						<td>'filter-onlyAvail'</td>
@@ -591,6 +606,7 @@ $(function(){
 		<div>
 			Class names that can be added to the <code>th</code> header cells:
 			<ul>
+				<li><code>filter-exact</code> - applies to the column where the user can use the logical "or" or "and" search. This does the opposite of the "filter-match" class, and overrides it if applied.</li>
 				<li><code>filter-false</code> - disable the filter for a specific header column.</li>
 				<li><code>filter-select</code> - build a default select box for a column (shows unique column content). See the <a href="example-widget-filter-custom.html">custom filter widget</a> demo for an example.</li>
 				<li><code>filter-select-nosort</code> - when a default select box is built, this option prevents the sorting of select options leaving them in their original table order (<span class="version">v2.16.3</span>).</li>
