@@ -15,11 +15,17 @@
 				$.event.special.scrollstop.latency = wo.lazyload_latency || 250;
 			}
 			ts.lazyload.update( c, wo );
-			var events = [ wo.lazyload_update, 'pagerUpdate', wo.columnSelector_updated || 'columnUpdate', '' ]
-				.join( c.namespace + 'lazyload ' );
-			c.$table.on( events, function() {
-				ts.lazyload.update( c, c.widgetOptions );
-			});
+			var namespace = c.namespace + 'lazyload ',
+				events = [ wo.lazyload_update, 'pagerUpdate', wo.columnSelector_updated || 'columnUpdate', '' ]
+					.join( namespace );
+			c.$table
+				.on( events, function() {
+					ts.lazyload.update( c, c.widgetOptions );
+				})
+				.on( 'filterEnd' + namespace, function() {
+					// give lazyload a nudge after filtering the table. Fixes #1169
+					$(window).scroll();
+				});
 		},
 		update : function( c, wo ) {
 			// add '.' if not already included
