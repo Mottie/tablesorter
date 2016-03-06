@@ -17,12 +17,13 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
 	<script src="../js/widgets/widget-lazyload.js"></script>
 
 	<script id="js">$(function() {
 	$("table").tablesorter({
 		theme : 'blue',
-		widgets : [ 'lazyload', 'zebra' ],
+		widgets : [ 'lazyload', 'filter', 'zebra' ],
 		widgetOptions : {
 			// widget options
 			lazyload_imageClass     : 'lazy',
@@ -35,7 +36,7 @@
 			lazyload_effect         : 'show',
 			lazyload_container      : window,
 			lazyload_data_attribute : 'original',
-			lazyload_skip_invisible : false,
+			lazyload_skip_invisible : true,
 			lazyload_appear         : function( elements_left, settings ) {
 				// callback fired when image is in view, but before it is loaded
 				$(this).addClass( 'tablesorter-processing' );
@@ -238,10 +239,11 @@
 					</tr>
 					<tr id="lazyload_skip_invisible">
 						<td><a href="#" class="permalink">lazyload_skip_invisible</a></td>
-						<td><code>false</code></td>
+						<td><code>true</code></td>
 						<td>
-							There are cases when you have images which are in viewport but not <code>:visible</code>.
+							There are cases when you have images which are in viewport but not <code>:visible</code> (<span class="version updated">v2.25.6</span>).
 							<div class="collapsible">
+								<p>In <span class="version updated">v2.25.6</span>, change this default value to <code>true</code> to better work with the filter widget.</p>
 								<p>To improve performance you can ignore <code>.not(":visible")</code> images by setting this option to <code>true</code>.</p>
 								For more details, see the <a class="external" href="http://www.appelsiini.net/projects/lazyload#dealing-with-invisible-images">main documentation</a>.
 							</div>

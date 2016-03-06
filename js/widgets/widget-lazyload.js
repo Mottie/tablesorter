@@ -63,7 +63,7 @@
 			lazyload_effect         : 'show',
 			lazyload_container      : window,
 			lazyload_data_attribute : 'original',
-			lazyload_skip_invisible : false,
+			lazyload_skip_invisible : true,
 			lazyload_appear         : null,
 			lazyload_load           : null,
 			lazyload_placeholder    : 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
