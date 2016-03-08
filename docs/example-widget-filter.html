@@ -22,6 +22,7 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-storage.js"></script>
 	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script id="js">$(function() {
@@ -153,6 +154,18 @@
 
 	});
 
+	// Clear stored filters - added v2.25.6
+	$('.resetsaved').click(function(){
+		$('#table').trigger('filterResetSaved');
+
+		// show quick popup to indicate something happened
+		var $message = $('<span class="results"> Reset</span>').insertAfter(this);
+		setTimeout(function(){
+			$message.remove();
+		}, 500);
+		return false;
+	});
+
 	// External search
 	// buttons set up like this:
 	// <button type="button" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
@@ -234,6 +247,7 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.25.6</span>, added <a class="intlink" href="#methods"><code>filterResetSaved</code></a> method to clear stored filter values.</li>
 				<li>In <span class="version">v2.25.2</span>, added <a class="intlink" href="#filter-resetonesc"><code>filter_resetOnEsc</code></a> option.</li>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
@@ -242,22 +256,22 @@ $(function(){
 						<li>Added the ability to nest filter types with a logical "OR" or a logical "AND". Try these filters: <button data-filter-column="1">a && !o</button> (<span class="label warning">*NOTE*</span> try this with and without the filter-match class applied), <button data-filter-column="3">&lt20 or &gt;40</button> or <button data-filter-column="3">&gt;20 && &lt;40</button></li>
 					</ul>
 				</li>
-				<li>In <span class="version">v2.22.0</span>
-					<ul>
-						<li>Regex filter searches now cache the created regex object for each query to optimize speed & a regex search now properly uses case-sensitive content.</li>
-						<li>Add <code>data</code> parameter to <a class="intlink" href="#filter-functions"><code>filter_functions</code></a> (<a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">get more details</a>).</li>
-						<li>Any match searches which target specific columns will no longer save each filter to its respective column; see <a href="example-widget-filter-any-match.html#anymatch_searches">"AnyMatch Searches"</a> documentation.</li>
-						<li>Operator filter searchs now ignore empty strings (because <code>"" &lt; 10</code> is <code>true</code>).</li>
-						<li>Added <a class="intlink" href="#filter-child-by-column"><code>filter_childByColumn</code></a> option which allows the filtering columns in both the parent & child rows. Demo added to the <a href="example-child-rows-filtered.html#child-by-column">filtered child rows demo</a></li>
-					</ul>
-				</li>
-				<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
 			</ul>
 
 			<div class="accordion start-closed">
 				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 				<div>
 					<ul>
+						<li>In <span class="version">v2.22.0</span>
+							<ul>
+								<li>Regex filter searches now cache the created regex object for each query to optimize speed & a regex search now properly uses case-sensitive content.</li>
+								<li>Add <code>data</code> parameter to <a class="intlink" href="#filter-functions"><code>filter_functions</code></a> (<a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types">get more details</a>).</li>
+								<li>Any match searches which target specific columns will no longer save each filter to its respective column; see <a href="example-widget-filter-any-match.html#anymatch_searches">"AnyMatch Searches"</a> documentation.</li>
+								<li>Operator filter searchs now ignore empty strings (because <code>"" &lt; 10</code> is <code>true</code>).</li>
+								<li>Added <a class="intlink" href="#filter-child-by-column"><code>filter_childByColumn</code></a> option which allows the filtering columns in both the parent & child rows. Demo added to the <a href="example-child-rows-filtered.html#child-by-column">filtered child rows demo</a></li>
+							</ul>
+						</li>
+						<li>In <span class="version updated">v2.18.0</span>, added <code>filter_cellFilter</code> &amp; the ability to set multiple "any" match columns for an external search (see the <a href="example-widget-filter-external-inputs.html">external inputs demo</a> for more details).</li>
 						<li>In <span class="version">v2.17.8</span>, filter selects will default to exact matches unless the header cell has a <a class="intlink" href="#classes"><code>"filter-match"</code></a> class added.</li>
 						<li>In <span class="version">v2.17.1</span>, added a not exact match (<code>!=</code>) filter type.</li>
 						<li>In <span class="version updated">v2.16+</span>,
@@ -642,11 +656,19 @@ $(function(){
 
 			<h3 id="method-reset">filterReset</h3>
 			<blockquote>
-			Use the <code>filterReset</code> method to reset (clear) all of the current filters using this method
+			Use the <code>filterReset</code> method to reset (clear) all of the current filters as follows:
 			<pre class="prettyprint lang-javascript">$('table').trigger('filterReset');</pre>
 			or, just add an element to your page and point to it by setting the <code>filter_reset</code> option, to allow user interaction.
 			<p></p>
 			<span class="label label-info">*NOTE*</span> delegated event bindings are used so these "reset" elements can be dynamically added and removed from the document.
+			</blockquote>
+
+			<h3 id="method-reset">filterResetSaved</h3>
+			<blockquote>
+			Use the <code>filterResetSaved</code> method to reset (clear) the saved filters (in storage) as follows (<span class="version">v2.25.6</span>):
+			<pre class="prettyprint lang-javascript">// equivalent to:
+// $.tablesorter.storage( $('#table'), 'tablesorter-filters', '' );
+$('#table').trigger('filterResetSaved');</pre>
 			</blockquote>
 
 			<h3 id="method-search">Search</h3>
@@ -764,8 +786,8 @@ $.extend($.tablesorter.language, {
 						<li>So you will need to escape any special characters contained in these values (e.g. <code>. \ + * ? [ ^ ] $ ( ) { } = ! &lt; &gt; | : -</code>).</li>
 						<li>This function might help (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Using_special_characters">ref</a>):
 							<pre class="prettyprint lang-js">function escapeRegExp( string ) {
-		  return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
-		}</pre>
+  return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' );
+}</pre>
 						</li>
 					</ul>
 				</li>
@@ -783,6 +805,7 @@ $.extend($.tablesorter.language, {
 
 	<div id="demo">Search <button type="button" data-filter-column="5" data-filter-text="2?%">2?%</button> in the Discount column<br>
 <button type="button" class="reset">Reset</button> <!-- targeted by the "filter_reset" option -->
+<button type="button" class="resetsaved" title="Reload the page to see that the saved filters have cleared">Reset Saved Filters</button>
 
 <table id="table" class="tablesorter">
 	<thead>

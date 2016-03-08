@@ -402,8 +402,8 @@
 				tsf.buildRow( table, c, wo );
 			}
 
-			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '
-				.split( ' ' ).join( c.namespace + 'filter ' );
+			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
+				'filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table.bind( txt, function( event, filter ) {
 				val = wo.filter_hideEmpty &&
 					$.isEmptyObject( c.cache ) &&
@@ -417,6 +417,8 @@
 				if ( event.type === 'filterReset' ) {
 					c.$table.find( '.' + tscss.filter ).add( wo.filter_$externalFilters ).val( '' );
 					tsf.searching( table, [] );
+				} else if ( event.type === 'filterResetSaved' ) {
+					ts.storage( table, 'tablesorter-filters', '' );
 				} else if ( event.type === 'filterEnd' ) {
 					tsf.buildDefault( table, true );
 				} else {
