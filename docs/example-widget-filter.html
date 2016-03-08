@@ -449,9 +449,15 @@ $(function(){
 					</tr>
 
 					<tr id="filter-filtered-row">
-						<td><span class="permalink">filter_filteredRow</span></td>
+						<td><a href="#"  class="permalink">filter_filteredRow</a></td>
 						<td>'filtered'</td>
-						<td>Css class name added to filtered rows (rows that are not showing); needed by pager plugin.</td>
+						<td>
+							CSS class name added to filtered rows (rows that are not showing); needed by pager plugin.
+							<div class="collapsible">
+								<br>
+								If modifying this definition, make sure that the new class is set to <code>display: none;</code> to hide the filtered rows.
+							</div>
+						</td>
 					</tr>
 
 					<tr id="filter-formatter">
