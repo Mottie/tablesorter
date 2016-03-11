@@ -72,6 +72,8 @@ If you would like to contribute, please...
 
 ### Questions?
 
+[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
+
 * Check the [FAQ](//github.com/Mottie/tablesorter/wiki/FAQ) page.
 * Search the [main documentation](//mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
 * Search the [issues](//github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
@@ -87,6 +89,13 @@ If you would like to contribute, please...
 [bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
 [zenhub-url]: https://zenhub.io
 [zenhub-image]: https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png
+
+[irc-url]: https://www.irccloud.com/#!/ircs://irc.freenode.net:6697/%23tablesorter
+[irc-image]: https://img.shields.io/badge/irc-%23tablesorter-yellowgreen.svg
+[gitter-url]: https://gitter.im/Mottie/tablesorter
+[gitter-image]: https://img.shields.io/badge/GITTER-join%20chat-yellowgreen.svg
+[stackoverflow-url]: http://stackoverflow.com/questions/tagged/tablesorter
+[stackoverflow-image]: https://img.shields.io/badge/stackoverflow-tablesorter-blue.svg
 
 ### Recent Changes
 
