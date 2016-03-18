@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 03-01-2016 (v2.25.5)*/
+/*! tablesorter (FORK) - updated 03-18-2016 (v2.25.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.5 *//*
+/*! TableSorter (FORK) v2.25.6 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -33,7 +33,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.5',
+		version : '2.25.6',
 
 		parsers : [],
 		widgets : [],
@@ -1860,6 +1860,9 @@
 		███████▀ ██ █████▀ ▀████▀ ██████   ██   █████▀
 		*/
 		addWidget : function( widget ) {
+			if ( widget.id && !ts.isEmptyObject( ts.getWidgetById( widget.id ) ) ) {
+				console.warn( '"' + widget.id + '" widget was loaded more than once!' );
+			}
 			ts.widgets[ ts.widgets.length ] = widget;
 		},
 
@@ -1988,6 +1991,8 @@
 						// set priority to 10 if not defined
 						if ( !widget.priority ) { widget.priority = 10; }
 						widgets[ indx ] = widget;
+					} else if ( c.debug ) {
+						console.warn( '"' + names[ indx ] + '" widget code does not exist!' );
 					}
 				}
 				// sort widgets by priority
@@ -3086,7 +3091,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 3/1/2016 (v2.25.5) *//*
+/*! Widget: filter - updated 3/18/2016 (v2.25.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3126,7 +3131,7 @@
 			filter_defaultFilter : {},    // add a default column filter type '~{query}' to make fuzzy searches default; '{q1} AND {q2}' to make all searches use a logical AND.
 			filter_excludeFilter : {},    // filters to exclude, per column
 			filter_external      : '',    // jQuery selector string ( or jQuery object ) of external filters
-			filter_filteredRow   : 'filtered', // class added to filtered rows; needed by pager plugin
+			filter_filteredRow   : 'filtered', // class added to filtered rows; define in css with "display:none" to hide the filtered-out rows
 			filter_formatter     : null,  // add custom filter elements to the filter row
 			filter_functions     : null,  // add custom filter functions using this option
 			filter_hideEmpty     : true,  // hide filter row when table is empty
@@ -3490,8 +3495,8 @@
 				tsf.buildRow( table, c, wo );
 			}
 
-			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '
-				.split( ' ' ).join( c.namespace + 'filter ' );
+			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
+				'filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table.bind( txt, function( event, filter ) {
 				val = wo.filter_hideEmpty &&
 					$.isEmptyObject( c.cache ) &&
@@ -3505,6 +3510,8 @@
 				if ( event.type === 'filterReset' ) {
 					c.$table.find( '.' + tscss.filter ).add( wo.filter_$externalFilters ).val( '' );
 					tsf.searching( table, [] );
+				} else if ( event.type === 'filterResetSaved' ) {
+					ts.storage( table, 'tablesorter-filters', '' );
 				} else if ( event.type === 'filterEnd' ) {
 					tsf.buildDefault( table, true );
 				} else {
@@ -3920,7 +3927,7 @@
 			// prevent errors if delay init is set
 			if ( $.isEmptyObject( c.cache ) ) {
 				// update cache if delayInit set & pager has initialized ( after user initiates a search )
-				if ( c.delayInit && c.pager && c.pager.initialized ) {
+				if ( c.delayInit && ( !c.pager || c.pager && c.pager.initialized ) ) {
 					ts.updateCache( c, function() {
 						tsf.checkFilters( table, false, skipFirst );
 					});

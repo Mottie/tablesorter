@@ -1,4 +1,4 @@
-/*! Widget: lazyload (BETA) - 10/31/2015 (v2.24.0) *//*
+/*! Widget: lazyload (BETA) - 3/18/2016 (v2.25.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

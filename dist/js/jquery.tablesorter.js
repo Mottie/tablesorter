@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.5 *//*
+/*! TableSorter (FORK) v2.25.6 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.5',
+		version : '2.25.6',
 
 		parsers : [],
 		widgets : [],
@@ -1858,6 +1858,9 @@
 		███████▀ ██ █████▀ ▀████▀ ██████   ██   █████▀
 		*/
 		addWidget : function( widget ) {
+			if ( widget.id && !ts.isEmptyObject( ts.getWidgetById( widget.id ) ) ) {
+				console.warn( '"' + widget.id + '" widget was loaded more than once!' );
+			}
 			ts.widgets[ ts.widgets.length ] = widget;
 		},
 
@@ -1986,6 +1989,8 @@
 						// set priority to 10 if not defined
 						if ( !widget.priority ) { widget.priority = 10; }
 						widgets[ indx ] = widget;
+					} else if ( c.debug ) {
+						console.warn( '"' + names[ indx ] + '" widget code does not exist!' );
 					}
 				}
 				// sort widgets by priority
