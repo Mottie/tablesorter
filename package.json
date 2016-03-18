@@ -61,13 +61,13 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-qunit": "^1.0.1",
-    "grunt-contrib-uglify": "^1.0.0",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-qunit": "^1.1.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-htmlhint": "^0.9.12",
-    "grunt-jscs": "^2.6.0",
+    "grunt-jscs": "^2.8.0",
     "grunt-string-replace": "^1.2.1"
   }
 }
