@@ -266,6 +266,13 @@
 				}
 			}
 
+			// resize table (Firefox)
+			if (wo.stickyHeaders_addResizeEvent) {
+				$table.bind('resize' + c.namespace + 'stickyheaders', function() {
+					resizeHeader();
+				});
+			}
+
 			$table.triggerHandler('stickyHeadersInit');
 
 		},
@@ -273,7 +280,7 @@
 			var namespace = c.namespace + 'stickyheaders ';
 			c.$table
 				.removeClass('hasStickyHeaders')
-				.unbind( ('pagerComplete filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+				.unbind( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 				.next('.' + ts.css.stickyWrap).remove();
 			if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 			$(window)
