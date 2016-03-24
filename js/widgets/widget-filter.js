@@ -1034,6 +1034,7 @@
 		},
 		matchType: function( c, columnIndex ) {
 			var isMatch,
+				wo = c.widgetOptions,
 				$el = c.$headerIndexed[ columnIndex ];
 			// filter-exact > filter-match > filter_matchType for type
 			if ( $el.hasClass( 'filter-exact' ) ) {
@@ -1042,7 +1043,14 @@
 				isMatch = true;
 			} else {
 				// filter-select is not applied when filter_functions are used, so look for a select
-				$el = c.$filters.eq( columnIndex ).find( '.' + tscss.filter );
+				if ( wo.filter_columnFilters ) {
+					$el = c.$filters
+						.find( '.' + tscss.filter )
+						.add( wo.filter_$externalFilters )
+						.filter( '[data-column="' + columnIndex + '"]' );
+				} else if ( wo.filter_$externalFilters ) {
+					$el = wo.filter_$externalFilters.filter( '[data-column="' + columnIndex + '"]' );
+				}
 				isMatch = $el.length ?
 					c.widgetOptions.filter_matchType[ ( $el[ 0 ].nodeName || '' ).toLowerCase() ] === 'match' :
 					// default to exact, if no inputs found
@@ -1133,7 +1141,7 @@
 
 					// in case select filter option has a different value vs text 'a - z|A through Z'
 					ffxn = wo.filter_columnFilters ?
-						c.$filters.add( c.$externalFilters )
+						c.$filters.add( wo.filter_$externalFilters )
 							.filter( '[data-column="' + columnIndex + '"]' )
 							.find( 'select option:selected' )
 							.attr( 'data-function-name' ) || '' : '';
