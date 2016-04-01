@@ -101,6 +101,14 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.7">Version 2.25.7</a> (4/1/2016)
+
+* Filter: Check match on both internal & external filters. See [issue #1177](https://github.com/Mottie/tablesorter/issues/1177).
+* Lazyload: Trigger window scroll after update. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
+* Scroller: Throttle scroll event. Fixes [issue #1186](https://github.com/Mottie/tablesorter/issues/1186).
+* StickyHeaders: Update on table resize for Firefox. Fixes [issue #1183](https://github.com/Mottie/tablesorter/issues/1183).
+* Grunt: Update dependencies.
+
 #### <a name="v2.25.6">Version 2.25.6</a> (3/18/2016)
 
 * Core:
@@ -153,37 +161,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Huge number correction (make JSCS happy).
 * Build:
   * Update dependencies. Several times!
-
-#### <a name="v2.25.4">Version 2.25.4</a> (2/15/2016)
-
-* Core:
-  * Remove id from widgets option prior to remove function. See [issue #1155](https://github.com/Mottie/tablesorter/issues/1155).
-  * `applyWidgetsId` properly accepts jQuery table element.
-* ColumnSelector:
-  * Clear column container when refreshing. See [pull #1145](https://github.com/Mottie/tablesorter/pull/1145); thanks [eltharin](https://github.com/eltharin)!
-  * Prevent refresh error. See [pull #1145](https://github.com/Mottie/tablesorter/pull/1145).
-* Editable:
-  * Use `execCommand` to select all text, if supported.
-* Filter:
-  * Select defaults to exact match again. Fixes [issue #1136](https://github.com/Mottie/tablesorter/issues/1136).
-  * Fix disable of live search. See [issue #1152](https://github.com/Mottie/tablesorter/issues/1152).
-* Grouping:
-  * Reapply zebra after collapsed group opens. Fixes [issue #1156](https://github.com/Mottie/tablesorter/issues/1156).
-* Pager:
-  * Add `initialRows` option; use when `processAjaxOnInit` set to `false`. See [Stackoverflow](See http://stackoverflow.com/q/34972532/145346).
-  * Prevent js error on successive removal calls. Fixes [issue #1155](https://github.com/Mottie/tablesorter/issues/1155).
-* Docs:
-  * Add `ignoreRow` class to pager row.
-  * Show actual theme names; to use in the `themes` option.
-* Build: Update dependencies.
-* Testing: re-align code.
-
-#### <a name="v2.25.3">Version 2.25.3</a> (1/21/2016)
-
-* Filter:
-  * Check that filter is not undefined before encoding/decoding it & treat null and undefined filters the same. See [pull #1130](https://github.com/Mottie/tablesorter/pull/1130); thanks [tim-schilling](https://github.com/tim-schilling)!
-  * Search delay now works properly. Fixes [issue #1134](https://github.com/Mottie/tablesorter/issues/1134).
-* Docs:
-  * Add clarification about hiding columns. See [issue #1133](https://github.com/Mottie/tablesorter/issues/1133).
-* Build:
-  * Update dependencies.

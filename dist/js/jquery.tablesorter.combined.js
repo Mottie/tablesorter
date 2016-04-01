@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 03-18-2016 (v2.25.6)*/
+/*! tablesorter (FORK) - updated 04-01-2016 (v2.25.7)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.6 *//*
+/*! TableSorter (FORK) v2.25.7 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -33,7 +33,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.6',
+		version : '2.25.7',
 
 		parsers : [],
 		widgets : [],
@@ -3091,7 +3091,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 3/18/2016 (v2.25.6) *//*
+/*! Widget: filter - updated 4/1/2016 (v2.25.7) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -4127,6 +4127,7 @@
 		},
 		matchType: function( c, columnIndex ) {
 			var isMatch,
+				wo = c.widgetOptions,
 				$el = c.$headerIndexed[ columnIndex ];
 			// filter-exact > filter-match > filter_matchType for type
 			if ( $el.hasClass( 'filter-exact' ) ) {
@@ -4135,7 +4136,14 @@
 				isMatch = true;
 			} else {
 				// filter-select is not applied when filter_functions are used, so look for a select
-				$el = c.$filters.eq( columnIndex ).find( '.' + tscss.filter );
+				if ( wo.filter_columnFilters ) {
+					$el = c.$filters
+						.find( '.' + tscss.filter )
+						.add( wo.filter_$externalFilters )
+						.filter( '[data-column="' + columnIndex + '"]' );
+				} else if ( wo.filter_$externalFilters ) {
+					$el = wo.filter_$externalFilters.filter( '[data-column="' + columnIndex + '"]' );
+				}
 				isMatch = $el.length ?
 					c.widgetOptions.filter_matchType[ ( $el[ 0 ].nodeName || '' ).toLowerCase() ] === 'match' :
 					// default to exact, if no inputs found
@@ -4226,7 +4234,7 @@
 
 					// in case select filter option has a different value vs text 'a - z|A through Z'
 					ffxn = wo.filter_columnFilters ?
-						c.$filters.add( c.$externalFilters )
+						c.$filters.add( wo.filter_$externalFilters )
 							.filter( '[data-column="' + columnIndex + '"]' )
 							.find( 'select option:selected' )
 							.attr( 'data-function-name' ) || '' : '';
@@ -4900,7 +4908,7 @@
 
 })( jQuery );
 
-/*! Widget: stickyHeaders - updated 3/1/2016 (v2.25.5) *//*
+/*! Widget: stickyHeaders - updated 4/1/2016 (v2.25.7) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -5168,6 +5176,13 @@
 				}
 			}
 
+			// resize table (Firefox)
+			if (wo.stickyHeaders_addResizeEvent) {
+				$table.bind('resize' + c.namespace + 'stickyheaders', function() {
+					resizeHeader();
+				});
+			}
+
 			$table.triggerHandler('stickyHeadersInit');
 
 		},
@@ -5175,7 +5190,7 @@
 			var namespace = c.namespace + 'stickyheaders ';
 			c.$table
 				.removeClass('hasStickyHeaders')
-				.unbind( ('pagerComplete filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+				.unbind( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 				.next('.' + ts.css.stickyWrap).remove();
 			if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 			$(window)
