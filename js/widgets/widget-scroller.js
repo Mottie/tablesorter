@@ -363,7 +363,7 @@
 
 		resize : function( c, wo ) {
 			if ( wo.scroller_isBusy ) { return; }
-			var index, borderWidth, setWidth, $hCells, $bCells, $fCells, $headers, $this, temp,
+			var index, borderWidth, setWidth, $headers, $this, temp,
 				tsScroller = ts.scroller,
 				$container = wo.scroller_$container,
 				$table = c.$table,
@@ -563,6 +563,28 @@
 
 		},
 
+		// https://remysharp.com/2010/07/21/throttling-function-calls
+		throttle : function(fn, threshhold, scope) {
+			threshhold = threshhold || 50;
+			var last, deferTimer;
+			return function() {
+				var context = scope || this,
+					now = +(new Date()),
+				args = arguments;
+				if (last && now < last + threshhold) {
+					// hold on to it
+					clearTimeout(deferTimer);
+					deferTimer = setTimeout(function() {
+						last = now;
+						fn.apply(context, args);
+					}, threshhold);
+				} else {
+					last = now;
+					fn.apply(context, args);
+				}
+			};
+		},
+
 		bindFixedColumnEvents : function( c, wo ) {
 			// update thead & tbody in fixed column
 			var tsScroller = ts.scroller,
@@ -576,10 +598,9 @@
 				.parent()
 				// *** SCROLL *** scroll fixed column along with main
 				.off( events )
-				.on( events, function() {
-					if ( wo.scroller_isBusy ) { return; }
+				.on( events, tsScroller.throttle(function() {
 					// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-					if ( !wo.scroller_isBusy && ( fixedScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) ) {
+					if ( !wo.scroller_isBusy && fixedScroll ) {
 						tableScroll = false;
 						var $this = $( this );
 						$fixedTbody[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
@@ -588,21 +609,20 @@
 							tableScroll = true;
 						}, 20 );
 					}
-				});
+				}));
 			// scroll main along with fixed column
 			$fixedTbody
 				.off( events )
-				.on( events, function() {
+				.on( events, tsScroller.throttle(function() {
 					// using flags to prevent firing the scroll event excessively leading to slow scrolling in Firefox
-					if ( !wo.scroller_isBusy && ( tableScroll || !( tsScroller.isFirefox || tsScroller.isIE ) ) ) {
+					if ( !wo.scroller_isBusy && tableScroll ) {
 						fixedScroll = false;
-						var $this = $( this );
-						c.$table.parent()[0].scrollTop = wo.scroller_saved[1] = $this.scrollTop();
+						c.$table.parent()[0].scrollTop = wo.scroller_saved[1] = $( this ).scrollTop();
 						setTimeout( function() {
 							fixedScroll = true;
 						}, 20 );
 					}
-				})
+				}))
 				.scroll();
 
 			// *** ROW HIGHLIGHT ***
@@ -685,8 +705,7 @@
 			}
 
 			// scroller_fixedColumns
-			var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, $fixHead, $fixBody, $fixFoot,
-				totalRows, row,
+			var index, tbodyIndex, rowIndex, $tbody, $adjCol, $fb, totalRows,
 
 				// source cells for measurement
 				$mainTbodies = wo.scroller_$container
