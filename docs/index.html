@@ -592,7 +592,7 @@
 				<td>Any <code>colspan</code> cells in the tbody may have its content duplicated in the cache for each spanned column (<span class="version">v2.25.0</span>; <span class="version updated">v2.25.8</span>).
 					<div class="collapsible">
 						<p>If <code>true</code>, the cache will contain duplicated cell contents for every column the <code>colspan</code> includes. This makes it easier to sort &amp; filter columns because a cell spanning all columns will only work with one parser.</p>
-						<p>In <span class="version updated">v2.25.8</span>, the contents of cells that are spanned will be set to an empty string only if the <code>textExtraction</code> setting is left as a string. If a function is added, it will be used to attempt to extract other content from the spanned cell (see <a href="">Stackoverflow</a> for an example).</p>
+						<p>In <span class="version updated">v2.25.8</span>, the contents of cells that are spanned will be set to an empty string only if the <code>textExtraction</code> setting is left as a string. If a function is added, it will be used to attempt to extract other content from the spanned cell (see <a href="http://jsfiddle.net/Mottie/aoLgu7f9/18/">demo</a> for an example).</p>
 						<pre class="prettyprint lang-js">// this row: &lt;tr&gt;&lt;td colspan="3"&gt;foo&lt;/td&gt;&lt;td&gt;bar&lt;/td&gt;&lt;/tr&gt; results in this row cache:
 [ 'foo', 'foo', 'foo', 'bar' ] // if duplicateSpan = true
 [ 'foo', '',    '',    'bar' ] // if duplicateSpan = false (no textExtraction function)</pre>
