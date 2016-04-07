@@ -614,7 +614,7 @@ jQuery(function($){
 	});
 
 	QUnit.test( 'colspan parsing', function(assert) {
-		assert.expect(2);
+		assert.expect(3);
 
 		t = [
 			'g1', '6', 'a9', 155, 'l', 'nytimes',
@@ -645,6 +645,35 @@ jQuery(function($){
 			'a', 'b', 'c', ''
 		];
 		assert.cacheCompare( $('#testblock table')[0], 'all', t, 'colspans not duplicated in cache (duplicateSpan:false)' );
+
+		// See http://stackoverflow.com/q/36449711/145346
+		$('#testblock').html('<table class="tablesorter">' +
+			'<thead><tr><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>' +
+			'<tbody>' +
+				'<tr><td>1</td><td colspan="2">2</td><td>3</td></tr>' +
+				'<tr><td colspan="3"><span class="col0">y0</span><span class="col1">y1</span><span class="col2">y2</span></td><td>z</td></tr>' +
+				'<tr><td>a</td><td>b</td><td colspan="2"><span class="col2">c1</span><span class="col3">c2</span></td></tr>' +
+			'</tbody></table>')
+			.find('table')
+			.tablesorter({
+				headers : { '*' : { sorter: 'text' } },
+				textExtraction: function(node, table, cellIndex) {
+					var $span = $(node).find('.col' + cellIndex);
+					if ($span.length) {
+						return $span.text();
+					}
+					return node.textContent;
+				},
+				duplicateSpan: false
+			});
+		t = [
+			'1', '2', '2',  '3',
+			'y0', 'y1',  'y2',  'z',
+			'a', 'b', 'c1', 'c2'
+		];
+		assert.cacheCompare( $('#testblock table')[0], 'all', t, 'colspans not duplicated but textExtraction defined' );
+
+
 
 	});
 
