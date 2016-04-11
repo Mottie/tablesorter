@@ -19,6 +19,9 @@
 .tablesorter-bootstrap .tablesorter-header {
 	cursor: pointer;
 }
+.tablesorter-bootstrap .sorter-false {
+	cursor: default;
+}
 
 .tablesorter-bootstrap .tablesorter-header-inner {
 	position: relative;
