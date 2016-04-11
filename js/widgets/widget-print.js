@@ -1,4 +1,4 @@
-/* Widget: print - updated 3/1/2016 (v2.25.5) *//*
+/* Widget: print - updated 4/11/2016 (v2.25.8) *//*
  * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */

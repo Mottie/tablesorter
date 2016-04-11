@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 04-01-2016 (v2.25.7)*/
+/*! tablesorter (FORK) - updated 04-11-2016 (v2.25.8)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.25.7 *//*
+/*! TableSorter (FORK) v2.25.8 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -39,7 +39,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.25.7',
+		version : '2.25.8',
 
 		parsers : [],
 		widgets : [],
@@ -959,8 +959,15 @@
 								index = 0;
 								while ( index <= span ) {
 									// duplicate text (or not) to spanned columns
-									rowData.raw[ cacheIndex + index ] = c.duplicateSpan || index === 0 ? val : '';
-									cols[ cacheIndex + index ] = c.duplicateSpan || index === 0 ? val : '';
+									// instead of setting duplicate span to empty string, use textExtraction to try to get a value
+									// see http://stackoverflow.com/q/36449711/145346
+									txt = c.duplicateSpan || index === 0 ?
+										val :
+										typeof c.textExtraction !== 'string' ?
+											ts.getElementText( c, cell, cacheIndex + index ) || '' :
+											'';
+									rowData.raw[ cacheIndex + index ] = txt;
+									cols[ cacheIndex + index ] = txt;
 									index++;
 								}
 								cacheIndex += span;
