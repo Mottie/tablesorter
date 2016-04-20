@@ -519,10 +519,10 @@
 				$date.datepicker('setDate', (getdate === '' ? '' : getdate) || null);
 				if (getdate === '') { notrigger = false; }
 				date = $date.datepicker('getDate');
-				query = date ? ( o.endOfDay && /<=/.test(compare) ? date.setHours(23, 59, 59) : date.getTime() ) || '' : '';
+				query = date ? ( o.endOfDay && /<=/.test(compare) ? date.setHours(23, 59, 59, 999) : date.getTime() ) || '' : '';
 				if (date && o.endOfDay && compare === '=') {
 					compare = '';
-					query += ' - ' + date.setHours(23, 59, 59);
+					query += ' - ' + date.setHours(23, 59, 59, 999);
 					notrigger = false;
 				}
 				$cell.find('.dateCompare')
@@ -670,7 +670,7 @@
 					from = $cell.find('.dateFrom').datepicker('getDate'),
 					to = $cell.find('.dateTo').datepicker('getDate');
 				from = validDate(from) ? from.getTime() : '';
-				to = validDate(to) ? ( o.endOfDay ? to.setHours(23, 59, 59) : to.getTime() ) || '' : '';
+				to = validDate(to) ? ( o.endOfDay ? to.setHours(23, 59, 59, 999) : to.getTime() ) || '' : '';
 				range = from ? ( to ? from + ' - ' + to : '>=' + from ) : (to ? '<=' + to : '');
 				$cell.add( $shcell )
 					.find('.dateRange').val(range)
