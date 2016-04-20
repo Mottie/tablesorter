@@ -74,8 +74,8 @@ jQuery(function($){
 					$collapsible.slideToggle();
 				}
 				if ($current.length) {
-					resultPosition = $current.position().top;
-					parentPosition = $collapsible.length ? $current.closest('tr[id]').position().top : resultPosition;
+					resultPosition = $current.offset().top;
+					parentPosition = $collapsible.length ? $current.closest('tr[id]').offset().top : resultPosition;
 					if (parentPosition + $(window).height() < resultPosition) {
 						parentPosition = resultPosition;
 					}
