@@ -828,6 +828,9 @@
 
 			$fixedColumn.removeClass( tscss.scrollerHideElement );
 
+			// adjust caption height, see #1202
+			$fixedColumn.find('caption').height( wo.scroller_$header.find( 'caption' ).height() );
+
 			wo.scroller_isBusy = false;
 
 		},
