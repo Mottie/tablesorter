@@ -128,7 +128,8 @@
 			}
 		},
 		updateHeaderCheckbox = function( $table, checkboxClass ) {
-			var $rows = $table.children( 'tbody' ).children( ':visible' ), // (include child rows?)
+			var ua = window.navigator.userAgent,
+				$rows = $table.children( 'tbody' ).children( ':visible' ), // (include child rows?)
 				len = $rows.length;
 			// set indeterminate state on header checkbox
 			$table.children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
@@ -139,7 +140,8 @@
 					this.checked = allChecked;
 					this.indeterminate = false;
 				} else {
-					this.checked = false; // needed for IE
+					// needed for IE
+					this.checked = !(ua.indexOf('Trident/') > -1 || ua.indexOf('Edge/') > -1);
 					this.indeterminate = true;
 				}
 			});
