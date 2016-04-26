@@ -457,7 +457,7 @@
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns highlight widget</a> (v2.0.17).</li>
 		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.25.1</span>).</li>
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.25.5</span>).</li>
-		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
+		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.25.7</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.25.5</span>).</li>
@@ -521,7 +521,7 @@
 	<h4 id="custom-parsers">Custom Parsers</h4>
 	<ul>
 		<li><a href="example-parsers-duration.html">Countdown parser</a> (<span class="version">v2.19.0</span>).</li>
-		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.24.6</span>; includes weekday, month, two-digit year &amp; <a href="http://sugarjs.com/dates">sugar.js</a> date parsers; a <a href="http://www.datejs.com/">datejs</a> parser is also available).</li>
+		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.24.6</span>; includes weekday, month, two-digit year &amp; <a class="external" href="http://sugarjs.com/dates">sugar.js</a> date parsers; a <a class="external" href="http://www.datejs.com/">datejs</a> parser is also available).</li>
 		<li><a href="example-parsers-date-range.html">Date range parsers</a> (<span class="version">v2.21.0</span>; <span class="version updated">v2.25.0</span>); if filters, include the <a href="example-widget-filter-custom-search2.html">insideRange</a> filter search type.</li>
 		<li><a href="example-parsers-duration.html">Duration parser</a> (<span class="version">v2.17.8</span>).</li>
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
@@ -541,7 +541,7 @@
 	<ul>
 		<li><span class="label label-info">Beta</span> <a href="../beta-testing/example-pager-custom-controls.html">Custom pager control script</a> (<span class="version updated">v2.17.1</span>).</li>
 		<li><span class="label label-info">Alpha</span> <a href="../beta-testing/example-widget-column-reorder.html">Column reorder widget</a> - not working 100% with sticky headers.</li>
-		<li><span class="label label-info">Alpha</span> Column reorder using the <a href="http://stackoverflow.com/a/27770224/145346">dragtable widget</a> (non-mod version).</li>
+		<li><span class="label label-info">Alpha</span> Column reorder using the <a class="external" href="http://stackoverflow.com/a/27770224/145346">dragtable widget</a> (non-mod version).</li>
 	</ul>
 
 	</div>
@@ -1125,7 +1125,7 @@
 					This function is called after content is to the TH tags (after the template is procressed and added). You can use this to modify the HTML in each header tag for additional styling (<span class="version updated">v2.18.0</span>).
 					<div class="collapsible">
 					<br>
-					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).<br>
+					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a class="external" href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).<br>
 					Function parameters:
 					<ul>
 						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
@@ -1372,7 +1372,7 @@ From the example function above, you'll end up with something similar to this HT
 						<li>This option no longer switches the sort to use the <code>String.localeCompare</code> method.</li>
 						<li>When this option is <code>true</code>, the text parsed from table cells will convert accented characters to their equivalent to allow the alphanumeric sort to properly sort.</li>
 						<li>If <code>false</code> (default), any accented characters are treated as their value in the standard unicode order.</li>
-						<li>The following characters are replaced for both upper and lower case (information obtained from <a href="http://sugarjs.com/sorting">sugar.js sorting equivalents</a> table):
+						<li>The following characters are replaced for both upper and lower case (information obtained from <a class="external" href="http://sugarjs.com/sorting">sugar.js sorting equivalents</a> table):
 							<ul>
 								<li><code>&#x00e1;&#x00e0;&#x00e2;&#x00e3;&#x00e4;</code> replaced with <code>a</code></li>
 								<li><code>&#x00e7;</code> replaced with <code>c</code></li>
@@ -1439,17 +1439,23 @@ From the example function above, you'll end up with something similar to this HT
 				<td>
 					Setting this option to <code>true</code> and sorting two rows with exactly the same content, the original sort order is maintained (<span class="version">v2.14</span>).
 					<div class="collapsible"><br>
-						This isn't exactly a <a href="http://en.wikipedia.org/wiki/Unstable_sort#Stability">stable sort</a> because the sort order maintains the original unsorted order when sorting the column in an ascending direction. When sorting the column in a descending order, the opposite of the original unsorted order is returned. If that doesn't make any sense, please refer to <a href="https://github.com/Mottie/tablesorter/issues/419">issue #419</a>.
+						This isn't exactly a <a class="external" href="http://en.wikipedia.org/wiki/Unstable_sort#Stability">stable sort</a> because the sort order maintains the original unsorted order when sorting the column in an ascending direction. When sorting the column in a descending order, the opposite of the original unsorted order is returned. If that doesn't make any sense, please refer to <a href="https://github.com/Mottie/tablesorter/issues/419">issue #419</a>.
 					</div>
 				</td>
 				<td></td>
 			</tr>
 
 			<tr id="sortmultisortkey">
-				<td><span class="permalink">sortMultiSortKey</span></td>
+				<td><a href="#" class="permalink">sortMultiSortKey</a></td>
 				<td>String</td>
 				<td>&quot;shiftKey&quot;</td>
-				<td>The key used to select more than one column for multi-column sorting.  Defaults to the <kbd>Shift</kbd> key.  The other options are <code>&quot;ctrlKey&quot;</code> or <code>&quot;altKey&quot;</code> (<a class="external" href="https://developer.mozilla.org/en/DOM/MouseEvent">reference</a>).</td>
+				<td>
+					The key used to select more than one column for multi-column sorting. Defaults to the <kbd>Shift</kbd> key.
+					<div class="collapsible">
+						<p>The other options include <code>&quot;ctrlKey&quot;</code> or <code>&quot;altKey&quot;</code> (<a class="external" href="https://developer.mozilla.org/en/DOM/MouseEvent">reference</a>)</p>
+						To make a multisort always active, use any of the other event objects that are always <a class="external" href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy">"truthy"</a> like <code>"type"</code> or <code>"bubbles"</code>. See <a href="https://github.com/Mottie/tablesorter/issues/1200">issue #1200</a>).
+					</div>
+				</td>
 				<td><a href="example-option-sort-key.html">Example</a></td>
 			</tr>
 
@@ -1717,7 +1723,7 @@ $(function(){
 				<td>&quot;mousedown&quot;</td>
 				<td>Use this option to change the pointer down event (<span class="version">v2.22.0</span>)
 					<div class="collapsible">
-						<p>Change this option if you're using pointer events (or the <a href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
+						<p>Change this option if you're using pointer events (or the <a class="external" href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
 						<span class="label label-warning">Warning</span> If this option is set to fire multiple events (e.g. <code>'mousedown pointerdown'</code>), sorting may be initialized twice in rapid succession and make it appear that nothing changed.
 					</div>
 				</td>
@@ -1729,7 +1735,7 @@ $(function(){
 				<td>&quot;mouseup&quot;</td>
 				<td>Use this option to change the pointer up event (<span class="version">v2.22.0</span>)
 					<div class="collapsible">
-						<p>Change this option if you're using pointer events (or the <a href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
+						<p>Change this option if you're using pointer events (or the <a class="external" href="https://github.com/jquery/PEP">pointer events polyfill</a>). Add multiple events separated by spaces.</p>
 						<span class="label label-warning">Warning</span> If this option is set to fire multiple events (e.g. <code>'mouseup pointerup'</code>), sorting may be initialized twice in rapid succession and make it appear that nothing changed.
 					</div>
 				</td>
@@ -1744,7 +1750,7 @@ $(function(){
 					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
 					<div class="collapsible">
 					<br>
-					Include a script like <a href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
+					Include a script like <a class="external" href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     textSorter : naturalSort
@@ -2051,7 +2057,7 @@ $(function(){
 				<td>
 					This option is used by multiple parsers to localize the language (<span class="version">v2.24.0</span>; <span class="version updated">v2.24.1</span>).
 					<div class="collapsible"><br>
-						This option is meant to be used with the <a href="https://github.com/jquery/globalize">jQuery Globalize</a> library along with CLDR data.
+						This option is meant to be used with the <a class="external" href="https://github.com/jquery/globalize">jQuery Globalize</a> library along with CLDR data.
 						<p>See the <a href="example-widget-grouping.html#globalization">Globalization</a> section in the group widget demo for details on how to set it up.</p>
 						<p>Currently, the globalize (<code>parser-globalize.js</code>), month (<code>parser-date-month.js</code>) &amp; weekday (<code>parser-date-weekday.js</code>) parsers utilize this option.</p>
 						<pre class="prettyprint lang-js">$(function(){
@@ -2342,7 +2348,7 @@ $(function(){
 					Filter widget: If there are child rows in the table (rows with class name from <a href="#csschildrow"><code>&quot;cssChildRow&quot;</code></a> option) and this option is <code>true</code> and a match is found anywhere in the child row, then it will make that row visible.
 					(Modified v2.1).
 					<div class="collapsible">
-					<p><span class="label label-info">*NOTE*</span> When using this option, please be aware that all child row content will be obtained from each table cell using <code>textContent</code>, so none of the markup will be preserved. Also, carriage returns (<code>&lt;br&gt;</code>) will not be included. To account for the loss of white space, especially after carriage returns, please add an extra space to the end of the line. Using <code>innerText</code>, could have been an option for preserving the white space, but it is not standardized across all browsers (<a href="http://perfectionkills.com/the-poor-misunderstood-innerText/">ref</a>).</p>
+					<p><span class="label label-info">*NOTE*</span> When using this option, please be aware that all child row content will be obtained from each table cell using <code>textContent</code>, so none of the markup will be preserved. Also, carriage returns (<code>&lt;br&gt;</code>) will not be included. To account for the loss of white space, especially after carriage returns, please add an extra space to the end of the line. Using <code>innerText</code>, could have been an option for preserving the white space, but it is not standardized across all browsers (<a class="external" href="http://perfectionkills.com/the-poor-misunderstood-innerText/">ref</a>).</p>
 					Use the <a href="#widget-filter-childrows"><code>filter_childRows</code></a> option to include child row text as follows:
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
@@ -2669,7 +2675,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
       }
     }
   });
-});</pre>Any of the other <a href="http://api.jqueryui.com/spinner/">jQuery UI spinner widget options</a> can also be included.<br>
+});</pre>Any of the other <a class="external" href="http://api.jqueryui.com/spinner/">jQuery UI spinner widget options</a> can also be included.<br>
 							<br>
 						</li>
 						<li>Filter formatter functions include: "uiSpinner", "uiSlider", "uiRange" (uiSlider ranged), "uiDatepicker" (range only), "html5Number", "html5Range" and "html5Color".</li>
@@ -2958,7 +2964,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 	from   : '', // datepicker range "from" placeholder
 	to     : ''  // datepicker range "to" placeholder
 }
-</pre><span class="label label-info">Note:</span> The browser must support the <a href="http://caniuse.com/#feat=input-placeholder">placeholder attribute</a> before it will be visible.
+</pre><span class="label label-info">Note:</span> The browser must support the <a class="external" href="http://caniuse.com/#feat=input-placeholder">placeholder attribute</a> before it will be visible.
 					</div>
 				</td>
 				<td><a href="example-widget-filter-formatter-1.html">Example</a></td>
@@ -2972,7 +2978,7 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 					Filter widget: jQuery selector string of an element used to reset the filters (v2.4; <span class="version updated">v2.16</span>).
 					<div class="collapsible">
 					<p>
-					When this option points to a reset element using a jQuery selector string, it is bound using <a href="http://api.jquery.com/on/#direct-and-delegated-events">event delegation</a>. So if any additional reset elements, with the same class name, are added to the page dynamically, they will be associated with the same table.<br>
+					When this option points to a reset element using a jQuery selector string, it is bound using <a class="external" href="http://api.jquery.com/on/#direct-and-delegated-events">event delegation</a>. So if any additional reset elements, with the same class name, are added to the page dynamically, they will be associated with the same table.<br>
 					<br>
 					For example, add this button (<code>&lt;button class="reset"&gt;Reset&lt;/button&gt;</code>) to the table header, or anywhere else on the page. That element will be used as a reset for all column and quick search filters (clears all fields):
 					</p>
@@ -3125,7 +3131,7 @@ $('table').trigger('search', false);</pre></div>
 						<li><span class="label warning">*NOTE*</span> because this example is providing a fixed select option source, it can not support "filter-onlyAvail" (only show available options after filtering).</li>
 					</ul>
 
-					In <span class="version updated">v2.21.5</span>, this option will now override the <code>filter_function</code> options (<em>so you need to add them back!</em>), allowing the addition of custom select options and still maintain basic filtering action - see <a href="http://jsfiddle.net/Mottie/856bzzeL/117/">this demo</a> (<a href="http://stackoverflow.com/a/29506523/145346">ref</a>).<br>
+					In <span class="version updated">v2.21.5</span>, this option will now override the <code>filter_function</code> options (<em>so you need to add them back!</em>), allowing the addition of custom select options and still maintain basic filtering action - see <a href="http://jsfiddle.net/Mottie/856bzzeL/117/">this demo</a> (<a class="external" href="http://stackoverflow.com/a/29506523/145346">ref</a>).<br>
 					<br>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_selectSource : {
@@ -3974,7 +3980,7 @@ $('table').trigger('search', false);</pre></div>
 					<br>
 					Your server does not need to return a JSON format, if you want to return pure HTML, set the dataType to <code>&quot;html&quot;</code> and modify the <code>ajaxProcessing</code> function to instead work with HTML; then return a jQuery object or apply the HTML to the table yourself.<br>
 					<br>
-					See all possible settings in the <a href="http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings">jQuery.ajax documentation</a>
+					See all possible settings in the <a class="external" href="http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings">jQuery.ajax documentation</a>
 					<pre class="prettyprint lang-js">$(function(){
   $("table")
     .tablesorter()
@@ -4005,7 +4011,7 @@ $('table').trigger('search', false);</pre></div>
 					<br>
 					In <span class="version updated">v2.23.1</span>
 						<ul>
-							<li>A <code>settings</code> parameter was added <em>before</em> the <code>exception</code> parameter to exactly match the parameters returned by the jQuery <a href="http://api.jquery.com/ajaxError/">.ajaxError()</a> method.</li>
+							<li>A <code>settings</code> parameter was added <em>before</em> the <code>exception</code> parameter to exactly match the parameters returned by the jQuery <a class="external" href="http://api.jquery.com/ajaxError/">.ajaxError()</a> method.</li>
 							<li>This function is now always called, even if the <code>$.tablesorter.showError</code> function is called by an external function with only a string.</li>
 						</ul>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxError</code><br>
@@ -4088,7 +4094,7 @@ $('table').trigger('search', false);</pre></div>
 					<br>
 					This function was created and modified to allow you a great deal of flexibility. The only required information that this function needs to return is an array containing the total number of rows, which is needed to calculate total pages.<br>
 					<br>
-					There are numerous examples below. Choosing which one to use is left to you. For more information, please check out related questions on <a href="http://stackoverflow.com/search?q=%5Btablesorter%5D+ajaxProcessing">Stackoverflow</a>, in particular see <a href="http://stackoverflow.com/q/16783740/145346">this thread</a> about how to use the different ajax options together.<br>
+					There are numerous examples below. Choosing which one to use is left to you. For more information, please check out related questions on <a class="external" href="http://stackoverflow.com/search?q=%5Btablesorter%5D+ajaxProcessing">Stackoverflow</a>, in particular see <a class="external" href="http://stackoverflow.com/q/16783740/145346">this thread</a> about how to use the different ajax options together.<br>
 					<br>
 					In <span class="version">v2.10</span>, the returned rows is now optional. And it can either be an array of arrays or a jQuery object (not attached to the table)<br>
 					<br>
@@ -7274,7 +7280,7 @@ $.tablesorter.computeColumnIndex($rows, config);</pre>
 				<td>This function allows adding/removing a row to the thead, to display any errors (<span class="version">v2.15</span>; <span class="version updated">v2.23.1</span>).
 					<div class="collapsible">
 						<p>This function is ONLY included within the <code>widget-pager.js</code> and <code>jquery.tablesorter.pager.js</code> files; in version 3+, I plan to add it as a selectable option in a build.</p>
-						<p>In <span class="version updated">v2.23.1</span>, a <code>settings</code> parameter was included to make it match the parametered returned by the jQuery <a href="http://api.jquery.com/ajaxError/"><code>.ajaxError()</code> method</a>.</p>
+						<p>In <span class="version updated">v2.23.1</span>, a <code>settings</code> parameter was included to make it match the parametered returned by the jQuery <a class="external" href="http://api.jquery.com/ajaxError/"><code>.ajaxError()</code> method</a>.</p>
 						<p>In <span class="version updated">v2.23.0</span>, this function will accept <code>xhr</code> and <code>exception</code> parameters provided by ajax error messages. To maintain backward compatibility, if <code>xhr</code> is a string, it will be treated as previous <code>message</code> parameter and displayed in the error row without modification.</p>
 						Use it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.showError( table, xhr, settings, exception );</pre>
@@ -7592,9 +7598,9 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 			<a class="btn btn-primary" href="https://github.com/Mottie/tablesorter/archive/master.tar.gz">tar.gz</a>
 		</li>
 		<li>Download a <a href="https://github.com/Mottie/tablesorter/releases">previous release</a>.</li>
-		<li>Install with <a href="http://bower.io/">bower</a>: <code>bower install jquery.tablesorter</code></li>
-		<li>Install with <a href="http://nodejs.org/">node.js</a>: <code>npm install tablesorter</code></li>
-		<li>Use CDN: <a href="https://cdnjs.com/libraries/jquery.tablesorter">jquery.tablesorter</a></li>
+		<li>Install with <a class="external" href="http://bower.io/">bower</a>: <code>bower install jquery.tablesorter</code></li>
+		<li>Install with <a class="external" href="http://nodejs.org/">node.js</a>: <code>npm install tablesorter</code></li>
+		<li>Use CDN: <a class="external" href="https://cdnjs.com/libraries/jquery.tablesorter">jquery.tablesorter</a></li>
 	</ul>
 
 	<strong id="Download-Required">Required:</strong>
