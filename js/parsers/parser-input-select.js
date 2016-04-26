@@ -139,6 +139,7 @@
 					this.checked = allChecked;
 					this.indeterminate = false;
 				} else {
+					this.checked = false; // needed for IE
 					this.indeterminate = true;
 				}
 			});
@@ -235,7 +236,9 @@
 				.children( 'thead' )
 				.off( namespace )
 				// modified from http://jsfiddle.net/abkNM/6163/
-				.on( 'change' + namespace, 'input[type="checkbox"]', function( event ) {
+				// click needed for IE; a change isn't fired when going from an indeterminate checkbox to
+				// either checked or unchecked
+				.on( 'click' + namespace + ' change' + namespace, 'input[type="checkbox"]', function( event ) {
 					var undef, onlyVisible, column, $target, isParsed, checkboxClass,
 						$checkbox = $( this ),
 						$table = $checkbox.closest( 'table' ),
