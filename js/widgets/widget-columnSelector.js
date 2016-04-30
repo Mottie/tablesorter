@@ -381,9 +381,9 @@
 						}
 					}
 					if ( span ) {
-						$cell.removeClass( wo.filter_filteredRow )[0].colSpan = span;
+						$cell.removeClass( wo.filter_filteredRow || 'filtered' )[0].colSpan = span;
 					} else {
-						$cell.addClass( wo.filter_filteredRow );
+						$cell.addClass( wo.filter_filteredRow || 'filtered' );
 					}
 				}
 			}
@@ -492,7 +492,7 @@
 			if (csel.$popup) { csel.$popup.empty(); }
 			csel.$style.remove();
 			csel.$breakpoints.remove();
-			$( c.namespace + 'columnselectorHasSpan' ).removeClass( wo.filter_filteredRow );
+			$( c.namespace + 'columnselectorHasSpan' ).removeClass( wo.filter_filteredRow || 'filtered' );
 			c.$table.off('updateAll' + namespace + ' update' + namespace);
 		}
 
