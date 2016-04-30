@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 4/1/2016 (v2.25.7) *//*
+/*! Widget: filter - updated 4/29/2016 (v2.25.9) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -358,7 +358,7 @@
 				and : 'and'
 			}, ts.language );
 
-			var options, string, txt, $header, column, filters, val, fxn, noSelect,
+			var options, string, txt, $header, column, val, fxn, noSelect,
 				c = table.config,
 				wo = c.widgetOptions;
 			c.$table.addClass( 'hasFilters' );

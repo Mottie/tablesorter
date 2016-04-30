@@ -101,6 +101,26 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.25.9">Version 2.25.9</a> (4/29/2016)
+
+* Docs:
+  * Fix search for next/previous result positioning.
+  * Add `sortMultiSortKey` alternative settings. See [issue #1200](https://github.com/Mottie/tablesorter/issues/1200).
+* ColumnSelector:
+  * Refresh method properly saves changes. Fixes [issue #1198](https://github.com/Mottie/tablesorter/issues/1198).
+  * Fix missing class name; fallback to "filtered" when the `filter_filteredRows` widget option is undefined.
+  * Add `columnSelector_maxPriorities`. Fixes [issue #1204](https://github.com/Mottie/tablesorter/issues/1204).
+* Filter:
+  * Include milliseconds in formatter date comparison. See [issue #1191](https://github.com/Mottie/tablesorter/issues/1191).
+  * Properly initialize after using `applyWidgetId`. Fixes [issue #1197](https://github.com/Mottie/tablesorter/issues/1197).
+* Scroller:
+  * Add multi-line caption height support in fixed column. Fixes [issue #1202](https://github.com/Mottie/tablesorter/issues/1202).
+* Parser (checkbox):
+  * Header checkbox properly updates row class names.
+  * Fix indeterminate checkbox issue in IE.
+  * Fix indeterminate checkbox state checked state in IE.
+  * See [issue #1199](https://github.com/Mottie/tablesorter/issues/1199).
+
 #### <a name="v2.25.8">Version 2.25.8</a> (4/11/2016)
 
 * Core: `duplicateSpan` set to `false` now uses `textExtraction` instead of setting the data to an empty string; see [Stackoverflow](See http://stackoverflow.com/q/36449711/145346).
@@ -120,20 +140,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Scroller: Throttle scroll event. Fixes [issue #1186](https://github.com/Mottie/tablesorter/issues/1186).
 * StickyHeaders: Update on table resize for Firefox. Fixes [issue #1183](https://github.com/Mottie/tablesorter/issues/1183).
 * Grunt: Update dependencies.
-
-#### <a name="v2.25.6">Version 2.25.6</a> (3/18/2016)
-
-* Core:
-  * Add debug warning when widget not found.
-  * Add debug warning when widget is added more than once.
-* Docs:
-  * More notes added about including `.filter { display: none; }` in custom themes. See [issue #1172](https://github.com/Mottie/tablesorter/issues/1172).
-  * Add support badges to readme.
-* Filter:
-  * Add `filterResetSaved` method. See [issue #1173](https://github.com/Mottie/tablesorter/issues/1173).
-  * Update cache when `delayInit` set. Fixes [issue #1180](https://github.com/Mottie/tablesorter/issues/1180).
-* Lazyload:
-  * Trigger lazyload after filtering. Fixes [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
-  * Change `skip_invisible` option default to `true`.
-* Grunt:
-  * Update dependencies.
