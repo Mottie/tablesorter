@@ -175,6 +175,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.25.9</span>,
+				<ul>
+					<li>Added a <code>columnSelector_maxPriorities</code> setting.</li>
+					<li>Using the "refreshColumnSelector" method now properly saves the settings if the <code>columnSelector_saveColumns</code> is <code>true</code>.</li>
+					<li>The widget still uses the <code>filter_filteredRow</code> setting, but now falls back to using "filtered" when it is undefined.</li>
+				</ul>
 			<li>In <span class="version">v2.24.0</span>,
 				<ul>
 					<li>This widget now supports extra rows and <code>colspan</code> cells in the header &amp; footer (not the body). The first demo has been updated to show this enhancement.</li>
@@ -380,14 +386,34 @@
 							<div class="collapsible">
 							<br>
 							<ul>
-								<li>For example, the last entry &quot;70em&quot; (1,120px) is assigned to data-priority 6. When the browser width is below this dimension, all columns with a 	data-priority of six will be hidden. Then when a browser width less than &quot;60em&quot; (960px) is reached, all columns of data-priority 5 and above will be hidden. At &quot;50em&quot; (800px), all columns of data-priority 4 and above are hidden, etc.</li>
-								<li>Adjust these values as desired, but a <em>maximum</em> of six data-priorities is set.</li>
+								<li>For example,
+									<ul>
+										<li>The last entry &quot;70em&quot; (1,120px) is assigned to data-priority 6.</li>
+										<li>When the browser width is below this dimension, all columns with a 	data-priority of six will be hidden.</li>
+										<li>Then when a browser width less than &quot;60em&quot; (960px) is reached, all columns of data-priority 5 and above will be hidden.</li>
+										<li>At &quot;50em&quot; (800px), all columns of data-priority 4 and above are hidden, etc.</li>
+									</ul>
+									<br>
+								</li>
+								<li>Adjust these values as desired, but a <em>maximum</em> number data-priorities is set by the <code>columnSelector_maxPriorities</code> value (<span class="version updated">v2.25.9</span>).</li>
 							</ul>
 							Default value: <code>[ &quot;20em&quot;, &quot;30em&quot;, &quot;40em&quot;, &quot;50em&quot;, &quot;60em&quot;, &quot;70em&quot; ]</code>
 							</div>
 						</td>
 					</tr>
-
+					<tr id="column-selector-maxpriority">
+						<td><a href="#" class="permalink">columnSelector_maxPriorities</a></td>
+						<td>This option sets the maximum number of priorities (<span class="version">v2.25.9</span>).
+							<div class="collapsible">
+							<br>
+							<ul>
+								<li>If for some reason you need to change the number of priorities (especially increase the number), then change this setting to reflect the maximum number of available priorities.</li>
+								<li>Then make sure to modify the <code>columnSelector_breakpoints</code> to match this new value.</li>
+							</ul>
+							Default value: <code>6</code>
+							</div>
+						</td>
+					</tr>
 					<tr id="column-selector-priority">
 						<td><a href="#" class="permalink">columnSelector_priority</a></td>
 						<td>

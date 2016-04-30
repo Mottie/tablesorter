@@ -273,7 +273,7 @@
 				}
 			}
 			// only 6 breakpoints (same as jQuery Mobile)
-			for (priority = 0; priority < 6; priority++){
+			for (priority = 0; priority < wo.columnSelector_maxPriorities; priority++){
 				/*jshint loopfunc:true */
 				breaks = [];
 				c.$headers.filter('[' + wo.columnSelector_priority + '=' + (priority + 1) + ']').each(function(){
@@ -471,6 +471,9 @@
 			// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
 			// *** set to false to disable ***
 			columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+			// maximum number of priority settings; if this value is changed (especially increased),
+			// then make sure to modify the columnSelector_breakpoints - see #1204
+			columnSelector_maxPriorities : 6,
 			// data attribute containing column priority
 			// duplicates how jQuery mobile uses priorities:
 			// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
