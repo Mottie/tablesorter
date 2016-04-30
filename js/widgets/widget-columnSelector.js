@@ -67,19 +67,20 @@
 		},
 
 		refreshColumns: function( c, optName, optState ) {
-			var i, arry,
+			var i, arry, $el, val,
+				colSel = c.selector,
 				isArry = $.isArray(optState || optName),
 				wo = c.widgetOptions;
 			// see #798
-			if (typeof optName !== 'undefined' && c.selector.$container.length) {
+			if (typeof optName !== 'undefined' && colSel.$container.length) {
 				// pass "selectors" to update the all of the container contents
 				if ( optName === 'selectors' ) {
-					c.selector.$container.empty();
+					colSel.$container.empty();
 					tsColSel.setupSelector(c, wo);
 					tsColSel.setupBreakpoints(c, wo);
 					// if optState is undefined, maintain the current "auto" state
 					if ( typeof optState === 'undefined' ) {
-						optState = c.selector.auto;
+						optState = colSel.auto;
 					}
 				}
 				// pass an array of column zero-based indexes to turn off auto mode & toggle selected columns
@@ -90,20 +91,24 @@
 						arry[i] = parseInt(v, 10);
 					});
 					for (i = 0; i < c.columns; i++) {
-						c.selector.$container
-							.find('input[data-column=' + i + ']')
-							.prop('checked', $.inArray( i, arry ) >= 0 );
+						val = $.inArray( i, arry ) >= 0;
+						$el = colSel.$container.find( 'input[data-column=' + i + ']' );
+						if ( $el.length ) {
+							$el.prop( 'checked', val );
+							colSel.states[i] = val;
+						}
 					}
 				}
 				// if passing an array, set auto to false to allow manual column selection & update columns
 				// refreshColumns( c, 'auto', true ) === refreshColumns( c, true );
-				tsColSel
-					.updateAuto( c, wo, c.selector.$container.find('input[data-column="auto"]')
-					.prop('checked', optState === true || optName === true || optName === 'auto' && optState !== false) );
+				val = optState === true || optName === true || optName === 'auto' && optState !== false;
+				$el = colSel.$container.find( 'input[data-column="auto"]' ).prop( 'checked', val );
+				tsColSel.updateAuto( c, wo, $el );
 			} else {
 				tsColSel.updateBreakpoints(c, wo);
 				tsColSel.updateCols(c, wo);
 			}
+			tsColSel.saveValues( c, wo );
 			tsColSel.adjustColspans( c, wo );
 		},
 
@@ -224,9 +229,7 @@
 						$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
 					});
 			}
-			if (wo.columnSelector_saveColumns && ts.storage) {
-				ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
-			}
+			tsColSel.saveValues( c, wo );
 			tsColSel.adjustColspans( c, wo );
 			// trigger columnUpdate if auto is true (it gets skipped in updateCols()
 			if (colSel.auto) {
@@ -317,9 +320,7 @@
 			if (colSel.$style) {
 				colSel.$style.prop('disabled', false).text( styles.length ? styles.join(',') + ' { display: none; }' : '' );
 			}
-			if (wo.columnSelector_saveColumns && ts.storage) {
-				ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
-			}
+			tsColSel.saveValues( c, wo );
 			tsColSel.adjustColspans( c, wo );
 			c.$table.triggerHandler(wo.columnSelector_updated);
 		},
@@ -385,6 +386,14 @@
 						$cell.addClass( wo.filter_filteredRow );
 					}
 				}
+			}
+		},
+
+		saveValues : function( c, wo ) {
+			if ( wo.columnSelector_saveColumns && ts.storage ) {
+				var colSel = c.selector;
+				ts.storage( c.$table[0], 'tablesorter-columnSelector-auto', { auto : colSel.auto } );
+				ts.storage( c.$table[0], 'tablesorter-columnSelector', colSel.states );
 			}
 		},
 
