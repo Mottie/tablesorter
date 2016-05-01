@@ -101,6 +101,13 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.0">Version 2.26.0</a> (5/1/2016)
+
+* Pager:
+  * Save pager size as "all" vs number. Fixes [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
+  * CAUTION: This change will pass "all", if set, as a page size to the server for ajax requests. So, this may break current server methods on the number of pages to return.
+* StickyHeaders: Include caption height in calculations. Fixes [issue #1205](https://github.com/Mottie/tablesorter/issues/1205).
+
 #### <a name="v2.25.9">Version 2.25.9</a> (4/29/2016)
 
 * Docs:
@@ -132,11 +139,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Grunt:
   * Update dependencies.
   * Update Qunit.
-
-#### <a name="v2.25.7">Version 2.25.7</a> (4/1/2016)
-
-* Filter: Check match on both internal & external filters. See [issue #1177](https://github.com/Mottie/tablesorter/issues/1177).
-* Lazyload: Trigger window scroll after update. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
-* Scroller: Throttle scroll event. Fixes [issue #1186](https://github.com/Mottie/tablesorter/issues/1186).
-* StickyHeaders: Update on table resize for Firefox. Fixes [issue #1183](https://github.com/Mottie/tablesorter/issues/1183).
-* Grunt: Update dependencies.

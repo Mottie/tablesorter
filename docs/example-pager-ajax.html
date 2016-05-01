@@ -210,6 +210,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version updated">v2.26.0</span>, a page size of "all" will be passed to the server when set; <span class="label warning">Note</span> this change may break current server methods on number of pages to return.</li>
 				<li>In <span class="version">v2.13.3</span>, the "ID" column has a default filter setting of "&gt;30" and a descending sort, but neither is applied as this demo is not connected a server (just a basic JSON file).</li>
 				<li>In <span class="version">v2.11</span>, the pager now stores any object returned by the `ajaxProcessing` function in `table.config.pager.ajaxData` (see the ajaxProcessing section below for more details).</li>
 				<li>In <span class="version updated">v2.10</span>, the <code>ajaxProcessing</code> function was updated to only require a total number of rows to be returned, also instead of returning an array of table rows, you can build the table yourself and just return the jQuery object containing those rows. The addon triggers an update.</li>
