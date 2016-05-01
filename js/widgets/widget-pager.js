@@ -182,8 +182,9 @@
 			if ( wo.pager_savePages && ts.storage ) {
 				t = ts.storage( table, wo.pager_storageKey ) || {}; // fixes #387
 				p.page = ( isNaN( t.page ) ? p.page : t.page ) || p.setPage || 0;
-				p.size = ( isNaN( t.size ) ? p.size : t.size ) || p.setSize || 10;
+				p.size = t.size === 'all' ? t.size : ( isNaN( t.size ) ? p.size : t.size ) || p.setSize || 10;
 				$.data( table, 'pagerLastSize', p.size );
+				p.$size.val( p.size );
 			}
 
 			// skipped rows
@@ -291,7 +292,7 @@
 					var $rows = c.$tbodies.eq( 0 ).children( 'tr' ).not( c.selectorRemove );
 					p.totalRows = $rows.length -
 						( wo.pager_countChildRows ? 0 : $rows.filter( '.' + c.cssChildRow ).length );
-					p.totalPages = Math.ceil( p.totalRows / p.size );
+					p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
 					if ( $rows.length && c.rowsCopy && c.rowsCopy.length === 0 ) {
 						// make a copy of all table rows once the cache has been built
 						tsp.updateCache( c );
@@ -443,6 +444,7 @@
 				p = c.pager,
 				namespace = c.namespace + 'pager',
 				sz = tsp.parsePageSize( c, p.size, 'get' ); // don't allow dividing by zero
+			if ( sz === 'all' ) { sz = p.totalRows; }
 			if ( wo.pager_countChildRows ) { t[ t.length ] = c.cssChildRow; }
 			p.$size
 				.add( p.$goto )
@@ -456,10 +458,10 @@
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
 			if ( tsp.getTotalPages( c, p ) >= 0 ) {
-				t = ( p.size * p.page > p.filteredRows ) && completed;
+				t = ( sz * p.page > p.filteredRows ) && completed;
 				p.page = t ? wo.pager_pageReset || 0 : p.page;
-				p.startRow = t ? p.size * p.page + 1 : ( p.filteredRows === 0 ? 0 : p.size * p.page + 1 );
-				p.endRow = Math.min( p.filteredRows, p.totalRows, p.size * ( p.page + 1 ) );
+				p.startRow = t ? sz * p.page + 1 : ( p.filteredRows === 0 ? 0 : sz * p.page + 1 );
+				p.endRow = Math.min( p.filteredRows, p.totalRows, sz * ( p.page + 1 ) );
 				$out = p.$container.find( wo.pager_selectors.pageDisplay );
 				// form the output string (can now get a new output string from the server)
 				s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
@@ -503,7 +505,7 @@
 						.off( 'change' + namespace )
 						.on( 'change' + namespace, function() {
 							var v = $( this ).val(),
-								pg = $( this ).hasClass( 'ts-startRow' ) ? Math.floor( v / p.size ) + 1 : v;
+								pg = $( this ).hasClass( 'ts-startRow' ) ? Math.floor( v / sz ) + 1 : v;
 							c.$table.triggerHandler( 'pageSet' + namespace, [ pg ] );
 						});
 				}
@@ -519,7 +521,7 @@
 				if ( wo.pager_savePages && ts.storage ) {
 					ts.storage( table, wo.pager_storageKey, {
 						page : p.page,
-						size : p.size
+						size : sz === p.totalRows ? 'all' : sz
 					});
 				}
 			}
@@ -600,7 +602,8 @@
 				h = $.data( table, 'pagerSavedHeight' );
 				if ( h ) {
 					d = h - $b.height();
-					if ( d > 5 && $.data( table, 'pagerLastSize' ) === p.size && $b.children( 'tr:visible' ).length < p.size ) {
+					if ( d > 5 && $.data( table, 'pagerLastSize' ) === p.size &&
+						$b.children( 'tr:visible' ).length < ( p.size === 'all' ? p.totalRows : p.size ) ) {
 						$b.append( '<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice( 1 ) +
 							'" style="height:' + d + 'px;"></tr>' );
 					}
@@ -611,15 +614,17 @@
 		changeHeight: function( c ) {
 			var h,
 				table = c.table,
+				p = c.pager,
+				sz = p.size === 'all' ? p.totalRows : p.size,
 				$b = c.$tbodies.eq( 0 );
 			$b.find( 'tr.pagerSavedHeightSpacer' ).remove();
 			if ( !$b.children( 'tr:visible' ).length ) {
 				$b.append( '<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice( 1 ) + '"><td>&nbsp</td></tr>' );
 			}
-			h = $b.children( 'tr' ).eq( 0 ).height() * c.pager.size;
+			h = $b.children( 'tr' ).eq( 0 ).height() * sz;
 			$.data( table, 'pagerSavedHeight', h );
 			tsp.fixHeight( c );
-			$.data( table, 'pagerLastSize', c.pager.size );
+			$.data( table, 'pagerLastSize', p.size );
 		},
 
 		hideRows: function( c ) {
@@ -629,8 +634,9 @@
 					p = c.pager,
 					wo = c.widgetOptions,
 					tbodyLen = c.$tbodies.length,
-					start = ( p.page * p.size ),
-					end =  start + p.size,
+					sz = p.size === 'all' ? p.totalRows : p.size,
+					start = ( p.page * sz ),
+					end =  start + sz,
 					filtr = wo && wo.filter_filteredRow || 'filtered',
 					last = 0, // for cache indexing
 					size = 0; // size counter
@@ -677,7 +683,7 @@
 				namespace = c.namespace + 'pager',
 				size = p.$size.val();
 			p.size = tsp.parsePageSize( c, size, 'get' );
-			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
+			p.$size.val( p.size );
 			$.data( c.table, 'pagerLastSize', p.size );
 			tsp.pagerArrows( c );
 			if ( !c.widgetOptions.pager_removeRows ) {
@@ -701,7 +707,7 @@
 				c.$tbodies.eq( 0 ).empty();
 
 				// ajaxProcessing result: [ total, rows, headers ]
-				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len,
+				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len, sz,
 					$table = c.$table,
 					tds = '',
 					result = wo.pager_ajaxProcessing( data, table, xhr ) || [ 0, [] ],
@@ -793,9 +799,10 @@
 				if ( c.showProcessing ) {
 					ts.isProcessing( table ); // remove loading icon
 				}
+				sz = tsp.parsePageSize( c, p.size, 'get' );
 				// make sure last pager settings are saved, prevents multiple server side calls with
 				// the same parameters
-				p.totalPages = Math.ceil( p.totalRows / tsp.parsePageSize( c, p.size, 'get' ) );
+				p.totalPages = sz === 'all' ? 1 : Math.ceil( p.totalRows / sz );
 				p.last.totalRows = p.totalRows;
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = ( c.sortList || [] ).join( ',' );
@@ -865,6 +872,7 @@
 				url = wo.pager_ajaxUrl ? wo.pager_ajaxUrl
 					// allow using '{page+1}' in the url string to switch to a non-zero based index
 					.replace( /\{page([\-+]\d+)?\}/, function( s, n ) { return p.page + ( n ? parseInt( n, 10 ) : 0 ); })
+					// this will pass "all" to server when size is set to "all"
 					.replace( /\{size\}/g, p.size ) : '',
 				sortList = c.sortList,
 				filterList = p.currentFilters || c.$table.data( 'lastSearch' ) || [],
@@ -909,8 +917,8 @@
 				wo = c.widgetOptions,
 				f = c.$table.hasClass('hasFilters'),
 				l = rows && rows.length || 0, // rows may be undefined
-				s = ( p.page * p.size ),
-				e = p.size;
+				e = p.size === 'all' ? p.totalRows : p.size,
+				s = ( p.page * e );
 			if ( l < 1 ) {
 				if ( c.debug ) {
 					console.warn( 'Pager: >> No rows for pager to render' );
@@ -977,7 +985,7 @@
 				$.data( table, 'pagerLastPage', p.page );
 				$.data( table, 'pagerLastSize', p.size );
 				p.page = 0;
-				p.size = p.totalRows;
+				p.size = 'all';
 				p.totalPages = 1;
 				c.$table
 					.addClass( 'pagerDisabled' )
@@ -1106,13 +1114,10 @@
 		// set to either set or get value
 		parsePageSize: function( c, size, mode ) {
 			var p = c.pager,
-				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10,
-				// if select does not contain an "all" option, use size
-				setAll = p.$size.find( 'option[value="all"]' ).length ? 'all' : p.totalRows;
+				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10;
 			return /all/i.test( size ) || s === p.totalRows ?
 				// "get" to set `p.size` or "set" to set `p.$size.val()`
-				( mode === 'get' ? p.totalRows : setAll ) :
-				( mode === 'get' ? s : p.size );
+				'all' : ( mode === 'get' ? s : p.size );
 		},
 
 		parsePageNumber: function( c, p ) {
@@ -1130,8 +1135,8 @@
 			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
 			$.data( table, 'pagerLastPage', tsp.parsePageNumber( c, p ) );
 			$.data( table, 'pagerLastSize', p.size );
-			p.totalPages = Math.ceil( p.totalRows / p.size );
-			p.filteredPages = Math.ceil( p.filteredRows / p.size );
+			p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
+			p.filteredPages = p.size === 'all' ? 1 : Math.ceil( p.filteredRows / p.size );
 			tsp.moveToPage( c, p, true );
 		},
 
@@ -1201,8 +1206,8 @@
 			p.page = $.data( table, 'pagerLastPage' ) || p.page || 0;
 			size = p.$size.find( 'option[selected]' ).val();
 			p.size = $.data( table, 'pagerLastSize' ) || tsp.parsePageSize( c, size, 'get' );
-			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) ); // set page size
-			p.totalPages = Math.ceil( tsp.getTotalPages( c, p ) / p.size );
+			p.$size.val( p.size ); // set page size
+			p.totalPages = p.size === 'all' ? 1 : Math.ceil( tsp.getTotalPages( c, p ) / p.size );
 			c.$table.removeClass( 'pagerDisabled' );
 			// if table id exists, include page display with aria info
 			if ( table.id ) {
@@ -1230,7 +1235,7 @@
 				c.rowsCopy = rows;
 				p.totalRows = wo.pager_countChildRows ? c.$tbodies.eq( 0 ).children( 'tr' ).length : rows.length;
 				p.size = $.data( table, 'pagerLastSize' ) || p.size || wo.pager_size || p.setSize || 10;
-				p.totalPages = Math.ceil( p.totalRows / p.size );
+				p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
 				tsp.moveToPage( c, p );
 				// update display here in case all rows are removed
 				tsp.updatePageDisplay( c, false );
