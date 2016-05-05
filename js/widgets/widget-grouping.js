@@ -169,12 +169,13 @@
 		},
 
 		groupHeaderHTML : function( c, wo, data ) {
+			var name = data.currentGroup.replace(/</g, '&lt;').replace(/>/g, '&gt');
 			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
 				( data.groupIndex++ ) + '">' +
 				'<td colspan="' + c.columns + '">' +
 					( wo.group_collapsible ? '<i/>' : '' ) +
-					'<span class="group-name">' + data.currentGroup + '</span>' +
+					'<span class="group-name">' + name + '</span>' +
 					'<span class="group-count"></span>' +
 				'</td></tr>';
 		},
