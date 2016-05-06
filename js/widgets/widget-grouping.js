@@ -198,12 +198,12 @@
 			return savedGroup;
 		},
 		findColumnGroups : function( c, wo, data ) {
-			var tbodyIndex, norm_rows, $row, rowIndex, end,
+			var tbodyIndex, norm_rows, $row, rowIndex, end, undef,
 				hasPager = ts.hasWidget( c.table, 'pager' );
 			data.groupIndex = 0;
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 				norm_rows = c.cache[ tbodyIndex ].normalized;
-				data.group = ''; // clear grouping across tbodies
+				data.group = undef; // clear grouping across tbodies
 				rowIndex = hasPager ? c.pager.startRow - 1 : 0;
 				end = hasPager ? c.pager.endRow : norm_rows.length;
 				for ( ; rowIndex < end; rowIndex++ ) {
