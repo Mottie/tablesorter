@@ -710,12 +710,13 @@ var filters = $.tablesorter.getFilters( $('table') );</pre>
 
 			<h3 id="method-set-filters">Set current filters</h3>
 			<blockquote>
-			Set the values of the actual filters using this method; include a <code>true</code> boolean to actually apply the search (<span class="version">v2.9</span>).
-			<pre class="prettyprint lang-javascript">// update filters, but don't apply the search
-$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] );
+			Set the values of the actual filters using this method; include a <code>false</code> boolean to not apply the search (<span class="version">v2.9</span>).
+			<p>In <span class="version update">v2.24.3</span>, if the last boolean parameter is <code>undefined</code> or set to <code>true</code>, the search <em>will be applied</em>. Only when the boolean is set to <code>false</code> will the search <em>not</em> be applied!</p>
+			<pre class="prettyprint lang-javascript">// update filters, AND apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ] ); // , true is optional
 
-// update filters, AND apply the search
-$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], true );</pre>
+// update filters, but DOES NOT apply the search
+$.tablesorter.setFilters( $('table'), [ '', '', '', '', '', '2?%' ], false );</pre>
 			This method returns <code>true</code> if the filters were sucessfully applied, or <code>false</code> if the table does have a filter row.<br>
 			<br>
 			As of <span class="version updated">v2.15</span>, if an external "any-match" filter (see <code>filter_external</code> widget option) is included, add an additional array parameter to set that filter; so if a table has six columns, add the any-match search as the seventh value.
