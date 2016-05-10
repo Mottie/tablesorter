@@ -28,13 +28,14 @@
 		id: 'filter',
 		priority: 50,
 		options : {
+			filter_cellFilter    : '',    // css class name added to the filter cell ( string or array )
 			filter_childRows     : false, // if true, filter includes child row content in the search
 			filter_childByColumn : false, // ( filter_childRows must be true ) if true = search child rows by column; false = search all child row text grouped
 			filter_childWithSibs : true,  // if true, include matching child row siblings
-			filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 			filter_columnAnyMatch: true,  // if true, allows using '#:{query}' in AnyMatch searches ( column:query )
-			filter_cellFilter    : '',    // css class name added to the filter cell ( string or array )
+			filter_columnFilters : true,  // if true, a filter will be added to the top of each table column
 			filter_cssFilter     : '',    // css class name added to the filter row & each input in the row ( tablesorter-filter is ALWAYS added )
+			filter_defaultAttrib : 'data-value', // data attribute in the header cell that contains the default filter value
 			filter_defaultFilter : {},    // add a default column filter type '~{query}' to make fuzzy searches default; '{q1} AND {q2}' to make all searches use a logical AND.
 			filter_excludeFilter : {},    // filters to exclude, per column
 			filter_external      : '',    // jQuery selector string ( or jQuery object ) of external filters
@@ -54,11 +55,10 @@
 			filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 			filter_searchFiltered: true,  // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
 			filter_selectSource  : null,  // include a function to return an array of values to be added to the column filter select
-			filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
-			filter_useParsedData : false, // filter all data using parsed content
+			filter_selectSourceSeparator : '|', // filter_selectSource array text left of the separator is added to the option value, right into the option text
 			filter_serversideFiltering : false, // if true, must perform server-side filtering b/c client-side filtering is disabled, but the ui and events will still be used.
-			filter_defaultAttrib : 'data-value', // data attribute in the header cell that contains the default filter value
-			filter_selectSourceSeparator : '|' // filter_selectSource array text left of the separator is added to the option value, right into the option text
+			filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
+			filter_useParsedData : false  // filter all data using parsed content
 		},
 		format: function( table, c, wo ) {
 			if ( !c.$table.hasClass( 'hasFilters' ) ) {
