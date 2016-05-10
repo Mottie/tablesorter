@@ -430,9 +430,9 @@
 
 	<h4>Playgrounds & Other demos</h4>
 	<ul>
-		<li><a href="http://jsfiddle.net/Mottie/4mVfu/">tablesorter basic demo</a> (includes widgets).</li>
-		<li><a href="http://jsfiddle.net/Mottie/abkNM/325/">tablesorter basic demo using jQuery UI theme</a>.</li>
-		<li><a href="http://jsfiddle.net/Mottie/4mVfu/1/">tablesorter basic demo with pager plugin</a>.</li>
+		<li><a href="http://jsfiddle.net/Mottie/bbxxomhx/">tablesorter basic demo</a> (includes widgets).</li>
+		<li><a href="http://jsfiddle.net/Mottie/dn1r0cy7/">tablesorter basic demo using jQuery UI theme</a>.</li>
+		<li><a href="http://jsfiddle.net/Mottie/wty134u7/">tablesorter basic demo with pager plugin</a>.</li>
 		<li>LESS themes (modify the colors in these demos dynamically):
 			<ul>
 				<li><a href="http://codepen.io/Mottie/pen/eqBbn">tablesorter LESS theme</a>.</li>
@@ -1861,134 +1861,235 @@ $(function(){
 
     widgetOptions: {
 
-      // *** columns widget ***
-      // change the default column class names
-      columns : [ "primary", "secondary", "tertiary" ],
-      // include thead when adding class names
-      columns_thead : true,
-      // include tfoot when adding class names
-      columns_tfoot : true,
+      // *** COLUMNS WIDGET ***
+      // change the default column class names primary is the 1st column
+      // sorted, secondary is the 2nd, etc
+      columns: [
+        "primary",
+        "secondary",
+        "tertiary"
+      ],
 
-      // *** filter widget ***
-      // jQuery selector string (or jQuery object) of external anyMatch filter
-      // filter_anyMatch   : null, // THIS OPTION WAS REMOVED IN V2.15
-      // Include child rows content in the search
-      filter_childRows     : false,
-      // filter child row content by column, if true; filter_childRows must also be true!
-      filter_childByColumn : false,
+      // If true, the class names from the columns option will also be added
+      // to the table tfoot
+      columns_tfoot: true,
+
+      // If true, the class names from the columns option will also be added
+      // to the table thead
+      columns_thead: true,
+
+      // *** FILTER WIDGET ***
+      // css class name added to the filter cell (string or array)
+      filter_cellFilter: '',
+
+      // If there are child rows in the table (rows with class name from
+      // "cssChildRow" option) and this option is true and a match is found
+      // anywhere in the child row, then it will make that row visible;
+      // default is false
+      filter_childRows: false,
+
+      // ( filter_childRows must be true ) if true = search
+      // child rows by column; false = search all child row text grouped
+      filter_childByColumn: false,
+
       // if true, include matching child row siblings
-      filter_childWithSibs : true,
-      // show column filters
-      filter_columnFilters : true,
-      // extra css class name (string or array) added to the filter element (input or select)
-      filter_cellFilter    : '',
-      // css class applied to the filter row inputs/select
-      filter_cssFilter     : '',
-      // data attribute in the header cell that contains the default filter value
-      filter_defaultAttrib : 'data-value',
-      // add a default column filter type "~{query}" to make fuzzy searches default; "{q1} AND {q2}" to make all searches use a logical AND.
-      filter_defaultFilter : {},
-      // filters to exclude, per column
-      filter_excludeFilter : {},
-      // jQuery selector string (or jQuery object) of external search inputs
-      filter_external      : '',
-      // class added to filtered rows; define in css with "display:none" to hide the filtered-out rows
-      filter_filteredRow   : 'filtered',
-      // add custom filter elements to the filter row
-      filter_formatter     : null,
-      // add custom filter functions using this option.
-      filter_functions     : null,
-      // hide filter row when table is empty
-      filter_hideEmpty     : true,
-      // if true, the filter row is hidden initially until hovered/focused.
-      filter_hideFilters   : false,
-      // if true, make all searches case-insensitive.
-      filter_ignoreCase    : true,
-      // if true, search column content while the user types (with a delay)
-      filter_liveSearch    : true,
-      // global query settings ('exact' or 'match'); overridden by "filter-match" or "filter-exact" class
-      filter_matchType     : { 'input': 'exact', 'select': 'exact' },
-      // a selector in a header with this class name will only show selected options in the drop down
-      filter_onlyAvail     : 'filter-onlyAvail',
-      // default placeholder text (overridden by any header "data-placeholder" setting)
-      filter_placeholder   : { search : '', select : '' },
-      // jQuery selector string of an element used to reset the filters.
-      filter_reset         : null,
-      // Reset filter input when the user presses escape - normalized across browsers
-      filter_resetOnEsc    : true,
-      // Use the $.tablesorter.storage utility to save the most recent filters
-      filter_saveFilters   : false,
-      // typing delay in milliseconds before starting a search.
-      filter_searchDelay   : 300,
-      // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
-      filter_searchFiltered: true,
-      // include a function to return an array of values to be added to the column filter select
-      filter_selectSource  : null,
-      // filter_selectSource array text left of the separator is added to the option value, right into the option text
-      filter_selectSourceSeparator : '|',
-      // if true, filter start from the beginning of the cell contents.
-      filter_startsWith    : false,
-      // filter all data using parsed content.
-      filter_useParsedData : false,
-      // Set to true for server-side filtering
-      filter_serversideFiltering :  false,
+      filter_childWithSibs: true,
 
-      // *** resizable widget ***
-      // if false, resized columns are not saved for next page reload
-      resizable : true,
-      // if true, the last column will be resizable (use in non-full width tables)
+      // if true, allows using '#:{query}' in AnyMatch searches
+      // ( column:query )
+      filter_columnAnyMatch: true,
+
+      // If true, a filter will be added to the top of each table column.
+      filter_columnFilters: true,
+
+      // css class name added to the filter row & each input in the row
+      // (tablesorter-filter is ALWAYS added)
+      filter_cssFilter: '',
+
+      // data attribute in the header cell that contains the default (initial)
+      // filter value
+      filter_defaultAttrib: 'data-value',
+
+      // add a default column filter type "~{query}" to make fuzzy searches
+      // default; "{q1} AND {q2}" to make all searches use a logical AND.
+      filter_defaultFilter: {},
+
+      // filters to exclude, per column
+      filter_excludeFilter: {},
+
+      // jQuery selector string (or jQuery object)
+      // of external filters
+      filter_external: '',
+
+      // class added to filtered rows; needed by pager plugin
+      filter_filteredRow: 'filtered',
+
+      // add custom filter elements to the filter row
+      filter_formatter: null,
+
+      // Customize the filter widget by adding a select dropdown with content,
+      // custom options or custom filter functions;
+      // see http://goo.gl/HQQLW for more details
+      filter_functions: null,
+
+      // hide filter row when table is empty
+      filter_hideEmpty: true,
+
+      // Set this option to true to hide the filter row initially. The row is
+      // revealed by hovering over the filter row or giving any filter
+      // input/select focus.
+      filter_hideFilters: false,
+
+      // Set this option to false to keep the searches case sensitive
+      filter_ignoreCase: true,
+
+      // if true, search column content while the user types (with a delay)
+      // or, set a minimum number of characters that must be present before
+      // a search is initiated
+      filter_liveSearch: true,
+
+      // global query settings ('exact' or 'match'); overridden by
+      // "filter-match" or "filter-exact" class
+      filter_matchType: {
+        'input': 'exact',
+        'select': 'exact'
+      },
+
+      // a header with a select dropdown & this class name will only show
+      // available (visible) options within the drop down
+      filter_onlyAvail: 'filter-onlyAvail',
+
+      // default placeholder text (overridden by any header
+      // "data-placeholder" setting)
+      filter_placeholder: {
+        search: '',
+        select: ''
+      },
+
+      // jQuery selector string of an element used to reset the filters.
+      filter_reset: null,
+
+      // Reset filter input when the user presses escape
+      // normalized across browsers
+      filter_resetOnEsc: true,
+
+      // Use the $.tablesorter.storage utility to save the most recent filters
+      filter_saveFilters: false,
+
+      // Delay in milliseconds before the filter widget starts searching;
+      // This option prevents searching for every character while typing
+      // and should make searching large tables faster.
+      filter_searchDelay: 300,
+
+      // allow searching through already filtered rows in special
+      // circumstances; will speed up searching in large tables if true
+      filter_searchFiltered: true,
+
+      // include a function to return an array of values to be added to the
+      // column filter select
+      filter_selectSource: null,
+
+      // filter_selectSource array text left of the separator is added to
+      // the option value, right into the option text
+      filter_selectSourceSeparator: '|',
+
+      // Set this option to true if filtering is performed on the
+      // server-side.
+      filter_serversideFiltering: false,
+
+      // Set this option to true to use the filter to find text from the
+      // start of the column. So typing in "a" will find "albert" but not
+      // "frank", both have a's; default is false
+      filter_startsWith: false,
+
+      // If true, ALL filter searches will only use parsed data. To only
+      // use parsed data in specific columns, set this option to false
+      // and add class name "filter-parsed" to the header
+      filter_useParsedData: false,
+
+      // *** RESIZABLE WIDGET ***
+      // If this option is set to false, resized column widths will not
+      // be saved. Previous saved values will be restored on page reload
+      resizable: true,
+
+      // If this option is set to true, a resizing anchor
+      // will be included in the last column of the table
       resizable_addLastColumn: false,
-      // Add the starting & reset header widths
-      resizable_widths : [],
-      // throttle resizable event (needed for slow browsers)
-      resizable_throttle : false,
-      // target the last column for resize (like holding shift-drag)
+
+      // Set this option to the starting & reset header widths
+      resizable_widths: [],
+
+      // Set this option to throttle the resizable events
+      // set to true (5ms) or any number 0-10 range
+      resizable_throttle: false,
+
+      // When true, the last column will be targeted for resizing,
+      // which is the same has holding the shift and resizing a column
       resizable_targetLast: false,
 
-      // *** savesort widget ***
-      // if false, the sort will not be saved for next page reload
-      saveSort : true,
+      // *** SAVESORT WIDGET ***
+      // If this option is set to false, new sorts will not be saved.
+      // Any previous saved sort will be restored on page reload.
+      saveSort: true,
 
-      // *** stickyHeaders widget ***
-      // extra class name added to the sticky header row
-      stickyHeaders : '',
+      // *** STICKYhEADERS WIDGET ***
+      // stickyHeaders widget: extra class name added to the sticky header
+      // row
+      stickyHeaders: '',
+
       // jQuery selector or object to attach sticky header to
-      stickyHeaders_attachTo : null,
-      // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
-      stickyHeaders_xScroll : null,
-      // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
-      stickyHeaders_yScroll : null,
+      stickyHeaders_attachTo: null,
+
+      // jQuery selector or object to monitor horizontal scroll position
+      // (defaults: xScroll > attachTo > window)
+      stickyHeaders_xScroll: null,
+
+      // jQuery selector or object to monitor vertical scroll position
+      // (defaults: yScroll > attachTo > window)
+      stickyHeaders_yScroll: null,
+
       // number or jquery selector targeting the position:fixed element
-      stickyHeaders_offset : 0,
+      stickyHeaders_offset: 0,
+
       // scroll table top into view after filtering
       stickyHeaders_filteredToTop: true,
+
       // added to table ID, if it exists
-      stickyHeaders_cloneId : '-sticky',
+      stickyHeaders_cloneId: '-sticky',
+
       // trigger "resize" event on headers
-      stickyHeaders_addResizeEvent : true,
-      // if false and a caption exist, it won't be included in the sticky header
-      stickyHeaders_includeCaption : true,
-      // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
-      stickyHeaders_zIndex : 2,
+      stickyHeaders_addResizeEvent: true,
 
-      // *** storage widget ***
+      // if false and a caption exist, it won't be included in the
+      // sticky header
+      stickyHeaders_includeCaption: true,
+
+      // The zIndex of the stickyHeaders, allows the user to adjust this
+      // to their needs
+      stickyHeaders_zIndex: 2,
+
+      // *** STORAGE WIDGET ***
       // allows switching between using local & session storage
-      storage_useSessionStorage : false,
+      storage_useSessionStorage: false,
       // alternate table id (set if grouping multiple tables together)
-      storage_tableId  : '',
-      // table attribute to get the table ID, if storage_tableId is undefined
-      storage_group    : '', // defaults to "data-table-group"
-      // alternate url to use (set if grouping tables across multiple pages)
-      storage_fixedUrl : '',
-      // table attribute to get the fixedUrl, if storage_fixedUrl is undefined
-      storage_page     : '',
+      storage_tableId: '',
+      // table attribute to get the table ID, if storage_tableId
+      // is undefined
+      storage_group: '', // defaults to "data-table-group"
+      // alternate url to use (set if grouping tables across
+      // multiple pages)
+      storage_fixedUrl: '',
+      // table attribute to get the fixedUrl, if storage_fixedUrl
+      // is undefined
+      storage_page: '',
 
-      // *** zebra widget ***
+      // *** ZEBRA WIDGET ***
       // class names to add to alternating rows
-      zebra : ["even", "odd"]
-
-      // *** uitheme widget ***
-      // use "config.theme" to set the theme to use
+      // [ "even", "odd" ]
+      zebra: [
+        "even",
+        "odd"
+      ]
 
     }
 
@@ -2411,6 +2512,24 @@ $(function(){
 					</div>
 				</td>
 				<td><a href="example-widget-filter-childrows.html">Example</a></td>
+			</tr>
+
+			<tr id="widget-filter-column-anymatch">
+				<td><a href="#" class="permalink">filter_columnAnyMatch</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>
+					Filter widget: If <code>true</code>, allows using "#:{query}" in anyMatch searches (<span class="version">v2.20.0</span>).
+					<div class="collapsible">
+					<br>
+					Users can use the anymatch input to target a specific column, using a one-based index.
+					<p></p>
+					For example: In the table below, searching for <code>2:aa</code> in an anymatch filter will result in "Phillip Aaron Wong" and "Aaron" showing in the First Name column.
+					<p></p>
+					See live examples in the <a href="example-widget-filter-any-match.html#anymatch_searches">Filter Widget External Search</a> demo.
+					</div>
+				</td>
+				<td></td>
 			</tr>
 
 			<tr id="widget-filter-columnfilters">
