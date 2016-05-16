@@ -1083,12 +1083,11 @@
 					[];
 
 			data.$cells = data.$row.children();
-
-			if ( data.anyMatchFlag && columnIndex.length > 1 ) {
+			if ( data.anyMatchFlag && columnIndex.length > 1 || data.anyMatchFilter ) {
 				data.anyMatch = true;
 				data.isMatch = true;
 				data.rowArray = data.$cells.map( function( i ) {
-					if ( $.inArray( i, columnIndex ) > -1 ) {
+					if ( $.inArray( i, columnIndex ) > -1 || data.anyMatchFilter ) {
 						if ( data.parsed[ i ] ) {
 							txt = data.cacheArray[ i ];
 						} else {
@@ -1106,7 +1105,6 @@
 				data.exact = data.rowArray.join( ' ' );
 				data.iExact = wo.filter_ignoreCase ? data.exact.toLowerCase() : data.exact;
 				data.cache = data.cacheArray.slice( 0, -1 ).join( ' ' );
-
 				vars.excludeMatch = vars.noAnyMatch;
 				filterMatched = tsf.processTypes( c, data, vars );
 				if ( filterMatched !== null ) {
