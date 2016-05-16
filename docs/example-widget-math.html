@@ -109,6 +109,11 @@
 				}
 				return txt;
 			},
+			math_completed : function(c) {
+				// c = table.config
+				// called after all math calculations have completed
+				console.log( 'math calculations complete', c.$table.find('[data-math="all-sum"]:first').text() );
+			},
 			// see "Mask Examples" section
 			math_mask     : '#,##0.00',
 			math_prefix   : '', // custom string added before the math_mask value (usually HTML)
@@ -396,6 +401,23 @@ math_complete : function($cell, wo, result, value, arry){
     return $.tablesorter.formatMask( wo.math_mask, percent ) + ' %';
 }</pre>
 							More details can be found in the <code>math_mask</code> description.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="math_completed">
+						<td><a href="#" class="permalink">math_completed</a></td>
+						<td><code>null</code></td>
+						<td>
+							This function is called after all math recalculations have completed.
+							<div class="collapsible">
+							<br>
+							Use this option as follows:
+							<pre class="prettyprint lang-js">// complete executed after each function
+math_completed : function(config) {
+    var total = config.$table.find('[data-math="all-sum"]:last').text();
+    console.log(total);
+}</pre>
 							</div>
 						</td>
 					</tr>

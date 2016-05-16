@@ -264,10 +264,19 @@
 					// update internal cache
 					ts.update( c, undef, function(){
 						math.updateComplete( c );
+						if ( !init && typeof wo.math_completed === 'function' ) {
+							wo.math_completed( c );
+						}
+						if ( c.debug ) {
+							console.log( 'Math widget update completed' + ts.benchmark( time ) );
+						}
 					});
-
+				} else {
+					if ( !init && typeof wo.math_completed === 'function' ) {
+						wo.math_completed( c );
+					}
 					if ( c.debug ) {
-						console.log( 'Math widget update completed' + ts.benchmark( time ) );
+						console.log( 'Math widget found no changes in data' + ts.benchmark( time ) );
 					}
 				}
 			}
@@ -580,6 +589,8 @@
 			math_mask     : '#,##0.00',
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
+			// math_completed called after all math calculations have completed
+			// math_completed : function( config ) {},
 			// order of calculation; 'all' is last
 			math_priority : [ 'row', 'above', 'below', 'col' ],
 			// template for or just prepend the mask prefix & suffix with this HTML
