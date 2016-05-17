@@ -8,7 +8,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.26.0 *//*
+/*! TableSorter (FORK) v2.26.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.26.0',
+		version : '2.26.1',
 
 		parsers : [],
 		widgets : [],
@@ -79,12 +79,12 @@
 			numberSorter     : null,       // choose overall numeric sorter function( a, b, direction, maxColumnValue )
 
 			// *** widget options
-			widgets: [],                   // method to add widgets, e.g. widgets: ['zebra']
+			initWidgets      : true,       // apply widgets on tablesorter initialization
+			widgetClass      : 'widget-{name}', // table class name template to match to include a widget
+			widgets          : [],         // method to add widgets, e.g. widgets: ['zebra']
 			widgetOptions    : {
 				zebra : [ 'even', 'odd' ]    // zebra widget alternating row class names
 			},
-			initWidgets      : true,       // apply widgets on tablesorter initialization
-			widgetClass      : 'widget-{name}', // table class name template to match to include a widget
 
 			// *** callbacks
 			initialized      : null,       // function( table ){},
@@ -98,7 +98,7 @@
 			cssHeaderRow     : '',
 			cssProcessing    : '', // processing icon applied to header during sort/filter
 
-			cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to the its parent
+			cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to its parent
 			cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
 			cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
 			cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers

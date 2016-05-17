@@ -101,6 +101,22 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.1">Version 2.26.1</a> (5/16/2016)
+
+* Docs:
+  * Update setFilters method.
+  * Update playground links & cleanup.
+* Core: Minor organization of options.
+* Filter:
+  * Minor organization of options.
+  * Allow any match searches with no input.
+* Group:
+  * Escape angled brackets in group names. Fixes [issue #1206](https://github.com/Mottie/tablesorter/issues/1206).
+  * Fix HTML escape string & prevent undefined error. See [issue #1206](https://github.com/Mottie/tablesorter/issues/1206).
+  * Ensure empty cells get a header. Fixes [issue #1209](https://github.com/Mottie/tablesorter/issues/1209).
+* Math: Add `math_completed` callback.
+* Resizable: update resizable handle position after init. Fixes [issue #1207](https://github.com/Mottie/tablesorter/issues/1207).
+
 #### <a name="v2.26.0">Version 2.26.0</a> (5/1/2016)
 
 * Pager:
@@ -127,15 +143,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Fix indeterminate checkbox issue in IE.
   * Fix indeterminate checkbox state checked state in IE.
   * See [issue #1199](https://github.com/Mottie/tablesorter/issues/1199).
-
-#### <a name="v2.25.8">Version 2.25.8</a> (4/11/2016)
-
-* Core: `duplicateSpan` set to `false` now uses `textExtraction` instead of setting the data to an empty string; see [Stackoverflow](See http://stackoverflow.com/q/36449711/145346).
-* Docs:
-  * Update jQuery.
-  * Various fixes.
-* Theme: Bootstrap: default cursor for sorter-false. Fixes [issue #1189](https://github.com/Mottie/tablesorter/issues/1189).
-* Print: Process lazyload images before printing. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
-* Grunt:
-  * Update dependencies.
-  * Update Qunit.
