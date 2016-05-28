@@ -101,6 +101,17 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.2">Version 2.26.2</a> (5/28/2016)
+
+* Docs:
+  * Add missing "tablesorter-ignoreRow" class. See [issue #1218](https://github.com/Mottie/tablesorter/issues/1218).
+  * Update jQuery to 1.12.3 & add migrate for v3.0.
+  * Correct grouping & resizable last update.
+* Filter:
+  * Remove not any match limitation. See [updated demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-any-match.html).
+  * Fix select2 v3 filter extension. See [issue #1216](https://github.com/Mottie/tablesorter/issues/1216); this code does not work with select2 v4.
+* Testing: `setFilters` last parameter now `true` by default.
+
 #### <a name="v2.26.1">Version 2.26.1</a> (5/16/2016)
 
 * Docs:
@@ -123,23 +134,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Save pager size as "all" vs number. Fixes [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
   * CAUTION: This change will pass "all", if set, as a page size to the server for ajax requests. So, this may break current server methods on the number of pages to return.
 * StickyHeaders: Include caption height in calculations. Fixes [issue #1205](https://github.com/Mottie/tablesorter/issues/1205).
-
-#### <a name="v2.25.9">Version 2.25.9</a> (4/29/2016)
-
-* Docs:
-  * Fix search for next/previous result positioning.
-  * Add `sortMultiSortKey` alternative settings. See [issue #1200](https://github.com/Mottie/tablesorter/issues/1200).
-* ColumnSelector:
-  * Refresh method properly saves changes. Fixes [issue #1198](https://github.com/Mottie/tablesorter/issues/1198).
-  * Fix missing class name; fallback to "filtered" when the `filter_filteredRows` widget option is undefined.
-  * Add `columnSelector_maxPriorities`. Fixes [issue #1204](https://github.com/Mottie/tablesorter/issues/1204).
-* Filter:
-  * Include milliseconds in formatter date comparison. See [issue #1191](https://github.com/Mottie/tablesorter/issues/1191).
-  * Properly initialize after using `applyWidgetId`. Fixes [issue #1197](https://github.com/Mottie/tablesorter/issues/1197).
-* Scroller:
-  * Add multi-line caption height support in fixed column. Fixes [issue #1202](https://github.com/Mottie/tablesorter/issues/1202).
-* Parser (checkbox):
-  * Header checkbox properly updates row class names.
-  * Fix indeterminate checkbox issue in IE.
-  * Fix indeterminate checkbox state checked state in IE.
-  * See [issue #1199](https://github.com/Mottie/tablesorter/issues/1199).

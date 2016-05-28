@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-16-2016 (v2.26.1)*/
+/*! tablesorter (FORK) - updated 05-28-2016 (v2.26.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -372,7 +372,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 4/29/2016 (v2.25.9) *//*
+/*! Widget: filter - updated 5/28/2016 (v2.26.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -636,7 +636,11 @@
 						return filter === '' ? true : $.trim( filter ) !== data.iExact;
 					} else {
 						indx = data.iExact.search( $.trim( filter ) );
-						return filter === '' ? true : !( c.widgetOptions.filter_startsWith ? indx === 0 : indx >= 0 );
+						return filter === '' ? true :
+							// return true if not found
+							data.anyMatch ? indx < 0 :
+							// return false if found
+							!( c.widgetOptions.filter_startsWith ? indx === 0 : indx >= 0 );
 					}
 				}
 				return null;
@@ -1455,7 +1459,6 @@
 					// look for multiple columns '1-3,4-6,8'
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
-
 			data.$cells = data.$row.children();
 			if ( data.anyMatchFlag && columnIndex.length > 1 || data.anyMatchFilter ) {
 				data.anyMatch = true;
@@ -1599,7 +1602,7 @@
 				},
 				vars = {
 					// anyMatch really screws up with these types of filters
-					noAnyMatch: [ 'range', 'notMatch',  'operators' ],
+					noAnyMatch: [ 'range',  'operators' ],
 					// cache filter variables that use ts.getColumnData in the main loop
 					functions : [],
 					excludeFilter : [],
@@ -2495,7 +2498,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 11/4/2015 (v2.24.3) */
+/*! Widget: resizable - updated 5/16/2015 (v2.26.1) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
