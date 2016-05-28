@@ -73,6 +73,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version updated">v2.26.2</span>, The not match (<code>!</code>) limitation is no longer in place. Try searching in the "Match any column" for <button type="button" data-column="all">!aaron</button>.
 			<li>In <span class="version">v2.22.0</span>, AnyMatch searches for specific columns will no longer save filter data to each targeted column. See the "AnyMatch Searches" section below.</li>
 			<li>In <span class="version">v2.20.0</span>, <a href="https://github.com/MaksimProgr">@MasksimProgr</a> added a method to allow targeting a specific column using the anyMatch filter. Find more details in the AnyMatch section below.</li>
 			<li>In <span class="version">v2.18.0</span>, the external search data column can be set to multiple columns (<code>data-column="0-2,4,6-7"</code>). Please see the <a href="example-widget-filter-external-inputs.html">Filter Widget External Inputs</a> demo for more details.</li>
@@ -127,13 +128,17 @@
 &quot;Fred&quot; &lt; 10   // false</pre>* For comparisons, letters have a greater <a href="http://en.wikipedia.org/wiki/Ascii#ASCII_printable_characters">ASCII value</a> than numbers.
 					</li>
 					<li>Range query - A search for any number range (<code>1 - 10</code>) is not allowed because, if any columns contain text, then no rows will result. The examples are the same as the search operators examples above.</li>
-					<li>Not Match query - A search for not matches (<code>!a</code>) is not allowed because tables that contain both numbers and text (in separate columns) will always show all rows. For example:
+					<li>Allowed filters include plain text matching, fuzzy search (<code>~</code>), exact match (<code>&quot;</code>), wild card matches( <code>?</code> or <code>*</code>), regex (<code>/\d/g</code>), and logical and (<code>a &amp;&amp; b</code>)/or (<code>a|b</code>) matches.<br><br></li>
+
+					<li>Not Match query - <strong>No longer a limitation!</strong> (<span class="version updated">v2.26.2</span>)
+						<p>Try searching for <button type="button" data-column="all">!aaron</button></p>
+						<del>A search for not matches (<code>!a</code>) is not allowed because tables that contain both numbers and text (in separate columns) will always show all rows. For example:
 						<pre class="prettyprint lang-javascript">&quot;Frank&quot;.search(&quot;a&quot;)    //  2 (a match, so this row "may" be hidden)
 &quot;Fred&quot;.search(&quot;a&quot;)      // -1 (a not match! so this row will always show)
 &quot;25&quot;.search(&quot;a&quot;)        // -1 (a not match! so this row will always show)
-&quot;1/1/2014&quot;.search(&quot;a&quot;)  // -1 (a not match! so this row will always show)</pre>
+&quot;1/1/2014&quot;.search(&quot;a&quot;)  // -1 (a not match! so this row will always show)</pre></del>
 					</li>
-					<li>Allowed filters include plain text matching, fuzzy search (<code>~</code>), exact match (<code>&quot;</code>), wild card matches( <code>?</code> or <code>*</code>), regex (<code>/\d/g</code>), and logical and (<code>a &amp;&amp; b</code>)/or (<code>a|b</code>) matches.</li>
+
 				</ul>
 				</li>
 				<li>Setting this option should work properly with or without the column filters. The only issue you would have is if you triggered a search on the table using an array with undefined or null array values, like this:

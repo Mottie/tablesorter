@@ -197,7 +197,7 @@ jQuery(function($){
 			wo = this.wo,
 			$table = this.$table,
 			table = this.table;
-		expect(33);
+		expect(34);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {
@@ -248,6 +248,9 @@ jQuery(function($){
 		).nextTask(
 			function(){ ts.setFilters( table, ['', '!aa'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Peter', 'John', 'Clark', 'Bruce', 'Alex', 'Jim', 'Bruce Lee', 'Brenda Dexter', 'Dennis', 'Martha'], 'search not match; ensure search filtered gets cleared', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', '!3'] ); },
+			function(){ assert.cacheCompare( table, 0, [1, 11, 111, 9], 'search not any match', true ); }
 		).nextTask(
 			function(){ ts.setFilters( table, ['', 'br && c'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Bruce Lee'], 'search and match', true ); }
