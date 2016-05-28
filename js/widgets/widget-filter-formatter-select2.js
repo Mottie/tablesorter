@@ -1,5 +1,6 @@
-/*! Widget: filter, select2 formatter function - updated 3/26/2015 (v2.21.3) *//*
- * requires: jQuery 1.7.2+, tableSorter (FORK) 2.16+, filter widget 2.16+ and select2 v3.4.6+ plugin
+/*! Widget: filter, select2 formatter function - updated 5/28/2016 (v2.26.2) *//*
+ * requires: jQuery 1.7.2+, tableSorter (FORK) 2.16+, filter widget 2.16+
+ and select2 v3.4.6+ plugin (this code is NOT compatible with select2 v4+)
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
@@ -74,7 +75,8 @@
 			arry = ts.filter.getOptionSource(c.$table[0], indx, onlyAvail) || [];
 			// build select2 data option
 			$.each(arry, function(i, v){
-				data.push({id: v, text: v});
+				// getOptionSource returns { parsed: "value", text: "value" } in v2.24.4
+				data.push({ id: "" + v.parsed, text: v.text });
 			});
 			o.data = data;
 		};
@@ -118,7 +120,7 @@
 
 		// has sticky headers?
 		c.$table.bind('stickyHeadersInit', function(){
-			$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
+			$shcell = c.widgetOptions.$sticky.find('.' + ts.css.filterRow).children().eq(indx).empty();
 			// add a select2!
 			$('<input class="select2 select2-' + indx + '" type="hidden">')
 				.val(o.value)
