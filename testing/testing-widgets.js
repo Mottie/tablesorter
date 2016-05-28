@@ -187,8 +187,8 @@ jQuery(function($){
 		filters[1] = 5, filters[2] = 'test', filters[3] = true, filters[4] = null;
 		results[1] = '5', results[2] = 'test', results[3] = 'true', results[4] = null;
 
-		assert.deepEqual( processFilters( filters, true ),         results );
-		assert.deepEqual( processFilters( filters, false ),         results );
+		assert.deepEqual( processFilters( filters, true ), results );
+		assert.deepEqual( processFilters( filters, false ), results );
 	});
 
 	QUnit.test( 'Filter searches', function(assert) {
@@ -204,82 +204,82 @@ jQuery(function($){
 				return QUnit.assertOnEvent($table, 'filterEnd', actions, assertions);
 			}
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'e'], true ); },
+			function(){ ts.setFilters( table, ['', 'e'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Peter', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter', 'Dennis'], 'search regular', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '~bee'], true ); },
+			function(){ ts.setFilters( table, ['', '~bee'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Bruce Lee', 'Brenda Dexter'], 'search fuzzy', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '~piano'], true ); },
+			function(){ ts.setFilters( table, ['', '~piano'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Philip Aaron Wong'], 'search fuzzy2', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'john='], true ); },
+			function(){ ts.setFilters( table, ['', 'john='] ); },
 			function(){ assert.cacheCompare( table, 1, ['John'], 'search exact', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', 'a?s'], true ); },
+			function(){ ts.setFilters( table, ['', '', 'a?s'] ); },
 			function(){ assert.cacheCompare( table, 2, ['Dumass', 'Evans'], 'search wildcard, one character (?)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', 'a*s'], true ); },
+			function(){ ts.setFilters( table, ['', '', 'a*s'] ); },
 			function(){ assert.cacheCompare( table, 2, ['Dumass', 'Evans', 'McMasters'], 'search wildcard, multiple characters (*)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '/r$/'], true ); },
+			function(){ ts.setFilters( table, ['', '/r$/'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Peter', 'Brenda Dexter'], 'search regex', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '>10'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '>10'] ); },
 			function(){ assert.cacheCompare( table, 4, [42.29, 19.99, 15.89, 153.19, 14.19, 13.19, 55.2, 123, 22.09], 'search operator (>10)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '>100'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '>100'] ); },
 			function(){ assert.cacheCompare( table, 4, [153.19, 123], 'search operator (>100); ensure search filtered gets cleared', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '', '>=20'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '', '>=20'] ); },
 			function(){ assert.cacheCompare( table, 5, [22, 20, 25, 44, 44], 'search operator (>=)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '', '<10'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '', '<10'] ); },
 			function(){ assert.cacheCompare( table, 5, [5, 4], 'search operator (<10)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '', '<100'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '', '<100'] ); },
 			function(){ assert.cacheCompare( table, 5, [22, 5, 18, 20, 25, 44, 44, 4, 14, 11, 15, 17], 'search operator (<100); ensure search filtered gets cleared', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '', '<=20'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '', '<=20'] ); },
 			function(){ assert.cacheCompare( table, 5, [5, 18, 20, 4, 14, 11, 15, 17], 'search operator (<=)', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '!a'], true ); },
+			function(){ ts.setFilters( table, ['', '!a'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Peter', 'John', 'Bruce', 'Jim', 'Bruce Lee', 'Dennis'], 'search not match', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '!aa'], true ); },
+			function(){ ts.setFilters( table, ['', '!aa'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Peter', 'John', 'Clark', 'Bruce', 'Alex', 'Jim', 'Bruce Lee', 'Brenda Dexter', 'Dennis', 'Martha'], 'search not match; ensure search filtered gets cleared', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'br && c'], true ); },
+			function(){ ts.setFilters( table, ['', 'br && c'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Bruce Lee'], 'search and match', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'br && cl'], true ); },
+			function(){ ts.setFilters( table, ['', 'br && cl'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark'], 'search and match; ensure search filtered gets cleared', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'c* && l && a'], true ); },
+			function(){ ts.setFilters( table, ['', 'c* && l && a'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Clark'], 'search "c* && l && a"', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'a && !o'], true ); },
+			function(){ ts.setFilters( table, ['', 'a && !o'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Clark', 'Alex', 'Brenda Dexter', 'Martha'], 'search "a && !o"', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '' , '>20 && <40'], true ); },
+			function(){ ts.setFilters( table, ['', '', '' , '>20 && <40'] ); },
 			function(){ assert.cacheCompare( table, 3, [25, 28, 33, 24, 22, 25], 'search ">20 && <40"', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '' , '<15 or >40'], true ); },
+			function(){ ts.setFilters( table, ['', '', '' , '<15 or >40'] ); },
 			function(){ assert.cacheCompare( table, 3, [12, 51, 45, 13, 65], 'search "<15 or >40"', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', 'alex|br*'], true ); },
+			function(){ ts.setFilters( table, ['', 'alex|br*'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search OR match', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '/(Alex|Aar'], true ); },
+			function(){ ts.setFilters( table, ['', '/(Alex|Aar'] ); },
 			function(){ assert.cacheCompare( table, 1, [], 'Partial OR match, but invalid regex', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '/(Alex && '], true ); },
+			function(){ ts.setFilters( table, ['', '/(Alex && '] ); },
 			function(){ assert.cacheCompare( table, 1, [], 'Partial AND match, and way messed up regex', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '5 - 10'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '5 - 10'] ); },
 			function(){ assert.cacheCompare( table, 4, [5.95, 9.99, 5.29], 'search range', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '', '', '', '5 - 100'], true ); },
+			function(){ ts.setFilters( table, ['', '', '', '', '5 - 100'] ); },
 			function(){ assert.cacheCompare( table, 4, [5.95, 42.29, 9.99, 19.99, 15.89, 5.29, 14.19, 13.19, 55.2, 22.09], 'search range; ensure search filtered gets cleared', true ); }
 		).nextTask( // test filter_startsWith (false by default)
 			function(){
@@ -306,7 +306,7 @@ jQuery(function($){
 				wo.filter_ignoreCase = true;
 			}
 		).nextTask( // test filter-match class (added in the example code)
-			function(){ ts.setFilters( table, ['', 'alex|br*|c'], true ); },
+			function(){ ts.setFilters( table, ['', 'alex|br*|c'] ); },
 			function(){ assert.cacheCompare( table, 1, ['Brandon Clark', 'Clark', 'Bruce', 'Alex', 'Bruce Lee', 'Brenda Dexter'], 'search - filter-match', true ); }
 		).nextTask( // test filter-match class
 			function(){
@@ -357,15 +357,15 @@ jQuery(function($){
 				return QUnit.assertOnEvent($table, 'filterEnd', actions, assertions);
 			}
 		).nextTask(
-			function(){ ts.setFilters( table, ['abc 1'], true ); },
+			function(){ ts.setFilters( table, ['abc 1'] ); },
 			function(){ assert.cacheCompare( table, 0, ['abc 1'], 'select exact search', true ); }
 		).nextTask(
 			function(){
 				$table.find( '.filter-select' ).eq(0).addClass( 'filter-match' );
-				ts.setFilters( table, [ 'abc 1' ], true ); },
+				ts.setFilters( table, [ 'abc 1' ] ); },
 			function(){ assert.cacheCompare( table, 0, ['abc 1', 'abc 11', 'ABC 10'], 'select match search', true ); }
 		).nextTask(
-			function(){ ts.setFilters( table, ['', '1'], true ); },
+			function(){ ts.setFilters( table, ['', '1'] ); },
 			function(){ assert.cacheCompare( table, 1, [ 1, 111, 123, 155], 'select match seach', true ); }
 		).promise();
 	});
