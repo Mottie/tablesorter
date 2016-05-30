@@ -76,7 +76,7 @@
 			// build select2 data option
 			$.each(arry, function(i, v){
 				// getOptionSource returns { parsed: "value", text: "value" } in v2.24.4
-				data.push({ id: "" + v.parsed, text: v.text });
+				data.push({ id: '' + v.parsed, text: v.text });
 			});
 			o.data = data;
 		};
