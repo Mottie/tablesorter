@@ -55,7 +55,7 @@
   "requireSpacesInForStatement": true,
   "requireSpacesInsideArrayBrackets": "all",
   "validateIndentation": {
-    "includeEmptyLines": false,
+   "allExcept": ["emptyLines", "comments"],
     "value": "\t"
   },
   "validateQuoteMarks": {
