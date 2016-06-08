@@ -28,7 +28,7 @@ There are a number of ways to get involved with the development of this fork of 
   * Please see the [Customize](https://github.com/Mottie/tablesorter/wiki/Customize) wiki page for specifics on how to install the necessary modules & create a custom build.
   * If you aren't comfortable using grunt or making a build file, you can go ahead and just share the changes.
 * Style Guide:
-  * We're not too strict, just try to follow the style that is already being used in the code; here is a [.jscsrc file](https://gist.github.com/Herst/39263a478046a48f1860) by [@Herst](https://github.com/Herst) you can use!
+  * We're not too strict, just try to follow the style that is already being used in the code; [click here here for the .jscsrc file  used in this project](https://github.com/Mottie/tablesorter/blob/master/.jscsrc).
   * When naming variables:
     * Use names that describe it's contents. I'm guilty of naming things `t` and `i`, but I'm slowly trying to rename them to make reading code and finding the variable in the code easier.
     * Name jQuery objects with a leading `$`, e.g. `var $table = $('table');`
