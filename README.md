@@ -101,6 +101,10 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.4">Version 2.26.4</a> (6/15/2016)
+
+* Version bump due to merging issues.
+
 #### <a name="v2.26.3">Version 2.26.3</a> (6/15/2016)
 
 * Distribution: Provide source css & js files on CDNJS. Fixes [issue #1222](https://github.com/Mottie/tablesorter/issues/1222).
