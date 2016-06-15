@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 4/29/2016 (v2.25.9) *//*
+/*! Widget: scroller - updated 6/15/2016 (v2.26.3) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -787,10 +787,11 @@
 
 			$fixedColumn.removeClass( tscss.scrollerHideElement );
 			for ( index = 0; index < fixedColumns; index++ ) {
+				temp = ':nth-child(' + ( index + 1 ) + ')';
 				$wrapper
 					.children( 'div' )
 					.children( 'table' )
-					.find( 'th:nth-child(' + ( index + 1 ) + '), td:nth-child(' + ( index + 1 ) + ')' )
+					.find( 'th' + temp + ', td' + temp + ', col' + temp )
 					.addClass( tscss.scrollerHideColumn );
 			}
 
