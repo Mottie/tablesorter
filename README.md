@@ -101,6 +101,17 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.3">Version 2.26.3</a> (6/15/2016)
+
+* Distribution: Provide source css & js files on CDNJS. Fixes [issue #1222](https://github.com/Mottie/tablesorter/issues/1222).
+* Readme:
+  * Make changelog link clickable. See [pull #1221](https://github.com/Mottie/tablesorter/pull/1221); thanks [@aried3r](https://github.com/aried3r)!
+  * Update badge for ZenHub.
+* Docs: Update main page to use jQuery 3.0.0-rc1 & add migrate.
+* Filter: Fix select2 lint issue.
+* Scroller: Hide `<col>` with hidden columns. Fixes [issue #1229](https://github.com/Mottie/tablesorter/issues/1229).
+* Grunt: Update dependencies & fix pager indentation.
+
 #### <a name="v2.26.2">Version 2.26.2</a> (5/28/2016)
 
 * Docs:
@@ -127,10 +138,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
   * Ensure empty cells get a header. Fixes [issue #1209](https://github.com/Mottie/tablesorter/issues/1209).
 * Math: Add `math_completed` callback.
 * Resizable: update resizable handle position after init. Fixes [issue #1207](https://github.com/Mottie/tablesorter/issues/1207).
-
-#### <a name="v2.26.0">Version 2.26.0</a> (5/1/2016)
-
-* Pager:
-  * Save pager size as "all" vs number. Fixes [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
-  * CAUTION: This change will pass "all", if set, as a page size to the server for ajax requests. So, this may break current server methods on the number of pages to return.
-* StickyHeaders: Include caption height in calculations. Fixes [issue #1205](https://github.com/Mottie/tablesorter/issues/1205).
