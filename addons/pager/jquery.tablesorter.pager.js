@@ -1120,18 +1120,18 @@
 	// see #486
 	ts.showError = function( table, xhr, settings, exception ) {
 		var $row,
-		$table = $( table ),
-		c = $table[0].config,
-		wo = c && c.widgetOptions,
-		errorRow = c.pager && c.pager.cssErrorRow ||
-		wo && wo.pager_css && wo.pager_css.errorRow ||
-		'tablesorter-errorRow',
-		typ = typeof xhr,
-		valid = true,
-		message = '',
-		removeRow = function(){
-			c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
-		};
+			$table = $( table ),
+			c = $table[0].config,
+			wo = c && c.widgetOptions,
+			errorRow = c.pager && c.pager.cssErrorRow ||
+			wo && wo.pager_css && wo.pager_css.errorRow ||
+			'tablesorter-errorRow',
+			typ = typeof xhr,
+			valid = true,
+			message = '',
+			removeRow = function(){
+				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+			};
 
 		if ( !$table.length ) {
 			console.error('tablesorter showError: no table parameter passed');
@@ -1158,13 +1158,13 @@
 		if ( message === '' ) {
 			if ( typ === 'object' ) {
 				message =
-				xhr.status === 0 ? 'Not connected, verify Network' :
-				xhr.status === 404 ? 'Requested page not found [404]' :
-				xhr.status === 500 ? 'Internal Server Error [500]' :
-				exception === 'parsererror' ? 'Requested JSON parse failed' :
-				exception === 'timeout' ? 'Time out error' :
-				exception === 'abort' ? 'Ajax Request aborted' :
-				'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
+					xhr.status === 0 ? 'Not connected, verify Network' :
+					xhr.status === 404 ? 'Requested page not found [404]' :
+					xhr.status === 500 ? 'Internal Server Error [500]' :
+					exception === 'parsererror' ? 'Requested JSON parse failed' :
+					exception === 'timeout' ? 'Time out error' :
+					exception === 'abort' ? 'Ajax Request aborted' :
+					'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
 			} else if ( typ === 'string'  ) {
 				// keep backward compatibility (external usage just passes a message string)
 				message = xhr;
@@ -1176,16 +1176,16 @@
 
 		// allow message to include entire row HTML!
 		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
-		.click( function() {
-			$( this ).remove();
-		})
-		// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-		.appendTo( c.$table.find( 'thead:first' ) )
-		.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
-		.attr({
-			role : 'alert',
-			'aria-live' : 'assertive'
-		});
+			.click( function() {
+				$( this ).remove();
+			})
+			// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+			.appendTo( c.$table.find( 'thead:first' ) )
+			.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
+			.attr({
+				role : 'alert',
+				'aria-live' : 'assertive'
+			});
 
 	};
 
