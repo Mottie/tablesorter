@@ -199,13 +199,14 @@
 		},
 		findColumnGroups : function( c, wo, data ) {
 			var tbodyIndex, norm_rows, $row, rowIndex, end, undef,
-				hasPager = ts.hasWidget( c.table, 'pager' );
+				hasPager = ts.hasWidget( c.table, 'pager' ),
+				p = c.pager || {};
 			data.groupIndex = 0;
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 				norm_rows = c.cache[ tbodyIndex ].normalized;
 				data.group = undef; // clear grouping across tbodies
-				rowIndex = hasPager ? c.pager.startRow - 1 : 0;
-				end = hasPager ? c.pager.endRow : norm_rows.length;
+				rowIndex = hasPager && !p.ajax ? p.startRow - 1 : 0;
+				end = hasPager ? p.endRow - ( p.ajax ? p.startRow : 0 ): norm_rows.length;
 				for ( ; rowIndex < end; rowIndex++ ) {
 					data.rowData = norm_rows[ rowIndex ];
 					data.$row = data.rowData[ c.columns ].$row;
