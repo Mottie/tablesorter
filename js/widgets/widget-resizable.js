@@ -254,7 +254,7 @@
 
 			// right click to reset columns to default widths
 			c.$table
-				.bind( 'columnUpdate' + namespace, function() {
+				.bind( 'columnUpdate' + namespace + ' pagerComplete' + namespace, function() {
 					ts.resizable.setHandlePosition( c, wo );
 				})
 				.find( 'thead:first' )
