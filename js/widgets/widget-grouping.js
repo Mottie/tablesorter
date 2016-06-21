@@ -209,10 +209,13 @@
 				end = hasPager ? p.endRow - ( p.ajax ? p.startRow : 0 ): norm_rows.length;
 				for ( ; rowIndex < end; rowIndex++ ) {
 					data.rowData = norm_rows[ rowIndex ];
-					data.$row = data.rowData[ c.columns ].$row;
-					// fixes #438
-					if ( data.$row.is( ':visible' ) && tsg.types[ data.grouping[ 1 ] ] ) {
-						tsg.insertGroupHeader( c, wo, data );
+					// fixes #1232 - ajax issue; if endRow > norm_rows.length (after filtering), then data.rowData is undefined
+					if (data.rowData) {
+						data.$row = data.rowData[ c.columns ].$row;
+						// fixes #438
+						if ( data.$row.is( ':visible' ) && tsg.types[ data.grouping[ 1 ] ] ) {
+							tsg.insertGroupHeader( c, wo, data );
+						}
 					}
 				}
 			}
