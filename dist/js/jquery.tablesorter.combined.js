@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 06-15-2016 (v2.26.4)*/
+/*! tablesorter (FORK) - updated 06-28-2016 (v2.26.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function($) {
 
-/*! TableSorter (FORK) v2.26.4 *//*
+/*! TableSorter (FORK) v2.26.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -33,7 +33,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.26.4',
+		version : '2.26.5',
 
 		parsers : [],
 		widgets : [],
@@ -3098,7 +3098,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 5/28/2016 (v2.26.2) *//*
+/*! Widget: filter - updated 6/28/2015 (v2.26.5) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3729,14 +3729,16 @@
 		// encode or decode filters for storage; see #1026
 		processFilters: function( filters, encode ) {
 			var indx,
+				// fixes #1237; previously returning an encoded "filters" value
+				result = [],
 				mode = encode ? encodeURIComponent : decodeURIComponent,
 				len = filters.length;
 			for ( indx = 0; indx < len; indx++ ) {
 				if ( filters[ indx ] ) {
-					filters[ indx ] = mode( filters[ indx ] );
+					result[ indx ] = mode( filters[ indx ] );
 				}
 			}
-			return filters;
+			return result;
 		},
 		setDefaults: function( table, c, wo ) {
 			var isArray, saved, indx, col, $filters,
@@ -5224,7 +5226,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 5/16/2015 (v2.26.1) */
+/*! Widget: resizable - updated 6/28/2015 (v2.26.5) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -5480,7 +5482,7 @@
 
 			// right click to reset columns to default widths
 			c.$table
-				.bind( 'columnUpdate' + namespace, function() {
+				.bind( 'columnUpdate' + namespace + ' pagerComplete' + namespace, function() {
 					ts.resizable.setHandlePosition( c, wo );
 				})
 				.find( 'thead:first' )
