@@ -341,12 +341,11 @@
 					sz = p.size === 'all' ? p.totalRows : p.size,
 					s = ( p.page * sz ),
 					e =  s + sz,
-					f = c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered',
 					last = 0, // for cache indexing
 					j = 0; // size counter
 					p.cacheIndex = [];
 					for ( i = 0; i < l; i++ ){
-						if ( !rows[i].className.match(f) ) {
+						if ( !p.regexFiltered.test(rows[i].className) ) {
 							if (j === s && rows[i].className.match(c.cssChildRow)) {
 								// hide child rows @ start of pager (if already visible)
 								rows[i].style.display = 'none';
@@ -636,7 +635,7 @@
 					count = f ? 0 : s;
 					added = 0;
 					while (added < e && index < rows.length) {
-						if (!f || !/filtered/.test(rows[index][0].className)){
+						if (!f || !p.regexFiltered.test(rows[index][0].className)){
 							count++;
 							if (count > s && added <= e) {
 								added++;
@@ -940,6 +939,7 @@
 					}
 					// skipped rows
 					p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
+					p.regexFiltered = new RegExp(wo.filter_filteredRow || 'filtered');
 
 					$t
 					// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )

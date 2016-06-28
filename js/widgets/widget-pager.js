@@ -190,6 +190,7 @@
 			// skipped rows
 			p.regexRows = new RegExp( '(' + ( wo.filter_filteredRow || 'filtered' ) + '|' +
 				c.selectorRemove.slice( 1 ) + '|' + c.cssChildRow + ')' );
+			p.regexFiltered = new RegExp( wo.filter_filteredRow || 'filtered' );
 
 			// clear initialized flag
 			p.initialized = false;
@@ -637,7 +638,6 @@
 					sz = p.size === 'all' ? p.totalRows : p.size,
 					start = ( p.page * sz ),
 					end =  start + sz,
-					filtr = wo && wo.filter_filteredRow || 'filtered',
 					last = 0, // for cache indexing
 					size = 0; // size counter
 				p.cacheIndex = [];
@@ -648,7 +648,7 @@
 					last = 0; // for cache indexing
 					size = 0; // size counter
 					for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
-						if ( !$rows[ rowIndex ].className.match( filtr ) ) {
+						if ( !p.regexFiltered.test( $rows[ rowIndex ].className ) ) {
 							if ( size === start && $rows[ rowIndex ].className.match( c.cssChildRow ) ) {
 								// hide child rows @ start of pager (if already visible)
 								$rows[ rowIndex ].style.display = 'none';
@@ -949,7 +949,7 @@
 				count = f ? 0 : s;
 				added = 0;
 				while ( added < e && index < rows.length ) {
-					if ( !f || !/filtered/.test( rows[ index ][ 0 ].className ) ) {
+					if ( !f || !p.regexFiltered.test( rows[ index ][ 0 ].className ) ) {
 						count++;
 						if ( count > s && added <= e ) {
 							added++;
