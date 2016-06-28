@@ -184,8 +184,9 @@ jQuery(function($){
 		var processFilters = this.ts.filter.processFilters,
 			filters = [],
 			results = [];
-		filters[1] = 5, filters[2] = 'test', filters[3] = true, filters[4] = null;
-		results[1] = '5', results[2] = 'test', results[3] = 'true', results[4] = null;
+		filters[1] = 5; filters[2] = 'test'; filters[3] = true; filters[4] = null;
+		results[1] = '5'; results[2] = 'test'; results[3] = 'true';
+		// filters[4] will now become undefined within results - see #1237
 
 		assert.deepEqual( processFilters( filters, true ), results );
 		assert.deepEqual( processFilters( filters, false ), results );
