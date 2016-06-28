@@ -206,7 +206,7 @@
 				norm_rows = c.cache[ tbodyIndex ].normalized;
 				data.group = undef; // clear grouping across tbodies
 				rowIndex = hasPager && !p.ajax ? p.startRow - 1 : 0;
-				end = hasPager ? p.endRow - ( p.ajax ? p.startRow : 0 ): norm_rows.length;
+				end = hasPager ? p.endRow - ( p.ajax ? p.startRow : 0 ) : norm_rows.length;
 				for ( ; rowIndex < end; rowIndex++ ) {
 					data.rowData = norm_rows[ rowIndex ];
 					// fixes #1232 - ajax issue; if endRow > norm_rows.length (after filtering), then data.rowData is undefined
