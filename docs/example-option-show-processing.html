@@ -23,7 +23,8 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
 <script id="js">$(function(){
-	var t, start;
+	var t, start,
+		vis = false;
 
 	$("table").tablesorter({
 		showProcessing: true,
@@ -34,19 +35,30 @@
 			filter_reset : '.reset'
 		}
 	})
-	.bind('filterStart filterEnd', function(e, filter){
+	.bind('sortBegin sortEnd', function(e) {
+		vis = e.type === "sortBegin";
+	})
+	.bind('filterStart filterEnd', function(e, filter) {
 		if (e.type === 'filterStart') {
 			start = e.timeStamp;
+			vis = true;
 			t = '<li>Filter Started: [' + filter + ']</li>';
 		} else if (start) {
+			vis = false;
 			t = '<li>Filter Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>';
+			start = 0;
 		} else {
 			return;
 		}
 		$("#display").append(t).find('li:first').remove();
 	});
 
-	$('button').click(function(){
+	$('.toggle').click(function(){
+		vis = !vis;
+		$.tablesorter.isProcessing($("table"), vis);
+	});
+
+	$('[data-search]').click(function(){
 		var search = $(this).attr('data-search').split(',');
 		$('table').trigger('search', [search]);
 		return false;
@@ -90,7 +102,8 @@
 	<!-- ",l,f,>80".split(",") ends up as an array [ "", "l", "f", ">80" ] -->
 	<button type="button" data-search=",l,f,>80">Filter</button> (females majoring in languages with a score >80)<br>
 	<button type="button" data-search=",l,!female,>80">Filter</button> (males majoring in languages with a score >80)<br>
-	<button type="button" class="reset">Reset</button>
+	<button type="button" class="reset">Reset</button><br>
+	<button type="button" class="toggle">Toggle</button>
 
 	<table class="tablesorter">
 	<thead>
