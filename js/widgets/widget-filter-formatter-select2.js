@@ -42,6 +42,7 @@
 		$shcell = [],
 		matchPrefix = o.match ? '' : '^',
 		matchSuffix = o.match ? '' : '$',
+		flags = wo.filter_ignoreCase ? 'i' : '',
 
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSelect2 = function() {
@@ -60,7 +61,11 @@
 			}
 			$input
 				// add regex, so we filter exact numbers
-				.val( $.isArray(v) && v.length && v.join('') !== '' ? '/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' : '' )
+				.val(
+					$.isArray(v) && v.length && v.join('') !== '' ?
+						'/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
+						''
+				)
 				.trigger('search').end()
 				.find('.select2').select2('val', v);
 			// update sticky header cell
