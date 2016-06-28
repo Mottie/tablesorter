@@ -101,6 +101,24 @@ If you would like to contribute, please...
 
 View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.5">Version 2.26.5</a> (6/28/2016)
+
+* Docs:
+  * Optimize png images using using zopflipng; see [pull #1230](https://github.com/Mottie/tablesorter/pull/1230) thanks [@PeterDaveHello](https://github.com/PeterDaveHello)!
+  * Add [`showProcessing`](https://mottie.github.io/tablesorter/docs/example-option-show-processing.html#display) toggle button.
+  * Add demo link for css3 animated `showProcessing` icons that actually works!
+  * Update to use jQuery v3.0.0.
+* Readme: Update for previous version bump.
+* Filter: Do not return altered filters variable. Fixes [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
+* Grouping:
+  * Use correct pager row indexing. Fixes [issue #1232](https://github.com/Mottie/tablesorter/issues/1232).
+  * Prevent JS error with ajax & filtering. Fixes [issue #1232](https://github.com/Mottie/tablesorter/issues/1232).
+  * Fix lint issue.
+* Resizable: Adjust handles on pager complete.
+* Pager:
+  * Fix code alignment.
+  * Fix filtered regular expression definition.
+
 #### <a name="v2.26.4">Version 2.26.4</a> (6/15/2016)
 
 * Version bump due to merging issues.
@@ -115,30 +133,3 @@ View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes
 * Filter: Fix select2 lint issue.
 * Scroller: Hide `<col>` with hidden columns. Fixes [issue #1229](https://github.com/Mottie/tablesorter/issues/1229).
 * Grunt: Update dependencies & fix pager indentation.
-
-#### <a name="v2.26.2">Version 2.26.2</a> (5/28/2016)
-
-* Docs:
-  * Add missing "tablesorter-ignoreRow" class. See [issue #1218](https://github.com/Mottie/tablesorter/issues/1218).
-  * Update jQuery to 1.12.3 & add migrate for v3.0.
-  * Correct grouping & resizable last update.
-* Filter:
-  * Remove not any match limitation. See [updated demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-any-match.html).
-  * Fix select2 v3 filter extension. See [issue #1216](https://github.com/Mottie/tablesorter/issues/1216); this code does not work with select2 v4.
-* Testing: `setFilters` last parameter now `true` by default.
-
-#### <a name="v2.26.1">Version 2.26.1</a> (5/16/2016)
-
-* Docs:
-  * Update setFilters method.
-  * Update playground links & cleanup.
-* Core: Minor organization of options.
-* Filter:
-  * Minor organization of options.
-  * Allow any match searches with no input.
-* Group:
-  * Escape angled brackets in group names. Fixes [issue #1206](https://github.com/Mottie/tablesorter/issues/1206).
-  * Fix HTML escape string & prevent undefined error. See [issue #1206](https://github.com/Mottie/tablesorter/issues/1206).
-  * Ensure empty cells get a header. Fixes [issue #1209](https://github.com/Mottie/tablesorter/issues/1209).
-* Math: Add `math_completed` callback.
-* Resizable: update resizable handle position after init. Fixes [issue #1207](https://github.com/Mottie/tablesorter/issues/1207).

@@ -1,4 +1,4 @@
-/*! Widget: grouping - updated 5/16/2015 (v2.26.1) *//*
+/*! Widget: grouping - updated 6/28/2015 (v2.26.5) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -199,19 +199,23 @@
 		},
 		findColumnGroups : function( c, wo, data ) {
 			var tbodyIndex, norm_rows, $row, rowIndex, end, undef,
-				hasPager = ts.hasWidget( c.table, 'pager' );
+				hasPager = ts.hasWidget( c.table, 'pager' ),
+				p = c.pager || {};
 			data.groupIndex = 0;
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 				norm_rows = c.cache[ tbodyIndex ].normalized;
 				data.group = undef; // clear grouping across tbodies
-				rowIndex = hasPager ? c.pager.startRow - 1 : 0;
-				end = hasPager ? c.pager.endRow : norm_rows.length;
+				rowIndex = hasPager && !p.ajax ? p.startRow - 1 : 0;
+				end = hasPager ? p.endRow - ( p.ajax ? p.startRow : 0 ) : norm_rows.length;
 				for ( ; rowIndex < end; rowIndex++ ) {
 					data.rowData = norm_rows[ rowIndex ];
-					data.$row = data.rowData[ c.columns ].$row;
-					// fixes #438
-					if ( data.$row.is( ':visible' ) && tsg.types[ data.grouping[ 1 ] ] ) {
-						tsg.insertGroupHeader( c, wo, data );
+					// fixes #1232 - ajax issue; if endRow > norm_rows.length (after filtering), then data.rowData is undefined
+					if (data.rowData) {
+						data.$row = data.rowData[ c.columns ].$row;
+						// fixes #438
+						if ( data.$row.is( ':visible' ) && tsg.types[ data.grouping[ 1 ] ] ) {
+							tsg.insertGroupHeader( c, wo, data );
+						}
 					}
 				}
 			}

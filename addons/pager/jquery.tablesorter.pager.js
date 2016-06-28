@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 5/1/2016 (v2.26.0)
+* updated 6/28/2015 (v2.26.5)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -341,12 +341,11 @@
 					sz = p.size === 'all' ? p.totalRows : p.size,
 					s = ( p.page * sz ),
 					e =  s + sz,
-					f = c.widgetOptions && c.widgetOptions.filter_filteredRow || 'filtered',
 					last = 0, // for cache indexing
 					j = 0; // size counter
 					p.cacheIndex = [];
 					for ( i = 0; i < l; i++ ){
-						if ( !rows[i].className.match(f) ) {
+						if ( !p.regexFiltered.test(rows[i].className) ) {
 							if (j === s && rows[i].className.match(c.cssChildRow)) {
 								// hide child rows @ start of pager (if already visible)
 								rows[i].style.display = 'none';
@@ -636,7 +635,7 @@
 					count = f ? 0 : s;
 					added = 0;
 					while (added < e && index < rows.length) {
-						if (!f || !/filtered/.test(rows[index][0].className)){
+						if (!f || !p.regexFiltered.test(rows[index][0].className)){
 							count++;
 							if (count > s && added <= e) {
 								added++;
@@ -940,6 +939,7 @@
 					}
 					// skipped rows
 					p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
+					p.regexFiltered = new RegExp(wo.filter_filteredRow || 'filtered');
 
 					$t
 					// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
@@ -1120,18 +1120,18 @@
 	// see #486
 	ts.showError = function( table, xhr, settings, exception ) {
 		var $row,
-		$table = $( table ),
-		c = $table[0].config,
-		wo = c && c.widgetOptions,
-		errorRow = c.pager && c.pager.cssErrorRow ||
-		wo && wo.pager_css && wo.pager_css.errorRow ||
-		'tablesorter-errorRow',
-		typ = typeof xhr,
-		valid = true,
-		message = '',
-		removeRow = function(){
-			c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
-		};
+			$table = $( table ),
+			c = $table[0].config,
+			wo = c && c.widgetOptions,
+			errorRow = c.pager && c.pager.cssErrorRow ||
+			wo && wo.pager_css && wo.pager_css.errorRow ||
+			'tablesorter-errorRow',
+			typ = typeof xhr,
+			valid = true,
+			message = '',
+			removeRow = function(){
+				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+			};
 
 		if ( !$table.length ) {
 			console.error('tablesorter showError: no table parameter passed');
@@ -1158,13 +1158,13 @@
 		if ( message === '' ) {
 			if ( typ === 'object' ) {
 				message =
-				xhr.status === 0 ? 'Not connected, verify Network' :
-				xhr.status === 404 ? 'Requested page not found [404]' :
-				xhr.status === 500 ? 'Internal Server Error [500]' :
-				exception === 'parsererror' ? 'Requested JSON parse failed' :
-				exception === 'timeout' ? 'Time out error' :
-				exception === 'abort' ? 'Ajax Request aborted' :
-				'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
+					xhr.status === 0 ? 'Not connected, verify Network' :
+					xhr.status === 404 ? 'Requested page not found [404]' :
+					xhr.status === 500 ? 'Internal Server Error [500]' :
+					exception === 'parsererror' ? 'Requested JSON parse failed' :
+					exception === 'timeout' ? 'Time out error' :
+					exception === 'abort' ? 'Ajax Request aborted' :
+					'Uncaught error: ' + xhr.statusText + ' [' + xhr.status + ']';
 			} else if ( typ === 'string'  ) {
 				// keep backward compatibility (external usage just passes a message string)
 				message = xhr;
@@ -1176,16 +1176,16 @@
 
 		// allow message to include entire row HTML!
 		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
-		.click( function() {
-			$( this ).remove();
-		})
-		// add error row to thead instead of tbody, or clicking on the header will result in a parser error
-		.appendTo( c.$table.find( 'thead:first' ) )
-		.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
-		.attr({
-			role : 'alert',
-			'aria-live' : 'assertive'
-		});
+			.click( function() {
+				$( this ).remove();
+			})
+			// add error row to thead instead of tbody, or clicking on the header will result in a parser error
+			.appendTo( c.$table.find( 'thead:first' ) )
+			.addClass( errorRow + ' ' + c.selectorRemove.slice(1) )
+			.attr({
+				role : 'alert',
+				'aria-live' : 'assertive'
+			});
 
 	};
 
