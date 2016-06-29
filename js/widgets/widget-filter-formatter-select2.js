@@ -25,7 +25,9 @@
 
 		}, select2Def ),
 		arry, data,
-		c = $cell.closest('table')[0].config,
+		// add class to $cell since it may point to a removed DOM node
+		// after a "refreshWidgets"; see #1237
+		c = $cell.addClass('select2col' + indx).closest('table')[0].config,
 		wo = c.widgetOptions,
 		// Add a hidden input to hold the range values
 		$input = $('<input class="filter" type="hidden">')
@@ -118,6 +120,7 @@
 			// value = '/(^x$|^y$)/' => 'x,y'
 			var val = c.$table.data('lastSearch')[indx] || '';
 			val = val.replace(/^\/\(\^?/, '').replace(/\$\|\^/g, '|').replace(/\$?\)\/$/g, '').split('|');
+			$cell = c.$table.find('.select2col' + indx);
 			$cell.find('.select2').select2('val', val);
 			updateSelect2();
 			ts.filter.formatterUpdated($cell, indx);
