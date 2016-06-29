@@ -460,7 +460,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.26.5</span>):
 			<ul>
-				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.25.5</span>).</li>
+				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.25.6</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.26.2</span>).</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>).</li>
 				<li><a href="example-widget-filter-custom.html">custom filter functions</a> (v2.3.6; <span class="version updated">v2.22.0</span>).</li>
@@ -468,7 +468,7 @@
 				<li><a href="example-widget-filter-custom-search2.html">custom search type (example #2: date range)</a> (<span class="version">v2.19.1</span>; <span class="version updated">v2.24.6</span>).</li>
 				<li><a href="example-widget-filter-childrows.html">child rows</a> (<span class="version">v2.23.4</span>).</li>
 				<li>formatter: <a href="example-widget-filter-formatter-1.html">jQuery UI widgets</a> and <a href="example-widget-filter-formatter-2.html">HTML5 Elements</a> (v2.7.7; <span class="version updated">v2.17.5</span>).</li>
-				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2 v3</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.26.2</span>).</li>
+				<li>formatter: <a href="example-widget-filter-formatter-select2.html">select2 v3</a> (<span class="version">v2.16.0</span>; <span class="version updated">v2.26.6</span>).</li>
 				<li>formatter: select2 v4 (TO DO)</li>
 				<li><a href="example-widget-filter-selectmenu.html">Using jQuery UI Selectmenu</a> (<span class="version">v2.24.4</span>).</li>
 			</ul>
@@ -2689,14 +2689,15 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 });</pre>
 					Exclusion names must be separated by a comma. Here is a full list of filter type names:
 					<ul>
-						<li><code>and</code> - logical <code>&quot; AND &quot;</code> or <code> && </code> type filter.</li>
+						<li><code>and</code> - logical AND type filter (using <code>foo AND bar</code> or <code>foo && bar</code>).</li>
+						<li><code>or</code> - logical OR type filter (using <code>foo OR bar</code> or <code>foo|bar</code>).</li>
 						<li><code>exact</code> - exact match (using <code>&quot;</code> or <code>=</code>).</li>
 						<li><code>fuzzy</code> - fuzzy match (<code>~</code>)</li>
 						<li><code>notMatch</code> - not match (<code>!</code> or <code>!=</code>)</li>
 						<li><code>operators</code> - comparison filters (<code>&lt; &lt;= &gt;= &gt;</code>)</li>
 						<li><code>range</code> - range (<code> - </code> or <code> to </code>)</li>
 						<li><code>regex</code> - regex (<code>/\d/</code>)</li>
-						<li><code>wild</code> - wild card matching (<code>?</code> for single characters, <code>*</code> for multiple characters not including spaces, or <code>|</code> or <code> OR </code> for a logical OR.</li>
+						<li><code>wild</code> - wild card matching (<code>?</code> for single characters, <code>*</code> for multiple characters not including spaces, <del>or <code>|</code> or <code> OR </code> for a logical OR</del> (the "or" filter type was separated from "wild" in v2.22.2).</li>
 					</ul>
 					</div>
 				</td>
@@ -2969,10 +2970,10 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 
 			<tr id="widget-filter-hidefilters">
 				<td><a href="#" class="permalink">filter_hideFilters</a></td>
-				<td>Boolean</td>
+				<td>Boolean, or Function</td>
 				<td>false</td>
 				<td>
-					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The row is revealed by hovering over the visible portion of the filter row or by giving any filter input/select focus (tab key) (v2.4).
+					Filter widget: Set this option to <code>true</code> to hide the filter row initially. The row is revealed by hovering over the visible portion of the filter row or by giving any filter input/select focus (tab key) (v2.4; <span class="version updated">v2.26.6</span>).
 					<div class="collapsible">
 					<br>
 					Use the <a href="#widget-filter-hidefilters"><code>filter_hideFilters</code></a> option as follows:
@@ -2983,7 +2984,30 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
       filter_hideFilters : true
     }
   });
-});</pre>You can change the style (thickness) of the hidden filter row in the tablesorter theme css. Look for <code>.tablesorter-filter-row</code> (revealed row) and <code>.tablesorter-filter-row.hideme</code> (for the hidden row) css definitions.</div>
+});</pre>You can change the style (thickness) of the hidden filter row in the tablesorter theme css. Look for <code>.tablesorter-filter-row</code> (revealed row) and <code>.tablesorter-filter-row.hideme</code> (for the hidden row) css definitions.
+					In <span class="version updated">v2.26.6</span>, this setting can also contain a function.
+					<ul>
+						<li>When this function returns a boolean value, it signifies weather the filter row should or should not be hidden (see the details in <a href="https://github.com/Mottie/tablesorter/issues/477#issuecomment-229352896">this issue</a>.</li>
+						<li>If this function does not return a boolean value, the value of the filters are checked and if no search queries are found, the filter row will be hidden.</li>
+					</ul>
+					Example of function setting:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_hideFilters : function(config) {
+        // get an array of filter queries (don't use the value from
+        // `config.lastSearch` because this code will modify it;
+        // unless you extend it)
+        var search = $.tablesorter.getFilters(config.$table);
+        // ignore any query is column 2 (zero-based index)
+        search.splice(2,1);
+        // return true to hide the filter row, false to show it
+        return search.join("") === "";
+      }
+    }
+  });
+});</pre></div>
 				</td>
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
