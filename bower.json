@@ -8,6 +8,10 @@
     "dist/js/jquery.tablesorter.combined.js",
     "dist/css/theme.blue.min.css"
   ],
+  "license" : [
+    "MIT",
+    "GPL-2.0+"
+  ],
   "ignore": [
     "/node_modules",
     "/bower_components",
