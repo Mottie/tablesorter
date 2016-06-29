@@ -116,10 +116,10 @@
 			});
 
 		// update select2 from filter hidden input, in case of saved filters
-		c.$table.bind('filterFomatterUpdate', function(){
+		c.$table.bind('filterFomatterUpdate', function() {
 			// value = '/(^x$|^y$)/' => 'x,y'
 			var val = c.$table.data('lastSearch')[indx] || '';
-			val = val.replace(/^\/\(\^?/, '').replace(/\$\|\^/g, '|').replace(/\$?\)\/$/g, '').split('|');
+			val = val.replace(/^\/\(\^?/, '').replace(/\$\|\^/g, '|').replace(/\$?\)\/i?$/g, '').split('|');
 			$cell = c.$table.find('.select2col' + indx);
 			$cell.find('.select2').select2('val', val);
 			updateSelect2();
