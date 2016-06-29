@@ -785,12 +785,13 @@
 			.attr( 'data-lastSearchTime', new Date().getTime() )
 			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
 			.bind( 'keydown' + namespace, function( event ) {
-				if ( event.which === tskeyCodes.escape && !wo.filter_resetOnEsc ) {
+				if ( event.which === tskeyCodes.escape && !table.config.widgetOptions.filter_resetOnEsc ) {
 					// prevent keypress event
 					return false;
 				}
 			})
 			.bind( 'keyup' + namespace, function( event ) {
+				wo = table.config.widgetOptions; // make sure "wo" isn't cached
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
 				// emulate what webkit does.... escape clears the filter
@@ -817,7 +818,8 @@
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( wo.filter_initialized && ( event.which === tskeyCodes.enter || event.type === 'search' ||
+				if ( table.config.widgetOptions.filter_initialized &&
+					( event.which === tskeyCodes.enter || event.type === 'search' ||
 					( event.type === 'change' ) && this.value !== c.lastSearch[column] ) ||
 					// only "input" event fires in MS Edge when clicking the "x" to clear the search
 					( event.type === 'input' && this.value === '' ) ) {
