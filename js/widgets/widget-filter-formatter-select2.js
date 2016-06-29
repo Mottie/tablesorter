@@ -119,7 +119,13 @@
 		c.$table.bind('filterFomatterUpdate', function() {
 			// value = '/(^x$|^y$)/' => 'x,y'
 			var val = c.$table.data('lastSearch')[indx] || '';
-			val = val.replace(/^\/\(\^?/, '').replace(/\$\|\^/g, '|').replace(/\$?\)\/i?$/g, '').split('|');
+			val = val
+				.replace(/^\/\(\^?/, '')
+				.replace(/\$\|\^/g, '|')
+				.replace(/\$?\)\/i?$/g, '')
+				// unescape special regex characters
+				.replace(/\\/g, '')
+				.split('|');
 			$cell = c.$table.find('.select2col' + indx);
 			$cell.find('.select2').select2('val', val);
 			updateSelect2();
