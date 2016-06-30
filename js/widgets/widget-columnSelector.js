@@ -348,7 +348,7 @@
 			}
 			// only add resize end if using media queries
 			if ( hasSpans && wo.columnSelector_mediaquery ) {
-				nspace = c.namespace.slice( 1 ) + 'columnselector';
+				nspace = c.namespace + 'columnselector';
 				// Setup window.resizeEnd event
 				$window
 					.off( nspace )
@@ -365,15 +365,18 @@
 		adjustColspans: function(c, wo) {
 			var index, cols, col, span, end, $cell,
 				colSel = c.selector,
-				autoModeOn = colSel.auto,
-				$colspans = $( c.namespace + 'columnselectorHasSpan' ),
-				len = $colspans.length;
-			if ( len ) {
-				for ( index = 0; index < len; index++ ) {
-					$cell = $colspans.eq(index);
-					col = parseInt( $cell.attr('data-column'), 10 ) || $cell[0].cellIndex;
-					span = parseInt( $cell.attr('data-col-span'), 10 );
-					end = col + span;
+				filtered = wo.filter_filteredRow || 'filtered',
+				autoModeOn = wo.columnSelector_mediaquery && colSel.auto,
+				// find all header/footer cells in case a regular column follows a colspan; see #1238
+				$headers = c.$table.children( 'thead, tfoot' ).children().children()
+					.add( $(c.namespace + '_extra_table').children( 'thead, tfoot' ).children().children() ),
+				len = $headers.length;
+			for ( index = 0; index < len; index++ ) {
+				$cell = $headers.eq(index);
+				col = parseInt( $cell.attr('data-column'), 10 ) || $cell[0].cellIndex;
+				span = parseInt( $cell.attr('data-col-span'), 10 ) || 1;
+				end = col + span;
+				if ( span > 1 ) {
 					for ( cols = col; cols < end; cols++ ) {
 						if ( !autoModeOn && colSel.states[ cols ] === false ||
 							autoModeOn && c.$headerIndexed[ cols ] && !c.$headerIndexed[ cols ].is(':visible') ) {
@@ -381,10 +384,12 @@
 						}
 					}
 					if ( span ) {
-						$cell.removeClass( wo.filter_filteredRow || 'filtered' )[0].colSpan = span;
+						$cell.removeClass( filtered )[0].colSpan = span;
 					} else {
-						$cell.addClass( wo.filter_filteredRow || 'filtered' );
+						$cell.addClass( filtered );
 					}
+				} else if ( typeof colSel.states[ col ] !== 'undefined' ) {
+					$cell.toggleClass( filtered, !colSel.states[ col ] );
 				}
 			}
 		},
