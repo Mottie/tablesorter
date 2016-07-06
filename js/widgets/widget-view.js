@@ -101,6 +101,9 @@
 						// Add 2 spans, one is dropped when using .html()
 						var span = $('<span />').append($('<span/>', attrs).append(content));
 						tmpl = tmpl.replace(reg, span.html());
+
+						reg = '{col' + k + ':raw}';
+						tmpl = tmpl.replace(reg, $(v).text());
 					});
 
 					var $tmpl = $(tmpl);
