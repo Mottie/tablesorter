@@ -6,29 +6,29 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 * Because of the change to the internal cache, the tablesorter v2.16+ core, filter widget and pager (both plugin &amp; widget) will only work with the same version or newer files.
 
-### [Documentation](//mottie.github.io/tablesorter/docs/)
+### [Documentation](https://mottie.github.io/tablesorter/docs/)
 
-* See the [full documentation](//mottie.github.io/tablesorter/docs/).
-* All of the [original document pages](//tablesorter.com/docs/) have been included.
-* Information from my blog post on [undocumented options](//wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
-* Change log moved from included text file into the [wiki documentation](//github.com/Mottie/tablesorter/wiki/Changes).
+* See the [full documentation](https://mottie.github.io/tablesorter/docs/).
+* All of the [original document pages](http://tablesorter.com/docs/) have been included.
+* Information from my blog post on [undocumented options](https://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
+* Change log moved from included text file into the [wiki documentation](https://github.com/Mottie/tablesorter/wiki/Changes).
 
 ### Demos
 
-* [Basic alpha-numeric sort Demo](//mottie.github.com/tablesorter/).
-* Links to demo pages can be found within the main [documentation](//mottie.github.io/tablesorter/docs/).
-* More demos & playgrounds - updated in the [wiki pages](//github.com/Mottie/tablesorter/wiki).
+* [Basic alpha-numeric sort Demo](https://mottie.github.io/tablesorter/).
+* Links to demo pages can be found within the main [documentation](https://mottie.github.io/tablesorter/docs/).
+* More demos & playgrounds - updated in the [wiki pages](https://github.com/Mottie/tablesorter/wiki).
 
 ### Features
 
 * Multi-column alphanumeric sorting and filtering.
-* Multi-tbody sorting - see the [options](//mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
-* Supports [Bootstrap v2 and 3](//mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
-* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](//mottie.github.io/tablesorter/docs/example-parsers.html).
-* Inline editing - see [demo](//mottie.github.io/tablesorter/docs/example-widget-editable.html).
+* Multi-tbody sorting - see the [options](https://mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
+* Supports [Bootstrap v2 and 3](https://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
+* Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](https://mottie.github.io/tablesorter/docs/example-parsers.html).
+* Inline editing - see [demo](https://mottie.github.io/tablesorter/docs/example-widget-editable.html).
 * Support for ROWSPAN and COLSPAN on TH elements.
 * Support secondary "hidden" sorting (e.g., maintain alphabetical sort when sorting on other criteria).
-* Extensibility via [widget system](//mottie.github.io/tablesorter/docs/example-widgets.html).
+* Extensibility via [widget system](https://mottie.github.io/tablesorter/docs/example-widgets.html).
 * Cross-browser: IE 6.0+, FF 2+, Safari 2.0+, Opera 9.0+, Chrome 5.0+.
 * Small code size, starting at 25K minified.
 * Works with jQuery 1.2.6+ (jQuery 1.4.1+ needed with some widgets).
@@ -37,20 +37,20 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 ### Licensing
 
 * Copyright (c) 2007 Christian Bach.
-* Original examples and docs at: [http://tablesorter.com](//tablesorter.com).
-* Dual licensed under the [MIT](//www.opensource.org/licenses/mit-license.php) and [GPL](//www.gnu.org/licenses/gpl.html) licenses.
+* Original examples and docs at: [http://tablesorter.com](http://tablesorter.com).
+* Dual licensed under the [MIT](https://opensource.org/licenses/mit-license.php) or [GPL](https://www.gnu.org/licenses/gpl.html) licenses (pick one).
 
 ### Download
 
-* Get all files: [zip](//github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](//github.com/Mottie/tablesorter/archive/master.tar.gz).
-* Use [bower](http://bower.io/): `bower install jquery.tablesorter`.
-* Use [node.js](http://nodejs.org/): `npm install tablesorter`.
+* Get all files: [zip](https://github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](https://github.com/Mottie/tablesorter/archive/master.tar.gz).
+* Use [bower](https://bower.io/): `bower install jquery.tablesorter`.
+* Use [node.js](https://nodejs.org/): `npm install tablesorter`.
 * CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter).
 
 ### Related Projects
 
-* [Plugin for Rails](//github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](//github.com/themilkman).
-* [UserFrosting](//github.com/alexweissman/UserFrosting) (A secure, modern user management system for PHP that uses tablesorter) by [alexweissman](//github.com/alexweissman).
+* [Plugin for Rails](https://github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](https://github.com/themilkman).
+* [UserFrosting](https://github.com/alexweissman/UserFrosting) (A secure, modern user management system for PHP that uses tablesorter) by [alexweissman](https://github.com/alexweissman).
 
 ### Contributing
 
@@ -63,23 +63,23 @@ If you would like to contribute, please...
 
 ### Special Thanks
 
-* Big shout-out to [Nick Craver](//github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
-* Big thanks to [thezoggy](//github.com/thezoggy) for helping with code, themes and providing valuable feedback.
-* Big thanks to [ThsSin-](//github.com/TheSin-) for taking over for a while and also providing valuable feedback.
+* Big shout-out to [Nick Craver](https://github.com/NickCraver) for getting rid of the `eval()` function that was previously needed for multi-column sorting.
+* Big thanks to [thezoggy](https://github.com/thezoggy) for helping with code, themes and providing valuable feedback.
+* Big thanks to [ThsSin-](https://github.com/TheSin-) for taking over for a while and also providing valuable feedback.
 * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for numerous contributions!
-* Also extra thanks to [christhomas](//github.com/christhomas) and [Lynesth](//github.com/Lynesth) for help with code.
+* Also extra thanks to [christhomas](https://github.com/christhomas) and [Lynesth](https://github.com/Lynesth) for help with code.
 * And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
 
 ### Questions?
 
 [![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
 
-* Check the [FAQ](//github.com/Mottie/tablesorter/wiki/FAQ) page.
-* Search the [main documentation](//mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
-* Search the [issues](//github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
+* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
+* Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
+* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
 * If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
-* Ask your question at [Stackoverflow](//stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
-* Please don't open a [new issue](//github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
+* Ask your question at [Stackoverflow](https://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
+* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
 [npm-url]: https://npmjs.org/package/tablesorter
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
@@ -99,7 +99,7 @@ If you would like to contribute, please...
 
 ### Recent Changes
 
-View the [complete change log here](//github.com/Mottie/tablesorter/wiki/Changes).
+View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
 #### <a name="v2.26.5">Version 2.26.5</a> (6/28/2016)
 
