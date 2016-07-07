@@ -118,6 +118,7 @@
 				});
 
 				$(wo.view_container).append($container);
+				c.$table.triggerHandler('viewComplete');
 			},
 
 			removeView: function(c, wo) {
@@ -154,7 +155,6 @@
 				c.$table.on('tablesorter-ready', function() {
 					view.buildToolBar(c, wo);
 					view.buildView(c, wo);
-					c.$table.triggerHandler('viewComplete');
 				});
 			},
 
