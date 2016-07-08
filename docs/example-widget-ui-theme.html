@@ -27,7 +27,8 @@
 	<link href="../css/theme.grey.css" rel="stylesheet">
 
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
+	<script src="../js/widgets/widget-uitheme.js"></script>
 
 	<!-- Tablesorter: optional -->
 	<!-- <script src="../addons/pager/jquery.tablesorter.pager.js"></script> -->
@@ -67,7 +68,7 @@
 		headerTemplate : '{content} {icon}', // needed to add icon for jui theme
 
 		// widget code now contained in the jquery.tablesorter.widgets.js file
-		widgets : ['uitheme', 'zebra'],
+		widgets : ['uitheme', 'filter', 'zebra'],
 
 		widgetOptions : {
 			// zebra striping class names - the uitheme widget adds the class names defined in
