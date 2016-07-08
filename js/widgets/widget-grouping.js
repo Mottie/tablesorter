@@ -151,7 +151,6 @@
 						}
 					}
 				}
-
 				// save collapsed groups
 				if ( wo.group_saveGroups &&
 					!$.isEmptyObject( wo.group_collapsedGroups ) &&
@@ -183,8 +182,8 @@
 			// save current grouping
 			var saveName, direction,
 				savedGroup = false;
-			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
-				wo.group_collapsedGroups = ts.storage( c.table, 'tablesorter-groups' ) || {};
+			if (wo.group_collapsible && wo.group_saveGroups) {
+				wo.group_collapsedGroups = ts.storage && ts.storage( c.table, 'tablesorter-groups' ) || {};
 				// include direction when saving groups (reversed numbers shows different range values)
 				direction = 'dir' + c.sortList[0][1];
 				// combine column, sort direction & grouping as save key
