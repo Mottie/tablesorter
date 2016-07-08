@@ -155,7 +155,6 @@
 				if ( wo.group_saveGroups &&
 					!$.isEmptyObject( wo.group_collapsedGroups ) &&
 					wo.group_collapsedGroups[ wo.group_collapsedGroup ].length ) {
-
 					name = $row.find( '.group-name' ).text().toLowerCase() + $row.attr( 'data-group-index' );
 					isHidden = $.inArray( name, wo.group_collapsedGroups[ wo.group_collapsedGroup ] ) > -1;
 					$row.toggleClass( 'collapsed', isHidden );
@@ -171,7 +170,7 @@
 			var name = ( data.currentGroup || '' ).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
-				( data.groupIndex++ ) + '">' +
+				data.groupIndex + '">' +
 				'<td colspan="' + c.columns + '">' +
 					( wo.group_collapsible ? '<i/>' : '' ) +
 					'<span class="group-name">' + name + '</span>' +
@@ -233,9 +232,10 @@
 				}
 				data.$row.before( tsg.groupHeaderHTML( c, wo, data ) );
 				if ( wo.group_saveGroups && !data.savedGroup && wo.group_collapsed && wo.group_collapsible ) {
-					// all groups start collapsed
-					wo.group_collapsedGroups[ wo.group_collapsedGroup ].push( data.currentGroup );
+					// all groups start collapsed; data.groupIndex is 1 more than the expected index.
+					wo.group_collapsedGroups[ wo.group_collapsedGroup ].push( data.currentGroup + data.groupIndex );
 				}
+				data.groupIndex++;
 			}
 		},
 
