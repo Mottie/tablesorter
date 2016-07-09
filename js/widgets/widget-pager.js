@@ -1115,7 +1115,7 @@
 		parsePageSize: function( c, size, mode ) {
 			var p = c.pager,
 				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10;
-			return /all/i.test( size ) || s === p.totalRows ?
+			return p.initialized && (/all/i.test( size ) || s === p.totalRows) ?
 				// "get" to set `p.size` or "set" to set `p.$size.val()`
 				'all' : ( mode === 'get' ? s : p.size );
 		},

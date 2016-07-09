@@ -783,7 +783,7 @@
 			// set to either set or get value
 			parsePageSize = function( p, size, mode ) {
 				var s = parseInt( size, 10 ) || p.size || p.settings.size || 10;
-				return /all/i.test( size ) || s === p.totalRows ?
+				return p.initialized && (/all/i.test( size ) || s === p.totalRows) ?
 				// "get" to get `p.size` or "set" to set `p.$size.val()`
 				'all' : ( mode === 'get' ? s : p.size );
 			},
