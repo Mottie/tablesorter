@@ -100,10 +100,10 @@
 						var content = $(v).html();
 						// Add 2 spans, one is dropped when using .html()
 						var span = $('<span />').append($('<span/>', attrs).append(content));
-						tmpl = tmpl.replace(reg, span.html());
+						tmpl = tmpl.replace(new RegExp(reg, 'g'), span.html());
 
 						reg = '{col' + k + ':raw}';
-						tmpl = tmpl.replace(reg, $(v).text());
+						tmpl = tmpl.replace(new RegExp(reg, 'g'), $(v).text());
 					});
 
 					var $tmpl = $(tmpl);
