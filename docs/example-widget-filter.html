@@ -96,6 +96,7 @@
 
 			// if true, filters are collapsed initially, but can be revealed by hovering over the grey bar immediately
 			// below the header row. Additionally, tabbing through the document will open the filter row when an input gets focus
+			// in v2.26.6, this option will also accept a function
 			filter_hideFilters : true,
 
 			// Set this option to false to make the searches case sensitive
@@ -247,6 +248,7 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="verison">v2.26.6</span>, the <a class="intlink" href="#filter-hidefilters"><code>hideFilters</code></a> setting will now accept a function to determine when to hide the filter row.</li>
 				<li>In <span class="version">v2.25.6</span>, added <a class="intlink" href="#methods"><code>filterResetSaved</code></a> method to clear stored filter values.</li>
 				<li>In <span class="version">v2.25.2</span>, added <a class="intlink" href="#filter-resetonesc"><code>filter_resetOnEsc</code></a> option.</li>
 				<li>In <span class="version">v2.22.2</span>,
@@ -498,7 +500,9 @@ $(function(){
 					<tr id="filter-hide-filters">
 						<td><span class="permalink">filter_hideFilters</span></td>
 						<td>false</td>
-						<td>If <code>true</code>, filters are hidden initially, but can be revealed by hovering over the filter row, or giving a filter input focus (tabbing down the page).</td>
+						<td>If <code>true</code>, filters are hidden initially, but can be revealed by hovering over the filter row, or giving a filter input focus (tabbing down the page).<br>
+							In <span class="version updated">v2.26.6</span>, a function can now be used to return a boolean value to set the visibility of the filter row. See the <a href="./#widget-filter-hidefilters">main documentation</a> for an example.
+						</td>
 					</tr>
 
 					<tr id="filter-ignore-case">

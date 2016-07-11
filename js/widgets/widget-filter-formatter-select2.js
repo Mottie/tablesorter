@@ -1,4 +1,4 @@
-/*! Widget: filter, select2 formatter function - updated 5/28/2016 (v2.26.2) *//*
+/*! Widget: filter, select2 formatter function - updated 7/11/2016 (v2.26.6) *//*
  * requires: jQuery 1.7.2+, tableSorter (FORK) 2.16+, filter widget 2.16+
  and select2 v3.4.6+ plugin (this code is NOT compatible with select2 v4+)
  */
@@ -34,22 +34,31 @@
 			.appendTo($cell)
 			// hidden filter update namespace trigger by filter widget
 			.bind('change' + c.namespace + 'filter', function(){
-				var val = this.value;
-				val = val.replace(/[/()$^]/g, '').split('|');
-				$cell.find('.select2').select2('val', val);
+				var val = convertRegex(this.value);
+				c.$table.find('.select2col' + indx + ' .select2').select2('val', val);
 				updateSelect2();
 			}),
 		$header = c.$headerIndexed[indx],
 		onlyAvail = $header.hasClass(wo.filter_onlyAvail),
-		$shcell = [],
 		matchPrefix = o.match ? '' : '^',
 		matchSuffix = o.match ? '' : '$',
 		flags = wo.filter_ignoreCase ? 'i' : '',
 
+		convertRegex = function(val) {
+			// value = '/(^x$|^y$)/' => ['x','y']
+			return val
+				.replace(/^\/\(\^?/, '')
+				.replace(/\$\|\^/g, '|')
+				.replace(/\$?\)\/i?$/g, '')
+				// unescape special regex characters
+				.replace(/\\/g, '')
+				.split('|');
+		},
+
 		// this function updates the hidden input and adds the current values to the header cell text
 		updateSelect2 = function() {
 			var arry = false,
-				v = $cell.find('.select2').select2('val') || o.value || '';
+				v = c.$table.find('.select2col' + indx + ' .select2').select2('val') || o.value || '';
 			// convert array to string
 			if ($.isArray(v)) {
 				arry = true;
@@ -71,8 +80,8 @@
 				.trigger('search').end()
 				.find('.select2').select2('val', v);
 			// update sticky header cell
-			if ($shcell.length) {
-				$shcell.find('.select2').select2('val', v);
+			if (c.widgetOptions.$sticky) {
+				c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val', v);
 			}
 		},
 
@@ -98,12 +107,13 @@
 		// data options are already defined
 		if (!(o.ajax && !$.isEmptyObject(o.ajax)) && !o.data) {
 			updateOptions();
-			if (onlyAvail) {
-				c.$table.bind('filterEnd', function(){
-					updateOptions();
-					$cell.add($shcell).find('.select2').select2(o);
-				});
-			}
+			c.$table.bind('filterEnd', function(){
+				updateOptions();
+				c.$table
+					.find('.select2col' + indx)
+					.add(c.widgetOptions.$sticky && c.widgetOptions.$sticky.find('.select2col' + indx))
+					.find('.select2').select2(o);
+			});
 		}
 
 		// add a select2 hidden input!
@@ -118,14 +128,7 @@
 		// update select2 from filter hidden input, in case of saved filters
 		c.$table.bind('filterFomatterUpdate', function() {
 			// value = '/(^x$|^y$)/' => 'x,y'
-			var val = c.$table.data('lastSearch')[indx] || '';
-			val = val
-				.replace(/^\/\(\^?/, '')
-				.replace(/\$\|\^/g, '|')
-				.replace(/\$?\)\/i?$/g, '')
-				// unescape special regex characters
-				.replace(/\\/g, '')
-				.split('|');
+			var val = convertRegex(c.$table.data('lastSearch')[indx] || '');
 			$cell = c.$table.find('.select2col' + indx);
 			$cell.find('.select2').select2('val', val);
 			updateSelect2();
@@ -134,25 +137,26 @@
 
 		// has sticky headers?
 		c.$table.bind('stickyHeadersInit', function(){
-			$shcell = c.widgetOptions.$sticky.find('.' + ts.css.filterRow).children().eq(indx).empty();
+			var $shcell = c.widgetOptions.$sticky.find('.select2col' + indx).empty();
 			// add a select2!
 			$('<input class="select2 select2-' + indx + '" type="hidden">')
 				.val(o.value)
 				.appendTo($shcell)
 				.select2(o)
 				.bind('change', function(){
-					$cell.find('.select2').select2('val', $shcell.find('.select2').select2('val') );
+					c.$table.find('.select2col' + indx)
+						.find('.select2')
+						.select2('val', c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val') );
 					updateSelect2();
 				});
 			if (o.cellText) {
 				$shcell.prepend('<label>' + o.cellText + '</label>');
 			}
-
 		});
 
 		// on reset
 		c.$table.bind('filterReset', function(){
-			$cell.find('.select2').select2('val', o.value || '');
+			c.$table.find('.select2col' + indx).find('.select2').select2('val', o.value || '');
 			setTimeout(function(){
 				updateSelect2();
 			}, 0);

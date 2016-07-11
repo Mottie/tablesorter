@@ -1,4 +1,4 @@
-/* Widget: view (beta) - updated 10/31/2015 (v2.24.0) */
+/* Widget: view (beta) - updated 7/11/2016 (v2.26.6) */
 /* By Justin F. Hallett (https://github.com/TheSin-)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  */

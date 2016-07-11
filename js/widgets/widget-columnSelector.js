@@ -1,4 +1,4 @@
-/* Widget: columnSelector (responsive table widget) - updated 4/29/2016 (v2.25.9) *//*
+/* Widget: columnSelector (responsive table widget) - updated 7/11/2016 (v2.26.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */

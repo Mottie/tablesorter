@@ -101,6 +101,37 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.26.6">Version 2.26.6</a> (7/11/2016)
+
+* Global: Fix "updated" date in various widgets & pager.
+* Docs:
+  * Cleanup links & license. Fixes [issue #1244](https://github.com/Mottie/tablesorter/issues/1244).
+  * Add button type to all buttons.
+  * Update to jQuery v3.1.0.
+* Core: Prevent undefined error in natural sort. See [issue #1151](https://github.com/Mottie/tablesorter/issues/1151).
+* Column Selector: Check visibility of cells after colspan. See [issue #1238](https://github.com/Mottie/tablesorter/issues/1238).
+* Filter
+  * Filter formatter for Select2 v3.4.6 (v4.0+ still not supported)
+    * Now adheres to case sensitivity setting. See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
+    * Update after filter row rebuilt. See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
+    * Properly remove case-insensitive flag in regex.
+    * Properly escaped characters in regex.
+  * Use uncached `widgetOptions` after inside events.
+  * `filter_hideFilters` option now accepts a function. See [issue #477](https://github.com/Mottie/tablesorter/issues/477).
+* Grouping:
+  * Fix js error when storage isn't loaded.
+  * Fix `group_collapsed` behavior. See [issue #1247](https://github.com/Mottie/tablesorter/issues/1247).
+* Pager:
+  * Prevent ajax call on init. See [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
+  * Prevent setting "all" value before initialization. See [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
+* Scroller: Save scroll position of window. See [issue #1240](https://github.com/Mottie/tablesorter/issues/1240).
+* UITheme: Modify filter row after filterInit.
+* View:
+  * Update to get the raw text value of a column without the span wrap.
+  * Trigger "viewComplete" in the view builder, not in init, otherwise you get no trigger when switching views.
+  * Replace all instances, not just the first one.
+* Bower: Add license identifiers. See [pull #1239](https://github.com/Mottie/tablesorter/pull/1239); thanks [@bckfnn](https://github.com/bckfnn)!
+
 #### <a name="v2.26.5">Version 2.26.5</a> (6/28/2016)
 
 * Docs:
@@ -122,14 +153,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 #### <a name="v2.26.4">Version 2.26.4</a> (6/15/2016)
 
 * Version bump due to merging issues.
-
-#### <a name="v2.26.3">Version 2.26.3</a> (6/15/2016)
-
-* Distribution: Provide source css & js files on CDNJS. Fixes [issue #1222](https://github.com/Mottie/tablesorter/issues/1222).
-* Readme:
-  * Make changelog link clickable. See [pull #1221](https://github.com/Mottie/tablesorter/pull/1221); thanks [@aried3r](https://github.com/aried3r)!
-  * Update badge for ZenHub.
-* Docs: Update main page to use jQuery 3.0.0-rc1 & add migrate.
-* Filter: Fix select2 lint issue.
-* Scroller: Hide `<col>` with hidden columns. Fixes [issue #1229](https://github.com/Mottie/tablesorter/issues/1229).
-* Grunt: Update dependencies & fix pager indentation.
