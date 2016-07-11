@@ -162,9 +162,14 @@ Test out these custom less files live
 	}
 
 	.tablesorter-header.sorter-false {
-		background-image: none;
 		cursor: default;
 
+		i.tablesorter-icon {
+			display: none;
+		}
+		.tablesorter-header-inner {
+			padding: @overallPadding;
+		}
 	}
 
 	.tablesorter-headerAsc {
