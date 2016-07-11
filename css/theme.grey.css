@@ -85,8 +85,7 @@
 	cursor: default;
 }
 .tablesorter-grey thead .sorter-false i.tablesorter-icon {
-	background-image: none;
-	padding: 4px;
+	display: none;
 }
 
 /* tfoot */

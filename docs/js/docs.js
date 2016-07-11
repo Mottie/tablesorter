@@ -228,15 +228,15 @@
 	}
 
 	// update stickyHeader when menu closes
-	$('#main-nav-check').on('change', function(){
+	$('#main-nav-check').bind('change', function(){
 		setTimeout(function(){
 			$(window).scroll();
 		}, 350); // transition animation 300ms
 	});
 
-	$(window).on('load', function(){
+	$(window).bind('load', function(){
 		if ($('#root').length) {
-			$(window).on('hashchange', function(){
+			$(window).bind('hashchange', function(){
 				showProperty();
 			});
 			showProperty();
@@ -259,7 +259,7 @@
 			});
 		});
 
-		$('.toggleparsedvalue').on('click', function(){
+		$('.toggleparsedvalue').bind('click', function(){
 			$('.val').toggleClass('hidden');
 			return false;
 		});

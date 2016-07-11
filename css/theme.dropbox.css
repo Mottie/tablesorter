@@ -79,10 +79,8 @@
 	cursor: default;
 }
 
-.tablesorter-dropbox thead .sorter-false i.tablesorter-icon,
-.tablesorter-dropbox thead .sorter-false:hover i.tablesorter-icon {
-	background-image: none;
-	padding: 4px;
+.tablesorter-dropbox thead .sorter-false i.tablesorter-icon {
+	display: none;
 }
 
 /* tbody */

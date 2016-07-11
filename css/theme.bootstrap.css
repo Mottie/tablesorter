@@ -23,9 +23,16 @@
 	cursor: default;
 }
 
+.tablesorter-bootstrap .tablesorter-header.sorter-false i.tablesorter-icon {
+	display: none;
+}
+
 .tablesorter-bootstrap .tablesorter-header-inner {
 	position: relative;
 	padding: 4px 18px 4px 4px;
+}
+.tablesorter-bootstrap .sorter-false .tablesorter-header-inner {
+	padding: 4px;
 }
 
 /* bootstrap uses <i> for icons */
