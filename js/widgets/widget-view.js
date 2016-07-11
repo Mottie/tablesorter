@@ -1,4 +1,4 @@
-/* Widget: view (beta) - updated 10/31/2015 (v2.24.0) */
+/* Widget: view (beta) - updated 7/11/2016 (v2.26.6) */
 /* By Justin F. Hallett (https://github.com/TheSin-)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  */
@@ -100,7 +100,10 @@
 						var content = $(v).html();
 						// Add 2 spans, one is dropped when using .html()
 						var span = $('<span />').append($('<span/>', attrs).append(content));
-						tmpl = tmpl.replace(reg, span.html());
+						tmpl = tmpl.replace(new RegExp(reg, 'g'), span.html());
+
+						reg = '{col' + k + ':raw}';
+						tmpl = tmpl.replace(new RegExp(reg, 'g'), $(v).text());
 					});
 
 					var $tmpl = $(tmpl);
@@ -115,6 +118,7 @@
 				});
 
 				$(wo.view_container).append($container);
+				c.$table.triggerHandler('viewComplete');
 			},
 
 			removeView: function(c, wo) {
@@ -151,7 +155,6 @@
 				c.$table.on('tablesorter-ready', function() {
 					view.buildToolBar(c, wo);
 					view.buildView(c, wo);
-					c.$table.triggerHandler('viewComplete');
 				});
 			},
 

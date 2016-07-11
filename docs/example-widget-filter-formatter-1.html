@@ -223,10 +223,10 @@
 						<li>Added <code>endOfDay</code> option for jQuery UI Datepicker.
 							<ul>
 								<li>When <code>true</code> search dates will include all times from the date chosen when a comparison is made of dates "less than" the set date.</li>
-								<li>Example 1: if a table entry has a date of "Jan 14, 2014 11:23 AM" and the filter search is set to <button data-column="4" data-value="<=1/14/2014">&lt;= 1/14/2014</button>, the table entry will be included in the search; the default set time would otherwise be "1/14/2014 00:00:00" and not include the entry from "11:23 AM". So, the <code>endOfDay</code> option sets the time to "23:59:59".</li>
-								<li>Example 2: if searching for one specific date, this option will now search for all times within that day. For example, searching for <button data-column="4" data-value="=1/20/2014">= 1/20/2014</button>, and the results will include dates from 1/20/2014 00:00:00 to 1/20/2014 23:59:59.</li>
+								<li>Example 1: if a table entry has a date of "Jan 14, 2014 11:23 AM" and the filter search is set to <button type="button" data-column="4" data-value="<=1/14/2014">&lt;= 1/14/2014</button>, the table entry will be included in the search; the default set time would otherwise be "1/14/2014 00:00:00" and not include the entry from "11:23 AM". So, the <code>endOfDay</code> option sets the time to "23:59:59".</li>
+								<li>Example 2: if searching for one specific date, this option will now search for all times within that day. For example, searching for <button type="button" data-column="4" data-value="=1/20/2014">= 1/20/2014</button>, and the results will include dates from 1/20/2014 00:00:00 to 1/20/2014 23:59:59.</li>
 								<li>When comparing dates greater than the set date, the time will be set to midnight; so this option will not be applied.</li>
-								<li>Example 3: in two date inputs, the <code>endOfDay</code> time is only applied to the "to" input; search for <button data-column="5" data-value="1/20/2014 - 1/20/2014">1/20/2014 - 1/20/2014</button></li>
+								<li>Example 3: in two date inputs, the <code>endOfDay</code> time is only applied to the "to" input; search for <button type="button" data-column="5" data-value="1/20/2014 - 1/20/2014">1/20/2014 - 1/20/2014</button></li>
 								<li>This option is available in both the comparison (one input) and range (two inputs; "to" date input only) date pickers.</li>
 							</ul>
 						</li>
@@ -407,8 +407,8 @@
 				<li>In <span class="version">v2.15.0</span>
 					<ul>
 						<li>The <code>compare</code> option was updated to allow adding a selector along with the input. The <code>selected</code> option allows choosing the default setting.</li>
-						<li>A <code>endOfDay</code> option was added, which when a <code>&lt;=</code> comparison is made, will include all times within the selected day. Try searching for <button data-column="4" data-value="<=1/14/2014">&lt;= 1/14/2014</button>; it basically sets the time of the selected day to end at 23:59:59.</li>
-						<li>Additionally, when <code>endOfDay</code> option is <code>true</code> and using an exact (<code>=</code>) comparison, all times within that selected day will be included - try searching for <button data-column="4" data-value="=1/20/2014">= 1/20/2014</button> to note that the day include various times.</li>
+						<li>A <code>endOfDay</code> option was added, which when a <code>&lt;=</code> comparison is made, will include all times within the selected day. Try searching for <button type="button" data-column="4" data-value="<=1/14/2014">&lt;= 1/14/2014</button>; it basically sets the time of the selected day to end at 23:59:59.</li>
+						<li>Additionally, when <code>endOfDay</code> option is <code>true</code> and using an exact (<code>=</code>) comparison, all times within that selected day will be included - try searching for <button type="button" data-column="4" data-value="=1/20/2014">= 1/20/2014</button> to note that the day include various times.</li>
 					</ul>
 					<br>
 				</li>
@@ -473,7 +473,7 @@
 						<li><span class="label label-info">Note</span> The browser must support the <a href="http://caniuse.com/#feat=input-placeholder">placeholder attribute</a> before this text will be visible.</li>
 					</ul>
 				</li>
-				<li>In <span class="version">v2.15.0</span>, an <code>endOfDay</code> option was added, which when <code>true</code> and searching within one day, all times within that selected day will be included - try searching for <button data-column="5" data-value="1/20/2014 - 1/20/2014">1/20/2014 - 1/20/2014</button> to note that the day include various times.<br></li>
+				<li>In <span class="version">v2.15.0</span>, an <code>endOfDay</code> option was added, which when <code>true</code> and searching within one day, all times within that selected day will be included - try searching for <button type="button" data-column="5" data-value="1/20/2014 - 1/20/2014">1/20/2014 - 1/20/2014</button> to note that the day include various times.<br></li>
 				<li>This example shows how you can add a jQuery UI Datepicker range to filter column content.</li>
 				<li>The <code>filter_formatter</code> function provided in the extra "widget-filter-formatter-jui.js" file is used to add this custom control within the filter row.</li>
 				<li>This code follows the <a class="external" href="http://jqueryui.com/datepicker/#date-range">date range</a> example from the jQuery UI docs.</li>

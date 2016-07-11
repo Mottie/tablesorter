@@ -1,4 +1,4 @@
-/*! Widget: grouping - updated 6/28/2015 (v2.26.5) *//*
+/*! Widget: grouping - updated 7/11/2016 (v2.26.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -151,12 +151,10 @@
 						}
 					}
 				}
-
 				// save collapsed groups
 				if ( wo.group_saveGroups &&
 					!$.isEmptyObject( wo.group_collapsedGroups ) &&
 					wo.group_collapsedGroups[ wo.group_collapsedGroup ].length ) {
-
 					name = $row.find( '.group-name' ).text().toLowerCase() + $row.attr( 'data-group-index' );
 					isHidden = $.inArray( name, wo.group_collapsedGroups[ wo.group_collapsedGroup ] ) > -1;
 					$row.toggleClass( 'collapsed', isHidden );
@@ -172,7 +170,7 @@
 			var name = ( data.currentGroup || '' ).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
-				( data.groupIndex++ ) + '">' +
+				data.groupIndex + '">' +
 				'<td colspan="' + c.columns + '">' +
 					( wo.group_collapsible ? '<i/>' : '' ) +
 					'<span class="group-name">' + name + '</span>' +
@@ -183,8 +181,8 @@
 			// save current grouping
 			var saveName, direction,
 				savedGroup = false;
-			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
-				wo.group_collapsedGroups = ts.storage( c.table, 'tablesorter-groups' ) || {};
+			if (wo.group_collapsible && wo.group_saveGroups) {
+				wo.group_collapsedGroups = ts.storage && ts.storage( c.table, 'tablesorter-groups' ) || {};
 				// include direction when saving groups (reversed numbers shows different range values)
 				direction = 'dir' + c.sortList[0][1];
 				// combine column, sort direction & grouping as save key
@@ -234,9 +232,10 @@
 				}
 				data.$row.before( tsg.groupHeaderHTML( c, wo, data ) );
 				if ( wo.group_saveGroups && !data.savedGroup && wo.group_collapsed && wo.group_collapsible ) {
-					// all groups start collapsed
-					wo.group_collapsedGroups[ wo.group_collapsedGroup ].push( data.currentGroup );
+					// all groups start collapsed; data.groupIndex is 1 more than the expected index.
+					wo.group_collapsedGroups[ wo.group_collapsedGroup ].push( data.currentGroup + data.groupIndex );
 				}
+				data.groupIndex++;
 			}
 		},
 

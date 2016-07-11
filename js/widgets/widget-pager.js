@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 6/28/2015 (v2.26.5) */
+/*! Widget: Pager - updated 7/11/2016 (v2.26.6) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1085,7 +1085,7 @@
 					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
 						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
 					tsp.updatePageDisplay( c, false );
-				} else {
+				} else if (p.initialized) {
 					tsp.getAjax( c );
 				}
 			} else if ( !p.ajax ) {
@@ -1115,7 +1115,7 @@
 		parsePageSize: function( c, size, mode ) {
 			var p = c.pager,
 				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10;
-			return /all/i.test( size ) || s === p.totalRows ?
+			return p.initialized && (/all/i.test( size ) || s === p.totalRows) ?
 				// "get" to set `p.size` or "set" to set `p.$size.val()`
 				'all' : ( mode === 'get' ? s : p.size );
 		},

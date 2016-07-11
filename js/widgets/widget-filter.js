@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 6/28/2015 (v2.26.5) *//*
+/*! Widget: filter - updated 7/11/2016 (v2.26.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -785,12 +785,13 @@
 			.attr( 'data-lastSearchTime', new Date().getTime() )
 			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
 			.bind( 'keydown' + namespace, function( event ) {
-				if ( event.which === tskeyCodes.escape && !wo.filter_resetOnEsc ) {
+				if ( event.which === tskeyCodes.escape && !table.config.widgetOptions.filter_resetOnEsc ) {
 					// prevent keypress event
 					return false;
 				}
 			})
 			.bind( 'keyup' + namespace, function( event ) {
+				wo = table.config.widgetOptions; // make sure "wo" isn't cached
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
 				// emulate what webkit does.... escape clears the filter
@@ -817,7 +818,8 @@
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
-				if ( wo.filter_initialized && ( event.which === tskeyCodes.enter || event.type === 'search' ||
+				if ( table.config.widgetOptions.filter_initialized &&
+					( event.which === tskeyCodes.enter || event.type === 'search' ||
 					( event.type === 'change' ) && this.value !== c.lastSearch[column] ) ||
 					// only "input" event fires in MS Edge when clicking the "x" to clear the search
 					( event.type === 'input' && this.value === '' ) ) {
@@ -866,7 +868,7 @@
 				// show/hide filter row as needed
 				c.$table
 					.find( '.' + tscss.filterRow )
-					.triggerHandler( combinedFilters === '' ? 'mouseleave' : 'mouseenter' );
+					.triggerHandler( tsf.hideFiltersCheck( c ) ? 'mouseleave' : 'mouseenter' );
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
@@ -899,26 +901,34 @@
 				return false;
 			}
 		},
+		hideFiltersCheck: function( c ) {
+			if (typeof c.widgetOptions.filter_hideFilters === 'function') {
+				var val = c.widgetOptions.filter_hideFilters( c );
+				if (typeof val === 'boolean') {
+					return val;
+				}
+			}
+			return ts.getFilters( c.$table ).join( '' ) === '';
+		},
 		hideFilters: function( c, $table ) {
-			var timer,
-				$row = ( $table || c.$table ).find( '.' + tscss.filterRow ).addClass( tscss.filterRowHide );
-			$row
+			var timer;
+			( $table || c.$table )
+				.find( '.' + tscss.filterRow )
+				.addClass( tscss.filterRowHide )
 				.bind( 'mouseenter mouseleave', function( e ) {
 					// save event object - http://bugs.jquery.com/ticket/12140
 					var event = e,
-						$filterRow = $( this );
+						$row = $( this );
 					clearTimeout( timer );
 					timer = setTimeout( function() {
 						if ( /enter|over/.test( event.type ) ) {
-							$filterRow.removeClass( tscss.filterRowHide );
+							$row.removeClass( tscss.filterRowHide );
 						} else {
 							// don't hide if input has focus
 							// $( ':focus' ) needs jQuery 1.6+
-							if ( $( document.activeElement ).closest( 'tr' )[0] !== $filterRow[0] ) {
+							if ( $( document.activeElement ).closest( 'tr' )[0] !== $row[0] ) {
 								// don't hide row if any filter has a value
-								if ( c.lastCombinedFilter === '' ) {
-									$filterRow.addClass( tscss.filterRowHide );
-								}
+								$row.toggleClass( tscss.filterRowHide, tsf.hideFiltersCheck( c ) );
 							}
 						}
 					}, 200 );
@@ -930,9 +940,7 @@
 					timer = setTimeout( function() {
 						clearTimeout( timer );
 						// don't hide row if any filter has a value
-						if ( ts.getFilters( c.$table ).join( '' ) === '' ) {
-							$row.toggleClass( tscss.filterRowHide, event.type !== 'focus' );
-						}
+						$row.toggleClass( tscss.filterRowHide, tsf.hideFiltersCheck( c ) && event.type !== 'focus' );
 					}, 200 );
 				});
 		},
