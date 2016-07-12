@@ -479,6 +479,26 @@ $(function() {
 				</ul>
 			</blockquote>
 		</div>
+
+		<h3><a href="#">RTL Support</a></h3>
+		<div>
+			Two things are required to get the fixed column properly aligned on the right side:
+			<ol>
+				<li>
+					A class of <code>ts-scroller-rtl</code> must be added to the table
+					<pre class="prettyprint lang-html">&lt;table class=&quot;ts-scroller-rtl&quot;&gt;...&lt;/table&gt;</pre>
+					the reason for the weird naming <code>ts</code> instead of <code>tablesorter</code> is because with a class name of <code>tablesorter-scroller-rtl</code>, the code will think you're trying to add a theme named <code>scroller-rtl</code>.
+					<p>If you want to change this class name, use the following code before the document ready function:</p>
+					<pre class="prettyprint lang-js">$.tablesorter.css.scrollerRtl = "ts-scroller-rtl";</pre>
+				</li>
+				<li>
+					Whatever element is wrapping the table needs to be set with the css <code>direction:rtl</code>. So if your entire page (<code>body</code> is set, that will work just fine. If you only want the table to be set as rtl, then set this css on the scroller's wrapper:
+					<pre class="prettyprint lang-css locked">.tablesorter-scroller { direction: rtl; }</pre>
+				</li>
+			</ol>
+			Here is a <a href="https://jsfiddle.net/Mottie/uL8ugxw4/">jsFiddle demo</a>.
+		</div>
+
 	</div>
 
 	<h1>CSS</h1>
