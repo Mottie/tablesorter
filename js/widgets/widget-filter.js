@@ -1745,7 +1745,7 @@
 
 	ts.getFilters = function( table, getRaw, setFilters, skipFirst ) {
 		var i, $filters, $column, cols,
-			filters = false,
+			filters = [],
 			c = table ? $( table )[0].config : '',
 			wo = c ? c.widgetOptions : '';
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
@@ -1811,9 +1811,6 @@
 				}
 			}
 		}
-		if ( filters.length === 0 ) {
-			filters = false;
-		}
 		return filters;
 	};
 
@@ -1831,7 +1828,7 @@
 			tsf.searching( c.table, filter, skipFirst );
 			c.$table.triggerHandler( 'filterFomatterUpdate' );
 		}
-		return !!valid;
+		return valid.length !== 0;
 	};
 
 })( jQuery );

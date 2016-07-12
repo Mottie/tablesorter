@@ -7575,13 +7575,15 @@ $('select.external').html( opts );</pre>
 						<pre class="prettyprint lang-js">$.tablesorter.getFilters(table, flag);</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
-							<li><code>flag</code> - boolean flag (optional; <code>false</code> by default), added <span class="version">v2.15</span></li>
+							<li><code>flag</code> - boolean flag (optional; <code>false</code> by default; filter values obtained from the cache), added <span class="version">v2.15</span>;</li>
 						</ul>
 						Use this function as follows:<br>
 						<pre class="prettyprint lang-js">// use $('table') or $('table.hasFilters') to make sure the table has a filter row
 // only required if the stickyHeaders or scroller widget is being used (they duplicate the table)
 $.tablesorter.getFilters( $('table') );</pre>
-						This function returns an array of filter values (e.g. <code>[ '', '', '', '', '', '2?%' ]</code>), or <code>false</code> if the selected table does not have a filter row. It will also return an additional parameter if an external input with <code>data-column=&quot;all&quot;</code> containing the value used when matching any table column.<br>
+						This function returns an array of filter values (e.g. <code>[ '', '', '', '', '', '2?%' ]</code>), or <del><code>false</code></del> an empty array (<span class="version">v2.27.0</span>) if the selected table does not have a filter row or any associated inputs. It will also return an additional parameter if an external input with <code>data-column=&quot;all&quot;</code> containing the value used when matching any table column.<br>
+						<br>
+						In <span class="version updated">v2.27.0</span>, this function will always return an array.
 						<br>
 						In <span class="version updated">v2.15</span>, this function will also return values from any external filters (set either by the <a href="#filter-external"><code>filter_external</code> option</a> or using the <a href="#function-bindsearch"><code>bindSearch</code> function</a>) - with or without an internal filter row.<br>
 						<br>
@@ -7599,7 +7601,7 @@ $.tablesorter.getFilters( $('table') );</pre>
 						<ul>
 							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
 							<li><code>filter</code> - array of filter values to apply to the table.</li>
-							<li><code>apply</code> - boolean flag, if <code>false</code> (default setting), the input values are updated, but the search is not applied to the table.</li>
+							<li><code>apply</code> - boolean flag, if <code>false</code> (<del>default setting</del>; default is now <code>true</code> as of v2.24.3), the input values are updated, but the search is not applied to the table.</li>
 						</ul>
 						Use this function as follows:<br>
 						<pre class="prettyprint lang-js">// update filters, but don't apply the search
