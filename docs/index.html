@@ -4134,7 +4134,8 @@ $('table').trigger('search', false);</pre></div>
       ajaxObject: {
         // add more ajax settings here
         // see http://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
-        dataType: 'json'
+        dataType: 'json',
+        type: 'GET'
       },
       ajaxProcessing: function(data, table, xhr){
         // do something with the ajax data;
