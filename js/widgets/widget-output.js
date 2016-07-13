@@ -145,8 +145,8 @@
 				});
 			headers = output.processRow(c, $this, true, outputJSON);
 
-			// all tbody rows
-			$rows = $el.children('tbody').children('tr');
+			// all tbody rows - do not include widget added rows (e.g. grouping widget headers)
+			$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
 
 			// check for a filter callback function first! because
 			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
