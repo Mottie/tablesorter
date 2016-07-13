@@ -220,10 +220,6 @@ tr.group-header.collapsed td i {
 					</ul>
 				</div>
 			</div>
-
-		<ul>
-			<li>Clicking on any of the sortable header cells will cause the column below it to sort and add a group header.</li>
-		</ul>
 		</div>
 
 		<h3><a href="#">Options</a></h3>
@@ -602,6 +598,19 @@ group_dateString : function(date, config, $header ) {
 			<p>Before v2.24.1, this demo only used the "shortDate" parser on the date column, so when "group-date-week" or "group-date-time" were set, group headers would repeat.</p>
 		</div>
 
+		<h3><a href="#">Methods</a></h3>
+		<div>
+			<h3>Toggle all Groups</h3>
+			Target the group header(s) and trigger a "toggleGroup" event to show/hide rows associated with that group.
+
+			<pre class="prettyprint lang-js">// "toggle" class name added to a button/link
+$('.toggle').click(function(){
+  // show/hide all groups - table must be grouped (sorted or force grouping)
+  $('table').find('.group-header').trigger('toggleGroup');
+  return false;
+});</pre>
+		</div>
+
 		<h3><a href="#">Globalization</a></h3>
 		<div>
 			<h3>jQuery Globalize</h3>
@@ -778,6 +787,12 @@ $(function() {
 	<p></p>
 
 <h1>Demo</h1>
+
+<ul>
+	<li>Clicking on a sortable header cells will sort the column and group the rows based on the group setting.</li>
+	<li>Clicking on a group header will toggle the view of the content below it.</li>
+	<li>Using <kbd>Shift</kbd> plus Click on a group header will toggle the view of all groups in that table.</li>
+</ul>
 
 <span class="demo-label">Numeric column:</span> <div id="slider0"></div> <span class="numberclass"></span> (includes subtotals)<br>
 <span class="demo-label">Animals column:</span> <div id="slider1"></div> <span class="animalclass"></span><br>
