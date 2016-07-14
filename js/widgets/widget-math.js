@@ -232,7 +232,6 @@
 				mathAttr = wo.math_dataAttrib;
 				$mathCells = c.$tbodies.children( 'tr' ).children( '[' + mathAttr + ']' );
 				changed = math.mathType( c, $mathCells, wo.math_priority ) || changed;
-
 				// only info tbody cells
 				$mathCells = c.$table
 					.children( '.' + c.cssInfoBlock + ', tfoot' )
@@ -258,11 +257,11 @@
 				if ( changed ) {
 					wo.math_isUpdating = true;
 					if ( c.debug ) {
-						console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
+						console[ console.group ? 'group' : 'log' ]( 'Math widget updating the cache after recalculation' );
 					}
 
-					// update internal cache
-					ts.update( c, undef, function(){
+					// update internal cache, but ignore "remove-me" rows and do not resort
+					ts.updateCache( c, function() {
 						math.updateComplete( c );
 						if ( !init && typeof wo.math_completed === 'function' ) {
 							wo.math_completed( c );
@@ -350,7 +349,14 @@
 				changed = false,
 				prev = $cell.html(),
 				mask = $cell.attr( 'data-' + wo.math_data + '-mask' ) || wo.math_mask,
+				target = $cell.attr( 'data-' + wo.math_data + '-target' ) || '',
 				result = ts.formatMask( mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
+			if (target) {
+				$el = $cell.find(target);
+				if ($el.length) {
+					$cell = $el;
+				}
+			}
 			if ( typeof wo.math_complete === 'function' ) {
 				result = wo.math_complete( $cell, wo, result, value, arry );
 			}

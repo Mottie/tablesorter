@@ -196,6 +196,12 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.27.0</span>
+				<ul>
+					<li>Added check for <code>data-math-target</code> attribute which allows you to target an element inside the table cell. See the <a href="#attribute_settings">Attribute Settings</a> &gt; <strong>Targeting cell content</strong> section below.</li>
+					<li>The math widget no longer uses "update" after recalculating cell values. Instead it uses "updateCache" to remove the need to resort and update the other widgets.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.25.0</span>
 				<ul>
 					<li><code>math_rowFilter</code> can now be overridden by the row's <code>data-math-filter</code> attribute.</li>
@@ -574,6 +580,19 @@ $.tablesorter.equations['product'] = function(arry, config) {
 				</li>
 				<li>Column: set the widget <code>math_ignore</code> option with an array of zero-based column indexes of columns to ignore or skip when building the array of data for calculations.
 				<pre class="prettyprint lang-js">math_ignore : [0,1]</pre>
+				</li>
+			</ul>
+			<h4>Targeting cell content</h4>
+			<ul>
+				<li>Version <span class="version">2.27.0</span> added a new data-attribute. The <code>data-math-target</code> attribute value must contain an element selector within the same cell.
+				<pre class="prettyprint lang-html">&lt;tr&gt;
+  &lt;td data-math=&quot;sum-above&quot; data-math-target=&quot;.sum&quot;&gt;The total value is &lt;span class=&quot;sum&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;</pre>
+				</li>
+				<li>If you're using the grouping widget and want to sum up the value of the group, you'll need to also include a <code>data-column</code> attribute to target the table column to sum. Here is a <a href="https://jsfiddle.net/Mottie/st2p6uvs/">JSFiddle</a> demonstrating how to combine the two widgets.
+				<pre class="prettyprint lang-html">&lt;tr&gt;
+  &lt;td colspan=&quot;5&quot; data-math=&quot;sum-above&quot; data-math-target=&quot;.sum&quot; data-column=&quot;3&quot;&gt;The total value is &lt;span class=&quot;sum&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;</pre>
 				</li>
 			</ul>
 		</div>
