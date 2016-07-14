@@ -216,7 +216,7 @@
 				var undef, time, mathAttr, $mathCells, indx, len,
 					changed = false,
 					filters = {};
-				if ( c.debug ) {
+				if ( c.debug || wo.math_debug ) {
 					time = new Date();
 				}
 
@@ -256,7 +256,7 @@
 				// trigger an update only if cells inside the tbody changed
 				if ( changed ) {
 					wo.math_isUpdating = true;
-					if ( c.debug ) {
+					if ( c.debug || wo.math_debug ) {
 						console[ console.group ? 'group' : 'log' ]( 'Math widget updating the cache after recalculation' );
 					}
 
@@ -266,7 +266,7 @@
 						if ( !init && typeof wo.math_completed === 'function' ) {
 							wo.math_completed( c );
 						}
-						if ( c.debug ) {
+						if ( c.debug || wo.math_debug ) {
 							console.log( 'Math widget update completed' + ts.benchmark( time ) );
 						}
 					});
@@ -274,7 +274,7 @@
 					if ( !init && typeof wo.math_completed === 'function' ) {
 						wo.math_completed( c );
 					}
-					if ( c.debug ) {
+					if ( c.debug || wo.math_debug ) {
 						console.log( 'Math widget found no changes in data' + ts.benchmark( time ) );
 					}
 				}
@@ -283,7 +283,9 @@
 
 		updateComplete : function( c ) {
 			var wo = c.widgetOptions;
-			if ( wo.math_isUpdating && c.debug && console.groupEnd ) { console.groupEnd(); }
+			if ( wo.math_isUpdating && (c.debug || wo.math_debug ) && console.groupEnd ) {
+				console.groupEnd();
+			}
 			wo.math_isUpdating = false;
 		},
 
@@ -298,7 +300,7 @@
 					// mathType is called multiple times if more than one "hasFilter" is used
 					getAll = math.getAll( c, hasFilter );
 				}
-				if (c.debug) {
+				if (c.debug || wo.math_debug) {
 					console[ console.group ? 'group' : 'log' ]( 'Tablesorter Math widget recalculation' );
 				}
 				// $.each is okay here... only 4 priorities
@@ -307,7 +309,7 @@
 						$targetCells = $cells.filter( '[' + mathAttr + '^=' + type + ']' ),
 						len = $targetCells.length;
 					if ( len ) {
-						if (c.debug) {
+						if (c.debug || wo.math_debug) {
 							console[ console.group ? 'group' : 'log' ]( type );
 						}
 						for ( index = 0; index < len; index++ ) {
@@ -323,7 +325,7 @@
 							if ( equations[ formula ] ) {
 								if ( arry.length ) {
 									result = equations[ formula ]( arry, c );
-									if ( c.debug ) {
+									if ( c.debug || wo.math_debug ) {
 										console.log( $el.attr( mathAttr ), hasFilter ? '("' + hasFilter + '")' : '', arry, '=', result );
 									}
 								} else {
@@ -333,10 +335,10 @@
 								changed = math.output( $el, c, result, arry ) || changed;
 							}
 						}
-						if ( c.debug && console.groupEnd ) { console.groupEnd(); }
+						if ( ( c.debug || wo.math_debug ) && console.groupEnd ) { console.groupEnd(); }
 					}
 				});
-				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
+				if ( ( c.debug || wo.math_debug ) && console.groupEnd ) { console.groupEnd(); }
 				return changed;
 			}
 			return false;
@@ -589,6 +591,7 @@
 		priority: 100,
 		options: {
 			math_data     : 'math',
+			math_debug    : false,
 			// column index to ignore
 			math_ignore   : [],
 			// mask info: https://code.google.com/p/javascript-number-formatter/

@@ -199,6 +199,7 @@
 			<li>In <span class="version">v2.27.0</span>
 				<ul>
 					<li>Added check for <code>data-math-target</code> attribute which allows you to target an element inside the table cell. See the <a href="#attribute_settings">Attribute Settings</a> &gt; <strong>Targeting cell content</strong> section below.</li>
+					<li>Added a <code>math_debug</code> option which when <code>true</code>, enables debug logging of only the math widget.</li>
 					<li>The math widget no longer uses "update" after recalculating cell values. Instead it uses "updateCache" to remove the need to resort and update the other widgets.</li>
 				</ul>
 			</li>
@@ -285,6 +286,14 @@
 						<td><code>'math'</code></td>
 						<td>
 							Set this option to point to the named data-attribute. For example, when set to <code>'math'</code>, the widget looks for settings within the <code>data-math</code> attribute.
+						</td>
+					</tr>
+
+					<tr id="math_debug">
+						<td><span class="permalink">math_debug</span></td>
+						<td><code>false</code></td>
+						<td>
+							Set this option to <code>true</code> to enable the debug log of the math widget without all the extra noise from the overall <a href="index.html#debug"><code>debug</code></a> option (<span class="version">v2.27.0</span>).
 						</td>
 					</tr>
 
