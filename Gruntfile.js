@@ -43,7 +43,7 @@ module.exports = function( grunt ) {
 					'	} else {\n' +
 					'		factory(jQuery);\n' +
 					'	}\n' +
-					'}(function($) {\n\n',
+					'}(function(jQuery) {\n\n',
 				// widgets wrapper & combined wrapper - may need a separate entry when this wrapper is redefined to make
 				// widgets a dependency of the core (see https://github.com/Mottie/tablesorter/issues/855)
 				banner: '<%= pkg.banner %>/* Includes widgets ( <%= pkg.selectedWidgets %> <%= pkg.selectedParsers %>) */\n' +
@@ -55,8 +55,8 @@ module.exports = function( grunt ) {
 					'	} else {\n' +
 					'		factory(jQuery);\n' +
 					'	}\n' +
-					'}(function($) {\n\n',
-				footer: '\nreturn $.tablesorter;\n}));\n'
+					'}(function(jQuery) {\n\n',
+				footer: '\nreturn jQuery.tablesorter;\n}));\n'
 			},
 			noModBanner: '/*** This file is dynamically generated ***\n' +
 				'█████▄ ▄████▄   █████▄ ▄████▄ ██████   ███████▄ ▄████▄ █████▄ ██ ██████ ██  ██\n' +
