@@ -399,7 +399,7 @@
 
 	<h4>Change Header Style</h4>
 	<ul>
-		<li><a href="example-widget-ui-theme.html">UITheme widget</a> (v2.0.9).</li>
+		<li><a href="example-widget-ui-theme.html">UITheme widget</a> (v2.0.9; <span class="version updated">v2.27.0</span>).</li>
 		<li><a href="example-option-render-header.html">Modifying the Header during rendering</a> (<a href="#onrenderheader"><code>onRenderHeader</code></a>).</li>
 		<li><a href="example-option-render-template.html">Modifying the Header using a template</a> (<a href="#headertemplate"><code>headerTemplate</code></a>; v2.7).</li>
 	</ul>
@@ -509,9 +509,9 @@
 
 		<li><span class="label label-info">Beta</span> <a href="example-widget-toggle-tablesorter.html">Toggle Sort & Filter Widget</a> (<span class="version">v2.24.4</span>).</li>
 
-		<li><span class="results">&dagger;</span> UITheme widget (<span class="version updated">v2.17.4</span>; <span class="version updated">v2.26.6</span>):
+		<li><span class="results">&dagger;</span> UITheme widget (<span class="version">v2.0.9</span>):
 			<ul>
-				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9).</li>
+				<li><a href="example-widget-ui-theme.html">jQuery UI theme</a> (v2.0.9; <span class="version updated">v2.27.0</span>).</li>
 				<li><a href="example-widget-bootstrap-theme-v2.html">Bootstrap v2.x</a> (demo added <span class="version">v2.22.0</span>) &amp; <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x</a> (v2.4).</li>
 			</ul>
 		</li>
@@ -1534,19 +1534,26 @@ From the example function above, you'll end up with something similar to this HT
 $.extend($.tablesorter.themes.jui, {
   // change default jQuery uitheme icons - find the full list of icons
   // here: http://jqueryui.com/themeroller/ (hover over them for their name)
-  table      : 'ui-widget ui-widget-content ui-corner-all', // table classes
-  header     : 'ui-widget-header ui-corner-all ui-state-default', // header classes
-  footerRow  : '',
-  footerCells: '',
-  icons      : 'ui-icon', // icon class added to the &lt;i&gt; in the header
-  sortNone   : 'ui-icon-carat-2-n-s',
-  sortAsc    : 'ui-icon-carat-1-n',
-  sortDesc   : 'ui-icon-carat-1-s',
-  active     : 'ui-state-active', // applied when column is sorted
-  hover      : 'ui-state-hover',  // hover class
-  filterRow  : '',
-  even       : 'ui-widget-content', // even row zebra striping
-  odd        : 'ui-state-default'   // odd row zebra striping
+  table        : 'ui-widget ui-widget-content ui-corner-all', // table classes
+  caption      : 'ui-widget-content',
+  // header class names
+  header       : 'ui-widget-header ui-corner-all ui-state-default', // header classes
+  sortNone     : '',
+  sortAsc      : '',
+  sortDesc     : '',
+  active       : 'ui-state-active', // applied when column is sorted
+  hover        : 'ui-state-hover',  // hover class
+  // icon class names
+  icons        : 'ui-icon', // icon class added to the <i> in the header
+  iconSortNone : 'ui-icon-carat-2-n-s ui-icon-caret-2-n-s', // "caret" class renamed in jQuery v1.12.0
+  iconSortAsc  : 'ui-icon-carat-1-n ui-icon-caret-1-n',
+  iconSortDesc : 'ui-icon-carat-1-s ui-icon-caret-1-s',
+  // other
+  filterRow    : '',
+  footerRow    : '',
+  footerCells  : '',
+  even         : 'ui-widget-content', // even row zebra striping
+  odd          : 'ui-state-default'   // odd row zebra striping
 });</pre>
 
 					<h4>Custom theme</h4>

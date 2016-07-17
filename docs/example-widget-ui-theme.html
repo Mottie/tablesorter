@@ -50,9 +50,9 @@
 		hover        : 'ui-state-hover',  // hover class
 		// icon class names
 		icons        : 'ui-icon', // icon class added to the <i> in the header
-		iconSortNone : 'ui-icon-carat-2-n-s', // class name added to icon when column is not sorted
-		iconSortAsc  : 'ui-icon-carat-1-n', // class name added to icon when column has ascending sort
-		iconSortDesc : 'ui-icon-carat-1-s', // class name added to icon when column has descending sort
+		iconSortNone : 'ui-icon-carat-2-n-s ui-icon-caret-2-n-s', // class name added to icon when column is not sorted
+		iconSortAsc  : 'ui-icon-carat-1-n ui-icon-caret-1-n', // class name added to icon when column has ascending sort
+		iconSortDesc : 'ui-icon-carat-1-s ui-icon-caret-1-s', // class name added to icon when column has descending sort
 		filterRow    : '',
 		footerRow    : '',
 		footerCells  : '',
@@ -88,6 +88,7 @@
 	$(function(){
 		$('#switcher').jui_theme_switch({
 			stylesheet_link_id : 'ui-theme',
+			default_theme      : 'cupertino',
 			datasource_url     : 'assets/theme_switcher.json'
 		});
 	});
@@ -109,6 +110,7 @@
 		<em>NOTE!</em>
 	</p>
 	<ul>
+		<li>In <span class="version">v2.27.0</span>, the icon class name changes used by jQuery 1.12.0 have been included. Icon class names were renamed from using "carat" to "caret"; this widget now includes both for backwards compatibility.
 		<li>In <span class="version">v2.19.0</span>, this widget allows dynamic changing of themes; including switching from jQuery UI or Bootstrap to any other theme. To change a theme, do the following:
 			<pre class="prettyprint lang-js">var $table = $('table');
 $table[0].config.theme = 'grey';
