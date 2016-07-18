@@ -77,7 +77,9 @@
 			scroller_barWidth : null
 		},
 		format : function( table, c, wo ) {
-			if ( !c.isScrolling ) {
+			if ( c.isScrolling ) {
+				ts.scroller.resize( c, wo );
+			} else {
 				// initialize here instead of in widget init to give the
 				// filter widget time to finish building the filter row
 				ts.scroller.setup( c, wo );
