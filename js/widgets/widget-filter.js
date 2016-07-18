@@ -94,7 +94,7 @@
 
 		// regex used in filter 'check' functions - not for general use and not documented
 		regex: {
-			regex     : /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // regex to test for regex
+			regex     : /^\/((?:\\\/|[^\/])+)\/([migyu]{0,5})?$/, // regex to test for regex
 			child     : /tablesorter-childRow/, // child row class name; this gets updated in the script
 			filtered  : /filtered/, // filtered (hidden) row class name; updated in the script
 			type      : /undefined|number/, // check type
