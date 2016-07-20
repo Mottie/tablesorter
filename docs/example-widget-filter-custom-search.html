@@ -162,6 +162,8 @@ $(function() {
 							<li><code>data.iFilter</code> - The text from the filter in all lower case for case insensitive searches, if <code>table.config.widgetOptions.filter_ignoreCase</code> is <code>true</code>.</li>
 							<li><code>data.exact</code> - The exact (or parsed) text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>; the parsed text is passed when the column has a <code>"filter-parsed"</code> class name set.</li>
 							<li><code>data.iExact</code> - The exact (or parsed) text in all lower case for case insensitive searches, if <code>table.config.widgetOptions.filter_ignoreCase</code> is <code>true</code>.<br><br></li>
+
+							<li><code>data.rowIndex</code> (<span class="version">v2.27.0</span>) - The current row index (zero-based) being filtered. This index includes hidden rows and only applies to the rows currently in the DOM in their current unsorted/sorted state.</li>
 							<li><code>data.index</code> - The current column index (zero-based) being filtered. When performing an "any match", this index is equal to <code>config.columns</code> which is the last column of the table plus one.</li>
 							<li><code>data.cache</code> - The parsed text from the current table cell, or the entire row if <code>data.anyMatch</code> is <code>true</code>. This value will be in all lower case if <code>config.ignoreCase</code> is <code>true</code>.<br><br></li>
 
