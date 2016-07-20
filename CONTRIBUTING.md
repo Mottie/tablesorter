@@ -10,7 +10,7 @@ There are a number of ways to get involved with the development of this fork of 
 
 ## How to Report issues, or make requests.
 
-* First off make sure it's a new issue. Search the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ), [documents](http://mottie.github.io/tablesorter/docs/) and the [issues](https://github.com/Mottie/tablesorter/issues).
+* First off make sure it's a new issue. Search the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ), [documents](https://mottie.github.io/tablesorter/docs/) and the [issues](https://github.com/Mottie/tablesorter/issues).
 * If it's an existing issue or feature request, and you want to show that it is also a concern for you. Add a comment!
 * If it turns out to not be an issue, but a question instead:
   * Please don't open a new issue.

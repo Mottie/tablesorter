@@ -5,7 +5,7 @@
 * Copyright (c) 2007 Christian Bach
 * fork maintained by Rob Garrison
 *
-* Examples and docs at: http://tablesorter.com
+* Examples and original docs at: http://tablesorter.com
 * Dual licensed under the MIT and GPL licenses:
 * http://www.opensource.org/licenses/mit-license.php
 * http://www.gnu.org/licenses/gpl.html
@@ -15,6 +15,7 @@
 * @cat Plugins/Tablesorter
 * @author Christian Bach - christian.bach@polyester.se
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
+* @docs (fork) - https://mottie.github.io/tablesorter/docs/
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 ;( function( $ ) {
