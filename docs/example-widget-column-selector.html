@@ -119,6 +119,10 @@
 			columnSelector_mediaqueryState: true,
 			// hide columnSelector false columns while in auto mode
 			columnSelector_mediaqueryHidden: true,
+
+			// set the maximum and/or minimum number of visible columns; use null to disable
+			columnSelector_maxVisible: null,
+			columnSelector_minVisible: null,
 			// responsive table hides columns with priority 1-6 at these breakpoints
 			// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
 			// *** set to false to disable ***
@@ -175,6 +179,13 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.27.0</span>,
+				<ul>
+					<li>Added two new options: <code>columnSelector_maxVisible</code> and <code>columnSelector_minVisible</code>.</li>
+					<li>These settings set a maximum and/or minimum number of visible columns. <strong>Please see the option description for each setting for important details!</strong></li>
+					<li>The <code>refreshColumnSelector</code> method is not constrained by these limitations. Only user interaction is restricted.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.25.9</span>,
 				<ul>
 					<li>Added a <code>columnSelector_maxPriorities</code> setting.</li>
@@ -377,6 +388,39 @@
 							</ul>
 							<p>See <a href="https://github.com/Mottie/tablesorter/issues/964">issue #964</a> for more details.</p>
 							Default value: <code>false</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="column-selector-max-visible">
+						<td><a href="#" class="permalink">columnSelector_maxVisible</a></td>
+						<td>Set this option to a number to set a maximum number of visible columns (<span class="version">v2.27.0</span>).
+							<div class="collapsible">
+							<br>
+							<span class="label label-info">Note</span>
+							<ul>
+								<li>The setting <em>does not</em> take into account the disabled columns (columns not listed in the column selector).</li>
+								<li>So, in the first example below, the "Name" and "Major" columns are disabled (not included in the popup).</li>
+								<li>If this option was set to <code>2</code>, only two additional columns, not counting the "Name" and "Major" columns can be made visible.</li>
+							</ul>
+							<p>Set this value to <code>null</code> to disable it.</p>
+							Default value: <code>null</code>
+							</div>
+						</td>
+					</tr>
+					<tr id="column-selector-min-visible">
+						<td><a href="#" class="permalink">columnSelector_minVisible</a></td>
+						<td>Set this option to a number to set a minimum number of visible columns (<span class="version">v2.27.0</span>).
+							<div class="collapsible">
+							<br>
+							<span class="label label-info">Note</span>
+							<ul>
+								<li>The setting <em>does not</em> take into account the disabled columns (columns not listed in the column selector).</li>
+								<li>So, in the first example below, the "Name" and "Major" columns are disabled (not included in the popup).</li>
+								<li>If this option was set to <code>1</code>, then one of the columns, not including the "Name" & "Major" columns, must always be visible.</li>
+							</ul>
+							<p>Set this value to <code>null</code> to disable it.</p>
+							Default value: <code>null</code>
 							</div>
 						</td>
 					</tr>
