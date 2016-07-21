@@ -193,7 +193,7 @@
 
 			// callback; if true returned, continue processing
 			if ($.isFunction(wo.output_callback)) {
-				tmp = wo.output_callback(c, mydata);
+				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
 					return;
 				} else if ( typeof tmp === 'string' ) {
