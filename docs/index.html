@@ -6433,6 +6433,57 @@ $headers.each(function(){
 				<td></td>
 			</tr>
 
+			<tr id="variable-sort-vars">
+				<td><a href="#" class="permalink">config.sortVars</a></td>
+				<td>Object</td>
+				<td>Internally stored object of column specific sort variables (<span class="version">v2.24.0</span>; <span class="version updated">v2.27.0</span>)
+					<div class="collapsible">
+					<br>
+					This object is defined as follows:<br>
+					<pre class="prettyprint lang-js">// $('table')[0].config.sortVars -> result
+[{
+  // column 0
+  count: 0, // click count; used as index for order value
+  order: [ 0, 1, 2 ], // default sort (sortReset: true)
+  lockedOrder: false  // true if column order is locked (read only)
+},{
+  // ...
+},{
+  // column n
+  count: 0, // click count; used as index for order value
+  order: [ 0, 1, 2 ], // default sort (sortReset: true)
+  lockedOrder: false  // true if column order is locked (read only)
+}]</pre>
+						<ul>
+							<li><code>count</code>
+								<ul>
+									<li>The initial value is <code>-1</code>.</li>
+									<li>The value is incremented each time the user clicks on a header cell; but it resets to zero once it reaches the end of the order array.</li>
+								</ul>
+							</li>
+							<li><code>order</code>
+								<ul>
+									<li>An array that contains the sort sequence for each column.</li>
+									<li><code>0</code> indicates an ascending sort.</li>
+									<li><code>1</code> indicates a descending sort.</li>
+									<li><code>0</code> indicates a reset sort (initial unsorted rows).</li>
+									<li>Locked sorts will contain either <code>[0, 0]</code> or <code>[1, 1]</code> determined by the lockedOrder setting.</li>
+									<li>Setting these values to <code>[2, 2]</code> will lock in an unsorted column, but the unsort arrows will still be visible; use a <code>"sorter-false"</code> class instead.</li>
+									<li>The values of this order can only be modified <em>after</em> tablesorter has initialized.</li>
+								</ul>
+							</li>
+							<li><code>lockedOrder</code>
+								<ul>
+									<li>See the <a href="#headers">lockedOrder</a> setting.</li>
+									<li>It's readonly because it is set during initialization and not used again (future use by a widget?)</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					</td>
+				<td></td>
+			</tr>
+
 			<tr id="variable-tbodies">
 				<td><a href="#" class="permalink">config.$tbodies</a></td>
 				<td>jQuery Object</td>
