@@ -2048,7 +2048,11 @@ $(function(){
       // row
       stickyHeaders: '',
 
-      // jQuery selector or object to attach sticky header to
+      // jQuery selector or object to append sticky headers to
+      stickyHeaders_appendTo: null,
+
+      // jQuery selector or object to attach sticky headers scroll listener to
+      // overridden by xScroll & yScroll settings
       stickyHeaders_attachTo: null,
 
       // jQuery selector or object to monitor horizontal scroll position
@@ -3575,9 +3579,33 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-sticky-header.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-sticky-headers-appendto">
+				<td><a href="#" class="permalink">stickyHeaders_appendTo</a></td>
+				<td>String, jQuery Object</td>
+				<td>null</td>
+				<td>
+					Sticky Headers widget: jQuery selector or object to physically attach the sticky headers (<span class="version">v2.27.0</span>).
+					<div class="collapsible">
+					<p>
+						<span class="label label-warning">Note</span> Appending the sticky headers to an element that does not have the same dimensions (width) as the table wrapper will produce a sticky header that does not match the table size!
+					</p>
+					Use the <a href="#widget-sticky-headers-appendto"><code>stickyHeaders_appendTo</code></a> option as follows:<br>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["stickyHeaders"],
+    widgetOptions : {
+      // Where to attach the stickyHeaders
+      stickyHeaders_appendTo : '.wrapper' // $('.wrapper') jQuery object can also be used
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-sticky-headers-attachto">
 				<td><a href="#" class="permalink">stickyHeaders_attachTo</a></td>
-				<td>String</td>
+				<td>String, jQuery Object</td>
 				<td>null</td>
 				<td>
 					Sticky Headers widget: points to the table wrapper to stick the headers to while scrolling. Use this option to point to their needs (<span class="version">v2.14.4</span>).
@@ -3599,7 +3627,7 @@ $('table').trigger('search', false);</pre></div>
 
 			<tr id="widget-sticky-headers-xscroll">
 				<td><a href="#" class="permalink">stickyHeaders_xScroll</a></td>
-				<td>String</td>
+				<td>String, jQuery Object</td>
 				<td>null</td>
 				<td>
 					Sticky Headers widget: points to the element in which to monitor for horizontal scrolling (<span class="version">v2.18.0</span>).
@@ -3623,7 +3651,7 @@ $('table').trigger('search', false);</pre></div>
 
 			<tr id="widget-sticky-headers-yscroll">
 				<td><a href="#" class="permalink">stickyHeaders_yScroll</a></td>
-				<td>String</td>
+				<td>String, jQuery Object</td>
 				<td>null</td>
 				<td>
 					Sticky Headers widget: points to the element in which to monitor for vertical scrolling (<span class="version">v2.18.0</span>).
