@@ -5839,7 +5839,7 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
   $('table')
 
     // bind to filter initialized event BEFORE initializing tablesorter*
-    .bind('filterInit', function(){
+    .bind('filterInit', function(event, config){
       $(this).find('tr.tablesorter-filter-row').addClass('fred');
     })
 
@@ -5858,7 +5858,8 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
 				<td>Event triggered when the filter widget has started processing the search (v2.4).
 					<div class="collapsible"><br>
 						You can use this event to do something like add a class to the filter row. Use it as follows:<pre class="prettyprint lang-js">$(function(){
-  $('table').bind('filterStart', function(){
+  $('table').bind('filterStart', function(event, filters) {
+    // filters contains an array of the current filters
     $(this).find('tr.tablesorter-filter-row').addClass('filtering');
   });
 });</pre></div>
