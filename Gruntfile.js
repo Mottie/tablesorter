@@ -123,7 +123,7 @@ module.exports = function( grunt ) {
 				src: [ 'dist/**/**/**/*', 'dist/**/**/*', 'dist/**/*', 'dist' ]
 			},
 			css: {
-				src: [ 'dist/css/*.css', '!dist/css/*.min.css' ]
+				src: [ 'dist/css/*.css', '!dist/css/*.min.css', '!dist/css/theme.blue.css' ]
 			}
 		},
 

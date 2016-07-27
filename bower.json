@@ -1,12 +1,12 @@
 {
   "name": "tablesorter",
-  "description": "tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes. tablesorter can successfully parse and sort many types of data including linked data in a cell.",
+  "description": "tablesorter (FORK) sorts tables & stuff.",
   "dependencies": {
     "jquery": ">=1.2.6"
   },
   "main": [
     "dist/js/jquery.tablesorter.combined.js",
-    "dist/css/theme.blue.min.css"
+    "dist/css/theme.blue.css"
   ],
   "license" : [
     "MIT",
