@@ -1091,6 +1091,7 @@
 				fxn, ffxn, txt,
 				wo = c.widgetOptions,
 				showRow = true,
+				hasAnyMatchInput = wo.filter_$anyMatch && wo.filter_$anyMatch.length,
 
 				// if wo.filter_$anyMatch data-column attribute is changed dynamically
 				// we don't want to do an "anyMatch" search on one column using data
@@ -1100,11 +1101,11 @@
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
 			data.$cells = data.$row.children();
-			if ( data.anyMatchFlag && columnIndex.length > 1 || data.anyMatchFilter ) {
+			if ( data.anyMatchFlag && columnIndex.length > 1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 				data.anyMatch = true;
 				data.isMatch = true;
 				data.rowArray = data.$cells.map( function( i ) {
-					if ( $.inArray( i, columnIndex ) > -1 || data.anyMatchFilter ) {
+					if ( $.inArray( i, columnIndex ) > -1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 						if ( data.parsed[ i ] ) {
 							txt = data.cacheArray[ i ];
 						} else {
