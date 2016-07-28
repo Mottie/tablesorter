@@ -146,7 +146,7 @@
 
 				// set default state; storage takes priority
 				colSel.states[colId] = saved && (typeof saved[colId] !== 'undefined' && saved[colId] !== null) ?
-					saved[colId] : (typeof wo.columnSelector_columns[colId] !== 'undefined' && wo.columnsSelector_columns[colId] !== null) ?
+					saved[colId] : (typeof wo.columnSelector_columns[colId] !== 'undefined' && wo.columnSelector_columns[colId] !== null) ?
 					wo.columnSelector_columns[colId] : (state === 'true' || state !== 'false');
 				colSel.$column[colId] = $(this);
 
