@@ -437,6 +437,8 @@
 						// force a new search since content has changed
 						c.lastCombinedFilter = null;
 						c.lastSearch = [];
+						// update filterFormatters after update - Fixes #1237
+						c.$table.triggerHandler( 'filterFomatterUpdate' );
 					}
 					// pass true ( skipFirst ) to prevent the tablesorter.setFilters function from skipping the first
 					// input ensures all inputs are updated when a search is triggered on the table
@@ -601,8 +603,10 @@
 				count = 0,
 				completed = function() {
 					wo.filter_initialized = true;
+					// update lastSearch - it gets cleared often
+					c.lastSearch = c.$table.data( 'lastSearch' );
 					c.$table.triggerHandler( 'filterInit', c );
-					tsf.findRows( c.table, c.$table.data( 'lastSearch' ) || [] );
+					tsf.findRows( c.table, c.lastSearch || [] );
 				};
 			if ( $.isEmptyObject( wo.filter_formatter ) ) {
 				completed();
