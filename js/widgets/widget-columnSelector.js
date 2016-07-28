@@ -72,14 +72,14 @@
 				isArry = $.isArray(optState || optName),
 				wo = c.widgetOptions;
 			// see #798
-			if (typeof optName !== 'undefined' && colSel.$container.length) {
+			if (typeof optName !== 'undefined' && optName !== null && colSel.$container.length) {
 				// pass "selectors" to update the all of the container contents
 				if ( optName === 'selectors' ) {
 					colSel.$container.empty();
 					tsColSel.setupSelector(c, wo);
 					tsColSel.setupBreakpoints(c, wo);
 					// if optState is undefined, maintain the current "auto" state
-					if ( typeof optState === 'undefined' ) {
+					if ( typeof optState === 'undefined' && optStates !== null ) {
 						optState = colSel.auto;
 					}
 				}
@@ -140,12 +140,13 @@
 				// include getData check (includes 'columnSelector-false' class, data attribute, etc)
 				if ( isNaN(priority) && priority.length > 0 || state === 'disable' ||
 					( wo.columnSelector_columns[colId] && wo.columnSelector_columns[colId] === 'disable') ) {
+					colSel.states[colId] = null;
 					continue; // goto next
 				}
 
 				// set default state; storage takes priority
-				colSel.states[colId] = saved && typeof saved[colId] !== 'undefined' ?
-					saved[colId] : typeof wo.columnSelector_columns[colId] !== 'undefined' ?
+				colSel.states[colId] = saved && (typeof saved[colId] !== 'undefined' && saved[colId] === null) ?
+					saved[colId] : (typeof wo.columnSelector_columns[colId] !== 'undefined' && wo.columnsSelector_columns[colId] !== null) ?
 					wo.columnSelector_columns[colId] : (state === 'true' || state !== 'false');
 				colSel.$column[colId] = $(this);
 
@@ -415,7 +416,7 @@
 					} else {
 						$cell.addClass( filtered );
 					}
-				} else if ( typeof colSel.states[ col ] !== 'undefined' ) {
+				} else if ( typeof colSel.states[ col ] !== 'undefined' && colSel.states[ col ] !== null ) {
 					$cell.toggleClass( filtered, !colSel.states[ col ] );
 				}
 			}
