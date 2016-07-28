@@ -198,7 +198,7 @@ jQuery(function($){
 			wo = this.wo,
 			$table = this.$table,
 			table = this.table;
-		expect(34);
+		expect(37);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {
@@ -285,6 +285,15 @@ jQuery(function($){
 		).nextTask(
 			function(){ ts.setFilters( table, ['', '', '', '', '5 - 100'] ); },
 			function(){ assert.cacheCompare( table, 4, [5.95, 42.29, 9.99, 19.99, 15.89, 5.29, 14.19, 13.19, 55.2, 22.09], 'search range; ensure search filtered gets cleared', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', '4:>40'] ); },
+			function(){ assert.cacheCompare( table, 3, [51, 45, 65], 'search "4:>40" in anyMatch', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', '2:~aa'] ); },
+			function(){ assert.cacheCompare( table, 1, ['Philip Aaron Wong', 'Aaron', 'Brandon Clark', 'Martha'], 'search "2:~aa" in anyMatch', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', '1:5 && 7:12'] ); },
+			function(){ assert.cacheCompare( table, 3, [45, 65], 'search "1:5 && 7:12" in anyMatch', true ); }
 		).nextTask( // test filter_startsWith (false by default)
 			function(){
 				wo.filter_startsWith = false;
