@@ -1,4 +1,4 @@
-/* Widget: columnSelector (responsive table widget) - updated 7/11/2016 (v2.26.6) *//*
+/* Widget: columnSelector (responsive table widget) - updated 7/31/2016 (v2.27.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -72,14 +72,14 @@
 				isArry = $.isArray(optState || optName),
 				wo = c.widgetOptions;
 			// see #798
-			if (typeof optName !== 'undefined' && colSel.$container.length) {
+			if (typeof optName !== 'undefined' && optName !== null && colSel.$container.length) {
 				// pass "selectors" to update the all of the container contents
 				if ( optName === 'selectors' ) {
 					colSel.$container.empty();
 					tsColSel.setupSelector(c, wo);
 					tsColSel.setupBreakpoints(c, wo);
 					// if optState is undefined, maintain the current "auto" state
-					if ( typeof optState === 'undefined' ) {
+					if ( typeof optState === 'undefined' && optStates !== null ) {
 						optState = colSel.auto;
 					}
 				}
@@ -140,12 +140,13 @@
 				// include getData check (includes 'columnSelector-false' class, data attribute, etc)
 				if ( isNaN(priority) && priority.length > 0 || state === 'disable' ||
 					( wo.columnSelector_columns[colId] && wo.columnSelector_columns[colId] === 'disable') ) {
+					colSel.states[colId] = null;
 					continue; // goto next
 				}
 
 				// set default state; storage takes priority
-				colSel.states[colId] = saved && typeof saved[colId] !== 'undefined' ?
-					saved[colId] : typeof wo.columnSelector_columns[colId] !== 'undefined' ?
+				colSel.states[colId] = saved && (typeof saved[colId] !== 'undefined' && saved[colId] !== null) ?
+					saved[colId] : (typeof wo.columnSelector_columns[colId] !== 'undefined' && wo.columnSelector_columns[colId] !== null) ?
 					wo.columnSelector_columns[colId] : (state === 'true' || state !== 'false');
 				colSel.$column[colId] = $(this);
 
@@ -159,15 +160,42 @@
 						.attr('data-column', colId)
 						.toggleClass( wo.columnSelector_cssChecked, colSel.states[colId] )
 						.prop('checked', colSel.states[colId])
-						.on('change', function(){
-							// ensure states is accurate
-							var colId = $(this).attr('data-column');
-							c.selector.states[colId] = this.checked;
-							tsColSel.updateCols(c, wo);
+						.on('change', function() {
+							if (!colSel.isInitializing) {
+								// ensure states is accurate
+								var colId = $(this).attr('data-column');
+								if (tsColSel.checkChange(c, this.checked)) {
+									// if (wo.columnSelector_maxVisible)
+									c.selector.states[colId] = this.checked;
+									tsColSel.updateCols(c, wo);
+								} else {
+									this.checked = !this.checked;
+									return false;
+								}
+							}
 						}).change();
 				}
 			}
 
+		},
+
+		checkChange: function(c, checked) {
+			var wo = c.widgetOptions,
+				max = wo.columnSelector_maxVisible,
+				min = wo.columnSelector_minVisible,
+				states = c.selector.states,
+				indx = states.length,
+				count = 0;
+			while (indx-- >= 0) {
+				if (states[indx]) {
+					count++;
+				}
+			}
+			if ((checked & max !== null && count >= max) ||
+				(!checked && min !== null && count <= min)) {
+				return false;
+			}
+			return true;
 		},
 
 		setupBreakpoints: function(c, wo) {
@@ -388,7 +416,7 @@
 					} else {
 						$cell.addClass( filtered );
 					}
-				} else if ( typeof colSel.states[ col ] !== 'undefined' ) {
+				} else if ( typeof colSel.states[ col ] !== 'undefined' && colSel.states[ col ] !== null ) {
 					$cell.toggleClass( filtered, !colSel.states[ col ] );
 				}
 			}
@@ -423,13 +451,20 @@
 							.toggleClass( wo.columnSelector_cssChecked, isChecked )
 							.prop( 'checked', isChecked );
 					});
-				colSel.$popup = $popup.on('change', 'input', function(){
-					// data input
-					indx = $(this).toggleClass( wo.columnSelector_cssChecked, this.checked ).attr('data-column');
-					// update original popup
-					colSel.$container.find('input[data-column="' + indx + '"]')
-						.prop('checked', this.checked)
-						.trigger('change');
+				colSel.$popup = $popup.on('change', 'input', function() {
+					if (!colSel.isInitializing) {
+						if (tsColSel.checkChange(c, this.checked)) {
+							// data input
+							indx = $(this).toggleClass( wo.columnSelector_cssChecked, this.checked ).attr('data-column');
+							// update original popup
+							colSel.$container.find('input[data-column="' + indx + '"]')
+								.prop('checked', this.checked)
+								.trigger('change');
+						} else {
+							this.checked = !this.checked;
+							return false;
+						}
+					}
 				});
 			}
 		}
@@ -461,17 +496,21 @@
 			// container layout
 			columnSelector_layout : '<label><input type="checkbox">{name}</label>',
 			// data attribute containing column name to use in the selector container
-			columnSelector_name  : 'data-selector-name',
+			columnSelector_name : 'data-selector-name',
 
 			/* Responsive Media Query settings */
 			// enable/disable mediaquery breakpoints
-			columnSelector_mediaquery: true,
+			columnSelector_mediaquery : true,
 			// toggle checkbox name
-			columnSelector_mediaqueryName: 'Auto: ',
+			columnSelector_mediaqueryName : 'Auto: ',
 			// breakpoints checkbox initial setting
-			columnSelector_mediaqueryState: true,
+			columnSelector_mediaqueryState : true,
 			// hide columnSelector false columns while in auto mode
-			columnSelector_mediaqueryHidden: false,
+			columnSelector_mediaqueryHidden : false,
+			// set the maximum and/or minimum number of visible columns
+			columnSelector_maxVisible : null,
+			columnSelector_minVisible : null,
+
 			// responsive table hides columns with priority 1-6 at these breakpoints
 			// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
 			// *** set to false to disable ***
@@ -488,7 +527,6 @@
 			columnSelector_cssChecked : 'checked',
 			// event triggered when columnSelector completes
 			columnSelector_updated : 'columnUpdate'
-
 		},
 		init: function(table, thisWidget, c, wo) {
 			tsColSel.init(table, c, wo);

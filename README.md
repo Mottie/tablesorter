@@ -83,7 +83,7 @@ If you would like to contribute, please...
 
 [npm-url]: https://npmjs.org/package/tablesorter
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
-[david-dev-url]: https://david-dm.org/Mottie/tablesorter#info=devDependencies
+[david-dev-url]: https://david-dm.org/Mottie/tablesorter?type=dev
 [david-dev-image]: https://img.shields.io/david/dev/Mottie/tablesorter.svg
 [bower-url]: http://bower.io/search/?q=jquery.tablesorter
 [bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
@@ -100,6 +100,61 @@ If you would like to contribute, please...
 ### Recent Changes
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.27.0">Version 2.27.0</a> (7/31/2016)
+
+* Core:
+  * `updateCache` now ignores "remove-me" rows.
+  * Add column count to debug log.
+  * Tweak internal sortVars & sortReset. Fixes [#1137](https://github.com/Mottie/tablesorter/issues/1137).
+* ColumnSelector:
+  * Add max/min visible columns settings.
+  * Set state to `null` for disabled columns - Fixes JSON issues with not storing `undefined` values.
+  * Fix null comparison & incorrect option.
+* CurrentSort: Add `currentSort` widget. Fixes [issue #1208](https://github.com/Mottie/tablesorter/issues/1208).
+* Filter:
+  * `getFilters` will now always return an array. Fixes [issue #1250](https://github.com/Mottie/tablesorter/issues/1250). **API change**
+  * Allow ES6 regex flags.
+  * Add rowIndex to filter data.
+  * Trigger filter formatters after update. See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
+  * Selected column query works again. Fixes [issue #1267](https://github.com/Mottie/tablesorter/issues/1267); broken since [a6b25ae](https://github.com/Mottie/tablesorter/commit/a6b25ae4c0cc44dcf935568b2f100ae65117ea74).
+* Grouping: Prevent js errors on non-string values.
+* Mark: Add mark widget. Fixes [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
+* Math:
+  * Add `data-math-target` attribute.
+  * Add `math-debug` option.
+* Output:
+  * Automatically ignore widget added rows.
+  * Add "url" parameter to output_callback function.
+* Scroller: Update when `applyWidgets` is used. See [issue #1261](https://github.com/Mottie/tablesorter/issues/1261).
+* StickyHeaders: Add `appendTo` option.
+* UITheme: jQuery v1.12.0 renamed "carat" to "caret". Fixes [issue #1257](https://github.com/Mottie/tablesorter/issues/1257).
+* Parsers: Url parser now ignores "www" & removed parsed flag. The filter widget finds "http" querys.
+* Docs:
+  * Fix docs javascript; some demos still using jQuery < 1.7.
+  * Add scroller widget RTL details. See [issue #906](https://github.com/Mottie/tablesorter/issues/906).
+  * Clarify & expand grouping widget usage.
+  * Include ajax type.
+  * Add ajax type example to main docs.
+  * Update jQuery UI & fix uitheme docs.
+  * Remove old syntax highlighter.
+  * Update theme switcher.
+  * Switch to use jQuery <3.0.0 for Bootstrap demos; later reverted this change after updating to Bootstrap v3.3.7.
+  * Add link to `cssIgnoreRow` example.
+  * Clarify column selector initial state.
+  * Fix HTML issues.
+  * Add filter event function parameter examples.
+* Themes:
+  * Hide icon when column is disabled.
+  * Optimize PNGs in data URLs using ZopfliPNG as well.
+  * Compress PNG images further. See [pull #1251](https://github.com/Mottie/tablesorter/pull/1251); thanks [@Herst](https://github.com/Herst)!
+  * Add Materialize theme style. Fixes [issue #1242](https://github.com/Mottie/tablesorter/issues/1242).
+* Meta:
+  * Grunt: Fix IIFE jQuery reference. Fixes [issue #1255](https://github.com/Mottie/tablesorter/issues/1255).
+  * Grunt: Update dependencies.
+  * Testing: Add filter anyMatch queries; Sadly unrelated to [issue #1267](https://github.com/Mottie/tablesorter/issues/1267).
+  * Bower: Oust meta warnings. Fixes [issue #1264](https://github.com/Mottie/tablesorter/issues/1264).
+  * Bower: Add recommending settings. Fixes [issue #1265](https://github.com/Mottie/tablesorter/issues/1265).
 
 #### <a name="v2.26.6">Version 2.26.6</a> (7/11/2016)
 
@@ -149,7 +204,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Pager:
   * Fix code alignment.
   * Fix filtered regular expression definition.
-
-#### <a name="v2.26.4">Version 2.26.4</a> (6/15/2016)
-
-* Version bump due to merging issues.

@@ -1,4 +1,4 @@
-/*! Widget: output - updated 1/15/2016 (v2.25.2) *//*
+/*! Widget: output - updated 7/31/2016 (v2.27.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -145,8 +145,8 @@
 				});
 			headers = output.processRow(c, $this, true, outputJSON);
 
-			// all tbody rows
-			$rows = $el.children('tbody').children('tr');
+			// all tbody rows - do not include widget added rows (e.g. grouping widget headers)
+			$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
 
 			// check for a filter callback function first! because
 			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
@@ -193,7 +193,7 @@
 
 			// callback; if true returned, continue processing
 			if ($.isFunction(wo.output_callback)) {
-				tmp = wo.output_callback(c, mydata);
+				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
 					return;
 				} else if ( typeof tmp === 'string' ) {

@@ -135,7 +135,7 @@ table.tablesorter tbody tr.even.checked td {
 			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
 			// callback executed when processing completes
-			output_callback      : function(config, data) {
+			output_callback      : function(config, data, url) {
 				// return false to stop delivery & do something else with the data
 				// return true OR modified data (v2.25.1) to continue download/output
 				return true;
@@ -247,6 +247,7 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.27.0</span>, the <code>output_callback</code> now includes a <code>url</code> parameter.</li>
 				<li>In <span class="version">v2.25.2</span>, updated the <code>output_saveRows</code> option to accept a function.</li>
 				<li>In <span class="version">v2.25.1</span>, the <code>output_callback</code> can return modified data instead of a boolean.</li>
 				<li>In <span class="version">v2.22.4</span>, added <code>output_formatContent</code> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
@@ -752,22 +753,46 @@ line,value1,value2,value3
 						<td>Return <code>true</code> or modified data in this callback to continue the download or open the popup (<span class="version updated">v2.25.1</span>).
 							<div class="collapsible">
 								<br>
+								<p>In <span class="version">v2.27.0</span>, a url parameter was added to the callback.</p>
 								<p>In <span class="version">v2.25.1</span>, this callback can return modified data for output.</p>
-								<p>As of v2.17.0, the callback function was modified to pass two parameters:</p>
+								<p>As of v2.17.0 (<span class="version updated">v2.27.0</span>) , the callback function was modified to pass <del>two</del> three parameters:</p>
 								<ul>
 									<li><code>config</code> - the <code>table.config</code> settings.</li>
 									<li><code>data</code> - the output data as a string</li>
+									<li><code>url</code> - the url of the current page (including filters, sort, etc), if the pager widget/addon is being used.
+										<ul>
+											<li>You can get the same value by using <code>config.pager.ajaxObject.url</code>; this parameter was added for convenience.</li>
+											<li>The value will be <code>null</code> if the pager is not being used.</li>
+										</ul>
+									</li>
 								</ul>
 								Default setting:
-								<pre class="prettyprint lang-js">function(config, data){
+								<pre class="prettyprint lang-js">function(config, data, url){
     // return data.replace( /Mary Smith/g, 'Mary Smith-Jones' ); // v2.25.1+
     return true;
 }</pre>
 								After table processing has completed, this callback function is exectued. If <code>true</code> is not returned, the processed data will not open a popup, nor download the data.
-								<pre class="prettyprint lang-js">output_callback : function(config, data) {
+								<pre class="prettyprint lang-js">output_callback : function(config, data, url) {
     // send output to the console only
     console.log(data);
     return false;
+}</pre>
+								If you are using the pager and want to provide the entire table in the output, use this callback as follows:
+								<pre class="prettyprint lang-js">function(config, data, url) {
+    // This is only an example, but you could set it up so that a "&csv=1"
+    // parameter in the url to signal the server to provide the csv for the
+    // entire table using the current filters, sort, etc.
+    if (url) {
+      return $.getJSON(url + "&csv=1")
+        .done(function(data){
+          return data.csv;
+        })
+        .fail(function() {
+          alert('no go on CSV');
+          return false;
+        });
+    }
+    return true;
 }</pre>
 							</div>
 						</td>

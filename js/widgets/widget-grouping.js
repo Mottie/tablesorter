@@ -1,4 +1,4 @@
-/*! Widget: grouping - updated 7/11/2016 (v2.26.6) *//*
+/*! Widget: grouping - updated 7/31/2016 (v2.27.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -144,7 +144,7 @@
 					$label = $row.find( '.group-count' );
 					if ( $label.length ) {
 						if ( wo.group_count ) {
-							$label.html( wo.group_count.replace( /\{num\}/g, $rows.length ) );
+							$label.html( wo.group_count.toString().replace( /\{num\}/g, $rows.length ) );
 						}
 						if ( $.isFunction( wo.group_callback ) ) {
 							wo.group_callback( $row.find( 'td' ), $rows, data.column, c.table );
@@ -167,7 +167,7 @@
 		},
 
 		groupHeaderHTML : function( c, wo, data ) {
-			var name = ( data.currentGroup || '' ).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			var name = ( data.currentGroup || '' ).toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
 				data.groupIndex + '">' +
