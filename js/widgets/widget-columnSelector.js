@@ -79,7 +79,7 @@
 					tsColSel.setupSelector(c, wo);
 					tsColSel.setupBreakpoints(c, wo);
 					// if optState is undefined, maintain the current "auto" state
-					if ( typeof optState === 'undefined' && optStates !== null ) {
+					if ( typeof optState === 'undefined' && optState !== null ) {
 						optState = colSel.auto;
 					}
 				}
