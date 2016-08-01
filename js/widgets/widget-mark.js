@@ -7,7 +7,7 @@
 	var ts = $.tablesorter;
 
 	ts.mark = {
-		init : function( c, wo ) {
+		init : function( c ) {
 			if ( typeof $.fn.mark === 'function' ) {
 				var tmp,
 					update = c.widgetOptions.mark_tsUpdate;
@@ -43,7 +43,7 @@
 			var results = [],
 				indx = matches && matches.length || 0;
 			while ( indx-- ) {
-				if ( matches[indx] !== "" ) {
+				if ( matches[indx] !== '' ) {
 					results[ results.length ] = matches[ indx ];
 				}
 			}
@@ -55,8 +55,8 @@
 				$rows = c.$table
 					.find( 'tbody tr' )
 					.unmark()
-					.not( '.' + ( c.widgetOptions.filter_filteredRow || 'filtered' ) ),
-				filters = filters || $.tablesorter.getFilters( c.$table );
+					.not( '.' + ( c.widgetOptions.filter_filteredRow || 'filtered' ) );
+			filters = filters || $.tablesorter.getFilters( c.$table );
 			// extract & save mark options from widgetOptions (prefixed with "mark_")
 			// update dynamically
 			$.each( filters, function( indx, filter ) {
@@ -121,7 +121,7 @@
 	ts.addWidget({
 		id: 'mark',
 		options: {
-			mark_tsUpdate : "markUpdate"
+			mark_tsUpdate : 'markUpdate'
 		},
 		init : function( table, thisWidget, c, wo ) {
 			ts.mark.init( c, wo );
