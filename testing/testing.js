@@ -461,7 +461,7 @@ jQuery(function($){
 	************************************************/
 	var p = ts.parsers,
 	// test by parser
-	parserTests = 85,
+	parserTests = 86,
 	// skipping metadata parser
 	sample1 = {
 		'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': '\u00e1 test' },
@@ -472,7 +472,7 @@ jQuery(function($){
 		'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4, '1,234.56    %': 1234.56 },
 		'usLongDate': { 'Feb 23, 1999': returnTime('Feb 23, 1999'), 'Feb 23, 1999 12:34': returnTime('Feb 23, 1999 12:34'), 'Feb 23, 1999 12:34 AM': returnTime('Feb 23, 1999 12:34 AM'), 'Feb 23, 1999 12:34:56 PM': returnTime('Feb 23, 1999 12:34:56 PM'), '01 Jan 2013': returnTime('01 Jan 2013') },
 		'shortDate' : { '1/2/2001': returnTime('1/2/2001'), '1 2 2001': returnTime('1/2/2001'), '1.2.2001': returnTime('1/2/2001'), '1-2-2001': returnTime('1/2/2001'), '1/2/2001 12:34 PM' : returnTime('1/2/2001 12:34 PM'), '1.2.2001 13:34' : returnTime('1/2/2001 13:34') },
-		'time'      : { '12:34 AM': returnTime('2000/01/01 12:34 AM'), '1:00 pm': returnTime('2000/01/01 1:00 pm') },
+		'time'      : { '12:34 AM': returnTime('2000/01/01 12:34 AM'), '1:00 pm': returnTime('2000/01/01 1:00 pm'), '09:54 PM': returnTime('2000/01/01 9:54 PM') },
 		'digit'     : { '12': 12, '$23': 23, '&44^': 44, '#(33)': -33, '1,000': 1000, '12.34': 12.34 }
 	},
 	// switch ignoreCase, sortLocalCompare & shortDate 'ddmmyyyy'
