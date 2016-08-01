@@ -101,6 +101,11 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.1">Version 2.27.1</a> (7/31/2016)
+
+* ColumnSelector: Fix undefined variable.
+* Mark: Fix linting issues.
+
 #### <a name="v2.27.0">Version 2.27.0</a> (7/31/2016)
 
 * Core:
