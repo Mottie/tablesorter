@@ -1,4 +1,4 @@
-/*! Widget: uitheme - updated 7/11/2016 (v2.26.6) */
+/*! Widget: uitheme - updated 7/31/2016 (v2.27.0) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};

@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-11-2016 (v2.26.6)*/
+/*! tablesorter (FORK) - updated 07-31-2016 (v2.27.0)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -8,16 +8,16 @@
 	} else {
 		factory(jQuery);
 	}
-}(function($) {
+}(function(jQuery) {
 
-/*! TableSorter (FORK) v2.26.6 *//*
+/*! TableSorter (FORK) v2.27.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
 * Copyright (c) 2007 Christian Bach
 * fork maintained by Rob Garrison
 *
-* Examples and docs at: http://tablesorter.com
+* Examples and original docs at: http://tablesorter.com
 * Dual licensed under the MIT and GPL licenses:
 * http://www.opensource.org/licenses/mit-license.php
 * http://www.gnu.org/licenses/gpl.html
@@ -27,13 +27,14 @@
 * @cat Plugins/Tablesorter
 * @author Christian Bach - christian.bach@polyester.se
 * @contributor Rob Garrison - https://github.com/Mottie/tablesorter
+* @docs (fork) - https://mottie.github.io/tablesorter/docs/
 */
 /*jshint browser:true, jquery:true, unused:false, expr: true */
 ;( function( $ ) {
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.26.6',
+		version : '2.27.0',
 
 		parsers : [],
 		widgets : [],
@@ -574,19 +575,19 @@
 				}
 				column = parseInt( $elem.attr( 'data-column' ), 10 );
 				elem.column = column;
-				tmp = ts.getData( $elem, configHeaders, 'sortInitialOrder' ) || c.sortInitialOrder;
+				tmp = ts.getOrder( ts.getData( $elem, configHeaders, 'sortInitialOrder' ) || c.sortInitialOrder );
 				// this may get updated numerous times if there are multiple rows
 				c.sortVars[ column ] = {
 					count : -1, // set to -1 because clicking on the header automatically adds one
-					order: ts.getOrder( tmp ) ?
-						[ 1, 0, 2 ] : // desc, asc, unsorted
-						[ 0, 1, 2 ],  // asc, desc, unsorted
+					order:  tmp ?
+						( c.sortReset ? [ 1, 0, 2 ] : [ 1, 0 ] ) : // desc, asc, unsorted
+						( c.sortReset ? [ 0, 1, 2 ] : [ 0, 1 ] ),  // asc, desc, unsorted
 					lockedOrder : false
 				};
 				tmp = ts.getData( $elem, configHeaders, 'lockedOrder' ) || false;
 				if ( typeof tmp !== 'undefined' && tmp !== false ) {
 					c.sortVars[ column ].lockedOrder = true;
-					c.sortVars[ column ].order = ts.getOrder( tmp ) ? [ 1, 1, 1 ] : [ 0, 0, 0 ];
+					c.sortVars[ column ].order = ts.getOrder( tmp ) ? [ 1, 1 ] : [ 0, 0 ];
 				}
 				// add cell to headerList
 				c.headerList[ index ] = elem;
@@ -894,6 +895,10 @@
 					/** Add the table data to main data array */
 					$row = $( $tbody[ tbodyIndex ].rows[ rowIndex ] );
 					cols = [];
+					// ignore "remove-me" rows
+					if ( $row.hasClass( c.selectorRemove.slice(1) ) ) {
+						continue;
+					}
 					// if this is a child row, add it to the last row's children and continue to the next row
 					// ignore child row class, if it is the first row
 					if ( $row.hasClass( c.cssChildRow ) && rowIndex !== 0 ) {
@@ -985,7 +990,8 @@
 			if ( c.debug ) {
 				len = Math.min( 5, c.cache[ 0 ].normalized.length );
 				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + c.totalRows +
-					' rows (showing ' + len + ' rows in log)' + ts.benchmark( cacheTime ) );
+					' rows (showing ' + len + ' rows in log) and ' + c.columns + ' columns' +
+					ts.benchmark( cacheTime ) );
 				val = {};
 				for ( colIndex = 0; colIndex < c.columns; colIndex++ ) {
 					for ( cacheIndex = 0; cacheIndex < len; cacheIndex++ ) {
@@ -1136,6 +1142,7 @@
 		setColumnAriaLabel : function( c, $header, nextSort ) {
 			if ( $header.length ) {
 				var column = parseInt( $header.attr( 'data-column' ), 10 ),
+					vars = c.sortVars[ column ],
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
 						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone',
@@ -1143,7 +1150,8 @@
 				if ( $header.hasClass( 'sorter-false' ) || nextSort === false ) {
 					txt += ts.language.sortDisabled;
 				} else {
-					nextSort = c.sortVars[ column ].order[ ( c.sortVars[ column ].count + 1 ) % ( c.sortReset ? 3 : 2 ) ];
+					tmp = ( vars.count + 1 ) % vars.order.length;
+					nextSort = vars.order[ tmp ];
 					// if nextSort
 					txt += ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 				}
@@ -1202,7 +1210,12 @@
 					// set order if not already defined - due to colspan header without associated header cell
 					// adding this check prevents a javascript error
 					if ( !c.sortVars[ col ].order ) {
-						order = c.sortVars[ col ].order = ts.getOrder( c.sortInitialOrder ) ? [ 1, 0, 2 ] : [ 0, 1, 2 ];
+						if ( ts.getOrder( c.sortInitialOrder ) ) {
+							order = c.sortReset ? [ 1, 0, 2 ] : [ 1, 0 ];
+						} else {
+							order = c.sortReset ? [ 0, 1, 2 ] : [ 0, 1 ];
+						}
+						c.sortVars[ col ].order = order;
 						c.sortVars[ col ].count = 0;
 					}
 
@@ -1219,12 +1232,12 @@
 							dir = primary || 0;
 							break;
 						case 'o' :
-							temp = order[ ( primary || 0 ) % ( c.sortReset ? 3 : 2 ) ];
+							temp = order[ ( primary || 0 ) % order.length ];
 							// opposite of primary column; but resets if primary resets
 							dir = temp === 0 ? 1 : temp === 1 ? 0 : 2;
 							break;
 						case 'n' :
-							dir = order[ ( ++c.sortVars[ col ].count ) % ( c.sortReset ? 3 : 2 ) ];
+							dir = order[ ( ++c.sortVars[ col ].count ) % order.length ];
 							break;
 						default : // ascending
 							dir = 0;
@@ -1234,7 +1247,7 @@
 					group = [ col, parseInt( dir, 10 ) || 0 ];
 					c.sortList[ c.sortList.length ] = group;
 					dir = $.inArray( group[ 1 ], order ); // fixes issue #167
-					c.sortVars[ col ].count = dir >= 0 ? dir : group[ 1 ] % ( c.sortReset ? 3 : 2 );
+					c.sortVars[ col ].count = dir >= 0 ? dir : group[ 1 ] % order.length;
 				}
 			}
 		},
@@ -1497,8 +1510,8 @@
 			// Only call sortStart if sorting is enabled
 			c.$table.triggerHandler( 'sortStart', table );
 			// get current column sort order
-			c.sortVars[ col ].count =
-				event[ c.sortResetKey ] ? 2 : ( c.sortVars[ col ].count + 1 ) % ( c.sortReset ? 3 : 2 );
+			tmp = ( c.sortVars[ col ].count + 1 ) % order.length;
+			c.sortVars[ col ].count = event[ c.sortResetKey ] ? 2 : tmp;
 			// reset all sorts on non-current column - issue #30
 			if ( c.sortRestart ) {
 				for ( headerIndx = 0; headerIndx < len; headerIndx++ ) {
@@ -1593,7 +1606,7 @@
 										dir = tmp === 0 ? 1 : 0;
 										break;
 									case 'n' :
-										dir = ( tmp + 1 ) % ( c.sortReset ? 3 : 2 );
+										dir = ( tmp + 1 ) % order.length;
 										break;
 									default:
 										dir = 0;
@@ -2111,7 +2124,7 @@
 		▀████▀   ██   ██ ██████ ██   ██   ██ ██████ █████▀
 		*/
 		benchmark : function( diff ) {
-			return ( ' ( ' + ( new Date().getTime() - diff.getTime() ) + 'ms )' );
+			return ( ' (' + ( new Date().getTime() - diff.getTime() ) + ' ms)' );
 		},
 		// deprecated ts.log
 		log : function() {
@@ -2540,8 +2553,8 @@
 
 	// too many protocols to add them all https://en.wikipedia.org/wiki/URI_scheme
 	// now, this regex can be updated before initialization
-	ts.regex.urlProtocolTest =   /^(https?|ftp|file):\/\//;
-	ts.regex.urlProtocolReplace = /(https?|ftp|file):\/\//;
+	ts.regex.urlProtocolTest = /^(https?|ftp|file):\/\//;
+	ts.regex.urlProtocolReplace = /(https?|ftp|file):\/\/(www\.)?/;
 	ts.addParser({
 		id : 'url',
 		is : function( str ) {
@@ -2550,7 +2563,6 @@
 		format : function( str ) {
 			return str ? $.trim( str.replace( ts.regex.urlProtocolReplace, '' ) ) : str;
 		},
-		parsed : true, // filter widget flag
 		type : 'text'
 	});
 
@@ -2833,7 +2845,7 @@
 
 })(jQuery, window, document);
 
-/*! Widget: uitheme - updated 7/11/2016 (v2.26.6) */
+/*! Widget: uitheme - updated 7/31/2016 (v2.27.0) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
@@ -2872,9 +2884,9 @@
 			hover        : 'ui-state-hover',  // hover class
 			// icon class names
 			icons        : 'ui-icon', // icon class added to the <i> in the header
-			iconSortNone : 'ui-icon-carat-2-n-s', // class name added to icon when column is not sorted
-			iconSortAsc  : 'ui-icon-carat-1-n', // class name added to icon when column has ascending sort
-			iconSortDesc : 'ui-icon-carat-1-s', // class name added to icon when column has descending sort
+			iconSortNone : 'ui-icon-carat-2-n-s ui-icon-caret-2-n-s', // class name added to icon when column is not sorted
+			iconSortAsc  : 'ui-icon-carat-1-n ui-icon-caret-1-n', // class name added to icon when column has ascending sort
+			iconSortDesc : 'ui-icon-carat-1-s ui-icon-caret-1-s', // class name added to icon when column has descending sort
 			filterRow    : '',
 			footerRow    : '',
 			footerCells  : '',
@@ -3108,7 +3120,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 7/11/2016 (v2.26.6) *//*
+/*! Widget: filter - updated 7/31/2016 (v2.27.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3204,7 +3216,7 @@
 
 		// regex used in filter 'check' functions - not for general use and not documented
 		regex: {
-			regex     : /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})?$/, // regex to test for regex
+			regex     : /^\/((?:\\\/|[^\/])+)\/([migyu]{0,5})?$/, // regex to test for regex
 			child     : /tablesorter-childRow/, // child row class name; this gets updated in the script
 			filtered  : /filtered/, // filtered (hidden) row class name; updated in the script
 			type      : /undefined|number/, // check type
@@ -3547,6 +3559,8 @@
 						// force a new search since content has changed
 						c.lastCombinedFilter = null;
 						c.lastSearch = [];
+						// update filterFormatters after update - Fixes #1237
+						c.$table.triggerHandler( 'filterFomatterUpdate' );
 					}
 					// pass true ( skipFirst ) to prevent the tablesorter.setFilters function from skipping the first
 					// input ensures all inputs are updated when a search is triggered on the table
@@ -3711,8 +3725,10 @@
 				count = 0,
 				completed = function() {
 					wo.filter_initialized = true;
+					// update lastSearch - it gets cleared often
+					c.lastSearch = c.$table.data( 'lastSearch' );
 					c.$table.triggerHandler( 'filterInit', c );
-					tsf.findRows( c.table, c.$table.data( 'lastSearch' ) || [] );
+					tsf.findRows( c.table, c.lastSearch || [] );
 				};
 			if ( $.isEmptyObject( wo.filter_formatter ) ) {
 				completed();
@@ -4197,6 +4213,7 @@
 				fxn, ffxn, txt,
 				wo = c.widgetOptions,
 				showRow = true,
+				hasAnyMatchInput = wo.filter_$anyMatch && wo.filter_$anyMatch.length,
 
 				// if wo.filter_$anyMatch data-column attribute is changed dynamically
 				// we don't want to do an "anyMatch" search on one column using data
@@ -4206,11 +4223,11 @@
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
 			data.$cells = data.$row.children();
-			if ( data.anyMatchFlag && columnIndex.length > 1 || data.anyMatchFilter ) {
+			if ( data.anyMatchFlag && columnIndex.length > 1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 				data.anyMatch = true;
 				data.isMatch = true;
 				data.rowArray = data.$cells.map( function( i ) {
-					if ( $.inArray( i, columnIndex ) > -1 || data.anyMatchFilter ) {
+					if ( $.inArray( i, columnIndex ) > -1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 						if ( data.parsed[ i ] ) {
 							txt = data.cacheArray[ i ];
 						} else {
@@ -4500,6 +4517,7 @@
 						}
 
 						data.$row = $rows.eq( rowIndex );
+						data.rowIndex = rowIndex;
 						data.cacheArray = norm_rows[ rowIndex ];
 						rowData = data.cacheArray[ c.columns ];
 						data.rawArray = rowData.raw;
@@ -4855,7 +4873,7 @@
 
 	ts.getFilters = function( table, getRaw, setFilters, skipFirst ) {
 		var i, $filters, $column, cols,
-			filters = false,
+			filters = [],
 			c = table ? $( table )[0].config : '',
 			wo = c ? c.widgetOptions : '';
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
@@ -4921,9 +4939,6 @@
 				}
 			}
 		}
-		if ( filters.length === 0 ) {
-			filters = false;
-		}
 		return filters;
 	};
 
@@ -4941,12 +4956,12 @@
 			tsf.searching( c.table, filter, skipFirst );
 			c.$table.triggerHandler( 'filterFomatterUpdate' );
 		}
-		return !!valid;
+		return valid.length !== 0;
 	};
 
 })( jQuery );
 
-/*! Widget: stickyHeaders - updated 5/1/2016 (v2.26.0) *//*
+/*! Widget: stickyHeaders - updated 7/31/2016 (v2.27.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -5009,10 +5024,11 @@
 	// **************************
 	ts.addWidget({
 		id: 'stickyHeaders',
-		priority: 60, // sticky widget must be initialized after the filter widget!
+		priority: 55, // sticky widget must be initialized after the filter widget!
 		options: {
 			stickyHeaders : '',       // extra class name added to the sticky header row
-			stickyHeaders_attachTo : null, // jQuery selector or object to attach sticky header to
+			stickyHeaders_appendTo : null, // jQuery selector or object to phycially attach the sticky headers
+			stickyHeaders_attachTo : null, // jQuery selector or object to attach scroll listener to (overridden by xScroll & yScroll settings)
 			stickyHeaders_xScroll : null, // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
 			stickyHeaders_yScroll : null, // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
 			stickyHeaders_offset : 0, // number or jquery selector targeting the position:fixed element
@@ -5163,8 +5179,12 @@
 
 			ts.bindEvents(table, $stickyThead.children().children('.' + ts.css.header));
 
-			// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
-			$table.after( $stickyWrap );
+			if (wo.stickyHeaders_appendTo) {
+				$(wo.stickyHeaders_appendTo).append( $stickyWrap );
+			} else {
+				// add stickyheaders AFTER the table. If the table is selected by ID, the original one (first) will be returned.
+				$table.after( $stickyWrap );
+			}
 
 			// onRenderHeader is defined, we need to do something about it (fixes #641)
 			if (c.onRenderHeader) {
@@ -5710,5 +5730,5 @@
 
 })(jQuery);
 
-return $.tablesorter;
+return jQuery.tablesorter;
 }));
