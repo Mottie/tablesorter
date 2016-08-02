@@ -101,7 +101,7 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.27.2">Version 2.27.2</a> (8/1/2016)
+#### <a name="v2.27.2">Version 2.27.2</a> (8/2/2016)
 
 * Docs: Update versions.
 * Core: Allow leading zeros in the time parser. Fixes [issue #1269](https://github.com/Mottie/tablesorter/issues/1269).
