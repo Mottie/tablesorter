@@ -1,4 +1,4 @@
-/*! Widget: mark.js - updated 7/31/2016 (v2.27.1) *//*
+/*! Widget: mark.js - updated 8/1/2016 (v2.27.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -51,6 +51,8 @@
 		},
 		update : function( c, filters ) {
 			var options = {},
+				wo = c.widgetOptions,
+				setIgnoreCase = typeof wo.filter_ignoreCase === 'undefined' ? true : wo.filter_ignoreCase,
 				regex = ts.mark.regex,
 				$rows = c.$table
 					.find( 'tbody tr' )
@@ -59,6 +61,12 @@
 			filters = filters || $.tablesorter.getFilters( c.$table );
 			// extract & save mark options from widgetOptions (prefixed with "mark_")
 			// update dynamically
+			$.each( c.widgetOptions, function( key, val ) {
+				var matches = key.match( regex.mark );
+				if ( matches && typeof matches[1] !== 'undefined' ) {
+					options[ matches[1] ] = val;
+				}
+			});
 			$.each( filters, function( indx, filter ) {
 				if ( filter ) {
 					var testRegex = null,
@@ -105,7 +113,10 @@
 						matches = filter.split( regex.filter );
 					}
 					if ( useRegex && matches && matches.length ) {
-						matches = new RegExp( ts.mark.cleanMatches( matches ).join( '.*' ), 'gim' );
+						matches = new RegExp(
+							ts.mark.cleanMatches( matches ).join( '.*' ),
+							'gm' + ( setIgnoreCase ? 'i' : '' )
+						);
 						if ( ts.mark.checkRegex( matches ) ) {
 							$rows.children( col ).markRegExp( matches, options );
 						}
