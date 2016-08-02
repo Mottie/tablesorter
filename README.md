@@ -101,6 +101,12 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.2">Version 2.27.2</a> (8/1/2016)
+
+* Docs: Update versions.
+* Core: Allow leading zeros in the time parser. Fixes [issue #1269](https://github.com/Mottie/tablesorter/issues/1269).
+* Mark: Actually include options this time! See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
+
 #### <a name="v2.27.1">Version 2.27.1</a> (7/31/2016)
 
 * ColumnSelector: Fix undefined variable.
@@ -160,52 +166,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Testing: Add filter anyMatch queries; Sadly unrelated to [issue #1267](https://github.com/Mottie/tablesorter/issues/1267).
   * Bower: Oust meta warnings. Fixes [issue #1264](https://github.com/Mottie/tablesorter/issues/1264).
   * Bower: Add recommending settings. Fixes [issue #1265](https://github.com/Mottie/tablesorter/issues/1265).
-
-#### <a name="v2.26.6">Version 2.26.6</a> (7/11/2016)
-
-* Global: Fix "updated" date in various widgets & pager.
-* Docs:
-  * Cleanup links & license. Fixes [issue #1244](https://github.com/Mottie/tablesorter/issues/1244).
-  * Add button type to all buttons.
-  * Update to jQuery v3.1.0.
-* Core: Prevent undefined error in natural sort. See [issue #1151](https://github.com/Mottie/tablesorter/issues/1151).
-* Column Selector: Check visibility of cells after colspan. See [issue #1238](https://github.com/Mottie/tablesorter/issues/1238).
-* Filter
-  * Filter formatter for Select2 v3.4.6 (v4.0+ still not supported)
-    * Now adheres to case sensitivity setting. See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
-    * Update after filter row rebuilt. See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
-    * Properly remove case-insensitive flag in regex.
-    * Properly escaped characters in regex.
-  * Use uncached `widgetOptions` after inside events.
-  * `filter_hideFilters` option now accepts a function. See [issue #477](https://github.com/Mottie/tablesorter/issues/477).
-* Grouping:
-  * Fix js error when storage isn't loaded.
-  * Fix `group_collapsed` behavior. See [issue #1247](https://github.com/Mottie/tablesorter/issues/1247).
-* Pager:
-  * Prevent ajax call on init. See [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
-  * Prevent setting "all" value before initialization. See [issue #1196](https://github.com/Mottie/tablesorter/issues/1196).
-* Scroller: Save scroll position of window. See [issue #1240](https://github.com/Mottie/tablesorter/issues/1240).
-* UITheme: Modify filter row after filterInit.
-* View:
-  * Update to get the raw text value of a column without the span wrap.
-  * Trigger "viewComplete" in the view builder, not in init, otherwise you get no trigger when switching views.
-  * Replace all instances, not just the first one.
-* Bower: Add license identifiers. See [pull #1239](https://github.com/Mottie/tablesorter/pull/1239); thanks [@bckfnn](https://github.com/bckfnn)!
-
-#### <a name="v2.26.5">Version 2.26.5</a> (6/28/2016)
-
-* Docs:
-  * Optimize png images using using zopflipng; see [pull #1230](https://github.com/Mottie/tablesorter/pull/1230) thanks [@PeterDaveHello](https://github.com/PeterDaveHello)!
-  * Add [`showProcessing`](https://mottie.github.io/tablesorter/docs/example-option-show-processing.html#display) toggle button.
-  * Add demo link for css3 animated `showProcessing` icons that actually works!
-  * Update to use jQuery v3.0.0.
-* Readme: Update for previous version bump.
-* Filter: Do not return altered filters variable. Fixes [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
-* Grouping:
-  * Use correct pager row indexing. Fixes [issue #1232](https://github.com/Mottie/tablesorter/issues/1232).
-  * Prevent JS error with ajax & filtering. Fixes [issue #1232](https://github.com/Mottie/tablesorter/issues/1232).
-  * Fix lint issue.
-* Resizable: Adjust handles on pager complete.
-* Pager:
-  * Fix code alignment.
-  * Fix filtered regular expression definition.

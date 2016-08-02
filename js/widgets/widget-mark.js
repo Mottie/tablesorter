@@ -1,4 +1,4 @@
-/*! Widget: mark.js - updated 7/31/2016 (v2.27.1) *//*
+/*! Widget: mark.js - updated 8/1/2016 (v2.27.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
