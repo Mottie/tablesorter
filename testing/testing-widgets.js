@@ -149,7 +149,7 @@ jQuery(function($){
 		Filter widget
 	************************************************/
 	QUnit.test( 'Filter: init', function(assert) {
-		expect(6);
+		assert.expect(6);
 
 		assert.equal( this.init, true, 'Init event' );
 		assert.equal( this.$table.hasClass('hasFilters'), true, '`hasFilters` class applied' );
@@ -163,7 +163,7 @@ jQuery(function($){
 	});
 
 	QUnit.test( 'Filter column range', function(assert) {
-		expect(10);
+		assert.expect(10);
 		var range = $.tablesorter.filter.findRange,
 			c = { columns: 10 }; // psuedo table.config
 
@@ -180,7 +180,7 @@ jQuery(function($){
 	});
 
 	QUnit.test( 'Filter process filters', function(assert) {
-		expect(2);
+		assert.expect(2);
 		var processFilters = this.ts.filter.processFilters,
 			filters = [],
 			results = [];
@@ -198,7 +198,7 @@ jQuery(function($){
 			wo = this.wo,
 			$table = this.$table,
 			table = this.table;
-		expect(37);
+		assert.expect(37);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {
@@ -340,7 +340,7 @@ jQuery(function($){
 	});
 
 	QUnit.test( 'Filter: function & selectSource', function(assert) {
-		expect(3);
+		assert.expect(3);
 
 		var $t, opts = [];
 		$t = this.c.$table.find('.tablesorter-filter-row select:last');
@@ -363,7 +363,7 @@ jQuery(function($){
 			ts = this.ts,
 			$table = this.$table,
 			table = this.table;
-		expect(3);
+		assert.expect(3);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {

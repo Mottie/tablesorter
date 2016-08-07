@@ -17,7 +17,7 @@ QUnit.extend(QUnit.assert, {
 ipv6tests = function(){
 
 	QUnit.test( "ipv6 parser", function(assert) {
-		expect(483);
+		assert.expect(483);
 
 		// IPV6 tests by Rich Brown copied from http:// download.dartware.com/thirdparty/test-ipv6-regex.pl
 		// modified to compare to canonical ipv6 output using http://www.v6decode.com/ to produce the result
