@@ -102,7 +102,10 @@
 			// Set this option to false to make the searches case sensitive
 			filter_ignoreCase : true,
 
-			// if true, search column content while the user types (with a delay)
+			// if true, search column content while the user types (with a delay).
+			// In v2.27.3, this option can contain an
+			// object with column indexes or classnames; "fallback" is used
+			// for undefined columns
 			filter_liveSearch : true,
 
 			// global query settings ('exact' or 'match'); overridden by "filter-match" or "filter-exact" class
@@ -336,7 +339,7 @@ $(function(){
 		<h3><a href="#">Options</a></h3>
 		<div>
 			<h4>Filter widget defaults (added inside of tablesorter <code>widgetOptions</code>)</h4>
-			<h5>This table includes very basic information about the filter options. For more extensive information &amp; links to demos, see the main page <a href="index.html#Widget-options">Widget &amp; Pager Options</a> section.</h5>
+			<h4><span class="label warning">NOTE</span> This table includes very basic information about the filter options. For more extensive information &amp; links to demos, see the main page <a href="index.html#Widget-options">Widget &amp; Pager Options</a> section.</h4>
 			<div>
 				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
 			</div>
@@ -521,6 +524,7 @@ $(function(){
 							<ul>
 								<li>If <code>false</code>, the user must press enter to start the search.</li>
 								<li>If set to a number, when the length of the input text reaches this minimum length, a search will initiate.</li>
+								<li>In <span class="version">v2.27.3</span>, this option can be set as an object containing column zero-based indexes or header class names. If a column isn't defined in the object, the "fallback" key is checked and if undefined, the value defaults to <code>false</code>.</li>
 							</ul>
 							</div>
 						</td>

@@ -460,7 +460,7 @@
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.25.5</span>).</li>
 		<li><a href="example-widget-current-sort.html">Current Sort Widget</a> (<span class="version">v2.27.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.27.0</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.27.3</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.26.6</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.26.2</span>).</li>
@@ -1957,7 +1957,9 @@ $(function(){
 
       // if true, search column content while the user types (with a delay)
       // or, set a minimum number of characters that must be present before
-      // a search is initiated
+      // a search is initiated. In v2.27.3, this option can contain an
+      // object with column indexes or classnames; "fallback" is used
+      // for undefined columns
       filter_liveSearch: true,
 
       // global query settings ('exact' or 'match'); overridden by
@@ -3050,15 +3052,34 @@ filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 
 			<tr id="widget-filter-livesearch">
 				<td><a href="#" class="permalink">filter_liveSearch</a></td>
-				<td>Boolean, or Number</td>
+				<td>Boolean, Number or Object</td>
 				<td>true</td>
 				<td>
-					Filter widget: If <code>true</code>, a search of the column content will occur as the user types, with the delay set in the <code>filter_searchDelay</code> option (v2.9; <span class="version updated">v2.10</span>).
+					Filter widget: If <code>true</code>, a search of the column content will occur as the user types, with the delay set in the <code>filter_searchDelay</code> option (v2.9; <span class="version updated">v2.27.3</span>).
 					<div class="collapsible">
 					<br>
 					This option, when <code>false</code> allows you to disable the live search behavior, so that a filter is only applied when the user presses <kbd>Enter</kbd> (or uses <kbd>Esc</kbd> to clear and cancel the search).<br>
 					<br>
 					If this option is set to a number, e.g. <code>4</code>, a search of the column content will not initiate until this minimum number of characters are entered into the input.
+					<p>In <span class="version">v2.27.3</span>, this option can be set as an object containing specific column zero-based indexes, or class names. For undefined columns, include a <code>"fallback"</code> value otherwise undefined columns will be set as <code>false</code>.</p>
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_liveSearch : {
+        // when false, the user must press enter to blur the input to trigger the search
+        3 : false,
+        // the query will initiate when 5 or more characters are entered into the filter
+        4 : 5,
+        // no live search on the last three columns (using a header class name)
+        '.last-3-columns' : false,
+        // for columns that aren't defined; this will set the fallback value
+        // otherwise the fallback defaults to false.
+        'fallback' : true
+      }
+    }
+  });
+});</pre>
 					</div>
 				</td>
 				<td></td>
