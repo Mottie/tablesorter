@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 7/11/2016 (v2.26.6)
+* updated 8/17/2016 (v2.27.3)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -145,7 +145,7 @@
 				var normalized, indx, len,
 				c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
-				if (hasFilters && !p.ajaxUrl) {
+				if (hasFilters && !p.ajax) {
 					if (ts.isEmptyObject(c.cache)) {
 						// delayInit: true so nothing is in the cache
 						p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;

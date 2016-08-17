@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 7/11/2016 (v2.26.6) */
+/*! Widget: Pager - updated 8/17/2016 (v2.27.3) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -417,7 +417,7 @@
 				wo = c.widgetOptions,
 				p = c.pager,
 				hasFilters = c.$table.hasClass( 'hasFilters' );
-			if ( hasFilters && !wo.pager_ajaxUrl ) {
+			if ( hasFilters && !p.ajax ) {
 				if ( $.isEmptyObject( c.cache ) ) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq( 0 )
