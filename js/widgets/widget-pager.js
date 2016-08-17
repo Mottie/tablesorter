@@ -417,7 +417,7 @@
 				wo = c.widgetOptions,
 				p = c.pager,
 				hasFilters = c.$table.hasClass( 'hasFilters' );
-			if ( hasFilters && !wo.pager_ajaxUrl ) {
+			if ( hasFilters && !p.ajax ) {
 				if ( $.isEmptyObject( c.cache ) ) {
 					// delayInit: true so nothing is in the cache
 					p.filteredRows = p.totalRows = c.$tbodies.eq( 0 )

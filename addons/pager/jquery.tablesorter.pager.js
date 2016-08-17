@@ -145,7 +145,7 @@
 				var normalized, indx, len,
 				c = table.config,
 				hasFilters = c.$table.hasClass('hasFilters');
-				if (hasFilters && !p.ajaxUrl) {
+				if (hasFilters && !p.ajax) {
 					if (ts.isEmptyObject(c.cache)) {
 						// delayInit: true so nothing is in the cache
 						p.filteredRows = p.totalRows = c.$tbodies.eq(0).children('tr').not( p.countChildRows ? '' : '.' + c.cssChildRow ).length;
