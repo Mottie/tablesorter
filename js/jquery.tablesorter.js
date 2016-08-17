@@ -2279,7 +2279,7 @@
 				// c.$headerIndexed is not defined initially
 				$cell = c.$headerIndexed && c.$headerIndexed[ indx ] ||
 					$cells.filter( '[data-column="' + indx + '"]:last' );
-			if ( obj[ indx ] ) {
+			if ( typeof obj[ indx ] !== 'undefined' ) {
 				return getCell ? obj[ indx ] : obj[ $cells.index( $cell ) ];
 			}
 			for ( key in obj ) {
