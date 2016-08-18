@@ -4,7 +4,7 @@
 ;(function($){
 	'use strict';
 
-	/*! Sugar (http://sugarjs.com/dates#comparing_dates) */
+	/*! Sugar (https://sugarjs.com/docs/#/DateParsing) */
 	/* demo: http://jsfiddle.net/Mottie/abkNM/4163/ */
 	$.tablesorter.addParser({
 		id: 'sugar',
@@ -12,7 +12,9 @@
 			return false;
 		},
 		format: function(s) {
-			var date = Date.create ? Date.create(s) : s ? new Date(s) : s;
+			// Add support for sugar v2.0+
+			var create = Date.create || Sugar.Date.create,
+				date = create ? create(s) : s ? new Date(s) : s;
 			return date instanceof Date && isFinite(date) ? date.getTime() : s;
 		},
 		type: 'numeric'

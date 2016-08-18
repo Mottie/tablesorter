@@ -525,7 +525,7 @@
 	<h4 id="custom-parsers">Custom Parsers</h4>
 	<ul>
 		<li><a href="example-parsers-duration.html">Countdown parser</a> (<span class="version">v2.19.0</span>).</li>
-		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.24.6</span>; includes weekday, month, two-digit year &amp; <a class="external" href="http://sugarjs.com/dates">sugar.js</a> date parsers; a <a class="external" href="http://www.datejs.com/">datejs</a> parser is also available).</li>
+		<li><a href="example-parsers-dates.html">Date parsers</a> (<span class="version">v2.8</span>; <span class="version updated">v2.24.6</span>; includes weekday, month, two-digit year &amp; <a class="external" href="https://sugarjs.com/docs/#/DateParsing">sugar.js</a> date parsers; a <a class="external" href="http://www.datejs.com/">datejs</a> parser is also available).</li>
 		<li><a href="example-parsers-date-range.html">Date range parsers</a> (<span class="version">v2.21.0</span>; <span class="version updated">v2.25.0</span>); if filters, include the <a href="example-widget-filter-custom-search2.html">insideRange</a> filter search type.</li>
 		<li><a href="example-parsers-duration.html">Duration parser</a> (<span class="version">v2.17.8</span>).</li>
 		<li><a href="example-parsers-feet-inch-fraction.html">Feet-inch-fraction parser</a> (<span class="version">v2.8</span>).</li>
@@ -1376,7 +1376,7 @@ From the example function above, you'll end up with something similar to this HT
 						<li>This option no longer switches the sort to use the <code>String.localeCompare</code> method.</li>
 						<li>When this option is <code>true</code>, the text parsed from table cells will convert accented characters to their equivalent to allow the alphanumeric sort to properly sort.</li>
 						<li>If <code>false</code> (default), any accented characters are treated as their value in the standard unicode order.</li>
-						<li>The following characters are replaced for both upper and lower case (information obtained from <a class="external" href="http://sugarjs.com/sorting">sugar.js sorting equivalents</a> table):
+						<li>The following characters are replaced for both upper and lower case (information obtained from <a class="external" href="https://sugarjs.com/docs/#/ArraySorting">sugar.js sorting equivalents</a> table):
 							<ul>
 								<li><code>&#x00e1;&#x00e0;&#x00e2;&#x00e3;&#x00e4;</code> replaced with <code>a</code></li>
 								<li><code>&#x00e7;</code> replaced with <code>c</code></li>
@@ -1792,7 +1792,7 @@ $(function(){
       },
       1 : $.tablesorter.sortText,    // same as the function in column 0 above (modified in v2.12)
       2 : $.tablesorter.sortNatural, // renamed v2.12 from $.tablesorter.sortText - performs natural sort
-      3 : Array.AlphanumericSort     // alphanumeric sort from sugar (http://sugarjs.com/arrays#sorting)
+      3 : Sugar.Array.sortCollate    // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/sortBy)
     }
   });
 });</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
@@ -2157,7 +2157,7 @@ $(function(){
 				<td>Object, Array</td>
 				<td>undefined</td>
 				<td>Storage for processed table build widget (<code>widget-build-table.js</code>) data (array, object, string) (<span class="version">v2.11</span>).</td>
-				<td><a href="widget-build-table.html">Example</a></td>
+				<td><a href="example-widget-build-table.html">Example</a></td>
 			</tr>
 
 			<tr id="daterange">
