@@ -17,15 +17,24 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-	<!-- http://sugarjs.com/dates#comparing_dates -->
-	<script src="js/sugar.min.js"></script>
+	<!-- https://sugarjs.com/docs/#/DateParsing -->
+	<script src="js/sugar-1.4.1.min.js"></script>
 
 	<script id="js">$(function() {
-	// define sugar.js Icelandic sort order
+	// define sugar.js v1.4.1 Icelandic sort order
 	Array.AlphanumericSortOrder = 'AaÁáBbCcDdÐðEeÉéĘęFfGgHhIiÍíJjKkLlMmNnOoÓóPpQqRrSsTtUuÚúVvWwXxYyÝýZzÞþÆæÖö';
 	Array.AlphanumericSortIgnoreCase = true;
-	// see https://github.com/andrewplummer/Sugar/issues/382#issuecomment-41526957
 	Array.AlphanumericSortEquivalents = {};
+
+	/* Sugar v2.0.0 not currently working
+	// The following setting is IMPORTANT!
+	// see https://github.com/andrewplummer/Sugar/issues/382#issuecomment-41526957
+	Sugar.Array.setOption('sortEquivalents', {});
+
+	// define sugar.js Icelandic sort order (Sugar namespace needed for v2.0+)
+	Sugar.Array.setOption('sortOrder', 'AaÁáBbCcDdÐðEeÉéĘęFfGgHhIiÍíJjKkLlMmNnOoÓóPpQqRrSsTtUuÚúVvWwXxYyÝýZzÞþÆæÖö');
+	Sugar.Array.setOption('sortIgnoreCase', true);
+	*/
 
 	$("table").tablesorter({
 		theme : 'blue',
@@ -33,7 +42,8 @@
 		// column is the column index (zero-based)
 		ignoreCase : false,
 		textSorter : {
-			1 : Array.AlphanumericSort,     // alphanumeric sort from sugar (http://sugarjs.com/arrays#sorting)
+			// 1 : Sugar.Array.sortCollate, // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/sortBy)
+			1 : Array.AlphanumericSort,     // alphanumeric sort from sugar v1.4.1 (http://sugarjs.com/arrays#sorting)
 			// function parameters were previously (a, b, table, column) - *** THEY HAVE CHANGED!!! ***
 			2 : function(a, b, direction, column, table){
 				// this is the original sort method from tablesorter 2.0.3
@@ -62,9 +72,10 @@
 	<ul>
 		<li>Modified the <code>textSorter</code> option to allow setting the sorter per column <span class="version">v2.12</span>:
 			<ul>
-				<li><span class="alert">*NOTE*</span> The <code>textSorter</code> function parameters have changed! It is now <code>function(a, b, direction, column, table)</code> (previously <code>function(a, b, table, column)</code>).</li>
-				<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="http://sugarjs.com/arrays#sorting">Sugar</a> library to sort:
+				<li><span class="label alert">*NOTE*</span> The <code>textSorter</code> function parameters have changed! It is now <code>function(a, b, direction, column, table)</code> (previously <code>function(a, b, table, column)</code>).</li>
+				<li>The &quot;Icelandic Alphabet&quot; column is using the <a href="https://sugarjs.com/docs/#/Array/sortBy">Sugar</a> library v1.4.1 to sort:
 					<ul>
+						<li><span class="label alert">*NOTE*</span> This demo is <strong>not yet using Sugar v2.0+</strong> due to issues with <code>Sugar.Array.sortCollate</code> (<a href="https://github.com/andrewplummer/Sugar/issues/556">ref</a>).</li>
 						<li>Solved (4/28/2014)! <del>please note that at the time of this writing, there is an issue with it not sorting properly (<a href="https://github.com/andrewplummer/Sugar/issues/382">ref</a>)</del></li>
 						<li>You can tell it is working properly when you sort the Icelandic Alphabet column and the numeric column numbers are sequential (<span class="lookhere">see row #37</span>).</li>
 					</ul>
