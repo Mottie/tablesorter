@@ -1790,9 +1790,12 @@ $(function(){
         // table: table DOM element (access options by using table.config)
         return a &gt; b ? 1 : (a &lt; b ? -1 : 0);
       },
-      1 : $.tablesorter.sortText,    // same as the function in column 0 above (modified in v2.12)
-      2 : $.tablesorter.sortNatural, // renamed v2.12 from $.tablesorter.sortText - performs natural sort
-      3 : Sugar.Array.sortCollate    // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/sortBy)
+      // same as the function in column 0 above (modified in v2.12)
+      1 : $.tablesorter.sortText,
+      // renamed v2.12 from $.tablesorter.sortText - performs natural sort
+      2 : $.tablesorter.sortNatural,
+      // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/getOption)
+      3 : Sugar.Array.getOption('sortCollate')
     }
   });
 });</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
