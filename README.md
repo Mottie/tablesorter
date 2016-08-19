@@ -90,7 +90,7 @@ If you would like to contribute, please...
 [zenhub-url]: https://zenhub.io
 [zenhub-image]: https://cdn.rawgit.com/Mottie/tablesorter/master/docs/img/zenhub-badge.svg
 
-[irc-url]: https://www.irccloud.com/#!/ircs://irc.freenode.net:6697/%23tablesorter
+[irc-url]: https://kiwiirc.com/client/irc.freenode.net#tablesorter
 [irc-image]: https://img.shields.io/badge/irc-%23tablesorter-yellowgreen.svg
 [gitter-url]: https://gitter.im/Mottie/tablesorter
 [gitter-image]: https://img.shields.io/badge/GITTER-join%20chat-yellowgreen.svg
