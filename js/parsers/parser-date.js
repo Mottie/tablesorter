@@ -1,6 +1,7 @@
 /*! Parser: dates - updated 10/26/2014 (v2.18.0) */
 /* Extract dates using popular natural language date parsers */
 /*jshint jquery:true */
+/*global Sugar*/
 ;(function($){
 	'use strict';
 
