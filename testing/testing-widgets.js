@@ -74,7 +74,7 @@ jQuery(function($){
 						'<th class="total">Total</th>' +
 						'<th>Discount</th>' +
 						'<th>Date</th>' +
-						'<th class="last2">Last Name2</th>' +
+						'<th class="last2">L4st N4me2</th>' +
 					'</tr></thead><tbody>' +
 						'<tr><td>1</td><td>Philip Aaron Wong</td><td>Johnson Sr Esq</td><td>25</td><td>$5.95</td><td>22%</td><td>Jun 26, 2004 7:22 AM</td><td>Johnson Sr Esq</td></tr>' +
 						'<tr><td>11</td><td>Aaron</td><td>Hibert</td><td>12</td><td>$2.99</td><td>5%</td><td>Aug 21, 2009 12:21 PM</td><td>Hibert</td></tr>' +
@@ -198,7 +198,7 @@ jQuery(function($){
 			wo = this.wo,
 			$table = this.$table,
 			table = this.table;
-		assert.expect(37);
+		assert.expect(40);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {
@@ -294,6 +294,15 @@ jQuery(function($){
 		).nextTask(
 			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', '1:5 && 7:12'] ); },
 			function(){ assert.cacheCompare( table, 3, [45, 65], 'search "1:5 && 7:12" in anyMatch', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', 'rank:5 && date:12'] ); },
+			function(){ assert.cacheCompare( table, 3, [45, 65], 'search "rank:5 && date:12" in anyMatch', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', 'name:e'] ); },
+			function(){ assert.cacheCompare( table, 1, ['Peter', 'Bruce', 'Bruce Lee', 'Brenda Dexter'], 'search "name:e" in anyMatch', true ); }
+		).nextTask(
+			function(){ ts.setFilters( table, ['', '', '', '', '', '', '', '', 'first:e && last:e'] ); },
+			function(){ assert.cacheCompare( table, 1, ['Peter', 'Bruce', 'Bruce Lee', 'Brenda Dexter'], 'search "name:e" in anyMatch', true ); }
 		).nextTask( // test filter_startsWith (false by default)
 			function(){
 				wo.filter_startsWith = false;

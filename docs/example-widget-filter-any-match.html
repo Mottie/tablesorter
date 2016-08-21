@@ -94,20 +94,22 @@
 		<h3><a href="#">AnyMatch Searches</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.27.5</span>, you can target specific columns using a partial match of the header text. Updated below.</li>
 			<li>In <span class="version">v2.20.0</span>, the anyMatch filter can target specific columns using the following format:
-				<pre class="prettyprint lang-js">#:{query}</pre>
+				<pre class="prettyprint lang-js">{column}:{query}</pre>
 				<ul>
-					<li>where <code>#</code> is the column <strong>one-based index</strong> (non-developers count from one)</li>
+					<li>where <code>{column}</code> is the column <strong>one-based index</strong> (non-developers count from one) or a partial match of the case-insensitive column text.</li>
 					<li>and <code>{query}</code> is the specific column query.</li>
 				</ul>
 				<br>
 				You can disable this type of search by setting the new <code>filter_columnAnyMatch</code> option to <code>false</code>.
 				<h4>Examples</h4>
 				<ul>
-					<li><button type="button" data-column="all">4:&gt;30</button> Find values &gt; 30 in the age column</li>
-					<li><button type="button" data-column="all">2:aa</button> Include a fuzzy search (see <code>filter_defaultFilter</code> setting) and look for "aa" in the first name column (four results should show).</li>
-					<li><button type="button" data-column="all">1:5 && 7:12</button> Find ranks with a "5" in them and find dates with a "12" </li>
-					<li>This column specific anyMatch does not support using an OR column search like <code>1:5|7:12</code> </li>
+					<li><button type="button" data-column="all">4:&gt;30</button> or <button type="button" data-column="all">age:&gt;30</button> Find values &gt; 30 in the age column</li>
+					<li><button type="button" data-column="all">2:aa</button> or <button type="button" data-column="all">first:aa</button> Include a fuzzy search (see <code>filter_defaultFilter</code> setting) and look for "aa" in the first name column (four results should show).</li>
+					<li><button type="button" data-column="all">1:5 && 7:12</button> or <button type="button" data-column="all">rank:5 && date:12</button> Find ranks with a "5" in them and find dates with a "12" </li>
+					<li>This column specific anyMatch does not support using an OR column search like <code>1:5|7:12</code>.</li>
+					<li><button type="button" data-column="all">name:e</button> Find names (First AND Last) that contain an "e". This searches <em>both</em> name columns, so it is essentially the same as using <button type="button" data-column="all">first:e && last:e</button>. Remember this method does not provide an "OR" type search.</li>
 				</ul>
 				<p></p>
 				<span class="label label-info">* NOTE *</span> Fixed in <span class="version">v2.22.0</span>. <del>When a AnyMatch search of this type is active, it adds filter queries to specific columns, so if the filters are saved and you reload the page, the specified <em>column filters will become populated</em> along with the AnyMatch search</del>.
