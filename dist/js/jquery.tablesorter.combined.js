@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 08-18-2016 (v2.27.4)*/
+/*! tablesorter (FORK) - updated 08-22-2016 (v2.27.5)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.27.4 *//*
+/*! TableSorter (FORK) v2.27.5 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.27.4',
+		version : '2.27.5',
 
 		parsers : [],
 		widgets : [],
@@ -3120,7 +3120,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 8/17/2016 (v2.27.3) *//*
+/*! Widget: filter - updated 8/22/2016 (v2.27.5) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -4461,7 +4461,17 @@
 								res = query[ indx ].split( ':' );
 								if ( res.length > 1 ) {
 									// make the column a one-based index ( non-developers start counting from one :P )
-									id = parseInt( res[0], 10 ) - 1;
+									if ( isNaN( res[0] ) ) {
+										$.each( c.headerContent, function( i, txt ) {
+											// multiple matches are possible
+											if ( txt.toLowerCase().indexOf( res[0] ) > -1 ) {
+												id = i;
+												filters[ id ] = res[1];
+											}
+										});
+									} else {
+										id = parseInt( res[0], 10 ) - 1;
+									}
 									if ( id >= 0 && id < c.columns ) { // if id is an integer
 										filters[ id ] = res[1];
 										query.splice( indx, 1 );
