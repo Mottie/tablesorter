@@ -1,4 +1,4 @@
-/*! Parser: dates - updated 10/26/2014 (v2.18.0) */
+/*! Parser: dates - updated 8/22/2016 (v2.27.5) */
 /* Extract dates using popular natural language date parsers */
 /*jshint jquery:true */
 /*global Sugar*/

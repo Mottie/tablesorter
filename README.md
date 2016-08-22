@@ -101,6 +101,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.5">Version 2.27.5</a> (8/22/2016)
+
+* Readme: Update IRC link to a free client.
+* Docs: Correct usage of Sugar v2.0+ `sortCollage`.
+* Filter: Add any match search by column text - see [updated demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-any-match.html#anymatch_searches).
+* Parser: Fix JSHint issue.
+
+#### <a name="v2.27.4">Version 2.27.4</a> (8/18/2016)
+
+* Docs & parser: Update Sugar library v2.0+. Fixes [issue #1275](https://github.com/Mottie/tablesorter/issues/1275).
+* Docs: Add `sortStable` example.
+
 #### <a name="v2.27.3">Version 2.27.3</a> (8/17/2016)
 
 * Core: `getColumnData` now allows falsy values.
@@ -110,14 +122,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Pager: use ajax flag when calculating filtered rows.
 * Readme: Fix date of last release.
 * Testing: Update QUnit.
-
-#### <a name="v2.27.2">Version 2.27.2</a> (8/2/2016)
-
-* Docs: Update versions.
-* Core: Allow leading zeros in the time parser. Fixes [issue #1269](https://github.com/Mottie/tablesorter/issues/1269).
-* Mark: Actually include options this time! See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
-
-#### <a name="v2.27.1">Version 2.27.1</a> (7/31/2016)
-
-* ColumnSelector: Fix undefined variable.
-* Mark: Fix linting issues.
