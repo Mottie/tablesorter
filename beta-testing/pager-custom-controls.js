@@ -1,5 +1,5 @@
 /*!
- * custom pager controls (beta) for TableSorter 9/15/2014 (v2.17.8) - updated 3/26/2015 (v2.21.3)
+ * custom pager controls (beta) for Tablesorter - updated 8/23/2016 (v2.27.6)
   initialize custom pager script BEFORE initializing tablesorter/tablesorter pager
   custom pager looks like this:
   1 | 2 … 5 | 6 | 7 … 99 | 100
@@ -35,66 +35,101 @@ $.tablesorter.customPagerControls = function(settings) {
 	$table = $(options.table),
 	$pager = $(options.pager);
 
+	function validate(val, min, max) {
+		if (val < min) { return min; }
+		if (val > max) { return max; }
+		return val;
+	}
+
 	$table
 		.on('pagerInitialized pagerComplete', function (e, c) {
 			var indx,
 				p = c.pager ? c.pager : c, // using widget
 				pages = $('<div/>'),
-				pageArray = [],
 				cur = p.page + 1,
-				start = cur > 1 ? (p.filteredPages - cur < options.aroundCurrent ? -(options.aroundCurrent + 1) + (p.filteredPages - cur) : -options.aroundCurrent) : 0,
-				end = cur < options.aroundCurrent + 1 ? options.aroundCurrent + 3 - cur : options.aroundCurrent + 1;
+				pageArray = [cur],
+				max = p.filteredPages,
+				around = options.aroundCurrent,
+				start = validate(cur > 1 ? (max - cur < around ? -(around + 1) + (max - cur) : -around) : 0, 0, max),
+				end = validate(cur < around + 1 ? around + 3 - cur : around + 1, 0, max);
 			for (indx = start; indx < end; indx++) {
-				if (cur + indx >= 1 && cur + indx < p.filteredPages) { pageArray.push( cur + indx ); }
+				if (cur + indx >= 1 && cur + indx < max) {
+					pageArray.push(cur + indx);
+				}
 			}
 			if (pageArray.length) {
 				// include first and last pages (ends) in the pagination
 				for (indx = 0; indx < options.ends; indx++){
-					if ($.inArray(indx + 1, pageArray) === -1) { pageArray.push(indx + 1); }
-					if ($.inArray(p.filteredPages - indx, pageArray) === -1) { pageArray.push(p.filteredPages - indx); }
+					if ((indx + 1 < max) && $.inArray(indx + 1, pageArray) === -1) {
+						pageArray.push(indx + 1);
+					}
+					if ((max - indx > 0) && $.inArray(max - indx, pageArray) === -1) {
+						pageArray.push(max - indx);
+					}
 				}
 				// sort the list
 				pageArray = pageArray.sort(function(a, b){ return a - b; });
-				// make links and spacers
-				$.each(pageArray, function(indx, value){
-					pages
-						.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
-						.append( '<span>' + (indx < pageArray.length - 1 && ( pageArray[ indx + 1 ] - 1 !== value ) ? options.distanceSpacer :
-							( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
+				// only include unique pages
+				pageArray = $.grep(pageArray, function(value, key){
+					return $.inArray(value, pageArray) === key;
 				});
+				// make links and spacers
+				if (pageArray.length > 1) {
+					$.each(pageArray, function(indx, value) {
+						pages
+							.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
+							.append( '<span>' + (indx < pageArray.length - 1 && ( pageArray[ indx + 1 ] - 1 !== value ) ? options.distanceSpacer :
+								( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
+					});
+				}
 			}
-			$pager.find('.pagecount').html(pages.html());
+			$pager
+				.find('.pagecount')
+				.html(pages.html());
 		});
 
 	// set up pager controls
-	$pager.find(options.pageSize).on('click', function () {
-		$(this)
-		.addClass(options.currentClass)
-		.siblings()
-		.removeClass(options.currentClass);
-		$table.trigger('pageSize', $(this).html());
-		return false;
-	}).end()
-	.on('click', options.currentPage, function(){
-		$(this)
-		.addClass(options.currentClass)
-		.siblings()
-		.removeClass(options.currentClass);
-		$table.trigger('pageSet', $(this).attr('data-page'));
-		return false;
-	});
+	$pager
+		.find(options.pageSize)
+			.on('click', function () {
+			$(this)
+			.addClass(options.currentClass)
+			.siblings()
+			.removeClass(options.currentClass);
+			$table.trigger('pageSize', $(this).html());
+			return false;
+		})
+		.end()
+		.on('click', options.currentPage, function(){
+			var $el =$(this)
+				.addClass(options.currentClass)
+				.siblings()
+				.removeClass(options.currentClass);
+			$table.trigger('pageSet', $el.attr('data-page'));
+			return false;
+		});
 
 	// make right/left arrow keys work
 	if (options.addKeyboard) {
 		$(document).on('keydown', function(events){
 			// ignore arrows inside form elements
-			if (/input|select|textarea/i.test(events.target.nodeName)) { return; }
+			if (/input|select|textarea/i.test(events.target.nodeName)) {
+				return;
+			}
 			if (events.which === 37) {
 				// left
-				$pager.find(options.currentPage).filter('.' + options.currentClass).prevAll(':not(span):first').click();
+				$pager
+					.find(options.currentPage)
+					.filter('.' + options.currentClass)
+					.prevAll(':not(span):first')
+					.click();
 			} else if (events.which === 39) {
 				// right
-				$pager.find(options.currentPage).filter('.' + options.currentClass).nextAll(':not(span):first').click();
+				$pager
+					.find(options.currentPage)
+					.filter('.' + options.currentClass)
+					.nextAll(':not(span):first')
+					.click();
 			}
 		});
 	}
