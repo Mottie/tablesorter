@@ -29,7 +29,8 @@ $.tablesorter.customPagerControls = function(settings) {
 		currentClass   : 'current',                // current page class name
 		adjacentSpacer : '<span> | </span>',       // spacer for page numbers next to each other
 		distanceSpacer : '<span> &#133; <span>',   // spacer for page numbers away from each other (ellipsis)
-		addKeyboard    : true                      // add left/right keyboard arrows to change current page
+		addKeyboard    : true,                     // use left,right,up,down,pageUp,pageDown,home, or end to change current page
+		pageKeyStep    : 10                        // page step to use for pageUp and pageDown
 	},
 	options = $.extend({}, defaults, settings),
 	$table = $(options.table),
@@ -84,7 +85,9 @@ $.tablesorter.customPagerControls = function(settings) {
 			}
 			$pager
 				.find('.pagecount')
-				.html(pages.html());
+				.html(pages.html())
+				.find('.' + options.currentClass)
+				.focus();
 		});
 
 	// set up pager controls
@@ -113,23 +116,26 @@ $.tablesorter.customPagerControls = function(settings) {
 	if (options.addKeyboard) {
 		$(document).on('keydown', function(events) {
 			// ignore arrows inside form elements
-			if (/input|select|textarea/i.test(events.target.nodeName)) {
+			if (/input|select|textarea/i.test(events.target.nodeName) ||
+				!(events.which > 32 && events.which < 41)) {
 				return;
 			}
-			if (events.which === 37) {
-				// left
-				$pager
-					.find(options.currentPage)
-					.filter('.' + options.currentClass)
-					.prevAll(':not(span):first')
-					.click();
-			} else if (events.which === 39) {
-				// right
-				$pager
-					.find(options.currentPage)
-					.filter('.' + options.currentClass)
-					.nextAll(':not(span):first')
-					.click();
+			// only allow keyboard use if element inside of pager is focused
+			if ($(document.activeElement).closest(options.pager).is($pager)) {
+				events.preventDefault();
+				var key = events.which,
+					max = $table[0].config.totalRows,
+					$el = $pager.find(options.currentPage).filter('.' + options.currentClass),
+					page = $el.length ? parseInt($el.attr('data-page'), 10) : null;
+				if (page) {
+					if (key === 33) { page -= options.pageKeyStep; } // pageUp
+					if (key === 34) { page += options.pageKeyStep; } // pageDown
+					if (key === 35) { page = max; } // end
+					if (key === 36) { page = 1; }   // home
+					if (key === 37 || key === 38) { page -= 1; } // left/up
+					if (key === 39 || key === 40) { page += 1; } // right/down
+					$table.trigger('pageSet', page);
+				}
 			}
 		});
 	}
