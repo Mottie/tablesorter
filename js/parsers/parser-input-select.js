@@ -135,7 +135,7 @@
 			$table.children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
 				var column = $( this ).closest( 'td, th' ).attr( 'data-column' ),
 					vis = $rows.filter( '.' + checkboxClass + '-' + column ).length,
-					allChecked = vis === len;
+					allChecked = vis === len && len > 0;
 				if ( vis === 0 || allChecked ) {
 					this.checked = allChecked;
 					this.indeterminate = false;
