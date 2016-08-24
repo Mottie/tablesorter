@@ -12,7 +12,7 @@
 /*jshint browser:true, jquery:true, unused:false, loopfunc:true */
 /*global jQuery: false */
 
-;(function($){
+;(function($) {
 "use strict";
 
 $.tablesorter = $.tablesorter || {};
@@ -35,32 +35,24 @@ $.tablesorter.customPagerControls = function(settings) {
 	$table = $(options.table),
 	$pager = $(options.pager);
 
-	function validate(val, min, max) {
-		if (val < min) { return min; }
-		if (val > max) { return max; }
-		return val;
-	}
-
 	$table
 		.on('pagerInitialized pagerComplete', function (e, c) {
 			var indx,
 				p = c.pager ? c.pager : c, // using widget
 				pages = $('<div/>'),
 				cur = p.page + 1,
-				pageArray = [cur],
+				pageArray = [],
 				max = p.filteredPages,
-				around = options.aroundCurrent,
-				start = validate(cur > 1 ? (max - cur < around ? -(around + 1) + (max - cur) : -around) : 0, 0, max),
-				end = validate(cur < around + 1 ? around + 3 - cur : around + 1, 0, max);
-			for (indx = start; indx < end; indx++) {
-				if (cur + indx >= 1 && cur + indx < max) {
+				around = options.aroundCurrent;
+			for (indx = -around; indx <= around; indx++) {
+				if (cur + indx >= 1 && cur + indx <= max) {
 					pageArray.push(cur + indx);
 				}
 			}
 			if (pageArray.length) {
 				// include first and last pages (ends) in the pagination
-				for (indx = 0; indx < options.ends; indx++){
-					if ((indx + 1 < max) && $.inArray(indx + 1, pageArray) === -1) {
+				for (indx = 0; indx < options.ends; indx++) {
+					if ((indx + 1 <= max) && $.inArray(indx + 1, pageArray) === -1) {
 						pageArray.push(indx + 1);
 					}
 					if ((max - indx > 0) && $.inArray(max - indx, pageArray) === -1) {
@@ -68,13 +60,14 @@ $.tablesorter.customPagerControls = function(settings) {
 					}
 				}
 				// sort the list
-				pageArray = pageArray.sort(function(a, b){ return a - b; });
+				pageArray = pageArray.sort(function(a, b) { return a - b; });
 				// only include unique pages
-				pageArray = $.grep(pageArray, function(value, key){
+				pageArray = $.grep(pageArray, function(value, key) {
 					return $.inArray(value, pageArray) === key;
 				});
 				// make links and spacers
-				if (pageArray.length > 1) {
+				if (pageArray.length) {
+					max = pageArray.length - 1;
 					$.each(pageArray, function(indx, value) {
 						pages
 							.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
@@ -91,7 +84,7 @@ $.tablesorter.customPagerControls = function(settings) {
 	// set up pager controls
 	$pager
 		.find(options.pageSize)
-			.on('click', function () {
+		.on('click', function () {
 			$(this)
 			.addClass(options.currentClass)
 			.siblings()
@@ -100,8 +93,9 @@ $.tablesorter.customPagerControls = function(settings) {
 			return false;
 		})
 		.end()
-		.on('click', options.currentPage, function(){
-			var $el =$(this)
+		.on('click', options.currentPage, function() {
+			var $el = $(this);
+			$el
 				.addClass(options.currentClass)
 				.siblings()
 				.removeClass(options.currentClass);
@@ -111,7 +105,7 @@ $.tablesorter.customPagerControls = function(settings) {
 
 	// make right/left arrow keys work
 	if (options.addKeyboard) {
-		$(document).on('keydown', function(events){
+		$(document).on('keydown', function(events) {
 			// ignore arrows inside form elements
 			if (/input|select|textarea/i.test(events.target.nodeName)) {
 				return;
