@@ -27,8 +27,8 @@ $.tablesorter.customPagerControls = function(settings) {
 		aroundCurrent  : 1,                        // number of pages surrounding the current page
 		link           : '<a href="#">{page}</a>', // page element; use {page} to include the page number
 		currentClass   : 'current',                // current page class name
-		adjacentSpacer : ' | ',                    // spacer for page numbers next to each other
-		distanceSpacer : ' &#133; ',               // spacer for page numbers away from each other (ellipsis)
+		adjacentSpacer : '<span> | </span>',       // spacer for page numbers next to each other
+		distanceSpacer : '<span> &#133; <span>',   // spacer for page numbers away from each other (ellipsis)
 		addKeyboard    : true                      // add left/right keyboard arrows to change current page
 	},
 	options = $.extend({}, defaults, settings),
@@ -70,9 +70,15 @@ $.tablesorter.customPagerControls = function(settings) {
 					max = pageArray.length - 1;
 					$.each(pageArray, function(indx, value) {
 						pages
-							.append( $(options.link.replace(/\{page\}/g, value)).toggleClass(options.currentClass, value === cur).attr('data-page', value) )
-							.append( '<span>' + (indx < pageArray.length - 1 && ( pageArray[ indx + 1 ] - 1 !== value ) ? options.distanceSpacer :
-								( indx >= pageArray.length - 1 ? '' : options.adjacentSpacer )) + '</span>' );
+							.append(
+								$(options.link.replace(/\{page\}/g, value))
+									.toggleClass(options.currentClass, value === cur)
+									.attr('data-page', value)
+							)
+							.append((indx < max && (pageArray[ indx + 1 ] - 1 !== value) ?
+								options.distanceSpacer :
+								(indx >= max ? '' : options.adjacentSpacer)
+							));
 					});
 				}
 			}
