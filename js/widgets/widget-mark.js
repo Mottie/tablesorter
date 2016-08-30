@@ -11,9 +11,9 @@
 			if ( typeof $.fn.mark === 'function' ) {
 				var tmp,
 					update = c.widgetOptions.mark_tsUpdate;
-				c.$table.on( 'filterEnd.tsmark' + ( update ? ' ' + update : '' ), function( e, filters ) {
+				c.$table.on( 'filterEnd.tsmark pagerComplete.tsmark' + ( update ? ' ' + update : '' ), function( e, filters ) {
 					// filterEnd passes "config" as the param
-					ts.mark.update( c, e.type === 'filterEnd' ? '' : filters );
+					ts.mark.update( c, e.type === update ? filters : '' );
 				});
 				// Regex to split up a query
 				tmp = '(?:<|=|>|\\||\"|' + "\\'|" +
@@ -139,7 +139,7 @@
 		},
 		remove : function( table, c ) {
 			var update = c.widgetOptions.mark_tsUpdate;
-			c.$table.off( 'filterEnd.tsmark' + ( update ? ' ' + update : '' ) );
+			c.$table.off( 'filterEnd.tsmark pagerComplete.tsmark' + ( update ? ' ' + update : '' ) );
 		}
 	});
 
