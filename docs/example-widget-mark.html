@@ -21,14 +21,18 @@
 tr td:nth-child(1) mark { background: #aa0000; color: #fff; }
 tr td:nth-child(2) mark { background: #00aa00; color: #fff; }
 tr td:nth-child(3) mark { background: #0000aa; color: #fff; }
-tr td:nth-child(4) mark { background: #aaaa00; color: #fff; }
+/* tr td:nth-child(4) mark { background: #aaaa00; color: #fff; } Age column not highlighted */
 tr td:nth-child(5) mark { background: #00aaaa; color: #fff; }
 tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
+
+/* column will not be highlighted */
+th.tablesorter-header.mark-ignore,
+th.tablesorter-header.ignore { background-color: #e6bf99; }
 </style>
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/widgets/widget-filter.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/7.0.2/jquery.mark.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.0.0/jquery.mark.js"></script>
 	<script src="../js/widgets/widget-mark.js"></script>
 
 	<script id="js">$(function() {
@@ -46,22 +50,33 @@ tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
 			filter_external: 'input[name="keyword"]',
 			filter_reset: 'button.reset',
 
-			// default settings
+			// *** mark widget only settings
+			mark_tsUpdate : 'markUpdate',
+			mark_tsIgnore : {
+				// don't highlight the age column
+				3: true
+			},
+			// *** default settings for non-regular expression searches only
 			mark_accuracy: 'partially',
+			mark_diacritics: true,
+			mark_separateWordSearch: true,
+			mark_synonyms: {},
+			// *** settings that apply to regex & non-regular expression searches
+			mark_acrossElements: false,
 			mark_className: '',
 			mark_debug: false,
-			mark_diacritics: true,
 			mark_element: 'mark',
 			mark_exclude: [],
 			mark_iframes: false,
 			mark_log: console,
-			mark_separateWordSearch: true,
-			mark_synonyms: {},
 			// callback functions
 			mark_done: function(totalMatches) {},
 			mark_each: function(element) {},
-			mark_filter: function(node, term, counter, totalCounter) { return true; },
-			mark_noMatch: function(keyword) {}
+			mark_filter: function(node, term, totalMatches, matches) {
+				// "matches" parameter is not defined for regular expression searches
+				return true;
+			},
+			mark_noMatch: function(termNotFound) {}
 		}
 	});
 
@@ -86,22 +101,11 @@ tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
 		sortLocaleCompare: true,
 		widgets: ['zebra', 'mark'],
 		widgetOptions : {
-			// default settings
-			mark_accuracy: 'partially',
-			mark_className: '',
-			mark_debug: false,
-			mark_diacritics: true,
-			mark_element: 'mark',
-			mark_exclude: [],
-			mark_iframes: false,
-			mark_log: console,
-			mark_separateWordSearch: true,
-			mark_synonyms: {},
-			// callback functions
-			mark_done: function(totalMatches) {},
-			mark_each: function(element) {},
-			mark_filter: function(node, term, counter, totalCounter) { return true; },
-			mark_noMatch: function(keyword) {}
+			// using mark.js default settings
+			mark_tsIgnore : {
+				// don't highlight the age column
+				// 3: true // done by adding "mark-ignore" class to header
+			}
 		}
 	});
 
@@ -144,6 +148,12 @@ tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>Updated <span class="verison">v2.27.6</span>
+					<ul>
+						<li>The mark widget properly applies after a pager change has occured.</li>
+						<li>Added <code>mark_tsIgnore</code> option as well as support of adding a "mark-ignore" class to the header. These columns will not be highlighted.</li>
+						<li>Included mark.js v8.0.0's new option as <code>mark_acrossElements</code>. This widget does not however apply the search across table cells.</li>
+					</ul>
 				<li>Added <span class="verison">v2.27.0</span> for use with the <a href="https://markjs.io/">mark.js</a> plugin.</li>
 				<li>Notable Issues:
 					<ul>
@@ -159,7 +169,7 @@ tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
 				<li>The <a href="https://markjs.io/#mark"><code>mark</code> function</a> is used for the following filter queries:
 					<ul>
 						<li>Plain text</li>
-						<li>Logical AND (<code>&nbsp;and&nbsp;</code> or <code>&nbsp;&&&nbsp;</code>) &amp; logical OR (<code>&nbsp;or&nbsp;</code> or <code>|</code>) searches.</li>
+						<li>Logical AND (<code>&nbsp;and&nbsp;</code> or <code>&nbsp;&amp;&amp;&nbsp;</code>) &amp; logical OR (<code>&nbsp;or&nbsp;</code> or <code>|</code>) searches.</li>
 						<li>Invalid regex (e.g. <code>/(|)/</code>).</li>
 						<li>Operator, range, exact and not searches.</li>
 					</ul>
@@ -210,6 +220,28 @@ $('button.update').click(function(){
 						</div>
 						</td>
 					</tr>
+
+					<tr id="mark-tsignore">
+						<td><a href="#" class="permalink">mark_tsIgnore</a></td>
+						<td>{}</td>
+						<td>This option sets which columns in the table to ignore when searching.
+							<div class="collapsible">
+							<br>
+								Use it as follows:
+								<pre class="prettyprint lang-js">$('table').tablesorter({
+  widgets: ['mark'],
+  widgetOptions: {
+    mark_tsIgnore: {
+      // ignore second column (zero-based index)
+      1: true
+    }
+  }
+});</pre>
+							You can also add a <code>"mark-ignore"</code> class name to the table header to accomplish the same thing.
+						</div>
+						</td>
+					</tr>
+
 				</tbody>
 				<tbody class="tablesorter-infoOnly">
 					<tr>
@@ -218,6 +250,15 @@ $('button.update').click(function(){
 				</tbody>
 
 				<tbody>
+					<tr id="mark-acrossElements">
+						<td><span class="permalink">mark_acrossElements</span></td>
+						<td>false</td>
+						<td>
+							Set to <code>true</code> to search for matches across elements (added in mark.js v8.0.0).<br>
+							This option does not apply to content across table cells as this widget targets individual cells while
+							performing an "any" match.
+						</td>
+					</tr>
 					<tr id="mark-element">
 						<td><span class="permalink">mark_element</span></td>
 						<td>"mark"</td>
@@ -321,14 +362,14 @@ $('button.update').click(function(){
 	<button type="button" data-filter-column="all">br?n</button>
 	<button type="button" data-filter-column="all">br*n</button>
 	<button type="button" data-filter-column="all">aaron|bruce</button>
-	<button type="button" data-filter-column="all">aaron && 2</button>
+	<button type="button" data-filter-column="all">aaron &amp;&amp; 2</button>
 	<table id="table" class="tablesorter">
 		<thead>
 			<tr>
 				<th>Rank</th>
 				<th class="filter-match">First Name</th>
 				<th>Last Name</th>
-				<th>Age</th>
+				<th class="ignore" title="no highlighting">Age</th>
 				<th>Total</th>
 				<th>Discount</th>
 				<th>Date</th>
@@ -360,7 +401,7 @@ $('button.update').click(function(){
 	<button class="table2" type="button">br?n</button>
 	<button class="table2" type="button">br*n</button>
 	<button class="table2" type="button">aaron|bruce</button>
-	<button class="table2" type="button">aaron && 2</button>
+	<button class="table2" type="button">aaron &amp;&amp; 2</button>
 
 	<table id="table2" class="tablesorter">
 		<thead>
@@ -368,7 +409,7 @@ $('button.update').click(function(){
 				<th>Rank</th>
 				<th class="filter-match">First Name</th>
 				<th>Last Name</th>
-				<th>Age</th>
+				<th class="mark-ignore" title="no highlighting">Age</th>
 				<th>Total</th>
 				<th>Discount</th>
 				<th>Date</th>

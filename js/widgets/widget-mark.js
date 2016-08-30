@@ -11,7 +11,8 @@
 			if ( typeof $.fn.mark === 'function' ) {
 				var tmp,
 					update = c.widgetOptions.mark_tsUpdate;
-				c.$table.on( 'filterEnd.tsmark pagerComplete.tsmark' + ( update ? ' ' + update : '' ), function( e, filters ) {
+				c.$table.on( 'filterEnd.tsmark pagerComplete.tsmark' +
+					( update ? ' ' + update : '' ), function( e, filters ) {
 					// filterEnd passes "config" as the param
 					ts.mark.update( c, e.type === update ? filters : '' );
 				});
@@ -33,7 +34,8 @@
 		},
 		checkRegex : function( regex ) {
 			if ( regex instanceof RegExp ) {
-				// prevent lock up of mark.js (see https://github.com/julmot/mark.js/issues/55)
+				// prevent lock up of mark.js
+				// (see https://github.com/julmot/mark.js/issues/55)
 				var result = '\u0001\u0002\u0003\u0004\u0005'.match( regex );
 				return result === null || result.length < 5;
 			}
@@ -49,10 +51,27 @@
 			}
 			return results;
 		},
+		// used when "any" match is performed
+		ignoreColumns : function( c ) {
+			var wo = c.widgetOptions,
+				len = c.columns,
+				cols = [];
+			while (len--) {
+				if (wo.mark_tsIgnore[len] ||
+					$( c.$headerIndexed[len] ).hasClass( 'mark-ignore' ) ) {
+					cols[cols.length] = ':nth-child(' + (len + 1) + ')';
+				}
+			}
+			if (cols.length) {
+				return ':not(' + cols.join(',') + ')';
+			}
+			return '';
+		},
 		update : function( c, filters ) {
 			var options = {},
 				wo = c.widgetOptions,
-				setIgnoreCase = typeof wo.filter_ignoreCase === 'undefined' ? true : wo.filter_ignoreCase,
+				setIgnoreCase = typeof wo.filter_ignoreCase === 'undefined' ? true :
+					wo.filter_ignoreCase,
 				regex = ts.mark.regex,
 				$rows = c.$table
 					.find( 'tbody tr' )
@@ -68,11 +87,16 @@
 				}
 			});
 			$.each( filters, function( indx, filter ) {
-				if ( filter ) {
+				if ( filter &&
+					!( $(c.$headerIndexed[indx]).hasClass('mark-ignore') ||
+						wo.mark_tsIgnore[indx]
+					) ) {
 					var testRegex = null,
 						matches = filter,
 						useRegex = false,
-						col = indx === c.columns ? '' : ':nth-child(' + ( indx + 1 ) + ')';
+						col = indx === c.columns ?
+							ts.mark.ignoreColumns( c ) :
+							':nth-child(' + ( indx + 1 ) + ')';
 					// regular expression entered
 					if ( regex.pure.test( filter ) ) {
 						matches = regex.pure.exec( filter );
@@ -122,7 +146,10 @@
 						}
 					} else {
 						// pass an array of matches
-						$rows.children( col ).mark( ts.mark.cleanMatches( matches ), options );
+						$rows.children( col ).mark(
+							ts.mark.cleanMatches( matches ),
+							options
+						);
 					}
 				}
 			});
@@ -132,14 +159,16 @@
 	ts.addWidget({
 		id: 'mark',
 		options: {
-			mark_tsUpdate : 'markUpdate'
+			mark_tsUpdate : 'markUpdate',
+			mark_tsIgnore : {}
 		},
 		init : function( table, thisWidget, c, wo ) {
 			ts.mark.init( c, wo );
 		},
 		remove : function( table, c ) {
 			var update = c.widgetOptions.mark_tsUpdate;
-			c.$table.off( 'filterEnd.tsmark pagerComplete.tsmark' + ( update ? ' ' + update : '' ) );
+			c.$table.off( 'filterEnd.tsmark pagerComplete.tsmark' +
+				( update ? ' ' + update : '' ) );
 		}
 	});
 
