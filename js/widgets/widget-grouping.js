@@ -57,6 +57,7 @@
 						part === 'day' ? month + ' ' + time.getDate() :
 						part === 'week' ? tsg.findWeek( wo, time.getDay() ) :
 						part === 'time' ? tsg.findTime( wo, time ) :
+						part === 'hour' ? tsg.findTime( wo, time, 'hour' ) :
 						wo.group_dateString( time, c, $column );
 				} else {
 					return wo.group_dateInvalid;
@@ -78,7 +79,7 @@
 				return wo.group_week[ cldrWeek[ day ] ];
 			}
 		},
-		findTime : function( wo, time ) {
+		findTime : function( wo, time, part ) {
 			var suffix,
 				// CLDR returns { am: "AM", pm: "PM", ... }
 				isObj = wo.group_time.am && wo.group_time.pm,
@@ -89,6 +90,9 @@
 				hours = ( '00' + p24 ).slice(-2),
 				min = ( '00' + time.getMinutes() ).slice(-2);
 			suffix = wo.group_time[ isObj ? [ 'am', 'pm' ][ period ] : period ];
+			if ( part === 'hour' ) {
+				return hours;
+			}
 			return hours + ':' + min + ( wo.group_time24Hour ? '' : ' ' + ( suffix || '' ) );
 		},
 
