@@ -1758,7 +1758,7 @@ $(function(){
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
+					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.27.6</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
 					<div class="collapsible">
 					<br>
 					Include a script like <a class="external" href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
@@ -1778,7 +1778,7 @@ $(function(){
       return a.localeCompare(b);
     }
   });
-});</pre>In <span class="version updated">v2.12</span>, the <code>textSorter</code> option will now accept a text sorter per column:
+});</pre>In <span class="version updated">v2.27.6</span>, the <code>textSorter</code> option will allow setting a sorter per column index or class name (column indexes were added in <span class="version updated">v2.12</span>):
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     textSorter : {
@@ -1793,9 +1793,9 @@ $(function(){
       // same as the function in column 0 above (modified in v2.12)
       1 : $.tablesorter.sortText,
       // renamed v2.12 from $.tablesorter.sortText - performs natural sort
-      2 : $.tablesorter.sortNatural,
+      '.nat-sort' : $.tablesorter.sortNatural,
       // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/getOption)
-      3 : Sugar.Array.getOption('sortCollate')
+      '.sugar-sort' : Sugar.Array.getOption('sortCollate')
     }
   });
 });</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).

@@ -1621,8 +1621,9 @@
 
 		// sort multiple columns
 		multisort : function( c ) { /*jshint loopfunc:true */
-			var tbodyIndex, sortTime, colMax, rows,
+			var tbodyIndex, sortTime, colMax, rows, tmp,
 				table = c.table,
+				sorter = [],
 				dir = 0,
 				textSorter = c.textSorter || '',
 				sortList = c.sortList,
@@ -1633,6 +1634,16 @@
 				return;
 			}
 			if ( c.debug ) { sortTime = new Date(); }
+			// cache textSorter to optimize speed
+			if ( typeof textSorter === 'object' ) {
+				colMax = c.columns;
+				while ( colMax-- ) {
+					tmp = ts.getColumnData( table, textSorter, colMax );
+					if ( typeof tmp === 'function' ) {
+						sorter[ colMax ] = tmp;
+					}
+				}
+			}
 			for ( tbodyIndex = 0; tbodyIndex < len; tbodyIndex++ ) {
 				colMax = c.cache[ tbodyIndex ].colMax;
 				rows = c.cache[ tbodyIndex ].normalized;
@@ -1671,9 +1682,9 @@
 							if ( typeof textSorter === 'function' ) {
 								// custom OVERALL text sorter
 								sort = textSorter( x[ col ], y[ col ], dir, col, table );
-							} else if ( typeof textSorter === 'object' && textSorter.hasOwnProperty( col ) ) {
+							} else if ( typeof sorter[ col ] === 'function' ) {
 								// custom text sorter for a SPECIFIC COLUMN
-								sort = textSorter[ col ]( x[ col ], y[ col ], dir, col, table );
+								sort = sorter[ col ]( x[ col ], y[ col ], dir, col, table );
 							} else {
 								// fall back to natural sort
 								sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( a[ col ], b[ col ], col, c );
