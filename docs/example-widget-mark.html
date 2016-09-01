@@ -27,7 +27,7 @@ tr td:nth-child(6) mark { background: #aa00aa; color: #fff; }
 
 /* column will not be highlighted */
 th.tablesorter-header.mark-ignore,
-th.tablesorter-header.ignore { background-color: #e6bf99; }
+th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 </style>
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/widgets/widget-filter.js"></script>
@@ -151,9 +151,10 @@ th.tablesorter-header.ignore { background-color: #e6bf99; }
 				<li>Updated <span class="verison">v2.27.6</span>
 					<ul>
 						<li>The mark widget properly applies after a pager change has occured.</li>
-						<li>Added <code>mark_tsIgnore</code> option as well as support of adding a "mark-ignore" class to the header. These columns will not be highlighted.</li>
+						<li>Added <code>mark_tsIgnore</code> option as well as support of adding a "mark-ignore" class to the header. These columns will not be highlighted - see <span class="ignore">Age</span> column below.</li>
 						<li>Included mark.js v8.0.0's new option as <code>mark_acrossElements</code>. This widget does not however apply the search across table cells.</li>
 					</ul>
+				</li>
 				<li>Added <span class="verison">v2.27.0</span> for use with the <a href="https://markjs.io/">mark.js</a> plugin.</li>
 				<li>Notable Issues:
 					<ul>
@@ -162,7 +163,7 @@ th.tablesorter-header.ignore { background-color: #e6bf99; }
 						I may fix this in future updates.
 						</li>
 						<li><button class="bad" type="button" data-filter-column="all">/.*/</button> or <button class="bad" type="button" data-filter-column="all">/(|)/</button> - When a regular expression matches everything, the regex is ignored by the mark widget otherwise, <a href="https://github.com/julmot/mark.js/issues/55">mark.js does bad things</a>; but this regex is okay: <button type="button" data-filter-column="all">/.+/</button>.</li>
-						<li><button class="bad" type="button" data-filter-column="3"><=22</button> or <button class="bad" type="button" data-filter-column="5">10 - 20</button> - Operators &amp; ranges are not fully supported (these are not supported at all by the filter widget in an "all" columns match - see the documentation on <a href="example-widget-filter-any-match.html#limitations">any match limitations</a>).</li>
+						<li><button class="bad" type="button" data-filter-column="3">&lt;=22</button> or <button class="bad" type="button" data-filter-column="5">10 - 20</button> - Operators &amp; ranges are not fully supported (these are not supported at all by the filter widget in an "all" columns match - see the documentation on <a href="example-widget-filter-any-match.html#limitations">any match limitations</a>).</li>
 						<li><button class="bad" type="button" data-filter-column="all">!aaron</button> - There is nothing to highlight for not matches.</li>
 					</ul>
 				</li>
