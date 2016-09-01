@@ -101,6 +101,27 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.6">Version 2.27.6</a> (9/1/2016)
+
+* Core: `textSorter` option now accepts class names. See [Stackoverflow](http://stackoverflow.com/q/39259954/145346).
+* Docs:
+  * Update `emptyTo` demo. See [issue #1278](https://github.com/Mottie/tablesorter/issues/1278).
+  * Add `$.tablesorter.defaults` variable.
+* Grouping: Add `"group-date-hour"` group type; added to demo.
+* Mark:
+  * Apply marks after pager completes. See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
+  * Add `mark_tsIgnore` option. See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
+* Parser: Header checkbox remains unchecked when table is hidden. Fixes [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
+* Pager Custom Controls (beta)
+  * Prevent out-of-range page numbers. Fixes [issue #1276](https://github.com/Mottie/tablesorter/issues/1276).
+  * Allow settings `ends` and/or `aroundCurrent` to zero. See [issue #1276](https://github.com/Mottie/tablesorter/issues/1276).
+  * Spacer settings now include wrapper element (a `<span>` by default).
+  * Keyboard use changes.
+    * A pager element must now be focused before keyboard keys work.
+    * Keyboard keys now include left, right, up, down, pageUp, pageDown,
+      home, or end.
+    * `pageKeyStep` option added. Number of pages to skip with pageUp or pageDown.
+
 #### <a name="v2.27.5">Version 2.27.5</a> (8/22/2016)
 
 * Readme: Update IRC link to a free client.
@@ -112,13 +133,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 
 * Docs & parser: Update Sugar library v2.0+. Fixes [issue #1275](https://github.com/Mottie/tablesorter/issues/1275).
 * Docs: Add `sortStable` example.
-
-#### <a name="v2.27.3">Version 2.27.3</a> (8/17/2016)
-
-* Core: `getColumnData` now allows falsy values.
-* Filter:
-  * Add delay to "filterFormatterUpdate". See [issue #1237](https://github.com/Mottie/tablesorter/issues/1237).
-  * `filter_liveSearch` now accepts an object.
-* Pager: use ajax flag when calculating filtered rows.
-* Readme: Fix date of last release.
-* Testing: Update QUnit.
