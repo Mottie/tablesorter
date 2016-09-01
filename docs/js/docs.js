@@ -5,13 +5,14 @@
 		var $t, t, v, animating, clicked,
 
 		cleanupCode = function(code){
-			return code.replace(/[<>\"\'\t\n]/g, function(m) { return {
+			return code.replace(/([<>\"\'\t\n]|&#133;)/g, function(m) { return {
 				'<' : '&lt;',
 				'>' : '&gt;',
 				"'" : '&#39;',
 				'"' : '&quot;',
 				'\t': '  ',
-				'\n': '<br/>' // needed for IE
+				'\n': '<br/>', // needed for IE
+				'&#133;' : '&amp;#133;' // pager custom controls ellipsis
 			}[m];});
 		};
 

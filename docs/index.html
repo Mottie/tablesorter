@@ -478,13 +478,13 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-formatter.html">Formatter widget</a> (<span class="version">v2.19.1</span>).</li>
 		<li>Grouping rows widget:
 			<ul>
-				<li><a href="example-widget-grouping.html">basic</a> (v2.8; <span class="version updated">v2.27.0</span>).</li>
+				<li><a href="example-widget-grouping.html">basic</a> (v2.8; <span class="version updated">v2.27.6</span>).</li>
 				<li><a href="example-widget-grouping-filter-childrows.html">Grouping + filter + child rows</a> (<span class="updated version">v2.15.12</span>).</li>
 			</ul>
 		</li>
 		<li><a href="example-widget-header-titles.html">Header titles widget</a> (v2.15.6; <span class="version updated">v2.24.4</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-lazyload.html">Lazyload widget</a> (<span class="version">v2.24.0</span>; <span class="version updated">v2.25.7</span>).</li>
-		<li><a href="example-widget-mark.html">Mark widget</a> (<span class="version">v2.27.2</span>).</li>
+		<li><a href="example-widget-mark.html">Mark widget</a> (<span class="version">v2.27.6</span>).</li>
 		<li><a href="example-widget-math.html">Math widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.27.0</span>).</li>
 		<li>
 			<a href="example-widget-output.html">Output widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.27.0</span>).
@@ -1758,7 +1758,7 @@ $(function(){
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.12</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
+					Replace the default sorting algorithm with a custom one using this option (<span class="version updated">v2.27.6</span>) - <span class="label label-warning">*NOTE*</span> The parameters have changed!!.
 					<div class="collapsible">
 					<br>
 					Include a script like <a class="external" href="https://github.com/overset/javascript-natural-sort">naturalSort.js</a> as follows:
@@ -1778,7 +1778,7 @@ $(function(){
       return a.localeCompare(b);
     }
   });
-});</pre>In <span class="version updated">v2.12</span>, the <code>textSorter</code> option will now accept a text sorter per column:
+});</pre>In <span class="version updated">v2.27.6</span>, the <code>textSorter</code> option will allow setting a sorter per column index or class name (column indexes were added in <span class="version updated">v2.12</span>):
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     textSorter : {
@@ -1793,9 +1793,9 @@ $(function(){
       // same as the function in column 0 above (modified in v2.12)
       1 : $.tablesorter.sortText,
       // renamed v2.12 from $.tablesorter.sortText - performs natural sort
-      2 : $.tablesorter.sortNatural,
+      '.nat-sort' : $.tablesorter.sortNatural,
       // alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/getOption)
-      3 : Sugar.Array.getOption('sortCollate')
+      '.sugar-sort' : Sugar.Array.getOption('sortCollate')
     }
   });
 });</pre>The direction parameter (boolean) is merely for informational purposes as the plugin automatically switches <code>a</code> and <code>b</code> depending on the sort direction ( i.e. there's no need to worry about reverse sorting, it's taken care of by the plugin ).
@@ -6109,6 +6109,35 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
 		</thead>
 
 		<tbody>
+			<tr id="variable-defaults">
+				<td><a href="#" class="permalink">$.tablesorter.defaults</a></td>
+				<td>Object</td>
+				<td>This object contains all of the default settings shown in the <a href="#Configuration">configuration</a> section.
+					<div class="collapsible">
+						<p>
+						Changing a defaults will cause all tables using the code to alter its default behavior without needing to include the options while initializing. For example, changing the default theme will cause all tables to use the new theme (make sure to include the css!).
+						</p>
+						<span class="label warning">Note</span>: If you wish to modify this object, make sure to either target the setting directly: <pre class="prettyprint lang-js">
+// set the default directly
+$.tablesorter.defaults.theme = 'myCustomTheme';</pre>
+						Or use jQuery extend (include <code>true</code> parameter for <a href="http://api.jquery.com/jQuery.extend/#jQuery-extend-deep-target-object1-objectN">more depth</a>): <pre class="prettyprint lang-js">
+// Extend the object. Use `true` for more than one level of depth
+$.extend( true, $.tablesorter.defaults, {
+  theme: 'myCustomTheme',
+  widgets: ['zebra', 'filter'],
+  widgetOptions: {
+    filter_placeholder: {
+      search: 'Find in column...',
+      select: 'Choose an option'
+    },
+    zebra: [ 'row-even', 'row-odd' ]
+  }
+});</pre>
+						If you don't use one of the above methods, the other default settings will be removed and cause unexpected issues.
+					</div>
+				</td>
+				<td></td>
+			</tr>
 
 			<tr id="variable-parsers">
 				<td><a href="#" class="permalink">$.tablesorter.parsers</a></td>

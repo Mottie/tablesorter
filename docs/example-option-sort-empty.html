@@ -53,8 +53,10 @@ $(function(){
 	<ul>
 		<li>Set the <code>emptyTo</code> selector below:
 			<ul>
-				<li><code>top</code> - sort empty table cells to the top.</li>
 				<li><code>bottom</code> - sort empty table cells to the bottom.</li>
+				<li><code>top</code> - sort empty table cells to the top.</li>
+				<li><code>emptyMax</code> - sort empty table cells as having a value greater than the <em>max</em> (more positive) value (added v2.16.2)</li>
+				<li><code>emptyMin</code> - sort empty table cells as having a value greater than the <em>min</em> (more negative) value (added v2.16.2)</li>
 				<li><code>none</code> or <code>zero</code>
 					<ul>
 						<li>Sort empty table cells as if the cell has the value equal to zero</li>
@@ -83,6 +85,8 @@ $(function(){
 Set <code>emptyTo</code> option: <select>
 	<option>bottom</option>
 	<option>top</option>
+	<option>emptyMax</option>
+	<option>emptyMin</option>
 	<option value="zero">none/zero</option>
 </select>
 

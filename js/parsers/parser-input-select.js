@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 4/29/2016 (v2.25.9) *//*
+/*! Parser: input & select - updated 9/1/2016 (v2.27.6) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -135,7 +135,7 @@
 			$table.children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
 				var column = $( this ).closest( 'td, th' ).attr( 'data-column' ),
 					vis = $rows.filter( '.' + checkboxClass + '-' + column ).length,
-					allChecked = vis === len;
+					allChecked = vis === len && len > 0;
 				if ( vis === 0 || allChecked ) {
 					this.checked = allChecked;
 					this.indeterminate = false;

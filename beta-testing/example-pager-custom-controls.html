@@ -63,9 +63,10 @@
 		aroundCurrent  : 1,                        // number of pages surrounding the current page
 		link           : '<a href="#">{page}</a>', // page element; use {page} to include the page number
 		currentClass   : 'current',                // current page class name
-		adjacentSpacer : ' | ',                    // spacer for page numbers next to each other
-		distanceSpacer : ' \u2026 ',               // spacer for page numbers away from each other (ellipsis &amp;hellip;)
-		addKeyboard    : true                      // add left/right keyboard arrows to change current page
+		adjacentSpacer : '<span> | </span>',       // spacer for page numbers next to each other
+		distanceSpacer : '<span> &#133; <span>',   // spacer for page numbers away from each other (ellipsis = &amp;#133;)
+		addKeyboard    : true,                     // use left,right,up,down,pageUp,pageDown,home, or end to change current page
+		pageKeyStep    : 10                        // page step to use for pageUp and pageDown
 	});
 
 	// initialize tablesorter & pager
@@ -97,6 +98,20 @@
 	<p class="tip">
 		<em>NOTE!</em>
 		<ul>
+			<li>Modified in <span class="version">v2.27.6</span>
+				<ul>
+					<li>Fixed issues with page less than one being shown.</li>
+					<li>The <code>ends</code> and <code>aroundCurrent</code> works properly when values are set to zero.</li>
+					<li>Modified <code>adjacentSpacer</code> and <code>distanceSpacer</code> to include surrounding span element.</li>
+					<li>Using the keyboard has changed!
+						<ul>
+							<li><span class="label warning">NOTE</span> The keyboard keys will only work IF a pager element has focus.</li>
+							<li>The <code>addKeyboard</code> function now includes <kbd>left</kbd>, <kbd>right</kbd>, <kbd>up</kbd>, <kbd>down</kbd>, <kbd>pageUp</kbd>, <kbd>pageDown</kbd>, <kbd>Home</kbd> and <kbd>End</kbd>.</li>
+							<li>A new <code>pageKeyStep</code> option was added to allow setting the number of pages to skip on <kbd>pageUp</kbd> or <kbd>pageDown</kbd>.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
 			<li>Modified in <span class="version">v2.17.1</span> to properly work with either the pager addon or pager widget.</li>
 			<li>In <span class="version">v2.16.4</span>, code was updated to correctly count process pages.</li>
 		</ul>
