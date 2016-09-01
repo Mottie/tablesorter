@@ -6109,6 +6109,35 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
 		</thead>
 
 		<tbody>
+			<tr id="variable-defaults">
+				<td><a href="#" class="permalink">$.tablesorter.defaults</a></td>
+				<td>Object</td>
+				<td>This object contains all of the default settings shown in the <a href="#Configuration">configuration</a> section.
+					<div class="collapsible">
+						<p>
+						Changing a defaults will cause all tables using the code to alter its default behavior without needing to include the options while initializing. For example, changing the default theme will cause all tables to use the new theme (make sure to include the css!).
+						</p>
+						<span class="label warning">Note</span>: If you wish to modify this object, make sure to either target the setting directly: <pre class="prettyprint lang-js">
+// set the default directly
+$.tablesorter.defaults.theme = 'myCustomTheme';</pre>
+						Or use jQuery extend (include <code>true</code> parameter for <a href="http://api.jquery.com/jQuery.extend/#jQuery-extend-deep-target-object1-objectN">more depth</a>): <pre class="prettyprint lang-js">
+// Extend the object. Use `true` for more than one level of depth
+$.extend( true, $.tablesorter.defaults, {
+  theme: 'myCustomTheme',
+  widgets: ['zebra', 'filter'],
+  widgetOptions: {
+    filter_placeholder: {
+      search: 'Find in column...',
+      select: 'Choose an option'
+    },
+    zebra: [ 'row-even', 'row-odd' ]
+  }
+});</pre>
+						If you don't use one of the above methods, the other default settings will be removed and cause unexpected issues.
+					</div>
+				</td>
+				<td></td>
+			</tr>
 
 			<tr id="variable-parsers">
 				<td><a href="#" class="permalink">$.tablesorter.parsers</a></td>
