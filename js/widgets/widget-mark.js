@@ -70,8 +70,6 @@
 		update : function( c, filters ) {
 			var options = {},
 				wo = c.widgetOptions,
-				setIgnoreCase = typeof wo.filter_ignoreCase === 'undefined' ? true :
-					wo.filter_ignoreCase,
 				regex = ts.mark.regex,
 				$rows = c.$table
 					.find( 'tbody tr' )
@@ -139,7 +137,7 @@
 					if ( useRegex && matches && matches.length ) {
 						matches = new RegExp(
 							ts.mark.cleanMatches( matches ).join( '.*' ),
-							'gm' + ( setIgnoreCase ? 'i' : '' )
+							'gm'
 						);
 						if ( ts.mark.checkRegex( matches ) ) {
 							$rows.children( col ).markRegExp( matches, options );
