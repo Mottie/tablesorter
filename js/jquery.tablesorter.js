@@ -233,7 +233,7 @@
 			// save the settings where they read
 			$.data( table, 'tablesorter', c );
 			if ( c.debug ) {
-				console[ console.group ? 'group' : 'log' ]( 'Initializing tablesorter' );
+				console[ console.group ? 'group' : 'log' ]( 'Initializing tablesorter v' + ts.version );
 				$.data( table, 'startoveralltimer', new Date() );
 			}
 
