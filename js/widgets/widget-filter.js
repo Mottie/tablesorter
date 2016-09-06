@@ -831,9 +831,9 @@
 				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( table.config.widgetOptions.filter_initialized &&
 					( event.which === tskeyCodes.enter || event.type === 'search' ||
-					( event.type === 'change' ) && this.value !== c.lastSearch[column] ) ||
-					// only "input" event fires in MS Edge when clicking the "x" to clear the search
-					( event.type === 'input' && this.value === '' ) ) {
+					( event.type === 'change' || event.type === 'input' ) &&
+					this.value !== c.lastSearch[column] )
+				) {
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
