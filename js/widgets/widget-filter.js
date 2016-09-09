@@ -1548,6 +1548,7 @@
 			var cts, txt, indx, len, parsedTxt, str,
 				c = table.config,
 				validColumn = typeof column !== 'undefined' && column !== null && column >= 0 && column < c.columns,
+				direction = validColumn ? c.$headerIndexed[ column ].hasClass( 'filter-select-sort-desc' ) : false,
 				parsed = [];
 			// get unique elements and sort the list
 			// if $.tablesorter.sortText exists ( not in the original tablesorter ),
@@ -1588,8 +1589,8 @@
 				// sort parsed select options
 				cts = c.textSorter || '';
 				parsed.sort( function( a, b ) {
-					var x = a.parsed,
-						y = b.parsed;
+					var x = direction ? b.parsed : a.parsed,
+						y = direction ? a.parsed : b.parsed;
 					if ( validColumn && typeof cts === 'function' ) {
 						// custom OVERALL text sorter
 						return cts( x, y, true, column, table );
