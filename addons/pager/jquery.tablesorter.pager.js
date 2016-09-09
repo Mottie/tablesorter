@@ -182,7 +182,7 @@
 					p.startRow = (t) ? sz * p.page + 1 : (p.filteredRows === 0 ? 0 : sz * p.page + 1);
 					p.endRow = Math.min( p.filteredRows, p.totalRows, sz * ( p.page + 1 ) );
 					$out = p.$container.find(p.cssPageDisplay);
-					
+
 					// Output param can be callback for custom rendering or string
 					if (typeof p.output === 'function') {
 						s = p.output(table, p);

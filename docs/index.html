@@ -491,9 +491,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.27.3</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.27.7</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.27.3</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.27.7</span>).<br>
 			<br>
 		</li>
 
@@ -4507,11 +4507,15 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
 				<td>&quot;{page}/<wbr>{totalPages}&quot;</td>
-				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.17.6</span>).
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.27.7</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_output</code><br>
 					<br>
+					In <span class="version updated">v2.27.7</span>, this option can also be set as a function
+						<pre class="prettyprint lang-js">output: function(table, pager) {
+	return 'page ' + pager.startRow + ' - ' + pager.endRow;
+}</pre>
 					This option replaced the original <code>separator</code> option, which only separated the page number from the total number of pages. The formatted output from this option is placed inside the information block targeted by the <code>cssPageDisplay</code> option.<br>
 					<br>
 					Use it as follows:

@@ -464,30 +464,36 @@
 				p.startRow = t ? sz * p.page + 1 : ( p.filteredRows === 0 ? 0 : sz * p.page + 1 );
 				p.endRow = Math.min( p.filteredRows, p.totalRows, sz * ( p.page + 1 ) );
 				$out = p.$container.find( wo.pager_selectors.pageDisplay );
-				// form the output string (can now get a new output string from the server)
-				s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
-					// {page} = one-based index; {page+#} = zero based index +/- value
-					.replace( /\{page([\-+]\d+)?\}/gi, function( m, n ) {
-						return p.totalPages ? p.page + ( n ? parseInt( n, 10 ) : 1 ) : 0;
-					})
-					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
-					.replace( /\{\w+(\s*:\s*\w+)?\}/gi, function( m ) {
-						var len, indx,
-							str = m.replace( /[{}\s]/g, '' ),
-							extra = str.split( ':' ),
-							data = p.ajaxData,
-							// return zero for default page/row numbers
-							deflt = /(rows?|pages?)$/i.test( str ) ? 0 : '';
-						if ( /(startRow|page)/.test( extra[ 0 ] ) && extra[ 1 ] === 'input' ) {
-							len = ( '' + ( extra[ 0 ] === 'page' ? p.totalPages : p.totalRows ) ).length;
-							indx = extra[ 0 ] === 'page' ? p.page + 1 : p.startRow;
-							return '<input type="text" class="ts-' + extra[ 0 ] +
-								'" style="max-width:' + len + 'em" value="' + indx + '"/>';
-						}
-						return extra.length > 1 && data && data[ extra[ 0 ] ] ?
-							data[ extra[ 0 ] ][ extra[ 1 ] ] :
-							p[ str ] || ( data ? data[ str ] : deflt ) || deflt;
-					});
+
+				// Output param can be callback for custom rendering or string
+				if ( typeof wo.pager_output === 'function' ) {
+					s = wo.pager_output( table, p );
+				} else {
+					// form the output string (can now get a new output string from the server)
+					s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
+						// {page} = one-based index; {page+#} = zero based index +/- value
+						.replace( /\{page([\-+]\d+)?\}/gi, function( m, n ) {
+							return p.totalPages ? p.page + ( n ? parseInt( n, 10 ) : 1 ) : 0;
+						})
+						// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
+						.replace( /\{\w+(\s*:\s*\w+)?\}/gi, function( m ) {
+							var len, indx,
+								str = m.replace( /[{}\s]/g, '' ),
+								extra = str.split( ':' ),
+								data = p.ajaxData,
+								// return zero for default page/row numbers
+								deflt = /(rows?|pages?)$/i.test( str ) ? 0 : '';
+							if ( /(startRow|page)/.test( extra[ 0 ] ) && extra[ 1 ] === 'input' ) {
+								len = ( '' + ( extra[ 0 ] === 'page' ? p.totalPages : p.totalRows ) ).length;
+								indx = extra[ 0 ] === 'page' ? p.page + 1 : p.startRow;
+								return '<input type="text" class="ts-' + extra[ 0 ] +
+									'" style="max-width:' + len + 'em" value="' + indx + '"/>';
+							}
+							return extra.length > 1 && data && data[ extra[ 0 ] ] ?
+								data[ extra[ 0 ] ][ extra[ 1 ] ] :
+								p[ str ] || ( data ? data[ str ] : deflt ) || deflt;
+						});
+				}
 				if ( p.$goto.length ) {
 					t = '';
 					options = tsp.buildPageSelect( c, p );
