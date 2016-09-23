@@ -1205,7 +1205,7 @@
 		},
 
 		enablePager: function( c, triggered ) {
-			var info, size,
+			var info, size, $el,
 				table = c.table,
 				p = c.pager;
 			p.isDisabled = false;
@@ -1216,9 +1216,14 @@
 			p.totalPages = p.size === 'all' ? 1 : Math.ceil( tsp.getTotalPages( c, p ) / p.size );
 			c.$table.removeClass( 'pagerDisabled' );
 			// if table id exists, include page display with aria info
-			if ( table.id ) {
-				info = table.id + '_pager_info';
-				p.$container.find( c.widgetOptions.pager_selectors.pageDisplay ).attr( 'id', info );
+			if ( table.id && !c.$table.attr( 'aria-describedby' ) ) {
+				$el = p.$container.find( c.widgetOptions.pager_selectors.pageDisplay );
+				info = $el.attr( 'id' );
+				if ( !info ) {
+					// only add pageDisplay id if it doesn't exist - see #1288
+					info = table.id + '_pager_info';
+					$el.attr( 'id', info );
+				}
 				c.$table.attr( 'aria-describedby', info );
 			}
 			tsp.changeHeight( c );

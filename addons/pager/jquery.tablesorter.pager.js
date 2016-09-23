@@ -871,7 +871,7 @@
 			},
 
 			enablePager = function(table, p, triggered) {
-				var info, size,
+				var info, size, $el,
 				c = table.config;
 				p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page'))
 				.removeClass(p.cssDisabled)
@@ -884,10 +884,15 @@
 				p.$size.val( p.size ); // set page size
 				p.totalPages = p.size === 'all' ? 1 : Math.ceil( getTotalPages( table, p ) / p.size );
 				// if table id exists, include page display with aria info
-				if ( table.id ) {
-					info = table.id + '_pager_info';
-					p.$container.find(p.cssPageDisplay).attr('id', info);
-					c.$table.attr('aria-describedby', info);
+				if ( table.id && !c.$table.attr( 'aria-describedby' ) ) {
+					$el = p.$container.find( p.cssPageDisplay );
+					info = $el.attr( 'id' );
+					if ( !info ) {
+						// only add pageDisplay id if it doesn't exist - see #1288
+						info = table.id + '_pager_info';
+						$el.attr( 'id', info );
+					}
+					c.$table.attr( 'aria-describedby', info );
 				}
 				changeHeight(table, p);
 				if ( triggered ) {
