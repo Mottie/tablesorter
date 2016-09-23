@@ -162,7 +162,7 @@ jQuery(function($){
 		undef, c1, c2, c3, c4, e, i, t;
 
 	$table1
-		.bind('tablesorter-initialized', function(){
+		.on('tablesorter-initialized', function(){
 			init = true;
 		})
 		.tablesorter();
@@ -727,7 +727,7 @@ jQuery(function($){
 	QUnit.test( 'sort Events', function(assert) {
 		assert.expect(1);
 
-		$table1.add($table5).bind( events.join('.testing '), function(e){
+		$table1.add($table5).on( events.join('.testing '), function(e){
 			if (e.type === events[sortIndx%3]) {
 				sortIndx++;
 			}
@@ -739,7 +739,7 @@ jQuery(function($){
 		// ensure all sort events fire on an empty table
 		$table5.trigger('sorton', [ [[0,0]] ]);
 
-		$table1.add($table5).unbind( events.join('.testing ') );
+		$table1.add($table5).off( events.join('.testing ') );
 
 		// table1 sorted twice in the above test; sortIndx = 9 then empty table5 x1 (total = 3 events x 3)
 		assert.equal( sortIndx, 9, 'sortStart, sortBegin & sortEnd fired in order x2; including empty table' );
@@ -755,7 +755,7 @@ jQuery(function($){
 		// updateAll
 		$table1
 			.trigger('sorton', [ [[0,1]] ])
-			.bind('updateComplete.testing', function(){ updateIndx++; })
+			.on('updateComplete.testing', function(){ updateIndx++; })
 			.find('th:eq(1)').removeAttr('class').html('num').end()
 			.find('td:nth-child(2)').html(function(i,h){
 				return h.substring(1);
@@ -832,13 +832,13 @@ jQuery(function($){
 		}]);
 
 		$table5
-			.bind('updateComplete.testing', function(){ updateIndx++; })
+			.on('updateComplete.testing', function(){ updateIndx++; })
 			.trigger('update', [true, function(){
 				updateCallback++;
 				assert.cacheCompare( table5, 'all', [], 'update method on empty table' );
 			}]);
 
-		$table1.add($table5).unbind('updateComplete.testing');
+		$table1.add($table5).off('updateComplete.testing');
 
 		// table1 updated 4x in the above test
 		// table5 updated 1x

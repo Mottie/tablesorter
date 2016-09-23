@@ -491,9 +491,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.27.3</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.27.7</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.27.3</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.27.7</span>).<br>
 			<br>
 		</li>
 
@@ -3314,8 +3314,12 @@ $('table').trigger('search', false);</pre></div>
 						<li><span class="label warning">*NOTE*</span> because this example is providing a fixed select option source, it can not support "filter-onlyAvail" (only show available options after filtering).</li>
 					</ul>
 
-					In <span class="version updated">v2.21.5</span>, this option will now override the <code>filter_function</code> options (<em>so you need to add them back!</em>), allowing the addition of custom select options and still maintain basic filtering action - see <a href="http://jsfiddle.net/Mottie/856bzzeL/117/">this demo</a> (<a class="external" href="http://stackoverflow.com/a/29506523/145346">ref</a>).<br>
-					<br>
+					<p>
+						In <span class="version updated">v2.27.7</span>, an option to have a descending sort applied to this data can be done by adding a <code>"filter-select-sort-desc"</code> to the header cell. Adding a <code>"filter-select-nosort"</code> class name to a header to prevent sorting has been available since v2.16.3.
+					</p>
+					<p>
+						In <span class="version updated">v2.21.5</span>, this option will now override the <code>filter_function</code> options (<em>so you need to add them back!</em>), allowing the addition of custom select options and still maintain basic filtering action - see <a href="http://jsfiddle.net/Mottie/856bzzeL/117/">this demo</a> (<a class="external" href="http://stackoverflow.com/a/29506523/145346">ref</a>).
+					</p>
 					In <span class="version updated">v2.17.0</span>, the <code>filter_selectSource</code> column can also be referenced by using a jQuery selector (e.g. class name or ID) that points to a table <em>header</em> cell.<br>
 					<pre class="prettyprint lang-js">filter_selectSource : {
   ".model-number" : [ "abc", "def", "ghi", "xyz" ]
@@ -4507,11 +4511,15 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
 				<td>&quot;{page}/<wbr>{totalPages}&quot;</td>
-				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.17.6</span>).
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.27.7</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_output</code><br>
 					<br>
+					In <span class="version updated">v2.27.7</span>, this option can also be set as a function
+						<pre class="prettyprint lang-js">output: function(table, pager) {
+	return 'page ' + pager.startRow + ' - ' + pager.endRow;
+}</pre>
 					This option replaced the original <code>separator</code> option, which only separated the page number from the total number of pages. The formatted output from this option is placed inside the information block targeted by the <code>cssPageDisplay</code> option.<br>
 					<br>
 					Use it as follows:
@@ -7711,6 +7719,7 @@ $('select.external').html( opts );</pre>
 						The <code>column</code> parameter is optional, but if included it is used:
 						<ul>
 							<li>To check the column header for a <code>filter-select-nosort</code> class name to prevent the sorting of options.</li>
+							<li>To check the column header for a <code>filter-select-sort-desc</code> class name to preform a descending sort of options.</li>
 							<li>To check tablesorter's <code>textSorter</code> option in case there are column specific sorting algorhithms set.</li>
 						</ul>
 						See the <a href="#function-getoptions"><code>getOptions</code></a> function description or the <a href="#widget-filter-selectsource"><code>filter_selectSource</code></a> option (under "An object containing column keys"; getJSON) for examples which use this function.

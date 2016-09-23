@@ -11,9 +11,11 @@
 	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<script src="js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/tipsy.css" rel="stylesheet">
 	<link href="css/prettify.css" rel="stylesheet">
 	<script src="js/prettify.js"></script>
 	<script src="js/docs.js"></script>
+	<script src="js/jquery.tipsy.min.js"></script>
 
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
@@ -32,7 +34,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/widgets/widget-filter.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.0.0/jquery.mark.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.1.1/jquery.mark.js"></script>
 	<script src="../js/widgets/widget-mark.js"></script>
 
 	<script id="js">$(function() {
@@ -58,6 +60,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 			},
 			// *** default settings for non-regular expression searches only
 			mark_accuracy: 'partially',
+			mark_caseSensitive: false,
 			mark_diacritics: true,
 			mark_separateWordSearch: true,
 			mark_synonyms: {},
@@ -83,10 +86,12 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 	// preset searches for the first table
 	$('button[data-filter-column]').click(function(){
 		var filters = [],
+			config = $table[0].config,
 			$t = $(this),
 			col = $t.data('filter-column'), // zero-based index, or "all" column
 			txt = $t.data('filter-text') || $t.text(); // text to add to filter
-		filters[col === "all" ? $table[0].config.columns : col] = txt;
+		filters[col === "all" ? config.columns : col] = txt;
+		config.widgetOptions.mark_caseSensitive = $t.data('mark-case') || false;
 		$.tablesorter.setFilters( $table, filters );
 		return false;
 	});
@@ -113,21 +118,30 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 	$('button.table2').click(function(){
 		// check for reset
 		var query = $(this).hasClass('reset2') ? '' : this.textContent;
+			config = $table2[0].config;
+		config.widgetOptions.mark_caseSensitive = $(this).data('mark-case') || false;
 		$('#table2-search')
 			.val(query)
 			.trigger('input');
 	});
 
-	$('#table2-search').on('input', function() {
+	$('#table2-search').on('input', function(event) {
 		var config = $table2[0].config,
 			filters = [];
 		// still target the "any" match column
 		filters[config.columns] = this.value;
+		// if input was not triggered by a button click, reset caseSensitive
+		if (!event.isTrigger) {
+			config.widgetOptions.mark_caseSensitive = false;
+		}
 		// trigger a mark update
 		$table2.trigger('markUpdate', [filters]);
 		// or call the function directly
 		// $.tablesorter.mark.update(config, filters);
 	});
+
+	// add tooltip
+	$('.tooltip').tipsy({ gravity: 's' });
 
 });</script>
 
@@ -148,6 +162,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>Updated <span class="verison">v2.27.7</span>, removed internal case matching as mark.js v8.1.1 now has a <code>caseSensitive</code> option (set using <code>mark_caseSensitive</code> widget option).</li>
 				<li>Updated <span class="verison">v2.27.6</span>
 					<ul>
 						<li>The mark widget properly applies after a pager change has occured.</li>
@@ -285,6 +300,11 @@ $('button.update').click(function(){
 						<td>"partially"</td>
 						<td>Use "partially", "complementary", "exactly" or object - see markjs docs for details.</td>
 					</tr>
+					<tr id="mark-casesensitive">
+						<td><span class="permalink">mark_caseSensitive</span></td>
+						<td>false</td>
+						<td>If <code>true</code>, only case sensitive marks are applied.</td>
+					</tr>
 					<tr id="mark-diacritics">
 						<td><span class="permalink">mark_diacritics</span></td>
 						<td>true</td>
@@ -362,8 +382,9 @@ $('button.update').click(function(){
 	<button class="bad" type="button" data-filter-column="all" title="See &quot;Notes&quot; on why the second row isn't highlighted">~ee</button>
 	<button type="button" data-filter-column="all">br?n</button>
 	<button type="button" data-filter-column="all">br*n</button>
-	<button type="button" data-filter-column="all">aaron|bruce</button>
 	<button type="button" data-filter-column="all">aaron &amp;&amp; 2</button>
+	<button type="button" data-filter-column="all">aaron|bruce</button>
+	<button type="button" class="sens tooltip" title="Case Sensitive Mark" data-filter-column="all" data-mark-case="true">aaron|Bruce</button>
 	<table id="table" class="tablesorter">
 		<thead>
 			<tr>
@@ -401,8 +422,9 @@ $('button.update').click(function(){
 	<button class="table2 bad" type="button" title="See &quot;Notes&quot; on why the &quot;005 Bruce Almighty&quot; row isn't highlighted">~ee</button>
 	<button class="table2" type="button">br?n</button>
 	<button class="table2" type="button">br*n</button>
-	<button class="table2" type="button">aaron|bruce</button>
 	<button class="table2" type="button">aaron &amp;&amp; 2</button>
+	<button class="table2" type="button">aaron|bruce</button>
+	<button class="table2 sens tooltip" type="button" title="Case Sensitive Mark" data-filter-column="all" data-mark-case="true">aaron|Bruce</button>
 
 	<table id="table2" class="tablesorter">
 		<thead>

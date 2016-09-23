@@ -1,4 +1,4 @@
-﻿/*! Widget: repeatHeaders - updated 2/7/2015 (v2.19.0) *//*
+/*! Widget: repeatHeaders - updated 9/23/2016 (v2.27.7) *//*
 * Requires tablesorter v2.8+ and jQuery 1.7+
 * Original by Christian Bach from the example-widgets.html demo
 */
@@ -19,8 +19,8 @@
 			if (!wo.repeatHeaders) {
 				h = '<tr class="repeated-header ' + c.selectorRemove.slice(1) + '">';
 				for (i = 0; i < c.columns; i++) {
-					// only get the headerContent text
-					h += '<th>' + $.trim( c.$headers.eq(i).text() ) + '</th>';
+					// repeat the content of the current header (including child elements)
+					h += '<th>' + $.trim( c.$headers.eq(i).html() ) + '</th>';
 				}
 				// 'remove-me' class was added in case the table needs to be updated, the 'remove-me' rows will be
 				// removed prior to the update to prevent including the rows in the update - see 'selectorRemove' option

@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 8/17/2016 (v2.27.3)
+* updated 9/23/2016 (v2.27.7)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -182,27 +182,33 @@
 					p.startRow = (t) ? sz * p.page + 1 : (p.filteredRows === 0 ? 0 : sz * p.page + 1);
 					p.endRow = Math.min( p.filteredRows, p.totalRows, sz * ( p.page + 1 ) );
 					$out = p.$container.find(p.cssPageDisplay);
-					// form the output string (can now get a new output string from the server)
-					s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
-					// {page} = one-based index; {page+#} = zero based index +/- value
-					.replace(/\{page([\-+]\d+)?\}/gi, function(m, n){
-						return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
-					})
-					// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
-					.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
-						var len, indx,
-						str = m.replace(/[{}\s]/g, ''),
-						extra = str.split(':'),
-						data = p.ajaxData,
-						// return zero for default page/row numbers
-						deflt = /(rows?|pages?)$/i.test(str) ? 0 : '';
-						if (/(startRow|page)/.test(extra[0]) && extra[1] === 'input') {
-							len = ('' + (extra[0] === 'page' ? p.totalPages : p.totalRows)).length;
-							indx = extra[0] === 'page' ? p.page + 1 : p.startRow;
-							return '<input type="text" class="ts-' + extra[0] + '" style="max-width:' + len + 'em" value="' + indx + '"/>';
-						}
-						return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
-					});
+
+					// Output param can be callback for custom rendering or string
+					if (typeof p.output === 'function') {
+						s = p.output(table, p);
+					} else {
+						// form the output string (can now get a new output string from the server)
+						s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
+							// {page} = one-based index; {page+#} = zero based index +/- value
+							.replace(/\{page([\-+]\d+)?\}/gi, function(m, n){
+								return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
+							})
+							// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
+							.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
+								var len, indx,
+								str = m.replace(/[{}\s]/g, ''),
+								extra = str.split(':'),
+								data = p.ajaxData,
+								// return zero for default page/row numbers
+								deflt = /(rows?|pages?)$/i.test(str) ? 0 : '';
+								if (/(startRow|page)/.test(extra[0]) && extra[1] === 'input') {
+									len = ('' + (extra[0] === 'page' ? p.totalPages : p.totalRows)).length;
+									indx = extra[0] === 'page' ? p.page + 1 : p.startRow;
+									return '<input type="text" class="ts-' + extra[0] + '" style="max-width:' + len + 'em" value="' + indx + '"/>';
+								}
+								return extra.length > 1 && data && data[extra[0]] ? data[extra[0]][extra[1]] : p[str] || (data ? data[str] : deflt) || deflt;
+							});
+					}
 					if ( p.$goto.length ) {
 						t = '';
 						options = buildPageSelect( table, p );
@@ -865,7 +871,7 @@
 			},
 
 			enablePager = function(table, p, triggered) {
-				var info, size,
+				var info, size, $el,
 				c = table.config;
 				p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page'))
 				.removeClass(p.cssDisabled)
@@ -878,10 +884,15 @@
 				p.$size.val( p.size ); // set page size
 				p.totalPages = p.size === 'all' ? 1 : Math.ceil( getTotalPages( table, p ) / p.size );
 				// if table id exists, include page display with aria info
-				if ( table.id ) {
-					info = table.id + '_pager_info';
-					p.$container.find(p.cssPageDisplay).attr('id', info);
-					c.$table.attr('aria-describedby', info);
+				if ( table.id && !c.$table.attr( 'aria-describedby' ) ) {
+					$el = p.$container.find( p.cssPageDisplay );
+					info = $el.attr( 'id' );
+					if ( !info ) {
+						// only add pageDisplay id if it doesn't exist - see #1288
+						info = table.id + '_pager_info';
+						$el.attr( 'id', info );
+					}
+					c.$table.attr( 'aria-describedby', info );
 				}
 				changeHeight(table, p);
 				if ( triggered ) {
