@@ -101,6 +101,24 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.7">Version 2.27.7</a> (9/23/2016)
+
+* Core:
+  * Include version in log.
+  * Remove space from debug message.
+* Docs: update jQuery.
+* Filter:
+  * Include "input" event for searches. See [issue #1280](https://github.com/Mottie/tablesorter/issues/1280).
+  * Add support for descending sort on selectSources values.
+* Mark: Remove internal case matching.
+* Pager:
+  * Allow for optional output callback in favour of parsable string. See [pull #1283](https://github.com/Mottie/tablesorter/pull/1283); thanks [@joelperry93](https://github.com/joelperry93)!
+  * Add output function support to pager widget. See [pull #1283](https://github.com/Mottie/tablesorter/pull/1283).
+  * Maintain `pageDisplay` ID, if one exists. Fixes [issue #1288](https://github.com/Mottie/tablesorter/issues/1288).
+* RepeatHeaders:
+  * Repeat HTML content instead of only text. See [pull #1282](https://github.com/Mottie/tablesorter/pull/1282); thanks [@Milania1](https://github.com/Milania1)!
+* Testing: update jQuery usage.
+
 #### <a name="v2.27.6">Version 2.27.6</a> (9/1/2016)
 
 * Core: `textSorter` option now accepts class names. See [Stackoverflow](http://stackoverflow.com/q/39259954/145346).
@@ -128,8 +146,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Docs: Correct usage of Sugar v2.0+ `sortCollage`.
 * Filter: Add any match search by column text - see [updated demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-any-match.html#anymatch_searches).
 * Parser: Fix JSHint issue.
-
-#### <a name="v2.27.4">Version 2.27.4</a> (8/18/2016)
-
-* Docs & parser: Update Sugar library v2.0+. Fixes [issue #1275](https://github.com/Mottie/tablesorter/issues/1275).
-* Docs: Add `sortStable` example.
