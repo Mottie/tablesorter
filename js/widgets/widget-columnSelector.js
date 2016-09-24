@@ -208,7 +208,9 @@
 				tsColSel.updateBreakpoints(c, wo);
 				c.$table
 					.off('updateAll' + namespace)
-					.on('updateAll' + namespace, function(){
+					.on('updateAll' + namespace, function() {
+						tsColSel.setupSelector(c, wo);
+						tsColSel.setupBreakpoints(c, wo);
 						tsColSel.updateBreakpoints(c, wo);
 						tsColSel.updateCols(c, wo);
 					});
