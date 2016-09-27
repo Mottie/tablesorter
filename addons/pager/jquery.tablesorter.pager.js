@@ -222,7 +222,7 @@
 					if ($out.length) {
 						$out[ ($out[0].nodeName === 'INPUT') ? 'val' : 'html' ](s);
 						// rebind startRow/page inputs
-						$out.find('.ts-startRow, .ts-page').unbind('change' + namespace).bind('change' + namespace, function(){
+						$out.find('.ts-startRow, .ts-page').off('change' + namespace).on('change' + namespace, function(){
 							var v = $(this).val(),
 							pg = $(this).hasClass('ts-startRow') ? Math.floor( v / sz ) + 1 : v;
 							c.$table.triggerHandler('pageSet' + namespace, [ pg ]);
@@ -385,7 +385,7 @@
 				pagerArrows( table, p );
 				if ( !p.removeRows ) {
 					hideRows(table, p);
-					$(table).bind('sortEnd filterEnd '.split(' ').join(table.config.namespace + 'pager '), function(){
+					$(table).on('sortEnd filterEnd '.split(' ').join(table.config.namespace + 'pager '), function(){
 						hideRows(table, p);
 					});
 				}
@@ -532,9 +532,9 @@
 					if (c.showProcessing) {
 						ts.isProcessing(table, true); // show loading icon
 					}
-					$doc.bind('ajaxError' + namespace, function(e, xhr, settings, exception) {
+					$doc.on('ajaxError' + namespace, function(e, xhr, settings, exception) {
 						renderAjax(null, table, p, xhr, settings, exception);
-						$doc.unbind('ajaxError' + namespace);
+						$doc.off('ajaxError' + namespace);
 					});
 
 					counter = ++p.ajaxCounter;
@@ -547,7 +547,7 @@
 							return;
 						}
 						renderAjax(data, table, p, jqxhr);
-						$doc.unbind('ajaxError' + namespace);
+						$doc.off('ajaxError' + namespace);
 						if (typeof p.oldAjaxSuccess === 'function') {
 							p.oldAjaxSuccess(data);
 						}
@@ -860,9 +860,9 @@
 				.hide()
 				// unbind
 				.find( ctrls )
-				.unbind( namespace );
+				.off( namespace );
 				c.appender = null; // remove pager appender function
-				c.$table.unbind( namespace );
+				c.$table.off( namespace );
 				if (ts.storage) {
 					ts.storage(table, p.storageKey, '');
 				}
@@ -953,9 +953,9 @@
 					p.regexFiltered = new RegExp(wo.filter_filteredRow || 'filtered');
 
 					$t
-					// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
-					.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
-					.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
+					// .off( namespace ) adding in jQuery 1.4.3 ( I think )
+					.off( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
+					.on('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 						// don't change page if filters are the same (pager updating, etc)
 						if (e.type === 'filterStart' && p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
@@ -963,7 +963,7 @@
 						}
 					})
 					// update pager after filter widget completes
-					.bind('filterEnd sortEnd '.split(' ').join(namespace + ' '), function() {
+					.on('filterEnd sortEnd '.split(' ').join(namespace + ' '), function() {
 						p.currentFilters = c.$table.data('lastSearch');
 						if (p.initialized || p.initializing) {
 							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
@@ -975,19 +975,19 @@
 							ts.applyWidget( table );
 						}
 					})
-					.bind('disablePager' + namespace, function(e){
+					.on('disablePager' + namespace, function(e){
 						e.stopPropagation();
 						showAllRows(table, p);
 					})
-					.bind('enablePager' + namespace, function(e){
+					.on('enablePager' + namespace, function(e){
 						e.stopPropagation();
 						enablePager(table, p, true);
 					})
-					.bind('destroyPager' + namespace, function(e){
+					.on('destroyPager' + namespace, function(e){
 						e.stopPropagation();
 						destroyPager(table, p);
 					})
-					.bind('updateComplete' + namespace, function(e, table, triggered){
+					.on('updateComplete' + namespace, function(e, table, triggered){
 						e.stopPropagation();
 						// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 						// don't recalculate total rows/pages if using ajax
@@ -1006,13 +1006,13 @@
 						changeHeight(table, p);
 						updatePageDisplay(table, p, true);
 					})
-					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
+					.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 						e.stopPropagation();
 						setPageSize(table, parsePageSize( p, size, 'get' ), p);
 						hideRows(table, p);
 						updatePageDisplay(table, p, false);
 					})
-					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
+					.on('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
 						e.stopPropagation();
 						// force pager refresh
 						if (e.type === 'pagerUpdate') {
@@ -1023,7 +1023,7 @@
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
 					})
-					.bind('pageAndSize' + namespace, function(e, page, size){
+					.on('pageAndSize' + namespace, function(e, page, size){
 						e.stopPropagation();
 						p.page = (parseInt(page, 10) || 1) - 1;
 						setPageSize(table, parsePageSize( p, size, 'get' ), p);
@@ -1040,8 +1040,8 @@
 					}
 					pager.find(ctrls.join(','))
 					.attr('tabindex', 0)
-					.unbind('click' + namespace)
-					.bind('click' + namespace, function(e){
+					.off('click' + namespace)
+					.on('click' + namespace, function(e){
 						e.stopPropagation();
 						var i, $t = $(this), l = ctrls.length;
 						if ( !$t.hasClass(p.cssDisabled) ) {
@@ -1058,8 +1058,8 @@
 					p.$goto = pager.find(p.cssGoto);
 					if ( p.$goto.length ) {
 						p.$goto
-						.unbind('change' + namespace)
-						.bind('change' + namespace, function(){
+						.off('change' + namespace)
+						.on('change' + namespace, function(){
 							p.page = $(this).val() - 1;
 							moveToPage(table, p, true);
 							updatePageDisplay(table, p, false);
@@ -1072,7 +1072,7 @@
 					if ( p.$size.length ) {
 						// setting an option as selected appears to cause issues with initial page size
 						p.$size.find('option').removeAttr('selected');
-						p.$size.unbind('change' + namespace).bind('change' + namespace, function() {
+						p.$size.off('change' + namespace).on('change' + namespace, function() {
 							if ( !$(this).hasClass(p.cssDisabled) ) {
 								var size = $(this).val();
 								p.$size.val( size ); // in case there are more than one pagers
