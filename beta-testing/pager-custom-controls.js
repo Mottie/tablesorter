@@ -1,5 +1,5 @@
 /*!
- * custom pager controls (beta) for Tablesorter - updated 9/1/2016 (v2.27.6)
+ * custom pager controls (beta) for Tablesorter - updated 9/28/2016 (v2.27.8)
   initialize custom pager script BEFORE initializing tablesorter/tablesorter pager
   custom pager looks like this:
   1 | 2 … 5 | 6 | 7 … 99 | 100
@@ -13,7 +13,7 @@
 /*global jQuery: false */
 
 ;(function($) {
-"use strict";
+'use strict';
 
 $.tablesorter = $.tablesorter || {};
 
@@ -34,9 +34,13 @@ $.tablesorter.customPagerControls = function(settings) {
 	},
 	options = $.extend({}, defaults, settings),
 	$table = $(options.table),
-	$pager = $(options.pager);
+	$pager = $(options.pager),
+	focusOnPager = false;
 
 	$table
+		.on('filterStart', function() {
+			focusOnPager = false;
+		})
 		.on('pagerInitialized pagerComplete', function (e, c) {
 			var indx,
 				p = c.pager ? c.pager : c, // using widget
@@ -83,11 +87,11 @@ $.tablesorter.customPagerControls = function(settings) {
 					});
 				}
 			}
-			$pager
-				.find('.pagecount')
-				.html(pages.html())
-				.find('.' + options.currentClass)
-				.focus();
+			$pager.find('.pagecount').html(pages.html());
+			if (focusOnPager) {
+				// don't focus on pager when using filter - fixes #1296
+				$pager.find('.' + options.currentClass).focus();
+			}
 		});
 
 	// set up pager controls
@@ -103,6 +107,7 @@ $.tablesorter.customPagerControls = function(settings) {
 		})
 		.end()
 		.on('click', options.currentPage, function() {
+			focusOnPager = true;
 			var $el = $(this);
 			$el
 				.addClass(options.currentClass)
@@ -118,11 +123,13 @@ $.tablesorter.customPagerControls = function(settings) {
 			// ignore arrows inside form elements
 			if (/input|select|textarea/i.test(events.target.nodeName) ||
 				!(events.which > 32 && events.which < 41)) {
+				focusOnPager = false;
 				return;
 			}
 			// only allow keyboard use if element inside of pager is focused
 			if ($(document.activeElement).closest(options.pager).is($pager)) {
 				events.preventDefault();
+				focusOnPager = true;
 				var key = events.which,
 					max = $table[0].config.totalRows,
 					$el = $pager.find(options.currentPage).filter('.' + options.currentClass),
@@ -140,4 +147,5 @@ $.tablesorter.customPagerControls = function(settings) {
 		});
 	}
 };
+
 })(jQuery);
