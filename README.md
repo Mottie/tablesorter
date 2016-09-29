@@ -102,6 +102,14 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.27.8">Version 2.27.8</a> (9/28/2016)
+
+* Core: minor code cleanup.
+* Docs: remove code in duplicate example-widget-filter-custom. See [pull #1295](https://github.com/Mottie/tablesorter/pull/1295); thanks [@themilkman](https://github.com/themilkman)!
+* ColumnSelector: `updateAll` properly updates the popup. See [Stack Overflow](http://stackoverflow.com/q/39669948/145346).
+* Pager: Maintain filter focus on custom controls. Fixes [issue #1296](https://github.com/Mottie/tablesorter/issues/1296).
+* Readme: Add link to Grav CMS. See [issue #1290](https://github.com/Mottie/tablesorter/issues/1290).
+
 #### <a name="v2.27.7">Version 2.27.7</a> (9/23/2016)
 
 * Core:
@@ -140,10 +148,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
     * Keyboard keys now include left, right, up, down, pageUp, pageDown,
       home, or end.
     * `pageKeyStep` option added. Number of pages to skip with pageUp or pageDown.
-
-#### <a name="v2.27.5">Version 2.27.5</a> (8/22/2016)
-
-* Readme: Update IRC link to a free client.
-* Docs: Correct usage of Sugar v2.0+ `sortCollage`.
-* Filter: Add any match search by column text - see [updated demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-any-match.html#anymatch_searches).
-* Parser: Fix JSHint issue.

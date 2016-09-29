@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 09-23-2016 (v2.27.7)*/
+/*! tablesorter (FORK) - updated 09-28-2016 (v2.27.8)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.27.7 *//*
+/*! TableSorter (FORK) v2.27.8 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.27.7',
+		version : '2.27.8',
 
 		parsers : [],
 		widgets : [],
@@ -86,7 +86,7 @@
 			widgetClass      : 'widget-{name}', // table class name template to match to include a widget
 			widgets          : [],         // method to add widgets, e.g. widgets: ['zebra']
 			widgetOptions    : {
-				zebra : [ 'even', 'odd' ]    // zebra widget alternating row class names
+				zebra : [ 'even', 'odd' ]  // zebra widget alternating row class names
 			},
 
 			// *** callbacks
@@ -103,8 +103,8 @@
 
 			cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to its parent
 			cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
-			cssNoSort        : 'tablesorter-noSort',      // class name added to element inside header; clicking on it won't cause a sort
-			cssIgnoreRow     : 'tablesorter-ignoreRow',   // header row to ignore; cells within this row will not be added to c.$headers
+			cssNoSort        : 'tablesorter-noSort',   // class name added to element inside header; clicking on it won't cause a sort
+			cssIgnoreRow     : 'tablesorter-ignoreRow',// header row to ignore; cells within this row will not be added to c.$headers
 
 			cssIcon          : 'tablesorter-icon', // if this class does not exist, the {icon} will not be added from the headerTemplate
 			cssIconNone      : '', // class name added to the icon when there is no column sort
@@ -118,7 +118,7 @@
 
 			// *** selectors
 			selectorHeaders  : '> thead th, > thead td',
-			selectorSort     : 'th, td',   // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
+			selectorSort     : 'th, td', // jQuery selector of content within selectorHeaders that is clickable to trigger a sort
 			selectorRemove   : '.remove-me',
 
 			// *** advanced
