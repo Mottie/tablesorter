@@ -1260,8 +1260,10 @@ From the example function above, you'll end up with something similar to this HT
 				<td>null</td>
 				<td>Use to add an additional forced sort that is <strong>prepended</strong> to <a href="#sortlist"><code>sortList</code></a>.
 					<div class="collapsible">
-					<br>
-					For example, <code>sortForce: [[0,0]]</code> will sort the first column in ascending order. After the forced sort, the user selected column(s), or during initialzation, the sorting order defined in the sortList will follow. And lastly, the sort defined in the <a href="#sortappend"><code>sortAppend</code></a> option will be applied. More explicitly:<br>
+					<p>
+						<span class="label label-warning">NOTE</span> Only when the user interacts with the table will the <code>sortForce</code> and <code>sortAppend</code> settings be applied. During initialization, and while setting the <code>sortList</code> through the API, both the <code>sortForce</code> and <code>sortAppend</code> settings are ignored. This will allow you to have explicit control over the sorting.
+					</p>
+					For example, <code>sortForce: [[0,0]]</code> will sort the first column in ascending order. After the forced sort, the user selected column(s), <em>but not during initialzation</em>, the sorting order defined in the sortList will follow. And lastly, the sort defined in the <a href="#sortappend"><code>sortAppend</code></a> option will be applied. More explicitly:<br>
 					<br>
 					There are three options to determine the sort order and this is the order of priority:
 					<ol>
@@ -1287,7 +1289,9 @@ From the example function above, you'll end up with something similar to this HT
 				<td>null</td>
 				<td>Use to add an initial sort to the table.
 					<div class="collapsible">
-					<br>
+					<p>
+						<span class="label label-warning">NOTE</span> Only when the user interacts with the table will the <code>sortForce</code> and <code>sortAppend</code> settings be applied. During initialization, and while setting the <code>sortList</code> through the API, both the <code>sortForce</code> and <code>sortAppend</code> settings are ignored. This will allow you to have explicit control over the sorting.
+					</p>
 					The value contains an array of instructions for per-column sorting and direction in the format: <code>[[columnIndex, sortDirection], ... ]</code> where columnIndex is a zero-based index for your columns left-to-right and sortDirection is 0 for Ascending and 1 for Descending.  A valid argument that sorts ascending first by column 1 and then column 2 looks like: <code>[[0,0],[1,0]]</code>. Please see <a href="#sortforce"><code>sortForce</code></a> for more details on other sort order options.<br>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
@@ -1315,7 +1319,9 @@ From the example function above, you'll end up with something similar to this HT
 				<td>null</td>
 				<td>Use to add an additional forced sort that will be appended to the dynamic selections by the user (<span class="version updated">v2.24.0</span>).
 					<div class="collapsible">
-					<br>
+					<p>
+						<span class="label label-warning">NOTE</span> Only when the user interacts with the table will the <code>sortForce</code> and <code>sortAppend</code> settings be applied. During initialization, and while setting the <code>sortList</code> through the API, both the <code>sortForce</code> and <code>sortAppend</code> settings are ignored. This will allow you to have explicit control over the sorting.
+					</p>
 					For example, can be used to sort people alphabetically after some other user-selected sort that results in rows with the same value like dates or money due. It can help prevent data from appearing as though it has a random secondary sort.<br>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
