@@ -85,7 +85,7 @@
 			cssAsc           : '',
 			cssDesc          : '',
 			cssNone          : '',
-			cssHeader        : '',
+			cssHeader        : 'testHead',
 			cssHeaderRow     : '',
 			cssProcessing    : '', // processing icon applied to header during sort/filter
 
