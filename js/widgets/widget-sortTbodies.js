@@ -42,10 +42,9 @@
 				})
 				.bind('sortEnd', function() {
 					// Moves the head row back to the top of the tbody
-					var lockHead = wo.sortTbody_lockHead;
 					var primaryRow = wo.sortTbody_primaryRow;
 
-					if ( primaryRow ) {
+					if ( wo.sortTbody_lockHead && primaryRow ) {
 						c.$table.find( primaryRow ).each( function(){
 							$( this ).parents( 'tbody' ).prepend( this );
 						});
