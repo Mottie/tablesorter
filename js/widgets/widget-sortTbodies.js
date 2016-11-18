@@ -43,9 +43,8 @@
 				.bind('sortEnd', function() {
 					// Moves the head row back to the top of the tbody
 					var primaryRow = wo.sortTbody_primaryRow;
-
 					if ( wo.sortTbody_lockHead && primaryRow ) {
-						c.$table.find( primaryRow ).each( function(){
+						c.$table.find( primaryRow ).each( function() {
 							$( this ).parents( 'tbody' ).prepend( this );
 						});
 					}
@@ -219,6 +218,8 @@
 		// priority < 50 (filter widget), so c.$tbodies has the correct elements
 		priority: 40,
 		options: {
+			// lock primary row as a header when sorting
+			sortTbody_lockHead   : false,
 			// point to a row within the tbody that matches the number of header columns
 			sortTbody_primaryRow : null,
 			// sort tbody internal rows

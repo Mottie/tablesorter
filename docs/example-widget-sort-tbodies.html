@@ -65,13 +65,26 @@
 
 	<script id="js">$( function() {
 
-	// settings work for all three demos
-	$( 'table' ).tablesorter({
+	// settings work for first three demos
+	$( '#table1, #table2, #table3' ).tablesorter({
 		widgets: [ 'sortTbody', 'filter', 'zebra' ],
 		widgetOptions: {
 			sortTbody_primaryRow : '.main',
 			sortTbody_sortRows   : false,
 			sortTbody_noSort     : 'tablesorter-no-sort-tbody',
+
+			// include child row content while filtering the second demo table
+			filter_childRows     : true
+		}
+	});
+
+	// locked headers demo
+	$( '#table4' ).tablesorter({
+		widgets: [ 'sortTbody', 'filter', 'zebra' ],
+		widgetOptions: {
+			sortTbody_lockHead   : true,
+			sortTbody_primaryRow : '.main',
+			sortTbody_sortRows   : true,
 
 			// include child row content while filtering the second demo table
 			filter_childRows     : true
@@ -111,6 +124,7 @@
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.27.9</span>, added `sortTbody_lockHead` option. Thanks to <a href="https://github.com/ChrisM-Rogers">Chris Rogers</a>!</li>
 			<li>This widget (<span class="version">v2.22.2</span>) allows the sorting of tbodies (not rows) based on a specified row set by the <code>sortTbody_primaryRow</code> option.</li>
 			<li>This widget replaces the <a href="index.html#cssinfoblock"><code>cssInfoBlock</code></a> setting:
 				<ul>
@@ -155,6 +169,17 @@
 				</thead>
 				<tbody>
 
+					<tr id="sorttbody-lockhead">
+						<td><a href="#" class="permalink">sortTbody_lockHead</a></td>
+						<td>false</td>
+						<td>When <code>true</code>, the primary row will be moved to the top of the sorted tbody.
+						<div class="collapsible">
+							<br>
+							Setting this option will also require setting the <code>sortTbody_sortRows</code> option to <code>true</code>. See the <a href="#lock-headers">Sort tbodies and lock the header (primary) row</a> demo below.
+						</div>
+						</td>
+					</tr>
+
 					<tr id="sorttbody-primaryrow">
 						<td><a href="#" class="permalink">sortTbody_primaryRow</a></td>
 						<td>null</td>
@@ -165,7 +190,7 @@
 							<p>In these demos, all primary rows have a class name of <code>"main"</code>, so this option is then set as follows:</p>
 							<pre class="prettyprint lang-js">sortTbody_primaryRow : '.main'</pre>
 							<p><span class="label label-info">*NOTE*</span> This will accept any jQuery selector, so it is possible to target multiple classes <code>'.main, .primary'</code>, but only the first found cell in the sorted column will be used when sorting the tbody.</p>
-							<p><span class="label warning">*WARNING*</span> This widget was not designed to deal with <code>colspan</code> or <code>rowspan</code> within the primary row, so it is best to avoid them.</p>
+							<span class="label warning">*WARNING*</span> This widget was not designed to deal with <code>colspan</code> or <code>rowspan</code> within the primary row, so it is best to avoid them.
 							</div>
 						</td>
 					</tr>
@@ -344,6 +369,52 @@
 		<tr><td>20</td><td>975</td><td>Aisha</td><td>Badertscher</td><td>CT</td><td>mi nec massa</td></tr>
 	</tbody>
 </table>
+
+<br>
+<hr id="lock-headers">
+<!--
+***********************************
+ TABLE 4 DEMO
+*********************************** -->
+<table id="table4" class="tablesorter-blue">
+	<caption>Sort tbodies and lock the header (primary) row</caption>
+	<thead>
+		<tr><th>Dealer</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th></tr>
+	</thead>
+  <tbody>
+    <tr class="main"><td> Dealer 48 </td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td></tr>
+    <tr><td>Site 3</td><td>77</td><td>84</td><td>197</td><td>33</td><td>136</td><td>166</td><td>158</td><td>58</td><td>170</td><td>154</td><td>92</td><td>25</td></tr>
+    <tr><td>Site 18</td><td>151</td><td>187</td><td>112</td><td>91</td><td>155</td><td>74</td><td>81</td><td>92</td><td>52</td><td>140</td><td>3</td><td>109</td></tr>
+    <tr><td>Site 25</td><td>177</td><td>24</td><td>125</td><td>168</td><td>116</td><td>122</td><td>123</td><td>141</td><td>13</td><td>10</td><td>41</td><td>66</td></tr>
+    <tr><td>Site 4</td><td>131</td><td>46</td><td>188</td><td>56</td><td>37</td><td>162</td><td>160</td><td>178</td><td>73</td><td>39</td><td>99</td><td>165</td></tr>
+    <tr><td>Site 20</td><td>87</td><td>20</td><td>65</td><td>61</td><td>87</td><td>139</td><td>17</td><td>159</td><td>75</td><td>108</td><td>119</td><td>171</td></tr>
+  </tbody>
+  <tbody>
+    <tr class="main"><td> Dealer 29 </td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td></tr>
+    <tr><td>Site 3</td><td>45</td><td>25</td><td>188</td><td>12</td><td>131</td><td>63</td><td>189</td><td>150</td><td>63</td><td>57</td><td>50</td><td>189</td></tr>
+    <tr><td>Site 18</td><td>122</td><td>6</td><td>121</td><td>169</td><td>90</td><td>131</td><td>65</td><td>74</td><td>188</td><td>78</td><td>180</td><td>82</td></tr>
+    <tr><td>Site 25</td><td>72</td><td>151</td><td>83</td><td>38</td><td>121</td><td>2</td><td>35</td><td>54</td><td>92</td><td>113</td><td>185</td><td>38</td></tr>
+    <tr><td>Site 4</td><td>79</td><td>62</td><td>53</td><td>173</td><td>18</td><td>1</td><td>93</td><td>9</td><td>58</td><td>48</td><td>57</td><td>129</td></tr>
+    <tr><td>Site 20</td><td>33</td><td>51</td><td>175</td><td>104</td><td>125</td><td>123</td><td>1</td><td>56</td><td>66</td><td>159</td><td>84</td><td>117</td></tr>
+  </tbody>
+  <tbody>
+    <tr class="main"><td> Dealer 62 </td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td></tr>
+    <tr><td>Site 3</td><td>85</td><td>56</td><td>168</td><td>78</td><td>115</td><td>104</td><td>8</td><td>151</td><td>144</td><td>20</td><td>105</td><td>60</td></tr>
+    <tr><td>Site 18</td><td>189</td><td>28</td><td>76</td><td>88</td><td>16</td><td>97</td><td>194</td><td>144</td><td>31</td><td>47</td><td>192</td><td>176</td></tr>
+    <tr><td>Site 25</td><td>156</td><td>145</td><td>132</td><td>81</td><td>193</td><td>130</td><td>102</td><td>9</td><td>196</td><td>48</td><td>99</td><td>37</td></tr>
+    <tr><td>Site 4</td><td>154</td><td>5</td><td>31</td><td>58</td><td>31</td><td>119</td><td>184</td><td>32</td><td>9</td><td>169</td><td>87</td><td>46</td></tr>
+    <tr><td>Site 20</td><td>13</td><td>19</td><td>41</td><td>82</td><td>174</td><td>48</td><td>177</td><td>157</td><td>19</td><td>134</td><td>85</td><td>176</td></tr>
+  </tbody>
+  <tbody>
+    <tr class="main"><td> Dealer 25 </td><td>Jan</td><td>Feb</td><td>Mar</td><td>Apr</td><td>May</td><td>Jun</td><td>Jul</td><td>Aug</td><td>Sep</td><td>Oct</td><td>Nov</td><td>Dec</td></tr>
+    <tr><td>Site 3</td><td>175</td><td>58</td><td>196</td><td>186</td><td>88</td><td>46</td><td>4</td><td>109</td><td>187</td><td>167</td><td>109</td><td>104</td></tr>
+    <tr><td>Site 18</td><td>109</td><td>2</td><td>53</td><td>170</td><td>163</td><td>116</td><td>36</td><td>125</td><td>43</td><td>57</td><td>179</td><td>194</td></tr>
+    <tr><td>Site 25</td><td>109</td><td>13</td><td>169</td><td>41</td><td>166</td><td>20</td><td>38</td><td>175</td><td>69</td><td>180</td><td>176</td><td>8</td></tr>
+    <tr><td>Site 4</td><td>129</td><td>28</td><td>137</td><td>61</td><td>38</td><td>70</td><td>156</td><td>200</td><td>141</td><td>178</td><td>76</td><td>70</td></tr>
+    <tr><td>Site 20</td><td>3</td><td>65</td><td>69</td><td>162</td><td>114</td><td>179</td><td>101</td><td>157</td><td>56</td><td>149</td><td>134</td><td>85</td></tr>
+  </tbody>
+</table>
+
 </div>
 
 	<h1>Page Header</h1>
