@@ -2282,7 +2282,9 @@
 		},
 
 		getColumnData : function( table, obj, indx, getCell, $headers ) {
-			if ( typeof obj === 'undefined' || obj === null ) { return; }
+			if ( typeof obj !== 'object' || obj === null ) {
+				return obj;
+			}
 			table = $( table )[ 0 ];
 			var $header, key,
 				c = table.config,
