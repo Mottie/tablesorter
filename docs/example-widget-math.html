@@ -380,11 +380,12 @@ math_complete : function($cell, wo, result, value, arry) {
 							</ul>
 							<h3>Note</h3>
 							<ul>
+								<li>The difference between using `#` and `0` in the mask, is that when a value of zero is passed to the function, the `#` mask will return an empty string whereas the `0` mask will return a zero.</li>
 								<li>When there's only one symbol is supplied, system will always treat the single symbol as Decimal. For instance, <code>$.tablesorter.formatMask( '#,###', 1234567.890)</code> will output <code>1234567,890</code>.</li>
 								<li>To force a single symbol as Separator, add a trailing dot to the end like this: <code>$.tablesorter.formatMask( '#,###.', 1234567.890)</code> which will then output <code>1,234,567</code>.</li>
 								<li><a href="http://www.integraxor.com/developer/codes/js-formatter/format-sample.htm">Original plugin demo</a></li>
 							</ul>
-							<span class="remark">&dagger;</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>) - now forked on <a href="https://github.com/Mottie/javascript-number-formatter">GitHub</a>.
+							<span class="remark">&dagger;</span> The number formatter code was copied from <a href="https://code.google.com/p/javascript-number-formatter/">javascript-number-formatter</a> (<a href="http://opensource.org/licenses/mit-license.php">MIT</a>) - now forked on <a href="https://github.com/Mottie/javascript-number-formatter">GitHub</a> (<a href="https://mottie.github.io/javascript-number-formatter/">updated demo</a>).
 							</div>
 						</td>
 					</tr>
