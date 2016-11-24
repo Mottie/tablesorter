@@ -1068,6 +1068,7 @@
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
+				.add( $( 'thead ' + c.namespace + '_extra_headers' ) )
 				.removeClass( css.join( ' ' ) )
 				.addClass( none )
 				.attr( 'aria-sort', 'none' )
