@@ -322,7 +322,8 @@
 				<li><a href="example-option-sortreset-sortrestart.html">Using sortReset &amp; sortRestart options</a> (<a href="#sortreset"><code>sortReset</code></a> &amp; <a href="#sortrestart"><code>sortRestart</code></a>).</li>
 				<li><a href="example-method-sortreset.html">Resetting the entire table sort</a> (<a href="#sortreset-method"><code>sortReset</code></a> method; v2.4.7).</li>
 				<li><a href="example-options-headers-locked.html">Lock sort order</a>.</li>
-				<li><a href="example-options-headers.html">Disable sort</a> (<span class="version updated">v2.18.1</span>).</li>
+				<li><a href="example-options-headers.html">Disable sort for a column</a> (<span class="version updated">v2.18.1</span>).</li>
+				<li><a href="example-widget-column-selector.html">Disable sort for an entire row</a> (<a href="#cssignorerow"><code>cssIgnoreRow</code></a> class; v2.18.4).</li>
 			</ul>
 		</li>
 		<li>Modify a sort:
@@ -853,7 +854,7 @@
 				<td>Class name to add to a table header row if you want all cells within this row to be ignored (<span class="version">v2.18.4</span>).
 					<div class="collapsible">
 						<br>
-						Header rows with this class name will not be added into the <a href="#variable-headers"><code>table.config.$headers</code></a> variable.<br>
+						Header rows with this class name will not be added into the <a href="#variable-headers"><code>table.config.$headers</code></a> variable. Meaning, any cells in the row will have sorting disabled, and any form element interaction within these cells will also be ignored by tablesorter.<br>
 						<br>
 						This class name should be added to header rows that contain custom HTML, like for the pager controls, custom filter row or table toolbar.
 					</div>

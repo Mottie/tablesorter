@@ -710,7 +710,7 @@ $.tablesorter.columnSelector.refreshColumns( config, optionName, optionState );<
 
 &lt;table class=&quot;tablesorter custom-popup&quot;&gt;
 	&lt;thead&gt;
-		&lt;tr&gt;
+		&lt;tr class="tablesorter-ignoreRow"&gt; &lt;!-- Ignore all cell content; disable sorting & form interaction  --&gt;
 			&lt;th data-priority=&quot;critical&quot;&gt;Name&lt;/th&gt;
 			&lt;!-- Remove column from selection popup by including --&gt;
 			&lt;!-- data-priority=&quot;Anything other than 1-6&quot; OR data-column-selector=&quot;disable&quot; OR  class=&quot;columnSelector-disable&quot; --&gt;
