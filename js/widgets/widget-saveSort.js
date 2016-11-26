@@ -46,7 +46,7 @@
 					if (c.debug) {
 						console.log('saveSort: Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
-					$table.bind('saveSortReset', function(event) {
+					$table.on('saveSortReset', function(event) {
 						event.stopPropagation();
 						ts.storage( table, 'tablesorter-savesort', '' );
 					});

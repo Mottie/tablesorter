@@ -99,7 +99,7 @@
 							'unselectable' : 'on'
 						})
 						.data( 'header', $header )
-						.bind( 'selectstart', false );
+						.on( 'selectstart', false );
 				}
 			}
 			ts.resizable.bindings( c, wo );
@@ -191,17 +191,17 @@
 			if ( toggle ) {
 				$( 'body' )
 					.attr( 'unselectable', 'on' )
-					.bind( 'selectstart' + namespace, false );
+					.on( 'selectstart' + namespace, false );
 			} else {
 				$( 'body' )
 					.removeAttr( 'unselectable' )
-					.unbind( 'selectstart' + namespace );
+					.off( 'selectstart' + namespace );
 			}
 		},
 
 		bindings : function( c, wo ) {
 			var namespace = c.namespace + 'tsresize';
-			wo.$resizable_container.children().bind( 'mousedown', function( event ) {
+			wo.$resizable_container.children().on( 'mousedown', function( event ) {
 				// save header cell and mouse position
 				var column,
 					vars = wo.resizable_vars,
@@ -227,7 +227,7 @@
 			});
 
 			$( document )
-				.bind( 'mousemove' + namespace, function( event ) {
+				.on( 'mousemove' + namespace, function( event ) {
 					var vars = wo.resizable_vars;
 					// ignore mousemove if no mousedown
 					if ( !vars.disabled || vars.mouseXPosition === 0 || !vars.$target ) { return; }
@@ -240,7 +240,7 @@
 						ts.resizable.mouseMove( c, wo, event );
 					}
 				})
-				.bind( 'mouseup' + namespace, function() {
+				.on( 'mouseup' + namespace, function() {
 					if (!wo.resizable_vars.disabled) { return; }
 					ts.resizable.toggleTextSelection( c, wo, false );
 					ts.resizable.stopResize( c, wo );
@@ -248,18 +248,18 @@
 				});
 
 			// resizeEnd event triggered by scroller widget
-			$( window ).bind( 'resize' + namespace + ' resizeEnd' + namespace, function() {
+			$( window ).on( 'resize' + namespace + ' resizeEnd' + namespace, function() {
 				ts.resizable.setHandlePosition( c, wo );
 			});
 
 			// right click to reset columns to default widths
 			c.$table
-				.bind( 'columnUpdate' + namespace + ' pagerComplete' + namespace, function() {
+				.on( 'columnUpdate' + namespace + ' pagerComplete' + namespace, function() {
 					ts.resizable.setHandlePosition( c, wo );
 				})
 				.find( 'thead:first' )
 				.add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
-				.bind( 'contextmenu' + namespace, function() {
+				.on( 'contextmenu' + namespace, function() {
 					// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
 					var allowClick = wo.resizable_vars.storedSizes.length === 0;
 					ts.resizableReset( c.table );
@@ -347,12 +347,12 @@
 				c.$table.add( $( c.namespace + '_extra_table' ) )
 					.removeClass('hasResizable')
 					.children( 'thead' )
-					.unbind( 'contextmenu' + namespace );
+					.off( 'contextmenu' + namespace );
 
 				wo.$resizable_container.remove();
 				ts.resizable.toggleTextSelection( c, wo, false );
 				ts.resizableReset( table, refreshing );
-				$( document ).unbind( 'mousemove' + namespace + ' mouseup' + namespace );
+				$( document ).off( 'mousemove' + namespace + ' mouseup' + namespace );
 			}
 		}
 	});

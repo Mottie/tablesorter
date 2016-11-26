@@ -319,8 +319,8 @@
 			// show processesing icon
 			if ( c.showProcessing ) {
 				$table
-				.unbind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace )
-				.bind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace, function( e ) {
+				.off( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace )
+				.on( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace, function( e ) {
 					clearTimeout( c.timerProcessing );
 					ts.isProcessing( table );
 					if ( e.type === 'sortBegin' ) {
@@ -353,40 +353,40 @@
 					.join( namespace + ' ' );
 			// apply easy methods that trigger bound events
 			$table
-			.unbind( events.replace( ts.regex.spaces, ' ' ) )
-			.bind( 'sortReset' + namespace, function( e, callback ) {
+			.off( events.replace( ts.regex.spaces, ' ' ) )
+			.on( 'sortReset' + namespace, function( e, callback ) {
 				e.stopPropagation();
 				// using this.config to ensure functions are getting a non-cached version of the config
 				ts.sortReset( this.config, callback );
 			})
-			.bind( 'updateAll' + namespace, function( e, resort, callback ) {
+			.on( 'updateAll' + namespace, function( e, resort, callback ) {
 				e.stopPropagation();
 				ts.updateAll( this.config, resort, callback );
 			})
-			.bind( 'update' + namespace + ' updateRows' + namespace, function( e, resort, callback ) {
+			.on( 'update' + namespace + ' updateRows' + namespace, function( e, resort, callback ) {
 				e.stopPropagation();
 				ts.update( this.config, resort, callback );
 			})
-			.bind( 'updateHeaders' + namespace, function( e, callback ) {
+			.on( 'updateHeaders' + namespace, function( e, callback ) {
 				e.stopPropagation();
 				ts.updateHeaders( this.config, callback );
 			})
-			.bind( 'updateCell' + namespace, function( e, cell, resort, callback ) {
+			.on( 'updateCell' + namespace, function( e, cell, resort, callback ) {
 				e.stopPropagation();
 				ts.updateCell( this.config, cell, resort, callback );
 			})
-			.bind( 'addRows' + namespace, function( e, $row, resort, callback ) {
+			.on( 'addRows' + namespace, function( e, $row, resort, callback ) {
 				e.stopPropagation();
 				ts.addRows( this.config, $row, resort, callback );
 			})
-			.bind( 'updateComplete' + namespace, function() {
+			.on( 'updateComplete' + namespace, function() {
 				this.isUpdating = false;
 			})
-			.bind( 'sorton' + namespace, function( e, list, callback, init ) {
+			.on( 'sorton' + namespace, function( e, list, callback, init ) {
 				e.stopPropagation();
 				ts.sortOn( this.config, list, callback, init );
 			})
-			.bind( 'appendCache' + namespace, function( e, callback, init ) {
+			.on( 'appendCache' + namespace, function( e, callback, init ) {
 				e.stopPropagation();
 				ts.appendCache( this.config, init );
 				if ( $.isFunction( callback ) ) {
@@ -394,32 +394,32 @@
 				}
 			})
 			// $tbodies variable is used by the tbody sorting widget
-			.bind( 'updateCache' + namespace, function( e, callback, $tbodies ) {
+			.on( 'updateCache' + namespace, function( e, callback, $tbodies ) {
 				e.stopPropagation();
 				ts.updateCache( this.config, callback, $tbodies );
 			})
-			.bind( 'applyWidgetId' + namespace, function( e, id ) {
+			.on( 'applyWidgetId' + namespace, function( e, id ) {
 				e.stopPropagation();
 				ts.applyWidgetId( this, id );
 			})
-			.bind( 'applyWidgets' + namespace, function( e, init ) {
+			.on( 'applyWidgets' + namespace, function( e, init ) {
 				e.stopPropagation();
 				// apply widgets
 				ts.applyWidget( this, init );
 			})
-			.bind( 'refreshWidgets' + namespace, function( e, all, dontapply ) {
+			.on( 'refreshWidgets' + namespace, function( e, all, dontapply ) {
 				e.stopPropagation();
 				ts.refreshWidgets( this, all, dontapply );
 			})
-			.bind( 'removeWidget' + namespace, function( e, name, refreshing ) {
+			.on( 'removeWidget' + namespace, function( e, name, refreshing ) {
 				e.stopPropagation();
 				ts.removeWidget( this, name, refreshing );
 			})
-			.bind( 'destroy' + namespace, function( e, removeClasses, callback ) {
+			.on( 'destroy' + namespace, function( e, removeClasses, callback ) {
 				e.stopPropagation();
 				ts.destroy( this, removeClasses, callback );
 			})
-			.bind( 'resetToLoadState' + namespace, function( e ) {
+			.on( 'resetToLoadState' + namespace, function( e ) {
 				e.stopPropagation();
 				// remove all widgets
 				ts.removeWidget( this, true, false );
@@ -454,8 +454,8 @@
 			// http://stackoverflow.com/questions/5312849/jquery-find-self;
 			.find( c.selectorSort )
 			.add( $headers.filter( c.selectorSort ) )
-			.unbind( tmp )
-			.bind( tmp, function( e, external ) {
+			.off( tmp )
+			.on( tmp, function( e, external ) {
 				var $cell, cell, temp,
 					$target = $( e.target ),
 					// wrap event type in spaces, so the match doesn't trigger on inner words
@@ -510,7 +510,7 @@
 				// cancel selection
 				$headers
 					.attr( 'unselectable', 'on' )
-					.bind( 'selectstart', false )
+					.on( 'selectstart', false )
 					.css({
 						'user-select' : 'none',
 						'MozUserSelect' : 'none' // not needed for jQuery 1.8+
@@ -2432,7 +2432,7 @@
 			}
 			// remove widget added rows, just in case
 			$h.find( 'tr' ).not( $r ).remove();
-			// disable tablesorter - not using .unbind( namespace ) because namespacing was
+			// disable tablesorter - not using .off( namespace ) because namespacing was
 			// added in jQuery v1.4.3 - see http://api.jquery.com/event.namespace/
 			events = 'sortReset update updateRows updateAll updateHeaders updateCell addRows updateComplete sorton ' +
 				'appendCache updateCache applyWidgetId applyWidgets refreshWidgets removeWidget destroy mouseup mouseleave ' +
@@ -2440,7 +2440,7 @@
 				.join( c.namespace + ' ' );
 			$t
 				.removeData( 'tablesorter' )
-				.unbind( events.replace( ts.regex.spaces, ' ' ) );
+				.off( events.replace( ts.regex.spaces, ' ' ) );
 			c.$headers
 				.add( $f )
 				.removeClass( [ ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone ].join( ' ' ) )
@@ -2449,7 +2449,7 @@
 				.attr( 'aria-disabled', 'true' );
 			$r
 				.find( c.selectorSort )
-				.unbind( ( 'mousedown mouseup keypress '.split( ' ' ).join( c.namespace + ' ' ) ).replace( ts.regex.spaces, ' ' ) );
+				.off( ( 'mousedown mouseup keypress '.split( ' ' ).join( c.namespace + ' ' ) ).replace( ts.regex.spaces, ' ' ) );
 			ts.restoreHeaders( table );
 			$t.toggleClass( ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false );
 			// clear flag in case the plugin is initialized again
