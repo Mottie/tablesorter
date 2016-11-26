@@ -196,6 +196,13 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.28.0</span>
+				<ul>
+					<li>Fix documentation and processing of <code>math_prefix</code> and <code>math_suffix</code> options. See <a href="https://github.com/Mottie/tablesorter/issues/1305">issue #1305</a>.</li>
+					<li>Remove <code>math_prefix</code> content prior to parsing table cell values.</li>
+					<li>Added "Methods" section & more mask examples.</li>
+				</ul>
+			</li>
 			<li>In <span class="version">v2.27.0</span>
 				<ul>
 					<li>Added check for <code>data-math-target</code> attribute which allows you to target an element inside the table cell. See the <a href="#attribute_settings">Attribute Settings</a> &gt; <strong>Targeting cell content</strong> section below.</li>
@@ -217,19 +224,19 @@
 					</li>
 				</ul>
 			</li>
-			<li>In <span class="version">v2.24.6</span>, added <code>math_rowFilter</code> option.</li>
-			<li>In <span class="version">v2.24.0</span>
-				<ul>
-					<li>Added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
-					<li>Added <code>math_none</code> option which allows customizing the text added to a cell when there are no matching math elements (.</li>
-				</ul>
-			</li>
 		</ul>
 
 		<div class="accordion start-closed">
 			<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 			<div>
 				<ul>
+					<li>In <span class="version">v2.24.6</span>, added <code>math_rowFilter</code> option.</li>
+					<li>In <span class="version">v2.24.0</span>
+						<ul>
+							<li>Added "below" type of data-gathering (see <a href="#attribute_settings">Attribute Settings</a> below for more info). See <a href="https://github.com/Mottie/tablesorter/pull/1027">pull #873</a>; thanks to <a href="https://github.com/LvLynx">LvLynx</a>!.</li>
+							<li>Added <code>math_none</code> option which allows customizing the text added to a cell when there are no matching math elements (.</li>
+						</ul>
+					</li>
 					<li>In <span class="version updated">v2.22.0</span>,
 						<ul>
 							<li>Fixed an issue with a sum column encountering a cell without a defined "data-math" attribute returning an empty string instead of zero. See <a href="https://github.com/Mottie/tablesorter/issues/873">issue #873</a>.</li>
@@ -249,6 +256,7 @@
 							<li>Added "Mask Examples" section with examples, and how to use the <code>$.tablesorter.formatMask</code> function.</li>
 						</ul>
 					</li>
+					<li>Added math widget in v2.16.0-beta</li>
 				</ul>
 			</div>
 		</div>
@@ -306,7 +314,7 @@
 								<p>By default, recalculations are performed after:</p>
 									<ul>
 										<li>Tablesorter initialization.</li>
-										<li>After any triggered "update" which may change a cell value. A listener is bound to the <a href="index.html#updatecomplete">updateComplete</a> event.</li>
+										<li>After any call to a tablesorter method which updates the internal cache (e.g. "update", "updateCell", etc). The math widget listens for the <a href="index.html#updatecomplete">updateComplete</a> event, which occurs after the internal cache has completed updating, before recalculating values.</li>
 										<li>After a "filterReset".</li>
 										<li>And after a "filterEnd" event, <em>or</em> a "pagerComplete" event (if the pager is being used), but not both!</li>
 									</ul>
@@ -352,7 +360,7 @@ math_complete : function($cell, wo, result, value, arry) {
 						<td>
 							Set this option with an output formatting mask to use <span class="xsmall results">&dagger;</span>
 							<div class="collapsible">
-							<p>As of <span class="version">v2.16.2</span>, you can set a mask for each math cell by adding a <code>data-math-mask</code> data-attribute (the <code>math</code> part of the data-attribute is obtained from the <code>math_data</code> setting).</p>
+							<p>As of <span class="version">v2.16.2</span>, you can set a mask for each math cell by adding a <code>data-math-mask</code> data-attribute (the <code>math</code> part of the data-attribute is named from the <code>math_data</code> setting).</p>
 							<pre class="prettyprint lang-html">&lt;th data-math=&quot;all-sum&quot; data-math-mask=&quot;##0.00&quot;&gt;all-sum&lt;/th&gt;</pre>
 							<hr>
 							<h3>Javascript-number-formatter details</h3>
@@ -380,7 +388,7 @@ math_complete : function($cell, wo, result, value, arry) {
 							</ul>
 							<h3>Note</h3>
 							<ul>
-								<li>The difference between using `#` and `0` in the mask, is that when a value of zero is passed to the function, the `#` mask will return an empty string whereas the `0` mask will return a zero.</li>
+								<li>The difference between using <code>#</code> and <code>0</code> in the mask, is that when a value of zero is passed to the function, the <code>#</code> mask will return an empty string whereas the <code>0</code> mask will return a zero.</li>
 								<li>When there's only one symbol is supplied, system will always treat the single symbol as Decimal. For instance, <code>$.tablesorter.formatMask( '#,###', 1234567.890)</code> will output <code>1234567,890</code>.</li>
 								<li>To force a single symbol as Separator, add a trailing dot to the end like this: <code>$.tablesorter.formatMask( '#,###.', 1234567.890)</code> which will then output <code>1,234,567</code>.</li>
 								<li><a href="http://www.integraxor.com/developer/codes/js-formatter/format-sample.htm">Original plugin demo</a></li>
@@ -530,6 +538,23 @@ math_rowFilter : ':visible:not(.filtered)'</pre>
 			</table>
 		</div>
 
+		<h3><a href="#">Methods</a></h3>
+		<div>
+			<h3>Recalculate</h3>
+			<blockquote>
+				Recalculate the values of all math cells within the table using the following method:
+				<pre class="prettyprint lang-js">$('table').trigger('recalculate');</pre>
+				<p>The triggered <code>'recalculate'</code> method can be renamed by modifying the <a class="intlink" href="#math_event"><code>math_event</code> option.</a></p>
+				This method is automatically called:
+					<ul>
+						<li>Tablesorter initialization.</li>
+						<li>After any call to a tablesorter method which updates the internal cache (e.g. "update", "updateCell", etc). The math widget listens for the <a href="index.html#updatecomplete">updateComplete</a> event, which occurs after the internal cache has completed updating, before recalculating values.</li>
+						<li>After a "filterReset".</li>
+						<li>And after a "filterEnd" event, <em>or</em> a "pagerComplete" event (if the pager is being used), but not both!</li>
+					</ul>
+			</blockquote>
+		</div>
+
 		<h3><a href="#">Attribute Settings</a></h3>
 		<div>
 			The math widget data-attibute setting requires two parts: type &amp; formula
@@ -623,6 +648,14 @@ $.tablesorter.formatMask('$#,##0.00 USD', 12345.678, 'prefix ', ' suffix');
 					</ul>
 				</li>
 			</ul>
+
+			<p>
+				<span class="label label-info">Note</span> The difference between using <code>#</code> and <code>0</code> in the mask, is that when a value of zero is passed to the function, the <code>#</code> mask will return an empty string whereas the <code>0</code> mask will return a zero.
+				<pre class="prettyprint lang-js">$.tablesorter.formatMask('$#,##0.00 USD', 0); // result: "$0.00 USD"
+$.tablesorter.formatMask('$#,###.00 USD', 0); // result: "$.00 USD"
+$.tablesorter.formatMask('$#,###.#0 USD', 0); // result: "$.00 USD"
+$.tablesorter.formatMask('$#,###.## USD', 0); // result: "$ USD"</pre>
+			</p>
 
 			<h4>Experiment with the mask:</h4>
 			<textarea class="source">$#,##0.00 USD
