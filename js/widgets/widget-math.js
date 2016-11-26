@@ -29,7 +29,15 @@
 			.split(' ').join('.tsmath '),
 
 		processText : function( c, $cell ) {
-			var txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) );
+			var tmp,
+				txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) ),
+				prefix = c.widgetOptions.math_prefix;
+			if ( /</.test( prefix ) ) {
+				// prefix contains HTML; remove it & any text before using formatFloat
+				tmp = $( '<div>' + prefix + '</div>' ).text()
+					.replace(/\{content\}/g, '').trim();
+				txt = txt.replace( tmp, '' );
+			}
 			txt = ts.formatFloat( txt.replace( /[^\w,. \-()]/g, '' ), c.table ) || 0;
 			// isNaN('') => false
 			return isNaN( txt ) ? 0 : txt;
