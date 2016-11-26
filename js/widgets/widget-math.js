@@ -352,7 +352,7 @@
 				prev = $cell.html(),
 				mask = $cell.attr( 'data-' + wo.math_data + '-mask' ) || wo.math_mask,
 				target = $cell.attr( 'data-' + wo.math_data + '-target' ) || '',
-				result = ts.formatMask( mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
+				result = ts.formatMask( mask, value, wo.math_prefix, wo.math_suffix );
 			if (target) {
 				$el = $cell.find(target);
 				if ($el.length) {
@@ -403,8 +403,7 @@
 			start = mask.search( /[0-9\-\+#]/ ),
 			tmp = start > 0 ? mask.substring( 0, start ) : '',
 			prefix = tmp;
-
-		if ( start > 0 && tmpPrefix ) {
+		if ( tmpPrefix ) {
 			if ( /\{content\}/.test( tmpPrefix || '' ) ) {
 				prefix = ( tmpPrefix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {
@@ -418,7 +417,7 @@
 		index += ( mask.substring( index, index + 1 ) === '.' ) ? 1 : 0;
 		tmp = end > 0 ? mask.substring( index, len ) : '';
 		suffix = tmp;
-		if ( tmp !== '' && tmpSuffix ) {
+		if ( tmpSuffix ) {
 			if ( /\{content\}/.test( tmpSuffix || '' ) ) {
 				suffix = ( tmpSuffix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {
