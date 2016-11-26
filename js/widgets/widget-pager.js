@@ -404,11 +404,11 @@
 				p.$container
 					.find( s.first + ',' + s.prev )
 					.toggleClass( wo.pager_css.disabled, first )
-					.attr( 'aria-disabled', first );
+					.prop( 'aria-disabled', first );
 				p.$container
 					.find( s.next + ',' + s.last )
 					.toggleClass( wo.pager_css.disabled, last )
-					.attr( 'aria-disabled', last );
+					.prop( 'aria-disabled', last );
 			}
 		},
 
@@ -451,7 +451,7 @@
 				.add( p.$goto )
 				.removeClass( wo.pager_css.disabled )
 				.removeAttr( 'disabled' )
-				.attr( 'aria-disabled', 'false' );
+				.prop( 'aria-disabled', 'false' );
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for 'pageSize' method
 			c.totalRows = p.totalRows;
 			tsp.parsePageNumber( c, p );
@@ -1012,7 +1012,7 @@
 			len = $controls.length;
 			for ( index = 0; index < len; index++ ) {
 				$controls.eq( index )
-					.attr( 'aria-disabled', 'true' )
+					.prop( 'aria-disabled', 'true' )
 					.addClass( wo.pager_css.disabled )[ 0 ].disabled = true;
 			}
 		},

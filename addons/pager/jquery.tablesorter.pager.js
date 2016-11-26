@@ -128,16 +128,25 @@
 
 			// hide arrows at extremes
 			pagerArrows = function( table, p, disable ) {
-				var a = 'addClass',
-				r = 'removeClass',
-				d = p.cssDisabled,
-				dis = !!disable,
-				first = ( dis || p.page === 0 ),
-				tp = getTotalPages( table, p ),
-				last = ( dis || (p.page === tp - 1) || tp === 0 );
+				var tmp,
+					a = 'addClass',
+					r = 'removeClass',
+					d = p.cssDisabled,
+					dis = !!disable,
+					first = ( dis || p.page === 0 ),
+					tp = getTotalPages( table, p ),
+					last = ( dis || (p.page === tp - 1) || tp === 0 );
 				if ( p.updateArrows ) {
-					p.$container.find(p.cssFirst + ',' + p.cssPrev)[ first ? a : r ](d).attr('aria-disabled', first);
-					p.$container.find(p.cssNext + ',' + p.cssLast)[ last ? a : r ](d).attr('aria-disabled', last);
+					tmp = p.$container.find(p.cssFirst + ',' + p.cssPrev);
+					tmp[ first ? a : r ](d); // toggle disabled class
+					tmp.each(function(){
+						this.ariaDisabled = first;
+					});
+					tmp = p.$container.find(p.cssNext + ',' + p.cssLast)
+					tmp[ last ? a : r ](d)
+					tmp.each(function(){
+						this.ariaDisabled = last;
+					});
 				}
 			},
 
@@ -689,9 +698,8 @@
 				.add( p.$container.find( '.ts-startRow, .ts-page' ) );
 				len = $controls.length;
 				for ( index = 0; index < len; index++ ) {
-					$controls.eq( index )
-					.attr( 'aria-disabled', 'true' )
-					.addClass( p.cssDisabled )[0].disabled = true;
+					$controls.eq( index ).addClass( p.cssDisabled )[0].disabled = true;
+					$controls[ index ].ariaDisabled = true;
 				}
 			},
 
@@ -876,7 +884,9 @@
 				p.$size.add(p.$goto).add(p.$container.find('.ts-startRow, .ts-page'))
 				.removeClass(p.cssDisabled)
 				.removeAttr('disabled')
-				.attr('aria-disabled', 'false');
+				.each(function(){
+					this.ariaDisabled = false;
+				});
 				p.isDisabled = false;
 				p.page = $.data(table, 'pagerLastPage') || p.page || 0;
 				size = p.$size.find('option[selected]').val();
