@@ -79,6 +79,9 @@
 		}
 	};
 
+	// add data to defaults for validator; value must be falsy!
+	ts.defaults.data = '';
+
 	bt.defaults = {
 		// *** build widget core ***
 		build_type       : '',   // array, csv, object, json, html

@@ -110,6 +110,10 @@
 		type : 'text'
 	});
 
+	// update defaults for validator; values must be falsy
+	ts.defaults.checkboxClass = '';
+	ts.defaults.checkboxVisible = '';
+
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
 	// you can change it to use delegate (v1.4.3+) or live (v1.3+) as desired

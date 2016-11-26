@@ -13,6 +13,9 @@
 	ts = $.tablesorter,
 	now = new Date().getFullYear();
 
+	// add dateRange to defaults for validator; value must be falsy
+	ts.defaults.dataRange = '';
+
 	if ( !ts.dates ) { ts.dates = {}; }
 	ts.dates.regxxxxyy = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/;
 	ts.dates.regyyxxxx = /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/;

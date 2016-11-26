@@ -116,7 +116,11 @@
 			headerList: [],
 			empties: {},
 			strings: {},
-			parsers: []
+			parsers: [],
+
+			// *** parser options for validator; values must be falsy!
+			globalize: 0,
+			imgAttr: 0
 
 			// removed: widgetZebra: { css: ['even', 'odd'] }
 
@@ -290,6 +294,7 @@
 			ts.setupParsers( c );
 			// start total row count at zero
 			c.totalRows = 0;
+			ts.validateOptions( c );
 			// build the cache for the tbody cells
 			// delayInit will delay building the cache until the user starts a sort
 			if ( !c.delayInit ) { ts.buildCache( c ); }
@@ -1911,6 +1916,8 @@
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
 						c.widgetOptions = $.extend( true, {}, widget.options, c.widgetOptions );
+						// add widgetOptions to defaults for option validator
+						$.extend( true, ts.defaults.widgetOptions, widget.options );
 					}
 				}
 			}
@@ -2394,6 +2401,34 @@
 				}
 			}
 			return str;
+		},
+
+		validateOptions : function( c ) {
+			var setting, setting2, typ, timer,
+				// ignore options containing an array
+				ignore = 'sortForce sortList sortAppend widgets'.split( ' ' ),
+				orig = c.originalSettings;
+			if ( orig ) {
+				if ( c.debug ) {
+					timer = new Date();
+				}
+				for ( setting in orig ) {
+					typ = typeof ts.defaults[setting];
+					if ( typ === 'undefined' ) {
+						console.warn( 'Tablesorter Warning! "table.config.' + setting + '" option not recognized' );
+					} else if ( typ === 'object' ) {
+						for ( setting2 in orig[setting] ) {
+							typ = typeof ts.defaults[setting][setting2];
+							if ( $.inArray( setting, ignore ) < 0 && typ === 'undefined' ) {
+								console.warn( 'Tablesorter Warning! "table.config.' + setting + '.' + setting2 + '" option not recognized' );
+							}
+						}
+					}
+				}
+				if ( c.debug ) {
+					console.log( 'validate options time:' + ts.benchmark( timer ) );
+				}
+			}
 		},
 
 		// restore headers
