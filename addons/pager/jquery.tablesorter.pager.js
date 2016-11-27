@@ -858,6 +858,12 @@
 				updatePageDisplay(table, p);
 			},
 
+			resetState = function(table, p) {
+				var c = table.config;
+				c.pager = $.extend( true, {}, $.tablesorterPager.defaults, p.settings );
+				init(table, p.settings);
+			},
+
 			destroyPager = function(table, p) {
 				var c = table.config,
 				namespace = c.namespace + 'pager',
@@ -914,6 +920,210 @@
 						console.log('Pager: Enabled');
 					}
 				}
+			},
+
+			init = function(table, settings) {
+				var t, ctrls, fxn, size,
+				c = table.config,
+				wo = c.widgetOptions,
+				p = c.pager = $.extend( true, {}, $.tablesorterPager.defaults, settings ),
+				$t = c.$table,
+				namespace = c.namespace + 'pager',
+				// added in case the pager is reinitialized after being destroyed.
+				pager = p.$container = $(p.container).addClass('tablesorter-pager').show();
+				// save a copy of the original settings
+				p.settings = $.extend( true, {}, $.tablesorterPager.defaults, settings );
+				if (c.debug) {
+					console.log('Pager: Initializing');
+				}
+				p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
+				c.appender = $this.appender;
+				p.initializing = true;
+				if (p.savePages && ts.storage) {
+					t = ts.storage(table, p.storageKey) || {}; // fixes #387
+					p.page = isNaN(t.page) ? p.page : t.page;
+					p.size = t.size === 'all' ? t.size : ( isNaN( t.size ) ? p.size : t.size ) || p.setSize || 10;
+					$.data(table, 'pagerLastSize', p.size);
+					pager.find(p.cssPageSize).val(p.size);
+				}
+				// skipped rows
+				p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
+				p.regexFiltered = new RegExp(wo.filter_filteredRow || 'filtered');
+
+				$t
+				// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
+				.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
+				.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
+					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
+					// don't change page if filters are the same (pager updating, etc)
+					if (e.type === 'filterStart' && p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
+						p.page = p.pageReset; // fixes #456 & #565
+					}
+				})
+				// update pager after filter widget completes
+				.bind('filterEnd sortEnd '.split(' ').join(namespace + ' '), function() {
+					p.currentFilters = c.$table.data('lastSearch');
+					if (p.initialized || p.initializing) {
+						if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
+							// make sure we have a copy of all table rows once the cache has been built
+							updateCache(table);
+						}
+						updatePageDisplay(table, p, false);
+						moveToPage(table, p, false);
+						ts.applyWidget( table );
+					}
+				})
+				.bind('disablePager' + namespace, function(e){
+					e.stopPropagation();
+					showAllRows(table, p);
+				})
+				.bind('enablePager' + namespace, function(e){
+					e.stopPropagation();
+					enablePager(table, p, true);
+				})
+				.bind('destroyPager' + namespace, function(e){
+					e.stopPropagation();
+					destroyPager(table, p);
+				})
+				.bind('resetToLoadState' + namespace, function(e){
+					e.stopPropagation();
+					resetState(table, p);
+				})
+				.bind('updateComplete' + namespace, function(e, table, triggered){
+					e.stopPropagation();
+					// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
+					// don't recalculate total rows/pages if using ajax
+					if ( !table || triggered || p.ajax ) { return; }
+					var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
+					p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
+					p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
+					if ($rows.length && c.rowsCopy && c.rowsCopy.length === 0) {
+						// make a copy of all table rows once the cache has been built
+						updateCache(table);
+					}
+					if ( p.page >= p.totalPages ) {
+						moveToLastPage(table, p);
+					}
+					hideRows(table, p);
+					changeHeight(table, p);
+					updatePageDisplay(table, p, true);
+				})
+				.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
+					e.stopPropagation();
+					setPageSize(table, parsePageSize( p, size, 'get' ), p);
+					hideRows(table, p);
+					updatePageDisplay(table, p, false);
+				})
+				.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
+					e.stopPropagation();
+					// force pager refresh
+					if (e.type === 'pagerUpdate') {
+						num = typeof num === 'undefined' ? p.page + 1 : num;
+						p.last.page = true;
+					}
+					p.page = (parseInt(num, 10) || 1) - 1;
+					moveToPage(table, p, true);
+					updatePageDisplay(table, p, false);
+				})
+				.bind('pageAndSize' + namespace, function(e, page, size){
+					e.stopPropagation();
+					p.page = (parseInt(page, 10) || 1) - 1;
+					setPageSize(table, parsePageSize( p, size, 'get' ), p);
+					moveToPage(table, p, true);
+					hideRows(table, p);
+					updatePageDisplay(table, p, false);
+				});
+
+				// clicked controls
+				ctrls = [ p.cssFirst, p.cssPrev, p.cssNext, p.cssLast ];
+				fxn = [ moveToFirstPage, moveToPrevPage, moveToNextPage, moveToLastPage ];
+				if (c.debug && !pager.length) {
+					console.warn('Pager: >> Container not found');
+				}
+				pager.find(ctrls.join(','))
+				.attr('tabindex', 0)
+				.unbind('click' + namespace)
+				.bind('click' + namespace, function(e){
+					e.stopPropagation();
+					var i, $t = $(this), l = ctrls.length;
+					if ( !$t.hasClass(p.cssDisabled) ) {
+						for (i = 0; i < l; i++) {
+							if ($t.is(ctrls[i])) {
+								fxn[i](table, p);
+								break;
+							}
+						}
+					}
+				});
+
+				// goto selector
+				p.$goto = pager.find(p.cssGoto);
+				if ( p.$goto.length ) {
+					p.$goto
+					.unbind('change' + namespace)
+					.bind('change' + namespace, function(){
+						p.page = $(this).val() - 1;
+						moveToPage(table, p, true);
+						updatePageDisplay(table, p, false);
+					});
+				} else if (c.debug) {
+					console.warn('Pager: >> Goto selector not found');
+				}
+				// page size selector
+				p.$size = pager.find(p.cssPageSize);
+				if ( p.$size.length ) {
+					// setting an option as selected appears to cause issues with initial page size
+					p.$size.find('option').removeAttr('selected');
+					p.$size.unbind('change' + namespace).bind('change' + namespace, function() {
+						if ( !$(this).hasClass(p.cssDisabled) ) {
+							var size = $(this).val();
+							p.$size.val( size ); // in case there are more than one pagers
+							setPageSize(table, size, p);
+							changeHeight(table, p);
+						}
+						return false;
+					});
+				} else if (c.debug) {
+					console.warn('Pager: >> Size selector not found');
+				}
+
+				// clear initialized flag
+				p.initialized = false;
+				// before initialization event
+				$t.triggerHandler('pagerBeforeInitialized', p);
+
+				enablePager(table, p, false);
+				if ( typeof p.ajaxUrl === 'string' ) {
+					// ajax pager; interact with database
+					p.ajax = true;
+					// When filtering with ajax, allow only custom filtering function, disable default
+					// filtering since it will be done server side.
+					c.widgetOptions.filter_serversideFiltering = true;
+					c.serverSideSorting = true;
+					moveToPage(table, p);
+				} else {
+					p.ajax = false;
+					// Regular pager; all rows stored in memory
+					ts.appendCache( c, true ); // true = don't apply widgets
+					hideRowsSetup(table, p);
+				}
+
+				// pager initialized
+				if (!p.ajax && !p.initialized) {
+					p.initializing = false;
+					p.initialized = true;
+					moveToPage(table, p);
+					if (c.debug) {
+						console.log('Pager: Triggering pagerInitialized');
+					}
+					c.$table.triggerHandler( 'pagerInitialized', p );
+					if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
+						updatePageDisplay(table, p, false);
+					}
+				}
+
+				// make the hasWidget function think that the pager widget is being used
+				c.widgetInit.pager = true;
 			};
 
 			$this.appender = function(table, rows) {
@@ -934,204 +1144,7 @@
 				return this.each(function() {
 					// check if tablesorter has initialized
 					if (!(this.config && this.hasInitialized)) { return; }
-					var t, ctrls, fxn, size,
-					table = this,
-					c = table.config,
-					wo = c.widgetOptions,
-					p = c.pager = $.extend( true, {}, $.tablesorterPager.defaults, settings ),
-					$t = c.$table,
-					namespace = c.namespace + 'pager',
-					// added in case the pager is reinitialized after being destroyed.
-					pager = p.$container = $(p.container).addClass('tablesorter-pager').show();
-					// save a copy of the original settings
-					p.settings = $.extend( true, {}, $.tablesorterPager.defaults, settings );
-					if (c.debug) {
-						console.log('Pager: Initializing');
-					}
-					p.oldAjaxSuccess = p.oldAjaxSuccess || p.ajaxObject.success;
-					c.appender = $this.appender;
-					p.initializing = true;
-					if (p.savePages && ts.storage) {
-						t = ts.storage(table, p.storageKey) || {}; // fixes #387
-						p.page = isNaN(t.page) ? p.page : t.page;
-						p.size = t.size === 'all' ? t.size : ( isNaN( t.size ) ? p.size : t.size ) || p.setSize || 10;
-						$.data(table, 'pagerLastSize', p.size);
-						pager.find(p.cssPageSize).val(p.size);
-					}
-					// skipped rows
-					p.regexRows = new RegExp('(' + (wo.filter_filteredRow || 'filtered') + '|' + c.selectorRemove.slice(1) + '|' + c.cssChildRow + ')');
-					p.regexFiltered = new RegExp(wo.filter_filteredRow || 'filtered');
-
-					$t
-					// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
-					.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
-					.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
-						p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
-						// don't change page if filters are the same (pager updating, etc)
-						if (e.type === 'filterStart' && p.pageReset !== false && (c.lastCombinedFilter || '') !== (p.currentFilters || []).join('')) {
-							p.page = p.pageReset; // fixes #456 & #565
-						}
-					})
-					// update pager after filter widget completes
-					.bind('filterEnd sortEnd '.split(' ').join(namespace + ' '), function() {
-						p.currentFilters = c.$table.data('lastSearch');
-						if (p.initialized || p.initializing) {
-							if (c.delayInit && c.rowsCopy && c.rowsCopy.length === 0) {
-								// make sure we have a copy of all table rows once the cache has been built
-								updateCache(table);
-							}
-							updatePageDisplay(table, p, false);
-							moveToPage(table, p, false);
-							ts.applyWidget( table );
-						}
-					})
-					.bind('disablePager' + namespace, function(e){
-						e.stopPropagation();
-						showAllRows(table, p);
-					})
-					.bind('enablePager' + namespace, function(e){
-						e.stopPropagation();
-						enablePager(table, p, true);
-					})
-					.bind('destroyPager' + namespace, function(e){
-						e.stopPropagation();
-						destroyPager(table, p);
-					})
-					.bind('updateComplete' + namespace, function(e, table, triggered){
-						e.stopPropagation();
-						// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
-						// don't recalculate total rows/pages if using ajax
-						if ( !table || triggered || p.ajax ) { return; }
-						var $rows = c.$tbodies.eq(0).children('tr').not(c.selectorRemove);
-						p.totalRows = $rows.length - ( p.countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
-						p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
-						if ($rows.length && c.rowsCopy && c.rowsCopy.length === 0) {
-							// make a copy of all table rows once the cache has been built
-							updateCache(table);
-						}
-						if ( p.page >= p.totalPages ) {
-							moveToLastPage(table, p);
-						}
-						hideRows(table, p);
-						changeHeight(table, p);
-						updatePageDisplay(table, p, true);
-					})
-					.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
-						e.stopPropagation();
-						setPageSize(table, parsePageSize( p, size, 'get' ), p);
-						hideRows(table, p);
-						updatePageDisplay(table, p, false);
-					})
-					.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
-						e.stopPropagation();
-						// force pager refresh
-						if (e.type === 'pagerUpdate') {
-							num = typeof num === 'undefined' ? p.page + 1 : num;
-							p.last.page = true;
-						}
-						p.page = (parseInt(num, 10) || 1) - 1;
-						moveToPage(table, p, true);
-						updatePageDisplay(table, p, false);
-					})
-					.bind('pageAndSize' + namespace, function(e, page, size){
-						e.stopPropagation();
-						p.page = (parseInt(page, 10) || 1) - 1;
-						setPageSize(table, parsePageSize( p, size, 'get' ), p);
-						moveToPage(table, p, true);
-						hideRows(table, p);
-						updatePageDisplay(table, p, false);
-					});
-
-					// clicked controls
-					ctrls = [ p.cssFirst, p.cssPrev, p.cssNext, p.cssLast ];
-					fxn = [ moveToFirstPage, moveToPrevPage, moveToNextPage, moveToLastPage ];
-					if (c.debug && !pager.length) {
-						console.warn('Pager: >> Container not found');
-					}
-					pager.find(ctrls.join(','))
-					.attr('tabindex', 0)
-					.unbind('click' + namespace)
-					.bind('click' + namespace, function(e){
-						e.stopPropagation();
-						var i, $t = $(this), l = ctrls.length;
-						if ( !$t.hasClass(p.cssDisabled) ) {
-							for (i = 0; i < l; i++) {
-								if ($t.is(ctrls[i])) {
-									fxn[i](table, p);
-									break;
-								}
-							}
-						}
-					});
-
-					// goto selector
-					p.$goto = pager.find(p.cssGoto);
-					if ( p.$goto.length ) {
-						p.$goto
-						.unbind('change' + namespace)
-						.bind('change' + namespace, function(){
-							p.page = $(this).val() - 1;
-							moveToPage(table, p, true);
-							updatePageDisplay(table, p, false);
-						});
-					} else if (c.debug) {
-						console.warn('Pager: >> Goto selector not found');
-					}
-					// page size selector
-					p.$size = pager.find(p.cssPageSize);
-					if ( p.$size.length ) {
-						// setting an option as selected appears to cause issues with initial page size
-						p.$size.find('option').removeAttr('selected');
-						p.$size.unbind('change' + namespace).bind('change' + namespace, function() {
-							if ( !$(this).hasClass(p.cssDisabled) ) {
-								var size = $(this).val();
-								p.$size.val( size ); // in case there are more than one pagers
-								setPageSize(table, size, p);
-								changeHeight(table, p);
-							}
-							return false;
-						});
-					} else if (c.debug) {
-						console.warn('Pager: >> Size selector not found');
-					}
-
-					// clear initialized flag
-					p.initialized = false;
-					// before initialization event
-					$t.triggerHandler('pagerBeforeInitialized', p);
-
-					enablePager(table, p, false);
-					if ( typeof p.ajaxUrl === 'string' ) {
-						// ajax pager; interact with database
-						p.ajax = true;
-						// When filtering with ajax, allow only custom filtering function, disable default
-						// filtering since it will be done server side.
-						c.widgetOptions.filter_serversideFiltering = true;
-						c.serverSideSorting = true;
-						moveToPage(table, p);
-					} else {
-						p.ajax = false;
-						// Regular pager; all rows stored in memory
-						ts.appendCache( c, true ); // true = don't apply widgets
-						hideRowsSetup(table, p);
-					}
-
-					// pager initialized
-					if (!p.ajax && !p.initialized) {
-						p.initializing = false;
-						p.initialized = true;
-						moveToPage(table, p);
-						if (c.debug) {
-							console.log('Pager: Triggering pagerInitialized');
-						}
-						c.$table.triggerHandler( 'pagerInitialized', p );
-						if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
-							updatePageDisplay(table, p, false);
-						}
-					}
-
-					// make the hasWidget function think that the pager widget is being used
-					c.widgetInit.pager = true;
+					init(this, settings);
 				});
 			};
 
