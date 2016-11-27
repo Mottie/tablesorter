@@ -1,4 +1,4 @@
-/*! Widget: math - updated 7/31/2016 (v2.27.0) *//*
+/*! Widget: math - updated 11/26/2016 (v2.28.0) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -29,7 +29,15 @@
 			.split(' ').join('.tsmath '),
 
 		processText : function( c, $cell ) {
-			var txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) );
+			var tmp,
+				txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) ),
+				prefix = c.widgetOptions.math_prefix;
+			if ( /</.test( prefix ) ) {
+				// prefix contains HTML; remove it & any text before using formatFloat
+				tmp = $( '<div>' + prefix + '</div>' ).text()
+					.replace(/\{content\}/g, '').trim();
+				txt = txt.replace( tmp, '' );
+			}
 			txt = ts.formatFloat( txt.replace( /[^\w,. \-()]/g, '' ), c.table ) || 0;
 			// isNaN('') => false
 			return isNaN( txt ) ? 0 : txt;
@@ -352,7 +360,7 @@
 				prev = $cell.html(),
 				mask = $cell.attr( 'data-' + wo.math_data + '-mask' ) || wo.math_mask,
 				target = $cell.attr( 'data-' + wo.math_data + '-target' ) || '',
-				result = ts.formatMask( mask, value, wo.math_wrapPrefix, wo.math_wrapSuffix );
+				result = ts.formatMask( mask, value, wo.math_prefix, wo.math_suffix );
 			if (target) {
 				$el = $cell.find(target);
 				if ($el.length) {
@@ -403,8 +411,7 @@
 			start = mask.search( /[0-9\-\+#]/ ),
 			tmp = start > 0 ? mask.substring( 0, start ) : '',
 			prefix = tmp;
-
-		if ( start > 0 && tmpPrefix ) {
+		if ( tmpPrefix ) {
 			if ( /\{content\}/.test( tmpPrefix || '' ) ) {
 				prefix = ( tmpPrefix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {
@@ -418,7 +425,7 @@
 		index += ( mask.substring( index, index + 1 ) === '.' ) ? 1 : 0;
 		tmp = end > 0 ? mask.substring( index, len ) : '';
 		suffix = tmp;
-		if ( tmp !== '' && tmpSuffix ) {
+		if ( tmpSuffix ) {
 			if ( /\{content\}/.test( tmpSuffix || '' ) ) {
 				suffix = ( tmpSuffix || '' ).replace( /\{content\}/g, tmp || '' );
 			} else {

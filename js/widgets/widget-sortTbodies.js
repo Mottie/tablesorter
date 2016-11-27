@@ -1,6 +1,7 @@
-/*! tablesorter tbody sorting widget (BETA) - 11/22/2015 (v2.24.6)
+/*! tablesorter tbody sorting widget (BETA) - 11/26/2016 (v2.28.0)
  * Requires tablesorter v2.22.2+ and jQuery 1.4+
  * by Rob Garrison
+ * Contributors: Chris Rogers
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
@@ -38,6 +39,15 @@
 					// find parsers for each column
 					ts.sortTbodies.setTbodies( c, wo );
 					ts.updateCache( c, null, c.$tbodies );
+				})
+				.bind('sortEnd', function() {
+					// Moves the head row back to the top of the tbody
+					var primaryRow = wo.sortTbody_primaryRow;
+					if ( wo.sortTbody_lockHead && primaryRow ) {
+						c.$table.find( primaryRow ).each( function() {
+							$( this ).parents( 'tbody' ).prepend( this );
+						});
+					}
 				});
 
 			// detect parsers - in case the table contains only info-only tbodies
@@ -208,6 +218,8 @@
 		// priority < 50 (filter widget), so c.$tbodies has the correct elements
 		priority: 40,
 		options: {
+			// lock primary row as a header when sorting
+			sortTbody_lockHead   : false,
 			// point to a row within the tbody that matches the number of header columns
 			sortTbody_primaryRow : null,
 			// sort tbody internal rows

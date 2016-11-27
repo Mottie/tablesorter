@@ -102,6 +102,36 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.0">Version 2.28.0</a> (11/27/2016)
+
+* Core:
+  * Return value from `getColumnData` if not an object.
+  * Include extra headers when adding unsorted class. Fixes [issue #1306](https://github.com/Mottie/tablesorter/issues/1306).
+  * Add option validator. Fixes [issue #1319](https://github.com/Mottie/tablesorter/issues/1319).
+  * Maintain original settings on `resetToLoadState`.
+* Docs:
+  * Add missing colon in CSS. Fixes [issue #1307](https://github.com/Mottie/tablesorter/issues/1307).
+  * Add notes on `sortList` overridding `sortForce` & `sortAppend`. See [issue #1286](https://github.com/Mottie/tablesorter/issues/1286).
+  * Update sortTbody widget demo showing new option.
+  * Add zebra widget to sort reset demo.
+  * Define a triggered "update". Fixes [issue #1317](https://github.com/Mottie/tablesorter/issues/1317).
+  * Clarify recalculation update method. Fixes [issue #1317](https://github.com/Mottie/tablesorter/issues/1317).
+  * Explain difference between `#` and `0` in the math mask. Fixes [issue #1320](https://github.com/Mottie/tablesorter/issues/1320).
+  * Add link to disable thead row example. Fixes [issue #1326](https://github.com/Mottie/tablesorter/issues/1326).
+* Filter:
+  * Restore `filter_searchDelay` function. Fixes [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
+* Grouping:
+  * Fix insertion of group header before child rows. See [pull #1301](https://github.com/Mottie/tablesorter/pull/1301); thanks [@babaevmm](https://github.com/babaevmm)! Also fixes [issue #1325](https://github.com/Mottie/tablesorter/issues/1325).
+* Math:
+  * Fix prefix/suffix option names & processing. Fixes [issue #1305](https://github.com/Mottie/tablesorter/issues/1305).
+  * Remove `math_prefix` content prior to parsing cell values.
+* Pager:
+  * Set `ariaDisabled` property to stop MS Edge crash. Fixes [issue #1303](https://github.com/Mottie/tablesorter/issues/1303).
+  * Restore settings on `resetToLoadState`. Fixes [issue #1311](https://github.com/Mottie/tablesorter/issues/1311).
+* Tbodysort:
+  * Add `sortTbody_lockHead` option. See [pull #1312](https://github.com/Mottie/tablesorter/pull/1312); thanks [@ChrisM-Rogers](https://github.com/ChrisM-Rogers)!
+  * Add `sortTbody_lockHead` to default options.
+
 #### <a name="v2.27.8">Version 2.27.8</a> (9/28/2016)
 
 * Core: minor code cleanup.
@@ -127,24 +157,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * RepeatHeaders:
   * Repeat HTML content instead of only text. See [pull #1282](https://github.com/Mottie/tablesorter/pull/1282); thanks [@Milania1](https://github.com/Milania1)!
 * Testing: update jQuery usage.
-
-#### <a name="v2.27.6">Version 2.27.6</a> (9/1/2016)
-
-* Core: `textSorter` option now accepts class names. See [Stackoverflow](http://stackoverflow.com/q/39259954/145346).
-* Docs:
-  * Update `emptyTo` demo. See [issue #1278](https://github.com/Mottie/tablesorter/issues/1278).
-  * Add `$.tablesorter.defaults` variable.
-* Grouping: Add `"group-date-hour"` group type; added to demo.
-* Mark:
-  * Apply marks after pager completes. See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
-  * Add `mark_tsIgnore` option. See [issue #1243](https://github.com/Mottie/tablesorter/issues/1243).
-* Parser: Header checkbox remains unchecked when table is hidden. Fixes [issue #1090](https://github.com/Mottie/tablesorter/issues/1090).
-* Pager Custom Controls (beta)
-  * Prevent out-of-range page numbers. Fixes [issue #1276](https://github.com/Mottie/tablesorter/issues/1276).
-  * Allow settings `ends` and/or `aroundCurrent` to zero. See [issue #1276](https://github.com/Mottie/tablesorter/issues/1276).
-  * Spacer settings now include wrapper element (a `<span>` by default).
-  * Keyboard use changes.
-    * A pager element must now be focused before keyboard keys work.
-    * Keyboard keys now include left, right, up, down, pageUp, pageDown,
-      home, or end.
-    * `pageKeyStep` option added. Number of pages to skip with pageUp or pageDown.

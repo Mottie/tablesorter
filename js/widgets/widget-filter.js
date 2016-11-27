@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 9/23/2016 (v2.27.7) *//*
+/*! Widget: filter - updated 11/26/2016 (v2.28.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -827,11 +827,15 @@
 			// include change for select - fixes #473
 			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
-				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
+				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
+					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
+						wo.filter_liveSearch :
+						ts.getColumnData( table, wo.filter_liveSearch, column );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( table.config.widgetOptions.filter_initialized &&
 					( event.which === tskeyCodes.enter || event.type === 'search' ||
-					( event.type === 'change' || event.type === 'input' ) &&
+					( event.type === 'change' ||
+					( event.type === 'input' && liveSearch === true ) ) &&
 					this.value !== c.lastSearch[column] )
 				) {
 					event.preventDefault();
