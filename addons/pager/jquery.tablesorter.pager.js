@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 9/23/2016 (v2.27.7)
+* updated 11/26/2016 (v2.28.0)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -142,8 +142,8 @@
 					tmp.each(function(){
 						this.ariaDisabled = first;
 					});
-					tmp = p.$container.find(p.cssNext + ',' + p.cssLast)
-					tmp[ last ? a : r ](d)
+					tmp = p.$container.find(p.cssNext + ',' + p.cssLast);
+					tmp[ last ? a : r ](d);
 					tmp.each(function(){
 						this.ariaDisabled = last;
 					});

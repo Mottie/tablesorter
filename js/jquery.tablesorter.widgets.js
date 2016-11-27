@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 09-28-2016 (v2.27.8)*/
+/*! tablesorter (FORK) - updated 11-26-2016 (v2.28.0)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! Widget: storage - updated 3/1/2016 (v2.25.5) */
+/*! Widget: storage - updated 11/26/2016 (v2.28.0) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
@@ -61,6 +61,17 @@
 			url = options && options.url ||
 				$table.attr(options && options.page || wo && wo.storage_page || 'data-table-page') ||
 				wo && wo.storage_fixedUrl || c && c.fixedUrl || window.location.pathname;
+		// update defaults for validator; these values must be falsy!
+		$.extend(true, ts.defaults, {
+			fixedUrl: '',
+			widgetOptions: {
+				storage_fixedUrl: '',
+				storage_group: '',
+				storage_page: '',
+				storage_tableId: '',
+				storage_useSessionStorage: ''
+			}
+		});
 		// https://gist.github.com/paulirish/5558557
 		if (storageType in window) {
 			try {
@@ -382,7 +393,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 9/23/2016 (v2.27.7) *//*
+/*! Widget: filter - updated 11/26/2016 (v2.28.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1211,11 +1222,15 @@
 			// include change for select - fixes #473
 			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
-				var column = parseInt( $( this ).attr( 'data-column' ), 10 );
+				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
+					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
+						wo.filter_liveSearch :
+						ts.getColumnData( table, wo.filter_liveSearch, column );
 				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( table.config.widgetOptions.filter_initialized &&
 					( event.which === tskeyCodes.enter || event.type === 'search' ||
-					( event.type === 'change' || event.type === 'input' ) &&
+					( event.type === 'change' ||
+					( event.type === 'input' && liveSearch === true ) ) &&
 					this.value !== c.lastSearch[column] )
 				) {
 					event.preventDefault();

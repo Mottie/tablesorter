@@ -1,4 +1,4 @@
-/*! Widget: grouping - updated 9/1/2016 (v2.27.6) *//*
+/*! Widget: grouping - updated 11/26/2016 (v2.28.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -234,7 +234,7 @@
 				if ( $.isFunction( wo.group_formatter ) ) {
 					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo, data ) || data.group;
 				}
-				//add first() for groping with childRows
+				// add first() for grouping with childRows
 				data.$row.first().before( tsg.groupHeaderHTML( c, wo, data ) );
 				if ( wo.group_saveGroups && !data.savedGroup && wo.group_collapsed && wo.group_collapsible ) {
 					// all groups start collapsed; data.groupIndex is 1 more than the expected index.

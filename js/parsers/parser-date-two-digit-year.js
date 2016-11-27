@@ -1,4 +1,4 @@
-/*! Parser: two digit year - updated 11/22/2015 (v2.24.6) */
+/*! Parser: two digit year - updated 11/26/2016 (v2.28.0) */
 /* Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html */
 /*jshint jquery:true */
 ;(function($){

@@ -1,4 +1,4 @@
-/*! tablesorter tbody sorting widget (BETA) - 11/07/2016 (v2.24.7)
+/*! tablesorter tbody sorting widget (BETA) - 11/26/2016 (v2.28.0)
  * Requires tablesorter v2.22.2+ and jQuery 1.4+
  * by Rob Garrison
  * Contributors: Chris Rogers

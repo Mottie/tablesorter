@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.27.8 *//*
+/*! TableSorter (FORK) v2.28.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.27.8',
+		version : '2.28.0',
 
 		parsers : [],
 		widgets : [],
@@ -126,7 +126,11 @@
 			headerList: [],
 			empties: {},
 			strings: {},
-			parsers: []
+			parsers: [],
+
+			// *** parser options for validator; values must be falsy!
+			globalize: 0,
+			imgAttr: 0
 
 			// removed: widgetZebra: { css: ['even', 'odd'] }
 
@@ -300,6 +304,7 @@
 			ts.setupParsers( c );
 			// start total row count at zero
 			c.totalRows = 0;
+			ts.validateOptions( c );
 			// build the cache for the tbody cells
 			// delayInit will delay building the cache until the user starts a sort
 			if ( !c.delayInit ) { ts.buildCache( c ); }
@@ -433,9 +438,11 @@
 				e.stopPropagation();
 				// remove all widgets
 				ts.removeWidget( this, true, false );
+				var tmp = $.extend( true, {}, c.originalSettings );
 				// restore original settings; this clears out current settings, but does not clear
 				// values saved to storage.
-				c = $.extend( true, ts.defaults, c.originalSettings );
+				c = $.extend( true, ts.defaults, tmp );
+				c.originalSettings = tmp;
 				this.hasInitialized = false;
 				// setup the entire table again
 				ts.setup( this, c );
@@ -1078,6 +1085,7 @@
 					.removeClass( css.join( ' ' ) );
 			// remove all header information
 			c.$headers
+				.add( $( 'thead ' + c.namespace + '_extra_headers' ) )
 				.removeClass( css.join( ' ' ) )
 				.addClass( none )
 				.attr( 'aria-sort', 'none' )
@@ -1920,6 +1928,8 @@
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
 						c.widgetOptions = $.extend( true, {}, widget.options, c.widgetOptions );
+						// add widgetOptions to defaults for option validator
+						$.extend( true, ts.defaults.widgetOptions, widget.options );
 					}
 				}
 			}
@@ -2292,7 +2302,9 @@
 		},
 
 		getColumnData : function( table, obj, indx, getCell, $headers ) {
-			if ( typeof obj === 'undefined' || obj === null ) { return; }
+			if ( typeof obj !== 'object' || obj === null ) {
+				return obj;
+			}
 			table = $( table )[ 0 ];
 			var $header, key,
 				c = table.config,
@@ -2401,6 +2413,34 @@
 				}
 			}
 			return str;
+		},
+
+		validateOptions : function( c ) {
+			var setting, setting2, typ, timer,
+				// ignore options containing an array
+				ignore = 'sortForce sortList sortAppend widgets'.split( ' ' ),
+				orig = c.originalSettings;
+			if ( orig ) {
+				if ( c.debug ) {
+					timer = new Date();
+				}
+				for ( setting in orig ) {
+					typ = typeof ts.defaults[setting];
+					if ( typ === 'undefined' ) {
+						console.warn( 'Tablesorter Warning! "table.config.' + setting + '" option not recognized' );
+					} else if ( typ === 'object' ) {
+						for ( setting2 in orig[setting] ) {
+							typ = typeof ts.defaults[setting][setting2];
+							if ( $.inArray( setting, ignore ) < 0 && typ === 'undefined' ) {
+								console.warn( 'Tablesorter Warning! "table.config.' + setting + '.' + setting2 + '" option not recognized' );
+							}
+						}
+					}
+				}
+				if ( c.debug ) {
+					console.log( 'validate options time:' + ts.benchmark( timer ) );
+				}
+			}
 		},
 
 		// restore headers

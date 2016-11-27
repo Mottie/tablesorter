@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 9/1/2016 (v2.27.6) *//*
+/*! Parser: input & select - updated 11/26/2016 (v2.28.0) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -111,8 +111,8 @@
 	});
 
 	// update defaults for validator; values must be falsy
-	ts.defaults.checkboxClass = '';
-	ts.defaults.checkboxVisible = '';
+	$.tablesorter.defaults.checkboxClass = '';
+	$.tablesorter.defaults.checkboxVisible = '';
 
 	// update select and all input types in the tablesorter cache when the change event fires.
 	// This method only works with jQuery 1.7+
