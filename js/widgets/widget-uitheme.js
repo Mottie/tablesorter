@@ -124,7 +124,7 @@
 						.addClass(themes.icons || '');
 				}
 				// filter widget initializes after uitheme
-				if (c.widgets.indexOf('filter') > -1) {
+				if (ts.hasWidget( c.table, 'filter' )) {
 					tmp = function() {
 						$table.children('thead').children('.' + ts.css.filterRow)
 							.removeClass(hasOldTheme ? oldtheme.filterRow || '' : '')
