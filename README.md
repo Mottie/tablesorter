@@ -45,7 +45,8 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 * Get all files: [zip](https://github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](https://github.com/Mottie/tablesorter/archive/master.tar.gz).
 * Use [bower](https://bower.io/): `bower install jquery.tablesorter`.
 * Use [node.js](https://nodejs.org/): `npm install tablesorter`.
-* CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter).
+* CDNJS: https://cdnjs.com/libraries/jquery.tablesorter
+* jsDelivr: http://www.jsdelivr.com/?query=tablesorter
 
 ### Related Projects
 
