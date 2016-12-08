@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 11/26/2016 (v2.28.0) *//*
+/*! Widget: filter - updated 12/8/2016 (v2.28.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -822,7 +822,7 @@
 					return;
 				}
 				// change event = no delay; last true flag tells getFilters to skip newest timed input
-				tsf.searching( table, true, true );
+				tsf.searching( table, true, true, column );
 			})
 			// include change for select - fixes #473
 			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
@@ -831,12 +831,19 @@
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column );
-				// don't allow 'change' event to process if the input value is the same - fixes #685
 				if ( table.config.widgetOptions.filter_initialized &&
-					( event.which === tskeyCodes.enter || event.type === 'search' ||
-					( event.type === 'change' ||
-					( event.type === 'input' && liveSearch === true ) ) &&
-					this.value !== c.lastSearch[column] )
+					// immediate search if user presses enter
+					( event.which === tskeyCodes.enter ||
+						// immediate search if a "search" is triggered on the input
+						event.type === 'search' ||
+						// change & input events must be ignored if liveSearch !== true
+						( event.type === 'change' || event.type === 'input' ) &&
+						// prevent search if liveSearch is a number
+						liveSearch === true &&
+						// don't allow 'change' or 'input' event to process if the input value
+						// is the same - fixes #685
+						this.value !== c.lastSearch[column]
+					)
 				) {
 					event.preventDefault();
 					// init search with no delay
@@ -856,7 +863,7 @@
 					wo.filter_liveSearch :
 					// get column setting, or set to fallback value, or default to false
 					ts.getColumnData( table, wo.filter_liveSearch, column );
-				if ( typeof liveSearch !== 'undefined' ) {
+				if ( typeof liveSearch === 'undefined' ) {
 					liveSearch = wo.filter_liveSearch.fallback || false;
 				}
 			}

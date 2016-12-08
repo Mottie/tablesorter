@@ -102,6 +102,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.1">Version 2.28.1</a> (11/27/2016)
+
+* Core:
+  * Update dist files. Fixes [issue #1331](https://github.com/Mottie/tablesorter/issues/1331).
+* Filter:
+  * Fix searchDelay & minimum character count. See [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
+  * Fix liveSearch ignoring searchDelay. See [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
+* Print
+  * Use `hasWidget` function.
+* UI-theme:
+  * Use `hasWidget` function. Fixes [issue #1327](https://github.com/Mottie/tablesorter/issues/1327).
+
 #### <a name="v2.28.0">Version 2.28.0</a> (11/27/2016)
 
 * Core:
@@ -139,21 +151,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * ColumnSelector: `updateAll` properly updates the popup. See [Stack Overflow](http://stackoverflow.com/q/39669948/145346).
 * Pager: Maintain filter focus on custom controls. Fixes [issue #1296](https://github.com/Mottie/tablesorter/issues/1296).
 * Readme: Add link to Grav CMS. See [issue #1290](https://github.com/Mottie/tablesorter/issues/1290).
-
-#### <a name="v2.27.7">Version 2.27.7</a> (9/23/2016)
-
-* Core:
-  * Include version in log.
-  * Remove space from debug message.
-* Docs: update jQuery.
-* Filter:
-  * Include "input" event for searches. See [issue #1280](https://github.com/Mottie/tablesorter/issues/1280).
-  * Add support for descending sort on selectSources values.
-* Mark: Remove internal case matching.
-* Pager:
-  * Allow for optional output callback in favour of parsable string. See [pull #1283](https://github.com/Mottie/tablesorter/pull/1283); thanks [@joelperry93](https://github.com/joelperry93)!
-  * Add output function support to pager widget. See [pull #1283](https://github.com/Mottie/tablesorter/pull/1283).
-  * Maintain `pageDisplay` ID, if one exists. Fixes [issue #1288](https://github.com/Mottie/tablesorter/issues/1288).
-* RepeatHeaders:
-  * Repeat HTML content instead of only text. See [pull #1282](https://github.com/Mottie/tablesorter/pull/1282); thanks [@Milania1](https://github.com/Milania1)!
-* Testing: update jQuery usage.

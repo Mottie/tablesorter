@@ -1,4 +1,4 @@
-/* Widget: print - updated 4/11/2016 (v2.25.8) *//*
+/* Widget: print - updated 12/8/2016 (v2.28.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -70,7 +70,7 @@
 			// columnSelector -> c.selector.$style
 			// Assume 'visible' means hidden columns have a 'display:none' style, or a class name
 			// add the definition to the wo.print_extraCSS option
-			if (/s/i.test(wo.print_columns) && c.selector && c.widgets.indexOf('columnSelector') >= 0) {
+			if (/s/i.test(wo.print_columns) && c.selector && ts.hasWidget( c.table, 'columnSelector' )) {
 				// show selected (visible) columns; make a copy of the columnSelector widget css (not media queries)
 				printStyle += wo.columnSelector_mediaquery && c.selector.auto ? '' : c.selector.$style.text();
 			} else if (/a/i.test(wo.print_columns)) {

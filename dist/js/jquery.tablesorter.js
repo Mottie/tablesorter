@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.0 *//*
+/*! TableSorter (FORK) v2.28.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.0',
+		version : '2.28.1',
 
 		parsers : [],
 		widgets : [],
@@ -2418,7 +2418,7 @@
 		validateOptions : function( c ) {
 			var setting, setting2, typ, timer,
 				// ignore options containing an array
-				ignore = 'sortForce sortList sortAppend widgets'.split( ' ' ),
+				ignore = 'headers sortForce sortList sortAppend widgets'.split( ' ' ),
 				orig = c.originalSettings;
 			if ( orig ) {
 				if ( c.debug ) {
@@ -2430,7 +2430,7 @@
 						console.warn( 'Tablesorter Warning! "table.config.' + setting + '" option not recognized' );
 					} else if ( typ === 'object' ) {
 						for ( setting2 in orig[setting] ) {
-							typ = typeof ts.defaults[setting][setting2];
+							typ = ts.defaults[setting] && typeof ts.defaults[setting][setting2];
 							if ( $.inArray( setting, ignore ) < 0 && typ === 'undefined' ) {
 								console.warn( 'Tablesorter Warning! "table.config.' + setting + '.' + setting2 + '" option not recognized' );
 							}
