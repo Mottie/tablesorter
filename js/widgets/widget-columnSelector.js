@@ -270,7 +270,7 @@
 			var array = [],
 				temp = ' col:nth-child(' + column + ')';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
-			temp = ' tr:not(.hasSpan) th:nth-child(' + column + ')';
+			temp = ' tr:not(.hasSpan) th[data-column="' + ( column - 1 ) + '"]';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
 			temp = ' tr:not(.hasSpan) td:nth-child(' + column + ')';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
