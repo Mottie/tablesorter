@@ -149,6 +149,12 @@ module.exports = function( grunt ) {
 				src:  'css/*.less',
 				dest: 'dist/css/less/'
 			},
+			scss: {
+				expand: true,
+				flatten: true,
+				src:  'css/*.scss',
+				dest: 'dist/css/scss/'
+			},
 			images: {
 				expand: true,
 				flatten: true,
