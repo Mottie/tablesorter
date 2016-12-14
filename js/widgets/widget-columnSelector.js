@@ -151,7 +151,7 @@
 				colSel.$column[colId] = $(this);
 
 				// set default col title
-				name = $header.attr(wo.columnSelector_name) || $header.text();
+				name = $header.attr(wo.columnSelector_name) || $header.text().trim() || c.headerContent[ index ];
 				if ($container.length) {
 					colSel.$wrapper[colId] = $(wo.columnSelector_layout.replace(/\{name\}/g, name)).appendTo($container);
 					colSel.$checkbox[colId] = colSel.$wrapper[colId]
