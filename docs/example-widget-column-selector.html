@@ -107,6 +107,9 @@
 
 			// container layout
 			columnSelector_layout : '<label><input type="checkbox">{name}</label>',
+			// layout customizer callback called for each column
+			// function($cell, name, column){ return name || $cell.html(); }
+			columnSelector_layoutCustomizer : null,
 			// data attribute containing column name to use in the selector container
 			columnSelector_name  : 'data-selector-name',
 
@@ -312,6 +315,35 @@
 							An <code>&lt;input type=&quot;checkbox&quot;&gt;</code> is required within this setting! The label element is optional.<br>
 							<br>
 							Default value: <code>'&lt;label&gt;&lt;input type=&quot;checkbox&quot;&gt;{name}&lt;/label&gt;'</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="column-selector-layout-customizer">
+						<td><a href="#" class="permalink">columnSelector_layoutCustomizer</a></td>
+						<td>
+							This option is set as a callback function that is called during the processing of the layout for each column.
+							<div class="collapsible">
+							<br>
+							<p>This callback contains three parameters:</p>
+							<ul>
+								<li><code>$cell</code> - jQuery object pointing to the header cell inner wrapper. If the <a href="index.html#headertemplate"><code>headerTemplate</code></a> option is set as an empty string, then the inner wrapper is not included, and the <code>$cell</code> would then point to the table cell (<code>th</code> or <code>td</code> depending on the markup).</li>
+								<li><code>name</code> - This parameter contains the header cell title string. This value is obtained from the header cell <code>data-selector-name</code> attribute, if defined, or the header cell text.</li>
+								<li><code>index</code> - The current column index as a number value.</li>
+							</ul>
+							<pre class="prettyprint lang-js">$(function() {
+  $("#task").tablesorter({
+    widgets: ["columnSelector"],
+    widgetOptions: {
+      columnSelector_container: $('#columnSelector'),
+      columnSelector_layoutCustomizer: function($cell, name, index) {
+        // return the HTML for the first column only
+        return index === 0 ? $cell.html() : name;
+      }
+    }
+  });
+});</pre>
+							Default value: <code>null</code>
 							</div>
 						</td>
 					</tr>
