@@ -56,7 +56,7 @@ $.tablesorter.addWidget({
 				top: r.top - clickOffset[1],
 				width: $th.outerWidth()
 			})
-			.appendTo('body')
+			.appendTo('head')
 			.find('th, td').addClass(wo.reorder_helperClass);
 			$bar = $('<div class="' + wo.reorder_helperBar + '" />')
 			.css({
@@ -64,7 +64,7 @@ $.tablesorter.addWidget({
 				top : c.$table.find('thead').offset().top,
 				height : $th.closest('thead').outerHeight() + c.$table.find('tbody').height()
 			})
-			.appendTo('body');
+			.appendTo('head');
 			positionBar(e);
 			lastIndx = endIndex;
 		},

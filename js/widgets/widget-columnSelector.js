@@ -1,4 +1,4 @@
-/* Widget: columnSelector (responsive table widget) - updated 9/28/2016 (v2.27.8) *//*
+/* Widget: columnSelector (responsive table widget) - updated 12/15/2016 (v2.28.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -113,7 +113,7 @@
 		},
 
 		setupSelector: function(c, wo) {
-			var index, name, $header, priority, col, colId,
+			var index, name, $header, priority, col, colId, $el,
 				colSel = c.selector,
 				$container = colSel.$container,
 				useStorage = wo.columnSelector_saveColumns && ts.storage,
@@ -149,10 +149,13 @@
 					saved[colId] : (typeof wo.columnSelector_columns[colId] !== 'undefined' && wo.columnSelector_columns[colId] !== null) ?
 					wo.columnSelector_columns[colId] : (state === 'true' || state !== 'false');
 				colSel.$column[colId] = $(this);
-
-				// set default col title
-				name = $header.attr(wo.columnSelector_name) || $header.text();
 				if ($container.length) {
+					// set default col title
+					name = $header.attr(wo.columnSelector_name) || $header.text().trim();
+					if (typeof wo.columnSelector_layoutCustomizer === "function") {
+						$el = $header.find('.' + ts.css.headerIn);
+						name = wo.columnSelector_layoutCustomizer( $el.length ? $el : $header, name, parseInt(colId, 10) );
+					}
 					colSel.$wrapper[colId] = $(wo.columnSelector_layout.replace(/\{name\}/g, name)).appendTo($container);
 					colSel.$checkbox[colId] = colSel.$wrapper[colId]
 						// input may not be wrapped within the layout template
@@ -270,7 +273,7 @@
 			var array = [],
 				temp = ' col:nth-child(' + column + ')';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
-			temp = ' tr:not(.hasSpan) th:nth-child(' + column + ')';
+			temp = ' tr:not(.hasSpan) th[data-column="' + ( column - 1 ) + '"]';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
 			temp = ' tr:not(.hasSpan) td:nth-child(' + column + ')';
 			array.push(prefix + temp + ',' + prefix + '_extra_table' + temp);
@@ -497,6 +500,9 @@
 
 			// container layout
 			columnSelector_layout : '<label><input type="checkbox">{name}</label>',
+			// layout customizer callback called for each column
+			// function($cell, name, column){ return name || $cell.html(); }
+			columnSelector_layoutCustomizer : null,
 			// data attribute containing column name to use in the selector container
 			columnSelector_name : 'data-selector-name',
 

@@ -45,7 +45,8 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 * Get all files: [zip](https://github.com/Mottie/tablesorter/archive/master.zip) or [tar.gz](https://github.com/Mottie/tablesorter/archive/master.tar.gz).
 * Use [bower](https://bower.io/): `bower install jquery.tablesorter`.
 * Use [node.js](https://nodejs.org/): `npm install tablesorter`.
-* CDNJS: [https://cdnjs.com/libraries/jquery.tablesorter](https://cdnjs.com/libraries/jquery.tablesorter).
+* CDNJS: https://cdnjs.com/libraries/jquery.tablesorter
+* jsDelivr: http://www.jsdelivr.com/?query=tablesorter
 
 ### Related Projects
 
@@ -102,6 +103,26 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.2">Version 2.28.2</a> (12/15/2016)
+
+* ColumnSelector:
+  * Target header column attr. Fixes [issue #1238](https://github.com/Mottie/tablesorter/issues/1238).
+  * Include HTML in empty headers, then reverted. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
+  * Add `layoutCustomizer` option. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
+* Reorder:
+  * Add style to `<HEAD>`.
+* Resizable:
+  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1337](https://github.com/Mottie/tablesorter/pull/1337); thanks [@Frennetix](https://github.com/Frennetix)!
+* Scroller:
+  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338); thanks [@Frennetix](https://github.com/Frennetix)!
+  * Code cleanup. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338).
+* Theme:
+  * Convert theme.less to theme.scss. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332); thanks to [@HongPong](https://github.com/HongPong)!
+  * Fix SCSS theme & add demo. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332)
+* Meta:
+  * Add jsDelivr CDN link to readme.
+  * Add scss to dist folder.
+
 #### <a name="v2.28.1">Version 2.28.1</a> (11/27/2016)
 
 * Core:
@@ -143,11 +164,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Tbodysort:
   * Add `sortTbody_lockHead` option. See [pull #1312](https://github.com/Mottie/tablesorter/pull/1312); thanks [@ChrisM-Rogers](https://github.com/ChrisM-Rogers)!
   * Add `sortTbody_lockHead` to default options.
-
-#### <a name="v2.27.8">Version 2.27.8</a> (9/28/2016)
-
-* Core: minor code cleanup.
-* Docs: remove code in duplicate example-widget-filter-custom. See [pull #1295](https://github.com/Mottie/tablesorter/pull/1295); thanks [@themilkman](https://github.com/themilkman)!
-* ColumnSelector: `updateAll` properly updates the popup. See [Stack Overflow](http://stackoverflow.com/q/39669948/145346).
-* Pager: Maintain filter focus on custom controls. Fixes [issue #1296](https://github.com/Mottie/tablesorter/issues/1296).
-* Readme: Add link to Grav CMS. See [issue #1290](https://github.com/Mottie/tablesorter/issues/1290).
