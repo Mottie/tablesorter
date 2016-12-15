@@ -1,13 +1,15 @@
-/* Tablesorter Custom LESS Theme by Rob Garrison
+/* Tablesorter Custom SCSS Theme by Dan Feidt (https://github.com/HongPong)
+ Converted from Custom LESS Theme by Rob Garrison
 
  To create your own theme, modify the code below and run it through
- a LESS compiler, like this one: http://leafo.net/lessphp/editor.html
- or download less.js from http://lesscss.org/
+ a SCSS compiler, like this one: http://beautifytools.com/scss-compiler.php
+ or download sass.js from https://github.com/medialize/sass.js
 
-Test out these custom less files live
- Basic Theme : http://codepen.io/Mottie/pen/eqBbn
- Bootstrap   : http://codepen.io/Mottie/pen/Ltzpi
- Metro Style : http://codepen.io/Mottie/pen/gCslk
+Test out these customization files live
+ Basic LESS Theme : http://codepen.io/Mottie/pen/eqBbn
+ Bootstrap LESS   : http://codepen.io/Mottie/pen/Ltzpi
+ Metro LESS Style : http://codepen.io/Mottie/pen/gCslk
+ Basic SCSS       : http://codepen.io/Mottie/pen/LbXdNR
 
  */
 
@@ -22,7 +24,7 @@ $tableBodyFont         : 11px 'trebuchet ms', verdana, arial;
 /* for best results, only change the hue (120),
    leave the saturation (60%) and luminosity (75%) alone
    pick the color from here: http://hslpicker.com/#99E699 */
-$headerBackground      : hsl(120, 60%, 75%);
+$headerBackground      : hsl(0, 60%, 75%);
 $borderAndBackground   : #cdcdcd;
 $overallBorder         : $borderAndBackground 1px solid;
 $headerTextColor       : #000;
@@ -51,24 +53,24 @@ $headerPadding         : 4px 20px 4px 4px;
 $processingIcon        : url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=');
 
 /* zebra striping */
-.allRows {
+@mixin allRows {
 	background-color: $bodyBackground;
 	color: $bodyTextColor;
 }
-.evenRows {
+@mixin evenRows {
 	background-color: lighten($headerBackground, 40%);
 	color: $bodyTextColor;
 }
-.oddRows {
+@mixin oddRows {
 	background-color: lighten($headerBackground, 20%);
 }
 
 /* hovered rows */
-.oddHovered {
+@mixin oddHovered {
 	background-color: desaturate($headerBackground, 60%);
 	color: $bodyTextColor;
 }
-.evenHovered {
+@mixin evenHovered {
 	background-color: lighten( desaturate($headerBackground, 60%), 10% );
 	color: $bodyTextColor;
 }
@@ -82,7 +84,7 @@ $tertiaryOdd   : $secondaryEven;
 $tertiaryEven  : lighten( $secondaryEven, 5% );
 
 /* Filter widget transition */
-.filterWidgetTransition {
+@mixin filterWidgetTransition {
 	-webkit-transition: line-height $filterTransitionTime ease;
 	-moz-transition: line-height $filterTransitionTime ease;
 	-o-transition: line-height $filterTransitionTime ease;
@@ -103,29 +105,25 @@ $sortAscWhite  : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEAL
 $sortDescWhite : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 
 /* automatically choose the correct arrow/text color */
-.headerText ($a) when (lightness($a) >= 50%) {
-	color: $headerTextColor;
+@function set-lightness($a, $b) {
+	@if (lightness($headerBackground) >= 50) {
+		@return $a;
+	} @else {
+		@return $b;
+	}
 }
-.headerText ($a) when (lightness($a) < 50%) {
-	color: lighten($headerTextColor, 90%);
+@mixin headerText {
+	color: set-lightness($headerTextColor, lighten($headerTextColor, 90%));
 }
-.unsorted ($a) when (lightness($a) >= 50%) {
-	background-image: $unsortedBlack;
+
+@mixin unsorted {
+	background-image: set-lightness($unsortedBlack, $unsortedWhite);
 }
-.unsorted ($a) when (lightness($a) < 50%) {
-	background-image: $unsortedWhite;
+@mixin sortAsc {
+	background-image: set-lightness($sortAscBlack, $sortAscWhite);
 }
-.sortAsc ($a) when (lightness($a) >= 50%) {
-	background-image: $sortAscBlack;
-}
-.sortAsc ($a) when (lightness($a) < 50%) {
-	background-image: $sortAscWhite;
-}
-.sortDesc ($a) when (lightness($a) >= 50%) {
-	background-image: $sortDescBlack;
-}
-.sortDesc ($a) when (lightness($a) < 50%) {
-	background-image: $sortDescWhite;
+@mixin sortDesc {
+	background-image: set-lightness($sortDescBlack, $sortDescWhite);
 }
 
 /* variable theme name - requires less.js 1.3+;
@@ -151,7 +149,7 @@ $sortDescWhite : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEAL
 		font: $tableHeaderFont;
 		font-weight: bold;
 		background-color: $headerBackground;
-		@include headerText($headerBackground);
+		@include headerText;
 		border-collapse: collapse;
 		padding: $overallPadding;
 	}
@@ -163,7 +161,7 @@ $sortDescWhite : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEAL
 
 	/* style header */
 	.tablesorter-header {
-		@include unsorted($headerBackground);
+		@include unsorted;
 		background-repeat: no-repeat;
 		background-position: $arrowPosition;
 		padding: $headerPadding;
@@ -178,12 +176,12 @@ $sortDescWhite : url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEAL
 
 	.tablesorter-headerAsc {
 		background-color: $headerAsc;
-		@include sortAsc($headerBackground);
+		@include sortAsc;
 	}
 
 	.tablesorter-headerDesc {
 		background-color: $headerDesc;
-		@include sortDesc($headerBackground);
+		@include sortDesc;
 	}
 
 	/* tfoot */
