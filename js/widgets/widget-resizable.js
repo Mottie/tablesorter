@@ -21,7 +21,7 @@
 			'.' + ts.css.resizableHandle + ' { position: absolute; display: inline-block; width: 8px;' +
 				'top: 1px; cursor: ew-resize; z-index: 3; user-select: none; -moz-user-select: none; }' +
 			'</style>';
-		$(s).appendTo('body');
+		$('head').append(s);
 	});
 
 	ts.resizable = {
