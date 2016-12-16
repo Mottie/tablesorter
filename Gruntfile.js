@@ -425,6 +425,10 @@ module.exports = function( grunt ) {
 		grunt.task.run(tasks);
 	});
 
+	function escapeRegExp(str) {
+		return str.replace(/[$()*+\-.\/?[\\\]^{|}]/g, "\\$&");
+	}
+
 	// update tablesorter.jquery.json file version numbers to match the package.json version
 	grunt.registerTask( 'updateManifest', function() {
 		var i, project,
@@ -439,6 +443,16 @@ module.exports = function( grunt ) {
 			project.version = pkg.version;
 			grunt.file.write( projectFile[i], JSON.stringify( project, null, 2 ) ); // serialize it back to file
 		}
+		// check internal version number
+		project = grunt.file.read('js/jquery.tablesorter.js');
+			if (
+				new RegExp(escapeRegExp('/*! TableSorter (FORK) v' + pkg.version)).test(project) &&
+				new RegExp(escapeRegExp("version : '" + pkg.version)).test(project)
+			) {
+				console.info('versions all match!');
+			} else {
+				grunt.log.writeln('\n**** version mismatch! ****'['red'].bold);
+			}
 	});
 
 };
