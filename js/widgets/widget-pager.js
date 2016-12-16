@@ -109,6 +109,7 @@
 				prev        : '.prev',        // previous page arrow
 				next        : '.next',        // next page arrow
 				last        : '.last',        // go to last page arrow
+				// goto is a reserved word #657
 				gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
 				pageDisplay : '.pagedisplay', // location of where the 'output' is displayed
 				pageSize    : '.pagesize'     // page size selector - select dropdown that sets the 'size' option
@@ -168,10 +169,6 @@
 			p.size = $.data( table, 'pagerLastSize' ) || wo.pager_size;
 			// added in case the pager is reinitialized after being destroyed.
 			p.$container = $( s.container ).addClass( wo.pager_css.container ).show();
-			// goto selector
-			p.$goto = p.$container.find( s.gotoPage ); // goto is a reserved word #657
-			// page size selector
-			p.$size = p.$container.find( s.pageSize );
 			p.totalRows = c.$tbodies.eq( 0 )
 				.children( 'tr' )
 				.not( wo.pager_countChildRows ? '' : '.' + c.cssChildRow )
@@ -184,7 +181,7 @@
 				p.page = ( isNaN( t.page ) ? p.page : t.page ) || p.setPage || 0;
 				p.size = t.size === 'all' ? t.size : ( isNaN( t.size ) ? p.size : t.size ) || p.setSize || 10;
 				$.data( table, 'pagerLastSize', p.size );
-				p.$size.val( p.size );
+				p.$container.find( s.pageSize ).val( p.size );
 			}
 
 			// skipped rows
@@ -243,7 +240,7 @@
 		},
 
 		bindEvents: function( c ) {
-			var ctrls, fxn,
+			var ctrls, fxn, tmp,
 				p = c.pager,
 				wo = c.widgetOptions,
 				namespace = c.namespace + 'pager',
@@ -359,8 +356,9 @@
 					}
 				});
 
-			if ( p.$goto.length ) {
-				p.$goto
+			tmp = p.$container.find( wo.pager_selectors.gotoPage );
+			if ( tmp.length ) {
+				tmp
 					.off( 'change' + namespace )
 					.on( 'change' + namespace, function() {
 						p.page = $( this ).val() - 1;
@@ -371,15 +369,17 @@
 				console.warn( 'Pager: >> Goto selector not found' );
 			}
 
-			if ( p.$size.length ) {
+			tmp = p.$container.find( wo.pager_selectors.pageSize );
+			if ( tmp.length ) {
 				// setting an option as selected appears to cause issues with initial page size
-				p.$size.find( 'option' ).removeAttr( 'selected' );
-				p.$size
+				tmp.find( 'option' ).removeAttr( 'selected' );
+				tmp
 					.off( 'change' + namespace )
 					.on( 'change' + namespace, function() {
 						if ( !$( this ).hasClass( wo.pager_css.disabled ) ) {
 							var size = $( this ).val();
-							p.$size.val( size ); // in case there are more than one pagers
+							// in case there are more than one pager
+							p.$container.find( wo.pager_selectors.pageSize ).val( size );
 							tsp.setPageSize( c, size );
 							tsp.changeHeight( c );
 						}
@@ -447,8 +447,7 @@
 				sz = tsp.parsePageSize( c, p.size, 'get' ); // don't allow dividing by zero
 			if ( sz === 'all' ) { sz = p.totalRows; }
 			if ( wo.pager_countChildRows ) { t[ t.length ] = c.cssChildRow; }
-			p.$size
-				.add( p.$goto )
+			p.$container.find( wo.pager_selectors.pageSize + ',' + wo.pager_selectors.gotoPage )
 				.removeClass( wo.pager_css.disabled )
 				.removeAttr( 'disabled' )
 				.prop( 'aria-disabled', 'false' );
@@ -494,7 +493,7 @@
 								p[ str ] || ( data ? data[ str ] : deflt ) || deflt;
 						});
 				}
-				if ( p.$goto.length ) {
+				if ( p.$container.find( wo.pager_selectors.gotoPage ).length ) {
 					t = '';
 					options = tsp.buildPageSelect( c, p );
 					len = options.length;
@@ -502,7 +501,7 @@
 						t += '<option value="' + options[ indx ] + '">' + options[ indx ] + '</option>';
 					}
 					// innerHTML doesn't work in IE9 - http://support2.microsoft.com/kb/276228
-					p.$goto.html( t ).val( p.page + 1 );
+					p.$container.find( wo.pager_selectors.gotoPage ).html( t ).val( p.page + 1 );
 				}
 				if ( $out.length ) {
 					$out[ ($out[ 0 ].nodeName === 'INPUT' ) ? 'val' : 'html' ]( s );
@@ -687,9 +686,10 @@
 		hideRowsSetup: function( c ) {
 			var p = c.pager,
 				namespace = c.namespace + 'pager',
-				size = p.$size.val();
+				$el = p.$container.find( wo.pager_selectors.pageSize ),
+				size = $el.val();
 			p.size = tsp.parsePageSize( c, size, 'get' );
-			p.$size.val( p.size );
+			$el.val( p.size );
 			$.data( c.table, 'pagerLastSize', p.size );
 			tsp.pagerArrows( c );
 			if ( !c.widgetOptions.pager_removeRows ) {
@@ -774,32 +774,34 @@
 						}
 					}
 					wo.pager_processAjaxOnInit = true;
-					// only add new header text if the length matches
-					if ( th && th.length === hl ) {
-						hsh = $table.hasClass( 'hasStickyHeaders' );
-						$sh = hsh ? wo.$sticky.children( 'thead:first' ).children( 'tr' ).children() : '';
-						$f = $table.find( 'tfoot tr:first' ).children();
-						// don't change td headers (may contain pager)
-						$headers = c.$headers.filter( 'th' );
-						len = $headers.length;
-						for ( j = 0; j < len; j++ ) {
-							$h = $headers.eq( j );
-							// add new test within the first span it finds, or just in the header
-							if ( $h.find( '.' + ts.css.icon ).length ) {
-								icon = $h.find( '.' + ts.css.icon ).clone( true );
-								$h.find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
-								if ( hsh && $sh.length ) {
-									icon = $sh.eq( j ).find( '.' + ts.css.icon ).clone( true );
-									$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
-								}
-							} else {
-								$h.find( '.tablesorter-header-inner' ).html( th[ j ] );
-								if ( hsh && $sh.length ) {
-									$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] );
-								}
+					hsh = $table.hasClass( 'hasStickyHeaders' );
+					$sh = hsh ? wo.$sticky.children( 'thead:first' ).children( 'tr' ).children() : '';
+					$f = $table.find( 'tfoot tr:first' ).children();
+					// don't change td headers (may contain pager)
+					$headers = c.$headers.filter( 'th' );
+					len = $headers.length;
+					for ( j = 0; j < len; j++ ) {
+						$h = $headers.eq( j );
+						// add new test within the first span it finds, or just in the header
+						if ( $h.find( '.' + ts.css.icon ).length ) {
+							icon = $h.find( '.' + ts.css.icon ).clone( true );
+							$h.find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
+							if ( hsh && $sh.length ) {
+								icon = $sh.eq( j ).find( '.' + ts.css.icon ).clone( true );
+								$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
 							}
-							$f.eq( j ).html( th[ j ] );
+						} else {
+							$h.find( '.tablesorter-header-inner' ).html( th[ j ] );
+							if ( hsh && $sh.length ) {
+								// add sticky header to container just in case it contains pager controls
+								p.$container = p.$container.add($sh);
+								$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] );
+							}
 						}
+						$f.eq( j ).html( th[ j ] );
+					}
+					if (hsh) {
+						tsp.bindEvents( c );
 					}
 				}
 				if ( c.showProcessing ) {
@@ -1006,9 +1008,11 @@
 				}
 			}
 			// disable size selector
-			$controls = p.$size
-				.add( p.$goto )
-				.add( p.$container.find( '.ts-startRow, .ts-page ' ) );
+			$controls = p.$container.find(
+				wo.pager_selectors.pageSize + ',' +
+				wo.pager_selectors.gotoPage + ',' +
+				'.ts-startRow, .ts-page'
+			);
 			len = $controls.length;
 			for ( index = 0; index < len; index++ ) {
 				$controls.eq( index )
@@ -1122,7 +1126,7 @@
 			var p = c.pager,
 				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10;
 			return p.initialized && (/all/i.test( size ) || s === p.totalRows) ?
-				// "get" to set `p.size` or "set" to set `p.$size.val()`
+				// "get" to set `p.size` or "set" to set `pageSize.val()`
 				'all' : ( mode === 'get' ? s : p.size );
 		},
 
@@ -1138,7 +1142,9 @@
 			var p = c.pager,
 				table = c.table;
 			p.size = tsp.parsePageSize( c, size, 'get' );
-			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
+			p.$container
+				.find( c.widgetOptions.pager_selectors.pageSize )
+				.val( tsp.parsePageSize( c, p.size, 'set' ) );
 			$.data( table, 'pagerLastPage', tsp.parsePageNumber( c, p ) );
 			$.data( table, 'pagerLastSize', p.size );
 			p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
@@ -1197,27 +1203,27 @@
 					ts.storage( table, c.widgetOptions.pager_storageKey, '' );
 				}
 				p.$container = null;
-				p.$goto = null;
-				p.$size = null;
 				c.pager = null;
 				c.rowsCopy = null;
 			}
 		},
 
 		enablePager: function( c, triggered ) {
-			var info, size, $el,
+			var info, size,
 				table = c.table,
-				p = c.pager;
+				p = c.pager,
+				wo = c.widgetOptions,
+				$el = p.$container.find( wo.pager_selectors.pageSize );
 			p.isDisabled = false;
 			p.page = $.data( table, 'pagerLastPage' ) || p.page || 0;
-			size = p.$size.find( 'option[selected]' ).val();
+			size = $el.find('option[selected]' ).val();
 			p.size = $.data( table, 'pagerLastSize' ) || tsp.parsePageSize( c, size, 'get' );
-			p.$size.val( p.size ); // set page size
+			$el.val( p.size ); // set page size
 			p.totalPages = p.size === 'all' ? 1 : Math.ceil( tsp.getTotalPages( c, p ) / p.size );
 			c.$table.removeClass( 'pagerDisabled' );
 			// if table id exists, include page display with aria info
 			if ( table.id && !c.$table.attr( 'aria-describedby' ) ) {
-				$el = p.$container.find( c.widgetOptions.pager_selectors.pageDisplay );
+				$el = p.$container.find( wo.pager_selectors.pageDisplay );
 				info = $el.attr( 'id' );
 				if ( !info ) {
 					// only add pageDisplay id if it doesn't exist - see #1288
