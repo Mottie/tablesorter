@@ -787,17 +787,17 @@
 						// add new test within the first span it finds, or just in the header
 						if ( $h.find( '.' + ts.css.icon ).length ) {
 							icon = $h.find( '.' + ts.css.icon ).clone( true );
-							$h.find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
+							$h.find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
 							if ( hsh && $sh.length ) {
 								icon = $sh.eq( j ).find( '.' + ts.css.icon ).clone( true );
-								$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] ).append( icon );
+								$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
 							}
 						} else {
-							$h.find( '.tablesorter-header-inner' ).html( th[ j ] );
+							$h.find( '.' + ts.css.headerIn ).html( th[ j ] );
 							if ( hsh && $sh.length ) {
 								// add sticky header to container just in case it contains pager controls
 								p.$container = p.$container.add( wo.$sticky );
-								$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] );
+								$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] );
 							}
 						}
 						$f.eq( j ).html( th[ j ] );
