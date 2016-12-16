@@ -106,6 +106,7 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 #### <a name="v2.28.3">Version 2.28.3</a> (12/16/2016)
 
 * Core: Fix internal version numbering.
+* Grunt: add version check.
 
 #### <a name="v2.28.2">Version 2.28.2</a> (12/15/2016)
 
