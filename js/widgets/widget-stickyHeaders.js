@@ -61,7 +61,7 @@
 	// **************************
 	ts.addWidget({
 		id: 'stickyHeaders',
-		priority: 55, // sticky widget must be initialized after the filter widget!
+		priority: 54, // sticky widget must be initialized after the filter & before pager widget!
 		options: {
 			stickyHeaders : '',       // extra class name added to the sticky header row
 			stickyHeaders_appendTo : null, // jQuery selector or object to phycially attach the sticky headers
