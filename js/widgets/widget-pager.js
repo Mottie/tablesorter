@@ -775,7 +775,9 @@
 					}
 					wo.pager_processAjaxOnInit = true;
 					hsh = $table.hasClass( 'hasStickyHeaders' );
-					$sh = hsh ? wo.$sticky.children( 'thead:first' ).children( 'tr' ).children() : '';
+					$sh = hsh ?
+						wo.$sticky.children( 'thead:first' ).children( 'tr:not(.' + c.cssIgnoreRow + ')' ).children() :
+						'';
 					$f = $table.find( 'tfoot tr:first' ).children();
 					// don't change td headers (may contain pager)
 					$headers = c.$headers.filter( 'th' );
@@ -794,7 +796,7 @@
 							$h.find( '.tablesorter-header-inner' ).html( th[ j ] );
 							if ( hsh && $sh.length ) {
 								// add sticky header to container just in case it contains pager controls
-								p.$container = p.$container.add($sh);
+								p.$container = p.$container.add( wo.$sticky );
 								$sh.eq( j ).find( '.tablesorter-header-inner' ).html( th[ j ] );
 							}
 						}
