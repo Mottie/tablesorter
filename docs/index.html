@@ -974,28 +974,32 @@
       // See example - Disable first header cell; parser false skips extracting content
       0: { sorter: false, parser: false },
 
-      // See example 2: Sort column numerically &amp; treat any text as if its value is:
-      1: { sorter: "digit", empty:  "top" }, // zero; sort empty cells to the top
-      2: { sorter: "digit", string: "max" }, // maximum positive value
-      3: { sorter: "digit", string: "min" }, // maximum negative value
+      // WARNING! The "ipAddress" parser was MOVED into the "parser-network.js" file
+      // in v2.18.0
+      1: { sorter: "ipAddress" },
 
-      // Sort the fifth column by date &amp; set the format
-      4: { sorter: "shortDate", dateFormat: "yyyymmdd" }, // year first format
+      // See example 2: Sort column numerically &amp; treat any text as if its value is:
+      2: { sorter: "digit", empty:  "top" }, // zero; sort empty cells to the top
+      3: { sorter: "digit", string: "max" }, // maximum positive value
+      4: { sorter: "digit", string: "min" }, // maximum negative value
+
+      // Sort the sixth column by date &amp; set the format
+      5: { sorter: "shortDate", dateFormat: "yyyymmdd" }, // year first format
 
       // See example 3: lock the sort order
       // this option will not work if added as metadata
-      5: { lockedOrder: "asc" },
+      6: { lockedOrder: "asc" },
 
-      // See Example 4: Initial sort order direction of seventh header cell
-      6: { sortInitialOrder: "desc" },
+      // See Example 4: Initial sort order direction of 8th header cell
+      7: { sortInitialOrder: "desc" },
 
       // Set filter widget options for this column
       // See the "Applying the filter widget" demo
-      7: { filter: false },    // disable filter widget for this column
-      8: { filter: "parsed" }, // use parsed data for this column in the filter search
+      8: { filter: false },    // disable filter widget for this column
+      9: { filter: "parsed" }, // use parsed data for this column in the filter search
 
       // Set resizable widget options for this column
-      9: { resizable: false } // prevent resizing of header cell 9
+      10: { resizable: false } // prevent resizing of the 11th column
 
     }
   });
@@ -6410,7 +6414,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 			<tr id="parsers">
 				<td><a href="#" class="permalink">config.parsers</a></td>
 				<td>Array</td>
-				<td>Internal list of all of the table's currently set parsers (objects copied from <a href="#variable-parsers"><code>$.tablesorter.parsers</code></a>). Here is a complete list of default parsers:
+				<td>Internal list of all of the table's currently set parsers (objects copied from <a href="#variable-parsers"><code>$.tablesorter.parsers</code></a>). Here is a complete list of default parsers: (modified v2.18.0)
 					<div class="collapsible">
 					<br>
 					<table class="info"><tbody>
@@ -6419,7 +6423,7 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 						<tr><th><code>sorter: &quot;text&quot;</code></th><td>Sort alpha-numerically.</td></tr>
 						<tr><th><code>sorter: &quot;digit&quot;</code></th><td>Sort numerically.</td></tr>
 						<tr><th><code>sorter: &quot;currency&quot;</code></th><td>Sort by currency value (supports "&#163;$&#8364;&#x00a4;&#x00a5;&#x00a2;").</td></tr>
-						<tr><th><code>sorter: &quot;image&quot;</code></th><td>Sort by image alt value (see <a href="#imgattr"><code>imgAttr</code></a> option).</td></tr>
+						<tr><th><code>sorter: &quot;image&quot;</code></th><td>Sort by image alt value (see <a href="#imgattr"><code>imgAttr</code></a> option; added in v2.18.0).</td></tr>
 						<tr><th><code>sorter: &quot;ipAddress&quot;</code></th><td>Sort by IP Address; <span class="label label-warning">Warning</span> This parser was moved to the <code>parser-network.js</code> file in <span class="version updated">v2.18.0</span>.</td></tr>
 						<tr><th><code>sorter: &quot;url&quot;</code></th><td>Sort by url.</td></tr>
 						<tr><th><code>sorter: &quot;isoDate&quot;</code></th><td>Sort by ISO date (YYYY-MM-DD or YYYY/MM/DD; these formats can be followed by a time).</td></tr>
@@ -6428,8 +6432,9 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 						<tr><th><code>sorter: &quot;shortDate&quot;</code></th><td>Sort by a shortened date (see <a href="#dateformat"><code>dateFormat</code></a>; these formats can also be followed by a time).</td></tr>
 						<tr><th><code>sorter: &quot;time&quot;</code></th><td>Sort by time (23:59 or 12:59 pm).</td></tr>
 						<tr><th><code>sorter: &quot;metadata&quot;</code></th><td>Sort by the sorter value in the metadata - requires the metadata plugin.</td></tr>
-					</tbody></table><br>
-					Check out the <a href="#headers"><code>headers</code></a> option to see how to use these parsers in your table (example #1).<br>Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3).
+					</tbody></table>
+					<p>Check out the <a href="#headers"><code>headers</code></a> option to see how to use these parsers in your table (example #1).</p>
+					Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3).
 					</div>
 				</td>
 				<td>
