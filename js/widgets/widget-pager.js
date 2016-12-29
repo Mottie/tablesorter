@@ -774,36 +774,39 @@
 						}
 					}
 					wo.pager_processAjaxOnInit = true;
-					hsh = $table.hasClass( 'hasStickyHeaders' );
-					$sh = hsh ?
-						wo.$sticky.children( 'thead:first' ).children( 'tr:not(.' + c.cssIgnoreRow + ')' ).children() :
-						'';
-					$f = $table.find( 'tfoot tr:first' ).children();
-					// don't change td headers (may contain pager)
-					$headers = c.$headers.filter( 'th' );
-					len = $headers.length;
-					for ( j = 0; j < len; j++ ) {
-						$h = $headers.eq( j );
-						// add new test within the first span it finds, or just in the header
-						if ( $h.find( '.' + ts.css.icon ).length ) {
-							icon = $h.find( '.' + ts.css.icon ).clone( true );
-							$h.find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
-							if ( hsh && $sh.length ) {
-								icon = $sh.eq( j ).find( '.' + ts.css.icon ).clone( true );
-								$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
+					// update new header text
+					if ( th ) {
+						hsh = $table.hasClass( 'hasStickyHeaders' );
+						$sh = hsh ?
+							wo.$sticky.children( 'thead:first' ).children( 'tr:not(.' + c.cssIgnoreRow + ')' ).children() :
+							'';
+						$f = $table.find( 'tfoot tr:first' ).children();
+						// don't change td headers (may contain pager)
+						$headers = c.$headers.filter( 'th' );
+						len = $headers.length;
+						for ( j = 0; j < len; j++ ) {
+							$h = $headers.eq( j );
+							// add new test within the first span it finds, or just in the header
+							if ( $h.find( '.' + ts.css.icon ).length ) {
+								icon = $h.find( '.' + ts.css.icon ).clone( true );
+								$h.find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
+								if ( hsh && $sh.length ) {
+									icon = $sh.eq( j ).find( '.' + ts.css.icon ).clone( true );
+									$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] ).append( icon );
+								}
+							} else {
+								$h.find( '.' + ts.css.headerIn ).html( th[ j ] );
+								if ( hsh && $sh.length ) {
+									// add sticky header to container just in case it contains pager controls
+									p.$container = p.$container.add( wo.$sticky );
+									$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] );
+								}
 							}
-						} else {
-							$h.find( '.' + ts.css.headerIn ).html( th[ j ] );
-							if ( hsh && $sh.length ) {
-								// add sticky header to container just in case it contains pager controls
-								p.$container = p.$container.add( wo.$sticky );
-								$sh.eq( j ).find( '.' + ts.css.headerIn ).html( th[ j ] );
-							}
+							$f.eq( j ).html( th[ j ] );
 						}
-						$f.eq( j ).html( th[ j ] );
-					}
-					if (hsh) {
-						tsp.bindEvents( c );
+						if ( hsh ) {
+							tsp.bindEvents( c );
+						}
 					}
 				}
 				if ( c.showProcessing ) {

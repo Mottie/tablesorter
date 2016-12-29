@@ -472,8 +472,8 @@
 							}
 						}
 						p.processAjaxOnInit = true;
-						// only add new header text if the length matches
-						if ( th && th.length === hl ) {
+						// update new header text
+						if ( th ) {
 							hsh = $table.hasClass('hasStickyHeaders');
 							$sh = hsh ?
 								c.widgetOptions.$sticky.children('thead:first').children('tr:not(.' + c.cssIgnoreRow + ')').children() :
