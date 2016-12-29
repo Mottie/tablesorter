@@ -48,8 +48,7 @@
 		<em>NOTE!</em>
 	</p>
 	<ul>
-		<li>This parser can be applied to the original plugin.</li>
-		<li>The default "ipAdress" parser (IPv4) is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
+		<li><span class="label warning">NOTE</span> The default "ipAddress" parser (also named "ipv4Address") is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
 		<li>A parser for IPv6 was added in <span class="version">v2.12</span> and named "ipv6Address":
 			<ul>
 				<li>Unlike some other custom parsers, this one will auto-detect &amp; check for a valid IPv6 address since the same address can be represented in many different ways. Some examples are shown in the demo table below.</li>
@@ -68,6 +67,7 @@ $('table').tablesorter({
 });
 });</pre>
 		</li>
+		<li>These parsers may also be used with the original tablesorter plugin.</li>
 	</ul>
 
 
