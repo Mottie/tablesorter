@@ -439,7 +439,7 @@
 
 		updatePageDisplay: function( c, completed ) {
 			if ( c.pager && c.pager.initializing ) { return; }
-			var s, t, $out, options, indx, len,
+			var s, t, $out, options, indx, len, output,
 				table = c.table,
 				wo = c.widgetOptions,
 				p = c.pager,
@@ -468,8 +468,12 @@
 				if ( typeof wo.pager_output === 'function' ) {
 					s = wo.pager_output( table, p );
 				} else {
+					output = $out
+						// get output template from data-pager-output or data-pager-output-filtered
+						.attr('data-pager-output' + (p.filteredRows < p.totalRows ? '-filtered' : '')) ||
+						wo.pager_output;
 					// form the output string (can now get a new output string from the server)
-					s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || wo.pager_output : wo.pager_output )
+					s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || output : output )
 						// {page} = one-based index; {page+#} = zero based index +/- value
 						.replace( /\{page([\-+]\d+)?\}/gi, function( m, n ) {
 							return p.totalPages ? p.page + ( n ? parseInt( n, 10 ) : 1 ) : 0;
@@ -686,7 +690,7 @@
 		hideRowsSetup: function( c ) {
 			var p = c.pager,
 				namespace = c.namespace + 'pager',
-				$el = p.$container.find( wo.pager_selectors.pageSize ),
+				$el = p.$container.find( c.widgetOptions.pager_selectors.pageSize ),
 				size = $el.val();
 			p.size = tsp.parsePageSize( c, size, 'get' );
 			$el.val( p.size );

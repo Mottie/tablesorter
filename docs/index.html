@@ -493,9 +493,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.0</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.4</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.0</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.4</span>).<br>
 			<br>
 		</li>
 
@@ -4523,11 +4523,15 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="#" class="permalink">output</a></td>
 				<td>String</td>
 				<td>&quot;{page}/<wbr>{totalPages}&quot;</td>
-				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version">v2.27.7</span>).
+				<td>This option allows you to format the output display which can show the current page, total pages, filtered pages, current start and end rows, total rows and filtered rows (v2.0.9; <span class="version updated">v2.28.4</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_output</code><br>
-					<br>
+					<p>
+					In <span class="version updated">v2.28.4</span>
+					<p>The <a href="#pager-csspagedisplay">output</a> element can now include two data-attributes, <code>data-pager-output</code> and <code>data-pager-output-filtered</code> which override this setting <em>string</em> when set.</p>
+					<pre class="prettyprint lang-html">&lt;span class=&quot;pagedisplay&quot; data-pager-output=&quot;{startRow:input} &ndash; {endRow} / {totalRows} total rows&quot; data-pager-output-filtered=&quot;{startRow:input} &ndash; {endRow} / {filteredRows} of {totalRows} total rows&quot;&gt;&lt;/span&gt;</pre>
+					<p>It will not override this option if set as a function, or if a specific <a href="#object">output is returned</a> from the server through ajax.</p>
 					In <span class="version updated">v2.27.7</span>, this option can also be set as a function
 						<pre class="prettyprint lang-js">output: function(table, pager) {
 	return 'page ' + pager.startRow + ' - ' + pager.endRow;

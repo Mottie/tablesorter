@@ -173,7 +173,7 @@
 
 			updatePageDisplay = function(table, p, completed) {
 				if ( p.initializing ) { return; }
-				var s, t, $out, $el, indx, len, options,
+				var s, t, $out, $el, indx, len, options, output,
 				c = table.config,
 				namespace = c.namespace + 'pager',
 				sz = parsePageSize( p, p.size, 'get' ); // don't allow dividing by zero
@@ -196,8 +196,12 @@
 					if (typeof p.output === 'function') {
 						s = p.output(table, p);
 					} else {
+						output = $out
+							// get output template from data-pager-output or data-pager-output-filtered
+							.attr('data-pager-output' + (p.filteredRows < p.totalRows ? '-filtered' : '')) ||
+							p.output;
 						// form the output string (can now get a new output string from the server)
-						s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || p.output : p.output )
+						s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || output : output )
 							// {page} = one-based index; {page+#} = zero based index +/- value
 							.replace(/\{page([\-+]\d+)?\}/gi, function(m, n){
 								return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
@@ -496,7 +500,7 @@
 									$h.find('.' + ts.css.headerIn).html( th[j] );
 									if (hsh && $sh.length) {
 										// add sticky header to container just in case it contains pager controls
-										p.$container = p.$container.add( wo.$sticky );
+										p.$container = p.$container.add( c.widgetOptions.$sticky );
 										$sh.eq(j).find('.' + ts.css.headerIn).html( th[j] );
 									}
 								}

@@ -58,7 +58,7 @@
 		// also {page:input} & {startRow:input} will add a modifiable input in place of the value
 		// In v2.27.7, this can be set as a function
 		// output: function(table, pager) { return 'page ' + pager.startRow + ' - ' + pager.endRow; }
-		output: '{startRow:input} to {endRow} ({totalRows})',
+		output: '{startRow:input} &ndash; {endRow} / {totalRows} rows',
 
 		// apply disabled classname (cssDisabled option) to the pager arrows when the rows
 		// are at either extreme is visible; default is true
@@ -116,7 +116,7 @@
 		.tablesorter({
 			theme: 'blue',
 			widthFixed: true,
-			widgets: ['zebra']
+			widgets: ['zebra', 'filter']
 		})
 
 		// bind to pager events
@@ -239,6 +239,7 @@
 			<em>NOTE!</em> The following are not part of the original plugin:
 		</p>
 		<ul>
+			<li>In <span class="version updated">v2.28.4</span>, added <code>data-pager-output</code> and <code>data-pager-output-filtered</code> attributes which override the <code>output</code> option when set on the <code>pageDisplay</code> element.</li>
 			<li>In <span class="version updated">v2.26.0</span>, a page size of "all" instead of a specific number will be saved and used on reload. Also, ajax interaction will pass a size of "all" which may break current server methods on number of pages to return.</li>
 			<li>In <span class="version updated">v2.24.0</span>, a page size select option with a value of "all" will display all rows - not recommended for ajax interactions!</li>
 			<li>In <span class="version updated">v2.23.0</span>, the following methods were changed due to issues with unique namespacing.
@@ -271,14 +272,14 @@
 	<div class="pager">
 		<img src="../addons/pager/icons/first.png" class="first" alt="First" />
 		<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />
-		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+		<!-- the "pagedisplay" can be any element, including an input -->
+		<span class="pagedisplay" data-pager-output-filtered="{startRow:input} &ndash; {endRow} / {filteredRows} of {totalRows} total rows"></span>
 		<img src="../addons/pager/icons/next.png" class="next" alt="Next" />
 		<img src="../addons/pager/icons/last.png" class="last" alt="Last" />
 		<select class="pagesize" title="Select page size">
 			<option value="10">10</option>
 			<option value="20">20</option>
 			<option value="30">30</option>
-			<option value="40">40</option>
 			<option value="all">All Rows</option>
 		</select>
 		<select class="gotoPage" title="Select page number"></select>
@@ -366,14 +367,14 @@
 <div class="pager">
 	<img src="../addons/pager/icons/first.png" class="first" alt="First" />
 	<img src="../addons/pager/icons/prev.png" class="prev" alt="Prev" />
-	<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+	<!-- the "pagedisplay" can be any element, including an input -->
+	<span class="pagedisplay" data-pager-output-filtered="{startRow:input} &ndash; {endRow} / {filteredRows} of {totalRows} total rows"></span>
 	<img src="../addons/pager/icons/next.png" class="next" alt="Next" />
 	<img src="../addons/pager/icons/last.png" class="last" alt="Last" />
 	<select class="pagesize" title="Select page size">
 		<option value="10">10</option>
 		<option value="20">20</option>
 		<option value="30">30</option>
-		<option value="40">40</option>
 		<option value="all">All Rows</option>
 	</select>
 	<select class="gotoPage" title="Select page number"></select>
@@ -440,7 +441,8 @@ td.tablesorter-pager {
   &lt;form&gt;
     &lt;img src=&quot;first.png&quot; class=&quot;first&quot;/&gt;
     &lt;img src=&quot;prev.png&quot; class=&quot;prev&quot;/&gt;
-    &lt;span class=&quot;pagedisplay&quot;&gt;&lt;/span&gt; &lt;!-- this can be any element, including an input --&gt;
+    &lt;!-- the &quot;pagedisplay&quot; can be any element, including an input --&gt;
+    &lt;span class=&quot;pagedisplay&quot; data-pager-output-filtered=&quot;{startRow:input} &amp;ndash; {endRow} / {filteredRows} of {totalRows} total rows&quot;&gt;&lt;/span&gt;
     &lt;img src=&quot;next.png&quot; class=&quot;next&quot;/&gt;
     &lt;img src=&quot;last.png&quot; class=&quot;last&quot;/&gt;
     &lt;select class=&quot;pagesize&quot;&gt;
