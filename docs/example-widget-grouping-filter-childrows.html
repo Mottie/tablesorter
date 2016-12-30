@@ -33,7 +33,9 @@
 	background: #bfbfbf;
 }
 
-/* Grouping widget css */
+/* Grouping widget css;
+ * contained in widget.grouping.css (added v2.28.4)
+ */
 tr.group-header td {
 	background: #eee;
 }
@@ -76,9 +78,7 @@ tr.group-header.collapsed td i {
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
-
 	<!-- grouping widget -->
-	<script src="../js/parsers/parser-input-select.js"></script>
 	<script src="../js/widgets/widget-grouping.js"></script>
 
 	<script id="js">$(function(){
@@ -91,13 +91,13 @@ tr.group-header.collapsed td i {
 			group_collapsible : true,
 			group_collapsed   : false,
 			group_count       : false,
-			filter_childRows  : true,
+			filter_childRows  : true
 		}
 	});
 
 	$('.tablesorter-childRow td').hide();
 
-	$('.tablesorter').delegate('.toggle', 'click' ,function(){
+	$('.tablesorter').on('click', '.toggle', function(){
 		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
 		return false;
 	});
@@ -172,6 +172,18 @@ tr.group-header.collapsed td i {
 	</tbody>
 </table>
 </div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;!-- Tablesorter: required --&gt;
+&lt;link href=&quot;css/theme.blue.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Grouping widget --&gt;
+&lt;link href=&quot;css/widget.group.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;!-- added v2.28.4 --&gt;
+&lt;script src=&quot;js/widgets/widget-grouping.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
 
 	<h1>Script</h1>
 	<div id="javascript">
