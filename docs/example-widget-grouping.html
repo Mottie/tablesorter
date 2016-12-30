@@ -22,7 +22,8 @@
 	}
 	</style>
 
-	<style id="css">tr.group-header td {
+	<style id="css">/* CSS from widget.grouping.css (added v2.28.4) */
+tr.group-header td {
 	background: #eee;
 }
 .group-name {
@@ -66,9 +67,11 @@ tr.group-header.collapsed td i {
 	<script src="../js/widgets/widget-filter.js"></script>
 
 	<!-- grouping widget -->
+	<!-- <link href="../css/widget.grouping.css" rel="stylesheet"> (added above) -->
 	<script src="../js/parsers/parser-input-select.js"></script>
 	<script src="../js/parsers/parser-date-weekday.js"></script>
 	<script src="../js/widgets/widget-grouping.js"></script>
+	<script src="../js/widgets/widget-storage.js"></script>
 
 	<script id="js">$(function(){
 
@@ -165,6 +168,7 @@ tr.group-header.collapsed td i {
 			<li>This widget will <strong>only work</strong> in tablesorter version 2.8+ and jQuery version 1.7+.</li>
 			<li>Please do not use this widget in very large tables (it might be really slow) <del>or when your table includes multiple tbodies</del>.<br><br></li>
 
+			<li>In <span class="version updated">v2.28.4</span>, added <code>widget.group.css</code> file into the <code>css</code> folder. It contains the grouping widget css shown on this page.</li>
 			<li>In <span class="version updated">v2.27.6</span>, added <code>group-date-hour</code> group type to the Header Class Names.</li>
 			<li>In <span class="version updated">v2.25.4</span>, the zebra widget is reapplied to the table after opening a collapsed group.</li>
 			<li>In <span class="version">v2.24.1</span>
@@ -852,13 +856,16 @@ $(function() {
 	<h1>Page Header</h1>
 	<div>
 		<pre class="prettyprint lang-html">&lt;!-- Tablesorter: required --&gt;
-&lt;link href=&quot;../css/theme.blue.css&quot; rel=&quot;stylesheet&quot;&gt;
-&lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;../js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
+&lt;link href=&quot;css/theme.blue.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/widget-filter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/widget-storage.js&quot;&gt;&lt;/script&gt;
 
 &lt;!-- Grouping widget --&gt;
-&lt;script src=&quot;../js/parsers/parser-input-select.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;../js/widgets/widget-grouping.js&quot;&gt;&lt;/script&gt;</pre>
+&lt;link href=&quot;css/widget.group.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;!-- added v2.28.4 --&gt;
+&lt;script src=&quot;js/parsers/parser-input-select.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parsers/parser-date-weekday.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/widgets/widget-grouping.js&quot;&gt;&lt;/script&gt;</pre>
 	</div>
 
 	<h1>Script</h1>
