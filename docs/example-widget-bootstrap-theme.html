@@ -63,12 +63,15 @@
 
 		// widget code contained in the jquery.tablesorter.widgets.js file
 		// use the zebra stripe widget if you plan on hiding any rows (filter widget)
-		widgets : [ "uitheme", "filter", "zebra" ],
+		widgets : [ "uitheme", "filter", "columns", "zebra" ],
 
 		widgetOptions : {
 			// using the default zebra striping class name, so it actually isn't included in the theme variable above
 			// this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
 			zebra : ["even", "odd"],
+
+			// class names added to columns when sorted
+			columns: [ "primary", "secondary", "tertiary" ],
 
 			// reset filters button
 			filter_reset : ".reset",
@@ -153,7 +156,8 @@
 		<span class="label label-info">NOTE!</span>
 	</p>
 	<ul>
-		<li><span class="label label-success">New!</span>In tablesorter v2.11+, The bootstrap theme now works with Bootstrap 3 and older versions.
+		<li>In <span class="version updated">v2.28.4</span>, added support for the column widget.</li>
+		<li>In tablesorter v2.11+, The bootstrap theme now works with Bootstrap 3 and older versions.
 			<ul>
 				<li>Note the changes to the sorting icons in the <code>$.tablesorter.themes.bootstrap</code> defaults below.</li>
 				<li>Just use the appropriate icon class name (<code>icon-{name}</code> for Bootstrap v2, and <code>glyphicon glyphicon-{name}</code> for Bootstrap v3.</li>
@@ -180,8 +184,8 @@
 		<li>This demo shows how to get around an issue with the filter widget:
 			<ul>
 				<li>The <span class="label label-info">zebra widget button</span> below was added to show that when bootstrap's "table-striped" class is applied, the css defined zebra striping will not apply correctly because table rows are hidden but still accounted for by the css <code>nth-child()</code> selector.</li>
-				<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button type="button" class="filter btn btn-small btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter glyphicon glyphicon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
-				<li>Try other filter searches with the zebra widget disabled, like <button type="button" class="filter btn btn-small btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter glyphicon glyphicon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
+				<li>To better understand this issue, disable the zebra widget (using the toggle button). Now <button type="button" class="filter btn btn-sm btn-primary" data-column="5" data-filter=">80"><i class="icon-white icon-filter glyphicon glyphicon-filter"></i> Filter ">80"</button> in the "Calculus" column.</li>
+				<li>Try other filter searches with the zebra widget disabled, like <button type="button" class="filter btn btn-sm btn-primary" data-column="2" data-filter="male"><i class="icon-white icon-filter glyphicon glyphicon-filter"></i> Filter "male"</button> in the "Sex" column.</li>
 				<li>To solve this issue, just enable the zebra widget and the "even" and "odd" row class names <del>will</del> should over-ride the <code>nth-child()</code> styling.<br><span class="label label-warning">NOTE!</span> This doesn't seem to work in the latest Bootstrap version, so you'll have to remove the "table-striped" class completely from the table.</li>
 				<li>The only down side is that for custom bootstrap themes, you'll need to edit the "theme.bootstrap.css" file for bootstrap.</li>
 			</ul>
@@ -220,19 +224,23 @@
 			<th>Geometry</th>
 		</tr>
 		<tr>
-			<th colspan="7" class="ts-pager form-horizontal">
-				<button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-				<button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
-				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-				<button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-				<button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
-				<select class="pagesize input-mini" title="Select page size">
+			<th colspan="7" class="ts-pager form-inline">
+				<div class="btn-group btn-group-sm" role="group">
+					<button type="button" class="btn btn-default first"><span class="glyphicon glyphicon-step-backward"></span></button>
+					<button type="button" class="btn btn-default prev"><span class="glyphicon glyphicon-backward"></span></button>
+				</div>
+				<span class="pagedisplay"></span>
+				<div class="btn-group btn-group-sm" role="group">
+					<button type="button" class="btn btn-default next"><span class="glyphicon glyphicon-forward"></span></button>
+					<button type="button" class="btn btn-default last"><span class="glyphicon glyphicon-step-forward"></span></button>
+				</div>
+				<select class="form-control input-sm pagesize" title="Select page size">
 					<option selected="selected" value="10">10</option>
 					<option value="20">20</option>
 					<option value="30">30</option>
-					<option value="40">40</option>
+					<option value="all">All Rows</option>
 				</select>
-				<select class="pagenum input-mini" title="Select page number"></select>
+				<select class="form-control input-sm pagenum" title="Select page number"></select>
 			</th>
 		</tr>
 	</tfoot>
@@ -299,7 +307,6 @@
 
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
-&lt;!-- tablesorter widget file - loaded after the plugin --&gt;
 &lt;script src=&quot;js/jquery.tablesorter.widgets.js&quot;&gt;&lt;/script&gt;
 
 &lt;!-- pager plugin --&gt;

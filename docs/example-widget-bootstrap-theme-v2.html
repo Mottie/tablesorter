@@ -64,12 +64,15 @@
 
 		// widget code contained in the jquery.tablesorter.widgets.js file
 		// use the zebra stripe widget if you plan on hiding any rows (filter widget)
-		widgets : [ "uitheme", "filter", "zebra" ],
+		widgets : [ "uitheme", "filter", "columns", "zebra" ],
 
 		widgetOptions : {
 			// using the default zebra striping class name, so it actually isn't included in the theme variable above
 			// this is ONLY needed for bootstrap theming if you are using the filter widget, because rows are hidden
 			zebra : ["even", "odd"],
+
+			// class names added to columns when sorted
+			columns: [ "primary", "secondary", "tertiary" ],
 
 			// reset filters button
 			filter_reset : ".reset",
@@ -125,7 +128,7 @@
 			$(this)
 				.toggleClass('btn-danger btn-success')
 				.find('i')
-				.toggleClass('icon-ok icon-remove glyphicon-ok glyphicon-remove').end()
+				.toggleClass('icon-ok icon-remove').end()
 				.find('span')
 				.text(t ? 'disabled' : 'enabled');
 			$('table').trigger('refreshWidgets', [false]);
@@ -150,6 +153,7 @@
 		<span class="label label-info">NOTE!</span>
 	</p>
 	<ul>
+		<li>In <span class="version updated">v2.28.4</span>, added support for the column widget.</li>
 		<li>This demo uses <a href="http://getbootstrap.com/2.3.2/">Bootstrap v2.x</a> (v2.3.2 specifically).</li>
 		<li>Hover over the thick grey bar under the header to reveal the filter row.</li>
 		<li>For more information like revision history of this theme &amp; why there is a button to enable/disable the zebra widget, please see the <a href="example-widget-bootstrap-theme.html">Bootstrap v3.x demo</a>.</li>
@@ -158,9 +162,9 @@
 	<h1>Demo</h1>
 	<!-- use the filter_reset : '.reset' option or include data-filter="" using the filter button demo code to reset the filters -->
 	<div class="bootstrap_buttons">
-		Reset filter : <button type="button" class="reset btn btn-primary" data-column="0" data-filter=""><i class="icon-white icon-refresh glyphicon glyphicon-refresh"></i> Reset filters</button>
+		Reset filter : <button type="button" class="reset btn btn-primary" data-column="0" data-filter=""><i class="icon-white icon-refresh"></i> Reset filters</button>
 		<br>
-		Zebra widget : <button type="button" class="zebra btn btn-success"><i class="icon-white icon-ok glyphicon glyphicon-ok"></i> <span>enabled</span></button>
+		Zebra widget : <button type="button" class="zebra btn btn-success"><i class="icon-white icon-ok"></i> <span>enabled</span></button>
 	</div>
 	<br>
 
@@ -187,16 +191,20 @@
 		</tr>
 		<tr>
 			<th colspan="7" class="ts-pager form-horizontal">
-				<button type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-				<button type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+				<div class="btn-group">
+					<button type="button" class="btn first"><i class="icon-step-backward"></i></button>
+					<button type="button" class="btn prev"><i class="icon-arrow-left"></i></button>
+				</div>
 				<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-				<button type="button" class="btn next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-				<button type="button" class="btn last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+				<div class="btn-group">
+					<button type="button" class="btn next"><i class="icon-arrow-right"></i></button>
+					<button type="button" class="btn last"><i class="icon-step-forward"></i></button>
+				</div>
 				<select class="pagesize input-mini" title="Select page size">
 					<option selected="selected" value="10">10</option>
 					<option value="20">20</option>
 					<option value="30">30</option>
-					<option value="40">40</option>
+					<option value="all">All Rows</option>
 				</select>
 				<select class="pagenum input-mini" title="Select page number"></select>
 			</th>

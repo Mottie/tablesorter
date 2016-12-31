@@ -89,6 +89,29 @@
 	z-index: 1000;
 }
 
+/* Column Widget - column sort colors */
+.tablesorter-bootstrap > tbody > tr.odd td.primary {
+	background-color: #bfbfbf;
+}
+.tablesorter-bootstrap > tbody > tr td.primary,
+.tablesorter-bootstrap > tbody > tr.even td.primary {
+	background-color: #d9d9d9;
+}
+.tablesorter-bootstrap > tbody > tr.odd td.secondary {
+	background-color: #d9d9d9;
+}
+.tablesorter-bootstrap > tbody > tr td.secondary,
+.tablesorter-bootstrap > tbody > tr.even td.secondary {
+	background-color: #e6e6e6;
+}
+.tablesorter-bootstrap > tbody > tr.odd td.tertiary {
+	background-color: #e6e6e6;
+}
+.tablesorter-bootstrap > tbody > tr td.tertiary,
+.tablesorter-bootstrap > tbody > tr.even td.tertiary {
+	background-color: #f2f2f2;
+}
+
 /* caption */
 caption {
 	background-color: #fff;
@@ -145,7 +168,7 @@ caption {
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
-/* rows hidden by filtering (needed for child rows) */
+/* rows hidden by filtering */
 .tablesorter .filtered {
 	display: none;
 }
