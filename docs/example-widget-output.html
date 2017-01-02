@@ -42,7 +42,7 @@
 		text-align: right;
 		margin-right: 4px;
 	}
-	div.output-download-popup {
+	.dropdown-menu li div {
 		margin-bottom: 5px;
 	}
 	.output-separator, .output-replacequotes, .output-quotes {
@@ -91,7 +91,7 @@ table.tablesorter tbody tr.even.checked td {
 		// buttons set up like this:
 		// <button type="button" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
 		$('button[data-filter-column]').click(function(){
-			/*** first method *** data-filter-column="1" data-filter-text="!son"
+			/*** first method *** data-filter-column="2" data-filter-text="!son"
 				add search value to Discount column (zero based index) input */
 			var filters = [],
 				$t = $(this),
@@ -115,14 +115,16 @@ table.tablesorter tbody tr.even.checked td {
 		headerTemplate : '{content} {icon}',
 		widgets: ["zebra", "filter", "uitheme", "output"],
 		widgetOptions : {
-			filter_filteredRow  : 'filtered',
-			filter_reset        : '.group1 .reset',
+			filter_filteredRow   : 'filtered',
+			filter_reset         : '.group1 .reset',
+
 			output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ';')
-			output_ignoreColumns : [0],          // columns to ignore [0, 1,... ] (zero-based index)
+			output_ignoreColumns : [0],         // columns to ignore [0, 1,... ] (zero-based index)
 			output_hiddenColumns : false,       // include hidden columns in the output
 			output_includeFooter : true,        // include footer rows in the output
+			output_includeHeader : true,        // include header rows in the output
+			output_headerRows    : false        // output all header rows (if multiple rows)
 			output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
-			output_headerRows    : true,        // output all header rows (multiple rows)
 			output_delivery      : 'p',         // (p)opup, (d)ownload
 			output_saveRows      : 'f',         // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
 			output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
@@ -133,7 +135,9 @@ table.tablesorter tbody tr.even.checked td {
 			output_popupStyle    : 'width=580,height=310',
 			output_saveFileName  : 'mytable.csv',
 			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
-			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
+			output_callbackJSON  : function($cell, txt, cellIndex) {
+				return txt + '(' + cellIndex + ')';
+			},
 			// callback executed when processing completes
 			output_callback      : function(config, data, url) {
 				// return false to stop delivery & do something else with the data
@@ -142,8 +146,13 @@ table.tablesorter tbody tr.even.checked td {
 			},
 
 			// the need to modify this for Excel no longer exists
-			output_encoding      : 'data:application/octet-stream;charset=utf8,'
-
+			output_encoding      : 'data:application/octet-stream;charset=utf8,',
+			// override internal save file code and use an external plugin such as
+			// https://github.com/eligrey/FileSaver.js
+			output_savePlugin    : null /* function(config, widgetOptions, data) {
+				var blob = new Blob([data], {type: widgetOptions.output_encoding});
+				saveAs(blob, widgetOptions.output_saveFileName);
+			} */
 		}
 	}).tablesorterPager({
 		container: $('.ts-pager'),
@@ -180,7 +189,7 @@ table.tablesorter tbody tr.even.checked td {
 		// make separator & replace quotes buttons update the value
 		$this.find('.output-separator').click(function(){
 			$this.find('.output-separator').removeClass('active');
-			var txt = $(this).addClass('active').html()
+			var txt = $(this).addClass('active').html();
 			$this.find('.output-separator-input').val( txt );
 			$this.find('.output-filename').val(function(i, v){
 				// change filename extension based on separator
@@ -195,27 +204,42 @@ table.tablesorter tbody tr.even.checked td {
 			$this.find('.output-replacequotes').val( $(this).addClass('active').text() );
 			return false;
 		});
-
+		// header/footer toggle buttons
+		$this.find('.output-header, .output-footer').click(function(){
+			$(this).toggleClass('active');
+		});
 		// clicking the download button; all you really need is to
 		// trigger an "output" event on the table
 		$this.find('.download').click(function(){
 			var typ,
 				$table = $this.find('table'),
 				wo = $table[0].config.widgetOptions,
-				saved = $this.find('.output-filter-all :checked').attr('class');
-			wo.output_separator    = $this.find('.output-separator-input').val();
-			wo.output_delivery     = $this.find('.output-download-popup :checked').attr('class') === 'output-download' ? 'd' : 'p';
-			wo.output_saveRows     = saved === 'output-filter' ? 'f' :
-				saved === 'output-visible' ? 'v' :
-				saved === 'output-selected' ? '.checked' : // checked class name, see table.config.checkboxClass
-				saved === 'output-sel-vis' ? '.checked:visible' :
+				val = $this.find('.output-filter-all :checked').attr('class');
+			wo.output_saveRows     = val === 'output-filter' ? 'f' :
+				val === 'output-visible' ? 'v' :
+				// checked class name, see table.config.checkboxClass
+				val === 'output-selected' ? '.checked' :
+				val === 'output-sel-vis' ? '.checked:visible' :
 				'a';
+			val = $this.find('.output-download-popup :checked').attr('class');
+			wo.output_delivery     = val === 'output-download' ? 'd' : 'p';
+			wo.output_separator    = $this.find('.output-separator-input').val();
 			wo.output_replaceQuote = $this.find('.output-replacequotes').val();
 			wo.output_trimSpaces   = $this.find('.output-trim').is(':checked');
 			wo.output_includeHTML  = $this.find('.output-html').is(':checked');
 			wo.output_wrapQuotes   = $this.find('.output-wrap').is(':checked');
-			wo.output_headerRows   = $this.find('.output-headers').is(':checked');
 			wo.output_saveFileName = $this.find('.output-filename').val();
+
+			// first example buttons, second has radio buttons
+			if (groupIndex === 0) {
+				wo.output_includeHeader = $this.find('button.output-header').is(".active");
+			} else {
+				wo.output_includeHeader = !$this.find('.output-no-header').is(':checked');
+				wo.output_headerRows = $this.find('.output-headers').is(':checked');
+			}
+			// footer not included in second example
+			wo.output_includeFooter = $this.find('.output-footer').is(".active");
+
 			$table.trigger('outputTable');
 			return false;
 		});
@@ -247,40 +271,55 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
-				<li>In <span class="version">v2.27.0</span>, the <code>output_callback</code> now includes a <code>url</code> parameter.</li>
-				<li>In <span class="version">v2.25.2</span>, updated the <code>output_saveRows</code> option to accept a function.</li>
-				<li>In <span class="version">v2.25.1</span>, the <code>output_callback</code> can return modified data instead of a boolean.</li>
-				<li>In <span class="version">v2.22.4</span>, added <code>output_formatContent</code> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
-				<li>In <span class="version">v2.22.2</span>,
+				<li>In <span class="version">v2.28.4</span>,
 					<ul>
-						<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
-						<li>Update <code>output_saveRows</code> option, it now includes the ability to set a jQuery filter selector.
+						<li>Added <a class="intlink" href="#output_includeheader"><code>output_includeHeader</code></a> option.</li>
+						<li>Added <a class="intlink" href="#output_saveplugin"><code>output_savePlugin</code></a> option.</li>
+						<li>Prevent javascript error while attempting to update an already open popup window.</li>
+					</ul>
+				</li>
+				<li>In <span class="version">v2.27.0</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> now includes a <code>url</code> parameter.</li>
+				<li>In <span class="version">v2.25.2</span>, updated the <a class="intlink" href="#output_saverows"><code>output_saveRows</code></a> option to accept a function.</li>
+				<li>In <span class="version">v2.25.1</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> can return modified data instead of a boolean.</li>
+				<li>In <span class="version">v2.22.4</span>, added <a class="intlink" href="#output_formatcontent"><code>output_formatContent</code></a> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
+			</ul>
+
+			<div class="accordion start-closed">
+				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
+				<div>
+					<ul>
+						<li>In <span class="version">v2.22.2</span>,
 							<ul>
-								<li>For example, if you want to only output rows with an active checkbox, set this option to <code>'.checked'</code> (default class added by the checkbox parser contained in the "parser-input-select.js" file).</li>
-								<li>To output only visible active checkboxes, set this option to <code>'.checked:visible'</code>.</li>
-								<li>To output rows without an active checkbox, set this option to <code>':not(.checked)'</code>, etc.</li>
-								<li>More details can be found in the options section.</li>
+								<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
+								<li>Update <code>output_saveRows</code> option, it now includes the ability to set a jQuery filter selector.
+									<ul>
+										<li>For example, if you want to only output rows with an active checkbox, set this option to <code>'.checked'</code> (default class added by the checkbox parser contained in the "parser-input-select.js" file).</li>
+										<li>To output only visible active checkboxes, set this option to <code>'.checked:visible'</code>.</li>
+										<li>To output rows without an active checkbox, set this option to <code>':not(.checked)'</code>, etc.</li>
+										<li>More details can be found in the options section.</li>
+									</ul>
+								</li>
+								<li>Fix issue with <code>output_hiddenColumns</code> causing an empty output.</li>
 							</ul>
 						</li>
-						<li>Fix issue with <code>output_hiddenColumns</code> causing an empty output.</li>
+						<li>In <span class="version">v2.22.0</span>,
+							<ul>
+								<li>Added the BOM back to the UTF-8 csv downloadable file to support unicode characters in Excel.</li>
+								<li>Add <code>output_hiddenColumns</code> which includes hidden columns in the output when <code>true</code>.</li>
+							</ul>
+						</li>
+						<li>In <span class="version">v2.21.0</span>, added the <code>output_includeFooter</code> option.</li>
+						<li>In <span class="version">v2.17.5</span>, the need to modify the server's content disposition no longer exists.</li>
+						<li>In <span class="version">v2.17.0</span>,
+							<ul>
+								<li>Added the <code>output_ignoreColumns</code> option &amp; modified the <a class="intlink" href="#output_callback"><code>output_callback</code></a> parameters.</li>
+								<li>Added <code>output_duplicateSpans</code> option to duplicate (when <code>true</code>) colspan &amp; rowspan content across cells.</li>
+							</ul>
+						</li>
+						<li>In <span class="version">v2.16.4</span>, added the <code>output_encoding</code> option.</li>
 					</ul>
-				</li>
-				<li>In <span class="version">v2.22.0</span>,
-					<ul>
-						<li>Added the BOM back to the UTF-8 csv downloadable file to support unicode characters in Excel.</li>
-						<li>Add <code>output_hiddenColumns</code> which includes hidden columns in the output when <code>true</code>.</li>
-					</ul>
-				</li>
-				<li>In <span class="version">v2.21.0</span>, added the <code>output_includeFooter</code> option.</li>
-				<li>In <span class="version">v2.17.5</span>, the need to modify the server's content disposition no longer exists.</li>
-				<li>In <span class="version">v2.17.0</span>,
-					<ul>
-						<li>Added the <code>output_ignoreColumns</code> option &amp; modified the <code>output_callback</code> parameters.</li>
-						<li>Added <code>output_duplicateSpans</code> option to duplicate (when <code>true</code>) colspan &amp; rowspan content across cells.</li>
-					</ul>
-				</li>
-				<li>In <span class="version">v2.16.4</span>, added the <code>output_encoding</code> option.</li>
-			</ul>
+				</div>
+			</div>
 
 			<h4>Requirements</h4>
 			<ul>
@@ -453,7 +492,7 @@ line,value1,value2,value3
 							<br>
 							When the output is created, and it this option doesn't match either <code>&quot;json&quot;</code> or <code>&quot;array&quot;</code>, each block of table cell data will be separated by this setting.<br>
 							<br>
-							This is the result with this option set to <code>&quot;,&quot;</code> and with the table filtered with Rank <button type="button" data-filter-column="0" data-filter-text=">100">&gt;100</button> :
+							This is the result with this option set to <code>&quot;,&quot;</code> and with the table filtered with Rank <button type="button" data-filter-column="1" data-filter-text=">100">&gt;100</button> :
 							<br>
 							<pre class="prettyprint lang-js">Rank,First,Last,Age,Total,Discount,Date
 111,Peter,Parker,28,$9.99,20%,"Jul 6, 2006 8:14 AM"
@@ -516,6 +555,24 @@ line,value1,value2,value3
 							Change this option to <code>true</code> to include the <code>&lt;tfoot&gt;</code> rows in the output (<span class="version">v2.21.0</span>)
 						</td>
 					</tr>
+					<tr id="output_includeheader">
+						<td><span class="permalink">output_includeHeader</span></td>
+						<td><code>true</code></td>
+						<td>
+							Change this option to <code>false</code> to not include any rows from the <code>&lt;thead&gt;</code> in the output (<span class="version">v2.28.4</span>)
+						</td>
+					</tr>
+					<tr id="output_headerrows">
+						<td><a href="#" class="permalink">output_headerRows</a></td>
+						<td><code>false</code></td>
+						<td>
+							Setting this option to <code>true</code> will include all header rows while processing a JSON output.
+							<div class="collapsible">
+							<br>
+							If this option is set to <code>false</code>, only the <strong>last row</strong> of the table header will be used as a key names for the tbody values; this does assume that the last table row in the header contains all of the header cell names &amp; does not contain any <code>colspan</code>.
+							</div>
+						</td>
+					</tr>
 					<tr id="output_dataattrib">
 						<td><a href="#" class="permalink">output_dataAttrib</a></td>
 						<td><code>'data-name'</code></td>
@@ -539,17 +596,6 @@ line,value1,value2,value3
 							<p>Notice in this output that the "First" and "Last" columns match the contents of the <code>data-name</code> attribute and not the header text:</p>
 							<pre class="prettyprint lang-js">Rank,First,Last,Age,Total,Discount,Date</pre>
 							<span class="label warning">* NOTE *</span> The core plugin uses the <code>data-text</code> attribute for text extraction. If you want to use the same data for both, make the data-attributes match!
-							</div>
-						</td>
-					</tr>
-					<tr id="output_headerrows">
-						<td><a href="#" class="permalink">output_headerRows</a></td>
-						<td><code>false</code></td>
-						<td>
-							Setting this option to <code>true</code> will include all header rows while processing a JSON output.
-							<div class="collapsible">
-							<br>
-							If this option is set to <code>false</code>, only the <strong>last row</strong> of the table header will be used as a key names for the tbody values; this does assume that the last table row in the header contains all of the header cell names &amp; does not contain any <code>colspan</code>.
 							</div>
 						</td>
 					</tr>
@@ -685,7 +731,7 @@ line,value1,value2,value3
 							This option, if <code>true</code> wrap the output of all table cell content in quotes.
 							<div class="collapsible">
 							<br>
-							This is the output of the widget when the age column is filtered for results in the range <button type="button" data-filter-column="3" data-filter-text="25 - 35">25 - 35</button>.
+							This is the output of the widget when the age column is filtered for results in the range <button type="button" data-filter-column="4" data-filter-text="25 - 35">25 - 35</button>.
 							<pre class="prettyprint lang-js">"Rank","First","Last","Age","Total","Discount","Date"
 "1","Philip Aaron Wong","Johnson Sr Esq","25","$5.95","22%","Jun 26, 2004 7:22 AM"
 "111","Peter","Parker","28","$9.99","20%","Jul 6, 2006 8:14 AM"
@@ -718,7 +764,6 @@ line,value1,value2,value3
 						<td><code>'mytable.csv'</code></td>
 						<td>When downloading, this option sets the filename of the output.</td>
 					</tr>
-
 					<tr id="output_formatcontent">
 						<td><a href="#" class="permalink">output_formatContent</a></td>
 						<td>null</td>
@@ -836,6 +881,21 @@ output_encoding : 'data:text/csv;charset=utf8,'</pre><span class="label label-in
 						</td>
 					</tr>
 
+					<tr id="output_saveplugin">
+						<td><a href="#" class="permalink">output_savePlugin</a></td>
+						<td><code>null</code></td>
+						<td>Override internal save file code and use an external plugin (<span class="version">v2.28.4</span>)
+							<div class="collapsible">
+								<br>
+								<p>You can use a plugin such as <a href="https://github.com/eligrey/FileSaver.js">FileSaver.js</a> instead of the simplified, and possibly out-of-date internal method.</p>
+								Use this option as follows:
+								<pre class="prettyprint lang-js">output_savePlugin: function(config, widgetOptions, data) {
+  var blob = new Blob([data], {type: widgetOptions.output_encoding});
+  saveAs(blob, widgetOptions.output_saveFileName);
+}</pre>
+						</td>
+					</tr>
+
 				</tbody>
 			</table>
 			<span class="label label-info">Note</span> If you need to change the carriage return and/or the tab replacement strings, modify them as follows (changed in <span class="version">v2.21.2</span>):
@@ -851,7 +911,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 
 	<h1>Demo</h1>
 	<br>
-	Search <button type="button" data-filter-column="5" data-filter-text=">15">&gt;15</button> in the Discount column<br>
+	Search <button type="button" data-filter-column="6" data-filter-text=">15">&gt;15</button> in the Discount column<br>
 	<br>
 
 	<div id="demo"><div class="group1">
@@ -861,7 +921,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 
 		<!-- Split button -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default download">Download</button>
+			<button type="button" class="btn btn-default download">Output</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -878,6 +938,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
 				</li>
 				<li>
+					<label>Send to:</label>
 					<div class="btn-group output-download-popup" data-toggle="buttons" title="Download file or open in Popup window">
 						<label class="btn btn-default btn-sm active">
 							<input type="radio" name="delivery1" class="output-popup" checked> Popup
@@ -888,6 +949,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					</div>
 				</li>
 				<li>
+					<label>Include:</label>
 					<div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible, selected, selected+visible or all rows">
 						<label class="btn btn-default btn-sm active">
 							<input type="radio" name="getrows1" class="output-filter" checked="checked"> Filtered
@@ -906,6 +968,10 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 						</label>
 					</div>
 				</li>
+				<li>
+					<button class="output-header btn btn-default btn-sm active" title="Include table header">Header</button>
+					<button class="output-footer btn btn-default btn-sm active" title="Include table footer">Footer</button>
+				</li>
 				<li class="divider"></li>
 				<li>
 					<label>Replace quotes: <input class="output-replacequotes" type="text" size="2" value="'" /></label>
@@ -922,11 +988,11 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 	</div>
 
 	<div class="ts-pager form-horizontal">
-		<button type="button" class="btn btn-default btn-sm first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
-		<button type="button" class="btn btn-default btn-sm prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+		<button type="button" class="btn btn-default btn-sm first"><i class="glyphicon glyphicon-step-backward"></i></button>
+		<button type="button" class="btn btn-default btn-sm prev"><i class="glyphicon glyphicon-backward"></i></button>
 		<span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-		<button type="button" class="btn btn-default btn-sm next"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
-		<button type="button" class="btn btn-default btn-sm last"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+		<button type="button" class="btn btn-default btn-sm next"><i class="glyphicon glyphicon-forward"></i></button>
+		<button type="button" class="btn btn-default btn-sm last"><i class="glyphicon glyphicon-step-forward"></i></button>
 		<select class="pagesize form-control btn-sm" title="Select page size">
 			<option selected="selected" value="5">5</option>
 			<option value="10">10</option>
@@ -937,7 +1003,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 	<table id="table" class="tablesorter">
 		<thead>
 			<tr>
-				<th class="sorter-checkbox"></th>
+				<th class="sorter-checkbox filter-false">&nbsp;</th>
 				<th>Rank</th>
 				<th data-name="First">First Name</th>
 				<th data-name="Last">Last Name</th>
@@ -984,7 +1050,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 
 		<!-- Split button -->
 		<div class="btn-group">
-			<button type="button" class="btn btn-default download">Download</button>
+			<button type="button" class="btn btn-default download">Output</button>
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -1001,6 +1067,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
 				</li>
 				<li>
+					<label>Send to:</label>
 					<div class="btn-group output-download-popup" data-toggle="buttons" title="Download file or open in Popup window">
 						<label class="btn btn-default btn-sm active">
 							<input type="radio" name="delivery2" class="output-popup" checked> Popup
@@ -1011,6 +1078,7 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					</div>
 				</li>
 				<li>
+					<label>Include:</label>
 					<div class="btn-group output-filter-all" data-toggle="buttons" title="Output only filtered, visible or all rows">
 						<label class="btn btn-default btn-sm active">
 							<input type="radio" name="getrows2" class="output-filter" checked> Filtered
@@ -1020,6 +1088,20 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 						</label>
 						<label class="btn btn-default btn-sm">
 							<input type="radio" name="getrows2" class="output-all"> All
+						</label>
+					</div>
+				</li>
+				<li>
+					<label>Header:</label>
+					<div class="btn-group output-includes" data-toggle="buttons" title="Include no, single (last row), or all table headers">
+						<label class="btn btn-default btn-sm">
+							<input type="radio" name="headers" class="output-no-header"> None
+						</label>
+						<label class="btn btn-default btn-sm">
+							<input type="radio" name="headers"> Single
+						</label>
+						<label class="btn btn-default btn-sm active">
+							<input type="radio" name="headers" class="output-headers" checked> All
 						</label>
 					</div>
 				</li>
@@ -1033,7 +1115,6 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 				<li><label title="Remove extra white space from each cell">Trim spaces: <input class="output-trim" type="checkbox" checked /></label></li>
 				<li><label title="Include HTML from cells in output">Include HTML: <input class="output-html" type="checkbox" /></label></li>
 				<li><label title="Wrap all values in quotes">Wrap in Quotes: <input class="output-wrap" type="checkbox" /></label></li>
-				<li><label title="Include both header rows in output">Include both header rows: <input class="output-headers" type="checkbox" checked /></label></li>
 				<li><label title="Choose a download filename">Filename: <input class="output-filename" type="text" size="15" value="mytable.csv"/></label></li>
 			</ul>
 		</div>

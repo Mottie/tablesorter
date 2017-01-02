@@ -26,7 +26,7 @@
 		replaceTab : '\x09',
 
 		popupTitle : 'Output',
-		popupStyle : 'width:100%;height:100%;', // for textarea
+		popupStyle : 'width:100%;height:100%;margin:0;resize:none;', // for textarea
 		message    : 'Your device does not support downloading. Please try again in desktop browser.',
 
 		init : function(c) {
@@ -183,9 +183,13 @@
 				// requires JSON stringify; if it doesn't exist, the output will show [object Object],... in the output window
 				mydata = hasStringify ? JSON.stringify(tmpData) : tmpData;
 			} else {
-				tmp = [ headers[ ( len > 1 && wo.output_headerRows ) ? indx % len : len - 1 ] ];
-				tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : tmp, outputArray)
-					.concat( output.row2CSV(wo, csvData, outputArray) );
+				if (wo.output_includeHeader) {
+					tmp = [ headers[ ( len > 1 && wo.output_headerRows ) ? indx % len : len - 1 ] ];
+					tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : tmp, outputArray)
+						.concat( output.row2CSV(wo, csvData, outputArray) );
+				} else {
+					tmpData = output.row2CSV(wo, csvData, outputArray);
+				}
 
 				// stringify the array; if stringify doesn't exist the array will be flattened
 				mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
@@ -369,8 +373,9 @@
 			output_ignoreColumns  : [],          // columns to ignore [0, 1,... ] (zero-based index)
 			output_hiddenColumns  : false,       // include hidden columns in the output
 			output_includeFooter  : false,       // include footer rows in the output
+			output_includeHeader  : true,        // include header rows in the output
+			output_headerRows     : false,       // if true, include multiple header rows
 			output_dataAttrib     : 'data-name', // header attrib containing modified header name
-			output_headerRows     : false,       // if true, include multiple header rows (JSON only)
 			output_delivery       : 'popup',     // popup, download
 			output_saveRows       : 'filtered',  // (a)ll, (v)isible, (f)iltered or jQuery filter selector
 			output_duplicateSpans : true,        // duplicate output data in tbody colspan/rowspan
@@ -390,14 +395,12 @@
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 			// the need to modify this for Excel no longer exists
 			output_encoding      : 'data:application/octet-stream;charset=utf8,',
-			/* override internal save file code and use an external plugin such as
-			 * https://github.com/eligrey/FileSaver.js (example)
-			 * output_savePlugin: function(config, widgetOptions, data) {
-			 *  var blob = new Blob([data], {type: wo.output_encoding});
-			 *  saveAs(blob, wo.output_saveFileName);
-			 * }
-			 */
-			output_savePlugin    : null
+			// override internal save file code and use an external plugin such as
+			// https://github.com/eligrey/FileSaver.js
+			output_savePlugin    : null /* function(c, wo, data) {
+				var blob = new Blob([data], {type: wo.output_encoding});
+				saveAs(blob, wo.output_saveFileName);
+			} */
 		},
 		init: function(table, thisWidget, c) {
 			output.init(c);
