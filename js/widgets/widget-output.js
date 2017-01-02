@@ -3,6 +3,7 @@
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
  * Download-File-JS: https://github.com/PixelsCommander/Download-File-JS (http://www.apache.org/licenses/LICENSE-2.0)
+ * FileSaver.js: https://github.com/eligrey/FileSaver.js (MIT)
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery:false, alert:false */
@@ -203,7 +204,7 @@
 			if ( /p/i.test( wo.output_delivery || '' ) ) {
 				output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);
 			} else {
-				output.download(wo, mydata);
+				output.download(c, wo, mydata);
 			}
 
 		}, // end process
@@ -294,13 +295,18 @@
 
 		// modified from https://github.com/PixelsCommander/Download-File-JS
 		// & http://html5-demos.appspot.com/static/a.download.html
-		download : function (wo, data){
+		download : function (c, wo, data) {
 
-			var e, blob, gotBlob,
+			if (typeof wo.output_savePlugin === "function") {
+				return wo.output_savePlugin(c, wo, data);
+			}
+
+			var e, blob, gotBlob, bom,
 				nav = window.navigator,
 				link = document.createElement('a');
 
-			// iOS devices do not support downloading. We have to inform user about this.
+			// iOS devices do not support downloading. We have to inform user about
+			// this limitation.
 			if (/(iP)/g.test(nav.userAgent)) {
 				alert(output.message);
 				return false;
@@ -317,8 +323,12 @@
 			if ( gotBlob ) {
 
 				window.URL = window.URL || window.webkitURL;
-				// prepend BOM for utf-8 encoding - see https://github.com/eligrey/FileSaver.js/blob/master/FileSaver.js#L140
-				blob = new Blob( [ '\ufeff', data ], { type: wo.output_encoding } );
+				// prepend BOM for UTF-8 XML and text/* types (including HTML)
+				// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+				// see https://github.com/eligrey/FileSaver.js/blob/master/FileSaver.js#L68
+				bom = (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(wo.output_encoding)) ?
+					[ '\ufeff', data ] : [ data ]
+				blob = new Blob( bom, { type: wo.output_encoding } );
 
 				if (nav.msSaveBlob) {
 					// IE 10+
@@ -379,7 +389,15 @@
 			// JSON callback executed when a colspan is encountered in the header
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 			// the need to modify this for Excel no longer exists
-			output_encoding      : 'data:application/octet-stream;charset=utf8,'
+			output_encoding      : 'data:application/octet-stream;charset=utf8,',
+			/* override internal save file code and use an external plugin such as
+			 * https://github.com/eligrey/FileSaver.js (example)
+			 * output_savePlugin: function(config, widgetOptions, data) {
+			 *  var blob = new Blob([data], {type: wo.output_encoding});
+			 *  saveAs(blob, wo.output_saveFileName);
+			 * }
+			 */
+			output_savePlugin    : null
 		},
 		init: function(table, thisWidget, c) {
 			output.init(c);
