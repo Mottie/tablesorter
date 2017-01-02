@@ -162,7 +162,6 @@
 
 			// process to array of arrays
 			csvData = output.processRow(c, $rows);
-
 			if (wo.output_includeFooter) {
 				// clone, to force the tfoot rows to the end of this selection of rows
 				// otherwise they appear after the thead (the order in the HTML)
@@ -274,13 +273,20 @@
 
 		popup : function(data, style, wrap) {
 			var generator = window.open('', output.popupTitle, style);
-			generator.document.write(
-				'<html><head><title>' + output.popupTitle + '</title></head><body>' +
-				'<textarea wrap="' + (wrap ? 'on' : 'off') + '" style="' + output.popupStyle + '">' + data + '\n</textarea>' +
-				'</body></html>'
-			);
-			generator.document.close();
-			generator.focus();
+			try {
+				generator.document.write(
+					'<html><head><title>' + output.popupTitle + '</title></head><body>' +
+					'<textarea wrap="' + (wrap ? 'on' : 'off') + '" style="' +
+					output.popupStyle + '">' + data + '\n</textarea>' +
+					'</body></html>'
+				);
+				generator.document.close();
+				generator.focus();
+			} catch (e) {
+				// popup already open
+				generator.close();
+				return output.popup(data, style, wrap);
+			}
 			// select all text and focus within the textarea in the popup
 			// $(generator.document).find('textarea').select().focus();
 			return true;
