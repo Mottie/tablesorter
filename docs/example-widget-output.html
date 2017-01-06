@@ -339,11 +339,29 @@ table.tablesorter tbody tr.even.checked td {
 					</ul>
 				</li>
 				<li>Rowspan and colspan are supported by this widget. Please take note of additional information in the "Rowspan and colspan" section below.</li>
+				<li>Working with Excel:
+					<ul>
+						<li>To save a file for Excel
+							<ul>
+								<li>Set the <code>separator</code> to a comma (<code>,</code>).</li>
+								<li>Save the file with a <code>csv</code> extension, then load it into Excel.</li>
+								<li>Or, save the file with a <code>xls</code> extension; but when loading the file in Excel, you will likely see a message stating that the file is corrupt. Continue loading and you will see the expected data placed into each cell.</li>
+							</ul>
+						</li>
+						<li>To copy the data into Excel
+							<ul>
+								<li>Set the <code>separator</code> as a tab (<code>\t</code>).</li>
+								<li>Open the data in a popup window, then copy the contents to the clipboard.</li>
+								<li>Paste from the clipboard directly into a cell in Excel.</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
 				<li>This demo uses Bootstrap to create the download button dropdown for each table allowing the user to choose the settings
 					<ul>
-						<li>Using Bootstrap was kind of a pain in the butt... any click inside would close the dropdown.</li>
-						<li>I am sure there are better alternatives as the download button and popup are all completely customizable.</li>
-						<li>The download dropdown code is probably overly complicated because it is set up for two tables &amp; allows modifying almost all of the options.</li>
+						<li>Using Bootstrap started out relatively difficult... any click inside would close the dropdown.</li>
+						<li>There are likely better alternatives as the download button and popup are all completely customizable.</li>
+						<li>The download dropdown code is overly complicated because it is set up for two tables &amp; allows modifying almost all of the options.</li>
 						<li>The only thing needed to output the table code (download or open a popup) is to trigger the following event after all of your widget options are set as desired: <pre class="prettyprint lang-js">$table.trigger('outputTable');</pre></li>
 					</ul>
 				</li>
@@ -359,6 +377,7 @@ table.tablesorter tbody tr.even.checked td {
 						<li><a href="http://www.kunalbabre.com/projects/table2CSV.php">HTML Table to CSV</a> (License unknown)</li>
 						<li><a href="https://github.com/PixelsCommander/Download-File-JS">Download-File-JS</a> (<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache v2.0</a>)</li>
 						<li><a href="http://html5-demos.appspot.com/static/a.download.html">Download demo</a> from <a href="https://github.com/ebidel/html5demos">ebidel/html5demos</a></li>
+						<li><a href="https://github.com/eligrey/FileSaver.js">FileSaver.js</a> (<a href="https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md">MIT</a>)</li>
 					</ul>
 				</li>
 			</ul>
