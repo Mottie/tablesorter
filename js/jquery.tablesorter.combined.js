@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 12-16-2016 (v2.28.3)*/
+/*! tablesorter (FORK) - updated 01-06-2017 (v2.28.4)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.3 *//*
+/*! TableSorter (FORK) v2.28.4 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.3',
+		version : '2.28.4',
 
 		parsers : [],
 		widgets : [],
@@ -5071,7 +5071,7 @@
 
 })( jQuery );
 
-/*! Widget: stickyHeaders - updated 7/31/2016 (v2.27.0) *//*
+/*! Widget: stickyHeaders - updated 1/6/2017 (v2.28.4) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -5134,7 +5134,7 @@
 	// **************************
 	ts.addWidget({
 		id: 'stickyHeaders',
-		priority: 55, // sticky widget must be initialized after the filter widget!
+		priority: 54, // sticky widget must be initialized after the filter & before pager widget!
 		options: {
 			stickyHeaders : '',       // extra class name added to the sticky header row
 			stickyHeaders_appendTo : null, // jQuery selector or object to phycially attach the sticky headers

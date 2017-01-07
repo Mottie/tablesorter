@@ -1,4 +1,4 @@
-/*! Widget: output - updated 7/31/2016 (v2.27.0) *//*
+/*! Widget: output - updated 1/6/2017 (v2.28.4) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -301,7 +301,7 @@
 		// & http://html5-demos.appspot.com/static/a.download.html
 		download : function (c, wo, data) {
 
-			if (typeof wo.output_savePlugin === "function") {
+			if (typeof wo.output_savePlugin === 'function') {
 				return wo.output_savePlugin(c, wo, data);
 			}
 
@@ -331,7 +331,7 @@
 				// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
 				// see https://github.com/eligrey/FileSaver.js/blob/master/FileSaver.js#L68
 				bom = (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(wo.output_encoding)) ?
-					[ '\ufeff', data ] : [ data ]
+					[ '\ufeff', data ] : [ data ];
 				blob = new Blob( bom, { type: wo.output_encoding } );
 
 				if (nav.msSaveBlob) {

@@ -103,6 +103,45 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.4">Version 2.28.4</a> (1/6/2017)
+
+* Docs:
+  * Add more notes about moving "ipAddress" parser into an external file. See [issue #1344](https://github.com/Mottie/tablesorter/issues/1344).
+  * Load storage widget in grouping widget demo. Fixes [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
+  * Add page header section to grouping child demo. See [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
+  * Include jQuery in page header section in various demos.
+  * Add page header to output demo. See [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
+  * Add comma to broken output demo.
+  * Add info on output to Excel in output widget demo. See [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
+  * Renamed [Bootstrap v2.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v2.html).
+  * Renamed [Bootstrap v3.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v3.html).
+  * Created [Bootstrap v4.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v4.html).
+  * Update all Bootstrap links to point to Bootstrap v3.x demo.
+  * Maintain minimal original [Bootstrap demo](https://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
+* Output:
+  * Prevent error on output to an already open popup.
+  * Add `output_savePlugin` option &amp; update download code.
+  * Add `output_includeHeader` option &amp; docs. Fixes [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
+* Pager:
+  * (widget only) make compatible with stickyHeaders. [Fixes #1313](https://github.com/Mottie/tablesorter/issues/1313):
+    * Removed all references to stored `pager.$goto` and `pager.$size`
+    * Removed check if header text matches header length - this breaks when a header row has a "tablesorter-ignoreRow" class name.
+    * Add stickyHeader container to `pager.$container` in case the pager controls are inside the thead.
+  * Fix rendering of sticky headers after ajax.
+  * Use option to target inner header.
+  * Restore check for new headers. [Fixes #1343](https://github.com/Mottie/tablesorter/issues/1343).
+  * Add `data-attribute` override on output. See [issue #1348](https://github.com/Mottie/tablesorter/issues/1348).
+* StickHeaders:
+  * Reduce widget priority below the pager widget priority.
+* Theme:
+  * Add group widget css file. See [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
+  * Add column widget support to Bootstrap. See [issue #1347](https://github.com/Mottie/tablesorter/issues/1347).
+  * Update high-specificity blue theme - [demo](https://jsfiddle.net/Mottie/k9uasLc7/); see [Stack Overflow](http://stackoverflow.com/q/41472634/145346).
+  * Add `theme.bootstrap_4.css` file ([demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v4.html); Bootstrap v4-alpha - do not use in production!).
+  * Duplicated `theme.bootstrap_3.css` from `theme.bootstrap.css` (maintaining this non-versioned file name until Bootstrap v4-stable has been available for about 6 months).
+* Readme:
+  * Update log for v2.28.3.
+
 #### <a name="v2.28.3">Version 2.28.3</a> (12/16/2016)
 
 * Core: Fix internal version numbering.
@@ -127,45 +166,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Meta:
   * Add jsDelivr CDN link to readme.
   * Add scss to dist folder.
-
-#### <a name="v2.28.1">Version 2.28.1</a> (11/27/2016)
-
-* Core:
-  * Update dist files. Fixes [issue #1331](https://github.com/Mottie/tablesorter/issues/1331).
-* Filter:
-  * Fix searchDelay & minimum character count. See [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
-  * Fix liveSearch ignoring searchDelay. See [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
-* Print
-  * Use `hasWidget` function.
-* UI-theme:
-  * Use `hasWidget` function. Fixes [issue #1327](https://github.com/Mottie/tablesorter/issues/1327).
-
-#### <a name="v2.28.0">Version 2.28.0</a> (11/27/2016)
-
-* Core:
-  * Return value from `getColumnData` if not an object.
-  * Include extra headers when adding unsorted class. Fixes [issue #1306](https://github.com/Mottie/tablesorter/issues/1306).
-  * Add option validator. Fixes [issue #1319](https://github.com/Mottie/tablesorter/issues/1319).
-  * Maintain original settings on `resetToLoadState`.
-* Docs:
-  * Add missing colon in CSS. Fixes [issue #1307](https://github.com/Mottie/tablesorter/issues/1307).
-  * Add notes on `sortList` overridding `sortForce` & `sortAppend`. See [issue #1286](https://github.com/Mottie/tablesorter/issues/1286).
-  * Update sortTbody widget demo showing new option.
-  * Add zebra widget to sort reset demo.
-  * Define a triggered "update". Fixes [issue #1317](https://github.com/Mottie/tablesorter/issues/1317).
-  * Clarify recalculation update method. Fixes [issue #1317](https://github.com/Mottie/tablesorter/issues/1317).
-  * Explain difference between `#` and `0` in the math mask. Fixes [issue #1320](https://github.com/Mottie/tablesorter/issues/1320).
-  * Add link to disable thead row example. Fixes [issue #1326](https://github.com/Mottie/tablesorter/issues/1326).
-* Filter:
-  * Restore `filter_searchDelay` function. Fixes [issue #1299](https://github.com/Mottie/tablesorter/issues/1299).
-* Grouping:
-  * Fix insertion of group header before child rows. See [pull #1301](https://github.com/Mottie/tablesorter/pull/1301); thanks [@babaevmm](https://github.com/babaevmm)! Also fixes [issue #1325](https://github.com/Mottie/tablesorter/issues/1325).
-* Math:
-  * Fix prefix/suffix option names & processing. Fixes [issue #1305](https://github.com/Mottie/tablesorter/issues/1305).
-  * Remove `math_prefix` content prior to parsing cell values.
-* Pager:
-  * Set `ariaDisabled` property to stop MS Edge crash. Fixes [issue #1303](https://github.com/Mottie/tablesorter/issues/1303).
-  * Restore settings on `resetToLoadState`. Fixes [issue #1311](https://github.com/Mottie/tablesorter/issues/1311).
-* Tbodysort:
-  * Add `sortTbody_lockHead` option. See [pull #1312](https://github.com/Mottie/tablesorter/pull/1312); thanks [@ChrisM-Rogers](https://github.com/ChrisM-Rogers)!
-  * Add `sortTbody_lockHead` to default options.
