@@ -23,7 +23,7 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 * Multi-column alphanumeric sorting and filtering.
 * Multi-tbody sorting - see the [options](https://mottie.github.io/tablesorter/docs/index.html#options) table on the main document page.
-* Supports [Bootstrap v2 and 3](https://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
+* Supports [Bootstrap v2-4](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v3.html).
 * Parsers for sorting text, alphanumeric text, URIs, integers, currency, floats, IP addresses, dates (ISO, long and short formats) &amp; time. [Add your own easily](https://mottie.github.io/tablesorter/docs/example-parsers.html).
 * Inline editing - see [demo](https://mottie.github.io/tablesorter/docs/example-widget-editable.html).
 * Support for ROWSPAN and COLSPAN on TH elements.

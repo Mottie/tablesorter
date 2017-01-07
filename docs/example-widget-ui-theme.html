@@ -124,7 +124,7 @@ $table.trigger('applyWidgets');</pre>
 			<ul>
 				<li>All theme class names are now contained within <code>$.tablesorter.themes</code> with the jQuery UI theme saved to <code>$.tablesorter.themes.jui</code></li>
 				<li>The themes variable allows you to modify the class names for the table, header, sort icons, active state, hover state, filter inputs and zebra striping. See the code below on how to extend these variables.</li>
-				<li>Set the <code>uitheme</code> widget option to <code>"jui"</code> to set the widget to use the jQuery UI theme. See the <a href="example-widget-bootstrap-theme.html">bootstrap demo</a> for another example.</li>
+				<li>Set the <code>uitheme</code> widget option to <code>"jui"</code> to set the widget to use the jQuery UI theme. See the <a href="example-option-theme-bootstrap-v3.html">bootstrap demo</a> for another example.</li>
 			</ul>
 		</li>
 		<li>Earlier widget versions required jQuery 1.4+. The UITheme widget for tablesorter 2.4+ requires jQuery 1.2.6+.</li>
@@ -202,13 +202,15 @@ $table.trigger('applyWidgets');</pre>
 	</tbody>
 </table></div>
 
-
 	<h1>Page Header</h1>
 	<div>
 		<pre class="prettyprint lang-html">&lt;!-- ui theme stylesheet - contents shown below --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.jui.css&quot;&gt;
 &lt;!-- jQuery UI theme (cupertino example here) --&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;css/jquery-ui.min.css&quot;&gt;
+
+&lt;!-- load jQuery first --&gt;
+&lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;!-- tablesorter plugin --&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
@@ -228,7 +230,7 @@ $table.trigger('applyWidgets');</pre>
 
 <div class="next-up">
 	<hr />
-	Next up: <a href="example-widget-bootstrap-theme.html">UITheme widget - Bootstrap theme &rsaquo;&rsaquo;</a><br>
+	Next up: <a href="example-option-theme-bootstrap-v3.html">UITheme widget - Bootstrap theme &rsaquo;&rsaquo;</a><br>
 	Second time around: <a href="example-option-render-header.html">Modifying the Header during rendering &rsaquo;&rsaquo;</a>
 </div>
 
