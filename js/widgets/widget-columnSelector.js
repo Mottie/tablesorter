@@ -152,7 +152,7 @@
 				if ($container.length) {
 					// set default col title
 					name = $header.attr(wo.columnSelector_name) || $header.text().trim();
-					if (typeof wo.columnSelector_layoutCustomizer === "function") {
+					if (typeof wo.columnSelector_layoutCustomizer === 'function') {
 						$el = $header.find('.' + ts.css.headerIn);
 						name = wo.columnSelector_layoutCustomizer( $el.length ? $el : $header, name, parseInt(colId, 10) );
 					}

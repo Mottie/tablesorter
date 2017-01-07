@@ -1,6 +1,8 @@
-/*************
-  Blue Theme (nested tables)
- *************/
+/**
+ * Blue Theme (demo - https://jsfiddle.net/Mottie/k9uasLc7/)
+ * Intended for an outer table containing differently styled nested
+ * tables (inner tables will not need a high specificity style)
+ */
 /* overall */
 .tablesorter-blue {
 	width: 100%;
@@ -122,10 +124,10 @@
 }
 
 /* Zebra Widget - row alternating colors */
-.tablesorter-blue > tbody tr.odd > td {
+.tablesorter-blue > tbody > tr.odd > td {
 	background-color: #ebf2fa;
 }
-.tablesorter-blue > tbody tr.even > td {
+.tablesorter-blue > tbody > tr.even > td {
 	background-color: #fff;
 }
 
@@ -171,13 +173,13 @@
 	transition: line-height 0.1s ease;
 }
 /* optional disabled input styling */
-.tablesorter-blue .tablesorter-filter-row .disabled {
+.tablesorter-blue > thead > .tablesorter-filter-row .disabled {
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 	cursor: not-allowed;
 }
 /* hidden filter row */
-.tablesorter-blue .tablesorter-filter-row.hideme td {
+.tablesorter-blue > thead > .tablesorter-filter-row.hideme td {
 	/*** *********************************************** ***/
 	/*** change this padding to modify the thickness     ***/
 	/*** of the closed filter row (height = padding x 2) ***/
@@ -187,7 +189,7 @@
 	line-height: 0;
 	cursor: pointer;
 }
-.tablesorter-blue .tablesorter-filter-row.hideme * {
+.tablesorter-blue > thead > .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;
@@ -198,8 +200,8 @@
 	filter: alpha(opacity=0);
 }
 /* filters */
-.tablesorter-blue input.tablesorter-filter,
-.tablesorter-blue select.tablesorter-filter {
+.tablesorter-blue > thead > .tablesorter-filter-row input.tablesorter-filter,
+.tablesorter-blue > thead > .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
 	height: auto;
 	margin: 0;
@@ -221,7 +223,7 @@
 }
 
 /* ajax error row */
-.tablesorter .tablesorter-errorRow td {
+.tablesorter-blue > thead > .tablesorter-errorRow td {
 	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;
