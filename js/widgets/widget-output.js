@@ -15,6 +15,13 @@
 	output = ts.output = {
 
 		event      : 'outputTable',
+		// Double click time is about 500ms; this value ignores double clicks
+		// and prevents multiple windows from opening - issue in Firefox
+		noDblClick : 600, // ms
+		lastEvent  : 0,
+		// prevent overlapping multiple opens in case rendering of content in
+		// popup or download is longer than noDblClick time.
+		busy       : false,
 
 		// wrap line breaks & tabs in quotes
 		regexQuote : /([\n\t\x09\x0d\x0a]|<[^<]+>)/, // test if cell needs wrapping quotes
@@ -34,9 +41,19 @@
 				.off(output.event)
 				.on(output.event, function( e ) {
 					e.stopPropagation();
-					// explicitly use table.config.widgetOptions because we want
-					// the most up-to-date values; not the 'wo' from initialization
-					output.process(c, c.widgetOptions);
+					// prevent multiple windows opening
+					if (
+						!output.busy &&
+						(e.timeStamp - output.lastEvent > output.noDblClick)
+					) {
+						output.lastEvent = e.timeStamp;
+						output.busy = true;
+						// explicitly use table.config.widgetOptions because we want
+						// the most up-to-date values; not the 'wo' from initialization
+						output.process(c, c.widgetOptions);
+					} else {
+						console.log('blocked', output.busy);
+					}
 				});
 		},
 
@@ -210,6 +227,7 @@
 			} else {
 				output.download(c, wo, mydata);
 			}
+			output.busy = false;
 
 		}, // end process
 
