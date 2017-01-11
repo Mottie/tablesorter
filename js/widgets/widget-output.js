@@ -51,8 +51,6 @@
 						// explicitly use table.config.widgetOptions because we want
 						// the most up-to-date values; not the 'wo' from initialization
 						output.process(c, c.widgetOptions);
-					} else {
-						console.log('blocked', output.busy);
 					}
 				});
 		},
