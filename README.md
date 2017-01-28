@@ -13,6 +13,17 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 * Information from my blog post on [undocumented options](https://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
 * Change log moved from included text file into the [wiki documentation](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+### Questions?
+
+[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
+
+* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
+* Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
+* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
+* If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
+* Ask your question at [Stackoverflow](https://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
+* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
+
 ### Demos
 
 * [Basic alpha-numeric sort Demo](https://mottie.github.io/tablesorter/).
@@ -72,17 +83,6 @@ If you would like to contribute, please...
 * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for numerous contributions!
 * Also extra thanks to [christhomas](https://github.com/christhomas) and [Lynesth](https://github.com/Lynesth) for help with code.
 * And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
-
-### Questions?
-
-[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
-
-* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
-* Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
-* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
-* If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
-* Ask your question at [Stackoverflow](https://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
-* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
 [npm-url]: https://npmjs.org/package/tablesorter
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
