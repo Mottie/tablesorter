@@ -104,6 +104,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.5">Version 2.28.5</a> (1/28/2017)
+
+* Docs: Fix "update" labels.
+* Output:
+  * Prevent multiple popups/download with dblClick (i.e. triggering "outputTable" multiple times).
+  * Remove extraneous console log.
+* Resizable:
+  * Add "resizableUpdate" & "resizableReset" methods.
+* Scroller:
+  * Add `scrollerComplete` event. Fixes [issue #1351](https://github.com/Mottie/tablesorter/issues/1351).
+* Readme: Add related project, tablesorter-pagercontrols
+
 #### <a name="v2.28.4">Version 2.28.4</a> (1/6/2017)
 
 * Docs:
@@ -147,23 +159,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 
 * Core: Fix internal version numbering.
 * Grunt: add version check.
-
-#### <a name="v2.28.2">Version 2.28.2</a> (12/15/2016)
-
-* ColumnSelector:
-  * Target header column attr. Fixes [issue #1238](https://github.com/Mottie/tablesorter/issues/1238).
-  * Include HTML in empty headers, then reverted. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
-  * Add `layoutCustomizer` option. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
-* Reorder:
-  * Add style to `<HEAD>`.
-* Resizable:
-  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1337](https://github.com/Mottie/tablesorter/pull/1337); thanks [@Frennetix](https://github.com/Frennetix)!
-* Scroller:
-  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338); thanks [@Frennetix](https://github.com/Frennetix)!
-  * Code cleanup. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338).
-* Theme:
-  * Convert theme.less to theme.scss. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332); thanks to [@HongPong](https://github.com/HongPong)!
-  * Fix SCSS theme & add demo. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332)
-* Meta:
-  * Add jsDelivr CDN link to readme.
-  * Add scss to dist folder.
