@@ -469,6 +469,7 @@
 			// update resizable widget handles
 			setTimeout( function() {
 				c.$table.triggerHandler( 'resizableUpdate' );
+				c.$table.triggerHandler( 'scrollerComplete' );
 			}, 100 );
 
 		},

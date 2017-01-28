@@ -211,6 +211,7 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.28.5</span> a <code>scrollerComplete</code> event is now triggered on the table once the scroller has completed rendering.</li>
 				<li>In <span class="version">v2.22.2</span>,
 					<ul>
 						<li>Add support for multiple tbodies in fixed columns:
@@ -249,24 +250,24 @@ $(function() {
 						<li>Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for all the work he put into updating this widget... he really didn't like that scrollbar under the fixed column LOL.</li>
 					</ul>
 				</li>
-				<li>In <span class="version">v2.22.0</span>,
-					<ul>
-						<li>Horizontal scrollbar now only appears on overflow.</li>
-						<li><code>border-box</code> is now applied to all tables with scroller widget applied.</li>
-						<li>Fixed columns no longer have pointer events disabled.</li>
-						<li>Fixed column vertical scrollbar is now hidden in IE9 &amp; older.</li>
-						<li>Fixed tabbing through fixed column header cells &amp; inputs.</li>
-						<li>The "setFixedColumnSize" can now be called with no set size to refresh the fixed column.</li>
-						<li>Add <code>scroller_addFixedOverlay</code> option which when <code>true</code>, adds an overlay on the fixed columns for styling.</li>
-						<li>Refresh column sizes after update.</li>
-					</ul>
-				</li>
 			</ul>
 
 			<div class="accordion start-closed">
 				<h3><a href="#">Older Notes</a></h3>
 				<div>
 				<ul>
+					<li>In <span class="version">v2.22.0</span>,
+						<ul>
+							<li>Horizontal scrollbar now only appears on overflow.</li>
+							<li><code>border-box</code> is now applied to all tables with scroller widget applied.</li>
+							<li>Fixed columns no longer have pointer events disabled.</li>
+							<li>Fixed column vertical scrollbar is now hidden in IE9 &amp; older.</li>
+							<li>Fixed tabbing through fixed column header cells &amp; inputs.</li>
+							<li>The "setFixedColumnSize" can now be called with no set size to refresh the fixed column.</li>
+							<li>Add <code>scroller_addFixedOverlay</code> option which when <code>true</code>, adds an overlay on the fixed columns for styling.</li>
+							<li>Refresh column sizes after update.</li>
+						</ul>
+					</li>
 					<li>In <span class="version">v2.21.3</span>
 						<ul>
 							<li><span class="label warning">* NOTE *</span> Prior to v2.21.3, this widget would work with jQuery v1.4.4+, now it requires <em>jQuery v1.7+</em>.</li>
@@ -354,10 +355,8 @@ $(function() {
 					<tr id="scroller-up-after-sort">
 						<td><a href="#" class="permalink">scroller_upAfterSort</a></td>
 						<td>true</td>
-						<td>
+						<td>When <code>true</code>, the scroller automatically scrolls the inner window back to the top after sorting.
 							<div class="collapsible">
-							<br>
-							When <code>true</code>, the scroller automatically scrolls the inner window back to the top after sorting.<br>
 							<br>
 							Set this option to <code>false</code> to prevent this behaviour, or to stop the window from scrolling after interacting with a table cell (e.g. clicking on a checkbox); new in <span class="version">v2.17.3</span>
 							</div>
@@ -369,7 +368,7 @@ $(function() {
 						<td>true</td>
 						<td>Bring the header into view while scrolling.
 							<div class="collapsible">
-							<p>When <code>true</code>, this option makes the table header jump into view when the table body is not scolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.</p>
+							<p>When <code>true</code>, this option makes the table header jump into view when the table body is not scrolled to the top and while scrolling up the page. It's not perfect, but it works. Disable it as desired.</p>
 							<p><span class="remark">*</span> <em>To see the difference, toggle the button in the demo below, then scroll down &amp; up the page using a mouse wheel with the cursor at the horizontal center of the page and about 100 pixels from the top, so the cursor is within the table body.</em></p>
 							</div>
 						</td>
@@ -477,6 +476,17 @@ $(function() {
 					<li>Zero or less, no fixed columns will be applied.</li>
 					<li>Undefined, the current number of fixed columns will be refreshed.</li>
 				</ul>
+			</blockquote>
+		</div>
+
+		<h3><a href="#">Events</a></h3>
+		<div>
+			<h3>scrollerComplete</h3>
+			<blockquote>
+				A <code>scrollerComplete</code> event (added <span class="version">v2.28.5</span>) is triggered on the table after the scroller widget has completed updating (including frozen columns). This event is triggered <em>after</em> an <code>updateComplete</code> event as the widget binds to that event to update the table.
+				<pre class="prettyprint lang-js">$( 'table' ).on( 'scrollerComplete', function() {
+  // do something
+} );</pre>
 			</blockquote>
 		</div>
 
