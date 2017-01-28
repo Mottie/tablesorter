@@ -107,9 +107,15 @@
 		<div>
 			<ul>
 				<li><span class="label label-info">IMPORTANT</span> If using jQuery versions older than 1.8, css box-sizing for the table <em>MUST</em> be set as <code>box-sizing: content-box;</code> or the resizable widget will not work properly.</li>
-				<li><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>).</li>
-				<li><span class="label label-info">IMPORTANT</span> The resizable will not work properly if the <a href="index.html#widthfixed"><code>widthFixed</code></a> option is set to <code>true</code>. Make sure it is set to <code>false</code> (default setting).<br><br></li>
+				<li><span class="label label-info">IMPORTANT</span> The resizable will not work properly if the <a href="index.html#widthfixed"><code>widthFixed</code></a> option is set to <code>true</code>. Make sure it is set to <code>false</code> (default setting).</li>
+				<li><del><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>)</del>. No longer necessary as the resizable widget no longer adds elements inside the table header cells.<br><br></li>
 
+				<li>In <span class="version">v2.28.5</span>,
+					<ul>
+						<li>A <a class="intlink" href="#events"><code>resizableUpdate</code></a> event can be triggered on the table to update the resizable handles.</li>
+						<li>A <a class="intlink" href="#events"><code>resizableReset</code></a> event can be triggered to reset the resizable columns to their default widths.</li>
+					</ul>
+				</li>
 				<li>In <span class="version">v2.22.2</span>, resizable will now work with tables inside an overflow wrapper (see <a href="https://github.com/Mottie/tablesorter/issues/953">issue #953</a>).</li>
 				<li>In <span class="version">v2.21.5</span>, this widget now works with the columnSelector widget &amp; tables with margins (see <a href="https://github.com/Mottie/tablesorter/issues/864">issue #864</a>).</li>
 				<li>In <span class="version">v2.21.3</span>
@@ -179,7 +185,7 @@
 						<td>[ ]</td>
 						<td>Set any default column widths within this zero-based-column-indexed array
 							<div class="collapsible">
-								<p>This option allows the setting of column widths initially (before any resizing occurs, or if there are no saved column widths) and when resetting (right-click on the column header).</p>
+								<p>This option allows the setting of column widths initially (before any resizing occurs, or if there are no saved column widths) and when resetting (right-click on the column header) or triggering a <a class="intlink" href="#events"><code>resizableReset</code></a> event on the table.</p>
 								<p>The array may contain any css allowed width definitions (e.g. percentage, pixels, em, etc).</p>
 								<p>Undefined column widths to not add a specified width to the column</p>
 								<p>Here is an example from the second table in this demo showing how to set this option:</p>
@@ -218,6 +224,22 @@ resizable_widths : [ '10%', '10%', '40px', '10%', '100px' ]</pre>
 
 				</tbody>
 			</table>
+		</div>
+
+		<h3><a href="#">Events</a></h3>
+		<div>
+			<h3>resizableUpdate</h3>
+			<blockquote>
+				A <code>resizableUpdate</code> event (added <span class="version">v2.28.5</span>) can be triggered on the table to force an update of the resizable handles. This behaves the same as triggering a <code>resize</code> event on the <code>window</code> without causing any unwanted page reflow.
+				<pre class="prettyprint lang-js">// equivalent to $( window ).trigger( 'resize' );
+$( 'table' ).trigger( 'resizableUpdate' );</pre>
+			</blockquote>
+
+			<h3>resizableReset</h3>
+			<blockquote>
+				A <code>resizableReset</code> event (added <span class="version">v2.28.5</span>) can be triggered on the table reset the resizable columns to their original, or set <a class="intlink" href="#resizable-widths"><code>resizable_widths</code></a> value. This is the same as the user right-clicking on the table header causing a reset.
+				<pre class="prettyprint lang-js">$( 'table' ).trigger( 'resizableReset' );</pre>
+			</blockquote>
 		</div>
 
 	</div>

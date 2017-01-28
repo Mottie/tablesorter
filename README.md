@@ -13,6 +13,17 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 * Information from my blog post on [undocumented options](https://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
 * Change log moved from included text file into the [wiki documentation](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+### Questions?
+
+[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
+
+* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
+* Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
+* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
+* If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
+* Ask your question at [Stackoverflow](https://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
+* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
+
 ### Demos
 
 * [Basic alpha-numeric sort Demo](https://mottie.github.io/tablesorter/).
@@ -53,6 +64,7 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 * [Plugin for Rails](https://github.com/themilkman/jquery-tablesorter-rails). Maintained by [themilkman](https://github.com/themilkman).
 * [UserFrosting](https://github.com/alexweissman/UserFrosting) (A secure, modern user management system for PHP that uses tablesorter) by [alexweissman](https://github.com/alexweissman).
 * [Grav CMS](https://getgrav.org/): `bin/gpm install tablesorter` ([ref](https://github.com/Perlkonig/grav-plugin-tablesorter)).
+* [tablesorter-pagercontrols](https://github.com/isg-software/tablesorter-pagercontrols) &ndash; programmatically adds pager controls below a table and applies the pager add-on for large HTML tables by [isg-software](https://github.com/isg-software).
 
 ### Contributing
 
@@ -71,17 +83,6 @@ If you would like to contribute, please...
 * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for numerous contributions!
 * Also extra thanks to [christhomas](https://github.com/christhomas) and [Lynesth](https://github.com/Lynesth) for help with code.
 * And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
-
-### Questions?
-
-[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
-
-* Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
-* Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
-* Search the [issues](https://github.com/Mottie/tablesorter/issues) to see if the question or problem has been brought up before, and hopefully resolved.
-* If someone is available, ask your question in the `#tablesorter` IRC channel at freenode.net.
-* Ask your question at [Stackoverflow](https://stackoverflow.com/questions/tagged/tablesorter) using a tablesorter tag.
-* Please don't open a [new issue](https://github.com/Mottie/tablesorter/issues) unless it really is an issue with the plugin, or a feature request. Thanks!
 
 [npm-url]: https://npmjs.org/package/tablesorter
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
@@ -102,6 +103,18 @@ If you would like to contribute, please...
 ### Recent Changes
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.28.5">Version 2.28.5</a> (1/28/2017)
+
+* Docs: Fix "update" labels.
+* Output:
+  * Prevent multiple popups/download with dblClick (i.e. triggering "outputTable" multiple times).
+  * Remove extraneous console log.
+* Resizable:
+  * Add "resizableUpdate" & "resizableReset" methods.
+* Scroller:
+  * Add `scrollerComplete` event. Fixes [issue #1351](https://github.com/Mottie/tablesorter/issues/1351).
+* Readme: Add related project, tablesorter-pagercontrols
 
 #### <a name="v2.28.4">Version 2.28.4</a> (1/6/2017)
 
@@ -146,23 +159,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 
 * Core: Fix internal version numbering.
 * Grunt: add version check.
-
-#### <a name="v2.28.2">Version 2.28.2</a> (12/15/2016)
-
-* ColumnSelector:
-  * Target header column attr. Fixes [issue #1238](https://github.com/Mottie/tablesorter/issues/1238).
-  * Include HTML in empty headers, then reverted. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
-  * Add `layoutCustomizer` option. Fixes [issue #1335](https://github.com/Mottie/tablesorter/issues/1335).
-* Reorder:
-  * Add style to `<HEAD>`.
-* Resizable:
-  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1337](https://github.com/Mottie/tablesorter/pull/1337); thanks [@Frennetix](https://github.com/Frennetix)!
-* Scroller:
-  * Adding style in `<HEAD>` tag not at the end of file. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338); thanks [@Frennetix](https://github.com/Frennetix)!
-  * Code cleanup. See [pull #1338](https://github.com/Mottie/tablesorter/pull/1338).
-* Theme:
-  * Convert theme.less to theme.scss. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332); thanks to [@HongPong](https://github.com/HongPong)!
-  * Fix SCSS theme & add demo. See [pull #1332](https://github.com/Mottie/tablesorter/pull/1332)
-* Meta:
-  * Add jsDelivr CDN link to readme.
-  * Add scss to dist folder.

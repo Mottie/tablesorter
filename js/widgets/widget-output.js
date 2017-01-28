@@ -1,4 +1,4 @@
-/*! Widget: output - updated 1/6/2017 (v2.28.4) *//*
+/*! Widget: output - updated 1/28/2017 (v2.28.5) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -15,6 +15,13 @@
 	output = ts.output = {
 
 		event      : 'outputTable',
+		// Double click time is about 500ms; this value ignores double clicks
+		// and prevents multiple windows from opening - issue in Firefox
+		noDblClick : 600, // ms
+		lastEvent  : 0,
+		// prevent overlapping multiple opens in case rendering of content in
+		// popup or download is longer than noDblClick time.
+		busy       : false,
 
 		// wrap line breaks & tabs in quotes
 		regexQuote : /([\n\t\x09\x0d\x0a]|<[^<]+>)/, // test if cell needs wrapping quotes
@@ -34,9 +41,17 @@
 				.off(output.event)
 				.on(output.event, function( e ) {
 					e.stopPropagation();
-					// explicitly use table.config.widgetOptions because we want
-					// the most up-to-date values; not the 'wo' from initialization
-					output.process(c, c.widgetOptions);
+					// prevent multiple windows opening
+					if (
+						!output.busy &&
+						(e.timeStamp - output.lastEvent > output.noDblClick)
+					) {
+						output.lastEvent = e.timeStamp;
+						output.busy = true;
+						// explicitly use table.config.widgetOptions because we want
+						// the most up-to-date values; not the 'wo' from initialization
+						output.process(c, c.widgetOptions);
+					}
 				});
 		},
 
@@ -210,6 +225,7 @@
 			} else {
 				output.download(c, wo, mydata);
 			}
+			output.busy = false;
 
 		}, // end process
 
