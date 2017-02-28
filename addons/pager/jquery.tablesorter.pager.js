@@ -820,7 +820,9 @@
 
 			setPageSize = function(table, size, p) {
 				p.size = parsePageSize( p, size, 'get' );
-				p.$container.find(p.cssPageSize).val( parsePageSize( p, p.size, 'set' ) );
+				var updatedPageSize = parsePageSize( p, p.size, 'set' );
+				p.$container.find(p.cssPageSize).val( updatedPageSize !== 'all' ? updatedPageSize :
+					(p.$container.find(p.cssPageSize.concat(' option[value="').concat(size).concat('"]')).length !== 0 ? size : updatedPageSize) );
 				$.data(table, 'pagerLastPage', parsePageNumber( table, p ) );
 				$.data(table, 'pagerLastSize', p.size);
 				p.totalPages = p.size === 'all' ? 1 : Math.ceil( p.totalRows / p.size );
