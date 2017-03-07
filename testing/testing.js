@@ -111,7 +111,7 @@ Core plugin tested
 ========================
 OPTIONS:
 	cssAsc, cssChildRow, cssDesc, cssHeader, cssHeaderRow, cssInfoBlock, dateFormat, emptyTo, headerList,
-	headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, stringTo, tableClass,
+	headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, sortRestart, stringTo, tableClass,
 	usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey, numberSorter
 
 METHODS:
@@ -125,7 +125,7 @@ Not yet tested
 OPTIONS:
 	cancelSelection, cssIcon, cssProcessing, debug, delayInit, headerTemplate, initWidgets, onRenderHeader,
 	onRenderTemplate, selectorHeaders, selectorRemove, selectorSort, serverSideSorting, showProcessing,
-	sortInitialOrder, sortRestart, strings,
+	sortInitialOrder, strings,
 	textExtraction, textSorter, theme, widthFixed, widgets (also need priority testing)
 
 METHODS:
