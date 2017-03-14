@@ -431,7 +431,7 @@
 				var tmp = $.extend( true, {}, c.originalSettings );
 				// restore original settings; this clears out current settings, but does not clear
 				// values saved to storage.
-				c = $.extend( true, ts.defaults, tmp );
+				c = $.extend( true, {}, ts.defaults, tmp );
 				c.originalSettings = tmp;
 				this.hasInitialized = false;
 				// setup the entire table again
@@ -1910,14 +1910,15 @@
 		},
 
 		applyWidgetOptions : function( table ) {
-			var indx, widget,
+			var indx, widget, wo,
 				c = table.config,
 				len = c.widgets.length;
 			if ( len ) {
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
-						c.widgetOptions = $.extend( true, widget.options, c.widgetOptions );
+						wo = $.extend( {}, widget.options );
+						c.widgetOptions = $.extend( true, wo, c.widgetOptions );
 						// add widgetOptions to defaults for option validator
 						$.extend( true, ts.defaults.widgetOptions, widget.options );
 					}
