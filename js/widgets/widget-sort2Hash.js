@@ -1,4 +1,4 @@
-/*! Widget: sort2Hash (BETA) - updated 11/10/2015 (v2.24.4) */
+/*! Widget: sort2Hash (BETA) - updated 3/14/2017 (v2.28.6) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -227,15 +227,14 @@
 			sort2Hash_separator         : '-',      // don't '#' or '=' here
 			sort2Hash_headerTextAttr    : 'data-header', // data attribute containing alternate header text
 			sort2Hash_directionText     : [ 0, 1 ], // [ 'asc', 'desc' ],
-			sort2Hash_overrideSaveSort  : false     // if true, override saveSort widget if saved sort available
+			sort2Hash_overrideSaveSort  : false,    // if true, override saveSort widget if saved sort available
 
-			// Options below commented out for improved compression
-			// ******************
-			// sort2Hash_tableId           : null,     // this option > table ID > table index on page,
+			// this option > table ID > table index on page
+			sort2Hash_tableId           : null,
 			// custom hash processing functions
-			// sort2Hash_encodeHash        : null,
-			// sort2Hash_decodeHash        : null,
-			// sort2Hash_cleanHash         : null
+			sort2Hash_encodeHash        : null,
+			sort2Hash_decodeHash        : null,
+			sort2Hash_cleanHash         : null
 		},
 		init: function(table, thisWidget, c, wo) {
 			s2h.init( c, wo );
