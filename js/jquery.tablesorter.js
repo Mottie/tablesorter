@@ -1768,6 +1768,10 @@
 			ts.setHeadersCss( c );
 			ts.multisort( c );
 			ts.appendCache( c );
+			var indx;
+			for (indx = 0; indx < c.columns; indx++) {
+				c.sortVars[ indx ].count = -1;
+			}
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
 			}
