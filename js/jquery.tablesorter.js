@@ -666,8 +666,9 @@
 					for ( indx = 0; indx < max; indx++ ) {
 						header = c.$headerIndexed[ colIndex ];
 						if ( header && header.length ) {
-							// get column indexed table cell
-							configHeaders = ts.getColumnData( table, c.headers, colIndex );
+							// get column indexed table cell; adding true parameter fixes #1362 but
+							// it would break backwards compatibility...
+							configHeaders = ts.getColumnData( table, c.headers, colIndex ); // , true );
 							// get column parser/extractor
 							extractor = ts.getParserById( ts.getData( header, configHeaders, 'extractor' ) );
 							parser = ts.getParserById( ts.getData( header, configHeaders, 'sorter' ) );
