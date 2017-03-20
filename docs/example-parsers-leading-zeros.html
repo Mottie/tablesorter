@@ -50,7 +50,7 @@
 				<li>Switching the parser to text (<code>sorter-text</code> in the second column) will behave the same as the number parser in the first column. This happens because the internal natural sort algorithm processes numeric values similar to the number parser.</li>
 				<li>Prior to this parser, it was recommended to use a plain text sort (setting <a href="index.html#textsorter"><code>textSorter</code></a> for the third column; see <a href="https://github.com/Mottie/tablesorter/issues/409">issue #409</a>). This method is not ideal as a plain sort will sort <code>2</code> after <code>15</code>, and sort all leading zeros at the top of the column.</li>
 				<li>This parser (<code>sorter-leadingZeros</code> in the fourth column) processes leading zeros by subtracting a very small number from the parsed value based on the total length of the string.</li>
-			</ul>
+			</ol>
 		</li>
 		<li>Click on the "Toggle parsed values" button to see the values as saved to the cache.</li>
 		<li>The small number the leading zeros parser subtracts from the cell value has a precision of 10 digits (<code>1e-10</code>). If you are using higher precision values, then copy this parser and increase the precision as needed.</li>
