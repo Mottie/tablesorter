@@ -49,16 +49,6 @@
       ]
     }
   ],
-  "autoupdate": {
-    "source": "git",
-    "target": "git://github.com/Mottie/tablesorter.git",
-    "basePath": "",
-    "files": [
-      "dist/**/*",
-      "css/*",
-      "js/**/*"
-    ]
-  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
