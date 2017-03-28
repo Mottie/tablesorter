@@ -252,7 +252,8 @@
 					p.currentFilters = $.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
 					// don't change page if filters are the same (pager updating, etc)
 					if ( e.type === 'filterStart' && wo.pager_pageReset !== false &&
-						( c.lastCombinedFilter || '' ) !== ( p.currentFilters || [] ).join( '' ) ) {
+						( c.lastSearch || [] ).join( ',' ) !== ( p.currentFilters || [] ).join( ',' )
+					) {
 						p.page = wo.pager_pageReset; // fixes #456 & #565
 					}
 				})
