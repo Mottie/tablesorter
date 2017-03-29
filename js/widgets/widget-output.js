@@ -85,7 +85,7 @@
 						colspanLen = parseInt( $cell.attr('colspan'), 10) - 1;
 						// allow data-attribute to be an empty string
 						txt = output.formatData( c, wo, $cell, isHeader );
-						for (col = 1; col <= colspanLen; col++) {
+						for (col = 0; col < colspanLen; col++) {
 							// if we're processing the header & making JSON, the header names need to be unique
 							if ($cell.filter('[rowspan]').length) {
 								rowspanLen = parseInt( $cell.attr('rowspan'), 10);
