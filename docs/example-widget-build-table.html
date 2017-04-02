@@ -41,6 +41,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>To bind events to the newly created table, see the <strong>Adding event bindings</strong> section below.</li>
 				<li>Build a table starting with an assortment of data types ( array, text (CSV, HTML) or object (json) ).</li>
 				<li>This widget isn't really a widget because it is run and does it's processing before tablesorter has initialized; but the options for it are contained within the tablesorter <code>widgetOptions</code>.</li>
 				<li>Using the core build options:
@@ -63,6 +64,38 @@
 					</ul>
 				</li>
 			</ul>
+		</div>
+
+		<h3><a href="#">Adding event bindings</a></h3>
+		<div>
+			<p>Internally, all triggered events use jQuery's <a href="http://api.jquery.com/triggerHandler/">triggerHandler</a> method to get around the issue of events triggered on a nested table bubbling up to the parent table; e.g. we don't want a "sortEnd" event to trigger on a parent table when a nested table has completed sorting.</p>
+			<strong>A binding added to the wrapper will not execute, and you can not target a table element that has not yet been created.</strong>
+			<p>To add an event listener to a table created by the build widget, you will need to use the <code>initialized</code> callback:</p>
+			HTML (before)
+			<pre class="prettyprint lang-html">&lt;!-- empty wrapper before the table has been built --&gt;
+&lt;div id="wrapper"&gt;&lt;/div&gt;
+</pre>
+			Javascript
+			<pre class="prettyprint lang-js">$(function() {
+  $('#wrapper').tablesorter({
+    theme: 'blue',
+    widgets: ['zebra'],
+    data : dataObject,
+    initialized: function(table) {
+      $(table).on('sortStart', function() {
+        alert('ok');
+      });
+    }
+  });
+});</pre>
+			HTML (after)
+			<pre class="prettyprint lang-html">&lt;div id="wrapper"&gt;
+  &lt;table class="tablesorter-blue"&gt;
+    &lt;!-- ... --&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+</pre>
+			<p></p>
 		</div>
 
 		<h3><a href="#">Options</a></h3>

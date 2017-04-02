@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter - Leading Zeros Parser</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+	<style>
+	th { width: 25%; }
+	</style>
+	<link href="../css/theme.blue.css" rel="stylesheet">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/parsers/parser-leading-zeros.js"></script>
+
+	<script id="js">$(function() {
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ["zebra"],
+		textSorter: {
+			// plain text sort applied to third column (zero-based index)
+			2: $.tablesorter.sortText
+		}
+	});
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Leading zeros parser</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+	</p>
+	<ul>
+		<li>Added this parser in <span class="version update">v2.28.6</span>.</li>
+		<li>The problem with leading zeros:
+			<ol>
+				<li>When using the number parser (<code>sorter-digit</code> in the first column), the leading zeros are removed upon parsing, so all equal values are sorted in a <a href="https://en.wikipedia.org/wiki/Sorting_algorithm#Stability">non-stable manner</a>.</li>
+				<li>Switching the parser to text (<code>sorter-text</code> in the second column) will behave the same as the number parser in the first column. This happens because the internal natural sort algorithm processes numeric values similar to the number parser.</li>
+				<li>Prior to this parser, it was recommended to use a plain text sort (setting <a href="index.html#textsorter"><code>textSorter</code></a> for the third column; see <a href="https://github.com/Mottie/tablesorter/issues/409">issue #409</a>). This method is not ideal as a plain sort will sort <code>2</code> after <code>15</code>, and sort all leading zeros at the top of the column.</li>
+				<li>This parser (<code>sorter-leadingZeros</code> in the fourth column) processes leading zeros by subtracting a very small number from the parsed value based on the total length of the string.</li>
+			</ol>
+		</li>
+		<li>Click on the "Toggle parsed values" button to see the values as saved to the cache.</li>
+		<li>The small number the leading zeros parser subtracts from the cell value has a precision of 10 digits (<code>1e-10</code>). If you are using higher precision values, then copy this parser and increase the precision as needed.</li>
+	</ul>
+
+	<h1>Demo</h1>
+	<button type="button" class="toggleparsedvalue">Toggle parsed values</button>
+	<div id="demo"><table class="tablesorter">
+  <thead>
+    <tr>
+      <th class="sorter-digit">Number sort</th>
+      <th class="sorter-text">Natural text sort</th>
+      <!-- override "sorter-digit" which is automatically detected -->
+      <th class="sorter-text">Plain text sort</th>
+      <th class="sorter-leadingZeros">Leading Zeros parser</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>001</td><td>001</td><td>001</td><td>001</td></tr>
+    <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+    <tr><td>10</td><td>10</td><td>10</td><td>10</td></tr>
+    <tr><td>01</td><td>01</td><td>01</td><td>01</td></tr>
+    <tr><td>1.01</td><td>1.01</td><td>1.01</td><td>1.01</td></tr>
+    <tr><td>000001</td><td>000001</td><td>000001</td><td>000001</td></tr>
+    <tr><td>00001</td><td>00001</td><td>00001</td><td>00001</td></tr>
+    <tr><td>020</td><td>020</td><td>020</td><td>020</td></tr>
+    <tr><td>0001</td><td>0001</td><td>0001</td><td>0001</td></tr>
+    <tr><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+    <tr><td>10</td><td>10</td><td>10</td><td>10</td></tr>
+    <tr><td>12</td><td>12</td><td>12</td><td>12</td></tr>
+    <tr><td>15</td><td>15</td><td>15</td><td>15</td></tr>
+    <tr><td>02</td><td>02</td><td>02</td><td>02</td></tr>
+    <tr><td>5</td><td>5</td><td>5</td><td>5</td></tr>
+    <tr><td>25</td><td>25</td><td>25</td><td>25</td></tr>
+    <tr><td>21</td><td>21</td><td>21</td><td>21</td></tr>
+  </tbody>
+</table></div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">&lt;link href=&quot;css/theme.blue.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parser-leading-zeros.js&quot;&gt;&lt;/script&gt;</pre>
+	</div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+<script>
+$(function(){
+	// add parsed values to columns [0,1]
+	addParsedValues($('table'), [0, 1, 2, 3]);
+});
+</script>
+
+</body>
+</html>

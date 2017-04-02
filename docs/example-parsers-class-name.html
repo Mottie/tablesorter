@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>jQuery tablesorter 2.0 - Disable or set the column parser using class names</title>
+	<title>jQuery tablesorter 2.0 - Disable sorting or set the column parser using class names</title>
 
 	<!-- jQuery -->
 	<script src="js/jquery-latest.min.js"></script>
@@ -24,7 +24,7 @@
 <body>
 <div id="banner">
 	<h1>table<em>sorter</em></h1>
-	<h2>Disable or set the column parser using class names</h2>
+	<h2>Disable sorting or set the column parser using class names</h2>
 	<h3>Flexible client-side table sorting</h3>
 	<a href="index.html">Back to documentation</a>
 </div>
@@ -35,6 +35,12 @@
 	</p>
 	<ul>
 		<li>In tablesorter version 2.0.5 and older, only the metadata and headers options methods were available to set the parsers.</li>
+		<li>There may be some confusion as to the wording of this example page:
+			<ul>
+				<li>Set the sorter to false to prevent sorting.</li>
+				<li>Prevent parsing a column by setting the parser to false - added v2.17.1 - get more details on <a href="example-options-headers-parser.html">this page</a></li>
+			</ul>
+		</li>
 		<li>In versions 2.0.11+, parsers could be set using class names.</li>
 		<li>Currently (versions 2.3+), parsers can be set using any of the following methods (they all do the same thing), in order of priority:
 			<ul>

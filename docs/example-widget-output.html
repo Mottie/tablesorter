@@ -347,6 +347,7 @@ table.tablesorter tbody tr.even.checked td {
 								<li>Set the <code>separator</code> to a comma (<code>,</code>).</li>
 								<li>Save the file with a <code>csv</code> extension, then load it into Excel.</li>
 								<li>Or, save the file with a <code>xls</code> extension; but when loading the file in Excel, you will likely see a message stating that the file is corrupt. Continue loading and you will see the expected data placed into each cell.</li>
+								<li><span class="label warning">Note</span> including a BOM in the <a class="intlink" href="#output_encoding"><code>output_encoding</code></a> option is no longer required!</li>
 							</ul>
 						</li>
 						<li>To copy the data into Excel
@@ -887,6 +888,7 @@ line,value1,value2,value3
 								<br>
 								The method used to download has been completely changed. The downloads still need an encoding setting, but this option is now set to a default of
 								<pre class="prettyprint lang-js">output_encoding : 'data:application/octet-stream;charset=utf8,'</pre>
+								<span class="label warning">Note</span> The trailing comma is important!
 								<hr>
 								The information below is no longer relavant:
 								<div class="fade">
@@ -895,7 +897,7 @@ line,value1,value2,value3
 // NO BOM   : 'data:text/csv;charset=utf8,'
 // With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
 // WIN 1252 : 'data:text/csv;charset=windows-1252,' // ANSI (subset of ISO-8859-1)
-output_encoding : 'data:text/csv;charset=utf8,'</pre><span class="label label-info">Note</span> The commas are important!
+output_encoding : 'data:text/csv;charset=utf8,'</pre>
 								</div>
 							</div>
 						</td>
@@ -921,7 +923,8 @@ output_encoding : 'data:text/csv;charset=utf8,'</pre><span class="label label-in
 			</table>
 			<span class="label label-info">Note</span> If you need to change the carriage return and/or the tab replacement strings, modify them as follows (changed in <span class="version">v2.21.2</span>):
 			<blockquote>
-				<pre class="prettyprint lang-js">$.tablesorter.output.replaceCR = '\x0d\x0a';
+				<pre class="prettyprint lang-js">// these are the default settings
+$.tablesorter.output.replaceCR = '\x0d\x0a';
 $.tablesorter.output.replaceTab = '\x09';</pre>
 			</blockquote>
 		</div>

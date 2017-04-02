@@ -445,14 +445,14 @@ module.exports = function( grunt ) {
 		}
 		// check internal version number
 		project = grunt.file.read('js/jquery.tablesorter.js');
-			if (
-				new RegExp(escapeRegExp('/*! TableSorter (FORK) v' + pkg.version)).test(project) &&
-				new RegExp(escapeRegExp("version : '" + pkg.version)).test(project)
-			) {
-				console.info('versions all match!');
-			} else {
-				grunt.log.writeln('\n**** version mismatch! ****'['red'].bold);
-			}
+		if (
+			new RegExp(escapeRegExp('/*! TableSorter (FORK) v' + pkg.version)).test(project) &&
+			new RegExp(escapeRegExp("version : '" + pkg.version)).test(project)
+		) {
+			console.info('versions all match!');
+		} else {
+			grunt.log.writeln('\n**** version mismatch! ****'['red'].bold);
+		}
 	});
 
 };
