@@ -1203,6 +1203,7 @@ From the example function above, you'll end up with something similar to this HT
 				<td>&quot;&gt; thead th, &gt; thead td&quot;</td>
 				<td>jQuery selectors used to find cells in the header.
 					<div class="collapsible">
+					<br>
 					You can change this, but the table will still need the required thead and tbody before this plugin will work properly.
 					<br>Added <code>&gt;</code> to the selector in v2.3 to prevent targeting nested table headers. It was modified again in v2.4 to include <code>td</code> cells within the thead.
 					</div>
@@ -1238,13 +1239,12 @@ From the example function above, you'll end up with something similar to this HT
 				<td>When this option is <code>true</code> any applied sort on the table will be reapplied after an update method (<span class="version">v2.19.0</span>).
 					<div class="collapsible">
 					<br>
-					Specifically, this option applies to the "updateAll", "update", "addRows" and "updateCell" methods and is checked after the method has completed updating the internal cache.<br>
+					Specifically, this option applies to the <a href="#updateall"><code>updateAll</code></a>, <a href="#update"><code>update</code></a>, <a href="#addrows"><code>addRows</code></a> and <a href="#updatecell"><code>updateCell</code></a> methods and is checked after the method has completed updating the internal cache.<br>
 					<br>
-					If <code>false</code>, the widgets will still be refreshed for all but the "updateCell" method - this "updateCell" behavior was added in v2.19.0.<br>
+					If <code>false</code>, the widgets will still be refreshed for all but the <code>updateCell</code> method - this behavior was added in v2.19.0.<br>
 					<br>
 					<span class="label label-info">Note</span> when triggering one of the above methods, and passing a defined <code>resort</code> parameter, it will override this setting.<br>
-					<br>
-					<span class="label label-warning">Note</span> if a sort is not reapplied, problems with some widgets may occur namely the grouping widget.
+					<span class="label label-warning">Note</span> if a sort is not reapplied, problems with some widgets may occur, namely with the grouping widget.
 					</div>
 				</td>
 				<td></td>
