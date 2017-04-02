@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 01-28-2017 (v2.28.5)*/
+/*! tablesorter (FORK) - updated 04-02-2017 (v2.28.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.5 *//*
+/*! TableSorter (FORK) v2.28.6 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.5',
+		version : '2.28.6',
 
 		parsers : [],
 		widgets : [],
@@ -374,7 +374,17 @@
 			.bind( 'sortReset' + namespace, function( e, callback ) {
 				e.stopPropagation();
 				// using this.config to ensure functions are getting a non-cached version of the config
-				ts.sortReset( this.config, callback );
+				ts.sortReset( this.config, function( table ) {
+					if (table.isApplyingWidgets) {
+						// multiple triggers in a row... filterReset, then sortReset - see #1361
+						// wait to update widgets
+						setTimeout( function() {
+							ts.applyWidget( table, '', callback );
+						}, 100 );
+					} else {
+						ts.applyWidget( table, '', callback );
+					}
+				});
 			})
 			.bind( 'updateAll' + namespace, function( e, resort, callback ) {
 				e.stopPropagation();
@@ -443,7 +453,7 @@
 				var tmp = $.extend( true, {}, c.originalSettings );
 				// restore original settings; this clears out current settings, but does not clear
 				// values saved to storage.
-				c = $.extend( true, ts.defaults, tmp );
+				c = $.extend( true, {}, ts.defaults, tmp );
 				c.originalSettings = tmp;
 				this.hasInitialized = false;
 				// setup the entire table again
@@ -678,8 +688,9 @@
 					for ( indx = 0; indx < max; indx++ ) {
 						header = c.$headerIndexed[ colIndex ];
 						if ( header && header.length ) {
-							// get column indexed table cell
-							configHeaders = ts.getColumnData( table, c.headers, colIndex );
+							// get column indexed table cell; adding true parameter fixes #1362 but
+							// it would break backwards compatibility...
+							configHeaders = ts.getColumnData( table, c.headers, colIndex ); // , true );
 							// get column parser/extractor
 							extractor = ts.getParserById( ts.getData( header, configHeaders, 'extractor' ) );
 							parser = ts.getParserById( ts.getData( header, configHeaders, 'sorter' ) );
@@ -1780,6 +1791,10 @@
 			ts.setHeadersCss( c );
 			ts.multisort( c );
 			ts.appendCache( c );
+			var indx;
+			for (indx = 0; indx < c.columns; indx++) {
+				c.sortVars[ indx ].count = -1;
+			}
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
 			}
@@ -1922,14 +1937,15 @@
 		},
 
 		applyWidgetOptions : function( table ) {
-			var indx, widget,
+			var indx, widget, wo,
 				c = table.config,
 				len = c.widgets.length;
 			if ( len ) {
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
-						c.widgetOptions = $.extend( true, {}, widget.options, c.widgetOptions );
+						wo = $.extend( {}, widget.options );
+						c.widgetOptions = $.extend( true, wo, c.widgetOptions );
 						// add widgetOptions to defaults for option validator
 						$.extend( true, ts.defaults.widgetOptions, widget.options );
 					}
@@ -2052,22 +2068,22 @@
 					}
 				}
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
-				// callback executed on init only
-				if ( !init && typeof callback === 'function' ) {
-					callback( table );
-				}
 			}
 			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
 				c.$table.triggerHandler( 'tablesorter-ready' );
+				// callback executed on init only
+				if ( !init && typeof callback === 'function' ) {
+					callback( table );
+				}
+				if ( c.debug ) {
+					widget = c.widgets.length;
+					console.log( 'Completed ' +
+						( init === true ? 'initializing ' : 'applying ' ) + widget +
+						' widget' + ( widget !== 1 ? 's' : '' ) + ts.benchmark( time ) );
+				}
 			}, 10 );
-			if ( c.debug ) {
-				widget = c.widgets.length;
-				console.log( 'Completed ' +
-					( init === true ? 'initializing ' : 'applying ' ) + widget +
-					' widget' + ( widget !== 1 ? 's' : '' ) + ts.benchmark( time ) );
-			}
 		},
 
 		removeWidget : function( table, name, refreshing ) {
@@ -3182,7 +3198,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 12/8/2016 (v2.28.1) *//*
+/*! Widget: filter - updated 4/2/2017 (v2.28.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -4067,7 +4083,7 @@
 				wo = c.widgetOptions,
 				filterArray = $.isArray( filter ),
 				filters = ( filterArray ) ? filter : ts.getFilters( table, true ),
-				combinedFilters = ( filters || [] ).join( '' ); // combined filter values
+				currentFilters = filters || []; // current filter values
 			// prevent errors if delay init is set
 			if ( $.isEmptyObject( c.cache ) ) {
 				// update cache if delayInit set & pager has initialized ( after user initiates a search )
@@ -4081,7 +4097,10 @@
 			// add filter array back into inputs
 			if ( filterArray ) {
 				ts.setFilters( table, filters, false, skipFirst !== true );
-				if ( !wo.filter_initialized ) { c.lastCombinedFilter = ''; }
+				if ( !wo.filter_initialized ) {
+					c.lastSearch = [];
+					c.lastCombinedFilter = '';
+				}
 			}
 			if ( wo.filter_hideFilters ) {
 				// show/hide filter row as needed
@@ -4091,11 +4110,11 @@
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
-			if ( c.lastCombinedFilter === combinedFilters && filter !== false ) {
+			if ( c.lastSearch.join(',') === currentFilters.join(',') && filter !== false ) {
 				return;
 			} else if ( filter === false ) {
 				// force filter refresh
-				c.lastCombinedFilter = null;
+				c.lastCombinedFilter = '';
 				c.lastSearch = [];
 			}
 			// define filter inside it is false
@@ -4112,11 +4131,11 @@
 			if ( c.showProcessing ) {
 				// give it time for the processing icon to kick in
 				setTimeout( function() {
-					tsf.findRows( table, filters, combinedFilters );
+					tsf.findRows( table, filters, currentFilters );
 					return false;
 				}, 30 );
 			} else {
-				tsf.findRows( table, filters, combinedFilters );
+				tsf.findRows( table, filters, currentFilters );
 				return false;
 			}
 		},
@@ -4438,9 +4457,11 @@
 			}
 			return showRow;
 		},
-		findRows: function( table, filters, combinedFilters ) {
-			if ( table.config.lastCombinedFilter === combinedFilters ||
-				!table.config.widgetOptions.filter_initialized ) {
+		findRows: function( table, filters, currentFilters ) {
+			if (
+				table.config.lastSearch.join(',') === ( currentFilters || [] ).join(',') ||
+				!table.config.widgetOptions.filter_initialized
+			) {
 				return;
 			}
 			var len, norm_rows, rowData, $rows, $row, rowIndex, tbodyIndex, $tbody, columnIndex,
@@ -4494,8 +4515,7 @@
 			// filtered rows count
 			c.filteredRows = 0;
 			c.totalRows = 0;
-			// combindedFilters are undefined on init
-			combinedFilters = ( storedFilters || [] ).join( '' );
+			currentFilters = ( storedFilters || [] );
 
 			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 				$tbody = ts.processTbody( table, c.$tbodies.eq( tbodyIndex ), true );
@@ -4508,7 +4528,7 @@
 					return el[ columnIndex ].$row.get();
 				}) );
 
-				if ( combinedFilters === '' || wo.filter_serversideFiltering ) {
+				if ( currentFilters.join('') === '' || wo.filter_serversideFiltering ) {
 					$rows
 						.removeClass( wo.filter_filteredRow )
 						.not( '.' + c.cssChildRow )
@@ -4683,7 +4703,8 @@
 				c.totalRows += $rows.length;
 				ts.processTbody( table, $tbody, false );
 			}
-			c.lastCombinedFilter = combinedFilters; // save last search
+			// lastCombinedFilter is no longer used internally
+			c.lastCombinedFilter = storedFilters.join(''); // save last search
 			// don't save 'filters' directly since it may have altered ( AnyMatch column searches )
 			c.lastSearch = storedFilters;
 			c.$table.data( 'lastSearch', storedFilters );
@@ -4983,7 +5004,7 @@
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
-			( $.isArray(setFilters) && setFilters.join('') === c.lastCombinedFilter ) ) {
+			( $.isArray(setFilters) && setFilters.join(',') === c.lastSearch.join(',') ) ) {
 			return $( table ).data( 'lastSearch' );
 		}
 		if ( c ) {

@@ -104,6 +104,47 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.6">Version 2.28.6</a> (4/2/2017)
+
+* Core:
+  * Prevent overwritting default `widgetOptions`. Fixes [issue #1356](https://github.com/Mottie/tablesorter/issues/1356).
+  * Fix method of saving default widgetOptions. See [issue #1356](https://github.com/Mottie/tablesorter/issues/1356).
+  * Update column count after reset.
+  * Add fix it (in Abelt) note for [issue #1362](https://github.com/Mottie/tablesorter/issues/1362).
+  * Update widgets after `sortReset`. Fixes [issue #1361](https://github.com/Mottie/tablesorter/issues/1361).
+  * The `applyWidget` callback now occurs after "tablesorter-ready" event
+* Docs:
+  * Update jQuery to v3.2.0.
+  * Fix "update" labels from previous version.
+  * Add note about Excel & `output_encoding`. See [issue #1353](https://github.com/Mottie/tablesorter/issues/1353).
+  * Clarify parser & sorter class name differences.
+  * Add note about event binding after build widget completes. See [issue #1370](https://github.com/Mottie/tablesorter/issues/1370).
+  * Fixed linting issues.
+  * Add some internal links.
+* Build:
+  * Stop build widget option warnings.
+* Filter:
+  * Compare last search array (instead of a combined string). Fixes [issue #1363](https://github.com/Mottie/tablesorter/issues/1363).
+* Output:
+  * Fixed CSV output when colspan &gt;3. See [PR #1373](https://github.com/Mottie/tablesorter/pull/1373); thanks [@ruchir19](https://github.com/ruchir19)!
+* Pager:
+  * Fix "all" option to not set when the option doesn't exist. See [PR #1364](https://github.com/Mottie/tablesorter/pull/1364); thanks [@simenflatby](https://github.com/simenflatby)!
+  * Stop using combined filter values. See [issue #1363](https://github.com/Mottie/tablesorter/issues/1363).
+  * Use "all" only when the option exists. Fixes [#1364](https://github.com/Mottie/tablesorter/pull/1364) & [#1366](https://github.com/Mottie/tablesorter/issues/1366).
+* Sort2Hash:
+  * Stop option warnings. Fixes [issue #1369](https://github.com/Mottie/tablesorter/issues/1369).
+* Parsers:
+  * Add leading zero parser & [demo](https://mottie.github.io/tablesorter/docs/example-parsers-leading-zeros.html).
+* Theme:
+  * Add CSS highlight file; copied from [the demo](https://mottie.github.io/tablesorter/docs/example-css-highlighting.html).
+* Meta:
+  * Add `composer.json` file. Fixes [issue #1355](https://github.com/Mottie/tablesorter/issues/1355).
+  * Readme: Move questions section closer to the top.
+  * Update dependencies.
+  * Fix indentation & remove extra spaces.
+  * Remove cdnjs auto-update config - see [CDNJS #9080](https://github.com/cdnjs/cdnjs/pull/9080).
+  * Update SPDX license.
+
 #### <a name="v2.28.5">Version 2.28.5</a> (1/28/2017)
 
 * Docs: Fix "update" labels.
@@ -154,8 +195,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Duplicated `theme.bootstrap_3.css` from `theme.bootstrap.css` (maintaining this non-versioned file name until Bootstrap v4-stable has been available for about 6 months).
 * Readme:
   * Update log for v2.28.3.
-
-#### <a name="v2.28.3">Version 2.28.3</a> (12/16/2016)
-
-* Core: Fix internal version numbering.
-* Grunt: add version check.

@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.5 *//*
+/*! TableSorter (FORK) v2.28.6 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.5',
+		version : '2.28.6',
 
 		parsers : [],
 		widgets : [],
@@ -372,7 +372,17 @@
 			.bind( 'sortReset' + namespace, function( e, callback ) {
 				e.stopPropagation();
 				// using this.config to ensure functions are getting a non-cached version of the config
-				ts.sortReset( this.config, callback );
+				ts.sortReset( this.config, function( table ) {
+					if (table.isApplyingWidgets) {
+						// multiple triggers in a row... filterReset, then sortReset - see #1361
+						// wait to update widgets
+						setTimeout( function() {
+							ts.applyWidget( table, '', callback );
+						}, 100 );
+					} else {
+						ts.applyWidget( table, '', callback );
+					}
+				});
 			})
 			.bind( 'updateAll' + namespace, function( e, resort, callback ) {
 				e.stopPropagation();
@@ -441,7 +451,7 @@
 				var tmp = $.extend( true, {}, c.originalSettings );
 				// restore original settings; this clears out current settings, but does not clear
 				// values saved to storage.
-				c = $.extend( true, ts.defaults, tmp );
+				c = $.extend( true, {}, ts.defaults, tmp );
 				c.originalSettings = tmp;
 				this.hasInitialized = false;
 				// setup the entire table again
@@ -676,8 +686,9 @@
 					for ( indx = 0; indx < max; indx++ ) {
 						header = c.$headerIndexed[ colIndex ];
 						if ( header && header.length ) {
-							// get column indexed table cell
-							configHeaders = ts.getColumnData( table, c.headers, colIndex );
+							// get column indexed table cell; adding true parameter fixes #1362 but
+							// it would break backwards compatibility...
+							configHeaders = ts.getColumnData( table, c.headers, colIndex ); // , true );
 							// get column parser/extractor
 							extractor = ts.getParserById( ts.getData( header, configHeaders, 'extractor' ) );
 							parser = ts.getParserById( ts.getData( header, configHeaders, 'sorter' ) );
@@ -1778,6 +1789,10 @@
 			ts.setHeadersCss( c );
 			ts.multisort( c );
 			ts.appendCache( c );
+			var indx;
+			for (indx = 0; indx < c.columns; indx++) {
+				c.sortVars[ indx ].count = -1;
+			}
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
 			}
@@ -1920,14 +1935,15 @@
 		},
 
 		applyWidgetOptions : function( table ) {
-			var indx, widget,
+			var indx, widget, wo,
 				c = table.config,
 				len = c.widgets.length;
 			if ( len ) {
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
-						c.widgetOptions = $.extend( true, {}, widget.options, c.widgetOptions );
+						wo = $.extend( {}, widget.options );
+						c.widgetOptions = $.extend( true, wo, c.widgetOptions );
 						// add widgetOptions to defaults for option validator
 						$.extend( true, ts.defaults.widgetOptions, widget.options );
 					}
@@ -2050,22 +2066,22 @@
 					}
 				}
 				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
-				// callback executed on init only
-				if ( !init && typeof callback === 'function' ) {
-					callback( table );
-				}
 			}
 			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
 				$.data( table, 'lastWidgetApplication', new Date() );
 				c.$table.triggerHandler( 'tablesorter-ready' );
+				// callback executed on init only
+				if ( !init && typeof callback === 'function' ) {
+					callback( table );
+				}
+				if ( c.debug ) {
+					widget = c.widgets.length;
+					console.log( 'Completed ' +
+						( init === true ? 'initializing ' : 'applying ' ) + widget +
+						' widget' + ( widget !== 1 ? 's' : '' ) + ts.benchmark( time ) );
+				}
 			}, 10 );
-			if ( c.debug ) {
-				widget = c.widgets.length;
-				console.log( 'Completed ' +
-					( init === true ? 'initializing ' : 'applying ' ) + widget +
-					' widget' + ( widget !== 1 ? 's' : '' ) + ts.benchmark( time ) );
-			}
 		},
 
 		removeWidget : function( table, name, refreshing ) {
