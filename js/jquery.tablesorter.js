@@ -362,7 +362,17 @@
 			.bind( 'sortReset' + namespace, function( e, callback ) {
 				e.stopPropagation();
 				// using this.config to ensure functions are getting a non-cached version of the config
-				ts.sortReset( this.config, callback );
+				ts.sortReset( this.config, function( table ) {
+					if (table.isApplyingWidgets) {
+						// multiple triggers in a row... filterReset, then sortReset - see #1361
+						// wait to update widgets
+						setTimeout( function() {
+							ts.applyWidget( table, '', callback );
+						}, 100 );
+					} else {
+						ts.applyWidget( table, '', callback );
+					}
+				});
 			})
 			.bind( 'updateAll' + namespace, function( e, resort, callback ) {
 				e.stopPropagation();
