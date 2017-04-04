@@ -1812,7 +1812,7 @@
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
 			( $.isArray(setFilters) && setFilters.join(',') === c.lastSearch.join(',') ) ) {
-			return $( table ).data( 'lastSearch' );
+			return $( table ).data( 'lastSearch' ) || [];
 		}
 		if ( c ) {
 			if ( c.$filters ) {
