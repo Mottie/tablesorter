@@ -104,6 +104,16 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.7">Version 2.28.7</a> (4/4/2017)
+
+* Editable:
+  * Remove "blur" event listeners. See [issue #1360](https://github.com/Mottie/tablesorter/issues/1360).
+* Filter:
+  * Add "filterAndSortReset" method. See [issue #1361](https://github.com/Mottie/tablesorter/issues/1361).
+  * Prevent JS error added from last update. Fixes [issue #1377](https://github.com/Mottie/tablesorter/issues/1377).
+* Meta:
+  * Fix composer.json license.
+
 #### <a name="v2.28.6">Version 2.28.6</a> (4/2/2017)
 
 * Core:
@@ -156,42 +166,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Scroller:
   * Add `scrollerComplete` event. Fixes [issue #1351](https://github.com/Mottie/tablesorter/issues/1351).
 * Readme: Add related project, tablesorter-pagercontrols
-
-#### <a name="v2.28.4">Version 2.28.4</a> (1/6/2017)
-
-* Docs:
-  * Add more notes about moving "ipAddress" parser into an external file. See [issue #1344](https://github.com/Mottie/tablesorter/issues/1344).
-  * Load storage widget in grouping widget demo. Fixes [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
-  * Add page header section to grouping child demo. See [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
-  * Include jQuery in page header section in various demos.
-  * Add page header to output demo. See [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
-  * Add comma to broken output demo.
-  * Add info on output to Excel in output widget demo. See [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
-  * Renamed [Bootstrap v2.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v2.html).
-  * Renamed [Bootstrap v3.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v3.html).
-  * Created [Bootstrap v4.x demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v4.html).
-  * Update all Bootstrap links to point to Bootstrap v3.x demo.
-  * Maintain minimal original [Bootstrap demo](https://mottie.github.io/tablesorter/docs/example-widget-bootstrap-theme.html).
-* Output:
-  * Prevent error on output to an already open popup.
-  * Add `output_savePlugin` option &amp; update download code.
-  * Add `output_includeHeader` option &amp; docs. Fixes [issue #1349](https://github.com/Mottie/tablesorter/issues/1349).
-* Pager:
-  * (widget only) make compatible with stickyHeaders. [Fixes #1313](https://github.com/Mottie/tablesorter/issues/1313):
-    * Removed all references to stored `pager.$goto` and `pager.$size`
-    * Removed check if header text matches header length - this breaks when a header row has a "tablesorter-ignoreRow" class name.
-    * Add stickyHeader container to `pager.$container` in case the pager controls are inside the thead.
-  * Fix rendering of sticky headers after ajax.
-  * Use option to target inner header.
-  * Restore check for new headers. [Fixes #1343](https://github.com/Mottie/tablesorter/issues/1343).
-  * Add `data-attribute` override on output. See [issue #1348](https://github.com/Mottie/tablesorter/issues/1348).
-* StickHeaders:
-  * Reduce widget priority below the pager widget priority.
-* Theme:
-  * Add group widget css file. See [issue #1346](https://github.com/Mottie/tablesorter/issues/1346).
-  * Add column widget support to Bootstrap. See [issue #1347](https://github.com/Mottie/tablesorter/issues/1347).
-  * Update high-specificity blue theme - [demo](https://jsfiddle.net/Mottie/k9uasLc7/); see [Stack Overflow](http://stackoverflow.com/q/41472634/145346).
-  * Add `theme.bootstrap_4.css` file ([demo](https://mottie.github.io/tablesorter/docs/example-option-theme-bootstrap-v4.html); Bootstrap v4-alpha - do not use in production!).
-  * Duplicated `theme.bootstrap_3.css` from `theme.bootstrap.css` (maintaining this non-versioned file name until Bootstrap v4-stable has been available for about 6 months).
-* Readme:
-  * Update log for v2.28.3.

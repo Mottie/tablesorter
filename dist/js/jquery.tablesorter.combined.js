@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 04-02-2017 (v2.28.6)*/
+/*! tablesorter (FORK) - updated 04-04-2017 (v2.28.7)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.6 *//*
+/*! TableSorter (FORK) v2.28.7 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.6',
+		version : '2.28.7',
 
 		parsers : [],
 		widgets : [],
@@ -3198,7 +3198,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 4/2/2017 (v2.28.6) *//*
+/*! Widget: filter - updated 4/4/2017 (v2.28.7) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3269,7 +3269,7 @@
 			var tbodyIndex, $tbody,
 				$table = c.$table,
 				$tbodies = c.$tbodies,
-				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterEnd search '
+				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterAndSortReset filterEnd search '
 					.split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
@@ -3610,7 +3610,7 @@
 			}
 
 			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
-				'filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
+				'filterAndSortReset filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table.bind( txt, function( event, filter ) {
 				val = wo.filter_hideEmpty &&
 					$.isEmptyObject( c.cache ) &&
@@ -3621,9 +3621,16 @@
 					event.stopPropagation();
 					tsf.buildDefault( table, true );
 				}
-				if ( event.type === 'filterReset' ) {
+				// Add filterAndSortReset - see #1361
+				if ( event.type === 'filterReset' || event.type === 'filterAndSortReset' ) {
 					c.$table.find( '.' + tscss.filter ).add( wo.filter_$externalFilters ).val( '' );
-					tsf.searching( table, [] );
+					if ( event.type === 'filterAndSortReset' ) {
+						ts.sortReset( this.config, function() {
+							tsf.searching( table, [] );
+						});
+					} else {
+						tsf.searching( table, [] );
+					}
 				} else if ( event.type === 'filterResetSaved' ) {
 					ts.storage( table, 'tablesorter-filters', '' );
 				} else if ( event.type === 'filterEnd' ) {
@@ -5005,7 +5012,7 @@
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
 			( $.isArray(setFilters) && setFilters.join(',') === c.lastSearch.join(',') ) ) {
-			return $( table ).data( 'lastSearch' );
+			return $( table ).data( 'lastSearch' ) || [];
 		}
 		if ( c ) {
 			if ( c.$filters ) {

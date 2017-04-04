@@ -5563,6 +5563,24 @@ $('table').trigger( 'search', [['', '', '', '', 'orange']] ); // find orange in 
 				<td><a href="example-widget-filter.html">Example</a></td>
 			</tr>
 
+			<tr id="filterandsortreset">
+				<td><a href="#" class="permalink">filterAndSortReset</a></td>
+				<td>filter: Trigger the filter widget to reset the sort &amp; reset the search criteria (<span class="version">v2.28.7</span>).
+					<div class="collapsible">
+						<p>
+							This combination reset was added to prevent issues with the widgets not being updated after a combination of <a href="#filterreset"><code>filterReset</code></a> and <a href="#sortreset"><code>sortReset</code></a> due to internal timers preventing multiple widget applications in a row.
+						</p>
+						This method does not include a callback parameter similiar to the <code>sortReset</code> method.
+						<pre class="prettyprint lang-js">$(function() {
+  $('button').click(function(){
+    $('table').trigger('filterAndSortReset');
+    return false;
+});</pre>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="filterresetsaved">
 				<td><a href="#" class="permalink">filterResetSaved</a></td>
 				<td>filter: Make the filter widget reset any saved searches (<span class="version">v2.25.6</span>).
