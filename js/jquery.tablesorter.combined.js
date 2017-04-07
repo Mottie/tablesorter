@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 04-04-2017 (v2.28.7)*/
+/*! tablesorter (FORK) - updated 04-07-2017 (v2.28.7)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1325,7 +1325,7 @@
 			cell = $cell[ 0 ]; // in case cell is a jQuery object
 			// tbody may not exist if update is initialized while tbody is removed for processing
 			if ( $tbodies.length && tbodyIndex >= 0 ) {
-				row = $tbodies.eq( tbodyIndex ).find( 'tr' ).index( $row );
+				row = $tbodies.eq( tbodyIndex ).find( 'tr' ).not( '.' + c.cssChildRow ).index( $row );
 				cache = tbcache.normalized[ row ];
 				len = $row[ 0 ].cells.length;
 				if ( len !== c.columns ) {
@@ -1346,6 +1346,11 @@
 				cache[ c.columns ].raw[ icell ] = tmp;
 				tmp = ts.getParsedText( c, cell, icell, tmp );
 				cache[ icell ] = tmp; // parsed
+				var tmpRow = cache[c.columns].$row;
+				if (tmpRow.length == 2) {
+				    // reapply child row
+				    $row = $row.add(tmpRow[1]);
+				}
 				cache[ c.columns ].$row = $row;
 				if ( ( c.parsers[ icell ].type || '' ).toLowerCase() === 'numeric' ) {
 					// update column max value (ignore sign)
