@@ -1328,12 +1328,6 @@
 				cache[ c.columns ].raw[ icell ] = tmp;
 				tmp = ts.getParsedText( c, cell, icell, tmp );
 				cache[ icell ] = tmp; // parsed
-				var tmpRow = cache[c.columns].$row;
-				if (tmpRow.length == 2) {
-				    // reapply child row
-				    $row = $row.add(tmpRow[1]);
-				}
-				cache[ c.columns ].$row = $row;
 				if ( ( c.parsers[ icell ].type || '' ).toLowerCase() === 'numeric' ) {
 					// update column max value (ignore sign)
 					tbcache.colMax[ icell ] = Math.max( Math.abs( tmp ) || 0, tbcache.colMax[ icell ] || 0 );
