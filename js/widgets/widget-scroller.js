@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 1/28/2017 (v2.28.5) *//*
+/*! Widget: scroller - updated 4/8/2017 (v2.28.8) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -113,7 +113,7 @@
 			when height < max height (filtering) */
 			'.' + tscss.scrollerTable + ' { position: relative; overflow: auto; }' +
 			'.' + tscss.scrollerTable + ' table.' + tscss.table +
-				' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; }' +
+				' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; max-width: initial; }' +
 			/* hide footer in original table */
 			'.' + tscss.scrollerTable + ' tfoot, .' + tscss.scrollerHideElement + ', .' + tscss.scrollerHideColumn +
 				' { display: none; }' +
