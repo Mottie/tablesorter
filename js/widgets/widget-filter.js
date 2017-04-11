@@ -885,6 +885,19 @@
 				tsf.checkFilters( table, filter, skipFirst );
 			}
 		},
+		equalFilters: function (c, filter1, filter2) {
+			var indx,
+				f1 = [],
+				f2 = [],
+				len = c.columns + 1; // add one to include anyMatch filter
+			filter1 = $.isArray(filter1) ? filter1 : [];
+			filter2 = $.isArray(filter2) ? filter2 : [];
+			for (indx = 0; indx < len; indx++) {
+				f1[indx] = filter1[indx] || '';
+				f2[indx] = filter2[indx] || '';
+			}
+			return f1.join(',') === f2.join(',');
+		},
 		checkFilters: function( table, filter, skipFirst ) {
 			var c = table.config,
 				wo = c.widgetOptions,
@@ -917,7 +930,7 @@
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
-			if ( c.lastSearch.join(',') === currentFilters.join(',') && filter !== false ) {
+			if ( tsf.equalFilters(c, c.lastSearch, currentFilters) && filter !== false ) {
 				return;
 			} else if ( filter === false ) {
 				// force filter refresh
@@ -1266,7 +1279,7 @@
 		},
 		findRows: function( table, filters, currentFilters ) {
 			if (
-				table.config.lastSearch.join(',') === ( currentFilters || [] ).join(',') ||
+				tsf.equalFilters(table.config, table.config.lastSearch, currentFilters) ||
 				!table.config.widgetOptions.filter_initialized
 			) {
 				return;
@@ -1811,7 +1824,8 @@
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
-			( $.isArray(setFilters) && setFilters.join(',') === c.lastSearch.join(',') ) ) {
+			( $.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
+		) {
 			return $( table ).data( 'lastSearch' ) || [];
 		}
 		if ( c ) {
