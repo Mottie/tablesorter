@@ -968,11 +968,15 @@
 				.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
 				.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
+					var filtersEqual;
+					if (ts.filter.equalFilters) {
+						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
+					} else {
+						// will miss filter changes of the same value in a different column, see #1363
+						filtersEqual = (c.lastSearch || []).join('') !== (p.currentFilters || []).join('');
+					}
 					// don't change page if filters are the same (pager updating, etc)
-					if (
-						e.type === 'filterStart' &&
-						p.pageReset !== false &&
-						(c.lastSearch || []).join(',') !== (p.currentFilters || []).join(',')) {
+					if (e.type === 'filterStart' && p.pageReset !== false && !filtersEqual) {
 						p.page = p.pageReset; // fixes #456 & #565
 					}
 				})
