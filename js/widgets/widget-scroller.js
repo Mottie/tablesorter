@@ -378,7 +378,9 @@
 				// Hide other scrollers so we can resize
 				$div = $( 'div.' + tscss.scrollerWrap + '[id!="' + id + '"]' )
 					.addClass( tscss.scrollerHideElement ),
-				row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) + '">';
+				temp = 'padding:0;margin:0;border:0;height:0;max-height:0;min-height:0;',
+				row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) +
+					'" style="' + temp + '">';
 
 			wo.scroller_calcWidths = [];
 
@@ -417,22 +419,22 @@
 						setWidth = $this.width();
 					}
 				}
-				row += '<td data-column="' + index + '" style="padding:0;margin:0;border:0;height:0;max-height:0;' +
-					'min-height:0;width:' + setWidth + 'px;min-width:' + setWidth + 'px;max-width:' + setWidth + 'px"></td>';
+				row += '<td data-column="' + index + '" style="' + temp + 'width:' + setWidth +
+					'px;min-width:' + setWidth + 'px;max-width:' + setWidth + 'px"></td>';
 
 				// save current widths
 				wo.scroller_calcWidths[ index ] = setWidth;
 			}
 			row += '</tr>';
-			c.$tbodies.eq(0).prepend( row ); // tbody
+			c.$tbodies.eq(0).append( row ); // tbody
 			$hdr.children( 'thead' ).append( row );
 			$foot.children( 'tfoot' ).append( row );
 
 			// include colgroup or alignment is off
 			ts.fixColumnWidth( c.table );
 			row = c.$table.children( 'colgroup' )[0].outerHTML;
-			$hdr.prepend( row );
-			$foot.prepend( row );
+			$hdr.append( row );
+			$foot.append( row );
 
 			temp = $tableWrap.parent().innerWidth() -
 				( tsScroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 );
