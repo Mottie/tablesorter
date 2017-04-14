@@ -180,6 +180,17 @@
 						</td>
 					</tr>
 
+					<tr id="resizable-include-footer">
+						<td><a href="#" class="permalink">resizable_includeFooter</a></td>
+						<td>true</td>
+						<td>When <code>true</code>, the resizable handle will extend into the table footer (<span class="version">v2.28.8</span>).
+							<div class="collapsible">
+								<p>When <code>true</code>, this option includes the entire height of the table footer. If the table does not include a footer, the resize handle will stop at the last row.</p>
+								<p>If <code>false</code>, the resizable handle will not extend into the table footer.</p>
+							</div>
+						</td>
+					</tr>
+
 					<tr id="resizable-widths">
 						<td><a href="#" class="permalink">resizable_widths</a></td>
 						<td>[ ]</td>
@@ -262,6 +273,16 @@ $( 'table' ).trigger( 'resizableUpdate' );</pre>
 			<th>Date</th>
 		</tr>
 	</thead>
+	<tfoot>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</tfoot>
 	<tbody>
 		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
 		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>

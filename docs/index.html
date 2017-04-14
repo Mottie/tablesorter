@@ -505,7 +505,7 @@
 		<li><a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.25.8</span>).</li>
 		<li><a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.19.0</span>).</li>
 		<li><a href="example-widgets.html">Repeat headers widget</a> (v2.0.5; <span class="version updated">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable columns widget</a> (v2.0.23.1; <span class="version updated">v2.28.5</span>).</li>
+		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable columns widget</a> (v2.0.23.1; <span class="version updated">v2.28.8</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27; <span class="version updated">v2.24.0</span>).</li>
 		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.28.5</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-to-hash.html">Sort-to-hash widget</a> (<span class="version">v2.22.4</span>; <span class="version updated">v2.28.6</span>).</li>
@@ -2050,6 +2050,10 @@ $(function(){
       // If this option is set to true, a resizing anchor
       // will be included in the last column of the table
       resizable_addLastColumn: false,
+
+      // If this option is set to true, the resizable handle will extend
+      // into the table footer
+      resizable_includeFooter: true,
 
       // Set this option to the starting & reset header widths
       resizable_widths: [],
@@ -3854,6 +3858,19 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-resizable.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-resizable-includefooter">
+				<td><a href="#" class="permalink">resizable_includeFooter</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>Resizable widget: If this option is set to <code>true</code>, the resizable handle will extend into the table footer (<span class="version">v2.28.8</span>).
+					<div class="collapsible">
+						<p>When <code>true</code>, this option includes the entire height of the table footer. If the table does not include a footer, the resize handle will stop at the last row.</p>
+						<p>If <code>false</code>, the resizable handle will not extend into the table footer.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-resizable-widths">
 				<td><a href="#" class="permalink">resizable_widths</a></td>
 				<td>Array</td>
@@ -3904,7 +3921,7 @@ $('table').trigger('search', false);</pre></div>
 				<td></td>
 			</tr>
 
-			<tr id="resizable-target-last">
+			<tr id="widget-resizable-target-last">
 				<td><a href="#" class="permalink">resizable_targetLast</a></td>
 				<td>Boolean</td>
 				<td>false</td>
