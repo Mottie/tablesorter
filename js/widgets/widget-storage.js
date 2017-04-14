@@ -4,6 +4,19 @@
 	'use strict';
 
 	var ts = $.tablesorter || {};
+
+	// update defaults for validator; these values must be falsy!
+	$.extend(true, ts.defaults, {
+		fixedUrl: '',
+		widgetOptions: {
+			storage_fixedUrl: '',
+			storage_group: '',
+			storage_page: '',
+			storage_tableId: '',
+			storage_useSessionStorage: ''
+		}
+	});
+
 	// *** Store data in local storage, with a cookie fallback ***
 	/* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
 	   if you need it, then include https://github.com/douglascrockford/JSON-js
@@ -43,17 +56,6 @@
 			url = options && options.url ||
 				$table.attr(options && options.page || wo && wo.storage_page || 'data-table-page') ||
 				wo && wo.storage_fixedUrl || c && c.fixedUrl || window.location.pathname;
-		// update defaults for validator; these values must be falsy!
-		$.extend(true, ts.defaults, {
-			fixedUrl: '',
-			widgetOptions: {
-				storage_fixedUrl: '',
-				storage_group: '',
-				storage_page: '',
-				storage_tableId: '',
-				storage_useSessionStorage: ''
-			}
-		});
 		// https://gist.github.com/paulirish/5558557
 		if (storageType in window) {
 			try {
