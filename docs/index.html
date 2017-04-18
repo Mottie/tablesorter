@@ -2112,7 +2112,10 @@ $(function(){
       stickyHeaders_zIndex: 2,
 
       // *** STORAGE WIDGET ***
-      // allows switching between using local & session storage
+      // set storage type; this overrides any storage_useSessionStorage setting
+      // use the first letter of (l)ocal, (s)ession or (c)ookie
+      storage_storageType: '',
+      // DEPRECATED: allows switching between using local & session storage
       storage_useSessionStorage: false,
       // alternate table id (set if grouping multiple tables together)
       storage_tableId: '',
@@ -3958,13 +3961,42 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-savesort.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-storage-storage-type">
+				<td><a href="#" class="permalink">storage_storageType</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>
+					Storage widget: Set this option to the first letter of the desired storage type (<span class="version">v2.28.8</span>).
+					<div class="collapsible">
+					<p>If <em>any</em> value is set in this option, the deprecated <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> is completely ignored.</p>
+					<ul>
+						<li>When set to <code>&quot;s&quot;</code> (session), all saved variables for the table use <code>sessionStorage</code>. This means once the user closes the browser, all saved variables are lost.</li>
+						<li>When set to <code>&quot;c&quot;</code> (cookie), all saved variables for the table will use cookies.</li>
+						<li>Any other setting will switch to using the default <code>localStorage</code> type.</li>
+					</ul>
+					Use the <a href="#widget-storage-storage-type"><code>&quot;storage_storageType&quot;</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["saveSort"],
+    widgetOptions : {
+      // This sets session storage; only the first letter is required
+      storage_storageType : "session"
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-storage-use-session-storage">
-				<td><a href="#" class="permalink">storage_useSessionStorage</a></td>
+				<td><a href="#" class="permalink alert">storage_useSessionStorage</a></td>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Storage widget: If this option is set to <code>false</code>, all saved variables for the table will be within local storage (<span class="version">v2.21.3</span>).
+					Storage widget: This option was <span class="label label-danger">deprecated</span> in <span class="version updated">v2.28.8</span>.
 					<div class="collapsible">
+					<p>In <span class="version">v2.28.8</span>, this option is replaced by the <a href="#widget-storage-storage-type"><code>&quot;storage_storageType&quot;</code></a> option and will be completely ignored if that option has <em>any</em> setting.</p>
+					<p>If this option is set to <code>false</code>, all saved variables for the table will be within local storage (<span class="version">v2.21.3</span>).</p>
 					<p>If <code>true</code>, all saved variables for the table will be within the session storage. This means once the user closes the browser, all saved variables are lost.</p>
 					Use the <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> option to switch to session storage as follows:
 					<pre class="prettyprint lang-js">$(function(){
