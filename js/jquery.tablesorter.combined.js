@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 04-08-2017 (v2.28.7)*/
+/*! tablesorter (FORK) - updated 04-18-2017 (v2.28.8)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.7 *//*
+/*! TableSorter (FORK) v2.28.8 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.7',
+		version : '2.28.8',
 
 		parsers : [],
 		widgets : [],
@@ -2826,12 +2826,26 @@
 
 })( jQuery );
 
-/*! Widget: storage - updated 11/26/2016 (v2.28.0) */
+/*! Widget: storage - updated 4/18/2017 (v2.28.8) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
 
 	var ts = $.tablesorter || {};
+
+	// update defaults for validator; these values must be falsy!
+	$.extend(true, ts.defaults, {
+		fixedUrl: '',
+		widgetOptions: {
+			storage_fixedUrl: '',
+			storage_group: '',
+			storage_page: '',
+			storage_storageType: '',
+			storage_tableId: '',
+			storage_useSessionStorage: ''
+		}
+	});
+
 	// *** Store data in local storage, with a cookie fallback ***
 	/* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
 	   if you need it, then include https://github.com/douglascrockford/JSON-js
@@ -2858,8 +2872,12 @@
 			values = {},
 			c = table.config,
 			wo = c && c.widgetOptions,
-			storageType = ( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ) ?
-				'sessionStorage' : 'localStorage',
+			storageType = (
+				( options && options.storageType ) || ( wo && wo.storage_storageType )
+			).toString().charAt(0).toLowerCase(),
+			// deprecating "useSessionStorage"; any storageType setting overrides it
+			session = storageType ? '' :
+				( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ),
 			$table = $(table),
 			// id from (1) options ID, (2) table 'data-table-group' attribute, (3) widgetOptions.storage_tableId,
 			// (4) table ID, then (5) table index
@@ -2871,28 +2889,25 @@
 			url = options && options.url ||
 				$table.attr(options && options.page || wo && wo.storage_page || 'data-table-page') ||
 				wo && wo.storage_fixedUrl || c && c.fixedUrl || window.location.pathname;
-		// update defaults for validator; these values must be falsy!
-		$.extend(true, ts.defaults, {
-			fixedUrl: '',
-			widgetOptions: {
-				storage_fixedUrl: '',
-				storage_group: '',
-				storage_page: '',
-				storage_tableId: '',
-				storage_useSessionStorage: ''
-			}
-		});
-		// https://gist.github.com/paulirish/5558557
-		if (storageType in window) {
-			try {
-				window[storageType].setItem('_tmptest', 'temp');
-				hasStorage = true;
-				window[storageType].removeItem('_tmptest');
-			} catch (error) {
-				if (c && c.debug) {
-					console.warn( storageType + ' is not supported in this browser' );
+
+		// skip if using cookies
+		if (storageType !== 'c') {
+			storageType = (storageType === 's' || session) ? 'sessionStorage' : 'localStorage';
+			// https://gist.github.com/paulirish/5558557
+			if (storageType in window) {
+				try {
+					window[storageType].setItem('_tmptest', 'temp');
+					hasStorage = true;
+					window[storageType].removeItem('_tmptest');
+				} catch (error) {
+					if (c && c.debug) {
+						console.warn( storageType + ' is not supported in this browser' );
+					}
 				}
 			}
+		}
+		if (c.debug) {
+			console.log('Storage widget using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
 		if ($.parseJSON) {
@@ -3203,7 +3218,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 4/4/2017 (v2.28.7) *//*
+/*! Widget: filter - updated 4/18/2017 (v2.28.8) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -4090,6 +4105,19 @@
 				tsf.checkFilters( table, filter, skipFirst );
 			}
 		},
+		equalFilters: function (c, filter1, filter2) {
+			var indx,
+				f1 = [],
+				f2 = [],
+				len = c.columns + 1; // add one to include anyMatch filter
+			filter1 = $.isArray(filter1) ? filter1 : [];
+			filter2 = $.isArray(filter2) ? filter2 : [];
+			for (indx = 0; indx < len; indx++) {
+				f1[indx] = filter1[indx] || '';
+				f2[indx] = filter2[indx] || '';
+			}
+			return f1.join(',') === f2.join(',');
+		},
 		checkFilters: function( table, filter, skipFirst ) {
 			var c = table.config,
 				wo = c.widgetOptions,
@@ -4122,7 +4150,7 @@
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
-			if ( c.lastSearch.join(',') === currentFilters.join(',') && filter !== false ) {
+			if ( tsf.equalFilters(c, c.lastSearch, currentFilters) && filter !== false ) {
 				return;
 			} else if ( filter === false ) {
 				// force filter refresh
@@ -4471,7 +4499,7 @@
 		},
 		findRows: function( table, filters, currentFilters ) {
 			if (
-				table.config.lastSearch.join(',') === ( currentFilters || [] ).join(',') ||
+				tsf.equalFilters(table.config, table.config.lastSearch, currentFilters) ||
 				!table.config.widgetOptions.filter_initialized
 			) {
 				return;
@@ -5016,7 +5044,8 @@
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
-			( $.isArray(setFilters) && setFilters.join(',') === c.lastSearch.join(',') ) ) {
+			( $.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
+		) {
 			return $( table ).data( 'lastSearch' ) || [];
 		}
 		if ( c ) {
@@ -5401,7 +5430,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 1/28/2017 (v2.28.5) */
+/*! Widget: resizable - updated 4/18/2017 (v2.28.8) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -5565,6 +5594,10 @@
 					// center table has a max-height set
 					tableHeight += $this.filter('[style*="height"]').length ? $this.height() : $this.children('table').height();
 				});
+			}
+
+			if ( !wo.resizable_includeFooter && c.$table.children('tfoot').length ) {
+				tableHeight -= c.$table.children('tfoot').height();
 			}
 			// subtract out table left position from resizable handles. Fixes #864
 			startPosition = c.$table.position().left;
@@ -5736,10 +5769,10 @@
 		options: {
 			resizable : true, // save column widths to storage
 			resizable_addLastColumn : false,
+			resizable_includeFooter: true,
 			resizable_widths : [],
 			resizable_throttle : false, // set to true (5ms) or any number 0-10 range
-			resizable_targetLast : false,
-			resizable_fullWidth : null
+			resizable_targetLast : false
 		},
 		init: function(table, thisWidget, c, wo) {
 			ts.resizable.init( c, wo );

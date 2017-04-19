@@ -104,6 +104,28 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.8">Version 2.28.8</a> (4/18/2017)
+
+* Docs:
+  * Update version tags.
+* Core:
+  * Fixed `updateCell` to work correctly with child rows. Thanks [@andysleigh](https://github.com/andysleigh); see [PR #1381](https://github.com/Mottie/tablesorter/pull/1381).
+* Filter:
+  * Add `equalFilters` function; for more reliable comparisons.
+* Pager:
+  * use `equalFilters` function for comparison. See [issue #1384](https://github.com/Mottie/tablesorter/issues/1384).
+* Resizable:
+  * Add `resizable_includeFooter` option. Fixes [issue #1386](https://github.com/Mottie/tablesorter/issues/1386).
+* Scroller:
+  * Set max-width to initial. See [issue #1382](https://github.com/Mottie/tablesorter/issues/1382).
+  * Fix offset from hidden row. See [issue #1376](https://github.com/Mottie/tablesorter/issues/1376).
+  * Fix linting issue.
+* Storage:
+  * Add options early to prevent validator message.
+  * Add `storage_storageType` option & deprecate `storage_useSessionStorage`.
+* Meta:
+  * Update dependencies x2.
+
 #### <a name="v2.28.7">Version 2.28.7</a> (4/4/2017)
 
 * Editable:
@@ -154,15 +176,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix indentation & remove extra spaces.
   * Remove cdnjs auto-update config - see [CDNJS #9080](https://github.com/cdnjs/cdnjs/pull/9080).
   * Update SPDX license.
-
-#### <a name="v2.28.5">Version 2.28.5</a> (1/28/2017)
-
-* Docs: Fix "update" labels.
-* Output:
-  * Prevent multiple popups/download with dblClick (i.e. triggering "outputTable" multiple times).
-  * Remove extraneous console log.
-* Resizable:
-  * Add "resizableUpdate" & "resizableReset" methods.
-* Scroller:
-  * Add `scrollerComplete` event. Fixes [issue #1351](https://github.com/Mottie/tablesorter/issues/1351).
-* Readme: Add related project, tablesorter-pagercontrols

@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 4/8/2017 (v2.28.8) *//*
+/*! Widget: scroller - updated 4/18/2017 (v2.28.8) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses

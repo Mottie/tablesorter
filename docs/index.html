@@ -465,7 +465,7 @@
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.28.7</span>).</li>
 		<li><a href="example-widget-current-sort.html">Current Sort Widget</a> (<span class="version">v2.27.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.28.7</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.28.8</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.26.6</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.27.5</span>).</li>
@@ -496,9 +496,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.6</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.8</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.6</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.8</span>).<br>
 			<br>
 		</li>
 
@@ -507,13 +507,15 @@
 		<li><a href="example-widgets.html">Repeat headers widget</a> (v2.0.5; <span class="version updated">v2.19.0</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable columns widget</a> (v2.0.23.1; <span class="version updated">v2.28.8</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27; <span class="version updated">v2.24.0</span>).</li>
-		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.28.5</span>).</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.28.8</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-to-hash.html">Sort-to-hash widget</a> (<span class="version">v2.22.4</span>; <span class="version updated">v2.28.6</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-tbodies.html">Sort tbodies widget</a> (<span class="version">v2.22.2</span>; <span class="version updated">v2.28.0</span>).</li>
 		<li><a href="example-widget-static-row.html">Static row widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.24.0</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.4</span>).</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.19.1</span>).</li>
+
+		<li><span class="results">&dagger;</span> <a href="#function-storage">Storage Widget</a> (<span class="version">v2.20.0</span>; <span class="version updated">v2.28.8</span>).</li>
 
 		<li><span class="label label-info">Beta</span> <a href="example-widget-toggle-tablesorter.html">Toggle Sort & Filter Widget</a> (<span class="version">v2.24.4</span>).</li>
 
@@ -7938,21 +7940,28 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						<pre class="prettyprint lang-html">&lt;table class=&quot;tablesorter&quot; data-table-page=&quot;mydomain&quot; data-table-group=&quot;financial&quot;&gt;...&lt;/table&gt;)</pre>
 						To change the default data attributes, use the <code>options</code> to modify them as follows:<pre class="prettyprint lang-js">$.tablesorter.storage( table, key, value, {
   // table id/group id
-  id  : 'group1',
+  id: 'group1',
   // this group option sets name of the table attribute with the ID;
   // but the value within this data attribute is overridden by the above id option
   group: 'data-table-group',
 
   // table pages
-  url : 'page1',
+  url: 'page1',
   // this page option sets name of the table attribute with the page/url;
   // but the value within the data attribute is overridden by the above url option
   page: 'data-table-page',
 
+  // Option added v2.28.8; use the first letter of (l)ocal, (s)ession or (c)ookie
+  // to set the desired storage type. Any setting of this option will override
+  // any setting in the `useSessionStorage` option.
+  storageType:  'l', // local
+
+  // DEPRECATED in v2.28.8; use the `storageType` option.
   // Option added v2.21.3; if `true` the storage function will use sessionStorage
   // if not defined, the `config.widgetOptions.storage_useSessionStorage` setting is checked
   // if no settings are found, it will default to `false`, and use localStorage
-  useSessionStorage : false
+  // useSessionStorage: false
+
 });</pre>
 						The priority of table ID settings is as follows:
 						<ol>
