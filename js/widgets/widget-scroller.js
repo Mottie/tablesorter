@@ -365,7 +365,7 @@
 
 		resize : function( c, wo ) {
 			if ( wo.scroller_isBusy ) { return; }
-			var index, borderWidth, setWidth, $headers, $this, temp,
+			var index, borderWidth, setWidth, $headers, $this,
 				tsScroller = ts.scroller,
 				$container = wo.scroller_$container,
 				$table = c.$table,
