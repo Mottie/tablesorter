@@ -1,9 +1,23 @@
-/*! Widget: storage - updated 11/26/2016 (v2.28.0) */
+/*! Widget: storage - updated 4/18/2017 (v2.28.8) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
 
 	var ts = $.tablesorter || {};
+
+	// update defaults for validator; these values must be falsy!
+	$.extend(true, ts.defaults, {
+		fixedUrl: '',
+		widgetOptions: {
+			storage_fixedUrl: '',
+			storage_group: '',
+			storage_page: '',
+			storage_storageType: '',
+			storage_tableId: '',
+			storage_useSessionStorage: ''
+		}
+	});
+
 	// *** Store data in local storage, with a cookie fallback ***
 	/* IE7 needs JSON library for JSON.stringify - (http://caniuse.com/#search=json)
 	   if you need it, then include https://github.com/douglascrockford/JSON-js
@@ -30,8 +44,12 @@
 			values = {},
 			c = table.config,
 			wo = c && c.widgetOptions,
-			storageType = ( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ) ?
-				'sessionStorage' : 'localStorage',
+			storageType = (
+				( options && options.storageType ) || ( wo && wo.storage_storageType )
+			).toString().charAt(0).toLowerCase(),
+			// deprecating "useSessionStorage"; any storageType setting overrides it
+			session = storageType ? '' :
+				( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ),
 			$table = $(table),
 			// id from (1) options ID, (2) table 'data-table-group' attribute, (3) widgetOptions.storage_tableId,
 			// (4) table ID, then (5) table index
@@ -43,28 +61,25 @@
 			url = options && options.url ||
 				$table.attr(options && options.page || wo && wo.storage_page || 'data-table-page') ||
 				wo && wo.storage_fixedUrl || c && c.fixedUrl || window.location.pathname;
-		// update defaults for validator; these values must be falsy!
-		$.extend(true, ts.defaults, {
-			fixedUrl: '',
-			widgetOptions: {
-				storage_fixedUrl: '',
-				storage_group: '',
-				storage_page: '',
-				storage_tableId: '',
-				storage_useSessionStorage: ''
-			}
-		});
-		// https://gist.github.com/paulirish/5558557
-		if (storageType in window) {
-			try {
-				window[storageType].setItem('_tmptest', 'temp');
-				hasStorage = true;
-				window[storageType].removeItem('_tmptest');
-			} catch (error) {
-				if (c && c.debug) {
-					console.warn( storageType + ' is not supported in this browser' );
+
+		// skip if using cookies
+		if (storageType !== 'c') {
+			storageType = (storageType === 's' || session) ? 'sessionStorage' : 'localStorage';
+			// https://gist.github.com/paulirish/5558557
+			if (storageType in window) {
+				try {
+					window[storageType].setItem('_tmptest', 'temp');
+					hasStorage = true;
+					window[storageType].removeItem('_tmptest');
+				} catch (error) {
+					if (c && c.debug) {
+						console.warn( storageType + ' is not supported in this browser' );
+					}
 				}
 			}
+		}
+		if (c.debug) {
+			console.log('Storage widget using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
 		if ($.parseJSON) {

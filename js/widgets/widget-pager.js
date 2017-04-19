@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 4/2/2017 (v2.28.6) */
+/*! Widget: Pager - updated 4/18/2017 (v2.28.8) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -249,10 +249,15 @@
 				.off( namespace )
 				.on( 'filterInit filterStart '.split( ' ' ).join( namespace + ' ' ), function( e, filters ) {
 					p.currentFilters = $.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
+					var filtersEqual;
+					if (ts.filter.equalFilters) {
+						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
+					} else {
+						// will miss filter changes of the same value in a different column, see #1363
+						filtersEqual = ( c.lastSearch || [] ).join( '' ) !== ( p.currentFilters || [] ).join( '' );
+					}
 					// don't change page if filters are the same (pager updating, etc)
-					if ( e.type === 'filterStart' && wo.pager_pageReset !== false &&
-						( c.lastSearch || [] ).join( ',' ) !== ( p.currentFilters || [] ).join( ',' )
-					) {
+					if ( e.type === 'filterStart' && wo.pager_pageReset !== false && !filtersEqual ) {
 						p.page = wo.pager_pageReset; // fixes #456 & #565
 					}
 				})

@@ -60,7 +60,8 @@
 		// initialize zebra striping and resizable widgets on the table
 		widgets: [ 'zebra', 'resizable', 'stickyHeaders' ],
 		widgetOptions: {
-			storage_useSessionStorage : true,
+			// storage_useSessionStorage : true, deprecated in v2.28.8
+			storage_storageType: 's', // use first letter (s)ession
 			resizable_addLastColumn : true
 		}
 	});
@@ -110,6 +111,7 @@
 				<li><span class="label label-info">IMPORTANT</span> The resizable will not work properly if the <a href="index.html#widthfixed"><code>widthFixed</code></a> option is set to <code>true</code>. Make sure it is set to <code>false</code> (default setting).</li>
 				<li><del><span class="label label-info">IMPORTANT</span> The resize div ends up with a zero height if the header cell is empty. Please include at least a <code>&amp;nbsp;</code> in the cell to allow it to render properly (<a href="https://github.com/Mottie/tablesorter/issues/844" title="Thanks gigib82!">ref</a>)</del>. No longer necessary as the resizable widget no longer adds elements inside the table header cells.<br><br></li>
 
+				<li>In <span class="version">v2.28.8</span>, added the <a class="intlink" href="#resizable-include-footer"><code>resizable_includeFooter</code></a> option.</li>
 				<li>In <span class="version">v2.28.5</span>,
 					<ul>
 						<li>A <a class="intlink" href="#events"><code>resizableUpdate</code></a> event can be triggered on the table to update the resizable handles.</li>
@@ -176,6 +178,17 @@
 							<div class="collapsible">
 								<p>If the table is full width, adjusting the right edge would actually shrink or stretch <em>all</em> columns without moving the right border.</p>
 								<p>On narrower tables, the table width will be adjusted.</p>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="resizable-include-footer">
+						<td><a href="#" class="permalink">resizable_includeFooter</a></td>
+						<td>true</td>
+						<td>When <code>true</code>, the resizable handle will extend into the table footer (<span class="version">v2.28.8</span>).
+							<div class="collapsible">
+								<p>When <code>true</code>, this option includes the entire height of the table footer. If the table does not include a footer, the resize handle will stop at the last row.</p>
+								<p>If <code>false</code>, the resizable handle will not extend into the table footer.</p>
 							</div>
 						</td>
 					</tr>
@@ -262,6 +275,16 @@ $( 'table' ).trigger( 'resizableUpdate' );</pre>
 			<th>Date</th>
 		</tr>
 	</thead>
+	<tfoot>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Age</th>
+			<th>Total</th>
+			<th>Discount</th>
+			<th>Date</th>
+		</tr>
+	</tfoot>
 	<tbody>
 		<tr><td>Peter</td><td>Parker</td><td>28</td><td>$9.99</td><td>20%</td><td>Jul 6, 2006 8:14 AM</td></tr>
 		<tr><td>John</td><td>Hood</td><td>33</td><td>$19.99</td><td>25%</td><td>Dec 10, 2002 5:14 AM</td></tr>

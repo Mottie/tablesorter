@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 1/28/2017 (v2.28.5) *//*
+/*! Widget: scroller - updated 4/18/2017 (v2.28.8) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -113,7 +113,7 @@
 			when height < max height (filtering) */
 			'.' + tscss.scrollerTable + ' { position: relative; overflow: auto; }' +
 			'.' + tscss.scrollerTable + ' table.' + tscss.table +
-				' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; }' +
+				' { border-top: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; max-width: initial; }' +
 			/* hide footer in original table */
 			'.' + tscss.scrollerTable + ' tfoot, .' + tscss.scrollerHideElement + ', .' + tscss.scrollerHideColumn +
 				' { display: none; }' +
@@ -365,7 +365,7 @@
 
 		resize : function( c, wo ) {
 			if ( wo.scroller_isBusy ) { return; }
-			var index, borderWidth, setWidth, $headers, $this, temp,
+			var index, borderWidth, setWidth, $headers, $this,
 				tsScroller = ts.scroller,
 				$container = wo.scroller_$container,
 				$table = c.$table,
@@ -378,7 +378,9 @@
 				// Hide other scrollers so we can resize
 				$div = $( 'div.' + tscss.scrollerWrap + '[id!="' + id + '"]' )
 					.addClass( tscss.scrollerHideElement ),
-				row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) + '">';
+				temp = 'padding:0;margin:0;border:0;height:0;max-height:0;min-height:0;',
+				row = '<tr class="' + tscss.scrollerSpacerRow + ' ' + c.selectorRemove.slice(1) +
+					'" style="' + temp + '">';
 
 			wo.scroller_calcWidths = [];
 
@@ -417,22 +419,22 @@
 						setWidth = $this.width();
 					}
 				}
-				row += '<td data-column="' + index + '" style="padding:0;margin:0;border:0;height:0;max-height:0;' +
-					'min-height:0;width:' + setWidth + 'px;min-width:' + setWidth + 'px;max-width:' + setWidth + 'px"></td>';
+				row += '<td data-column="' + index + '" style="' + temp + 'width:' + setWidth +
+					'px;min-width:' + setWidth + 'px;max-width:' + setWidth + 'px"></td>';
 
 				// save current widths
 				wo.scroller_calcWidths[ index ] = setWidth;
 			}
 			row += '</tr>';
-			c.$tbodies.eq(0).prepend( row ); // tbody
+			c.$tbodies.eq(0).append( row ); // tbody
 			$hdr.children( 'thead' ).append( row );
 			$foot.children( 'tfoot' ).append( row );
 
 			// include colgroup or alignment is off
 			ts.fixColumnWidth( c.table );
 			row = c.$table.children( 'colgroup' )[0].outerHTML;
-			$hdr.prepend( row );
-			$foot.prepend( row );
+			$hdr.append( row );
+			$foot.append( row );
 
 			temp = $tableWrap.parent().innerWidth() -
 				( tsScroller.hasScrollBar( $tableWrap ) ? wo.scroller_barSetWidth : 0 );

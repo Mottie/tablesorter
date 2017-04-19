@@ -465,7 +465,7 @@
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.28.7</span>).</li>
 		<li><a href="example-widget-current-sort.html">Current Sort Widget</a> (<span class="version">v2.27.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.28.7</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.28.8</span>):
 			<ul>
 				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.26.6</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.27.5</span>).</li>
@@ -496,24 +496,26 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.6</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.28.8</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.6</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.28.8</span>).<br>
 			<br>
 		</li>
 
 		<li><a href="example-widget-print.html">Print widget</a> (<span class="version">v2.16.4</span>; <span class="version updated">v2.25.8</span>).</li>
 		<li><a href="example-widget-reflow.html">Reflow widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.19.0</span>).</li>
 		<li><a href="example-widgets.html">Repeat headers widget</a> (v2.0.5; <span class="version updated">v2.19.0</span>).</li>
-		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable columns widget</a> (v2.0.23.1; <span class="version updated">v2.28.5</span>).</li>
+		<li><span class="results">&dagger;</span> <a href="example-widget-resizable.html">Resizable columns widget</a> (v2.0.23.1; <span class="version updated">v2.28.8</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-savesort.html">Save sort widget</a> (v2.0.27; <span class="version updated">v2.24.0</span>).</li>
-		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.28.5</span>).</li>
+		<li><a href="example-widget-scroller.html">Scroller widget</a> (<span class="version">v2.9</span>; <span class="version updated">v2.28.8</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-to-hash.html">Sort-to-hash widget</a> (<span class="version">v2.22.4</span>; <span class="version updated">v2.28.6</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-tbodies.html">Sort tbodies widget</a> (<span class="version">v2.22.2</span>; <span class="version updated">v2.28.0</span>).</li>
 		<li><a href="example-widget-static-row.html">Static row widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.24.0</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.4</span>).</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.19.1</span>).</li>
+
+		<li><span class="results">&dagger;</span> <a href="#function-storage">Storage Widget</a> (<span class="version">v2.20.0</span>; <span class="version updated">v2.28.8</span>).</li>
 
 		<li><span class="label label-info">Beta</span> <a href="example-widget-toggle-tablesorter.html">Toggle Sort & Filter Widget</a> (<span class="version">v2.24.4</span>).</li>
 
@@ -2051,6 +2053,10 @@ $(function(){
       // will be included in the last column of the table
       resizable_addLastColumn: false,
 
+      // If this option is set to true, the resizable handle will extend
+      // into the table footer
+      resizable_includeFooter: true,
+
       // Set this option to the starting & reset header widths
       resizable_widths: [],
 
@@ -2108,7 +2114,10 @@ $(function(){
       stickyHeaders_zIndex: 2,
 
       // *** STORAGE WIDGET ***
-      // allows switching between using local & session storage
+      // set storage type; this overrides any storage_useSessionStorage setting
+      // use the first letter of (l)ocal, (s)ession or (c)ookie
+      storage_storageType: '',
+      // DEPRECATED: allows switching between using local & session storage
       storage_useSessionStorage: false,
       // alternate table id (set if grouping multiple tables together)
       storage_tableId: '',
@@ -3854,6 +3863,19 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-resizable.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-resizable-includefooter">
+				<td><a href="#" class="permalink">resizable_includeFooter</a></td>
+				<td>Boolean</td>
+				<td>true</td>
+				<td>Resizable widget: If this option is set to <code>true</code>, the resizable handle will extend into the table footer (<span class="version">v2.28.8</span>).
+					<div class="collapsible">
+						<p>When <code>true</code>, this option includes the entire height of the table footer. If the table does not include a footer, the resize handle will stop at the last row.</p>
+						<p>If <code>false</code>, the resizable handle will not extend into the table footer.</p>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-resizable-widths">
 				<td><a href="#" class="permalink">resizable_widths</a></td>
 				<td>Array</td>
@@ -3904,7 +3926,7 @@ $('table').trigger('search', false);</pre></div>
 				<td></td>
 			</tr>
 
-			<tr id="resizable-target-last">
+			<tr id="widget-resizable-target-last">
 				<td><a href="#" class="permalink">resizable_targetLast</a></td>
 				<td>Boolean</td>
 				<td>false</td>
@@ -3941,13 +3963,42 @@ $('table').trigger('search', false);</pre></div>
 				<td><a href="example-widget-savesort.html">Example</a></td>
 			</tr>
 
+			<tr id="widget-storage-storage-type">
+				<td><a href="#" class="permalink">storage_storageType</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>
+					Storage widget: Set this option to the first letter of the desired storage type (<span class="version">v2.28.8</span>).
+					<div class="collapsible">
+					<p>If <em>any</em> value is set in this option, the deprecated <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> is completely ignored.</p>
+					<ul>
+						<li>When set to <code>&quot;s&quot;</code> (session), all saved variables for the table use <code>sessionStorage</code>. This means once the user closes the browser, all saved variables are lost.</li>
+						<li>When set to <code>&quot;c&quot;</code> (cookie), all saved variables for the table will use cookies.</li>
+						<li>Any other setting will switch to using the default <code>localStorage</code> type.</li>
+					</ul>
+					Use the <a href="#widget-storage-storage-type"><code>&quot;storage_storageType&quot;</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function(){
+  $("table").tablesorter({
+    widgets: ["saveSort"],
+    widgetOptions : {
+      // This sets session storage; only the first letter is required
+      storage_storageType : "session"
+    }
+  });
+});</pre></div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="widget-storage-use-session-storage">
-				<td><a href="#" class="permalink">storage_useSessionStorage</a></td>
+				<td><a href="#" class="permalink alert">storage_useSessionStorage</a></td>
 				<td>Boolean</td>
 				<td>false</td>
 				<td>
-					Storage widget: If this option is set to <code>false</code>, all saved variables for the table will be within local storage (<span class="version">v2.21.3</span>).
+					Storage widget: This option was <span class="label label-danger">deprecated</span> in <span class="version updated">v2.28.8</span>.
 					<div class="collapsible">
+					<p>In <span class="version">v2.28.8</span>, this option is replaced by the <a href="#widget-storage-storage-type"><code>&quot;storage_storageType&quot;</code></a> option and will be completely ignored if that option has <em>any</em> setting.</p>
+					<p>If this option is set to <code>false</code>, all saved variables for the table will be within local storage (<span class="version">v2.21.3</span>).</p>
 					<p>If <code>true</code>, all saved variables for the table will be within the session storage. This means once the user closes the browser, all saved variables are lost.</p>
 					Use the <a href="#widget-storage-use-session-storage"><code>&quot;storage_useSessionStorage&quot;</code></a> option to switch to session storage as follows:
 					<pre class="prettyprint lang-js">$(function(){
@@ -7889,21 +7940,28 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 						<pre class="prettyprint lang-html">&lt;table class=&quot;tablesorter&quot; data-table-page=&quot;mydomain&quot; data-table-group=&quot;financial&quot;&gt;...&lt;/table&gt;)</pre>
 						To change the default data attributes, use the <code>options</code> to modify them as follows:<pre class="prettyprint lang-js">$.tablesorter.storage( table, key, value, {
   // table id/group id
-  id  : 'group1',
+  id: 'group1',
   // this group option sets name of the table attribute with the ID;
   // but the value within this data attribute is overridden by the above id option
   group: 'data-table-group',
 
   // table pages
-  url : 'page1',
+  url: 'page1',
   // this page option sets name of the table attribute with the page/url;
   // but the value within the data attribute is overridden by the above url option
   page: 'data-table-page',
 
+  // Option added v2.28.8; use the first letter of (l)ocal, (s)ession or (c)ookie
+  // to set the desired storage type. Any setting of this option will override
+  // any setting in the `useSessionStorage` option.
+  storageType:  'l', // local
+
+  // DEPRECATED in v2.28.8; use the `storageType` option.
   // Option added v2.21.3; if `true` the storage function will use sessionStorage
   // if not defined, the `config.widgetOptions.storage_useSessionStorage` setting is checked
   // if no settings are found, it will default to `false`, and use localStorage
-  useSessionStorage : false
+  // useSessionStorage: false
+
 });</pre>
 						The priority of table ID settings is as follows:
 						<ol>
