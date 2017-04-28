@@ -37,18 +37,26 @@
 	padding: 4px;
 }
 
-/* bootstrap uses <i> for icons */
-.tablesorter-bootstrap .tablesorter-header i.tablesorter-icon {
-	font-size: 11px;
-	position: absolute;
-	right: 2px;
-	top: 50%;
-	margin-top: -7px; /* half the icon height; older IE doesn't like this */
-	width: 14px;
-	height: 14px;
-	background-repeat: no-repeat;
-	line-height: 14px;
-	display: inline-block;
+.tablesorter-bootstrap thead .headerSortUp,
+.tablesorter-bootstrap thead .tablesorter-headerSortUp,
+.tablesorter-bootstrap thead .tablesorter-headerAsc,
+.tablesorter-bootstrap thead .headerSortDown,
+.tablesorter-bootstrap thead .tablesorter-headerSortDown,
+.tablesorter-bootstrap thead .tablesorter-headerDesc {
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 50%;
+	border-bottom: #000 2px solid;
+}
+.tablesorter-bootstrap thead .headerSortUp,
+.tablesorter-bootstrap thead .tablesorter-headerSortUp,
+.tablesorter-bootstrap thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+}
+.tablesorter-bootstrap thead .headerSortDown,
+.tablesorter-bootstrap thead .tablesorter-headerSortDown,
+.tablesorter-bootstrap thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 
 /* black unsorted icon */
