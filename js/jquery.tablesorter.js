@@ -1,4 +1,4 @@
-﻿/*! TableSorter (FORK) v2.28.8 *//*
+﻿/*! TableSorter (FORK) v2.28.9 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -22,7 +22,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.8',
+		version : '2.28.9',
 
 		parsers : [],
 		widgets : [],
@@ -1931,7 +1931,7 @@
 				for ( indx = 0; indx < len; indx++ ) {
 					widget = ts.getWidgetById( c.widgets[ indx ] );
 					if ( widget && widget.options ) {
-						wo = $.extend( {}, widget.options );
+						wo = $.extend( true, {}, widget.options );
 						c.widgetOptions = $.extend( true, wo, c.widgetOptions );
 						// add widgetOptions to defaults for option validator
 						$.extend( true, ts.defaults.widgetOptions, widget.options );

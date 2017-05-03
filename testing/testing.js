@@ -161,17 +161,37 @@ jQuery(function($){
 		},
 		undef, c1, c2, c3, c4, e, i, t;
 
+	/* test widget */
+	ts.addWidget({
+		id : 'test',
+		options: {
+			'test': []
+		},
+		format: function() {}
+	});
+
 	$table1
 		.on('tablesorter-initialized', function(){
 			init = true;
 		})
-		.tablesorter();
+		.tablesorter({
+			widgets: ['test'],
+			widgetOptions: {
+				// check widget option defaults across tables
+				test: [0,1]
+			}
+		});
 
 	$table2.tablesorter({
 		headers: {
 			0: { sorter: 'text' },
 			1: { sorter: 'text' },
 			2: { sorter: false }
+		},
+		widgets: ['test'],
+		widgetOptions: {
+			// check widget option defaults across tables
+			test: [0]
 		}
 	});
 
@@ -182,7 +202,9 @@ jQuery(function($){
 			0: { empty : 'top' }, // sort empty cells to the top
 			2: { string: 'min' }, // non-numeric content is treated as a MIN value
 			3: { sorter: 'digit', empty : 'zero', string : 'top' }
-		}
+		},
+		// check widget option defaults across tables
+		widgets: ['test']
 	});
 
 	$table4.tablesorter({
@@ -906,6 +928,14 @@ jQuery(function($){
 		});
 		return t;
 	};
+
+	QUnit.test( 'check widgetOption defaults across tables', function(assert) {
+		assert.expect(4);
+		assert.deepEqual(c1.widgetOptions.test, [0,1], 'widget option properly set');
+		assert.deepEqual(c2.widgetOptions.test, [0], 'widget option properly set');
+		assert.deepEqual(c3.widgetOptions.test, [], 'default widget option set on table');
+		assert.deepEqual(ts.defaults.widgetOptions.test, [], 'default widget option set in core');
+	});
 
 	QUnit.test( 'apply zebra widget', function(assert) {
 		assert.expect(3);

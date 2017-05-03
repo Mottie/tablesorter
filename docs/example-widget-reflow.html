@@ -261,7 +261,7 @@
 						<pre class="prettyprint lang-css">content: attr(data-title);</pre>
 						The second method ignores the backslash and shows <code>"row1 \A row2"</code>
 					</li>
-					<li><span class="label label-info">Update</span>: After some discussion in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=988694">bugzilla</a>, I discovered that it is possible to add multiple lines of content usigin a data-attribute by setting a <code>white-space: pre;</code> css definition and using <code>&amp;#10</code> instead of <code>\A</code> (<a href="https://jsfiddle.net/96pwE/5/">demo</a>), but I think I'll keep the second reflow version because it actually allows styling.</li>
+					<li><span class="label label-info">Update</span>: After some discussion in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=988694">bugzilla</a>, I discovered that it is possible to add multiple lines of content using a data-attribute by setting a <code>white-space: pre;</code> css definition and using <code>&amp;#10</code> instead of <code>\A</code> (<a href="https://jsfiddle.net/96pwE/5/">demo</a>), but I think I'll keep the second reflow version because it actually allows styling.</li>
 					<li>Adding bold elements to every table tbody cell is the method used by jQuery Mobile; so, a second reflow widget "reflow2" was created to do the same, and work properly with a thead containing multiple rows.</li>
 				</ul>
 			</li>
