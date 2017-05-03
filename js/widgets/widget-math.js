@@ -1,4 +1,4 @@
-/*! Widget: math - updated 11/26/2016 (v2.28.0) *//*
+/*! Widget: math - updated 5/3/2017 (v2.28.9) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -606,7 +606,7 @@
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
 			// math_completed called after all math calculations have completed
-			// math_completed : function( config ) {},
+			math_completed: function( config ) {},
 			// order of calculation; 'all' is last
 			math_priority : [ 'row', 'above', 'below', 'col' ],
 			// template for or just prepend the mask prefix & suffix with this HTML
