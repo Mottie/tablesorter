@@ -1,4 +1,4 @@
-﻿/*! Parser: input & select - updated 11/26/2016 (v2.28.0) *//*
+﻿/*! Parser: input & select - updated 5/12/2017 (v2.28.10) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -165,23 +165,17 @@
 				}
 			})
 			.on( 'focus' + namespace, 'select, input:not([type=checkbox]), textarea', function( event ) {
-				var $target = $( event.target ),
-					$cell = $target.closest( 'td' ),
-					$row = $cell.closest( 'tr '),
-					$table = $row.closest( 'table' ),
-					c = $table[ 0 ].config || false;
-				if ($row.hasClass(c.cssChildRow)) {
+				var $row = $( event.target ).closest( 'tr' ),
+					c = $row.closest( 'table' )[0].config;
+				if ( !c || c && c.ignoreChildRow && $row.hasClass( c.cssChildRow ) ) {
 					return;
 				}
 				$( this ).data( 'ts-original-value', this.value );
 			})
 			.on( 'blur' + namespace, 'input:not([type=checkbox]), textarea', function( event ) {
-				var $target = $( event.target ),
-					$cell = $target.closest( 'td' ),
-					$row = $cell.closest( 'tr '),
-					$table = $row.closest( 'table' ),
-					c = $table[ 0 ].config || false;
-				if ($row.hasClass(c.cssChildRow)) {
+				var $row = $( event.target ).closest( 'tr' ),
+					c = $row.closest( 'table' )[0].config;
+				if ( !c || c && c.ignoreChildRow && $row.hasClass( c.cssChildRow ) ) {
 					return;
 				}
 				// restore input value;
@@ -189,12 +183,9 @@
 				this.value = $( this ).data( 'ts-original-value' );
 			})
 			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
-				var $target = $( event.target ),
-					$cell = $target.closest( 'td' ),
-					$row = $cell.closest( 'tr '),
-					$table = $row.closest( 'table' ),
-					c = $table[ 0 ].config || false;
-				if ($row.hasClass(c.cssChildRow)) {
+				var $row = $( this ).closest( 'tr' ),
+					c = $row.closest( 'table' )[0].config;
+				if ( !c || c && c.ignoreChildRow && $row.hasClass( c.cssChildRow ) ) {
 					return;
 				}
 				if ( event.which === 27 && !( this.nodeName === 'INPUT' && this.type === 'checkbox' ) ) {
@@ -210,11 +201,9 @@
 						$target = $( event.target ),
 						isCheckbox = event.target.type === 'checkbox',
 						$cell = $target.closest( 'td' ),
-						$table = $cell.closest( 'table' ),
 						indx = $cell[ 0 ].cellIndex,
-						c = $table[ 0 ].config || false,
-						busy = $table.length && $table[ 0 ].tablesorterBusy,
-						$hdr = c && c.$headerIndexed && c.$headerIndexed[ indx ] || [],
+						busy = c.table.tablesorterBusy,
+						$hdr = c.$headerIndexed && c.$headerIndexed[ indx ] || [],
 						val = isCheckbox ? event.target.checked : $target.val();
 					// abort if not a tablesorter table, or busy
 					if ( $.isEmptyObject( c ) || busy !== false ) {
@@ -223,7 +212,7 @@
 					if ( isCheckbox ) {
 						checkboxClass = c.checkboxClass || 'checked';
 						toggleRowClass( $cell.closest( 'tr' ), checkboxClass, indx, val );
-						updateHeaderCheckbox( $table, checkboxClass );
+						updateHeaderCheckbox( c.$table, checkboxClass );
 					}
 					// don't use updateCell if column is set to 'sorter-false' and 'filter-false',
 					// or column is set to 'parser-false'
@@ -236,11 +225,11 @@
 					// ignore change event if nothing changed
 					if ( c && val !== $target.data( 'ts-original-value' ) || isCheckbox ) {
 						$target.data( 'ts-original-value', val );
-						$table[ 0 ].tablesorterBusy = true;
+						c.table.tablesorterBusy = true;
 						// pass undefined resort value so it falls back to config.resort setting
 						$.tablesorter.updateCell( c, $cell, undef, function() {
-							updateServer( event, $table, $target );
-							$table[ 0 ].tablesorterBusy = false;
+							updateServer( event, c.$table, $target );
+							c.table.tablesorterBusy = false;
 						});
 					}
 				}

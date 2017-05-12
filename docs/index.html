@@ -2224,6 +2224,25 @@ $(function(){
 				<td><a href="example-parsers-globalize.html">2</a> <a href="example-parsers-dates.html">2</a></td>
 			</tr>
 
+			<tr id="ignorechildrow">
+				<td><a href="#" class="permalink">ignoreChildRow</a></td>
+				<td>Boolean</td>
+				<td>false</td>
+				<td>
+					Used by the input-select parser indicate if changes to child row content is to be ignored (<span class="version">v2.28.10</span>)
+					<div class="collapsible"><br>
+						Change this setting to ignore input, textarea and select changes inside of child rows:
+						<pre class="prettyprint lang-js">$(function(){
+  $('table').tablesorter({
+    ignoreChildRow : true
+  });
+});</pre>
+					See <a href="https://github.com/Mottie/tablesorter/pull/1399">pull request #1399</a> for more information.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="imgattr">
 				<td><a href="#" class="permalink">imgAttr</a></td>
 				<td>String</td>
