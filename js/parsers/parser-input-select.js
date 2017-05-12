@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 11/26/2016 (v2.28.0) *//*
+﻿/*! Parser: input & select - updated 11/26/2016 (v2.28.0) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -154,7 +154,6 @@
 		$( 'table' ).on( 'tablesorter-initialized updateComplete', function() {
 			this.tablesorterBusy = false;
 			var namespace = '.parser-forms';
-			// bind to .tablesorter (default class name)
 			$( this ).children( 'tbody' )
 			.off( namespace )
 			.on( 'mouseleave' + namespace, function( event ) {
@@ -165,15 +164,39 @@
 					$( ':focus' ).blur();
 				}
 			})
-			.on( 'focus' + namespace, 'select, input:not([type=checkbox]), textarea', function() {
+			.on( 'focus' + namespace, 'select, input:not([type=checkbox]), textarea', function( event ) {
+				var $target = $( event.target ),
+					$cell = $target.closest( 'td' ),
+					$row = $cell.closest( 'tr '),
+					$table = $row.closest( 'table' ),
+					c = $table[ 0 ].config || false;
+				if ($row.hasClass(c.cssChildRow)) {
+					return;
+				}
 				$( this ).data( 'ts-original-value', this.value );
 			})
-			.on( 'blur' + namespace, 'input:not([type=checkbox]), textarea', function() {
+			.on( 'blur' + namespace, 'input:not([type=checkbox]), textarea', function( event ) {
+				var $target = $( event.target ),
+					$cell = $target.closest( 'td' ),
+					$row = $cell.closest( 'tr '),
+					$table = $row.closest( 'table' ),
+					c = $table[ 0 ].config || false;
+				if ($row.hasClass(c.cssChildRow)) {
+					return;
+				}
 				// restore input value;
 				// 'change' is triggered before 'blur' so this doesn't replace the new update with the original
 				this.value = $( this ).data( 'ts-original-value' );
 			})
 			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
+				var $target = $( event.target ),
+					$cell = $target.closest( 'td' ),
+					$row = $cell.closest( 'tr '),
+					$table = $row.closest( 'table' ),
+					c = $table[ 0 ].config || false;
+				if ($row.hasClass(c.cssChildRow)) {
+					return;
+				}
 				if ( event.which === 27 && !( this.nodeName === 'INPUT' && this.type === 'checkbox' ) ) {
 					// escape: restore original value
 					this.value = $( this ).data( 'ts-original-value' );
