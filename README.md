@@ -48,8 +48,8 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 ### Licensing
 
 * Copyright (c) 2007 Christian Bach.
-* Original examples and docs at: [http://tablesorter.com](http://tablesorter.com).
-* Dual licensed under the [MIT](https://opensource.org/licenses/mit-license.php) or [GPL](https://www.gnu.org/licenses/gpl.html) licenses (pick one).
+* The original version can be found at [http://tablesorter.com](http://tablesorter.com), or on [GitHub](https://github.com/christianbach/tablesorter).
+* Dual licensed under the [MIT](https://opensource.org/licenses/mit-license.php) or [GPLv2](https://www.gnu.org/licenses/gpl-2.0.html) licenses (pick one).
 
 ### Download
 
