@@ -1286,6 +1286,12 @@
 		},
 
 		updateCell : function( c, cell, resort, callback ) {
+			// updateCell for child rows is a mess - we'll ignore them for now
+			// eventually I'll break out the "update" row cache code to make everything consistent
+			if ( $( cell ).closest( 'tr' ).hasClass( c.cssChildRow ) ) {
+				console.warn('Tablesorter Warning! "updateCell" for child row content has been disabled, use "update" instead');
+				return;
+			}
 			if ( ts.isEmptyObject( c.cache ) ) {
 				// empty table, do an update instead - fixes #1099
 				ts.updateHeader( c );
