@@ -5,7 +5,7 @@
   "type": "component",
   "license": "(MIT OR GPL-2.0)",
   "require": {
-    "jquery": "^1.2.6"
+    "components/jquery": ">=1.2.6"
   },
   "authors": [{
     "name": "Christian Bach",

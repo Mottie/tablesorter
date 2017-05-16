@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 05-03-2017 (v2.28.9)*/
+/*! tablesorter (FORK) - updated 05-16-2017 (v2.28.10)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.9 *//*
+/*! TableSorter (FORK) v2.28.10 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.9',
+		version : '2.28.10',
 
 		parsers : [],
 		widgets : [],
@@ -266,11 +266,6 @@
 			if ( !/tablesorter\-/.test( $table.attr( 'class' ) ) ) {
 				tmp = ( c.theme !== '' ? ' tablesorter-' + c.theme : '' );
 			}
-			c.table = table;
-			c.$table = $table
-				.addClass( ts.css.table + ' ' + c.tableClass + tmp )
-				.attr( 'role', 'grid' );
-			c.$headers = $table.find( c.selectorHeaders );
 
 			// give the table a unique id, which will be used in namespace binding
 			if ( !c.namespace ) {
@@ -279,6 +274,14 @@
 				// make sure namespace starts with a period & doesn't have weird characters
 				c.namespace = '.' + c.namespace.replace( ts.regex.nonWord, '' );
 			}
+
+			c.table = table;
+			c.$table = $table
+				// add namespace to table to allow bindings on extra elements to target
+				// the parent table (e.g. parser-input-select)
+				.addClass( ts.css.table + ' ' + c.tableClass + tmp + ' ' + c.namespace.slice(1) )
+				.attr( 'role', 'grid' );
+			c.$headers = $table.find( c.selectorHeaders );
 
 			c.$table.children().children( 'tr' ).attr( 'role', 'row' );
 			c.$tbodies = $table.children( 'tbody:not(.' + c.cssInfoBlock + ')' ).attr({
@@ -1298,6 +1301,12 @@
 		},
 
 		updateCell : function( c, cell, resort, callback ) {
+			// updateCell for child rows is a mess - we'll ignore them for now
+			// eventually I'll break out the "update" row cache code to make everything consistent
+			if ( $( cell ).closest( 'tr' ).hasClass( c.cssChildRow ) ) {
+				console.warn('Tablesorter Warning! "updateCell" for child row content has been disabled, use "update" instead');
+				return;
+			}
 			if ( ts.isEmptyObject( c.cache ) ) {
 				// empty table, do an update instead - fixes #1099
 				ts.updateHeader( c );
@@ -2516,6 +2525,7 @@
 				.unbind( ( 'mousedown mouseup keypress '.split( ' ' ).join( c.namespace + ' ' ) ).replace( ts.regex.spaces, ' ' ) );
 			ts.restoreHeaders( table );
 			$t.toggleClass( ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false );
+			$t.removeClass(c.namespace.slice(1));
 			// clear flag in case the plugin is initialized again
 			table.hasInitialized = false;
 			delete table.config.cache;
