@@ -1,4 +1,4 @@
-﻿/*! TableSorter (FORK) v2.28.9 *//*
+/*! TableSorter (FORK) v2.28.10 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -22,7 +22,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.9',
+		version : '2.28.10',
 
 		parsers : [],
 		widgets : [],

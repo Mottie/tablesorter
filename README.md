@@ -104,6 +104,21 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.10">Version 2.28.10</a> (5/16/2017)
+
+* Core:
+  * Disable `updateCell` method for child rows (temporary block until code is fixed).
+  * Add namespace class name to table.
+* Parsers
+  * Input-select:
+    * Prevent input select parser from handling events from child rows. See [pull #1399](https://github.com/Mottie/tablesorter/pull/1399); thanks [@andysleigh](https://github.com/andysleigh)!
+    * Remove unused variables & add `ignoreChildRow` option.
+    * Bind & update stickyHeaders checkbox. Fixes [issue #261](https://github.com/Mottie/tablesorter/issues/261).
+* Meta:
+  * Use correct `composer.json` jQuery version. Fixes [issue #1398](https://github.com/Mottie/tablesorter/issues/1398).
+  * Clarify use of GPLv2 license. See [issue #1400](https://github.com/Mottie/tablesorter/issues/1400).
+  * Update dependencies.
+
 #### <a name="v2.28.9">Version 2.28.9</a> (5/3/2017)
 
 * Core:
@@ -136,13 +151,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Add `storage_storageType` option & deprecate `storage_useSessionStorage`.
 * Meta:
   * Update dependencies x2.
-
-#### <a name="v2.28.7">Version 2.28.7</a> (4/4/2017)
-
-* Editable:
-  * Remove "blur" event listeners. See [issue #1360](https://github.com/Mottie/tablesorter/issues/1360).
-* Filter:
-  * Add "filterAndSortReset" method. See [issue #1361](https://github.com/Mottie/tablesorter/issues/1361).
-  * Prevent JS error added from last update. Fixes [issue #1377](https://github.com/Mottie/tablesorter/issues/1377).
-* Meta:
-  * Fix composer.json license.
