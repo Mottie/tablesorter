@@ -6,7 +6,7 @@
 	'use strict';
 
 	/*! Sugar (https://sugarjs.com/docs/#/DateParsing) */
-	/* demo: http://jsfiddle.net/Mottie/abkNM/4163/ */
+	/* demo: http://jsfiddle.net/Mottie/7z0ss5xn/ */
 	$.tablesorter.addParser({
 		id: 'sugar',
 		is: function() {
@@ -22,7 +22,7 @@
 	});
 
 	/*! Datejs (http://www.datejs.com/) */
-	/* demo: http://jsfiddle.net/Mottie/abkNM/4164/ */
+	/* demo: http://jsfiddle.net/Mottie/zge0L2u6/ */
 	$.tablesorter.addParser({
 		id: 'datejs',
 		is: function() {
