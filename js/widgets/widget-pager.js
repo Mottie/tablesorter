@@ -244,12 +244,15 @@
 				wo = c.widgetOptions,
 				namespace = c.namespace + 'pager',
 				s = wo.pager_selectors;
-
 			c.$table
 				.off( namespace )
 				.on( 'filterInit filterStart '.split( ' ' ).join( namespace + ' ' ), function( e, filters ) {
 					p.currentFilters = $.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
 					var filtersEqual;
+					if (p.ajax && e.type === 'filterInit') {
+						// ensure pager ajax is called after filter widget has initialized
+						return tsp.moveToPage( c, p, false );
+					}
 					if (ts.filter.equalFilters) {
 						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
 					} else {
@@ -270,7 +273,6 @@
 							tsp.updateCache( c );
 						}
 						tsp.updatePageDisplay( c, false );
-						// tsp.moveToPage( c, p, false ); <-- called when applyWidgets is triggered
 						ts.applyWidget( c.table );
 					}
 				})
