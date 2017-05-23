@@ -837,6 +837,7 @@
 			.bind( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
+					eventType = event.type,
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column );
@@ -844,9 +845,9 @@
 					// immediate search if user presses enter
 					( event.which === tskeyCodes.enter ||
 						// immediate search if a "search" or "blur" is triggered on the input
-						/search|blur/.test(event.type) ||
+						( eventType === 'search' || eventType === 'blur' ) ||
 						// change & input events must be ignored if liveSearch !== true
-						/change|input/.test(event.type) &&
+						( eventType === 'change' || eventType === 'input' ) &&
 						// prevent search if liveSearch is a number
 						( liveSearch === true || liveSearch !== true && event.target.nodeName !== "INPUT" ) &&
 						// don't allow 'change' or 'input' event to process if the input value
@@ -857,7 +858,7 @@
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, event.type !== 'keypress', true, column );
+					tsf.searching( table, eventType !== 'keypress', true, column );
 				}
 			});
 		},
