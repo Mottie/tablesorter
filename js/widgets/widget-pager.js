@@ -1110,7 +1110,7 @@
 					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
 						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
 					tsp.updatePageDisplay( c, false );
-				} else if (p.initialized) {
+				} else {
 					tsp.getAjax( c );
 				}
 			} else if ( !p.ajax ) {
