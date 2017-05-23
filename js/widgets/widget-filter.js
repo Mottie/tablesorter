@@ -834,7 +834,7 @@
 				tsf.searching( table, true, true, column );
 			})
 			// include change for select - fixes #473
-			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			.bind( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
@@ -843,10 +843,10 @@
 				if ( table.config.widgetOptions.filter_initialized &&
 					// immediate search if user presses enter
 					( event.which === tskeyCodes.enter ||
-						// immediate search if a "search" is triggered on the input
-						event.type === 'search' ||
+						// immediate search if a "search" or "blur" is triggered on the input
+						/search|blur/.test(event.type) ||
 						// change & input events must be ignored if liveSearch !== true
-						( event.type === 'change' || event.type === 'input' ) &&
+						/change|input/.test(event.type) &&
 						// prevent search if liveSearch is a number
 						( liveSearch === true || liveSearch !== true && event.target.nodeName !== "INPUT" ) &&
 						// don't allow 'change' or 'input' event to process if the input value
