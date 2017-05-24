@@ -1,11 +1,11 @@
-/*! Widget: columns */
+/*! Widget: columns - updated 5/24/2017 (v2.28.11) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
 
 	ts.addWidget({
 		id: 'columns',
-		priority: 30,
+		priority: 65,
 		options : {
 			columns : [ 'primary', 'secondary', 'tertiary' ]
 		},

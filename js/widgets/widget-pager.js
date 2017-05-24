@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 4/18/2017 (v2.28.8) */
+/*! Widget: Pager - updated 5/24/2017 (v2.28.11) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -244,12 +244,15 @@
 				wo = c.widgetOptions,
 				namespace = c.namespace + 'pager',
 				s = wo.pager_selectors;
-
 			c.$table
 				.off( namespace )
 				.on( 'filterInit filterStart '.split( ' ' ).join( namespace + ' ' ), function( e, filters ) {
 					p.currentFilters = $.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
 					var filtersEqual;
+					if (p.ajax && e.type === 'filterInit') {
+						// ensure pager ajax is called after filter widget has initialized
+						return tsp.moveToPage( c, p, false );
+					}
 					if (ts.filter.equalFilters) {
 						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
 					} else {
@@ -270,7 +273,6 @@
 							tsp.updateCache( c );
 						}
 						tsp.updatePageDisplay( c, false );
-						// tsp.moveToPage( c, p, false ); <-- called when applyWidgets is triggered
 						ts.applyWidget( c.table );
 					}
 				})
@@ -1110,7 +1112,7 @@
 					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
 						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
 					tsp.updatePageDisplay( c, false );
-				} else if (p.initialized) {
+				} else {
 					tsp.getAjax( c );
 				}
 			} else if ( !p.ajax ) {

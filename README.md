@@ -104,6 +104,27 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.11">Version 2.28.11</a> (5/24/2017)
+
+* Docs:
+  * Reword `sortReset` method description. See [issue #1404](https://github.com/Mottie/tablesorter/issues/1404).
+* Columns:
+  * Initialize after pager widget.
+* CssStickyHeaders:
+  * Fix captioned tables in Safari. See [issue #1405](https://github.com/Mottie/tablesorter/issues/1405); thanks [@TheSin-](https://github.com/TheSin-)!
+  * Fix in Edge browser.
+* Filter:
+  * Attempt to fix [issue #1152](https://github.com/Mottie/tablesorter/issues/1152) (`liveSearch`).
+  * Second attempt at [issue #1152](https://github.com/Mottie/tablesorter/issues/1152).
+  * Trigger `liveSearch` on blur & cleanup.
+* Pager (widget only):
+  * Allow ajax processing on init.
+  * Ensure ajax is called after filter widget initializes.
+* Parsers:
+  * Update links to sugarjs/datejs demos.
+* Meta:
+  * Update dependencies.
+
 #### <a name="v2.28.10">Version 2.28.10</a> (5/16/2017)
 
 * Core:
@@ -129,25 +150,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * update jQuery.
 * Math:
   * Include noop `math_complete` in defaults; prevents option not recognized warning
-
-#### <a name="v2.28.8">Version 2.28.8</a> (4/18/2017)
-
-* Docs:
-  * Update version tags.
-* Core:
-  * Fixed `updateCell` to work correctly with child rows. Thanks [@andysleigh](https://github.com/andysleigh); see [PR #1381](https://github.com/Mottie/tablesorter/pull/1381).
-* Filter:
-  * Add `equalFilters` function; for more reliable comparisons.
-* Pager:
-  * use `equalFilters` function for comparison. See [issue #1384](https://github.com/Mottie/tablesorter/issues/1384).
-* Resizable:
-  * Add `resizable_includeFooter` option. Fixes [issue #1386](https://github.com/Mottie/tablesorter/issues/1386).
-* Scroller:
-  * Set max-width to initial. See [issue #1382](https://github.com/Mottie/tablesorter/issues/1382).
-  * Fix offset from hidden row. See [issue #1376](https://github.com/Mottie/tablesorter/issues/1376).
-  * Fix linting issue.
-* Storage:
-  * Add options early to prevent validator message.
-  * Add `storage_storageType` option & deprecate `storage_useSessionStorage`.
-* Meta:
-  * Update dependencies x2.

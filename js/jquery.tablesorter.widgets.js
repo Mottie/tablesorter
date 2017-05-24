@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-16-2017 (v2.28.10)*/
+/*! tablesorter (FORK) - updated 05-24-2017 (v2.28.11)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -329,14 +329,14 @@
 
 })(jQuery);
 
-/*! Widget: columns */
+/*! Widget: columns - updated 5/24/2017 (v2.28.11) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
 
 	ts.addWidget({
 		id: 'columns',
-		priority: 30,
+		priority: 65,
 		options : {
 			columns : [ 'primary', 'secondary', 'tertiary' ]
 		},
@@ -408,7 +408,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 4/18/2017 (v2.28.8) *//*
+/*! Widget: filter - updated 5/24/2017 (v2.28.11) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1226,9 +1226,6 @@
 				if ( event.which === tskeyCodes.escape ) {
 					// make sure to restore the last value on escape
 					this.value = wo.filter_resetOnEsc ? '' : c.lastSearch[column];
-				// live search
-				} else if ( liveSearch === false ) {
-					return;
 					// don't return if the search value is empty ( all rows need to be revealed )
 				} else if ( this.value !== '' && (
 					// liveSearch can contain a min value length; ignore arrow and meta keys, but allow backspace
@@ -1237,26 +1234,32 @@
 					( event.which !== tskeyCodes.enter && event.which !== tskeyCodes.backSpace &&
 						( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) ) ) ) {
 					return;
+					// live search
+				} else if ( liveSearch === false ) {
+					if ( this.value !== '' && event.which !== tskeyCodes.enter ) {
+						return;
+					}
 				}
 				// change event = no delay; last true flag tells getFilters to skip newest timed input
 				tsf.searching( table, true, true, column );
 			})
 			// include change for select - fixes #473
-			.bind( 'search change keypress input '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			.bind( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
+					eventType = event.type,
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column );
 				if ( table.config.widgetOptions.filter_initialized &&
 					// immediate search if user presses enter
 					( event.which === tskeyCodes.enter ||
-						// immediate search if a "search" is triggered on the input
-						event.type === 'search' ||
+						// immediate search if a "search" or "blur" is triggered on the input
+						( eventType === 'search' || eventType === 'blur' ) ||
 						// change & input events must be ignored if liveSearch !== true
-						( event.type === 'change' || event.type === 'input' ) &&
+						( eventType === 'change' || eventType === 'input' ) &&
 						// prevent search if liveSearch is a number
-						liveSearch === true &&
+						( liveSearch === true || liveSearch !== true && event.target.nodeName !== "INPUT" ) &&
 						// don't allow 'change' or 'input' event to process if the input value
 						// is the same - fixes #685
 						this.value !== c.lastSearch[column]
@@ -1265,7 +1268,7 @@
 					event.preventDefault();
 					// init search with no delay
 					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, event.type !== 'keypress', true, column );
+					tsf.searching( table, eventType !== 'keypress', true, column );
 				}
 			});
 		},
