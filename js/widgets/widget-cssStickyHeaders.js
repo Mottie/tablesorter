@@ -18,7 +18,7 @@
 			cssStickyHeaders_filteredToTop : true
 		},
 		init : function(table, thisWidget, c, wo) {
-			var ht, offst, adjustY,
+			var offst, adjustY,
 				$table = c.$table,
 				$attach = $(wo.cssStickyHeaders_attachTo),
 				isIE = 'ActiveXObject' in window, // target all versions of IE
@@ -29,6 +29,8 @@
 				$parent = $table.parent().closest('table.' + ts.css.table),
 				$parentThead = $parent.length && ts.hasWidget($parent[0], 'cssStickyHeaders') ? $parent.children('thead') : [],
 				borderTopWidth = ( parseInt( $table.css('border-top-width'), 10 ) || 0 ),
+				// Fixes for Safari
+				tableH = $table.height(),
 				lastCaptionSetting = wo.cssStickyHeaders_addCaption,
 				// table offset top changes while scrolling in FF
 				adjustOffsetTop = false,
@@ -46,9 +48,8 @@
 			if ($caption.length) {
 				// Firefox does not include the caption height when getting the table height
 				// see https://bugzilla.mozilla.org/show_bug.cgi?id=820891, so lets detect it instead of browser sniff
-				ht = $table.height();
 				$caption.hide();
-				addCaptionHeight = $table.height() === ht;
+				addCaptionHeight = $table.height() === tableH;
 				$caption.show();
 
 				// Firefox changes the offset().top when translating the table caption
@@ -71,6 +72,12 @@
 					adjustY = $table.offset().top;
 				}
 
+				// Fix for safari, when caption present, table
+				// height changes while scrolling
+				if ($win.scrollTop() < $caption.outerHeight(true)) {
+					tableH = $table.height();
+				}
+
 				var top = $attach.length ? $attach.offset().top : $win.scrollTop(),
 				// add caption height; include table padding top & border-spacing or text may be above the fold (jQuery UI themes)
 				// border-spacing needed in Firefox, but not webkit... not sure if I should account for that
@@ -78,7 +85,7 @@
 					( parseInt( $table.css('padding-top'), 10 ) || 0 ) +
 					( parseInt( $table.css('border-spacing'), 10 ) || 0 ),
 
-				bottom = $table.height() + ( addCaptionHeight && wo.cssStickyHeaders_addCaption ? captionHeight : 0 ) -
+				bottom = tableH + ( addCaptionHeight && wo.cssStickyHeaders_addCaption ? captionHeight : 0 ) -
 					$thead.height() - ( $table.children('tfoot').height() || 0 ) -
 					( wo.cssStickyHeaders_addCaption ? captionHeight : ( addCaptionHeight ? 0 : captionHeight ) ),
 
