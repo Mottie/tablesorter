@@ -21,7 +21,8 @@
 			var offst, adjustY,
 				$table = c.$table,
 				$attach = $(wo.cssStickyHeaders_attachTo),
-				isIE = 'ActiveXObject' in window, // target all versions of IE
+				// target all versions of IE
+				isIE = 'ActiveXObject' in window || window.navigator.userAgent.indexOf("Edge") > -1,
 				namespace = c.namespace + 'cssstickyheader ',
 				$thead = $table.children('thead'),
 				$caption = $table.children('caption'),
