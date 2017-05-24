@@ -1,4 +1,4 @@
-/*! Widget: cssStickyHeaders - updated 2/9/2015 (v2.19.1) *//*
+/*! Widget: cssStickyHeaders - updated 5/24/2017 (v2.28.11) *//*
 * Requires a modern browser, tablesorter v2.8+
 */
 /*jshint jquery:true, unused:false */
