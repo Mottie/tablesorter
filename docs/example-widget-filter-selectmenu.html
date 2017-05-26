@@ -29,7 +29,11 @@
 	$.widget( 'custom.iconselectmenu', $.ui.selectmenu, {
 		_renderItem: function( ul, item ) {
 			var hasClass,
-				li = $( '<li>', { text: item.label } );
+				li = $( '<li>' ),
+				wrapper = $( "<div>", {
+					// empty strings don't work, pass a &nbsp;
+					text: item.label || '\xA0'
+				});
 			if ( item.disabled ) {
 				li.addClass( 'ui-state-disabled' );
 			}
@@ -38,8 +42,8 @@
 				style : item.element.attr( 'data-style' ),
 				'class' : hasClass ? 'ui-icon ' + item.element.attr( 'data-class' ) : ''
 			})
-			.appendTo( li );
-			return li.appendTo( ul );
+			.appendTo( wrapper );
+			return li.append( wrapper ).appendTo( ul );
 		}
 	});
 
@@ -98,6 +102,13 @@
 		<em>NOTE!</em>
 	</p>
 	<ul>
+		<li>Updated <span class="version">v2.28.12</span>:
+			<ul>
+				<li>Fix issue with the selectmenu rendering with jQuery UI v1.12.1.</li>
+				<li>Fixed a filter widget issue with regular expression settings being ignored since select filters are set to exactly match the content (modified in <span class="version">v2.25.4</span>)</li>
+				<li><span class="label warning">*NOTE*</span> "filter-match" *must* be added to header since the default select behavior is to exactly match settings and this demo uses a combination of select value using partial matches and regular expressions.</li>
+			</ul>
+		</li>
 		<li>Demo added <span class="version">v2.24.4</span>, to demonstrate how to use <a href="http://jqueryui.com/selectmenu/#custom_render">jQuery UI Selectmenu widget</a> on a filter row select.</li>
 		<li><span class="label warning">*NOTE*</span> - Selectmenu will not work properly in all circumstances:
 			<ul>
@@ -113,7 +124,7 @@
 <table id="table" class="tablesorter">
 	<thead>
 		<tr>
-			<th class="filter-select">File Name</th>
+			<th class="filter-select filter-match">File Name</th>
 			<th>Updated</th>
 		</tr>
 	</thead>
