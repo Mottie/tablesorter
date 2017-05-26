@@ -98,6 +98,9 @@
 			cssIconNone      : '', // class name added to the icon when there is no column sort
 			cssIconAsc       : '', // class name added to the icon when the column has an ascending sort
 			cssIconDesc      : '', // class name added to the icon when the column has a descending sort
+            cssIconContentNone: '', // icon's html content when there is no column sort
+            cssIconContentAsc : '', // icon's html content when the column has an ascending sort
+            cssIconContentDesc: '', // icon's html content when the column has a descending sort
 
 			// *** events
 			pointerClick     : 'click',
@@ -1080,6 +1083,7 @@
 				none = ts.css.sortNone + ' ' + c.cssNone,
 				css = [ ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc ],
 				cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
+                cssIconContent = [ c.cssIconContentAsc, c.cssIconContentDesc, c.cssIconContentNone ],
 				aria = [ 'ascending', 'descending' ],
 				// find the footer
 				$headers = c.$table
@@ -1095,7 +1099,8 @@
 				.attr( 'aria-sort', 'none' )
 				.find( '.' + ts.css.icon )
 				.removeClass( cssIcon.join( ' ' ) )
-				.addClass( cssIcon[ 2 ] );
+				.addClass( cssIcon[ 2 ] )
+                .html( cssIconContent[ 2 ] );
 			for ( indx = 0; indx < len; indx++ ) {
 				// direction = 2 means reset!
 				if ( list[ indx ][ 1 ] !== 2 ) {
@@ -1128,7 +1133,8 @@
 									.attr( 'aria-sort', aria[ list[ indx ][ 1 ] ] )
 									.find( '.' + ts.css.icon )
 									.removeClass( cssIcon[ 2 ] )
-									.addClass( cssIcon[ list[ indx ][ 1 ] ] );
+									.addClass( cssIcon[ list[ indx ][ 1 ] ] )
+                                    .html( cssIconContent[ list[ indx ][ 1 ] ] );
 							}
 						}
 						// add sorted class to footer & extra headers, if they exist
