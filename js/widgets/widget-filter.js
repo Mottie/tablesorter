@@ -1244,13 +1244,7 @@
 					fxn = vars.functions[ columnIndex ];
 					filterMatched = null;
 					if ( fxn ) {
-						if ( fxn === true ) {
-							// default selector uses exact match unless 'filter-match' class is found
-							filterMatched = data.isMatch ?
-								// data.iExact may be a number
-								( '' + data.iExact ).search( data.iFilter ) >= 0 :
-								data.filter === data.exact;
-						} else if ( typeof fxn === 'function' ) {
+						if ( typeof fxn === 'function' ) {
 							// filter callback( exact cell content, parser normalized content,
 							// filter input value, column index, jQuery row object )
 							filterMatched = fxn( data.exact, data.cache, data.filter, columnIndex, data.$row, c, data );
@@ -1269,8 +1263,18 @@
 							result = filterMatched;
 						// Look for match, and add child row data for matching
 						} else {
-							txt = ( data.iExact + data.childRowText ).indexOf( tsf.parseFilter( c, data.iFilter, data ) );
-							result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
+							// check fxn (filter-select in header) after filter types are checked
+							// without this, the filter + jQuery UI selectmenu demo was breaking
+							if ( fxn === true ) {
+								// default selector uses exact match unless 'filter-match' class is found
+								result = data.isMatch ?
+									// data.iExact may be a number
+									( '' + data.iExact ).search( data.iFilter ) >= 0 :
+									data.filter === data.exact;
+							} else {
+								txt = ( data.iExact + data.childRowText ).indexOf( tsf.parseFilter( c, data.iFilter, data ) );
+								result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
+							}
 						}
 					} else {
 						result = filterMatched;
