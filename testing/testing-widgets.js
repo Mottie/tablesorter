@@ -391,7 +391,7 @@ jQuery(function($){
 			ts = this.ts,
 			$table = this.$table,
 			table = this.table;
-		assert.expect(3);
+		assert.expect(4);
 
 		return QUnit.SequentialRunner(
 			function(actions, assertions) {
@@ -401,9 +401,13 @@ jQuery(function($){
 			function(){ ts.setFilters( table, ['abc 1'] ); },
 			function(){ assert.cacheCompare( table, 0, ['abc 1'], 'select exact search', true ); }
 		).nextTask(
+			function(){ ts.setFilters( table, ['/abc\\s1$/'] ); },
+			function(){ assert.cacheCompare( table, 0, ['abc 1'], 'select exact search using regex', true ); }
+		).nextTask(
 			function(){
 				$table.find( '.filter-select' ).eq(0).addClass( 'filter-match' );
-				ts.setFilters( table, [ 'abc 1' ] ); },
+				ts.setFilters( table, [ 'abc 1' ] );
+			},
 			function(){ assert.cacheCompare( table, 0, ['abc 1', 'abc 11', 'ABC 10'], 'select match search', true ); }
 		).nextTask(
 			function(){ ts.setFilters( table, ['', '1'] ); },

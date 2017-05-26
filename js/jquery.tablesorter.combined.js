@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 05-24-2017 (v2.28.11)*/
+/*! tablesorter (FORK) - updated 05-26-2017 (v2.28.12)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.11 *//*
+/*! TableSorter (FORK) v2.28.12 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.11',
+		version : '2.28.12',
 
 		parsers : [],
 		widgets : [],
@@ -4079,7 +4079,7 @@
 						// change & input events must be ignored if liveSearch !== true
 						( eventType === 'change' || eventType === 'input' ) &&
 						// prevent search if liveSearch is a number
-						( liveSearch === true || liveSearch !== true && event.target.nodeName !== "INPUT" ) &&
+						( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
 						// don't allow 'change' or 'input' event to process if the input value
 						// is the same - fixes #685
 						this.value !== c.lastSearch[column]
@@ -4474,13 +4474,7 @@
 					fxn = vars.functions[ columnIndex ];
 					filterMatched = null;
 					if ( fxn ) {
-						if ( fxn === true ) {
-							// default selector uses exact match unless 'filter-match' class is found
-							filterMatched = data.isMatch ?
-								// data.iExact may be a number
-								( '' + data.iExact ).search( data.iFilter ) >= 0 :
-								data.filter === data.exact;
-						} else if ( typeof fxn === 'function' ) {
+						if ( typeof fxn === 'function' ) {
 							// filter callback( exact cell content, parser normalized content,
 							// filter input value, column index, jQuery row object )
 							filterMatched = fxn( data.exact, data.cache, data.filter, columnIndex, data.$row, c, data );
@@ -4499,8 +4493,18 @@
 							result = filterMatched;
 						// Look for match, and add child row data for matching
 						} else {
-							txt = ( data.iExact + data.childRowText ).indexOf( tsf.parseFilter( c, data.iFilter, data ) );
-							result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
+							// check fxn (filter-select in header) after filter types are checked
+							// without this, the filter + jQuery UI selectmenu demo was breaking
+							if ( fxn === true ) {
+								// default selector uses exact match unless 'filter-match' class is found
+								result = data.isMatch ?
+									// data.iExact may be a number
+									( '' + data.iExact ).search( data.iFilter ) >= 0 :
+									data.filter === data.exact;
+							} else {
+								txt = ( data.iExact + data.childRowText ).indexOf( tsf.parseFilter( c, data.iFilter, data ) );
+								result = ( ( !wo.filter_startsWith && txt >= 0 ) || ( wo.filter_startsWith && txt === 0 ) );
+							}
 						}
 					} else {
 						result = filterMatched;
@@ -4800,6 +4804,10 @@
 			} else if ( $.type( source ) === 'object' && fxn ) {
 				// custom select source function for a SPECIFIC COLUMN
 				arry = fxn( table, column, onlyAvail );
+				// abort - updating the selects from an external method
+				if (arry === null) {
+					return null;
+				}
 			}
 			if ( arry === false ) {
 				// fall back to original method
@@ -4957,6 +4965,10 @@
 			// filter_selectSource or column data
 			if ( typeof arry === 'undefined' || arry === '' ) {
 				arry = tsf.getOptionSource( table, column, onlyAvail );
+				// abort, selects are updated by an external method
+				if (arry === null) {
+					return;
+				}
 			}
 
 			if ( $.isArray( arry ) ) {

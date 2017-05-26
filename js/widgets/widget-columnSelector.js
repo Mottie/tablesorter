@@ -1,4 +1,4 @@
-/* Widget: columnSelector (responsive table widget) - updated 12/15/2016 (v2.28.2) *//*
+/* Widget: columnSelector (responsive table widget) - updated 5/25/2017 (v2.28.12) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -541,9 +541,9 @@
 		},
 		remove: function(table, c, wo, refreshing) {
 			var csel = c.selector;
-			if ( csel) { csel.$container.empty(); }
 			if ( refreshing || !csel ) { return; }
-			if (csel.$popup) { csel.$popup.empty(); }
+			if ( csel ) { csel.$container.empty(); }
+			if ( csel.$popup ) { csel.$popup.empty(); }
 			csel.$style.remove();
 			csel.$breakpoints.remove();
 			$( c.namespace + 'columnselectorHasSpan' ).removeClass( wo.filter_filteredRow || 'filtered' );

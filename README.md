@@ -104,6 +104,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.12">Version 2.28.12</a> (5/26/2017)
+
+* ColumnSelector:
+  * Don't clear container on updateAll. Fixes [issue #1406](https://github.com/Mottie/tablesorter/issues/1406).
+* Filter:
+  * Return `null` from `filter_selectSource` to prevent select updates; From discussion in IRC with [@alexweissman](https://github.com/alexweissman).
+  * Select searches now process filter types, then exactly match. Previously only exact matches were performed by default, filter types were ignored. This broke the filter + jQuery UI selectmenu demo.
+* Docs/Meta:
+  * Fix linting issues.
+  * Update jQuery UI to v1.12.1.
+  * Update [filter selectmenu demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-selectmenu.html).
+
 #### <a name="v2.28.11">Version 2.28.11</a> (5/24/2017)
 
 * Docs:

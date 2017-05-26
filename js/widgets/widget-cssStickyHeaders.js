@@ -22,7 +22,7 @@
 				$table = c.$table,
 				$attach = $(wo.cssStickyHeaders_attachTo),
 				// target all versions of IE
-				isIE = 'ActiveXObject' in window || window.navigator.userAgent.indexOf("Edge") > -1,
+				isIE = 'ActiveXObject' in window || window.navigator.userAgent.indexOf('Edge') > -1,
 				namespace = c.namespace + 'cssstickyheader ',
 				$thead = $table.children('thead'),
 				$caption = $table.children('caption'),
