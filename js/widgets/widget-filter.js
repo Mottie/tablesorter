@@ -849,7 +849,7 @@
 						// change & input events must be ignored if liveSearch !== true
 						( eventType === 'change' || eventType === 'input' ) &&
 						// prevent search if liveSearch is a number
-						( liveSearch === true || liveSearch !== true && event.target.nodeName !== "INPUT" ) &&
+						( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
 						// don't allow 'change' or 'input' event to process if the input value
 						// is the same - fixes #685
 						this.value !== c.lastSearch[column]
