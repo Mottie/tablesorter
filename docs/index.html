@@ -3337,7 +3337,7 @@ $('table').trigger('search', false);</pre></div>
 				<td>Function</td>
 				<td>null</td>
 				<td>
-					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.24.4</span>).
+					Filter widget: Include a function to return an array of values to be added to the column filter select (<span class="version">v2.16.0</span>; <span class="version updated">v2.28.12</span>).
 					<div class="collapsible">
 					<br>
 					In <span class="version updated">v2.24.4</span>, this option will now accept an array of objects which can contain extra information for each option. Here is an example modified from the <a href="example-widget-filter-selectmenu.html">filter selectmenu demo</a>:
@@ -3360,6 +3360,12 @@ $('table').trigger('search', false);</pre></div>
 						<li><span class="label warning">*NOTE*</span> because this example is providing a fixed select option source, it can not support "filter-onlyAvail" (only show available options after filtering).</li>
 					</ul>
 
+					<p>
+						In <span class="version updated">v2.28.12</span>, return <code>null</code> from a <code>filter_selectSource</code> function to prevent updates to the select options. Useful if you are updating the select options from outside of tablesorter.
+						<pre class="prettyprint lang-js">filter_selectSource : {
+  ".filter-select" : function() { return null; }
+}</pre>
+					</p>
 					<p>
 						In <span class="version updated">v2.27.7</span>, an option to have a descending sort applied to this data can be done by adding a <code>"filter-select-sort-desc"</code> to the header cell. Adding a <code>"filter-select-nosort"</code> class name to a header to prevent sorting has been available since v2.16.3.
 					</p>
