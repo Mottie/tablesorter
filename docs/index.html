@@ -797,6 +797,18 @@
 				<td></td>
 			</tr>
 
+			<tr id="cssicondisabled">
+				<td><a href="#" class="permalink">cssIconDisabled</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column sort is disabled (<span class="version">v2.28.13</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
 			<tr id="cssnone">
 				<td><a href="#" class="permalink">cssNone</a></td>
 				<td>String</td>
@@ -1144,7 +1156,7 @@
 					<div class="collapsible">
 					<br>
 					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a class="external" href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).<br>
-					Function parameters:
+					<p>Function parameters:</p>
 					<ul>
 						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
 						<li><code>config</code> - The current <code>table.config</code>.</li>
@@ -1177,7 +1189,12 @@
 					This function is called after the template string has been built, but before the template string is applied to the header and before the <code>onRenderHeader</code> function is called (v2.7).
 					<div class="collapsible">
 					<br>
-					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it. Here is an example:
+					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it.
+					<p>Function parameters:</p>
+					<ul>
+						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
+						<li><code>template</code> - A rendered <code>headerTemplate</code> HTML string.</li>
+					</ul>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     headerTemplate: '{icon}{content}',

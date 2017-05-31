@@ -112,7 +112,8 @@ Core plugin tested
 OPTIONS:
 	cssAsc, cssChildRow, cssDesc, cssHeader, cssHeaderRow, cssInfoBlock, dateFormat, emptyTo, headerList,
 	headers, ignoreCase, initialized, parsers, sortList, sortLocaleCompare, sortReset, sortRestart, stringTo, tableClass,
-	usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey, numberSorter
+	usNumberFormat, widgets (just zebra), sortAppend, sortForce, sortMultiSortKey, sortResetKey, numberSorter,
+	cssIconAsc, cssIconDesc, cssIconNone, cssIconDisabled
 
 METHODS:
 	addRows, applyWidgets, destroy, sorton, sortReset, update/updateRow, updateAll, updateCell
@@ -123,7 +124,7 @@ EVENTS:
 Not yet tested
 =========================
 OPTIONS:
-	cancelSelection, cssIcon, cssProcessing, debug, delayInit, headerTemplate, initWidgets, onRenderHeader,
+	cancelSelection, cssProcessing, debug, delayInit, headerTemplate, initWidgets, onRenderHeader,
 	onRenderTemplate, selectorHeaders, selectorRemove, selectorSort, serverSideSorting, showProcessing,
 	sortInitialOrder, strings,
 	textExtraction, textSorter, theme, widthFixed, widgets (also need priority testing)
@@ -694,9 +695,6 @@ jQuery(function($){
 			'a', 'b', 'c1', 'c2'
 		];
 		assert.cacheCompare( $('#testblock table')[0], 'all', t, 'colspans not duplicated but textExtraction defined' );
-
-
-
 	});
 
 	QUnit.test( 'sorton methods', function(assert) {
@@ -915,6 +913,37 @@ jQuery(function($){
 		assert.equal( t.hasClass(ts.css.sortAsc), true, 'Ascending class present' );
 		$table1.trigger('sortReset');
 		assert.equal( t.hasClass(ts.css.sortAsc) || t.hasClass(ts.css.sortDesc), false, 'Testing sortReset' );
+	});
+
+	QUnit.test( 'testing header css icons', function(assert) {
+		var done = assert.async();
+		assert.expect(1);
+		$('#testblock2').html('<table class="tablesorter"><thead><tr>' +
+				'<th>A</th>' +
+				'<th>B</th>' +
+				'<th>C</th>' +
+				'<th class="sorter-false">D</th>' +
+			'</tr></thead><tbody></tbody></table>')
+		.find('table')
+		.tablesorter({
+			sortList: [[0,0], [1,1]],
+			headerTemplate:'{content} {icon}',
+			cssIconAsc: 'asc',
+			cssIconDesc: 'desc',
+			cssIconNone: 'none',
+			cssIconDisabled: 'disabled',
+			initialized: function(table){
+				var i,
+					results = [],
+					expected = ['asc', 'desc', 'none', 'disabled'],
+					c = table.config;
+				for (i = 0; i < c.columns; i++){
+					results[i] = c.$headers.eq(i).find('.' + ts.css.icon).hasClass(expected[i]);
+				}
+				assert.deepEqual( results, [true, true, true, true], 'applies correct cssIcon classes' );
+				done();
+			}
+		});
 	});
 
 	/************************************************
