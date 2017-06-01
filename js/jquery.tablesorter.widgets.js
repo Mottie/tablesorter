@@ -1060,6 +1060,9 @@
 				if ( filters[ indx ] ) {
 					result[ indx ] = mode( filters[ indx ] );
 				}
+				
+				// add tabindex
+				buildFilter.attr('tabindex', 1 );
 			}
 			return result;
 		},
