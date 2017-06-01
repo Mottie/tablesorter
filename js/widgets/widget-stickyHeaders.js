@@ -282,6 +282,8 @@
 				});
 			}
 
+			// make sure sticky is visible if page is partially scrolled
+			scrollSticky( true );
 			$table.triggerHandler('stickyHeadersInit');
 
 		},
