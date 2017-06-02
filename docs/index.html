@@ -512,7 +512,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-tbodies.html">Sort tbodies widget</a> (<span class="version">v2.22.2</span>; <span class="version updated">v2.28.0</span>).</li>
 		<li><a href="example-widget-static-row.html">Static row widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.24.0</span>).</li>
 
-		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.4</span>).</li>
+		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.13</span>).</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.28.11</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="#function-storage">Storage Widget</a> (<span class="version">v2.20.0</span>; <span class="version updated">v2.28.8</span>).</li>
@@ -790,6 +790,18 @@
 				<td>String</td>
 				<td>&quot;&quot;</td>
 				<td>The CSS style used to style the header cell icon when the column does not have a sort applied (<span class="version">v2.18.3</span>)
+					<div class="collapsible"><br>
+						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
+					</div>
+				</td>
+				<td></td>
+			</tr>
+
+			<tr id="cssicondisabled">
+				<td><a href="#" class="permalink">cssIconDisabled</a></td>
+				<td>String</td>
+				<td>&quot;&quot;</td>
+				<td>The CSS style used to style the header cell icon when the column sort is disabled (<span class="version">v2.28.13</span>)
 					<div class="collapsible"><br>
 						This class is only applied when the <a href="#headertemplate"><code>headerTemplate</code></a> option includes a <code>{icon}</code> tag or an HTML element with the class name from the <a href="#cssicon"><code>cssIcon</code></a> option.
 					</div>
@@ -1144,7 +1156,7 @@
 					<div class="collapsible">
 					<br>
 					In versions 2.0.6+, all TH text is wrapped in a div with a class name of "tablesorter-inner" by default. In the example below, the header cell (TH) div is given a class name (<a class="external" href="http://www.pengoworks.com/workshop/jquery/tablesorter/tablesorter.htm">source</a>).<br>
-					Function parameters:
+					<p>Function parameters:</p>
 					<ul>
 						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
 						<li><code>config</code> - The current <code>table.config</code>.</li>
@@ -1177,7 +1189,12 @@
 					This function is called after the template string has been built, but before the template string is applied to the header and before the <code>onRenderHeader</code> function is called (v2.7).
 					<div class="collapsible">
 					<br>
-					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it. Here is an example:
+					The <code>onRenderTemplate</code> function receives a column index and template string parameters. The template string, from the <a href="#headertemplate"><code>headerTemplate</code> option</a>, will already have the <code>{icon}</code> and <code>{content}</code> tags replaced; it's just a string of formatted HTML. When done manipulating this string, return it.
+					<p>Function parameters:</p>
+					<ul>
+						<li><code>index</code> - zero-based index of the current table header cell; this value is <em>not</em> indicative of the column index, as it is simply a count of header cells. So it will be effected by rowspan, colspan and multiple rows in the header.</li>
+						<li><code>template</code> - A rendered <code>headerTemplate</code> HTML string.</li>
+					</ul>
 					<pre class="prettyprint lang-js">$(function(){
   $("table").tablesorter({
     headerTemplate: '{icon}{content}',
@@ -2073,7 +2090,7 @@ $(function(){
       // Any previous saved sort will be restored on page reload.
       saveSort: true,
 
-      // *** STICKYhEADERS WIDGET ***
+      // *** STICKYHEADERS WIDGET ***
       // stickyHeaders widget: extra class name added to the sticky header
       // row
       stickyHeaders: '',
@@ -7276,7 +7293,7 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 
 			<tr id="function-sortnatural">
 				<td><a href="#" class="permalink">sortNatural</a></td>
-				<td>This function sorts the a &amp; b parameter using a natural sort (v2.12).
+				<td>This function sorts the a &amp; b parameter using a natural sort (v2.12; <span class="version updated">v2.28.13</span>).
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.sortNatural(a, b);</pre>
@@ -7288,7 +7305,8 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 						<pre class="prettyprint lang-js">var myArray = [ '1a', '10a', '2a', '2b' ];
 // result: ["1a", "2a", "2b", "10a"]
 myArray.sort(function(a,b) { return $.tablesorter.sortNatural(a, b); });</pre>
-						Please note that this natural sort function only accepts strings (added v2.0.6; renamed v2.12).
+						<del>Please note that this natural sort function only accepts strings (added v2.0.6; renamed v2.12)</del>.<br>
+						As of <span class="version updated">v2.28.13</span>, the natural sort function will convert all values into strings.
 					</div>
 				</td>
 			</tr>
