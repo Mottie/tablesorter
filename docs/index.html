@@ -512,7 +512,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-sort-tbodies.html">Sort tbodies widget</a> (<span class="version">v2.22.2</span>; <span class="version updated">v2.28.0</span>).</li>
 		<li><a href="example-widget-static-row.html">Static row widget</a> (<span class="version">v2.16</span>; <span class="version updated">v2.24.0</span>).</li>
 
-		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.4</span>).</li>
+		<li><span class="results">&dagger;</span> <a href="example-widget-sticky-header.html">Sticky header widget</a> (v2.0.21.1; <span class="version updated">v2.28.13</span>).</li>
 		<li><a href="example-widget-css-sticky-header.html">Sticky header (css3) widget</a> (<span class="version">v2.14.2</span>; <span class="version updated">v2.28.11</span>).</li>
 
 		<li><span class="results">&dagger;</span> <a href="#function-storage">Storage Widget</a> (<span class="version">v2.20.0</span>; <span class="version updated">v2.28.8</span>).</li>
@@ -2090,7 +2090,7 @@ $(function(){
       // Any previous saved sort will be restored on page reload.
       saveSort: true,
 
-      // *** STICKYhEADERS WIDGET ***
+      // *** STICKYHEADERS WIDGET ***
       // stickyHeaders widget: extra class name added to the sticky header
       // row
       stickyHeaders: '',
@@ -7293,7 +7293,7 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 
 			<tr id="function-sortnatural">
 				<td><a href="#" class="permalink">sortNatural</a></td>
-				<td>This function sorts the a &amp; b parameter using a natural sort (v2.12).
+				<td>This function sorts the a &amp; b parameter using a natural sort (v2.12; <span class="version updated">v2.28.13</span>).
 					<div class="collapsible"><br>
 						Access it as follows:
 						<pre class="prettyprint lang-js">$.tablesorter.sortNatural(a, b);</pre>
@@ -7305,7 +7305,8 @@ $.tablesorter.bindEvents( $table, $clonedTable.find('th') );</pre>
 						<pre class="prettyprint lang-js">var myArray = [ '1a', '10a', '2a', '2b' ];
 // result: ["1a", "2a", "2b", "10a"]
 myArray.sort(function(a,b) { return $.tablesorter.sortNatural(a, b); });</pre>
-						Please note that this natural sort function only accepts strings (added v2.0.6; renamed v2.12).
+						<del>Please note that this natural sort function only accepts strings (added v2.0.6; renamed v2.12)</del>.<br>
+						As of <span class="version updated">v2.28.13</span>, the natural sort function will convert all values into strings.
 					</div>
 				</td>
 			</tr>

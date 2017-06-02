@@ -104,6 +104,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.13">Version 2.28.13</a> (6/2/2017)
+
+* Core:
+  * Add cssIconDisabled option. See [issue #1409](https://github.com/Mottie/tablesorter/issues/1409).
+  * Coerce sort natural elements into strings. See [issue #1415](https://github.com/Mottie/tablesorter/issues/1415).
+* StickyHeaders:
+  * Fix dynamic updating of offset. Fixes [issue #1412](https://github.com/Mottie/tablesorter/issues/1412).
+  * Init with visible headers on partial scroll
+* Meta:
+  * Set jQuery dependency back to >=1.2.6. Fixes [issue #1411](https://github.com/Mottie/tablesorter/issues/1411).
+  * Add `package-lock.json` file.
+
 #### <a name="v2.28.12">Version 2.28.12</a> (5/26/2017)
 
 * ColumnSelector:
@@ -136,29 +148,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Update links to sugarjs/datejs demos.
 * Meta:
   * Update dependencies.
-
-#### <a name="v2.28.10">Version 2.28.10</a> (5/16/2017)
-
-* Core:
-  * Disable `updateCell` method for child rows (temporary block until code is fixed).
-  * Add namespace class name to table.
-* Parsers
-  * Input-select:
-    * Prevent input select parser from handling events from child rows. See [pull #1399](https://github.com/Mottie/tablesorter/pull/1399); thanks [@andysleigh](https://github.com/andysleigh)!
-    * Remove unused variables & add `ignoreChildRow` option.
-    * Bind & update stickyHeaders checkbox. Fixes [issue #261](https://github.com/Mottie/tablesorter/issues/261).
-* Meta:
-  * Use correct `composer.json` jQuery version. Fixes [issue #1398](https://github.com/Mottie/tablesorter/issues/1398).
-  * Clarify use of GPLv2 license. See [issue #1400](https://github.com/Mottie/tablesorter/issues/1400).
-  * Update dependencies.
-
-#### <a name="v2.28.9">Version 2.28.9</a> (5/3/2017)
-
-* Core:
-  * Fix widget option changes across multiple tables; seen in the second table of the math page demo with the `math_ignore` option.
-* Docs:
-  * Add page header section to Math docs. See #1392.
-  * Fix misspelling.
-  * update jQuery.
-* Math:
-  * Include noop `math_complete` in defaults; prevents option not recognized warning
