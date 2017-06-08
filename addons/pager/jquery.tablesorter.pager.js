@@ -329,8 +329,8 @@
 					h = $.data(table, 'pagerSavedHeight');
 					if (h) {
 						var bs = 0;
-						if($(table).css('border-spacing').split(" ").length>0){
-							bs = $(table).css('border-spacing').split(" ")[0].replace(/[^-\d\.]/g, '');
+						if($(table).css('border-spacing').split(" ").length>1){
+							bs = $(table).css('border-spacing').split(" ")[1].replace(/[^-\d\.]/g, '');
 						}
 						d = h - $b.height()+(bs*p.size)-bs;
 						if ( d > 5 && $.data(table, 'pagerLastSize') === p.size &&
