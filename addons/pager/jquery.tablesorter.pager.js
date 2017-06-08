@@ -328,7 +328,11 @@
 				if (p.fixedHeight && !p.isDisabled) {
 					h = $.data(table, 'pagerSavedHeight');
 					if (h) {
-						d = h - $b.height();
+						var bs = 0;
+						if($(table).css('border-spacing').split(" ").length>1){
+							bs = $(table).css('border-spacing').split(" ")[1].replace(/[^-\d\.]/g, '');
+						}
+						d = h - $b.height()+(bs*p.size)-bs;
 						if ( d > 5 && $.data(table, 'pagerLastSize') === p.size &&
 						$b.children('tr:visible').length < (p.size === 'all' ? p.totalRows : p.size) ) {
 							$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '" style="height:' + d + 'px;"></tr>');
