@@ -969,6 +969,10 @@
 				.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 					var filtersEqual;
+					if (p.ajax && e.type === 'filterInit') {
+						// ensure pager ajax is called after filter widget has initialized
+						return moveToPage( table, p, false );
+					}
 					if (ts.filter.equalFilters) {
 						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
 					} else {
