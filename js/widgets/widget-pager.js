@@ -611,7 +611,7 @@
 		},
 
 		fixHeight: function( c ) {
-			var d, h,
+			var d, h, bs,
 				table = c.table,
 				p = c.pager,
 				wo = c.widgetOptions,
@@ -620,9 +620,15 @@
 			if ( wo.pager_fixedHeight && !p.isDisabled ) {
 				h = $.data( table, 'pagerSavedHeight' );
 				if ( h ) {
-					d = h - $b.height();
-					if ( d > 5 && $.data( table, 'pagerLastSize' ) === p.size &&
-						$b.children( 'tr:visible' ).length < ( p.size === 'all' ? p.totalRows : p.size ) ) {
+					bs = 0;
+					if ( $(table).css('border-spacing').split(' ').length > 1 ) {
+						bs = $(table).css('border-spacing').split(' ')[1].replace( /[^-\d\.]/g, '' );
+					}
+					d = h - $b.height() + (bs * p.size) - bs;
+					if (
+						d > 5 && $.data( table, 'pagerLastSize' ) === p.size &&
+						$b.children( 'tr:visible' ).length < ( p.size === 'all' ? p.totalRows : p.size )
+					) {
 						$b.append( '<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice( 1 ) +
 							'" style="height:' + d + 'px;"></tr>' );
 					}

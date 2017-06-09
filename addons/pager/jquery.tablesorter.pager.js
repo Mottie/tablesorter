@@ -321,20 +321,22 @@
 			},
 
 			fixHeight = function(table, p) {
-				var d, h,
+				var d, h, bs,
 				c = table.config,
 				$b = c.$tbodies.eq(0);
 				$b.find('tr.pagerSavedHeightSpacer').remove();
 				if (p.fixedHeight && !p.isDisabled) {
 					h = $.data(table, 'pagerSavedHeight');
 					if (h) {
-						var bs = 0;
-						if($(table).css('border-spacing').split(" ").length>1){
-							bs = $(table).css('border-spacing').split(" ")[1].replace(/[^-\d\.]/g, '');
+						bs = 0;
+						if ($(table).css('border-spacing').split(' ').length > 1) {
+							bs = $(table).css('border-spacing').split(' ')[1].replace(/[^-\d\.]/g, '');
 						}
-						d = h - $b.height()+(bs*p.size)-bs;
-						if ( d > 5 && $.data(table, 'pagerLastSize') === p.size &&
-						$b.children('tr:visible').length < (p.size === 'all' ? p.totalRows : p.size) ) {
+						d = h - $b.height() + (bs * p.size) - bs;
+						if (
+							d > 5 && $.data(table, 'pagerLastSize') === p.size &&
+							$b.children('tr:visible').length < (p.size === 'all' ? p.totalRows : p.size)
+						) {
 							$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '" style="height:' + d + 'px;"></tr>');
 						}
 					}
