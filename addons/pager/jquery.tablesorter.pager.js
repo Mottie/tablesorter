@@ -321,16 +321,22 @@
 			},
 
 			fixHeight = function(table, p) {
-				var d, h,
+				var d, h, bs,
 				c = table.config,
 				$b = c.$tbodies.eq(0);
 				$b.find('tr.pagerSavedHeightSpacer').remove();
 				if (p.fixedHeight && !p.isDisabled) {
 					h = $.data(table, 'pagerSavedHeight');
 					if (h) {
-						d = h - $b.height();
-						if ( d > 5 && $.data(table, 'pagerLastSize') === p.size &&
-						$b.children('tr:visible').length < (p.size === 'all' ? p.totalRows : p.size) ) {
+						bs = 0;
+						if ($(table).css('border-spacing').split(' ').length > 1) {
+							bs = $(table).css('border-spacing').split(' ')[1].replace(/[^-\d\.]/g, '');
+						}
+						d = h - $b.height() + (bs * p.size) - bs;
+						if (
+							d > 5 && $.data(table, 'pagerLastSize') === p.size &&
+							$b.children('tr:visible').length < (p.size === 'all' ? p.totalRows : p.size)
+						) {
 							$b.append('<tr class="pagerSavedHeightSpacer ' + c.selectorRemove.slice(1) + '" style="height:' + d + 'px;"></tr>');
 						}
 					}
@@ -969,6 +975,10 @@
 				.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
 					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 					var filtersEqual;
+					if (p.ajax && e.type === 'filterInit') {
+						// ensure pager ajax is called after filter widget has initialized
+						return moveToPage( table, p, false );
+					}
 					if (ts.filter.equalFilters) {
 						filtersEqual = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
 					} else {
@@ -1188,7 +1198,7 @@
 			valid = true,
 			message = '',
 			removeRow = function(){
-				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+				c.$table.find( 'thead' ).find( c.selectorRemove ).remove();
 			};
 
 		if ( !$table.length ) {
