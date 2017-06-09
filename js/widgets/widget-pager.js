@@ -1307,7 +1307,7 @@
 			valid = true,
 			message = '',
 			removeRow = function() {
-				c.$table.find( 'thead' ).find( '.' + errorRow ).remove();
+				c.$table.find( 'thead' ).find( c.selectorRemove ).remove();
 			};
 
 		if ( !$table.length ) {
