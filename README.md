@@ -82,7 +82,7 @@ If you would like to contribute, please...
 * Big thanks to [ThsSin-](https://github.com/TheSin-) for taking over for a while and also providing valuable feedback.
 * Thanks to [prijutme4ty](https://github.com/prijutme4ty) for numerous contributions!
 * Also extra thanks to [christhomas](https://github.com/christhomas) and [Lynesth](https://github.com/Lynesth) for help with code.
-* And, of course thanks to everyone else that has contributed, and continues to contribute to this forked project!
+* And, of course thanks to everyone else that has [contributed](https://github.com/Mottie/tablesorter/blob/master/AUTHORS), and continues to contribute through pull requests and open issues to this forked project!
 
 [npm-url]: https://npmjs.org/package/tablesorter
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
@@ -103,6 +103,18 @@ If you would like to contribute, please...
 ### Recent Changes
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
+
+#### <a name="v2.28.14">Version 2.28.14</a> (6/8/2017)
+
+* Core:
+  * Show console error for mismatched column count. See [issue #1415](https://github.com/Mottie/tablesorter/issues/1415).
+* Pager:
+  * (addon) Ensure ajax is called after filter widget init. Fixes [issue #1389](https://github.com/Mottie/tablesorter/issues/1389).
+  * (addon) Fix height issues for certain browsers (border-spacing). See [pull #1418](https://github.com/Mottie/tablesorter/pull/1418); thanks [@DoctorWhite](https://github.com/DoctorWhite)
+  * (widget) Apply height adjustment code to pager widget.
+  * Use selectorRemove to remove error rows. Removes error rows with dynamically changed class names.
+* Meta:
+  * Added [AUTHORS](https://github.com/Mottie/tablesorter/blob/master/AUTHORS) file.
 
 #### <a name="v2.28.13">Version 2.28.13</a> (6/2/2017)
 
@@ -127,24 +139,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix linting issues.
   * Update jQuery UI to v1.12.1.
   * Update [filter selectmenu demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-selectmenu.html).
-
-#### <a name="v2.28.11">Version 2.28.11</a> (5/24/2017)
-
-* Docs:
-  * Reword `sortReset` method description. See [issue #1404](https://github.com/Mottie/tablesorter/issues/1404).
-* Columns:
-  * Initialize after pager widget.
-* CssStickyHeaders:
-  * Fix captioned tables in Safari. See [issue #1405](https://github.com/Mottie/tablesorter/issues/1405); thanks [@TheSin-](https://github.com/TheSin-)!
-  * Fix in Edge browser.
-* Filter:
-  * Attempt to fix [issue #1152](https://github.com/Mottie/tablesorter/issues/1152) (`liveSearch`).
-  * Second attempt at [issue #1152](https://github.com/Mottie/tablesorter/issues/1152).
-  * Trigger `liveSearch` on blur & cleanup.
-* Pager (widget only):
-  * Allow ajax processing on init.
-  * Ensure ajax is called after filter widget initializes.
-* Parsers:
-  * Update links to sugarjs/datejs demos.
-* Meta:
-  * Update dependencies.

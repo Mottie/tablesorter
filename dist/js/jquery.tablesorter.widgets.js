@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 06-02-2017 (v2.28.13)*/
+/*! tablesorter (FORK) - updated 06-08-2017 (v2.28.14)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
