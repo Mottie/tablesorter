@@ -38,6 +38,9 @@
     "type": "git",
     "url": "git://github.com/Mottie/tablesorter.git"
   },
+  "scripts": {
+    "authors": "bash testing/authors.sh"
+  },
   "npmName": "tablesorter",
   "npmFileMap": [
     {
