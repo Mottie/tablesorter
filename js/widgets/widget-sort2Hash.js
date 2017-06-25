@@ -30,12 +30,12 @@
 								$(this).triggerHandler( 'pageAndSize', [ page, size ] );
 							});
 							// use the newest filter comparison code
-							if (ts.filter.equalFilters) {
-								temp = ts.filter.equalFilters(c, c.lastSearch, pager.currentFilters);
+							if ( ts.filter.equalFilters ) {
+								temp = ts.filter.equalFilters( c, c.lastSearch, filter );
 							} else {
 								// quick n' dirty comparison... it will miss filter changes of
 								// the same value in a different column, see #1363
-								temp = ( c.lastSearch || [] ).join( '' ) !== ( pager.currentFilters || [] ).join( '' );
+								temp = ( c.lastSearch || [] ).join( '' ) !== ( filter || [] ).join( '' );
 							}
 							// don't set filters if they haven't changed
 							if ( !temp ) {
