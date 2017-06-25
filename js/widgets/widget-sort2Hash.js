@@ -1,4 +1,4 @@
-/*! Widget: sort2Hash (BETA) - updated 4/2/2017 (v2.28.6) */
+/*! Widget: sort2Hash (BETA) - updated 6/25/2017 (v2.28.15) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -26,10 +26,21 @@
 					filter = filter.split( wo.sort2Hash_separator );
 					c.$table.one( 'tablesorter-ready', function() {
 						setTimeout(function(){
-							c.$table.one( 'filterEnd', function(){
+							c.$table.one( 'filterEnd', function() {
 								$(this).triggerHandler( 'pageAndSize', [ page, size ] );
 							});
-							$.tablesorter.setFilters( table, filter, true );
+							// use the newest filter comparison code
+							if (ts.filter.equalFilters) {
+								temp = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
+							} else {
+								// quick n' dirty comparison... it will miss filter changes of
+								// the same value in a different column, see #1363
+								temp = ( c.lastSearch || [] ).join( '' ) !== ( p.currentFilters || [] ).join( '' );
+							}
+							// don't set filters if they haven't changed
+							if ( !temp ) {
+								$.tablesorter.setFilters( table, filter, true );
+							}
 						}, 100 );
 					});
 				}
