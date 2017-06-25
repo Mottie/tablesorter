@@ -31,11 +31,11 @@
 							});
 							// use the newest filter comparison code
 							if (ts.filter.equalFilters) {
-								temp = ts.filter.equalFilters(c, c.lastSearch, p.currentFilters);
+								temp = ts.filter.equalFilters(c, c.lastSearch, pager.currentFilters);
 							} else {
 								// quick n' dirty comparison... it will miss filter changes of
 								// the same value in a different column, see #1363
-								temp = ( c.lastSearch || [] ).join( '' ) !== ( p.currentFilters || [] ).join( '' );
+								temp = ( c.lastSearch || [] ).join( '' ) !== ( pager.currentFilters || [] ).join( '' );
 							}
 							// don't set filters if they haven't changed
 							if ( !temp ) {
