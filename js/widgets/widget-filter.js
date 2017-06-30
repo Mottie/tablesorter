@@ -69,7 +69,8 @@
 			var tbodyIndex, $tbody,
 				$table = c.$table,
 				$tbodies = c.$tbodies,
-				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterAndSortReset filterEnd search '
+				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
+					'filterAndSortReset filterFomatterUpdate filterEnd search stickyHeadersInit '
 					.split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
@@ -599,7 +600,9 @@
 		// so we have to work with it instead
 		formatterUpdated: function( $cell, column ) {
 			// prevent error if $cell is undefined - see #1056
-			var wo = $cell && $cell.closest( 'table' )[0].config.widgetOptions;
+			var $table = $cell && $cell.closest( 'table' );
+			var config = $table.length && $table[0].config,
+				wo = config && config.widgetOptions;
 			if ( wo && !wo.filter_initialized ) {
 				// add updates by column since this function
 				// may be called numerous times before initialization
