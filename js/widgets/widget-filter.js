@@ -69,9 +69,10 @@
 			var tbodyIndex, $tbody,
 				$table = c.$table,
 				$tbodies = c.$tbodies,
-				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
+				events = (
+					'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
 					'filterAndSortReset filterFomatterUpdate filterEnd search stickyHeadersInit '
-					.split( ' ' ).join( c.namespace + 'filter ' );
+				).split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
 				// add filter namespace to all BUT search
