@@ -548,7 +548,7 @@
 				timer = new Date();
 			}
 			// children tr in tfoot - see issue #196 & #547
-			// don't pass table.config to CColumnIndex here - widgets (math) pass it to "quickly" index tbody cells
+			// don't pass table.config to computeColumnIndex here - widgets (math) pass it to "quickly" index tbody cells
 			c.columns = ts.computeColumnIndex( c.$table.children( 'thead, tfoot' ).children( 'tr' ) );
 			// add icon if cssIcon option exists
 			icon = c.cssIcon ?
