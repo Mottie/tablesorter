@@ -104,6 +104,28 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.28.15">Version 2.28.15</a> (7/4/2017)
+
+* Core:
+  * Use calculated index instead of DOM index. See [pull #1424](https://github.com/Mottie/tablesorter/pull/1424); thanks [@ced-b](https://github.com/ced-b)!
+  * Fix check count cell indexing.
+* ColumnSelector:
+  * Remove colspan adjustments when widget removed.
+  * Include tbody colspan updates on removal.
+* Filter:
+  * Add namespacing to filter-formatter listeners. Needed to prevent JS error when a "resetToLoadState" is triggered and the "filterFomatterUpdate" bindings are still firing.
+  * Fix namespacing of events.
+* Sort2Hash:
+  * Prevent filter update if unchanged & compare (with) hash filter.
+  * Fix p's (reference to pager object).
+* Docs
+  * CSS fixed to comply with editable_wrapContent : `<div>`. See [pull #1420](https://github.com/Mottie/tablesorter/pull/1420); thanks [@LaurentBarbareau](https://github.com/LaurentBarbareau)!
+  * Remove note on contenteditable wrapping. See [pull #1420](https://github.com/Mottie/tablesorter/pull/1420).
+  * Update pager widget options in demo code.
+  * Use src files in filter formatter demo for testing.
+* Meta:
+  * Include `js` & `css` folders with bower installs.
+
 #### <a name="v2.28.14">Version 2.28.14</a> (6/8/2017)
 
 * Core:
@@ -127,15 +149,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Meta:
   * Set jQuery dependency back to >=1.2.6. Fixes [issue #1411](https://github.com/Mottie/tablesorter/issues/1411).
   * Add `package-lock.json` file.
-
-#### <a name="v2.28.12">Version 2.28.12</a> (5/26/2017)
-
-* ColumnSelector:
-  * Don't clear container on updateAll. Fixes [issue #1406](https://github.com/Mottie/tablesorter/issues/1406).
-* Filter:
-  * Return `null` from `filter_selectSource` to prevent select updates; From discussion in IRC with [@alexweissman](https://github.com/alexweissman).
-  * Select searches now process filter types, then exactly match. Previously only exact matches were performed by default, filter types were ignored. This broke the filter + jQuery UI selectmenu demo.
-* Docs/Meta:
-  * Fix linting issues.
-  * Update jQuery UI to v1.12.1.
-  * Update [filter selectmenu demo](https://mottie.github.io/tablesorter/docs/example-widget-filter-selectmenu.html).
