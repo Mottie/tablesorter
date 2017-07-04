@@ -70,18 +70,20 @@
 			if (arry) {
 				v = v.split('\u0000');
 			}
-			$input
-				// add regex, so we filter exact numbers
-				.val(
-					$.isArray(v) && v.length && v.join('') !== '' ?
-						'/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
-						''
-				)
-				.trigger('search').end()
-				.find('.select2').select2('val', v);
-			// update sticky header cell
-			if (c.widgetOptions.$sticky) {
-				c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val', v);
+			if (!ts.isEmptyObject($input.find('.select2').data())) {
+				$input
+					// add regex, so we filter exact numbers
+					.val(
+						$.isArray(v) && v.length && v.join('') !== '' ?
+							'/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
+							''
+					)
+					.trigger('search').end()
+					.find('.select2').select2('val', v);
+				// update sticky header cell
+				if (c.widgetOptions.$sticky) {
+					c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val', v);
+				}
 			}
 		},
 

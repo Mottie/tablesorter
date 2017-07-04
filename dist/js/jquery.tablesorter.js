@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.14 *//*
+/*! TableSorter (FORK) v2.28.15 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.14',
+		version : '2.28.15',
 
 		parsers : [],
 		widgets : [],
@@ -2250,7 +2250,7 @@
 				cells = $rows[ i ].cells;
 				for ( j = 0; j < cells.length; j++ ) {
 					cell = cells[ j ];
-					rowIndex = cell.parentNode.rowIndex;
+					rowIndex = i;
 					rowSpan = cell.rowSpan || 1;
 					colSpan = cell.colSpan || 1;
 					if ( typeof matrix[ rowIndex ] === 'undefined' ) {
@@ -2309,7 +2309,7 @@
 			if ( !valid ) {
 				$rows.each( function( indx, el ) {
 					var cell = el.parentElement.nodeName;
-					if ( cells.indexOf( cell ) ) {
+					if ( cells.indexOf( cell ) < 0 ) {
 						cells.push( cell );
 					}
 				});

@@ -38,6 +38,26 @@
 			widgets: ['zebra', 'filter', 'pager'],
 			widgetOptions: {
 
+				// css class names of pager arrows
+				pager_css: {
+					container   : 'tablesorter-pager',
+					errorRow    : 'tablesorter-errorRow', // error information row (don't include period at beginning)
+					disabled    : 'disabled'              // class added to arrows @ extremes (i.e. prev/first arrows "disabled" on first page)
+				},
+
+				// jQuery selectors
+				pager_selectors: {
+					container   : '.pager',       // target the pager markup (wrapper)
+					first       : '.first',       // go to first page arrow
+					prev        : '.prev',        // previous page arrow
+					next        : '.next',        // next page arrow
+					last        : '.last',        // go to last page arrow
+					gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
+					pageDisplay : '.pagedisplay', // location of where the "output" is displayed
+					pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
+
+				},
+
 				// output default: '{page}/{totalPages}'
 				// possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
 				// also {page:input} & {startRow:input} will add a modifiable input in place of the value
@@ -49,11 +69,23 @@
 				// starting page of the pager (zero based index)
 				pager_startPage: 0,
 
+				// Reset pager to this page after filtering; set to desired page number
+				// (zero-based index), or false to not change page at filter start
+				pager_pageReset: 0,
+
 				// Number of visible rows
 				pager_size: 25,
 
+				// f true, child rows will be counted towards the pager set size
+				pager_countChildRows: false,
+
 				// Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
 				pager_savePages: true,
+
+				// Saves tablesorter paging to custom key if defined. Key parameter name
+				// used by the $.tablesorter.storage function. Useful if you have
+				// multiple tables defined
+				pager_storageKey: "tablesorter-pager",
 
 				// if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
 				// table row set to a height to compensate; default is false
@@ -92,6 +124,18 @@
 				pager_ajaxObject: {
 					type: 'GET', // default setting
 					dataType: 'json'
+				},
+
+				// Set this option to false if your table data is preloaded into the
+				// table, but you are still using ajax
+				pager_processAjaxOnInit: true,
+
+				// When processAjaxOnInit is set to false, set this option to contain
+				// the total number of rows and filtered rows to prevent an initial ajax
+				// call
+				initialRows: {
+					total: 100,
+					filtered: 100
 				},
 
 				// process ajax so that the following information is returned:
@@ -140,26 +184,6 @@
 						// in version 2.10, you can optionally return $(rows) a set of table rows within a jQuery object
 						return [ total, rows, headers ];
 					}
-				},
-
-				// css class names of pager arrows
-				pager_css: {
-					container   : 'tablesorter-pager',
-					errorRow    : 'tablesorter-errorRow', // error information row (don't include period at beginning)
-					disabled    : 'disabled'              // class added to arrows @ extremes (i.e. prev/first arrows "disabled" on first page)
-				},
-
-				// jQuery selectors
-				pager_selectors: {
-					container   : '.pager',       // target the pager markup (wrapper)
-					first       : '.first',       // go to first page arrow
-					prev        : '.prev',        // previous page arrow
-					next        : '.next',        // next page arrow
-					last        : '.last',        // go to last page arrow
-					gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
-					pageDisplay : '.pagedisplay', // location of where the "output" is displayed
-					pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
-
 				}
 			}
 

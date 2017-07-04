@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 06-08-2017 (v2.28.14)*/
+/*! tablesorter (FORK) - updated 07-04-2017 (v2.28.15)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.14 *//*
+/*! TableSorter (FORK) v2.28.15 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.14',
+		version : '2.28.15',
 
 		parsers : [],
 		widgets : [],
@@ -2258,7 +2258,7 @@
 				cells = $rows[ i ].cells;
 				for ( j = 0; j < cells.length; j++ ) {
 					cell = cells[ j ];
-					rowIndex = cell.parentNode.rowIndex;
+					rowIndex = i;
 					rowSpan = cell.rowSpan || 1;
 					colSpan = cell.colSpan || 1;
 					if ( typeof matrix[ rowIndex ] === 'undefined' ) {
@@ -2317,7 +2317,7 @@
 			if ( !valid ) {
 				$rows.each( function( indx, el ) {
 					var cell = el.parentElement.nodeName;
-					if ( cells.indexOf( cell ) ) {
+					if ( cells.indexOf( cell ) < 0 ) {
 						cells.push( cell );
 					}
 				});
@@ -3274,7 +3274,7 @@
 
 })(jQuery);
 
-/*! Widget: filter - updated 5/24/2017 (v2.28.11) *//*
+/*! Widget: filter - updated 7/4/2017 (v2.28.15) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -3345,8 +3345,10 @@
 			var tbodyIndex, $tbody,
 				$table = c.$table,
 				$tbodies = c.$tbodies,
-				events = 'addRows updateCell update updateRows updateComplete appendCache filterReset filterAndSortReset filterEnd search '
-					.split( ' ' ).join( c.namespace + 'filter ' );
+				events = (
+					'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
+					'filterAndSortReset filterFomatterUpdate filterEnd search stickyHeadersInit '
+				).split( ' ' ).join( c.namespace + 'filter ' );
 			$table
 				.removeClass( 'hasFilters' )
 				// add filter namespace to all BUT search
@@ -3875,7 +3877,9 @@
 		// so we have to work with it instead
 		formatterUpdated: function( $cell, column ) {
 			// prevent error if $cell is undefined - see #1056
-			var wo = $cell && $cell.closest( 'table' )[0].config.widgetOptions;
+			var $table = $cell && $cell.closest( 'table' );
+			var config = $table.length && $table[0].config,
+				wo = config && config.widgetOptions;
 			if ( wo && !wo.filter_initialized ) {
 				// add updates by column since this function
 				// may be called numerous times before initialization
