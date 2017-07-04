@@ -2299,7 +2299,7 @@
 			if ( !valid ) {
 				$rows.each( function( indx, el ) {
 					var cell = el.parentElement.nodeName;
-					if ( cells.indexOf( cell ) ) {
+					if ( cells.indexOf( cell ) < 0 ) {
 						cells.push( cell );
 					}
 				});
