@@ -547,7 +547,7 @@
 			csel.$style.remove();
 			csel.$breakpoints.remove();
 			$( c.namespace + 'columnselectorHasSpan' ).removeClass( wo.filter_filteredRow || 'filtered' );
-			c.$table.children('thead, tfoot').find('[data-col-span]').each(function(indx, el) {
+			c.$table.find('[data-col-span]').each(function(indx, el) {
 				var $el = $(el);
 				console.log($el, $el.attr('data-col-span'));
 				$el.attr('colspan', $el.attr('data-col-span'));
