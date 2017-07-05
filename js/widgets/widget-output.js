@@ -220,6 +220,7 @@
 			if ($.isFunction(wo.output_callback)) {
 				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
+					output.busy = false;
 					return;
 				} else if ( typeof tmp === 'string' ) {
 					mydata = tmp;
