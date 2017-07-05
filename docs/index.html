@@ -2647,12 +2647,12 @@ $(function(){
 						<ul>
 							<li>If this option is a plain string, all filter row cells will get the text applied as a class name.
 								<pre class="prettyprint lang-js">// "table-filter" class added to all filter row td's
-filter_cssFilter : 'table-filter'</pre>
+filter_cellFilter : 'table-filter-cell'</pre>
 							</li>
 							<li>If this option is an array, then each filter row cell will get the text from the associate array element applied as a class name.
 								<pre class="prettyprint lang-css">.hidden { display: none; }</pre>
 								<pre class="prettyprint lang-js">// hiding second & fourth columns using associated css
-filter_cssFilter : [ '', 'hidden', '', 'hidden' ]</pre>
+filter_cellFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 							</li>
 						</ul>
 						<p>Use the <a href="#widget-filter-cellfilter"><code>filter_cellFilter</code></a> option to add an extra css class name as follows:</p>
