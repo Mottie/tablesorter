@@ -53,8 +53,8 @@
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAA20lEQVR4AWJABpKSkoxALCstLb0aUAsZaCAMhVEY6B0amx8YZWDDEDSBa2AGe7XeIiAAClYwVGBvsAcIllsf/mvcC9DgOOd8h90fxWvngVEUbZIkuWRZZlE8eQjcisgZMM9zi+LJ6ZfwegmWZflZDugdHMfxTcGqql7TNBlUB/QObtv2VBSFrev6OY7jngzFk9OT/fn73fWYpqnlXNyXDMWT0zuYx/Bvel9ej+LJ6R08DMOu67q7DkTkrSA5vYPneV71fX/QASdTkJwezhs0TfMARn0wMDDGXEPgF4oijqwM5YjNAAAAAElFTkSuQmCC);
 }
 
-/* white unsorted icon */
-.tablesorter-bootstrap .icon-white.bootstrap-icon-unsorted {
+/* white unsorted icon; updated to use bootstrap-icon-white - see #1432 */
+.tablesorter-bootstrap .bootstrap-icon-white.bootstrap-icon-unsorted {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAAe0lEQVR4AbXQoRWDMBiF0Sh2QLAAQ8SxJGugWSA6A2STW1PxTsnB9cnkfuYvv8OGC1t5G3Y0QMP+Bm857keAdQIzWBP3+Bw4MADQE18B6/etRnCV/w9nnGuLezfAmXhABGtAGIkruvk6auIFRwQJDywllsEAjCecB20GP59BQQ+gtlRLAAAAAElFTkSuQmCC);
 }
 
