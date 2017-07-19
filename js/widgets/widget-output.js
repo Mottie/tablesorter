@@ -213,8 +213,9 @@
 				mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
 			}
 
-			if (dump)
+			if (dump) {
 				return mydata;
+			}
 
 			// callback; if true returned, continue processing
 			if ($.isFunction(wo.output_callback)) {

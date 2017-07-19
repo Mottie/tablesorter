@@ -15,10 +15,10 @@
 			active       : '', // applied when column is sorted
 			hover        : '', // custom css required - a defined bootstrap style may not override other classes
 			// icon class names
-			icons        : '', // add 'icon-white' to make them white; this icon class is added to the <i> in the header
+			icons        : '', // add 'bootstrap-icon-white' to make them white; this icon class is added to the <i> in the header
 			iconSortNone : 'bootstrap-icon-unsorted', // class name added to icon when column is not sorted
-			iconSortAsc  : 'icon-chevron-up glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
-			iconSortDesc : 'icon-chevron-down glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
+			iconSortAsc  : 'glyphicon glyphicon-chevron-up', // class name added to icon when column has ascending sort
+			iconSortDesc : 'glyphicon glyphicon-chevron-down', // class name added to icon when column has descending sort
 			filterRow    : '', // filter row class
 			footerRow    : '',
 			footerCells  : '',
