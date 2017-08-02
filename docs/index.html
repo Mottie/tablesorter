@@ -5530,16 +5530,19 @@ $.tablesorter.updateCell( config, $cell, resort, callback );</pre>
 
 			<tr id="applywidgets">
 				<td><a href="#" class="permalink">applyWidgets</a></td>
-				<td>Apply the set widgets to the table (<span class="version updated">v2.16.0</span>).
+				<td>Apply the set widgets to the table (<span class="version updated">v2.29.0</span>).
 					<div class="collapsible">
+						<p>In <span class="version updated">v2.29.0</span>, access to the callback method was added.</p>
 						<p>This method only updates the widgets listed in the <a href="#widgets"><code>table.config.widgets</code></a> option.</p>
 						<pre class="prettyprint lang-js">// This method applies the widgets already added to tablesorter
-$('table').trigger('applyWidgets');
+$('table').trigger('applyWidgets', callback);
 </pre>
 						Use this method can be used to add multiple widgets to the table.
 						<pre class="prettyprint lang-js">var $table = $( 'table' );
 $table[0].config.widgets = [ 'zebra', 'columns' ];
-$table.trigger('applyWidgets');
+$table.trigger('applyWidgets', function() {
+	console.log('new widgets applied');
+});
 </pre></div>
 				</td>
 				<td><a href="example-apply-widget.html">Example</a></td>
