@@ -2130,6 +2130,7 @@
 					c.widgetInit[ name[ index ] ] = false;
 				}
 			}
+			c.$table.triggerHandler( 'widgetRemoveEnd', table );
 		},
 
 		refreshWidgets : function( table, doAll, dontapply ) {
