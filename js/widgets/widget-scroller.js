@@ -273,6 +273,10 @@
 			$tableWrap
 				.off( 'scroll' + namespace )
 				.on( 'scroll' + namespace, function() {
+					//Save position
+					wo.scroller_saved[0] = $tableWrap.scrollLeft()
+					wo.scroller_saved[1] = $tableWrap.scrollTop()
+				
 					if ( wo.scroller_jumpToHeader ) {
 						var pos = $win.scrollTop() - $hdr.offset().top;
 						if ( $( this ).scrollTop() !== 0 && pos < tbHt && pos > 0 ) {
