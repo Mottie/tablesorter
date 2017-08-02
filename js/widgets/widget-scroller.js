@@ -274,8 +274,8 @@
 				.off( 'scroll' + namespace )
 				.on( 'scroll' + namespace, function() {
 					//Save position
-					wo.scroller_saved[0] = $tableWrap.scrollLeft()
-					wo.scroller_saved[1] = $tableWrap.scrollTop()
+					wo.scroller_saved[0] = $tableWrap.scrollLeft();
+					wo.scroller_saved[1] = $tableWrap.scrollTop();
 				
 					if ( wo.scroller_jumpToHeader ) {
 						var pos = $win.scrollTop() - $hdr.offset().top;
