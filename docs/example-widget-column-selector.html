@@ -137,7 +137,13 @@
 
 			// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
 			// applied icons; use this class name (input.checked) instead of input:checked
-			columnSelector_cssChecked : 'checked'
+			columnSelector_cssChecked : 'checked',
+
+			// class name added to rows that have a span (e.g. grouping widget & other rows inside the tbody)
+			columnSelector_classHasSpan : 'hasSpan',
+
+			// event triggered when columnSelector completes
+			columnSelector_updated : 'columnUpdate'
 		}
 	});
 
@@ -182,6 +188,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.29.0</span>, added a <code>columnSelector_classHasSpan</code> setting.</li>
 			<li>In <span class="version">v2.27.0</span>,
 				<ul>
 					<li>Added two new options: <code>columnSelector_maxVisible</code> and <code>columnSelector_minVisible</code>.</li>
@@ -522,6 +529,18 @@
 							Use <code>input.checked</code> (or whatever value setting this class name option contains to get around this issue). See <a href="http://jsfiddle.net/2tu38gez">this demo</a> by TheSin which uses this option to change the checkbox style.<br>
 							<br>
 							Default value: <code>'checked'</code>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="column-selector-class-has-span">
+						<td><a href="#" class="permalink">columnSelector_classHasSpan</a></td>
+						<td>
+							Class name added to rows that have a span (e.g. grouping widget & other rows inside the tbody) (<span class="version">v2.29.0</span>)
+							<div class="collapsible">
+							<p>This was added to allow customizing the css name in case of conflicts.</p>
+							<p>The grouping widget accesses this value to ensure that group rows are not hidden when the first column is toggled.</p>
+							Default value: <code>'hasSpan'</code>
 							</div>
 						</td>
 					</tr>
