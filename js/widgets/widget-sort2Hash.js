@@ -225,8 +225,19 @@
 				hash = s2h.cleanHash( c, wo, component, hash );
 				str += value;
 			});
-			// add updated hash
-			window.location.hash = ( ( window.location.hash || '' ).replace( '#', '' ).length ? hash : wo.sort2Hash_hash ) + str;
+
+			// Combine new hash with any existing hashes
+			var hashChar = c.widgetOptions.sort2Hash_hash;
+			var newHash = ( ( window.location.hash || '' ).replace( hashChar, '' ).length ? hash : wo.sort2Hash_hash ) + str;
+			var baseUrl = window.location.href.split(hashChar)[0];
+			// Ensure that there is a leading hash character
+			var firstChar = newHash[0];
+			if (firstChar != hashChar) {
+					newHash = hashChar + newHash;
+			}
+
+			// Update URL in browser
+			window.location.replace(baseUrl + newHash);
 		}
 	};
 
