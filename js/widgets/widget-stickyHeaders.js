@@ -174,6 +174,7 @@
 						scrollTop = attachTop + stickyOffset + nestedStickyTop - captionHeight,
 						tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)) - captionHeight,
 						isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
+						state = isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide,
 						cssSettings = { visibility : isVisible };
 					if ($attach.length) {
 						cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
@@ -183,10 +184,13 @@
 						cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft();
 					}
 					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
-					$stickyWrap
-						.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
-						.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
-						.css(cssSettings);
+					// attached sticky headers always need updating
+					if ( !$stickyWrap.hasClass( state ) || $attach.length ) {
+						$stickyWrap
+							.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
+							.addClass( state )
+							.css(cssSettings);
+					}
 					if (isVisible !== laststate || resizing) {
 						// make sure the column widths match
 						resizeHeader();
