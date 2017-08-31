@@ -402,7 +402,9 @@
 				autoModeOn = wo.columnSelector_mediaquery && colSel.auto,
 				// find all header/footer cells in case a regular column follows a colspan; see #1238
 				$headers = c.$table.children( 'thead, tfoot' ).children().children()
-					.add( $(c.namespace + '_extra_table').children( 'thead, tfoot' ).children().children() ),
+					.add( $(c.namespace + '_extra_table').children( 'thead, tfoot' ).children().children() )
+					// include grouping widget headers (they have colspans!)
+					.add( c.$table.find( '.group-header' ).children() ),
 				len = $headers.length;
 			for ( index = 0; index < len; index++ ) {
 				$cell = $headers.eq(index);
@@ -422,7 +424,7 @@
 						$cell.addClass( filtered );
 					}
 				} else if ( typeof colSel.states[ col ] !== 'undefined' && colSel.states[ col ] !== null ) {
-					$cell.toggleClass( filtered, !colSel.states[ col ] );
+					$cell.toggleClass( filtered, !autoModeOn && !colSel.states[ col ] );
 				}
 			}
 		},
@@ -552,7 +554,6 @@
 				.removeClass( wo.filter_filteredRow || 'filtered' );
 			c.$table.find('[data-col-span]').each(function(indx, el) {
 				var $el = $(el);
-				console.log($el, $el.attr('data-col-span'));
 				$el.attr('colspan', $el.attr('data-col-span'));
 			});
 			c.$table.off('updateAll' + namespace + ' update' + namespace);
