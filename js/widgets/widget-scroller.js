@@ -273,10 +273,9 @@
 			$tableWrap
 				.off( 'scroll' + namespace )
 				.on( 'scroll' + namespace, function() {
-					//Save position
+					// Save position
 					wo.scroller_saved[0] = $tableWrap.scrollLeft();
 					wo.scroller_saved[1] = $tableWrap.scrollTop();
-				
 					if ( wo.scroller_jumpToHeader ) {
 						var pos = $win.scrollTop() - $hdr.offset().top;
 						if ( $( this ).scrollTop() !== 0 && pos < tbHt && pos > 0 ) {
@@ -845,6 +844,7 @@
 			// adjust caption height, see #1202
 			$fixedColumn.find('caption').height( wo.scroller_$header.find( 'caption' ).height() );
 
+			$tableWrap.scroll();
 			wo.scroller_isBusy = false;
 
 		},
