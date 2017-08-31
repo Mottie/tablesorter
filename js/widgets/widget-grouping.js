@@ -172,7 +172,10 @@
 
 		groupHeaderHTML : function( c, wo, data ) {
 			var name = ( data.currentGroup || '' ).toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
-			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
+			return '<tr class="group-header ' + c.selectorRemove.slice(1) + ' ' +
+				// prevent grouping row from being hidden by the columnSelector;
+				// classHasSpan option added 2.29.0
+				( wo.columnSelector_classHasSpan || 'hasSpan' ) +
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
 				data.groupIndex + '">' +
 				'<td colspan="' + c.columns + '">' +
@@ -220,6 +223,10 @@
 						}
 					}
 				}
+			}
+			if ( ts.hasWidget( c.table, 'columnSelector' ) ) {
+				// make sure to handle the colspan adjustments of the grouping rows
+				ts.columnSelector.setUpColspan( c, wo );
 			}
 		},
 		insertGroupHeader: function( c, wo, data ) {
