@@ -226,18 +226,26 @@
 				str += value;
 			});
 
+			var hashChar = wo.sort2Hash_hash;
 			// Combine new hash with any existing hashes
-			var hashChar = c.widgetOptions.sort2Hash_hash;
-			var newHash = ( ( window.location.hash || '' ).replace( hashChar, '' ).length ? hash : wo.sort2Hash_hash ) + str;
-			var baseUrl = window.location.href.split(hashChar)[0];
-			// Ensure that there is a leading hash character
-			var firstChar = newHash[0];
-			if (firstChar != hashChar) {
-					newHash = hashChar + newHash;
-			}
+			var newHash = (
+				( window.location.hash || '' ).replace( hashChar, '' ).length ?
+				hash : hashChar
+			) + str;
 
-			// Update URL in browser
-			window.location.replace(baseUrl + newHash);
+			if (wo.sort2Hash_replaceHistory) {
+				var baseUrl = window.location.href.split(hashChar)[0];
+				// Ensure that there is a leading hash character
+				var firstChar = newHash[0];
+				if (firstChar != hashChar) {
+					newHash = hashChar + newHash;
+				}
+				// Update URL in browser
+				window.location.replace(baseUrl + newHash);
+			} else {
+				// Add updated hash
+				window.location.hash = newHash;
+			}
 		}
 	};
 
@@ -250,6 +258,7 @@
 			sort2Hash_headerTextAttr    : 'data-header', // data attribute containing alternate header text
 			sort2Hash_directionText     : [ 0, 1 ], // [ 'asc', 'desc' ],
 			sort2Hash_overrideSaveSort  : false,    // if true, override saveSort widget if saved sort available
+			sort2Hash_replaceHistory    : false,    // if true, hash changes are not saved to browser history
 
 			// this option > table ID > table index on page
 			sort2Hash_tableId           : null,

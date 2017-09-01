@@ -42,6 +42,9 @@
 			sort2Hash_directionText     : [ 0, 1 ], // default values
 			// if true, override saveSort widget sort, if used & stored sort is available
 			sort2Hash_overrideSaveSort  : true, // default = false
+			// if true, hash changes are not saved to browser history
+			sort2Hash_replaceHistory    : false,
+
 			sort2Hash_encodeHash        : null,
 			/* how to use encodeHash
 			sort2Hash_encodeHash : function( config, tableId, component, value, rawValue ) {
@@ -207,6 +210,17 @@
 						<td><span class="permalink">sort2Hash_overrideSaveSort</span></td>
 						<td><code>false</code></td>
 						<td>if <code>true</code>, the hash sort will override any stored sort (saveSort widget).</td>
+					</tr>
+
+					<tr id="sort2hash_replacehistory">
+						<td><a href="#" class="permalink">sort2Hash_replaceHistory</a></td>
+						<td><code>false</code></td>
+						<td>Change how the browser history is managed (<span class="version">v2.29.0</span>)
+							<div class="collapsible">
+								<p>If <code>true</code>, all hash changes are not saved to browser history, so when the user presses the back arrow, they will be returned to the previous page.</p>
+								If <code>false</code>, all hash changes are preserved in the browser history, so when the user presses the back arrow, the hash will show the previous state, but the table won't update unless the page is refreshed.
+							</div>
+						</td>
 					</tr>
 
 					<tr id="sort2hash_encodehash">
