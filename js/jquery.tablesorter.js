@@ -2058,7 +2058,7 @@
 						if ( !widget.priority ) { widget.priority = 10; }
 						widgets[ indx ] = widget;
 					} else if ( c.debug ) {
-						console.warn( '"' + names[ indx ] + '" widget code does not exist!' );
+						console.warn( '"' + names[ indx ] + '" was enabled, but the widget code has not been loaded!' );
 					}
 				}
 				// sort widgets by priority
