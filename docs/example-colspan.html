@@ -83,7 +83,8 @@
 		<li>Having a <code>colspan</code> in the tbody is not fully supported by all widgets, and there are still some minor issues to work out.</li>
 		<li><span class="label alert">Alert</span> Cells with a <code>rowspan</code> are <em>not</em> currently supported.</li>
 		<li><span class="label warning">Warning</span> Cells with a <code>colspan</code> will attempt to use the parser set for that column and <em>will not</em> use the parser for another column while sorting or filtering - try this <button class="search" data-column="3" type="button">&gt;10</button> - the "17 Koala" cell is not parsed as a numeric value and is thus considered a string.</li>
-		<li>The <code>duplicateSpan</code> option (storing of cache data) is a preliminary step in providing <code>colspan</code> support, it is by no means complete.</li>
+		<li>The <a href="index.html#duplicatespan"><code>duplicateSpan</code></a> option (storing of cache data) is a preliminary step in providing <code>colspan</code> support, it is by no means complete.</li>
+		<li>Ignore an entire <em>header</em> row by adding a "tablesorter-ignoreRow" class (set by the <a href="index.html#cssignorerow"><code>cssIgnoreRow</code></a> option).</li>
 		<li>This demo requires tablesorter v2.25.0+, as well the corresponding version of the filter widget.<br><br></li>
 
 		<li>Follow the demo steps to hopefully get the full understanding of how to use <code>colspan</code>s in the tbody.</li>
@@ -129,6 +130,9 @@ Search:
 
 <table class="tablesorter">
 	<thead>
+		<tr class="tablesorter-ignoreRow">
+			<th colspan="6">This entire row is ignored</th>
+		</tr>
 		<tr>
 			<th rowspan="2" colspan="2">Index (colspan 2)</th>
 			<th colspan="4">Products</th>
@@ -138,6 +142,9 @@ Search:
 			<th>Numeric</th>
 			<th>Animals</th>
 			<th>Url</th>
+		</tr>
+		<tr class="tablesorter-ignoreRow">
+			<th colspan="6">This entire row is ignored too!</th>
 		</tr>
 	</thead>
 	<tfoot>
