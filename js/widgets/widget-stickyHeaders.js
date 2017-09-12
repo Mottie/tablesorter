@@ -150,10 +150,14 @@
 						});
 					}
 				},
+				getLeftPosition = function() {
+					return $attach.length ?
+						parseInt($attach.css('padding-left'), 10) || 0 :
+						$table.offset().left - parseInt($table.css('margin-left'), 10) - $(window).scrollLeft();
+				},
 				resizeHeader = function() {
 					$stickyWrap.css({
-						left : $attach.length ? parseInt($attach.css('padding-left'), 10) || 0 :
-								$table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft(),
+						left : getLeftPosition(),
 						width: $table.outerWidth()
 					});
 					setWidth( $table, $stickyTable );
@@ -163,10 +167,10 @@
 					if (!$table.is(':visible')) { return; } // fixes #278
 					// Detect nested tables - fixes #724
 					nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
-					var offset = $table.offset(),
+					var tmp,
+						offset = $table.offset(),
 						stickyOffset = getStickyOffset(c, wo),
 						yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-						xWindow = $.isWindow( $xScroll[0] ),
 						attachTop = $attach.length ?
 							( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) :
 							$yScroll.scrollTop(),
@@ -175,17 +179,21 @@
 						tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)) - captionHeight,
 						isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
 						state = isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide,
+						needsUpdating = !$stickyWrap.hasClass( state ),
 						cssSettings = { visibility : isVisible };
 					if ($attach.length) {
+						// attached sticky headers always need updating
+						needsUpdating = true;
 						cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 					}
-					if (xWindow) {
-						// adjust when scrolling horizontally - fixes issue #143
-						cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft();
+					// adjust when scrolling horizontally - fixes issue #143
+					tmp = getLeftPosition();
+					if (tmp !== parseInt($stickyWrap.css('left'), 10)) {
+						needsUpdating = true;
+						cssSettings.left = tmp;
 					}
 					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
-					// attached sticky headers always need updating
-					if ( !$stickyWrap.hasClass( state ) || $attach.length ) {
+					if (needsUpdating) {
 						$stickyWrap
 							.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
 							.addClass( state )
