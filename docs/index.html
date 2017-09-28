@@ -6071,6 +6071,21 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
 				<td></td>
 			</tr>
 
+			<tr id="widgetremoveend">
+				<td><a href="#" class="permalink">widgetRemoveEnd</a></td>
+				<td>Event triggered after <em>any</em> widget has finished being removed (<span class="version">v2.29.0</span>).
+					<div class="collapsible"><br>
+						You can use this event to do something like remove the class added to the filter row when the filtering started. Use it as follows:<pre class="prettyprint lang-js">$(function(){
+  $('table').bind('widgetRemoveEnd', function(event, table) {
+    // do something after widget was removed
+  });
+});</pre>
+					This method does not include data on which widget was removed.
+					</div>
+				</td>
+				<td><a href="example-option-show-processing.html">Example</a></td>
+			</tr>
+
 		</tbody>
 
 		<!-- non-sorting tbody -->
