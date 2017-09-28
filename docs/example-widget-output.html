@@ -271,6 +271,7 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.29.0</span>, updated internal function parameters to make it easier to output all table data from the server without modifying the current table, or changing the pager size or page. See the modified <code>output_callback</code> code in the <a class="intlink" href="#setup_example_php">Output all data</a> section.</li>
 				<li>In <span class="version">v2.28.5</span>, triggering of the "outputTable" event multiple times in rapid succession (within 600 milliseconds) will now prevent the opening of multiple popups or cause mutliple downloads.</li>
 				<li>In <span class="version">v2.28.4</span>,
 					<ul>
@@ -280,15 +281,15 @@ table.tablesorter tbody tr.even.checked td {
 					</ul>
 				</li>
 				<li>In <span class="version">v2.27.0</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> now includes a <code>url</code> parameter.</li>
-				<li>In <span class="version">v2.25.2</span>, updated the <a class="intlink" href="#output_saverows"><code>output_saveRows</code></a> option to accept a function.</li>
-				<li>In <span class="version">v2.25.1</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> can return modified data instead of a boolean.</li>
-				<li>In <span class="version">v2.22.4</span>, added <a class="intlink" href="#output_formatcontent"><code>output_formatContent</code></a> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 			</ul>
 
 			<div class="accordion start-closed">
 				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 				<div>
 					<ul>
+						<li>In <span class="version">v2.25.2</span>, updated the <a class="intlink" href="#output_saverows"><code>output_saveRows</code></a> option to accept a function.</li>
+						<li>In <span class="version">v2.25.1</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> can return modified data instead of a boolean.</li>
+						<li>In <span class="version">v2.22.4</span>, added <a class="intlink" href="#output_formatcontent"><code>output_formatContent</code></a> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 						<li>In <span class="version">v2.22.2</span>,
 							<ul>
 								<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
@@ -427,10 +428,23 @@ table.tablesorter tbody tr.even.checked td {
 		</div>
 
 		<h3><a href="#">Setup Example (php)</a></h3>
+
 		<div>
-			Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for sharing this setup which includes the necessary php to allow file download with the proper filename and extension (<a href="https://gist.github.com/TheSin-/3303c23f033bd973bf34">original Gist</a>)
-			<p></p>
-			<script src="https://gist.github.com/TheSin-/3303c23f033bd973bf34.js"></script>
+			<div class="accordion start-closed">
+				<h3><a href="#">Basic Example</a></h3>
+				<div>
+					Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for sharing this setup which includes the necessary php to allow file download with the proper filename and extension (<a href="https://gist.github.com/TheSin-/3303c23f033bd973bf34">original Gist</a>)
+					<p></p>
+					<script src="https://gist.github.com/TheSin-/3303c23f033bd973bf34.js"></script>
+				</div>
+
+				<h3><a href="#">Output all data</a></h3>
+				<div>
+					This code example can be used in <span class="version updated">v2.29.0+</span> to load in all data to output it directly. It will not manipulate the data currently in the table.
+					<p></p>
+					<script src="https://gist.github.com/TheSin-/ce24a9b551ae3ebd8f4828bae7ea572d.js"></script>
+				</div>
+			</div>
 		</div>
 
 		<h3><a href="#">Rowspan and colspan</a></h3>
