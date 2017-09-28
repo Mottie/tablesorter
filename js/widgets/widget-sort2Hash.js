@@ -1,4 +1,4 @@
-/*! Widget: sort2Hash (BETA) - updated 7/4/2017 (v2.28.15) */
+/*! Widget: sort2Hash (BETA) - updated 9/27/2017 (v2.29.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -225,8 +225,27 @@
 				hash = s2h.cleanHash( c, wo, component, hash );
 				str += value;
 			});
-			// add updated hash
-			window.location.hash = ( ( window.location.hash || '' ).replace( '#', '' ).length ? hash : wo.sort2Hash_hash ) + str;
+
+			var hashChar = wo.sort2Hash_hash;
+			// Combine new hash with any existing hashes
+			var newHash = (
+				( window.location.hash || '' ).replace( hashChar, '' ).length ?
+				hash : hashChar
+			) + str;
+
+			if (wo.sort2Hash_replaceHistory) {
+				var baseUrl = window.location.href.split(hashChar)[0];
+				// Ensure that there is a leading hash character
+				var firstChar = newHash[0];
+				if (firstChar != hashChar) {
+					newHash = hashChar + newHash;
+				}
+				// Update URL in browser
+				window.location.replace(baseUrl + newHash);
+			} else {
+				// Add updated hash
+				window.location.hash = newHash;
+			}
 		}
 	};
 
@@ -239,6 +258,7 @@
 			sort2Hash_headerTextAttr    : 'data-header', // data attribute containing alternate header text
 			sort2Hash_directionText     : [ 0, 1 ], // [ 'asc', 'desc' ],
 			sort2Hash_overrideSaveSort  : false,    // if true, override saveSort widget if saved sort available
+			sort2Hash_replaceHistory    : false,    // if true, hash changes are not saved to browser history
 
 			// this option > table ID > table index on page
 			sort2Hash_tableId           : null,

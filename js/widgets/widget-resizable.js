@@ -1,4 +1,4 @@
-/*! Widget: resizable - updated 4/18/2017 (v2.28.8) */
+/*! Widget: resizable - updated 9/27/2017 (v2.29.0) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -325,6 +325,7 @@
 			vars.$target = vars.$next = null;
 			// will update stickyHeaders, just in case, see #912
 			c.$table.triggerHandler('stickyHeadersUpdate');
+			c.$table.triggerHandler('resizableComplete');
 		}
 	};
 

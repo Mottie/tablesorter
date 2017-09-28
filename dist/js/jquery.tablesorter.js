@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.28.15 *//*
+/*! TableSorter (FORK) v2.29.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.28.15',
+		version : '2.29.0',
 
 		parsers : [],
 		widgets : [],
@@ -431,10 +431,10 @@
 				e.stopPropagation();
 				ts.applyWidgetId( this, id );
 			})
-			.bind( 'applyWidgets' + namespace, function( e, init ) {
+			.bind( 'applyWidgets' + namespace, function( e, callback ) {
 				e.stopPropagation();
-				// apply widgets
-				ts.applyWidget( this, init );
+				// apply widgets (false = not initializing)
+				ts.applyWidget( this, false, callback );
 			})
 			.bind( 'refreshWidgets' + namespace, function( e, all, dontapply ) {
 				e.stopPropagation();
@@ -471,9 +471,9 @@
 				downTarget = null;
 			if ( core !== true ) {
 				$headers.addClass( namespace.slice( 1 ) + '_extra_headers' );
-				tmp = $.fn.closest ? $headers.closest( 'table' )[ 0 ] : $headers.parents( 'table' )[ 0 ];
-				if ( tmp && tmp.nodeName === 'TABLE' && tmp !== table ) {
-					$( tmp ).addClass( namespace.slice( 1 ) + '_extra_table' );
+				tmp = ts.getClosest( $headers, 'table' );
+				if ( tmp.length && tmp[ 0 ].nodeName === 'TABLE' && tmp[ 0 ] !== table ) {
+					$( tmp[ 0 ] ).addClass( namespace.slice( 1 ) + '_extra_table' );
 				}
 			}
 			tmp = ( c.pointerDown + ' ' + c.pointerUp + ' ' + c.pointerClick + ' sort keyup ' )
@@ -525,8 +525,7 @@
 					ts.buildCache( c );
 				}
 				// jQuery v1.2.6 doesn't have closest()
-				$cell = $.fn.closest ? $( this ).closest( 'th, td' ) :
-					/TH|TD/.test( this.nodeName ) ? $( this ) : $( this ).parents( 'th, td' );
+				$cell = ts.getHeaderCell( $( this ) );
 				// reference original table headers and find the same cell
 				// don't use $headers or IE8 throws an error - see #987
 				temp = $headers.index( $cell );
@@ -566,7 +565,7 @@
 				'';
 			// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
 			c.$headers = $( $.map( c.$table.find( c.selectorHeaders ), function( elem, index ) {
-				var configHeaders, header, column, template, tmp,
+				var configHeaders, header, column, template, tmp, $th,
 					$elem = $( elem );
 				// ignore cell (don't add it to c.$headers) if row has ignoreRow class
 				if ( $elem.parent().hasClass( c.cssIgnoreRow ) ) { return; }
@@ -592,7 +591,9 @@
 				if ( c.onRenderHeader ) {
 					c.onRenderHeader.apply( $elem, [ index, c, c.$table ] );
 				}
-				column = parseInt( $elem.attr( 'data-column' ), 10 );
+				// data-column stored on th or td only
+				$th = ts.getHeaderCell( $elem );
+				column = parseInt( $th.attr( 'data-column' ), 10 );
 				elem.column = column;
 				tmp = ts.getOrder( ts.getData( $elem, configHeaders, 'sortInitialOrder' ) || c.sortInitialOrder );
 				// this may get updated numerous times if there are multiple rows
@@ -610,10 +611,9 @@
 				}
 				// add cell to headerList
 				c.headerList[ index ] = elem;
+				$elem.addClass( ts.css.header + ' ' + c.cssHeader );
 				// add to parent in case there are multiple rows
-				$elem
-					.addClass( ts.css.header + ' ' + c.cssHeader )
-					.parent()
+				ts.getClosest( $elem, 'tr' )
 					.addClass( ts.css.headerRow + ' ' + c.cssHeaderRow )
 					.attr( 'role', 'row' );
 				// allow keyboard cursor to focus on element
@@ -1171,10 +1171,29 @@
 			}
 		},
 
+		// This function does NOT return closest if the $el matches the selector
+		getClosest : function( $el, selector ) {
+			return $.fn.closest ?
+				$el.closest( selector ) :
+				$el.parents( selector ).filter( ':first' );
+		},
+
+		getHeaderCell : function( $el ) {
+			// jQuery v1.2.6 doesn't have closest()
+			if ( $.fn.closest ) {
+				return $el.closest( 'th, td' );
+			}
+			return /TH|TD/.test( $el[0].nodeName ) ?
+				$el :
+				$el.parents( 'th, td' ).filter( ':first' );
+		},
+
 		// nextSort (optional), lets you disable next sort text
 		setColumnAriaLabel : function( c, $header, nextSort ) {
 			if ( $header.length ) {
-				var column = parseInt( $header.attr( 'data-column' ), 10 ),
+				var $th = ts.getHeaderCell( $header ),
+					// data-column always stored on the th/td
+					column = parseInt( $th.attr( 'data-column' ), 10 ),
 					vars = c.sortVars[ column ],
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
@@ -1332,10 +1351,9 @@
 				$cell = $( cell ),
 				// update cache - format: function( s, table, cell, cellIndex )
 				// no closest in jQuery v1.2.6
-				tbodyIndex = $tbodies
-					.index( $.fn.closest ? $cell.closest( 'tbody' ) : $cell.parents( 'tbody' ).filter( ':first' ) ),
+				tbodyIndex = $tbodies.index( ts.getClosest( $cell, 'tbody' ) ),
 				tbcache = c.cache[ tbodyIndex ],
-				$row = $.fn.closest ? $cell.closest( 'tr' ) : $cell.parents( 'tr' ).filter( ':first' );
+				$row = ts.getClosest( $cell, 'tr' );
 			cell = $cell[ 0 ]; // in case cell is a jQuery object
 			// tbody may not exist if update is initialized while tbody is removed for processing
 			if ( $tbodies.length && tbodyIndex >= 0 ) {
@@ -1390,11 +1408,13 @@
 			if ( valid ) {
 				$row = $( $row );
 				c.$tbodies.append( $row );
-			} else if ( !$row ||
+			} else if (
+				!$row ||
 				// row is a jQuery object?
 				!( $row instanceof jQuery ) ||
 				// row contained in the table?
-				( $.fn.closest ? $row.closest( 'table' )[ 0 ] : $row.parents( 'table' )[ 0 ] ) !== c.table ) {
+				( ts.getClosest( $row, 'table' )[ 0 ] !== c.table )
+			) {
 				if ( c.debug ) {
 					console.error( 'addRows method requires (1) a jQuery selector reference to rows that have already ' +
 						'been added to the table, or (2) row HTML string to be added to a table with only one tbody' );
@@ -1541,10 +1561,10 @@
 				notMultiSort = !event[ c.sortMultiSortKey ],
 				table = c.table,
 				len = c.$headers.length,
-				// get current column index
-				col = parseInt( $( cell ).attr( 'data-column' ), 10 ),
+				// get current column index; *always* stored on th/td
+				$th = ts.getHeaderCell( $( cell ) ),
+				col = parseInt( $th.attr( 'data-column' ), 10 ),
 				order = c.sortVars[ col ].order;
-
 			// Only call sortStart if sorting is enabled
 			c.$table.triggerHandler( 'sortStart', table );
 			// get current column sort order
@@ -2068,7 +2088,7 @@
 						if ( !widget.priority ) { widget.priority = 10; }
 						widgets[ indx ] = widget;
 					} else if ( c.debug ) {
-						console.warn( '"' + names[ indx ] + '" widget code does not exist!' );
+						console.warn( '"' + names[ indx ] + '" was enabled, but the widget code has not been loaded!' );
 					}
 				}
 				// sort widgets by priority
@@ -2140,6 +2160,7 @@
 					c.widgetInit[ name[ index ] ] = false;
 				}
 			}
+			c.$table.triggerHandler( 'widgetRemoveEnd', table );
 		},
 
 		refreshWidgets : function( table, doAll, dontapply ) {

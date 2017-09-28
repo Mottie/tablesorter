@@ -1,4 +1,4 @@
-/*! Widget: output - updated 4/2/2017 (v2.28.6) *//*
+/*! Widget: output - updated 9/27/2017 (v2.29.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -131,8 +131,10 @@
 			return data;
 		},
 
-		process : function(c, wo) {
-			var mydata, $this, $rows, headers, csvData, len, rowsLen, tmp,
+		// optional vars $rows and dump added by TheSin to make
+		// process callable via callback for ajaxPager
+		process : function(c, wo, $rows, dump) {
+			var mydata, $this, headers, csvData, len, rowsLen, tmp,
 				hasStringify = window.JSON && JSON.hasOwnProperty('stringify'),
 				indx = 0,
 				tmpData = (wo.output_separator || ',').toLowerCase(),
@@ -162,7 +164,8 @@
 			headers = output.processRow(c, $this, true, outputJSON);
 
 			// all tbody rows - do not include widget added rows (e.g. grouping widget headers)
-			$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
+			if ( !$rows )
+				$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
 
 			// check for a filter callback function first! because
 			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
@@ -210,10 +213,15 @@
 				mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
 			}
 
+			if (dump) {
+				return mydata;
+			}
+
 			// callback; if true returned, continue processing
 			if ($.isFunction(wo.output_callback)) {
 				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
+					output.busy = false;
 					return;
 				} else if ( typeof tmp === 'string' ) {
 					mydata = tmp;

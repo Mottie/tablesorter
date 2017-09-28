@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 4/18/2017 (v2.28.8) *//*
+/*! Widget: scroller - updated 9/27/2017 (v2.29.0) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -273,6 +273,9 @@
 			$tableWrap
 				.off( 'scroll' + namespace )
 				.on( 'scroll' + namespace, function() {
+					// Save position
+					wo.scroller_saved[0] = $tableWrap.scrollLeft();
+					wo.scroller_saved[1] = $tableWrap.scrollTop();
 					if ( wo.scroller_jumpToHeader ) {
 						var pos = $win.scrollTop() - $hdr.offset().top;
 						if ( $( this ).scrollTop() !== 0 && pos < tbHt && pos > 0 ) {
@@ -841,6 +844,7 @@
 			// adjust caption height, see #1202
 			$fixedColumn.find('caption').height( wo.scroller_$header.find( 'caption' ).height() );
 
+			$tableWrap.scroll();
 			wo.scroller_isBusy = false;
 
 		},
