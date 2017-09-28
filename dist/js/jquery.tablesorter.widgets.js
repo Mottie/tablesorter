@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 07-04-2017 (v2.28.15)*/
+/*! tablesorter (FORK) - updated 09-27-2017 (v2.29.0)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -127,7 +127,7 @@
 
 })(jQuery, window, document);
 
-/*! Widget: uitheme - updated 12/8/2016 (v2.28.1) */
+/*! Widget: uitheme - updated 9/27/2017 (v2.29.0) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
@@ -2330,7 +2330,7 @@
 
 })( jQuery );
 
-/*! Widget: stickyHeaders - updated 6/2/2017 (v2.28.13) *//*
+/*! Widget: stickyHeaders - updated 9/27/2017 (v2.29.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.4.3+
  * by Rob Garrison
  */
@@ -2482,10 +2482,14 @@
 						});
 					}
 				},
+				getLeftPosition = function() {
+					return $attach.length ?
+						parseInt($attach.css('padding-left'), 10) || 0 :
+						$table.offset().left - parseInt($table.css('margin-left'), 10) - $(window).scrollLeft();
+				},
 				resizeHeader = function() {
 					$stickyWrap.css({
-						left : $attach.length ? parseInt($attach.css('padding-left'), 10) || 0 :
-								$table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft(),
+						left : getLeftPosition(),
 						width: $table.outerWidth()
 					});
 					setWidth( $table, $stickyTable );
@@ -2495,10 +2499,10 @@
 					if (!$table.is(':visible')) { return; } // fixes #278
 					// Detect nested tables - fixes #724
 					nestedStickyTop = $nestedSticky.length ? $nestedSticky.offset().top - $yScroll.scrollTop() + $nestedSticky.height() : 0;
-					var offset = $table.offset(),
+					var tmp,
+						offset = $table.offset(),
 						stickyOffset = getStickyOffset(c, wo),
 						yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-						xWindow = $.isWindow( $xScroll[0] ),
 						attachTop = $attach.length ?
 							( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) :
 							$yScroll.scrollTop(),
@@ -2506,19 +2510,27 @@
 						scrollTop = attachTop + stickyOffset + nestedStickyTop - captionHeight,
 						tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)) - captionHeight,
 						isVisible = ( scrollTop > offset.top ) && ( scrollTop < offset.top + tableHeight ) ? 'visible' : 'hidden',
+						state = isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide,
+						needsUpdating = !$stickyWrap.hasClass( state ),
 						cssSettings = { visibility : isVisible };
 					if ($attach.length) {
+						// attached sticky headers always need updating
+						needsUpdating = true;
 						cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 					}
-					if (xWindow) {
-						// adjust when scrolling horizontally - fixes issue #143
-						cssSettings.left = $table.offset().left - parseInt($table.css('margin-left'), 10) - $xScroll.scrollLeft();
+					// adjust when scrolling horizontally - fixes issue #143
+					tmp = getLeftPosition();
+					if (tmp !== parseInt($stickyWrap.css('left'), 10)) {
+						needsUpdating = true;
+						cssSettings.left = tmp;
 					}
 					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
-					$stickyWrap
-						.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
-						.addClass( isVisible === 'visible' ? ts.css.stickyVis : ts.css.stickyHide )
-						.css(cssSettings);
+					if (needsUpdating) {
+						$stickyWrap
+							.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
+							.addClass( state )
+							.css(cssSettings);
+					}
 					if (isVisible !== laststate || resizing) {
 						// make sure the column widths match
 						resizeHeader();
@@ -2637,7 +2649,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 4/18/2017 (v2.28.8) */
+/*! Widget: resizable - updated 9/27/2017 (v2.29.0) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -2964,6 +2976,7 @@
 			vars.$target = vars.$next = null;
 			// will update stickyHeaders, just in case, see #912
 			c.$table.triggerHandler('stickyHeadersUpdate');
+			c.$table.triggerHandler('resizableComplete');
 		}
 	};
 
