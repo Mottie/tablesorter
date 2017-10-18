@@ -6114,7 +6114,7 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
     .bind('pagerChange pagerComplete', function(event, options){
       // options = table.config.pager (pager addon)
       // options = table.config (pager widget) - so use options.pager.page below
-      // c.totalPages contains the total number of pages
+      // this.totalPages contains the total number of pages (this = table)
       $('#display').html( event.type + " event triggered, now on page " + (options.page + 1) );
     });
 
