@@ -1,6 +1,9 @@
 /*! Widget: vertical-group (BETA) - updated 9/27/2017 (v2.29.0) */
 /* Requires tablesorter and jQuery 
- * by @aavmurphy (Andrew Murphy)
+ * Originally by @aavmurphy (Andrew Murphy)
+ * Adapted for tablesorter by xxxxxx
+ *
+ * This widget is licensed under the same terms at mottie/tablesorter itself, i.e. free to use
  */
 
 /*
