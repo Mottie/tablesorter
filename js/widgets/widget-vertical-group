@@ -1,0 +1,127 @@
+/*! Widget: vertical-group (BETA) - updated 9/27/2017 (v2.29.0) */
+/* Requires tablesorter and jQuery 
+ * by @aavmurphy (Andrew Murphy)
+ */
+
+/*
+
+$.tablesorter.addWidget( { 
+	id: 'vertical_group', 
+	priority:99, 
+	format: vertically_group 
+	} ) ;
+	
+vertical_group = function ( table, config, widget_options, init_flag )
+	{
+	// -------------------------------------------------------------------------------------------------
+	// loop thru the header row,
+	//		- look for .vertical-group
+	//
+	// loop thru the rows
+	//
+	//		set ALWAYS_SHOW = FALSE
+	//
+	//		loop thru the 1st 4 columns
+	//
+	//			if this cell does not exist, skip to next row
+	//
+	//			if ALWAYS_SHOW, then this cell is SHOW
+	//
+	//			else if this column does not have '.vertical-group', then this cell is SHOW
+	//
+	//			else if this cell is NOT the same as the cell-above, then this cell is SHOW
+	//
+	//			else this cell is HIDE
+	//
+	//			if this cell is SHOW, set ALWAYS_SHOW 
+	//			
+	//			if this cell is SHOW, 
+	//			then 
+	//				set the cell class to .vertical_group_show
+	//			else
+	//				set the cell class to vertical_group_show
+	//
+	//			TO DO add/remove classes so as not to clobber other existing classes
+	//
+	//
+	//			TO DO add classes
+	//
+	//				.vertical-group-show { background-color: white !important; }
+	//				.vertical-group-hide { visibility: hidden; border-top: white !important;background-color: white !important; }
+	//
+	//				this is all because of stripped tables
+	//					- background-colour show be the table's background colour (or the first row's)
+	//					- the border-color needs to be the same
+	//
+	// ------------------------------------------------------------------------------------------------
+
+	//console.groupCollapsed( 'EVENT widget tablesorter : group rows vertically' );
+
+	var	rows					= table.tBodies[0].rows,
+		header					= table.tHead.rows,
+		is_vertical_group_col	= [],
+		last_row				= [ 'xxx', 'xxx', 'xxx', 'xxx' ] ;
+
+	//console.info( 'vertical cols widget' );
+	//console.info( ' . rows: ' + rows.length );
+
+	if ( table.vertical_group_lock )
+		{
+		console.info( '. STOP lock found' );
+		return;
+		}
+
+	table.vertical_group_lock = true;
+
+	for (var k = 0 ; k < 4; k++ )
+		{
+		if ( header[0].cells[ k ] && header[0].cells[ k ].className && header[0].cells[ k ].className.match( /vertical-group/i )  )
+			{
+			is_vertical_group_col[ k ] = true;
+			}
+		else
+			{
+			is_vertical_group_col[ k ] = false ;
+			}
+		}
+
+	for (var i = 0; i < rows.length; i++)
+		{
+		var always_show_cell = false ;
+
+		for (var j = 0 ; j < 4; j++ )
+			{
+			if ( ! is_vertical_group_col[ j ]  ) continue;
+
+			if ( ! rows[ i ].cells[ j ] ) continue; 		// check 1st 4 cols .. unless it doesnt have 4 cols
+
+			//console.info( '. . row: ' + i + ' = ' + region + ' from ' + rows[ i ].cells[ 0 ].className );
+
+			var cell_data	= rows[ i ].cells[ j ].innerHTML,
+				cell_class	= rows[ i ].cells[ j ].className ;
+
+			if ( ! always_show_cell && cell_data == last_row[j] )
+				{
+				if ( cell_class != 'vertical-group-hide' ) 	rows[ i ].cells[ j ].className 	= 'vertical-group-hide';
+				}
+			else
+				{
+				always_show_cell = true ; // show
+
+				if ( cell_class != 'vertical-group-show' ) 	rows[ i ].cells[ j ].className	= 'vertical-group-show';
+				}
+
+			//console.info( '. .     = ' + rows[ i ].cells[ 0 ].className );
+
+			last_row[j] = cell_data ;
+			}
+		}
+
+	//console.info( '. done' );
+
+	table.vertical_group_lock = false;
+
+	//console.groupEnd();
+	};
+	
+*/
