@@ -289,8 +289,10 @@
 				});
 
 			// resize/update events - filterEnd fires after "tablesorter-initialized" and "updateComplete"
-			events = ( ( ts.hasWidget( c.table, 'filter' ) ? 'filterEnd' : 'tablesorter-initialized updateComplete' ) +
-					' sortEnd pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' );
+			tmp = ts.hasWidget( c.table, 'filter' ) ?
+				'filterEnd filterInit' :
+				'tablesorter-initialized updateComplete';
+			events = ( tmp + ' sortEnd pagerComplete columnUpdate ' ).split( ' ' ).join( namespace + ' ' );
 
 			$table
 				.off( namespace )
