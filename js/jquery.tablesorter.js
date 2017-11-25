@@ -1143,8 +1143,6 @@
 					$sorted = $sorted
 						.not( '.sorter-false' )
 						.filter( '[data-column="' + list[ indx ][ 0 ] + '"]' + ( len === 1 ? ':last' : '' ) );
-					if ( $extras.length ) {
-					}
 					if ( $sorted.length ) {
 						for ( column = 0; column < $sorted.length; column++ ) {
 							if ( !$sorted[ column ].sortDisabled ) {
