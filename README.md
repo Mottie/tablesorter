@@ -104,6 +104,28 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.29.1">Version 2.29.1</a> (12/13/2017)
+
+* Core:
+  * Fix non-typical use of selectorHeaders. See [issue #1459](https://github.com/Mottie/tablesorter/issues/1459).
+  * Update external header icons on sort. Fixes [issue #1483](https://github.com/Mottie/tablesorter/issues/1483).
+  * Remove an empty block.
+* Filter:
+  * Select exact matches ignore "and" and "or" keywords. Fixes [issue #1486](https://github.com/Mottie/tablesorter/issues/1486).
+* Resizable:
+  * `addLastColumn` stops adding handles to hidden columns. Fixes [issue #1485](https://github.com/Mottie/tablesorter/issues/1485).
+* Scroller:
+  * Adjust columns on `filterInit`. See [issue #1468](https://github.com/Mottie/tablesorter/issues/1468).
+* Vertical Group:
+  * New widget added. See [demo](https://mottie.github.io/tablesorter/docs/example-widget-vertical-group.html).
+  * Thanks to [aavmurphy](https://github.com/aavmurphy) for sharing the code. See [issue #1469](https://github.com/Mottie/tablesorter/issues/1469) and [PR #1470](https://github.com/Mottie/tablesorter/pull/1470).
+* Docs:
+  * Fix pager example.
+  * List all contained IP parsers. Fixes [issue #1484](https://github.com/Mottie/tablesorter/issues/1484).
+  * Fix Bootstrap v2 demo; restored gyphs images.
+* Meta:
+  * Update authors.
+
 #### <a name="v2.29.0">Version 2.29.0</a> (9/27/2017)
 
 * Core:
@@ -164,15 +186,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Use src files in filter formatter demo for testing.
 * Meta:
   * Include `js` & `css` folders with bower installs.
-
-#### <a name="v2.28.14">Version 2.28.14</a> (6/8/2017)
-
-* Core:
-  * Show console error for mismatched column count. See [issue #1415](https://github.com/Mottie/tablesorter/issues/1415).
-* Pager:
-  * (addon) Ensure ajax is called after filter widget init. Fixes [issue #1389](https://github.com/Mottie/tablesorter/issues/1389).
-  * (addon) Fix height issues for certain browsers (border-spacing). See [pull #1418](https://github.com/Mottie/tablesorter/pull/1418); thanks [@DoctorWhite](https://github.com/DoctorWhite)
-  * (widget) Apply height adjustment code to pager widget.
-  * Use selectorRemove to remove error rows. Removes error rows with dynamically changed class names.
-* Meta:
-  * Added [AUTHORS](https://github.com/Mottie/tablesorter/blob/master/AUTHORS) file.
