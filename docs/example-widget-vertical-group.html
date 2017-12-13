@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Vertical Group Widget</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link rel="stylesheet" href="css/jq.css">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/parsers/parser-date-weekday.js"></script>
+
+	<script src="../js/widgets/widget-vertical-group.js"></script>
+
+<style id="css">/* Required additional CSS to make this widget work */
+table.tablesorter tr:not(:last-of-type) th,
+table.tablesorter tr:not(:last-of-type) td {
+	/* all current themes style the bottom border; we'll switch to use the top */
+	border-width: 1px 1px 0 0;
+}
+.tablesorter td.tablesorter-vertical-group-hide {
+	text-indent: -9999em;
+	border-top-color: transparent;
+}
+/* class added to the cell in the first row of the group */
+.tablesorter td.tablesorter-vertical-group-show {}</style>
+
+	<script id="js">$(function() {
+
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		theme: 'blue',
+		widgets: ["vertical-group", "zebra"]
+	});
+
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Vertical Group Widget</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+	</p>
+	<ul>
+		<li>Widget added in <span class="version">v2.29.1</span>. Thanks to <a href="https://github.com/aavmurphy">aavmurphy</a> for sharing the code!
+			<ul>
+				<li>This widget works by enabling it in the <code>widgets</code> option <em>and</em> adding a <code>tablesorter-vertical-group</code> class name to the header column.</li>
+				<li>Make sure to include the additional CSS shown on this page.</li>
+				<li>Click to sort a column. Any sorted columns with duplicate cell entries will be grouped together and the zebra striping will be adjusted.</li>
+				<li>Sorting multiple columns will again adjust the duplicates and zebra striping.</li>
+			</ul>
+		</li>
+	</ul>
+
+	<h1>Demo</h1>
+	<div id="demo"><table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="tablesorter-vertical-group sorter-weekday">Day</th>
+			<th class="tablesorter-vertical-group">First Name</th>
+			<th class="tablesorter-vertical-group">Last Name</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Tuesday</td><td>Peter</td><td>Jones</td></tr>
+		<tr><td>Thursday</td><td>Peter</td><td>Smith</td></tr>
+		<tr><td>Thursday</td><td>Fred</td><td>Smith</td></tr>
+		<tr><td>Friday</td><td>Fred</td><td>Jones</td></tr>
+		<tr><td>Tuesday</td><td>Mike</td><td>Snow</td></tr>
+		<tr><td>Monday</td><td>Mike</td><td>Jones</td></tr>
+		<tr><td>Wednesday</td><td>Mike</td><td>Smith</td></tr>
+		<tr><td>Friday</td><td>Fred</td><td>Snow</td></tr>
+		<tr><td>Tuesday</td><td>Fred</td><td>Smith</td></tr>
+		<tr><td>Thursday</td><td>Peter</td><td>Snow</td></tr>
+		<tr><td>Friday</td><td>Mike</td><td>Smith</td></tr>
+		<tr><td>Monday</td><td>Fred</td><td>Jones</td></tr>
+		<tr><td>Tuesday</td><td>Peter</td><td>Snow</td></tr>
+		<tr><td>Friday</td><td>Mike</td><td>Jones</td></tr>
+		<tr><td>Wednesday</td><td>Peter</td><td>Smith</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">
+&lt;link rel="stylesheet" href="css/blue/style.css"&gt;
+&lt;script src="js/jquery-latest.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/jquery.tablesorter.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/widgets/widget-vertical-group.min.js">&lt;/script&gt;</pre>
+	</div>
+	<h1>CSS</h1>
+	<div id="css">
+		<pre class="prettyprint lang-css"></pre>
+	</div>
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

@@ -527,6 +527,7 @@
 				<li><a href="example-option-theme-bootstrap-v4.html">Bootstrap v4.x</a> (<span class="version updated">v2.29.0</span>) <span class="label warning">NOTE</span> <strong>does not</strong> require the uitheme widget!</li>
 			</ul>
 		</li>
+		<li><span class="label label-info">Beta</span> <a href="example-widget-vertical-group.html">Vertical Group Widget</a> (<span class="version">v2.29.1</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-widget-view.html">View Widget</a> (<span class="version">v2.24.0</span>; <span class="version updated">v2.26.6</span>).</li>
 		<li><span class="results">&Dagger;</span> <a href="example-widget-zebra.html">Zebra stripe widget</a>.</li>
 	</ul>
@@ -2903,7 +2904,7 @@ filter_cellFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 					Filter widget: Customize the filter widget by adding a select dropdown with content, custom options or custom filter functions (v2.3.6; <span class="version updated">v2.17.0</span>).
 					<div class="collapsible">
 					<br>
-					In <span class="version updated">v2.22.0</span>, a <code>data</code> parameter was added to that long list of parameters.<p></p>
+					In <span class="version updated">v2.22.0</span>, a <a href="example-widget-filter-custom-search.html#how_to_add_custom_filter_types"><code>data</code></a> parameter was added to that long list of parameters.<p></p>
 					<span class="label alert">*WARNING*</span> In a future update, the filter function parameters will be cleaned up and changed as follows!
 							<pre class="prettyprint lang-js">filter_functions : {
   // function(e, n, f, i, $r, c, data) {} &lt;- current parameters
@@ -6114,7 +6115,7 @@ $.tablesorter.storage( $('#myTable'), 'tablesorter-filters', '' );</pre>
     .bind('pagerChange pagerComplete', function(event, options){
       // options = table.config.pager (pager addon)
       // options = table.config (pager widget) - so use options.pager.page below
-      // c.totalPages contains the total number of pages
+      // this.totalPages contains the total number of pages (this = table)
       $('#display').html( event.type + " event triggered, now on page " + (options.page + 1) );
     });
 

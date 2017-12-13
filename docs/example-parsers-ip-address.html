@@ -105,7 +105,7 @@ $('table').tablesorter({
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
 
-&lt;!-- load ipv6 parser --&gt;
+&lt;!-- load mac, ipv4 and ipv6 parsers --&gt;
 &lt;script src=&quot;../js/parsers/parser-network.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 $(function() {
@@ -116,8 +116,8 @@ $(function() {
     sortList: [[1, 0]],
     headers: {
       1: { sorter: 'MAC' },
-      // 2: { sorter: 'ipAddress' }, this parser is auto-detected
-      3: { sorter: 'ipv6Address' }
+      // 2: { sorter: 'ipAddress' }, this parser is auto-detected (alias for 'ipv4Address')
+      3: { sorter: 'ipv6Address' } // this parser is also auto-detected
     }
   });
 

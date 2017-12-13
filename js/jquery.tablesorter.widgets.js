@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 09-27-2017 (v2.29.0)*/
+/*! tablesorter (FORK) - updated 12-13-2017 (v2.29.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1525,6 +1525,7 @@
 				if ( $.inArray( ffxn, vars.excludeMatch ) < 0 && matches === null ) {
 					matches = tsf.types[ffxn]( c, data, vars );
 					if ( matches !== null ) {
+						data.matchedOn = ffxn;
 						filterMatched = matches;
 					}
 				}
@@ -1572,6 +1573,7 @@
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
 			data.$cells = data.$row.children();
+			data.matchedOn = null;
 			if ( data.anyMatchFlag && columnIndex.length > 1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 				data.anyMatch = true;
 				data.isMatch = true;
@@ -1673,7 +1675,9 @@
 						// cycle through the different filters
 						// filters return a boolean or null if nothing matches
 						filterMatched = tsf.processTypes( c, data, vars );
-						if ( filterMatched !== null ) {
+						// select with exact match; ignore "and" or "or" within the text; fixes #1486
+						txt = fxn === true && (data.matchedOn === 'and' || data.matchedOn === 'or');
+						if ( filterMatched !== null && !txt) {
 							result = filterMatched;
 						// Look for match, and add child row data for matching
 						} else {
@@ -2832,7 +2836,10 @@
 					columns = c.columns - 1,
 					$header = $this.data( 'header' );
 				if ( !$header ) { return; } // see #859
-				if ( !$header.is(':visible') ) {
+				if (
+					!$header.is(':visible') ||
+					( !wo.resizable_addLastColumn && ts.resizable.checkVisibleColumns(c, column) )
+				) {
 					$this.hide();
 				} else if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
 					$this.css({
@@ -2842,6 +2849,16 @@
 					});
 				}
 			});
+		},
+
+		// Fixes #1485
+		checkVisibleColumns: function( c, column ) {
+			var i,
+				len = 0;
+			for ( i = column + 1; i < c.columns; i++ ) {
+				len += c.$headerIndexed[i].is( ':visible' ) ? 1 : 0;
+			}
+			return len === 0;
 		},
 
 		// prevent text selection while dragging resize bar
