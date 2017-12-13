@@ -100,6 +100,7 @@ $(function() {
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.29.1</span>, a <code>data.matchedOn</code> value was added. See the <a class="intlink" href="#how_to_add_custom_filter_types">How to add Custom filter types</a> section below.</li>
 			<li>In <span class="version">v2.22.0</span>, additional values were added to the <code>data</code> parameter as it is now provided as a parameter to all <a href="index.html#widget-filter-functions"><code>filter_functions</code></a>. See the "How to add Custom filter types" section below to review the new additions.</li>
 			<li><span class="label warning">Notice!</span> In version <span class="version">v2.17.8</span>, some drastic changes were made to the way variables are passed to the filters. Please check out the "How to add Custom Filter types" section below.</li>
 			<li>This demo was added in <span class="version">v2.17.5</span>, but modification using these instructions works for v2.13.3+; when the filter widget was restructured to allow the adding of custom filter search types.</li>
@@ -174,8 +175,9 @@ $(function() {
 							<li><code>data.cacheArray</code> - An array of parsed content from each table cell in the row being processed.</li>
 							<li><code>data.childRowText</code> - contains <em>all</em> text from any associated child rows.</li>
 
-							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should be obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.
+							<li><code>data.parsed</code> - An array of boolean flags that indicate if the column data should be obtained from parsed values, or not; obtained from <code>filter_useParsedData</code> setting or <code>filter-parsed</code> classes on the header cells.<br><br>
 							</li>
+							<li><code>data.matchedOn</code> - The name of the filter type function (see the <a class="intlink" href="#builtin_filters">Built-in Filters</a> section above for a list) that returned a match, either <code>true</code> or <code>false</code>. If no type was matched, it will contain a <code>null</code> value; added <span class="version">v2.29.1</span>.</li>
 						</ul>
 						<br>
 					</li>
