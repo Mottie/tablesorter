@@ -104,7 +104,7 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.29.1">Version 2.29.1</a> (12/13/2017)
+#### <a name="v2.29.1">Version 2.29.1</a> &amp; <a name="v2.29.2">Version 2.29.2</a> (12/13/2017)
 
 * Core:
   * Fix non-typical use of selectorHeaders. See [issue #1459](https://github.com/Mottie/tablesorter/issues/1459).
