@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 12-13-2017 (v2.29.2)*/
+/*! tablesorter (FORK) - updated 01-04-2018 (v2.29.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -65,6 +65,7 @@
 			delayInit        : false,      // if false, the parsed table contents will not update until the first sort
 			serverSideSorting: false,      // if true, server-side sorting should be performed because client-side sorting will be disabled, but the ui and events will still be used.
 			resort           : true,       // default setting to trigger a resort after an 'update', 'addRows', 'updateCell', etc has completed
+			columnSelection  : true,
 
 			// *** sort options
 			headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
@@ -106,6 +107,7 @@
 			cssHeader        : '',
 			cssHeaderRow     : '',
 			cssProcessing    : '', // processing icon applied to header during sort/filter
+			customClass			 : '', //default custom class for column when sorting
 
 			cssChildRow      : 'tablesorter-childRow', // class name indiciating that a row is to be attached to its parent
 			cssInfoBlock     : 'tablesorter-infoOnly', // don't sort tbody with this class name (only one class name allowed here!)
@@ -471,6 +473,27 @@
 			});
 		},
 
+		selectColumn: function (c) {
+			var customClassElements,
+					tbodyCells = [];
+
+			customClassElements = document.querySelectorAll("." + c.customClass);
+			[].forEach.call(customClassElements, function (el) {
+					el.classList.remove(c.customClass);
+			});
+
+			tbodyCells = [];
+			c.$tbodies.each(function (e) {
+					this.childNodes.forEach(function (element) {
+							tbodyCells.push(element.cells[c.last.clickedIndex]);
+					});
+			});
+
+			tbodyCells.forEach(function (element) {
+					element.setAttribute("class", c.customClass);
+			});
+		},
+
 		bindEvents : function( table, $headers, core ) {
 			table = $( table )[ 0 ];
 			var tmp,
@@ -540,6 +563,9 @@
 				// use column index if $headers is undefined
 				cell = c.$headers[ c.last.clickedIndex ];
 				if ( cell && !cell.sortDisabled ) {
+					if (c.columnSelection) {
+	        	ts.selectColumn(c);
+	        }
 					ts.initSort( c, cell, e );
 				}
 			});
