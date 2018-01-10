@@ -1,4 +1,4 @@
-/*! Parser: network - updated 5/17/2015 (v2.22.0) */
+/*! Parser: network - updated 2018-01-10 (v2.29.3) */
 /* IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
 ;(function($){
@@ -22,6 +22,10 @@
 		// (specifically from http://download.dartware.com/thirdparty/ipv6validator.js)
 		ipv6Validate : /^\s*((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/i
 	});
+
+	// used for internal testing; it's not useful to set this to true because the natural sort algorithm
+	// is set up to only sort solitary hex values ("ffff") vs separated hex values ("ffff.ffff")
+	ts.defaults.ipv6HexFormat = false;
 
 	ts.addParser({
 		id: 'ipv6Address',
@@ -72,10 +76,10 @@
 					('00000' + (parseInt(groups[i], 16) || 0)).slice(-5);
 				expandedAddress += ( i != validGroupCount - 1) ? groups[i] + ':' : groups[i];
 			}
-			return hex ? expandedAddress : expandedAddress.replace(/:/g, '');
+			return expandedAddress;
 		},
 		// uses natural sort hex compare
-		type: 'numeric'
+		type: 'text'
 	});
 
 	// ipv4 address
@@ -83,14 +87,15 @@
 	ipv4Is = function(s) {
 		return (/^\d{1,3}[\.]\d{1,3}[\.]\d{1,3}[\.]\d{1,3}$/).test(s);
 	};
-	ipv4Format = function(s, table) {
-		var i, a = s ? s.split('.') : '',
-			r = '',
+	ipv4Format = function(s) {
+		var i,
+			a = s ? s.split('.') : '',
+			r = [],
 			l = a.length;
 		for (i = 0; i < l; i++) {
-			r += ('000' + a[i]).slice(-3);
+			r.push(('000' + a[i]).slice(-3));
 		}
-		return s ? ts.formatFloat(r, table) : s;
+		return s ? r.join('.') : s;
 	};
 
 	/*! Parser: ipv4Address (a.k.a. ipAddress) */
@@ -99,13 +104,13 @@
 		id: 'ipAddress',
 		is: ipv4Is,
 		format: ipv4Format,
-		type: 'numeric'
+		type: 'text'
 	});
 	ts.addParser({
 		id: 'ipv4Address',
 		is: ipv4Is,
 		format: ipv4Format,
-		type: 'numeric'
+		type: 'text'
 	});
 
 	/*! Parser: MAC address */
@@ -118,21 +123,21 @@
 		},
 		format : function( str ) {
 			var indx, len,
-				mac = '',
+				mac = [],
 				val = ( str || '' ).replace( /[:.-]/g, '' ).match( /\w{2}/g );
 			if ( val ) {
 				// not assuming all mac addresses in the column will end up with six
 				// groups of two to process, so it's not actually validating the address
 				len = val.length;
 				for ( indx = 0; indx < len; indx++ ) {
-					mac += ( '000' + parseInt( val[ indx ], 16 ) ).slice( -3 );
+					mac.push(( '000' + parseInt( val[ indx ], 16 ) ).slice( -3 ));
 				}
-				return mac;
+				return mac.join('.');
 			}
 			return str;
 		},
 		// uses natural sort hex compare
-		type : 'numeric'
+		type : 'text'
 	});
 
 })( jQuery );
