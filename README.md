@@ -110,7 +110,8 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Update Bootstrap to v4-beta.3.
   * Add scroller widget incompatibilities section.
   * Add pager size all setting.
-
+* Parser:
+  * Network parsers now return a text value. Fixes [issue #1494](https://github.com/Mottie/tablesorter/issues/1494).
 
 #### <a name="v2.29.1">Version 2.29.1</a> &amp; <a name="v2.29.2">Version 2.29.2</a> (12/13/2017)
 
@@ -172,25 +173,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
 * Meta:
   * Update dependencies.
   * Build: maintain ie8 support to fix [issue #1431](https://github.com/Mottie/tablesorter/issues/1431).
-
-#### <a name="v2.28.15">Version 2.28.15</a> (7/4/2017)
-
-* Core:
-  * Use calculated index instead of DOM index. See [pull #1424](https://github.com/Mottie/tablesorter/pull/1424); thanks [@ced-b](https://github.com/ced-b)!
-  * Fix check count cell indexing.
-* ColumnSelector:
-  * Remove colspan adjustments when widget removed.
-  * Include tbody colspan updates on removal.
-* Filter:
-  * Add namespacing to filter-formatter listeners. Needed to prevent JS error when a "resetToLoadState" is triggered and the "filterFomatterUpdate" bindings are still firing.
-  * Fix namespacing of events.
-* Sort2Hash:
-  * Prevent filter update if unchanged & compare (with) hash filter.
-  * Fix p's (reference to pager object).
-* Docs
-  * CSS fixed to comply with editable_wrapContent : `<div>`. See [pull #1420](https://github.com/Mottie/tablesorter/pull/1420); thanks [@LaurentBarbareau](https://github.com/LaurentBarbareau)!
-  * Remove note on contenteditable wrapping. See [pull #1420](https://github.com/Mottie/tablesorter/pull/1420).
-  * Update pager widget options in demo code.
-  * Use src files in filter formatter demo for testing.
-* Meta:
-  * Include `js` & `css` folders with bower installs.
