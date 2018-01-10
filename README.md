@@ -104,6 +104,14 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.29.3">Version 2.29.3</a> (2018-01-10)
+
+* Docs:
+  * Update Bootstrap to v4-beta.3.
+  * Add scroller widget incompatibilities section.
+  * Add pager size all setting.
+
+
 #### <a name="v2.29.1">Version 2.29.1</a> &amp; <a name="v2.29.2">Version 2.29.2</a> (12/13/2017)
 
 * Core:
