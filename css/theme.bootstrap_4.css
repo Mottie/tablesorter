@@ -20,9 +20,9 @@
 	cursor: pointer;
 	white-space: normal;
 }
-.tablesorter-bootstrap:not(.table-inverse) thead:not(.thead-inverse) .tablesorter-header,
-.tablesorter-bootstrap:not(.table-inverse) tfoot th,
-.tablesorter-bootstrap:not(.table-inverse) tfoot td {
+.tablesorter-bootstrap:not(.table-dark) thead:not(.thead-dark) .tablesorter-header,
+.tablesorter-bootstrap:not(.table-dark) tfoot th,
+.tablesorter-bootstrap:not(.table-dark) tfoot td {
 	background-color: #eee;
 }
 
@@ -51,33 +51,33 @@
 }
 
 /* white icons */
-.tablesorter-bootstrap thead.thead-inverse .tablesorter-headerUnSorted:not(.sorter-false),
-.tablesorter-bootstrap.table-inverse thead .tablesorter-headerUnSorted:not(.sorter-false) {
+.tablesorter-bootstrap thead.thead-dark .tablesorter-headerUnSorted:not(.sorter-false),
+.tablesorter-bootstrap.table-dark thead .tablesorter-headerUnSorted:not(.sorter-false) {
 	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE0IDIwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTQgMTNsLTIuNS0yLjVMNyAxNWwtNC41LTQuNUwwIDEzbDcgN3pNMTQgNy41TDExLjUgMTAgNyA1LjUgMi41IDEwIDAgNy41bDctN3oiLz48L3N2Zz4=);
 }
-.tablesorter-bootstrap thead.thead-inverse .tablesorter-headerAsc,
-.tablesorter-bootstrap.table-inverse thead .tablesorter-headerAsc {
+.tablesorter-bootstrap thead.thead-dark .tablesorter-headerAsc,
+.tablesorter-bootstrap.table-dark thead .tablesorter-headerAsc {
 	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTQgOS41TDExLjUgMTIgNyA3LjUgMi41IDEyIDAgOS41bDctN3oiLz48L3N2Zz4=);
 }
-.tablesorter-bootstrap thead.thead-inverse .tablesorter-headerDesc,
-.tablesorter-bootstrap.table-inverse thead .tablesorter-headerDesc {
+.tablesorter-bootstrap thead.thead-dark .tablesorter-headerDesc,
+.tablesorter-bootstrap.table-dark thead .tablesorter-headerDesc {
 	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDE0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTQgNWwtMi41LTIuNS00LjUgNC41LTQuNS00LjVMMCA1IDcgMTJ6Ii8+PC9zdmc+);
 }
 
 /* since bootstrap (table-striped) uses nth-child(), we just use this to add a zebra stripe color */
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.odd > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.odd > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
 	background-color: #f9f9f9;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.hover > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.odd:hover > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.even:hover > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.tablesorter-hasChildRow.even:hover ~ .tablesorter-childRow.even > td {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.hover > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.odd:hover > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.even:hover > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.tablesorter-hasChildRow.even:hover ~ .tablesorter-childRow.even > td {
 	background-color: #f5f5f5;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.even > td,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.tablesorter-hasChildRow.even:hover ~ tr.tablesorter-hasChildRow.even ~ .tablesorter-childRow.even > td {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.even > td,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.tablesorter-hasChildRow.even:hover ~ tr.tablesorter-hasChildRow.even ~ .tablesorter-childRow.even > td {
 	background-color: #fff;
 }
 
@@ -89,30 +89,30 @@
 }
 
 /* Column Widget - column sort colors */
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.odd td.primary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.odd td.primary {
 	background-color: #bfbfbf;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr td.primary,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.even td.primary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr td.primary,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.even td.primary {
 	background-color: #d9d9d9;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.odd td.secondary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.odd td.secondary {
 	background-color: #d9d9d9;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr td.secondary,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.even td.secondary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr td.secondary,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.even td.secondary {
 	background-color: #e6e6e6;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.odd td.tertiary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.odd td.tertiary {
 	background-color: #e6e6e6;
 }
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr td.tertiary,
-.tablesorter-bootstrap:not(.table-inverse) > tbody > tr.even td.tertiary {
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr td.tertiary,
+.tablesorter-bootstrap:not(.table-dark) > tbody > tr.even td.tertiary {
 	background-color: #f2f2f2;
 }
 
 /* caption */
-.tablesorter-bootstrap:not(.table-inverse) .caption {
+.tablesorter-bootstrap:not(.table-dark) .caption {
 	background-color: #fff;
 }
 
@@ -129,11 +129,11 @@
 	-o-transition: height 0.1s ease;
 	transition: height 0.1s ease;
 }
-.tablesorter-bootstrap:not(.table-inverse) .tablesorter-filter-row {
+.tablesorter-bootstrap:not(.table-dark) .tablesorter-filter-row {
 	background-color: #efefef;
 }
-.tablesorter-bootstrap:not(.table-inverse) .tablesorter-filter-row input.tablesorter-filter,
-.tablesorter-bootstrap:not(.table-inverse) .tablesorter-filter-row select.tablesorter-filter {
+.tablesorter-bootstrap:not(.table-dark) .tablesorter-filter-row input.tablesorter-filter,
+.tablesorter-bootstrap:not(.table-dark) .tablesorter-filter-row select.tablesorter-filter {
 	color: #333;
 }
 
@@ -144,7 +144,7 @@
 	transition: height 0.1s ease;
 }
 
-.tablesorter-bootstrap:not(.table-inverse) .tablesorter-filter-row td {
+.tablesorter-bootstrap:not(.table-dark) .tablesorter-filter-row td {
 	line-height: normal;
 	text-align: center;
 	padding: 4px 6px;
@@ -176,13 +176,12 @@
 }
 
 /* pager plugin */
-
 .tablesorter-bootstrap .tablesorter-pager .pagedisplay {
 	border: 0;
 }
 
 /* ajax error row */
-.tablesorter:not(.table-inverse) .tablesorter-errorRow td {
+.tablesorter:not(.table-dark) .tablesorter-errorRow td {
 	text-align: center;
 	cursor: pointer;
 	background-color: #e6bf99;

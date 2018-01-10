@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 12-13-2017 (v2.29.2)*/
+/*! tablesorter (FORK) - updated 01-10-2018 (v2.29.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.29.2 *//*
+/*! TableSorter (FORK) v2.29.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.29.2',
+		version : '2.29.3',
 
 		parsers : [],
 		widgets : [],
@@ -1164,7 +1164,7 @@
 					if ( $sorted.length ) {
 						for ( column = 0; column < $sorted.length; column++ ) {
 							if ( !$sorted[ column ].sortDisabled ) {
-								updateColumnSort( $sorted.eq( column ) , list[ indx ][ 1 ] );
+								updateColumnSort( $sorted.eq( column ), list[ indx ][ 1 ] );
 							}
 						}
 					}
