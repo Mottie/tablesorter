@@ -83,6 +83,10 @@
 			// class added to filtered rows (rows that are not showing); needed by pager plugin
 			filter_filteredRow : 'filtered',
 
+			// ARIA-label added to filter input/select; {{label}} is replaced by the column header
+			// "data-label" attribute, if it exists, or it uses the column header text
+			filter_filterLabel : 'Filter "{{label}}" column by...',
+
 			// add custom filter elements to the filter row
 			// see the filter formatter demos for more specifics
 			filter_formatter : null,
@@ -251,6 +255,7 @@ $(function(){
 		<h3 id="notes"><a href="#">Notes</a></h3>
 		<div>
 			<ul>
+				<li>In <span class="version">v2.29.4</span>, <code>filter_filterLabel</code> option was added to include an ARIA-label to the filter inputs and selects.</li>
 				<li>In <span class="verison">v2.27.3</span>, <code>filter_liveSearch</code> will now accept an object containing zero-based column indexes or header class names.</li>
 				<li>In <span class="verison">v2.26.6</span>, the <a class="intlink" href="#filter-hidefilters"><code>hideFilters</code></a> setting will now accept a function to determine when to hide the filter row.</li>
 				<li>In <span class="version">v2.25.6</span>, added <a class="intlink" href="#methods"><code>filterResetSaved</code></a> method to clear stored filter values.</li>
@@ -462,6 +467,20 @@ $(function(){
 							<div class="collapsible">
 								<br>
 								If modifying this definition, make sure that the new class is set to <code>display: none;</code> to hide the filtered rows.
+							</div>
+						</td>
+					</tr>
+
+					<tr id="filter-filter-label">
+						<td><a href="#"  class="permalink">filter_filterLabel</a></td>
+						<td>'Filter "{{label}}" column by...'</td>
+						<td>
+							This option contains the ARIA-label value to be added to the filter input or select (<span class="version">v2.29.4</span>).
+							<div class="collapsible">
+								<p>
+									By default, a <code>{{label}}</code> is included in the setting to insert a column label. The content is obtained from the header cell's <code>data-label</code> attribute (do not include the <code>data-</code> prefix), if it exists, or the column header text. See the "First Name" column below for an example.
+								</p>
+								<span class="label label-info">Note</span> See the <a href="index.html#filter-filter-label">main page documentation for more important details</a>!
 							</div>
 						</td>
 					</tr>
@@ -829,7 +848,7 @@ $.extend($.tablesorter.language, {
 		<tr>
 			<!-- you can also add a placeholder using script; $('.tablesorter th:eq(0)').data('placeholder', 'hello') -->
 			<th data-placeholder="" class="filter-false">Rank</th>
-			<th data-placeholder="Try B*{space} or alex|br*|c" class="filter-match">First Name (<span></span> filter-match )</th>
+			<th data-placeholder="Try B*{space} or alex|br*|c" data-label="First Name" data-test="" class="filter-match">First Name (<span></span> filter-match )</th>
 			<th data-placeholder="Try <d">Last Name</th>
 			<th data-placeholder="Try >=33">Age</th>
 			<th data-placeholder="Try <9.99">Total</th>
