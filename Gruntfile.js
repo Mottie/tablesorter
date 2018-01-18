@@ -108,7 +108,7 @@ module.exports = function( grunt ) {
 
 	// minified banner template - updated ##/##/20## (v2.##.##)
 	pkg.banner = '/*! <%= pkg.name %> (FORK) - updated ' +
-		'<%= grunt.template.today("mm-dd-yyyy") %> (v<%= pkg.version %>)*/\n';
+		'<%= grunt.template.today("yyyy-mm-dd") %> (v<%= pkg.version %>)*/\n';
 
 	pkg.buildWidget = defaults.standardWidgetFileName;
 	pkg.buildCombined = 'jquery.tablesorter.combined.js';
