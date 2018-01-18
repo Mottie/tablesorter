@@ -83,7 +83,7 @@ div.ui-slider .ui-slider-handle { width: 0.8em; height: 0.8em; }
 a.alert, a.permalink.alert { color: #a00; padding: 0; }
 span.alert { padding: 1px 3px; }
 .hidden { display: none; }
-.fade { opacity: 0.5; }
+.ts-fade { opacity: 0.5; } /* don't effect Bootstrap's fade class */
 .results { color: red; }
 .clear { clear: both; }
 .good { color: #080; }

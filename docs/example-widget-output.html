@@ -417,7 +417,7 @@ table.tablesorter tbody tr.even.checked td {
     });
 });</pre>
 		Modification of the <code>.htaccess</code> is no longer required
-			<div class="fade">
+			<div class="ts-fade">
 			<h4>.htaccess</h4>
 			The Content-disposition headers <em>may need to be set</em> in order to make downloads work properly in IE. So <code>.htaccess</code> can look like:
 			<pre class="prettyprint lang-xml">&lt;FilesMatch "\.(?i:csv|txt)$"&gt;
@@ -905,7 +905,7 @@ line,value1,value2,value3
 								<span class="label warning">Note</span> The trailing comma is important!
 								<hr>
 								The information below is no longer relavant:
-								<div class="fade">
+								<div class="ts-fade">
 								With the default settings (utf-8 no BOM), Excel does not properly encode accented characters unless the csv file is imported. Depending on the characters used, there are various methods which will allow proper encoding, but no one method is ideal. So this option can be set to allow the user to try different encodings. Set it as follows:
 								<pre class="prettyprint lang-js">// output data type (with BOM or Windows-1252 is needed for excel)
 // NO BOM   : 'data:text/csv;charset=utf8,'
