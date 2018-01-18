@@ -104,6 +104,17 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.29.4">Version 2.29.4</a> (2018-01-18)
+
+* Docs:
+  * Downgrade Bootstrap JS (v3.3.7) in demos.
+* Filter:
+  * Add `filter_filterLabel` to support filter input ARIA labels. See [issue #1495](https://github.com/Mottie/tablesorter/issues/1495).
+  * Change filter row role from "row" to "search".
+  * Fix select2 issue. Closes [issue #1497](https://github.com/Mottie/tablesorter/issues/1497).
+* Meta:
+  * Change date format in file comments to "YYYY-MM-DD".
+
 #### <a name="v2.29.3">Version 2.29.3</a> (2018-01-10)
 
 * Docs:
@@ -134,42 +145,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix Bootstrap v2 demo; restored gyphs images.
 * Meta:
   * Update authors.
-
-#### <a name="v2.29.0">Version 2.29.0</a> (9/27/2017)
-
-* Core:
-  * Include callback method for ["applyWidgets"](https://mottie.github.io/tablesorter/docs/index.html#applywidgets).
-  * Add ["widgetRemoveEnd" event](https://mottie.github.io/tablesorter/docs/index.html#widgetremoveend). Fixes [issue #1430](https://github.com/Mottie/tablesorter/issues/1430).
-  * Clarify warning message (widget enabled but code not loaded).
-  * Target header cells for data-column. Fixes [issue #1459](https://github.com/Mottie/tablesorter/issues/1459).
-* ColumnSelector:
-  * Add [`classHasSpan` option](https://mottie.github.io/tablesorter/docs/example-widget-column-selector.html#column-selector-class-has-span).
-  * Fix compatibility with grouping widget.
-* Grouping:
-  * Fix compatibility with columnSelector widget.
-* Output:
-  * Modify internal `process` function to allow outputting of data without adding it to the table.
-* Resizable:
-  * Add resizableComplete event. Fixes [issue #1444](https://github.com/Mottie/tablesorter/issues/1444).
-* Scroller:
-  * Save position to fix `scroller_upAfterSort: false`; See [PR #1441](https://github.com/Mottie/tablesorter/pull/1441). This should fix [issue #1297](https://github.com/Mottie/tablesorter/issues/1297) - The current position is now saved on scroll so it can be restored after sorting; thanks [@lbodtke](https://github.com/lbodtke)!
-  * Update scroll position after fixing columns.
-* Sort2Hash:
-  * Prevent sort2Hash from adding extraneous entries to browser history. Use `window.location.replace` to update the browser URL only, rather than `window.location.hash`, which modifies the browser history. See [PR #1447](https://github.com/Mottie/tablesorter/pull/1447); thanks [@alexweissman](https://github.com/alexweissman)!
-* StickyHeaders:
-  * Only update class as needed. See [issue #1018](https://github.com/Mottie/tablesorter/issues/1018).
-  * Check horizontal scrolling. Fixes [issue #1455](https://github.com/Mottie/tablesorter/issues/1455).
-* UITheme:
-  * Remove bootstrap v2 refs &amp; fix docs. See [issue #1432](https://github.com/Mottie/tablesorter/issues/1432).
-* Docs:
-  * Miscellaneous fixes and updates.
-  * Add more info about zebra widget when the table is not visible. See [PR #1438](https://github.com/Mottie/tablesorter/pull/1438); thanks [@Federico-G](https://github.com/Federico-G)!
-  * Fix alignCharacter widget reference to css4.
-  * Update userfrosting link in the readme.
-  * Update to Bootstrap v4.0.0-beta.
-  * Fix colspan demo.
-* Themes:
-  * Rename `icon-white` to `bootstrap-icon-white`. Fixes [issue #1432](https://github.com/Mottie/tablesorter/issues/1432).
-* Meta:
-  * Update dependencies.
-  * Build: maintain ie8 support to fix [issue #1431](https://github.com/Mottie/tablesorter/issues/1431).
