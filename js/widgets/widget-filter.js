@@ -770,7 +770,7 @@
 						name = wo.filter_filterLabel;
 						tmp = name.match(/{{([^}]+?)}}/g);
 						if (!tmp) {
-							tmp = ['{{label}}'];
+							tmp = [ '{{label}}' ];
 						}
 						$.each(tmp, function(indx, attr) {
 							var regex = new RegExp(attr, 'g'),
