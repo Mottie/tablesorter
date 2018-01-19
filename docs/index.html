@@ -465,9 +465,9 @@
 		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.28.7</span>).</li>
 		<li><a href="example-widget-current-sort.html">Current Sort Widget</a> (<span class="version">v2.27.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
-		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.29.2</span>):
+		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.29.4</span>):
 			<ul>
-				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.26.6</span>).</li>
+				<li><a href="example-widget-filter.html">basic</a> (v2.0.18; <span class="version updated">v2.29.4</span>).</li>
 				<li><a href="example-widget-filter-any-match.html">external option (match any column)</a> (<span class="version">v2.13.3</span>; <span class="version updated">v2.27.5</span>).</li>
 				<li><a href="example-widget-filter-external-inputs.html">external inputs</a> (<span class="version">v2.14</span>; <span class="version updated">v2.18.0</span>).</li>
 				<li><a href="example-widget-filter-custom.html">custom filter functions</a> (v2.3.6; <span class="version updated">v2.22.0</span>).</li>
@@ -1976,6 +1976,11 @@ $(function(){
       // class added to filtered rows; needed by pager plugin
       filter_filteredRow: 'filtered',
 
+      // ARIA-label added to filter input/select; {{label}} is replaced by
+      // the column header "data-label" attribute, if it exists, or it uses the
+      // column header text
+      filter_filterLabel : 'Filter "{{label}}" column by...',
+
       // add custom filter elements to the filter row
       filter_formatter: null,
 
@@ -2831,6 +2836,36 @@ filter_cellFilter : [ '', 'hidden', '', 'hidden' ]</pre>
 					</div>
 				</td>
 				<td></td>
+			</tr>
+
+			<tr id="widget-filter-filterlabel">
+				<td><a href="#"  class="permalink">filter_filterLabel</a></td>
+				<td>String</td>
+				<td>'Filter "{{label}}" column by...'</td>
+				<td>
+					This option contains the ARIA-label value to be added to the filter input or select (<span class="version">v2.29.4</span>).
+					<div class="collapsible">
+						<p>
+							By default, a <code>{{label}}</code> is included in the setting to insert a column label. The content is obtained from the header cell's <code>data-label</code> attribute (do not include the <code>data-</code> prefix), if it exists, or the column header text. See the "First Name" column on the example page.
+						</p>
+						<p>
+							More complex labels may be included by adding multiple "data-attributes". For example, the following option:
+							<pre class="pretty-print lang-js">filter_filterLabel : 'Filter the {{column-name}}, the {{ordinal-number}} column{{label-extra}}{{default-filter}}'</pre>
+							with this header cell HTML
+							<pre class="pretty-print lang-html">&lt;th data-column-name="last name" data-ordinal-number="second" data-default-filter=", using a fuzzy search" data-label-extra=""&gt;
+  Last
+&lt;th&gt;</pre>
+							would result in an ARIA-label of <code>'Filter the last name, the second column, using a fuzzy search'</code>
+						</p>
+						<span class="label label-info">Note:</span>
+						<ul>
+							<li>The <code>data-</code> prefix must not be added in the placeholders.</li>
+							<li>The empty <code>data-label-extra</code> attribute did add any content to the resulting label.</li>
+							<li>If an included data-attribute does not exist on the header, it will be replaced by the header text.</li>
+						</ul>
+					</div>
+				</td>
+				<td><a href="example-widget-filter.html#demo">Example</a></td>
 			</tr>
 
 			<tr id="widget-filter-formatter">

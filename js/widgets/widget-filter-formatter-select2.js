@@ -70,7 +70,7 @@
 			if (arry) {
 				v = v.split('\u0000');
 			}
-			if (!ts.isEmptyObject($input.find('.select2').data())) {
+			if (!ts.isEmptyObject($cell.find('.select2').data())) {
 				$input
 					// add regex, so we filter exact numbers
 					.val(
@@ -78,8 +78,8 @@
 							'/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
 							''
 					)
-					.trigger('search').end()
-					.find('.select2').select2('val', v);
+					.trigger('search');
+				$cell.find('.select2').select2('val', v);
 				// update sticky header cell
 				if (c.widgetOptions.$sticky) {
 					c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val', v);
