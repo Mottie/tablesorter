@@ -1,4 +1,4 @@
-/*! Widget: filter - updated 12/13/2017 (v2.29.1) *//*
+/*! Widget: filter - updated 1/18/2018 (v2.29.4) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
