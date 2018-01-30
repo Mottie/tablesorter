@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 5/16/2017 (v2.28.10) *//*
+/*! Parser: input & select - updated 2018-01-30 (v2.29.5) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -64,6 +64,19 @@
 		},
 		parsed : true, // filter widget flag
 		type : 'text'
+	});
+
+	$.tablesorter.addParser({
+		id: 'radio',
+		is: function() {
+			return false;
+		},
+		format: function(txt, table, cell) {
+			var $input = $(cell).find('input:checked');
+			return $input.length ? $input.val() : txt;
+		},
+		parsed: true,
+		type: 'text'
 	});
 
 	// Custom parser which returns the currently selected options

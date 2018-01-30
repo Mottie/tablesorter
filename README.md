@@ -104,6 +104,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.29.5">Version 2.29.5</a> (2018-01-30)
+
+* Docs:
+  * Update jQuery to v3.3.1.
+  * Add jQuery UI theme selector to scroller demo. See [issue #1506](https://github.com/Mottie/tablesorter/issues/1506).
+  * Minor fixes to links.
+* Filter:
+  * Clean up language settings & allow empty strings. See [issue #1505](https://github.com/Mottie/tablesorter/issues/1505).
+  * Fix linting issue.
+  * Fix version numbering.
+* Parser:
+  * Add radio parser. See [issue #1502(https://github.com/Mottie/tablesorter/issues/1502).
+
 #### <a name="v2.29.4">Version 2.29.4</a> (2018-01-18)
 
 * Docs:
@@ -123,25 +136,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Add pager size all setting.
 * Parser:
   * Network parsers now return a text value. Fixes [issue #1494](https://github.com/Mottie/tablesorter/issues/1494).
-
-#### <a name="v2.29.1">Version 2.29.1</a> &amp; <a name="v2.29.2">Version 2.29.2</a> (12/13/2017)
-
-* Core:
-  * Fix non-typical use of selectorHeaders. See [issue #1459](https://github.com/Mottie/tablesorter/issues/1459).
-  * Update external header icons on sort. Fixes [issue #1483](https://github.com/Mottie/tablesorter/issues/1483).
-  * Remove an empty block.
-* Filter:
-  * Select exact matches ignore "and" and "or" keywords. Fixes [issue #1486](https://github.com/Mottie/tablesorter/issues/1486).
-* Resizable:
-  * `addLastColumn` stops adding handles to hidden columns. Fixes [issue #1485](https://github.com/Mottie/tablesorter/issues/1485).
-* Scroller:
-  * Adjust columns on `filterInit`. See [issue #1468](https://github.com/Mottie/tablesorter/issues/1468).
-* Vertical Group:
-  * New widget added. See [demo](https://mottie.github.io/tablesorter/docs/example-widget-vertical-group.html).
-  * Thanks to [aavmurphy](https://github.com/aavmurphy) for sharing the code. See [issue #1469](https://github.com/Mottie/tablesorter/issues/1469) and [PR #1470](https://github.com/Mottie/tablesorter/pull/1470).
-* Docs:
-  * Fix pager example.
-  * List all contained IP parsers. Fixes [issue #1484](https://github.com/Mottie/tablesorter/issues/1484).
-  * Fix Bootstrap v2 demo; restored gyphs images.
-* Meta:
-  * Update authors.

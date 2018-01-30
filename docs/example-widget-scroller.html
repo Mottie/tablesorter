@@ -8,7 +8,6 @@
 	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<script src="js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
@@ -73,6 +72,23 @@
 	min-width: 60px;
 }</style>
 
+	<!-- jQuery UI theme switcher: https://github.com/pontikis/jui_theme_switch/ -->
+	<style>
+	.switcher_container { padding: 5px; }
+	.switcher_list { padding: 2px; }
+	.switcher_label { margin-right: 5px; }
+	</style>
+	<script src="js/jquery.jui_theme_switch.min.js"></script>
+	<script>
+	$(function(){
+		$('#switcher').jui_theme_switch({
+			stylesheet_link_id : 'ui-theme',
+			switcher_label     : 'Select jQuery UI Theme:',
+			default_theme      : 'cupertino',
+			datasource_url     : 'assets/theme_switcher.json'
+		});
+	});
+	</script>
 	<script id="js">$(function(){
 
 	$('.tablesorter').tablesorter({
@@ -149,12 +165,14 @@ $(function() {
 		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
 	}
 
-	$('select')
+	$('#theme')
 		.append(o)
 		.val('jui')
 		.change(function(){
 			var theme = $(this).val().toLowerCase();
 
+			// show jui select only if jQuery UI selected
+			$('#switcher').toggle(theme === 'jui');
 			// add class so the black border fits the theme
 			$('#main').attr( 'class', 'using-' + theme + '-theme' );
 
@@ -542,9 +560,10 @@ $(function() {
 	<p><a href="#fixed-demo">Fixed columns</a> | <a href="#wide-demo">Full-width</a> | <a href="#narrow-demo">Half-width</a></p>
 
 	Choose Theme:
-	<select>
+	<select id="theme">
 		<option value="jui">Jquery UI</option>
 	</select><br>
+	<div id="switcher"></div>
 	<br>
 	<button id="jthb" type="button">Toggle</button> scroller_jumpToHeader : <span id="jth">true</span> (see the note above)<span class="remark">*</span>
 	<br>
