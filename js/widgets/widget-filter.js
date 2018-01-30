@@ -368,8 +368,8 @@
 			var options, string, txt, $header, column, val, fxn, noSelect,
 				c = table.config,
 				wo = c.widgetOptions,
-				escRegExp = function(prefix, str, suffix) {
-					str = str.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+				processStr = function(prefix, str, suffix) {
+					str = str.trim();
 					// don't include prefix/suffix if str is empty
 					return str === '' ? '' : (prefix || '') + str + (suffix || '');
 				};
@@ -388,13 +388,13 @@
 			$.extend( tsfRegex, {
 				child : new RegExp( c.cssChildRow ),
 				filtered : new RegExp( wo.filter_filteredRow ),
-				alreadyFiltered : new RegExp( '(\\s+(-' + escRegExp('|', ts.language.or) + escRegExp('|', ts.language.to) + ')\\s+)', 'i' ),
-				toTest : new RegExp( '\\s+(-' + escRegExp('|', ts.language.to) + ')\\s+', 'i' ),
-				toSplit : new RegExp( '(?:\\s+(?:-' + escRegExp('|', ts.language.to) + ')\\s+)', 'gi' ),
-				andTest : new RegExp( '\\s+(' + escRegExp('', ts.language.and, '|') + '&&)\\s+', 'i' ),
-				andSplit : new RegExp( '(?:\\s+(?:' + escRegExp('', ts.language.and, '|') + '&&)\\s+)', 'gi' ),
-				orTest : new RegExp( '(\\|' + escRegExp('|\\s+', ts.language.or, '\\s+') + ')', 'i' ),
-				orSplit : new RegExp( '(?:\\|' + escRegExp('|\\s+(?:', ts.language.or, ')\\s+') + ')', 'gi' ),
+				alreadyFiltered : new RegExp( '(\\s+(-' + processStr('|', ts.language.or) + processStr('|', ts.language.to) + ')\\s+)', 'i' ),
+				toTest : new RegExp( '\\s+(-' + processStr('|', ts.language.to) + ')\\s+', 'i' ),
+				toSplit : new RegExp( '(?:\\s+(?:-' + processStr('|', ts.language.to) + ')\\s+)', 'gi' ),
+				andTest : new RegExp( '\\s+(' + processStr('', ts.language.and, '|') + '&&)\\s+', 'i' ),
+				andSplit : new RegExp( '(?:\\s+(?:' + processStr('', ts.language.and, '|') + '&&)\\s+)', 'gi' ),
+				orTest : new RegExp( '(\\|' + processStr('|\\s+', ts.language.or, '\\s+') + ')', 'i' ),
+				orSplit : new RegExp( '(?:\\|' + processStr('|\\s+(?:', ts.language.or, ')\\s+') + ')', 'gi' ),
 				iQuery : new RegExp( val, 'i' ),
 				igQuery : new RegExp( val, 'ig' ),
 				operTest : /^[<>]=?/,
