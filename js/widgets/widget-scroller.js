@@ -745,12 +745,18 @@
 				tsScroller = ts.scroller,
 				fixedColumns = wo.scroller_fixedColumns,
 				// get dimensions
+				getDim = function ($el, name, deflt) {
+					return parseInt( $el.css(name) || '', 10 ) || deflt || 0;
+				},
 				$temp = $table.find( 'tbody td' ),
-				borderRightWidth = parseInt( $temp.css( 'border-right-width' ), 10 ) || 1,
-				borderSpacing = parseInt( ( $temp.css( 'border-spacing' ) || '' ).split( /\s/ )[ 0 ], 10 ) / 2 || 0,
-				totalWidth = parseInt( $table.css( 'padding-left' ), 10 ) +
-					parseInt( $table.css( 'padding-right' ), 10 ) -
-					borderRightWidth,
+				borderRightWidth = getDim( $temp, 'border-right-width', 1 ),
+				borderSpacing = getDim( $temp, 'border-spacing', 0 ),
+				totalWidth = getDim( $table, 'padding-left' ) +
+					getDim( $table, 'padding-right' ) +
+					// include table left & row left border
+					getDim( $table, 'border-left-width', 1 ) * 2 +
+					getDim( $table, 'border-right-width', 1 ) -
+					borderRightWidth + borderSpacing / 2,
 				widths = wo.scroller_calcWidths;
 
 			ts.scroller.removeFixed( c, wo, false );
@@ -761,7 +767,7 @@
 			}
 
 			// set fixed column width
-			totalWidth = totalWidth + borderRightWidth * 2 - borderSpacing;
+			totalWidth = totalWidth + borderRightWidth * 2;
 			tsScroller.setWidth( $fixedColumn.add( $fixedColumn.children() ), totalWidth );
 			tsScroller.setWidth( $fixedColumn.children().children( 'table' ), totalWidth );
 
@@ -799,7 +805,6 @@
 					.css( 'width', totalWidth + adj );
 			}
 
-			$fixedColumn.removeClass( tscss.scrollerHideElement );
 			for ( index = 0; index < fixedColumns; index++ ) {
 				temp = ':nth-child(' + ( index + 1 ) + ')';
 				$wrapper
@@ -808,6 +813,14 @@
 					.find( 'th' + temp + ', td' + temp + ', col' + temp )
 					.addClass( tscss.scrollerHideColumn );
 			}
+			$fixedColumn
+				.removeClass( tscss.scrollerHideElement )
+				.find('colgroup')
+				.each(function() {
+					$(this)
+						.find('col:gt(' + (fixedColumns - 1) + ')')
+						.addClass( tscss.scrollerHideElement );
+				});
 
 			totalWidth = totalWidth - borderRightWidth;
 			temp = $tableWrap.parent().innerWidth() - totalWidth;

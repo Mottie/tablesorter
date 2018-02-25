@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2018-01-30 (v2.29.5)*/
+/*! tablesorter (FORK) - updated 2018-02-25 (v2.29.6)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2453,7 +2453,7 @@
 			var index, len, $t,
 				$table = c.$table,
 				// add position: relative to attach element, hopefully it won't cause trouble.
-				$attach = $(wo.stickyHeaders_attachTo),
+				$attach = $(wo.stickyHeaders_attachTo || wo.stickyHeaders_appendTo),
 				namespace = c.namespace + 'stickyheaders ',
 				// element to watch for the scroll event
 				$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
@@ -2513,7 +2513,10 @@
 						});
 					}
 				},
-				getLeftPosition = function() {
+				getLeftPosition = function(yWindow) {
+					if (yWindow === false && $nestedSticky.length) {
+						return $table.position().left;
+					}
 					return $attach.length ?
 						parseInt($attach.css('padding-left'), 10) || 0 :
 						$table.offset().left - parseInt($table.css('margin-left'), 10) - $(window).scrollLeft();
@@ -2534,9 +2537,11 @@
 						offset = $table.offset(),
 						stickyOffset = getStickyOffset(c, wo),
 						yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-						attachTop = $attach.length ?
-							( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) :
-							$yScroll.scrollTop(),
+						yScroll = yWindow ?
+							$yScroll.scrollTop() :
+							// use parent sticky position if nested AND inside of a scrollable element - see #1512
+							$nestedSticky.length ? parseInt($nestedSticky[0].style.top, 10) : $yScroll.offset().top,
+						attachTop = $attach.length ? yScroll : $yScroll.scrollTop(),
 						captionHeight = wo.stickyHeaders_includeCaption ? 0 : $table.children( 'caption' ).height() || 0,
 						scrollTop = attachTop + stickyOffset + nestedStickyTop - captionHeight,
 						tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)) - captionHeight,
@@ -2550,12 +2555,14 @@
 						cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 					}
 					// adjust when scrolling horizontally - fixes issue #143
-					tmp = getLeftPosition();
+					tmp = getLeftPosition(yWindow);
 					if (tmp !== parseInt($stickyWrap.css('left'), 10)) {
 						needsUpdating = true;
 						cssSettings.left = tmp;
 					}
-					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
+					cssSettings.top = ( cssSettings.top || 0 ) +
+						// If nested AND inside of a scrollable element, only add parent sticky height
+						(!yWindow && $nestedSticky.length ? $nestedSticky.height() : stickyOffset + nestedStickyTop);
 					if (needsUpdating) {
 						$stickyWrap
 							.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
@@ -2576,8 +2583,8 @@
 			if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 			// clear out cloned table, except for sticky header
 			// include caption & filter row (fixes #126 & #249) - don't remove cells to get correct cell indexing
-			$stickyTable.find('thead:gt(0), tr.sticky-false').hide();
-			$stickyTable.find('tbody, tfoot').remove();
+			$stickyTable.find('> thead:gt(0), tr.sticky-false').hide();
+			$stickyTable.find('> tbody, > tfoot').remove();
 			$stickyTable.find('caption').toggle(wo.stickyHeaders_includeCaption);
 			// issue #172 - find td/th in sticky header
 			$stickyCells = $stickyThead.children().children();
@@ -2609,7 +2616,6 @@
 					c.onRenderHeader.apply( $t.eq( index ), [ index, c, $stickyTable ] );
 				}
 			}
-
 			// make it sticky!
 			$xScroll.add($yScroll)
 				.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
@@ -2680,7 +2686,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 12/13/2017 (v2.29.1) */
+/*! Widget: resizable - updated 2018-02-14 (v2.29.6) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -3071,7 +3077,7 @@
 				if ( vars.overflow && vars.tableWidth ) {
 					ts.resizable.setWidth( c.$table, vars.tableWidth, true );
 					if ( vars.useStorage ) {
-						ts.storage( table, 'tablesorter-table-resized-width', 'auto' );
+						ts.storage( table, 'tablesorter-table-resized-width', vars.tableWidth );
 					}
 				}
 				for ( index = 0; index < c.columns; index++ ) {
@@ -3087,7 +3093,7 @@
 				// reset stickyHeader widths
 				c.$table.triggerHandler( 'stickyHeadersUpdate' );
 				if ( ts.storage && !refreshing ) {
-					ts.storage( this, ts.css.resizableStorage, {} );
+					ts.storage( this, ts.css.resizableStorage, [] );
 				}
 			}
 		});
