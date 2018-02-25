@@ -104,6 +104,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.29.6">Version 2.29.6</a> (2018-02-25)
+
+* Docs:
+  * Fix theme selector.
+  * `pager.page` is zero-based. See [issue #1516](https://github.com/Mottie/tablesorter/issues/1516).
+* Resizable:
+  * Don't save 'auto' table width. Closes [issue #1514](https://github.com/Mottie/tablesorter/issues/1514).
+* Scroller:
+  * Adjust spacing for jQuery UI themes. See [issue #1506](https://github.com/Mottie/tablesorter/issues/1506).
+* StickyHeaders:
+  * Allow nested tables in sticky header. See [Stack Overflow](https://stackoverflow.com/q/48793036/145346).
+  * Include nested tables inside a scrolling element. Fixes [issue #1512](https://github.com/Mottie/tablesorter/issues/1512).
+
 #### <a name="v2.29.5">Version 2.29.5</a> (2018-01-30)
 
 * Docs:
@@ -115,7 +128,7 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix linting issue.
   * Fix version numbering.
 * Parser:
-  * Add radio parser. See [issue #1502(https://github.com/Mottie/tablesorter/issues/1502).
+  * Add radio parser. See [issue #1502](https://github.com/Mottie/tablesorter/issues/1502).
 
 #### <a name="v2.29.4">Version 2.29.4</a> (2018-01-18)
 
@@ -127,12 +140,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix select2 issue. Closes [issue #1497](https://github.com/Mottie/tablesorter/issues/1497).
 * Meta:
   * Change date format in file comments to "YYYY-MM-DD".
-
-#### <a name="v2.29.3">Version 2.29.3</a> (2018-01-10)
-
-* Docs:
-  * Update Bootstrap to v4-beta.3.
-  * Add scroller widget incompatibilities section.
-  * Add pager size all setting.
-* Parser:
-  * Network parsers now return a text value. Fixes [issue #1494](https://github.com/Mottie/tablesorter/issues/1494).
