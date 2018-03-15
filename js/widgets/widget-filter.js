@@ -1783,13 +1783,13 @@
 						options += '<option';
 						for ( val in option ) {
 							if ( option.hasOwnProperty( val ) && val !== 'text' ) {
-								options += ' ' + val + '="' + option[ val ] + '"';
+								options += ' ' + val + '="' + option[ val ].replace( tsfRegex.quote, '&quot;' ) + '"';
 							}
 						}
 						if ( !option.value ) {
-							options += ' value="' + option.text + '"';
+							options += ' value="' + option.text.replace( tsfRegex.quote, '&quot;' ) + '"';
 						}
-						options += '>' + option.text + '</option>';
+						options += '>' + option.text.replace( tsfRegex.quote, '&quot;' ) + '</option>';
 						// above code is needed in jQuery < v1.8
 
 						// make sure we don't turn an object into a string (objects without a "text" property)
