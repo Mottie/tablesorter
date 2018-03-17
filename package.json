@@ -39,7 +39,8 @@
     "url": "git://github.com/Mottie/tablesorter.git"
   },
   "scripts": {
-    "authors": "bash testing/authors.sh"
+    "authors": "bash testing/authors.sh",
+    "eslint": "eslint --color Gruntfile.js js/jquery.tablesorter.js js/parsers/* js/widgets/*"
   },
   "npmName": "tablesorter",
   "npmFileMap": [

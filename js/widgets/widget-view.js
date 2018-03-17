@@ -31,7 +31,7 @@
 
 				$.each(wo.view_layouts, function(k, v) {
 					var classes = wo.view_switcher_class;
-					if (k == wo.view_layout) {
+					if (k === wo.view_layout) {
 						classes += ' active';
 					}
 
@@ -108,7 +108,7 @@
 
 					var $tmpl = $(tmpl);
 					$.each(data.$row[0].attributes, function(idx, attr) {
-						if (attr.nodeName == 'class') {
+						if (attr.nodeName === 'class') {
 							$tmpl.attr(attr.nodeName, $tmpl.attr(attr.nodeName) + ' ' + attr.nodeValue);
 						} else {
 							$tmpl.attr(attr.nodeName, attr.nodeValue);
@@ -125,7 +125,7 @@
 				$(wo.view_container).empty();
 			},
 
-			hideTable: function(c, wo) {
+			hideTable: function(c) {
 				tpos = c.$table.css('position');
 				ttop = c.$table.css('bottom');
 				tleft = c.$table.css('left');

@@ -73,7 +73,7 @@ tr.group-header.collapsed td i {
 	<script src="../js/widgets/widget-grouping.js"></script>
 	<script src="../js/widgets/widget-storage.js"></script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	$("#groups").tablesorter({
 		theme : "blue",
@@ -135,7 +135,7 @@ tr.group-header.collapsed td i {
 				// column = current column being sorted/grouped
 				if (column === 2) {
 					var subtotal = 0;
-					$rows.each(function(){
+					$rows.each(function() {
 						subtotal += parseFloat( $(this).find("td").eq(column).text() );
 					});
 					$cell.find(".group-count").append("; subtotal: " + subtotal );
@@ -349,7 +349,7 @@ group_separator : /[/.]/</pre>
 								<li><code>column</code> - current table column being grouped (zero-based index).</li>
 								<li><code>table</code> - current table (DOM).</li>
 							</ul>
-							<pre class="prettyprint lang-js">group_callback : function($cell, $rows, column, table){
+							<pre class="prettyprint lang-js">group_callback : function($cell, $rows, column, table) {
   $cell.find('.group-name').append(' group'); // adds "group" to the end of the group name
 }</pre>
 							</div>
@@ -361,7 +361,7 @@ group_separator : /[/.]/</pre>
 						<td>
 							Event triggered on the table when the grouping widget has finished work <span class="version">v2.12</span>.
 							<div class="collapsible">
-							<pre class="prettyprint lang-js">$('table').on('groupingComplete', function(){
+							<pre class="prettyprint lang-js">$('table').on('groupingComplete', function() {
   // always hide empty groups ("Empty" can be added by the group_formatter function)
   $(this).find('.group-header:contains("Empty")').trigger('toggleGroup');
 });</pre>
@@ -613,7 +613,7 @@ group_dateString : function(date, config, $header ) {
 			Target the group header(s) and trigger a "toggleGroup" event to show/hide rows associated with that group.
 
 			<pre class="prettyprint lang-js">// "toggle" class name added to a button/link
-$('.toggle').click(function(){
+$('.toggle').click(function() {
   // show/hide all groups - table must be grouped (sorted or force grouping)
   $('table').find('.group-header').trigger('toggleGroup');
   return false;
@@ -886,7 +886,7 @@ $(function() {
 
 	<script>
 	/* DEMO ONLY CODE */
-	$(function(){
+	$(function() {
 		var $groups = $('#groups'),
 			startBlock = 10,
 			startVal = 1,
@@ -901,13 +901,13 @@ $(function() {
 			min: 10,
 			max: 50,
 			step: 10,
-			create: function(){
+			create: function() {
 				$('.numberclass').html(' "group-number-' + startBlock + '"');
 				$groups.find('.tablesorter-header-inner:eq(' + numcol + ')').find('span').html(startBlock);
 			},
 			slide: function( event, ui ) {
 				$groups[0].config.$headers.eq(numcol)
-					.attr('class', function(i,v){
+					.attr('class', function(i,v) {
 						return v.replace(/group-number-\d+/, 'group-number-' + ui.value);
 					})
 					.trigger('sorton', [ [[numcol,0]] ]);
@@ -921,13 +921,13 @@ $(function() {
 			min: 1,
 			max: 5,
 			step: 1,
-			create: function(){
+			create: function() {
 				$('.animalclass').html(' "group-letter-' + startVal + '"');
 				$groups.find('.tablesorter-header-inner:eq(' + letcol + ')').find('span').html(startVal === 1 ? 'letter' : startVal + ' letters');
 			},
 			slide: function( event, ui ) {
 				$groups[0].config.$headers.eq(letcol)
-					.attr('class', function(i,v){
+					.attr('class', function(i,v) {
 						return v.replace(/group-letter-\d+/, 'group-letter-' + ui.value);
 					})
 					.trigger('sorton', [ [[letcol,0]] ]);
@@ -941,13 +941,13 @@ $(function() {
 			min: 0,
 			max: dateGroups.length - 1,
 			step: 1,
-			create: function(){
+			create: function() {
 				$('.dateclass').html(' "group-date' + (curGroup > 0 ? '-' + dateGroups[curGroup] : '') + '"');
 				$groups.find('.tablesorter-header-inner:eq(' + datecol + ')').find('span').html(curGroup === 0 ? 'full' : dateGroups[curGroup]);
 			},
 			slide: function( event, ui ) {
 				var $h = $groups[0].config.$headers.eq(datecol)
-					.attr('class', function(i,v){
+					.attr('class', function(i,v) {
 						return v.replace(/group-date(-\w+)?/, 'group-date' + (ui.value > 0 ? '-' + dateGroups[ui.value] : ''));
 					});
 				$h.removeClass('sorter-weekday-index sorter-time');

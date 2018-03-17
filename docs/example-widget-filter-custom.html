@@ -22,12 +22,12 @@
 	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script>
-	$(function(){
+	$(function() {
 
 		// External search
 		// buttons set up like this:
 		// <button type="button" class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
-		$('button.match').click(function(){
+		$('button.match').click(function() {
 
 			// toggle "filter-match" class on first column
 			var first = $('table').find('th:first').toggleClass('filter-match');
@@ -44,7 +44,7 @@
 			return false;
 		});
 
-		$('.accordion button[data-filter-column]').click(function(){
+		$('.accordion button[data-filter-column]').click(function() {
 			var filters = [],
 				$t = $(this),
 				col = $t.data('filter-column'), // zero-based index
@@ -54,7 +54,7 @@
 			return false;
 		});
 
-		$('button.search-type').click(function(){
+		$('button.search-type').click(function() {
 			var c = $('#demo table')[0].config,
 				wo = c.widgetOptions,
 				search = wo.filter_searchFiltered = !wo.filter_searchFiltered;

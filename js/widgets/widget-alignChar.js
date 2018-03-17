@@ -4,14 +4,14 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter;
 
 	ts.alignChar = {
 
 		init : function(table, c, wo) {
-			c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function(){
+			c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function() {
 				var $this = $(this),
 				vars = {
 					column     : this.column,
@@ -27,14 +27,14 @@
 			});
 		},
 
-		setup: function(table, c, wo, v){
+		setup: function(table, c, wo, v) {
 			// do nothing for empty tables
 			if ($.isEmptyObject(c.cache)) { return; }
 			var tbodyIndex, rowIndex, start, end, last, index, rows, val, count,
 				len, wLeft, wRight, alignChar, $row,
 				left = [],
 				right = [];
-			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++){
+			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 				rows = c.cache[tbodyIndex];
 				len = rows.normalized.length;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
@@ -70,14 +70,14 @@
 			}
 
 			// find widest segments
-			wLeft = ($.extend([], left)).sort(function(a, b){ return b.length - a.length; })[0];
-			wRight = ($.extend([], right)).sort(function(a, b){ return b.length - a.length; })[0];
+			wLeft = ($.extend([], left)).sort(function(a, b) { return b.length - a.length; })[0];
+			wRight = ($.extend([], right)).sort(function(a, b) { return b.length - a.length; })[0];
 			// calculate percentage widths
 			v.width = v.width || ( Math.floor(wLeft.length / (wLeft.length + wRight.length) * 100) + v.adjust );
 			wLeft = 'min-width:' + v.width + '%';
 			wRight = 'min-width:' + (100 - v.width)  + '%';
 
-			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++){
+			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 				rows = c.cache[tbodyIndex];
 				len = rows.normalized.length;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
@@ -94,10 +94,10 @@
 
 		},
 
-		remove: function(table, c, column){
+		remove: function(table, c, column) {
 			if ($.isEmptyObject(c.cache)) { return; }
 			var tbodyIndex, rowIndex, len, rows, $row, $cell;
-			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++){
+			for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
 				rows = c.cache[tbodyIndex];
 				len = rows.normalized.length;
 				for (rowIndex = 0; rowIndex < len; rowIndex++) {
@@ -118,26 +118,26 @@
 			alignChar_indexAttrib  : 'data-align-index',
 			alignChar_adjustAttrib : 'data-align-adjust' // percentage width adjustments
 		},
-		init: function(table, thisWidget, c, wo){
+		init: function(table, thisWidget, c, wo) {
 			wo.alignChar_initialized = false;
 			wo.alignChar_savedVars = [];
 			ts.alignChar.init(table, c, wo);
-			c.$table.on('pagerEnd refreshAlign', function(){
-				c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function(){
+			c.$table.on('pagerEnd refreshAlign', function() {
+				c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function() {
 					ts.alignChar.remove(table, c, this.column);
 				});
 				ts.alignChar.init(table, c, wo);
 			});
 		},
-		format : function(table, c, wo){
+		format : function(table, c, wo) {
 			// reinitialize in case table is empty when first initialized
 			if (!wo.alignChar_initialized) {
 				c.$table.triggerHandler('refreshAlign');
 			}
 		},
-		remove : function(table, c, wo, refreshing){
+		remove : function(table, c, wo, refreshing) {
 			if (refreshing) { return; }
-			c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function(){
+			c.$headers.filter('[' + wo.alignChar_charAttrib + ']').each(function() {
 				ts.alignChar.remove(table, c, this.column);
 			});
 			wo.alignChar_initialized = false;

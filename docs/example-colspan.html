@@ -21,7 +21,7 @@
 	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script>
-	$(function(){
+	$(function() {
 		var dupe = true;
 		$( '#dupe' ).click( function() {
 			dupe = !dupe;
@@ -32,7 +32,7 @@
 		$('table').on('filterEnd', function( event, c ) {
 			$( '#show-filter' ).html( '[ "' + c.lastSearch.join('", "') + '" ]' );
 		});
-		$('.search').click(function(){
+		$('.search').click(function() {
 			var $this = $(this),
 				filter = [],
 				col = $this.attr( 'data-column' );

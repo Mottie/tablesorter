@@ -58,7 +58,7 @@ td.editable_updated {
 				editable_enterToAccept : true,          // press enter to accept content, or click outside if false
 				editable_autoAccept    : true,          // accepts any changes made to the table cell automatically (v2.17.6)
 				editable_autoResort    : false,         // auto resort after the content has changed.
-				editable_validate      : null,          // return a valid string: function(text, original, columnIndex){ return text; }
+				editable_validate      : null,          // return a valid string: function(text, original, columnIndex) { return text; }
 				editable_focused       : function(txt, columnIndex, $element) {
 					// $element is the div, not the td
 					// to get the td, use $element.closest('td')
@@ -69,7 +69,7 @@ td.editable_updated {
 					// to get the td, use $element.closest('td')
 					$element.removeClass('focused');
 				},
-				editable_selectAll     : function(txt, columnIndex, $element){
+				editable_selectAll     : function(txt, columnIndex, $element) {
 					// note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
 					// only select everthing within the element when the content starts with the letter "B"
 					return /^b/i.test(txt) && columnIndex === 0;
@@ -81,7 +81,7 @@ td.editable_updated {
 			}
 		})
 		// config event variable new in v2.17.6
-		.children('tbody').on('editComplete', 'td', function(event, config){
+		.children('tbody').on('editComplete', 'td', function(event, config) {
 			var $this = $(this),
 				newContent = $this.text(),
 				cellIndex = this.cellIndex, // there shouldn't be any colspans in the tbody
@@ -90,7 +90,7 @@ td.editable_updated {
 			// Do whatever you want here to indicate
 			// that the content was updated
 			$this.addClass( 'editable_updated' ); // green background + white text
-			setTimeout(function(){
+			setTimeout(function() {
 				$this.removeClass( 'editable_updated' );
 			}, 500);
 
@@ -285,7 +285,7 @@ td.editable_updated {
 						<td>Event fired after the table content has been edited
 							<div class="collapsible">
 							<br>
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table')
     .tablesorter({
@@ -295,7 +295,7 @@ td.editable_updated {
       }
     })
     // use delegated event binding
-    .on('giterdone', 'td', function(event, config){
+    .on('giterdone', 'td', function(event, config) {
       // this = td; the event bubble up
       console.log( 'new content = ' + $(this).text() );
     });
@@ -312,16 +312,16 @@ td.editable_updated {
 							<div class="collapsible">
 							<br>
 							Set this function to manipulate or adjust the content when the content editable is focused
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_focused : function(txt, columnIndex, $element){
+      editable_focused : function(txt, columnIndex, $element) {
         // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
         $element.closest('td').addClass('focused');
       },
-      editable_blur : function(txt, columnIndex, $element){
+      editable_blur : function(txt, columnIndex, $element) {
         $element.closest('td').removeClass('focused');
       }
     }
@@ -339,16 +339,16 @@ td.editable_updated {
 							<div class="collapsible">
 							<br>
 							Set this function to manipulate or adjust the content when the content editable is blurred
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_focused : function(txt, columnIndex, $element){
+      editable_focused : function(txt, columnIndex, $element) {
         // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
         $element.closest('td').addClass('focused');
       },
-      editable_blur : function(txt, columnIndex, $element){
+      editable_blur : function(txt, columnIndex, $element) {
         $element.closest('td').removeClass('focused');
       }
     }
@@ -371,12 +371,12 @@ td.editable_updated {
 								<li>When <code>false</code>, no selection is made.</li>
 								<li>When this option contains a function, return either <code>true</code> to select all of the text within the element, or <code>false</code> to not select any text.</li>
 							</ul>
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
-      editable_selectAll : function(txt, columnIndex, $element){
+      editable_selectAll : function(txt, columnIndex, $element) {
         // note $element is the div inside of the table cell, so use $element.closest('td') to get the cell
         // only select everthing within the element when the content starts with the letter "B"
         return /^b/i.test(txt) && columnIndex === 0;
@@ -404,13 +404,13 @@ td.editable_updated {
 								<li>A <code>$element</code> parameter has been included which contains the contenteditable element. To get the table cell, use <code>$element.closest('td');</code></li>
 							</ul>
 							This function must return either a string containing the modified content or <code>false</code> to revert the content back to it's original value. Example:
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table1').tablesorter({
     widgets : ['editable'],
     widgetOptions : {
       // global validate function
-      editable_validate : function(txt, orig, columnIndex, $element){
+      editable_validate : function(txt, orig, columnIndex, $element) {
         // only allow one word
         var t = /\s/.test(txt) ? txt.split(/\s/)[0] : txt;
         return t || false;
@@ -423,7 +423,7 @@ td.editable_updated {
     widgetOptions : {
       // validate function per column
       editable_validate : {
-        0 : function(txt, orig, columnIndex, $element){
+        0 : function(txt, orig, columnIndex, $element) {
           // allow up to two words
           var t = txt.split(' ');
           return t.length > 2 ? t[0] + (t[1] ? ' ' + t[1] : '') : txt;
@@ -455,7 +455,7 @@ td.editable_updated {
 							If this option is <code>true</code>, this widget will trim content <em>upon initialization</em>; this is necessary if you need cleaned it up content before editing, like with an autocomplete script.<br>
 							<br>
 							Use this option as follows:
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table').tablesorter({
     widgets : ['editable'],
@@ -482,7 +482,7 @@ td.editable_updated {
 								<li>If the cell already has children (one or more) immediately inside of the table cell, no wrapping occurs and the child element(s) that don't have the class name set in <code>editable_noEdit</code>, will have the "contenteditable" attribute enabled.</li>
 							</ul>
 							Note: that this option uses jQuery's <code>wrapInner</code>, so this option can be set to a html string or selector, jQuery object, DOM element, or a function (jQuery 1.4+)
-							<pre class="prettyprint lang-js">$(function(){
+							<pre class="prettyprint lang-js">$(function() {
 
   $('#table').tablesorter({
     widgets : ['editable'],
@@ -583,11 +583,11 @@ td.editable_updated {
 <script>
 $(function() {
 	var wo = $('#table')[0].config.widgetOptions;
-	$('.enter').click(function(){
+	$('.enter').click(function() {
 		var t = wo.editable_enterToAccept = !wo.editable_enterToAccept;
 		$(this).next().find('span').html('' + t);
 	});
-	$('.auto').click(function(){
+	$('.auto').click(function() {
 		var t = wo.editable_autoAccept = !wo.editable_autoAccept;
 		$(this).next().find('span').html('' + t);
 	});

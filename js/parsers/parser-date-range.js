@@ -1,7 +1,7 @@
 /*! Parser: date ranges -updated 11/22/2015 (v2.24.6) */
 /* Include the 'widget-filter-type-insideRange.js' to filter ranges */
 /*jshint jquery:true */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,

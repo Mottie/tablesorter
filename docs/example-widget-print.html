@@ -91,7 +91,7 @@
 			print_styleSheet : '../css/theme.blue.css', // add the url of your print stylesheet
 			print_now        : true,        // Open the print dialog immediately if true
 			// callback executed when processing completes - default setting is null
-			print_callback   : function(config, $table, printStyle){
+			print_callback   : function(config, $table, printStyle) {
 				// do something to the $table (jQuery object of table wrapped in a div)
 				// or add to the printStyle string, then...
 				// print the table using the following code
@@ -100,7 +100,7 @@
 		}
 	});
 
-	$('.print').click(function(){
+	$('.print').click(function() {
 		$('.tablesorter').trigger('printTable');
 	});
 
@@ -300,7 +300,7 @@ print_callback : function( config, $table, printStyle ) {
 		<div>
 			<ul>
 				<li>To make the print widget work programmatically, trigger a "printTable" event.
-					<pre class="prettyprint lang-js">$('.print').click(function(){
+					<pre class="prettyprint lang-js">$('.print').click(function() {
 	$('.tablesorter').trigger('printTable');
 });</pre>
 				</li>

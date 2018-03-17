@@ -7,7 +7,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery:false, alert:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -164,11 +164,12 @@
 			headers = output.processRow(c, $this, true, outputJSON);
 
 			// all tbody rows - do not include widget added rows (e.g. grouping widget headers)
-			if ( !$rows )
+			if ( !$rows ) {
 				$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
+			}
 
 			// check for a filter callback function first! because
-			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
+			// /^f/.test(function() { console.log('test'); }) is TRUE! (function is converted to a string)
 			$rows = typeof saveRows === 'function' ? $rows.filter(saveRows) :
 				// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
 				/^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
@@ -410,11 +411,11 @@
 			output_popupStyle     : 'width=500,height=300',
 			output_saveFileName   : 'mytable.csv',
 			// format $cell content callback
-			output_formatContent  : null, // function(config, widgetOptions, data){ return data.content; }
+			output_formatContent  : null, // function(config, widgetOptions, data) { return data.content; }
 			// callback executed when processing completes
 			// return true to continue download/output
 			// return false to stop delivery & do something else with the data
-			output_callback      : function(config, data){ return true; },
+			output_callback      : function(/* config, data */) { return true; },
 			// JSON callback executed when a colspan is encountered in the header
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 			// the need to modify this for Excel no longer exists
@@ -429,7 +430,7 @@
 		init: function(table, thisWidget, c) {
 			output.init(c);
 		},
-		remove: function(table, c){
+		remove: function(table, c) {
 			output.remove(c);
 		}
 

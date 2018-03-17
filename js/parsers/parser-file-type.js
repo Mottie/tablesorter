@@ -3,7 +3,7 @@
  * prefixed into the parsed data, so sorting occurs in groups
  */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	// basic list from http://en.wikipedia.org/wiki/List_of_file_formats
@@ -51,7 +51,7 @@
 			if (!m) {
 				// make a string to 'quick' match the existing equivalents
 				t = [];
-				$.each(types, function(i, v){
+				$.each(types, function(i, v) {
 					t.push(v);
 				});
 				m = $.tablesorter.fileTypes.matching = sep + t.join(sep) + sep;

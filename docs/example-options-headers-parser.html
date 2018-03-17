@@ -18,8 +18,8 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 
 	<script>
-	$(function(){
-		$('table').on('tablesorter-initialized', function(){
+	$(function() {
+		$('table').on('tablesorter-initialized', function() {
 			var i, j, t = [],
 				cache = this.config.cache[0].normalized;
 			for (i = 0; i < cache.length; i++) {
@@ -30,7 +30,7 @@
 	});
 	</script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 	$("table").tablesorter({
 		theme : 'blue',
 

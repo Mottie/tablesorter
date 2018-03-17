@@ -46,7 +46,7 @@
 
 			// Make sure all lazy loaded images are visible - see #1169
 			data = 'data-' + (wo.lazyload_data_attribute || 'original');
-			$table.find('img[' + data + ']').each(function(){
+			$table.find('img[' + data + ']').each(function() {
 				$this = $(this);
 				$this.attr('src', $this.attr(data));
 			});

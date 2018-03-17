@@ -43,7 +43,7 @@
 		widgets: ['zebra', 'staticRow']
 	})
 	// (ctrl or mac command) + click to toggle static row
-	.find('tbody tr').click(function(event){
+	.find('tbody tr').click(function(event) {
 		if (event.ctrlKey || event.metaKey) {
 			$(this)
 				.toggleClass('static')
@@ -51,14 +51,14 @@
 		}
 	});
 
-	$('.addrow').click(function(){
+	$('.addrow').click(function() {
 		$('#alphimals tbody')
 			.append('<tr><td>AA</td><td>0</td><td>Aardvark</td></tr>')
 			.trigger('update');
 	});
 
 	// move row up or down
-	$('.move').click(function(){
+	$('.move').click(function() {
 		var direction = $(this).hasClass('up'),
 			$rows = $('#alphimals tr'),
 			$ig = $rows.filter(':contains(Iguana)').addClass('static'),
@@ -179,7 +179,7 @@ $(table).trigger('staticRowsRefresh');</pre>
 			this allows moving a static row dynamically; try the Move "Ignuana" row buttons above the "Single tbody" demo.
 			<h3>Event</h3>
 			A <code>staticRowsComplete</code> event is triggered after the static rows widget has completed moving the static rows back into place. Use it as follows:
-			<pre class="prettyprint lang-js">$(table).bind('staticRowsComplete', function(table){
+			<pre class="prettyprint lang-js">$(table).bind('staticRowsComplete', function(table) {
 	console.log('static rows applied to ' + table.id);
 });</pre>
 		</div>

@@ -148,12 +148,12 @@
 	</div>
 
 	<script>
-	$(function(){
+	$(function() {
 		var $table = $('table'),
 			len = $table[0].config.durationLength,
 			regex = new RegExp('(\\d{' + len + '})', 'g');
 		// add parsed values to order & value column
-		addParsedValues( $table, [1,2], function(v){
+		addParsedValues( $table, [1,2], function(v) {
 			var t = v.replace(regex, '$1|');
 			return t.substring(0, t.length - 1);
 		});

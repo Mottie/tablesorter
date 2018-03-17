@@ -77,7 +77,7 @@
 		$('.resultz').html(results.join('<br>'));
 	};
 
-	$(function(){
+	$(function() {
 		$('button').click(function () {
 			process();
 		});
@@ -145,7 +145,7 @@
 	$.tablesorter.equations['product'] = function(arry) {
 		// multiple all array values together
 		var product = 1;
-		$.each(arry, function(i,v){
+		$.each(arry, function(i,v) {
 			// oops, we shouldn't have any zero values in the array
 			if (v !== 0) {
 				product *= v;
@@ -407,7 +407,7 @@ math_complete : function($cell, wo, result, value, arry) {
 							<br>
 							Use this option as follows:
 							<pre class="prettyprint lang-js">// complete executed after each function
-math_complete : function($cell, wo, result, value, arry){
+math_complete : function($cell, wo, result, value, arry) {
     return '$ ' + result + $cell.attr('data-suffix');
 }</pre>
 							<ul>
@@ -420,7 +420,7 @@ math_complete : function($cell, wo, result, value, arry){
 							In this function, if a anything is returned, it will be automatically added to the <code>$cell</code> as html. Or, return <code>false</code> and no change is made to the cell contents; use this method if you manipulate the <code>$cell</code> contents and don't want the widget to do it.<br>
 							<br>
 							If you need to format the data output after manipulating the <code>value</code>, you can use <code>wo.math_mask</code>, or a different mask, by using the <code>$.tablesorter.formatMask( mask, value );</code> function. For example:
-							<pre class="prettyprint lang-js">math_complete : function($cell, wo, result, value, arry){
+							<pre class="prettyprint lang-js">math_complete : function($cell, wo, result, value, arry) {
     var percent = Math.round( value * 1e4 ) / 100; // percent with two decimal places
     return $.tablesorter.formatMask( wo.math_mask, percent ) + ' %';
 }</pre>
@@ -593,7 +593,7 @@ math_rowFilter : ':visible:not(.filtered)'</pre>
 $.tablesorter.equations['product'] = function(arry, config) {
     // multiple all array values together
     var product = 1;
-    $.each(arry, function(i,v){
+    $.each(arry, function(i,v) {
         // oops, we shouldn't have any zero values in the array
         if (v !== 0) {
             product *= v;

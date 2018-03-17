@@ -280,6 +280,7 @@
 				if ( tsfRegex.exact.test( data.iFilter ) ) {
 					var txt = data.iFilter.replace( tsfRegex.exact, '' ),
 						filter = tsf.parseFilter( c, txt, data ) || '';
+					// eslint-disable-next-line eqeqeq
 					return data.anyMatch ? $.inArray( filter, data.rowArray ) >= 0 : filter == data.iExact;
 				}
 				return null;
@@ -453,7 +454,7 @@
 						c.lastCombinedFilter = null;
 						c.lastSearch = [];
 						// update filterFormatters after update (& small delay) - Fixes #1237
-						setTimeout(function(){
+						setTimeout(function() {
 							c.$table.triggerHandler( 'filterFomatterUpdate' );
 						}, 100);
 					}

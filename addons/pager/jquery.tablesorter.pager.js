@@ -27,7 +27,7 @@
 				customAjaxUrl: function(table, url) { return url; },
 
 				// ajax error callback from $.tablesorter.showError function
-				// ajaxError: function( config, xhr, settings, exception ){ return exception; };
+				// ajaxError: function( config, xhr, settings, exception ) { return exception; };
 				// returning false will abort the error message
 				ajaxError: null,
 
@@ -52,7 +52,7 @@
 				//   ],
 				//   [ "header1", "header2", ... "headerN" ] // optional
 				// ]
-				ajaxProcessing: function(ajax){ return [ 0, [], null ]; },
+				ajaxProcessing: function( /* ajax */ ) { return [ 0, [], null ]; },
 
 				// output default: '{page}/{totalPages}'
 				// possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow},
@@ -139,12 +139,12 @@
 				if ( p.updateArrows ) {
 					tmp = p.$container.find(p.cssFirst + ',' + p.cssPrev);
 					tmp[ first ? a : r ](d); // toggle disabled class
-					tmp.each(function(){
+					tmp.each(function() {
 						this.ariaDisabled = first;
 					});
 					tmp = p.$container.find(p.cssNext + ',' + p.cssLast);
 					tmp[ last ? a : r ](d);
-					tmp.each(function(){
+					tmp.each(function() {
 						this.ariaDisabled = last;
 					});
 				}
@@ -203,11 +203,11 @@
 						// form the output string (can now get a new output string from the server)
 						s = ( p.ajaxData && p.ajaxData.output ? p.ajaxData.output || output : output )
 							// {page} = one-based index; {page+#} = zero based index +/- value
-							.replace(/\{page([\-+]\d+)?\}/gi, function(m, n){
+							.replace(/\{page([\-+]\d+)?\}/gi, function(m, n) {
 								return p.totalPages ? p.page + (n ? parseInt(n, 10) : 1) : 0;
 							})
 							// {totalPages}, {extra}, {extra:0} (array) or {extra : key} (object)
-							.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m){
+							.replace(/\{\w+(\s*:\s*\w+)?\}/gi, function(m) {
 								var len, indx,
 								str = m.replace(/[{}\s]/g, ''),
 								extra = str.split(':'),
@@ -236,7 +236,7 @@
 					if ($out.length) {
 						$out[ ($out[0].nodeName === 'INPUT') ? 'val' : 'html' ](s);
 						// rebind startRow/page inputs
-						$out.find('.ts-startRow, .ts-page').unbind('change' + namespace).bind('change' + namespace, function(){
+						$out.find('.ts-startRow, .ts-page').unbind('change' + namespace).bind('change' + namespace, function() {
 							var v = $(this).val(),
 							pg = $(this).hasClass('ts-startRow') ? Math.floor( v / sz ) + 1 : v;
 							c.$table.triggerHandler('pageSet' + namespace, [ pg ]);
@@ -357,7 +357,7 @@
 				$.data(table, 'pagerLastSize', p.size);
 			},
 
-			hideRows = function(table, p){
+			hideRows = function(table, p) {
 				if (!p.ajaxUrl) {
 					var i,
 					lastIndex = 0,
@@ -370,7 +370,7 @@
 					last = 0, // for cache indexing
 					j = 0; // size counter
 					p.cacheIndex = [];
-					for ( i = 0; i < l; i++ ){
+					for ( i = 0; i < l; i++ ) {
 						if ( !p.regexFiltered.test(rows[i].className) ) {
 							if (j === s && rows[i].className.match(c.cssChildRow)) {
 								// hide child rows @ start of pager (if already visible)
@@ -398,19 +398,19 @@
 				}
 			},
 
-			hideRowsSetup = function(table, p){
+			hideRowsSetup = function(table, p) {
 				p.size = parsePageSize( p, p.$container.find(p.cssPageSize).val(), 'get' );
 				setPageSize( table, p.size, p );
 				pagerArrows( table, p );
 				if ( !p.removeRows ) {
 					hideRows(table, p);
-					$(table).bind('sortEnd filterEnd '.split(' ').join(table.config.namespace + 'pager '), function(){
+					$(table).bind('sortEnd filterEnd '.split(' ').join(table.config.namespace + 'pager '), function() {
 						hideRows(table, p);
 					});
 				}
 			},
 
-			renderAjax = function(data, table, p, xhr, settings, exception){
+			renderAjax = function(data, table, p, xhr, settings, exception) {
 				// process data
 				if ( typeof p.ajaxProcessing === 'function' ) {
 
@@ -424,9 +424,7 @@
 					c = table.config,
 					$table = c.$table,
 					tds = '',
-					result = p.ajaxProcessing(data, table, xhr) || [ 0, [] ],
-					hl = $table.find('thead th').length;
-
+					result = p.ajaxProcessing(data, table, xhr) || [ 0, [] ];
 					// Clean up any previous error.
 					ts.showError( table );
 
@@ -524,11 +522,11 @@
 					p.last.sortList = (c.sortList || []).join(',');
 					updatePageDisplay(table, p, false);
 					// tablesorter core updateCache (not pager)
-					ts.updateCache( c, function(){
+					ts.updateCache( c, function() {
 						if (p.initialized) {
 							// apply widgets after table has rendered & after a delay to prevent
 							// multiple applyWidget blocking code from blocking this trigger
-							setTimeout(function(){
+							setTimeout(function() {
 								if (c.debug) {
 									console.log('Pager: Triggering pagerChange');
 								}
@@ -566,7 +564,7 @@
 					p.ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
 					p.ajaxObject.success = function(data, status, jqxhr) {
 						// Refuse to process old ajax commands that were overwritten by new ones - see #443
-						if (counter < p.ajaxCounter){
+						if (counter < p.ajaxCounter) {
 							return;
 						}
 						renderAjax(data, table, p, jqxhr);
@@ -587,7 +585,7 @@
 				c = table.config,
 				url = (p.ajaxUrl) ? p.ajaxUrl
 				// allow using "{page+1}" in the url string to switch to a non-zero based index
-				.replace(/\{page([\-+]\d+)?\}/, function(s, n){ return p.page + (n ? parseInt(n, 10) : 0); })
+				.replace(/\{page([\-+]\d+)?\}/, function(s, n) { return p.page + (n ? parseInt(n, 10) : 0); })
 				// this will pass "all" to server when size is set to "all"
 				.replace(/\{size\}/g, p.size) : '',
 				sortList = c.sortList,
@@ -664,7 +662,7 @@
 					count = f ? 0 : s;
 					added = 0;
 					while (added < e && index < rows.length) {
-						if (!f || !p.regexFiltered.test(rows[index][0].className)){
+						if (!f || !p.regexFiltered.test(rows[index][0].className)) {
 							count++;
 							if (count > s && added <= e) {
 								added++;
@@ -720,7 +718,7 @@
 				var c = table.config,
 				p = c.pager;
 				// tablesorter core updateCache (not pager)
-				ts.updateCache( c, function(){
+				ts.updateCache( c, function() {
 					var i,
 					rows = [],
 					n = table.config.cache[0].normalized;
@@ -908,7 +906,7 @@
 				p.$container.find(p.cssGoto + ',' + p.cssPageSize + ',.ts-startRow, .ts-page')
 				.removeClass(p.cssDisabled)
 				.removeAttr('disabled')
-				.each(function(){
+				.each(function() {
 					this.ariaDisabled = false;
 				});
 				p.isDisabled = false;
@@ -943,7 +941,7 @@
 			},
 
 			init = function(table, settings) {
-				var t, ctrls, fxn, size, $el,
+				var t, ctrls, fxn, $el,
 				c = table.config,
 				wo = c.widgetOptions,
 				p = c.pager = $.extend( true, {}, $.tablesorterPager.defaults, settings ),
@@ -1003,23 +1001,23 @@
 						ts.applyWidget( table );
 					}
 				})
-				.bind('disablePager' + namespace, function(e){
+				.bind('disablePager' + namespace, function(e) {
 					e.stopPropagation();
 					showAllRows(table, p);
 				})
-				.bind('enablePager' + namespace, function(e){
+				.bind('enablePager' + namespace, function(e) {
 					e.stopPropagation();
 					enablePager(table, p, true);
 				})
-				.bind('destroyPager' + namespace, function(e){
+				.bind('destroyPager' + namespace, function(e) {
 					e.stopPropagation();
 					destroyPager(table, p);
 				})
-				.bind('resetToLoadState' + namespace, function(e){
+				.bind('resetToLoadState' + namespace, function(e) {
 					e.stopPropagation();
 					resetState(table, p);
 				})
-				.bind('updateComplete' + namespace, function(e, table, triggered){
+				.bind('updateComplete' + namespace, function(e, table, triggered) {
 					e.stopPropagation();
 					// table can be unintentionally undefined in tablesorter v2.17.7 and earlier
 					// don't recalculate total rows/pages if using ajax
@@ -1038,14 +1036,14 @@
 					changeHeight(table, p);
 					updatePageDisplay(table, p, true);
 				})
-				.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
+				.bind('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size) {
 					e.stopPropagation();
 					setPageSize(table, parsePageSize( p, size, 'get' ), p);
 					moveToPage(table, p);
 					hideRows(table, p);
 					updatePageDisplay(table, p, false);
 				})
-				.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
+				.bind('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num) {
 					e.stopPropagation();
 					// force pager refresh
 					if (e.type === 'pagerUpdate') {
@@ -1056,7 +1054,7 @@
 					moveToPage(table, p, true);
 					updatePageDisplay(table, p, false);
 				})
-				.bind('pageAndSize' + namespace, function(e, page, size){
+				.bind('pageAndSize' + namespace, function(e, page, size) {
 					e.stopPropagation();
 					p.page = (parseInt(page, 10) || 1) - 1;
 					setPageSize(table, parsePageSize( p, size, 'get' ), p);
@@ -1074,7 +1072,7 @@
 				pager.find(ctrls.join(','))
 				.attr('tabindex', 0)
 				.unbind('click' + namespace)
-				.bind('click' + namespace, function(e){
+				.bind('click' + namespace, function(e) {
 					e.stopPropagation();
 					var i, $t = $(this), l = ctrls.length;
 					if ( !$t.hasClass(p.cssDisabled) ) {
@@ -1092,7 +1090,7 @@
 				if ( $el.length ) {
 					$el
 					.unbind('change' + namespace)
-					.bind('change' + namespace, function(){
+					.bind('change' + namespace, function() {
 						p.page = $(this).val() - 1;
 						moveToPage(table, p, true);
 						updatePageDisplay(table, p, false);
@@ -1187,8 +1185,7 @@
 
 	// see #486
 	ts.showError = function( table, xhr, settings, exception ) {
-		var $row,
-			$table = $( table ),
+		var $table = $( table ),
 			c = $table[0].config,
 			wo = c && c.widgetOptions,
 			errorRow = c.pager && c.pager.cssErrorRow ||
@@ -1197,7 +1194,7 @@
 			typ = typeof xhr,
 			valid = true,
 			message = '',
-			removeRow = function(){
+			removeRow = function() {
 				c.$table.find( 'thead' ).find( c.selectorRemove ).remove();
 			};
 
@@ -1243,7 +1240,7 @@
 		}
 
 		// allow message to include entire row HTML!
-		$row = ( /tr\>/.test(message) ? $(message) : $('<tr><td colspan="' + c.columns + '">' + message + '</td></tr>') )
+		$( /tr\>/.test(message) ? message : '<tr><td colspan="' + c.columns + '">' + message + '</td></tr>' )
 			.click( function() {
 				$( this ).remove();
 			})

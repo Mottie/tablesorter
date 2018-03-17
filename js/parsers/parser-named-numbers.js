@@ -2,7 +2,7 @@
  * code modified from http://stackoverflow.com/a/12014376/145346
  */
 /*jshint jquery:true */
-;(function($){
+;(function($) {
 	'use strict';
 
 	// Change language of the named numbers as needed

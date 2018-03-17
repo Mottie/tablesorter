@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter;
 
@@ -35,14 +35,14 @@
 			// manipulate the title as desired
 			headerTitle_callback : null // function($cell, txt) { return txt; }
 		},
-		init: function(table, thisWidget, c, wo){
+		init: function(table, thisWidget, c, wo) {
 			// force refresh
-			c.$table.on('refreshHeaderTitle', function(){
+			c.$table.on('refreshHeaderTitle', function() {
 				thisWidget.format(table, c, wo);
 			});
 			// add tooltip class
 			if ($.isArray(wo.headerTitle_tooltip)) {
-				c.$headers.each(function(){
+				c.$headers.each(function() {
 					$(this).addClass( wo.headerTitle_tooltip[this.column] || '' );
 				});
 			} else if (wo.headerTitle_tooltip !== '') {
@@ -51,9 +51,8 @@
 		},
 		format: function (table, c, wo) {
 			var txt;
-			c.$headers.each(function(){
-				var t = this,
-					$this = $(this),
+			c.$headers.each(function() {
+				var $this = $(this),
 					col = parseInt( $this.attr( 'data-column' ), 10 ),
 					sortType = wo.headerTitle_type[ col ] || c.parsers[ col ].type || 'text',
 					sortDirection = $this.hasClass(ts.css.sortAsc) ? 0 : $this.hasClass(ts.css.sortDesc) ? 1 : 2,
@@ -64,7 +63,7 @@
 					txt = (wo.headerTitle_prefix || '') + // now deprecated
 						($this.hasClass('sorter-false') ? wo.headerTitle_output_nosort :
 						ts.isValueInArray( col, c.sortList ) >= 0 ? wo.headerTitle_output_sorted : wo.headerTitle_output_unsorted);
-					txt = txt.replace(/\{(current|next|name)\}/gi, function(m){
+					txt = txt.replace(/\{(current|next|name)\}/gi, function(m) {
 						return {
 							'{name}'    : $this.text(),
 							'{current}' : wo[ 'headerTitle_cur_' + sortType ][ sortDirection ] || '',
@@ -80,7 +79,7 @@
 			c.$table.off('refreshHeaderTitle');
 			// remove tooltip class
 			if ($.isArray(wo.headerTitle_tooltip)) {
-				c.$headers.each(function(){
+				c.$headers.each(function() {
 					$(this).removeClass( wo.headerTitle_tooltip[this.column] || '' );
 				});
 			} else if (wo.headerTitle_tooltip !== '') {

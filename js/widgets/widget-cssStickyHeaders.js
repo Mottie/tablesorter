@@ -2,7 +2,7 @@
 * Requires a modern browser, tablesorter v2.8+
 */
 /*jshint jquery:true, unused:false */
-;(function($, window){
+;(function($, window) {
 	'use strict';
 
 	var ts = $.tablesorter;

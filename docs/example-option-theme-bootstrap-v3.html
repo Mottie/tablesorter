@@ -25,7 +25,7 @@
 
 	<script id="js">$(function() {
 
-	// NOTE: $.tablesorter.theme.bootstrap is ALREADY INCLUDED in the jquery.tablesorter.widgets.js
+	// NOTE: $.tablesorter.themes.bootstrap is ALREADY INCLUDED in the jquery.tablesorter.widgets.js
 	// file; it is included here to show how you can modify the default classes
 	$.tablesorter.themes.bootstrap = {
 		// these classes are added to the table. To see other table classes available,
@@ -106,10 +106,10 @@
 });</script>
 
 	<script>
-	$(function(){
+	$(function() {
 
 		// filter button demo code
-		$('button.filter').click(function(){
+		$('button.filter').click(function() {
 			var col = $(this).data('column'),
 				txt = $(this).data('filter');
 			$('table').find('.tablesorter-filter').val('').eq(col).val(txt);
@@ -118,7 +118,7 @@
 		});
 
 		// toggle zebra widget
-		$('button.zebra').click(function(){
+		$('button.zebra').click(function() {
 			var t = $(this).hasClass('btn-success');
 //			if (t) {
 				// removing classes applied by the zebra widget

@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter;
 
@@ -33,7 +33,7 @@
 				formatter[ column ] = ts.getColumnData( c.table, wo.formatter_column, column ) || false;
 			}
 			// main loop
-			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ){
+			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
 				$tbody = ts.processTbody( c.table, c.$tbodies.eq( tbodyIndex ), true ); // detach tbody
 				rows = c.cache[ tbodyIndex ];
 				len = rows.normalized.length;

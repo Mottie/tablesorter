@@ -80,7 +80,7 @@
 	</style>
 	<script src="js/jquery.jui_theme_switch.min.js"></script>
 	<script>
-	$(function(){
+	$(function() {
 		$('#switcher').jui_theme_switch({
 			stylesheet_link_id : 'ui-theme',
 			switcher_label     : 'Select jQuery UI Theme:',
@@ -89,7 +89,7 @@
 		});
 	});
 	</script>
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	$('.tablesorter').tablesorter({
 		theme: 'jui',
@@ -168,7 +168,7 @@ $(function() {
 	$('#theme')
 		.append(o)
 		.val('jui')
-		.change(function(){
+		.change(function() {
 			var theme = $(this).val().toLowerCase();
 
 			// show jui select only if jQuery UI selected
@@ -177,7 +177,7 @@ $(function() {
 			$('#main').attr( 'class', 'using-' + theme + '-theme' );
 
 			// refresh uitheme widget class names
-			$('#main .tablesorter').each(function(){
+			$('#main .tablesorter').each(function() {
 				if (this.config) {
 					this.config.theme = theme === 'black-ice' ? 'blackice' : theme;
 				}
@@ -188,7 +188,7 @@ $(function() {
 			$(window).trigger('resize');
 		}).change();
 
-	$('button').click(function(){
+	$('button').click(function() {
 		var jth = $jth.text() === 'true',
 			uas = $uas.text() === 'true';
 		if (this.id === 'jthb') {
@@ -196,7 +196,7 @@ $(function() {
 		} else {
 			uas = !uas;
 		}
-		$('.tablesorter-scroller-table table').each(function(){
+		$('.tablesorter-scroller-table table').each(function() {
 			var c = this.config;
 			if (c) {
 				c.widgetOptions.scroller_jumpToHeader = jth;

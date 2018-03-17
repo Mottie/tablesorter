@@ -230,7 +230,7 @@
 		init : function( table, thisWidget, c, wo ) {
 			ts.sortTbodies.init( c, wo );
 		},
-		remove : function( table, c, wo, refreshing ) {
+		remove : function( table, c, wo ) {
 			c.$table.unbind( 'sortBegin updateComplete '.split( ' ' ).join( c.namespace + 'sortTbody ' ) );
 			c.serverSideSorting = wo.sortTbody_original_serverSideSorting;
 			c.cssInfoBlock = wo.sortTbody_original_cssInfoBlock;

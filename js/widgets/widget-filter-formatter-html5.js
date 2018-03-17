@@ -7,7 +7,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter || {},
@@ -17,12 +17,12 @@
 
 	tsff = ts.filterFormatter = $.extend( {}, ts.filterFormatter, {
 
-		addCompare: function($cell, indx, options){
+		addCompare: function($cell, indx, options) {
 			if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
 				var opt = '',
 					compareSelectClass = [ compareSelect.slice(1), ' ' + compareSelect.slice(1), '' ],
 					txt = options.cellText ? '<label class="' + compareSelectClass.join('-label') + indx + '">' + options.cellText + '</label>' : '';
-				$.each(options.compare, function(i, c){
+				$.each(options.compare, function(i, c) {
 					opt += '<option ' + (options.selected === i ? 'selected' : '') + '>' + c + '</option>';
 				});
 				$cell
@@ -38,7 +38,7 @@
 				num = val.replace(/\s*?[><=]\s*?/g, ''),
 				compare = val.match(/[><=]/g) || '';
 			if (o.compare) {
-				if ($.isArray(o.compare)){
+				if ($.isArray(o.compare)) {
 					compare = (compare || []).join('') || o.compare[o.selected || 0];
 				}
 				$cell.find(compareSelect).val( compare );
@@ -72,7 +72,7 @@
 			$shcell = [],
 			c = $cell.closest('table')[0].config,
 
-			updateNumber = function(delayed, notrigger){
+			updateNumber = function(delayed, notrigger) {
 				var chkd = o.addToggle ? $cell.find('.toggle').is(':checked') : true,
 					v = $cell.find('.number').val(),
 					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
@@ -104,13 +104,13 @@
 				// add HTML5 number (spinner)
 				$cell
 					.append(t + '<input type="hidden" />')
-					.find('.toggle, .number').bind('change', function(){
+					.find('.toggle, .number').bind('change', function() {
 						updateNumber();
 					})
 					.closest('thead').find('th[data-column=' + indx + ']')
 					.addClass('filter-parsed') // get exact numbers from column
 					// on reset
-					.closest('table').bind('filterReset', function(){
+					.closest('table').bind('filterReset', function() {
 						if ($.isArray(o.compare)) {
 							$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 						}
@@ -122,17 +122,17 @@
 							}
 						}
 						$cell.find('.number').val( o.value );
-						setTimeout(function(){
+						setTimeout(function() {
 							updateNumber();
 						}, 0);
 					});
-				$input = $cell.find('input[type=hidden]').bind('change', function(){
+				$input = $cell.find('input[type=hidden]').bind('change', function() {
 					$cell.find('.number').val( this.value );
 					updateNumber();
 				});
 
 				// update slider from hidden input, in case of saved filters
-				c.$table.bind('filterFomatterUpdate', function(){
+				c.$table.bind('filterFomatterUpdate', function() {
 					var val = tsff.updateCompare($cell, $input, o)[0] || o.value;
 					$cell.find('.number').val( ((val || '') + '').replace(/[><=]/g, '') );
 					updateNumber(false, true);
@@ -142,17 +142,17 @@
 				if (o.compare) {
 					// add compare select
 					tsff.addCompare($cell, indx, o);
-					$cell.find(compareSelect).bind('change', function(){
+					$cell.find(compareSelect).bind('change', function() {
 						updateNumber();
 					});
 				}
 
 				// has sticky headers?
-				c.$table.bind('stickyHeadersInit', function(){
+				c.$table.bind('stickyHeadersInit', function() {
 					$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 					$shcell
 						.append(t)
-						.find('.toggle, .number').bind('change', function(){
+						.find('.toggle, .number').bind('change', function() {
 							$cell.find('.number').val( $(this).val() );
 							updateNumber();
 						});
@@ -160,7 +160,7 @@
 					if (o.compare) {
 						// add compare select
 						tsff.addCompare($shcell, indx, o);
-						$shcell.find(compareSelect).bind('change', function(){
+						$shcell.find(compareSelect).bind('change', function() {
 							$cell.find(compareSelect).val( $(this).val() );
 							updateNumber();
 						});
@@ -203,15 +203,17 @@
 			$shcell = [],
 			c = $cell.closest('table')[0].config,
 
-			updateRange = function(v, delayed, notrigger){
+			updateRange = function(v, delayed, notrigger) {
 				/*jshint eqeqeq:false */
 				// hidden input changes may include compare symbols
 				v = ( typeof v === 'undefined' ? $input.val() : v ).toString().replace(/[<>=]/g, '') || o.value;
 				var compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					// eslint-disable-next-line eqeqeq
 					t = ' (' + (compare ? compare + v : v == o.min ? o.allText : v) + ')',
 					searchType =  c.$table[0].hasInitialized ? (delayed ? delayed : o.delayed) || '' : true;
 				$cell.find('input[type=hidden]')
 					// add equal to the beginning, so we filter exact numbers
+					// eslint-disable-next-line eqeqeq
 					.val( ( compare ? compare + v : ( v == o.min ? '' : ( o.exactMatch ? '=' : '' ) + v ) ) )
 					// ( val == o.min ? '' : val + (o.exactMatch ? '=' : ''))
 					.trigger( notrigger ? '' : 'search', searchType ).end()
@@ -237,23 +239,24 @@
 					// add span to header for the current slider value
 					.find('.tablesorter-header-inner').append('<span class="curvalue" />');
 				// hidden filter update namespace trigger by filter widget
-				$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
+				$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function() {
 					/*jshint eqeqeq:false */
 					var v = this.value,
 						compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '';
 					if (v !== this.lastValue) {
+						// eslint-disable-next-line eqeqeq
 						this.lastValue = ( compare ? compare + v : ( v == o.min ? '' : ( o.exactMatch ? '=' : '' ) + v ) );
 						this.value = this.lastValue;
 						updateRange( v );
 					}
 				});
 
-				$cell.find('.range').bind('change', function(){
+				$cell.find('.range').bind('change', function() {
 					updateRange( this.value );
 				});
 
 				// update spinner from hidden input, in case of saved filters
-				c.$table.bind('filterFomatterUpdate', function(){
+				c.$table.bind('filterFomatterUpdate', function() {
 					var val = tsff.updateCompare($cell, $input, o)[0];
 					$cell.find('.range').val( val );
 					updateRange(val, false, true);
@@ -263,17 +266,17 @@
 				if (o.compare) {
 					// add compare select
 					tsff.addCompare($cell, indx, o);
-					$cell.find(compareSelect).bind('change', function(){
+					$cell.find(compareSelect).bind('change', function() {
 						updateRange();
 					});
 				}
 
 				// has sticky headers?
-				c.$table.bind('stickyHeadersInit', function(){
+				c.$table.bind('stickyHeadersInit', function() {
 					$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 					$shcell
 						.html('<input class="range" type="range" min="' + o.min + '" max="' + o.max + '" value="' + o.value + '" />')
-						.find('.range').bind('change', function(){
+						.find('.range').bind('change', function() {
 							updateRange( $shcell.find('.range').val() );
 						});
 					updateRange();
@@ -281,7 +284,7 @@
 					if (o.compare) {
 						// add compare select
 						tsff.addCompare($shcell, indx, o);
-						$shcell.find(compareSelect).bind('change', function(){
+						$shcell.find(compareSelect).bind('change', function() {
 							$cell.find(compareSelect).val( $(this).val() );
 							updateRange();
 						});
@@ -290,11 +293,11 @@
 				});
 
 				// on reset
-				$cell.closest('table').bind('filterReset', function(){
+				$cell.closest('table').bind('filterReset', function() {
 					if ($.isArray(o.compare)) {
 						$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 					}
-					setTimeout(function(){
+					setTimeout(function() {
 						updateRange(o.value, false, true);
 					}, 0);
 				});
@@ -378,23 +381,23 @@
 					$cell.closest('thead').find('th[data-column=' + indx + ']').find('.tablesorter-header-inner').append('<span class="curcolor" />');
 				}
 
-				$cell.find('.toggle, .colorpicker').bind('change', function(){
+				$cell.find('.toggle, .colorpicker').bind('change', function() {
 					updateColor( $cell.find('.colorpicker').val() );
 				});
 
 				// hidden filter update namespace trigger by filter widget
-				$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function(){
+				$input = $cell.find('input[type=hidden]').bind('change' + c.namespace + 'filter', function() {
 					updateColor( this.value );
 				});
 
 				// update slider from hidden input, in case of saved filters
-				c.$table.bind('filterFomatterUpdate', function(){
+				c.$table.bind('filterFomatterUpdate', function() {
 					updateColor( $input.val(), true );
 					ts.filter.formatterUpdated($cell, indx);
 				});
 
 				// on reset
-				$cell.closest('table').bind('filterReset', function(){
+				$cell.closest('table').bind('filterReset', function() {
 					// just turn off the colorpicker
 					if (o.addToggle) {
 						$cell.find('.toggle')[0].checked = false;
@@ -402,17 +405,17 @@
 					// delay needed because default color needs to be set in the filter
 					// there is no compare option here, so if addToggle = false,
 					// default color is #000000 (even with no value set)
-					setTimeout(function(){
+					setTimeout(function() {
 						updateColor();
 					}, 0);
 				});
 
 				// has sticky headers?
-				c.$table.bind('stickyHeadersInit', function(){
+				c.$table.bind('stickyHeadersInit', function() {
 					$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx);
 					$shcell
 						.html(t)
-						.find('.toggle, .colorpicker').bind('change', function(){
+						.find('.toggle, .colorpicker').bind('change', function() {
 							updateColor( $shcell.find('.colorpicker').val() );
 						});
 					updateColor( $shcell.find('.colorpicker').val() );

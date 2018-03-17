@@ -1,7 +1,7 @@
 /*! Parser: network - updated 2018-01-10 (v2.29.3) */
 /* IPv4, IPv6 and MAC Addresses */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -47,13 +47,13 @@
 			if (ts.regex.ipv4Validate.test(address)) {
 				groups = address.match(ts.regex.ipv4Extract);
 				t = '';
-				for (i = 1; i < groups.length; i++){
+				for (i = 1; i < groups.length; i++) {
 					t += ('00' + (parseInt(groups[i], 10).toString(16)) ).slice(-2) + ( i === 2 ? ':' : '' );
 				}
 				address = address.replace( ts.regex.ipv4Extract, t );
 			}
 
-			if (address.indexOf('::') == -1) {
+			if (address.indexOf('::') === -1) {
 				// All eight groups are present
 				fullAddress = address;
 			} else {
@@ -74,7 +74,7 @@
 				// it's fastest & easiest for tablesorter to sort decimal values (vs hex)
 				groups[i] = hex ? ('0000' + groups[i]).slice(-4) :
 					('00000' + (parseInt(groups[i], 16) || 0)).slice(-5);
-				expandedAddress += ( i != validGroupCount - 1) ? groups[i] + ':' : groups[i];
+				expandedAddress += ( i !== validGroupCount - 1) ? groups[i] + ':' : groups[i];
 			}
 			return expandedAddress;
 		},

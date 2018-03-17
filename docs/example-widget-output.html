@@ -79,7 +79,7 @@ table.tablesorter tbody tr.even.checked td {
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 	<script>
-	$(function(){
+	$(function() {
 		$('#output-options').tablesorter({
 			theme: 'bootstrap',
 			widthFixed : true,
@@ -90,7 +90,7 @@ table.tablesorter tbody tr.even.checked td {
 		// External search
 		// buttons set up like this:
 		// <button type="button" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
-		$('button[data-filter-column]').click(function(){
+		$('button[data-filter-column]').click(function() {
 			/*** first method *** data-filter-column="2" data-filter-text="!son"
 				add search value to Discount column (zero based index) input */
 			var filters = [],
@@ -177,21 +177,21 @@ table.tablesorter tbody tr.even.checked td {
 	// set up download buttons for two table groups
 	var demos = ['.group1', '.group2'];
 
-	$.each(demos, function(groupIndex){
+	$.each(demos, function(groupIndex) {
 		var $this = $(demos[groupIndex]);
 
-		$this.find('.dropdown-toggle').click(function(e){
+		$this.find('.dropdown-toggle').click(function(e) {
 			// this is needed because clicking inside the dropdown will close
 			// the menu with only bootstrap controlling it.
 			$this.find('.dropdown-menu').toggle();
 			return false;
 		});
 		// make separator & replace quotes buttons update the value
-		$this.find('.output-separator').click(function(){
+		$this.find('.output-separator').click(function() {
 			$this.find('.output-separator').removeClass('active');
 			var txt = $(this).addClass('active').html();
 			$this.find('.output-separator-input').val( txt );
-			$this.find('.output-filename').val(function(i, v){
+			$this.find('.output-filename').val(function(i, v) {
 				// change filename extension based on separator
 				var filetype = (txt === 'json' || txt === 'array') ? 'js' :
 					txt === ',' ? 'csv' : 'txt';
@@ -199,18 +199,18 @@ table.tablesorter tbody tr.even.checked td {
 			});
 			return false;
 		});
-		$this.find('.output-quotes').click(function(){
+		$this.find('.output-quotes').click(function() {
 			$this.find('.output-quotes').removeClass('active');
 			$this.find('.output-replacequotes').val( $(this).addClass('active').text() );
 			return false;
 		});
 		// header/footer toggle buttons
-		$this.find('.output-header, .output-footer').click(function(){
+		$this.find('.output-header, .output-footer').click(function() {
 			$(this).toggleClass('active');
 		});
 		// clicking the download button; all you really need is to
 		// trigger an "output" event on the table
-		$this.find('.download').click(function(){
+		$this.find('.download').click(function() {
 			var typ,
 				$table = $this.find('table'),
 				wo = $table[0].config.widgetOptions,
@@ -406,7 +406,7 @@ table.tablesorter tbody tr.even.checked td {
 			<pre class="prettyprint lang-js">$(function () {
     var $table = $('table');
 
-    $('.download').click(function(){
+    $('.download').click(function() {
         // tell the output widget do it's thing
         $table.trigger('outputTable');
     });
@@ -847,7 +847,7 @@ line,value1,value2,value3
 									</li>
 								</ul>
 								Default setting:
-								<pre class="prettyprint lang-js">function(config, data, url){
+								<pre class="prettyprint lang-js">function(config, data, url) {
     // return data.replace( /Mary Smith/g, 'Mary Smith-Jones' ); // v2.25.1+
     return true;
 }</pre>
@@ -864,7 +864,7 @@ line,value1,value2,value3
     // entire table using the current filters, sort, etc.
     if (url) {
       return $.getJSON(url + "&csv=1")
-        .done(function(data){
+        .done(function(data) {
           return data.csv;
         })
         .fail(function() {

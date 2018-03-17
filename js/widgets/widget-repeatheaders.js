@@ -3,7 +3,7 @@
 * Original by Christian Bach from the example-widgets.html demo
 */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	$.tablesorter.addWidget({
@@ -42,7 +42,7 @@
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo){
+		remove: function(table, c, wo) {
 			wo.repeatHeaders = '';
 			c.$table.find('tr.repeated-header').remove();
 		}

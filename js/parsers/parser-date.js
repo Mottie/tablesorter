@@ -2,7 +2,7 @@
 /* Extract dates using popular natural language date parsers */
 /*jshint jquery:true */
 /*global Sugar*/
-;(function($){
+;(function($) {
 	'use strict';
 
 	/*! Sugar (https://sugarjs.com/docs/#/DateParsing) */

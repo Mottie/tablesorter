@@ -186,7 +186,7 @@
 	</style>
 	<script src="../js/widgets/widget-reflow.js"></script>
 	<script>
-	$(function(){
+	$(function() {
 		// screen size class names
 		var j = 0,
 		allClasses = '',
@@ -199,7 +199,7 @@
 			[ 'smart-p',  'smartphone portrait 320x480' ]
 		];
 		$('.resize-frame li')
-			.each(function(i){
+			.each(function(i) {
 				// add tooltip to each table size button
 				$(this).attr('title', sizes[j][1]);
 				j = (j + 1) % 6;
@@ -207,14 +207,14 @@
 					allClasses += sizes[i][0] + ' ';
 				}
 			})
-			.on('click', function(){
+			.on('click', function() {
 				var $t = $(this),
 					indx = $t.index();
 				$t.addClass('active').siblings().removeClass('active');
 				$t.parent().nextAll('div:first').removeClass(allClasses).addClass( sizes[indx][0] );
 			});
 		// toggle thead in iframe
-		$('button.toggle').click(function(){
+		$('button.toggle').click(function() {
 			$(this).nextAll('div:first').find('iframe').contents().find('thead').toggleClass('hide-header');
 		});
 

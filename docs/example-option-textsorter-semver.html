@@ -39,12 +39,12 @@
 			}
 		},
 		// extra code to highlight invalid semver numbers
-		initialized : function(table){
+		initialized : function(table) {
 			var $cell,
 				c = table.config,
 				column = 1; // search second column (zero-based index)
 			if (window.semver) {
-				c.$tbodies.each(function(tbindex, tb){
+				c.$tbodies.each(function(tbindex, tb) {
 					$(tb).children('tr').each(function(rowindex, tr) {
 						$cell = $(tr).children().eq(column);
 						if (semver.valid( $.trim( $cell.text() ) ) === null) {

@@ -1352,9 +1352,10 @@
 		}
 
 		// allow message to include entire row HTML!
-		$row = ( /tr\>/.test( message ) ?
-			$( message ) :
-			$( '<tr><td colspan="' + c.columns + '">' + message + '</td></tr>' ) )
+		$( /tr\>/.test( message ) ?
+			message :
+			'<tr><td colspan="' + c.columns + '">' + message + '</td></tr>'
+		)
 			.click( function() {
 				$( this ).remove();
 			})

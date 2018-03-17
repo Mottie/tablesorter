@@ -1,6 +1,6 @@
 /*! Parser: Extract out date - updated 10/26/2014 (v2.18.0) */
 /*jshint jquery:true */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var regex = {

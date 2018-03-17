@@ -65,7 +65,7 @@
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c){
+		remove: function(table, c) {
 			c.$tbodies.children("tr.repeated-header").remove();
 		}
 
@@ -175,7 +175,7 @@ $.tablesorter.addWidget({
   },
   // The init function (added v2.0.28) is called only after tablesorter has
   // initialized, but before initial sort & before any of the widgets are applied.
-  init: function(table, thisWidget, config, widgetOptions){
+  init: function(table, thisWidget, config, widgetOptions) {
     // widget initialization code - this is only *RUN ONCE*
     // but in this example, only the format function is called to from here
     // to keep the widget backwards compatible with the original tablesorter
@@ -187,7 +187,7 @@ $.tablesorter.addWidget({
     // function above otherwise initFlag is undefined
     // * see the saveSort widget for a full example *
   },
-  remove: function(table, config, widgetOptions, refreshing){
+  remove: function(table, config, widgetOptions, refreshing) {
     // do what ever needs to be done to remove stuff added by your widget
     // unbind events, restore hidden content, etc.
     // refreshing flag is true when the refreshWidgets method is triggered, meaning

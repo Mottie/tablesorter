@@ -9,12 +9,12 @@
 
 	<script>
 	// tweak "Added" column to keep recent dates
-	$(function(){
+	$(function() {
 		var d, t,
 			tweaks = [ 9e5, 8e8, 2e7, 0, 6e10, 1e11 ],
 			$t = $('#demo tbody'),
 			date = new Date().getTime();
-		$t.find('tr td:nth-child(4)').each(function(i){
+		$t.find('tr td:nth-child(4)').each(function(i) {
 			d = new Date( date - tweaks[i] );
 			t = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear() + ' ' +
 				d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
@@ -88,7 +88,7 @@
  * Copyright (c) 2011 John Resig (ejohn.org)
  * Licensed under the MIT and GPL licenses.
  */
-function prettyDate(date){
+function prettyDate(date) {
 	var diff = (((new Date()).getTime() - date.getTime()) / 1000),
 		day_diff = Math.floor(diff / 86400);
 	if ( isNaN(day_diff) || day_diff < 0 ) { return ''; }

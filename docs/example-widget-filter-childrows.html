@@ -99,7 +99,7 @@ tr.group-header.collapsed td i {
 		return false;
 	});
 
-	$('.toggle').click(function(){
+	$('.toggle').click(function() {
 		var wo = $table[0].config.widgetOptions,
 			set = !wo.filter_childWithSibs;
 		wo.filter_childWithSibs = set;
@@ -108,7 +108,7 @@ tr.group-header.collapsed td i {
 		$table.trigger( 'search', false );
 	});
 
-	$('.search').click(function(){
+	$('.search').click(function() {
 		var filter = [],
 			$this = $(this),
 			col = parseInt( $this.attr('data-column'), 10 );
