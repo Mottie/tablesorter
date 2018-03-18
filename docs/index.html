@@ -928,11 +928,24 @@
 			</tr>
 
 			<tr id="debug">
-				<td><span class="permalink">debug</span></td>
-				<td>Boolean</td>
+				<td><a href="#" class="permalink">debug</a></td>
+				<td>Boolean or String</td>
 				<td>false</td>
 				<td>
-					Boolean flag indicating if tablesorter should display debuging information useful for development.
+					Set this option to provide useful for development debugging information in the console <span class="version updated">v2.30.0</span>.
+					<div class="collapsible">
+						In <span class="version updated">v2.30.0</span>, set this option as a string containing either "core" and/or a specific widget name; or, a boolean value.
+						<p>When a boolean flag is set, <em>all</em> debugging information is shown in the console.</p>
+						To display debugging information specific to a widget, or widgets include the widget name:
+						<pre class="prettyprint lang-js">$(function() {
+  $("table").tablesorter({
+    // Show debugging info only for the filter and columnSelector widgets
+    // include "core" to only show the core debugging info
+    debug : "filter columnSelector"
+  });
+});</pre>
+						The option only tests if the string contains the widget name, so <code>"corefilter"</code> would show debugging for both the core and filter widget.
+					</div>
 				</td>
 				<td><a href="example-option-debug.html">Example</a></td>
 			</tr>

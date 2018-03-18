@@ -1,9 +1,9 @@
-/*! Widget: Pager - updated 5/24/2017 (v2.28.11) */
+/*! Widget: Pager - updated 2018-03-17 (v2.30.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */
-;(function($){
+;(function($) {
 	'use strict';
 	var tsp,
 	ts = $.tablesorter;
@@ -66,7 +66,7 @@
 			pager_customAjaxUrl: function( table, url ) { return url; },
 
 			// ajax error callback from $.tablesorter.showError function
-			// pager_ajaxError: function( config, xhr, settings, exception ){ return exception; };
+			// pager_ajaxError: function( config, xhr, settings, exception ) { return exception; };
 			// returning false will abort the error message
 			pager_ajaxError: null,
 
@@ -91,7 +91,7 @@
 			//   ],
 			//   [ "header1", "header2", ... "headerN" ] // optional
 			// ]
-			pager_ajaxProcessing: function( ajax ){ return [ 0, [], null ]; },
+			pager_ajaxProcessing: function( /* ajax */ ) { return [ 0, [], null ]; },
 
 			// css class names of pager arrows
 			pager_css: {
@@ -162,8 +162,8 @@
 			if ( p.isInitializing ) { return; }
 
 			p.isInitializing = true;
-			if ( c.debug ) {
-				console.log( 'Pager: Initializing' );
+			if ( ts.debug(c, 'pager') ) {
+				console.log( 'Pager >> Initializing' );
 			}
 
 			p.size = $.data( table, 'pagerLastSize' ) || wo.pager_size;
@@ -227,8 +227,8 @@
 			p.initializing = false;
 			p.isInitializing = false;
 			tsp.setPageSize( c, p.size ); // page size 0 is ignored
-			if ( c.debug ) {
-				console.log( 'Pager: Triggering pagerInitialized' );
+			if ( ts.debug(c, 'pager') ) {
+				console.log( 'Pager >> Triggering pagerInitialized' );
 			}
 			c.$table.triggerHandler( 'pagerInitialized', c );
 			// filter widget not initialized; it will update the output display & fire off the pagerComplete event
@@ -243,7 +243,8 @@
 				p = c.pager,
 				wo = c.widgetOptions,
 				namespace = c.namespace + 'pager',
-				s = wo.pager_selectors;
+				s = wo.pager_selectors,
+				debug = ts.debug(c, 'pager');
 			c.$table
 				.off( namespace )
 				.on( 'filterInit filterStart '.split( ' ' ).join( namespace + ' ' ), function( e, filters ) {
@@ -284,7 +285,7 @@
 					e.stopPropagation();
 					tsp.enablePager( c, true );
 				})
-				.on( 'destroyPager' + namespace, function( e, refreshing ) {
+				.on( 'destroyPager' + namespace, function( e ) {
 					e.stopPropagation();
 					// call removeWidget to make sure internal flags are modified.
 					ts.removeWidget( c.table, 'pager', false );
@@ -343,8 +344,8 @@
 			// clicked controls
 			ctrls = [ s.first, s.prev, s.next, s.last ];
 			fxn = [ 'moveToFirstPage', 'moveToPrevPage', 'moveToNextPage', 'moveToLastPage' ];
-			if ( c.debug && !p.$container.length ) {
-				console.warn( 'Pager: >> Container not found' );
+			if ( debug && !p.$container.length ) {
+				console.warn( 'Pager >> "container" not found' );
 			}
 			p.$container.find( ctrls.join( ',' ) )
 				.attr( 'tabindex', 0 )
@@ -373,8 +374,8 @@
 						tsp.moveToPage( c, p, true );
 						tsp.updatePageDisplay( c, false );
 					});
-			} else if ( c.debug ) {
-				console.warn( 'Pager: >> Goto selector not found' );
+			} else if ( debug ) {
+				console.warn( 'Pager >> "goto" selector not found' );
 			}
 
 			tmp = p.$container.find( wo.pager_selectors.pageSize );
@@ -394,8 +395,8 @@
 						}
 						return false;
 					});
-			} else if ( c.debug ) {
-				console.warn('Pager: >> Size selector not found');
+			} else if ( debug ) {
+				console.warn('Pager >> "size" selector not found');
 			}
 
 		},
@@ -532,8 +533,8 @@
 			tsp.pagerArrows( c );
 			tsp.fixHeight( c );
 			if ( p.initialized && completed !== false ) {
-				if ( c.debug ) {
-					console.log( 'Pager: Triggering pagerComplete' );
+				if ( ts.debug(c, 'pager') ) {
+					console.log( 'Pager >> Triggering pagerComplete' );
 				}
 				c.$table.triggerHandler( 'pagerComplete', c );
 				// save pager info to storage
@@ -655,7 +656,6 @@
 		hideRows: function( c ) {
 			if ( !c.widgetOptions.pager_ajaxUrl ) {
 				var tbodyIndex, rowIndex, $rows, len, lastIndex,
-					table = c.table,
 					p = c.pager,
 					wo = c.widgetOptions,
 					tbodyLen = c.$tbodies.length,
@@ -721,7 +721,8 @@
 		renderAjax: function( data, c, xhr, settings, exception ) {
 			var table = c.table,
 				p = c.pager,
-				wo = c.widgetOptions;
+				wo = c.widgetOptions,
+				debug = ts.debug(c, 'pager');
 			// process data
 			if ( $.isFunction( wo.pager_ajaxProcessing ) ) {
 
@@ -734,15 +735,14 @@
 				var i, j, t, hsh, $f, $sh, $headers, $h, icon, th, d, l, rr_count, len, sz,
 					$table = c.$table,
 					tds = '',
-					result = wo.pager_ajaxProcessing( data, table, xhr ) || [ 0, [] ],
-					hl = $table.find( 'thead th' ).length;
+					result = wo.pager_ajaxProcessing( data, table, xhr ) || [ 0, [] ];
 
 				// Clean up any previous error.
 				ts.showError( table );
 
 				if ( exception ) {
-					if ( c.debug ) {
-						console.error( 'Pager: >> Ajax Error', xhr, settings, exception );
+					if ( debug ) {
+						console.error( 'Pager >> Ajax Error', xhr, settings, exception );
 					}
 					ts.showError( table, xhr, settings, exception );
 					c.$tbodies.eq( 0 ).children( 'tr' ).detach();
@@ -846,8 +846,8 @@
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
 						setTimeout( function() {
-							if ( c.debug ) {
-								console.log( 'Pager: Triggering pagerChange' );
+							if ( debug ) {
+								console.log( 'Pager >> Triggering pagerChange' );
 							}
 							$table.triggerHandler( 'pagerChange', p );
 							ts.applyWidget( table );
@@ -889,8 +889,8 @@
 						p.oldAjaxSuccess( data );
 					}
 				};
-				if ( c.debug ) {
-					console.log( 'Pager: Ajax initialized', p.ajaxObject );
+				if ( ts.debug(c, 'pager') ) {
+					console.log( 'Pager >> Ajax initialized', p.ajaxObject );
 				}
 				$.ajax( p.ajaxObject );
 			}
@@ -935,8 +935,8 @@
 			if ( $.isFunction( wo.pager_customAjaxUrl ) ) {
 				url = wo.pager_customAjaxUrl( c.table, url );
 			}
-			if ( c.debug ) {
-				console.log( 'Pager: Ajax url = ' + url );
+			if ( ts.debug(c, 'pager') ) {
+				console.log( 'Pager >> Ajax url = ' + url );
 			}
 			return url;
 		},
@@ -946,13 +946,14 @@
 				table = c.table,
 				p = c.pager,
 				wo = c.widgetOptions,
+				debug = ts.debug(c, 'pager'),
 				f = c.$table.hasClass('hasFilters'),
 				l = rows && rows.length || 0, // rows may be undefined
 				e = p.size === 'all' ? p.totalRows : p.size,
 				s = ( p.page * e );
 			if ( l < 1 ) {
-				if ( c.debug ) {
-					console.warn( 'Pager: >> No rows for pager to render' );
+				if ( debug ) {
+					console.warn( 'Pager >> No rows for pager to render' );
 				}
 				// empty table, abort!
 				return;
@@ -964,8 +965,8 @@
 			p.cacheIndex = [];
 			p.isDisabled = false; // needed because sorting will change the page and re-enable the pager
 			if ( p.initialized ) {
-				if ( c.debug ) {
-					console.log( 'Pager: Triggering pagerChange' );
+				if ( debug ) {
+					console.log( 'Pager >> Triggering pagerChange' );
 				}
 				c.$table.triggerHandler( 'pagerChange', c );
 			}
@@ -997,8 +998,8 @@
 			wo.pager_startPage = p.page;
 			wo.pager_size = p.size;
 			if ( table.isUpdating ) {
-				if ( c.debug ) {
-					console.log( 'Pager: Triggering updateComplete' );
+				if ( debug ) {
+					console.log( 'Pager >> Triggering updateComplete' );
 				}
 				c.$table.triggerHandler( 'updateComplete', [ table, true ] );
 			}
@@ -1026,8 +1027,8 @@
 				tsp.renderTable( c, c.rowsCopy );
 				p.isDisabled = true;
 				ts.applyWidget( table );
-				if ( c.debug ) {
-					console.log( 'Pager: Disabled' );
+				if ( ts.debug(c, 'pager') ) {
+					console.log( 'Pager >> Disabled' );
 				}
 			}
 			// disable size selector
@@ -1074,14 +1075,14 @@
 			var tmp,
 				table = c.table,
 				wo = c.widgetOptions,
-				l = p.last;
+				l = p.last,
+				debug = ts.debug(c, 'pager');
 
 			// abort page move if the table has filters and has not been initialized
 			if ( p.ajax && !wo.filter_initialized && ts.hasWidget( table, 'filter' ) ) { return; }
 
 			tsp.parsePageNumber( c, p );
 			tsp.calcFilters( c );
-
 			// fixes issue where one current filter is [] and the other is [ '', '', '' ],
 			// making the next if comparison think the filters as different. Fixes #202.
 			l.currentFilters = ( l.currentFilters || [] ).join( '' ) === '' ? [] : l.currentFilters;
@@ -1096,8 +1097,8 @@
 				l.sortList === ( c.sortList || [] ).join( ',' ) ) {
 				return;
 			}
-			if ( c.debug ) {
-				console.log( 'Pager: Changing to page ' + p.page );
+			if ( debug ) {
+				console.log( 'Pager >> Changing to page ' + p.page );
 			}
 			p.last = {
 				page: p.page,
@@ -1114,9 +1115,9 @@
 					wo.pager_processAjaxOnInit = true;
 					tmp = wo.pager_initialRows;
 					p.totalRows = typeof tmp.total !== 'undefined' ? tmp.total :
-						( c.debug ? console.error('Pager: no initial total page set!') || 0 : 0 );
+						( debug ? console.error('Pager >> No initial total page set!') || 0 : 0 );
 					p.filteredRows = typeof tmp.filtered !== 'undefined' ? tmp.filtered :
-						( c.debug ? console.error('Pager: no initial filtered page set!') || 0 : 0 );
+						( debug ? console.error('Pager >> No initial filtered page set!') || 0 : 0 );
 					tsp.updatePageDisplay( c, false );
 				} else {
 					tsp.getAjax( c );
@@ -1126,14 +1127,14 @@
 			}
 			$.data( table, 'pagerLastPage', p.page );
 			if ( p.initialized && pageMoved !== false ) {
-				if ( c.debug ) {
-					console.log( 'Pager: Triggering pageMoved' );
+				if ( debug ) {
+					console.log( 'Pager >> Triggering pageMoved' );
 				}
 				c.$table.triggerHandler( 'pageMoved', c );
 				ts.applyWidget( table );
 				if ( !p.ajax && table.isUpdating ) {
-					if ( c.debug ) {
-						console.log( 'Pager: Triggering updateComplete' );
+					if ( debug ) {
+						console.log( 'Pager >> Triggering updateComplete' );
 					}
 					c.$table.triggerHandler( 'updateComplete', [ table, true ] );
 				}
@@ -1269,8 +1270,8 @@
 				tsp.setPageSize( c, p.size );
 				tsp.moveToPage( c, p, true );
 				tsp.hideRowsSetup( c );
-				if ( c.debug ) {
-					console.log( 'Pager: Enabled' );
+				if ( ts.debug(c, 'pager') ) {
+					console.log( 'Pager >> Enabled' );
 				}
 			}
 		},
@@ -1296,8 +1297,7 @@
 
 	// see #486
 	ts.showError = function( table, xhr, settings, exception ) {
-		var $row,
-			$table = $( table ),
+		var $table = $( table ),
 			c = $table[ 0 ].config,
 			wo = c && c.widgetOptions,
 			errorRow = c.pager && c.pager.cssErrorRow ||

@@ -4,14 +4,14 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter = $.tablesorter || {},
 
 	// build a table from data (requires existing <table> tag)
 	// data.header contains an array of header titles
 	// data.rows contains an array of rows which contains an array of cells
-	bt = ts.buildTable = function(tar, c){
+	bt = ts.buildTable = function(tar, c) {
 		// add build options to defaults to prevent warnings
 		$.extend(true, ts.defaults.widgetOptions, bt.defaults);
 		// add table if one doesn't exist
@@ -21,9 +21,10 @@
 			p = wo.build_processing,
 			typ = wo.build_type,
 			d = wo.build_source || c.data,
+			debug = ts.debug(c, 'build'),
 
 		// determine type: html, json, array, csv, object
-		runType = function(d){
+		runType = function(d) {
 			var t = $.type(d),
 				jq = d instanceof jQuery;
 			// run any processing if set
@@ -59,7 +60,9 @@
 
 		// even if wo.build_type is undefined, we can try to figure out the type
 		if ( !ts.buildTable.hasOwnProperty(typ) && typ !== '' ) {
-			if (c.debug) { console.error('aborting build table widget, incorrect build type'); }
+			if (debug) {
+				console.error('Build >> ERROR: Aborting build table widget, incorrect build type');
+			}
 			return false;
 		}
 
@@ -72,8 +75,10 @@
 			.done(function(data) {
 				runType(data);
 			})
-			.fail(function( jqXHR, textStatus, errorThrown) {
-				if (c.debug) { console.error('aborting build table widget, failed ajax load'); }
+			.fail(function( jqXHR, textStatus) {
+				if (debug) {
+					console.error('Build >> ERROR: Aborting build table widget, failed ajax load');
+				}
 				$tbl.html('<tr><td class="error">' + jqXHR.status + ' '  + textStatus + '</td></tr>');
 			});
 		} else {
@@ -125,7 +130,7 @@
 			// add colgroup if widths set
 			if (widths && widths.length) {
 				t += '<colgroup>';
-				$.each(widths, function(i, w){
+				$.each(widths, function(i, w) {
 					t += '<col' + ( w ? ' style="width:' + w + '"' : '' ) + '>';
 				});
 				t += '</colgroup>';
@@ -133,7 +138,7 @@
 			return t;
 		},
 		// d = cell data; typ = 'th' or 'td'; first = save widths from first header row only
-		cell : function(d, wo, typ, col, first){
+		cell : function(d, wo, typ, col, first) {
 			var j, $td,
 				$col = first ? $('<col>') : '',
 				cls = wo.build_headers.classes,
@@ -150,7 +155,7 @@
 				// assume we have an object
 				$td = $('<' + typ + '>');
 				for (j in d) {
-					if (d.hasOwnProperty(j)){
+					if (d.hasOwnProperty(j)) {
 						if (j === 'text' || j === 'html') {
 							$td[j]( d[j] );
 						} else if (first && j === 'width') {
@@ -165,7 +170,7 @@
 			return [ $td, $col ];
 		},
 		// h1 = header text from data
-		header : function(h1, wo){
+		header : function(h1, wo) {
 			var h2 = wo.build_headers.text,
 				cls = wo.build_headers.classes,
 				t = '<tr>' + (wo.build_numbers.addColumn ? '<th' + (wo.build_numbers.sortable ? '' :
@@ -180,7 +185,7 @@
 			});
 			return t + '</tr>';
 		},
-		rows : function(items, txt, c, wo, num, ftr){
+		rows : function(items, txt, c, wo, num, ftr) {
 			var h = (ftr ? 'th' : 'td'),
 				t = '<tr>' + (wo.build_numbers.addColumn ? '<' + h + '>' + (ftr ? '' : num) + '</' + h + '>' : '');
 			$.each(items, function(i, item) {
@@ -196,8 +201,11 @@
 		}
 	};
 
-	bt.buildComplete = function(table, wo){
+	bt.buildComplete = function(table, wo) {
 		$(table).triggerHandler(wo.build_complete);
+		if (table.config && ts.debug(table.config, 'build')) {
+			console.log('Build >> Table build complete');
+		}
 		ts.setup(table, table.config);
 	};
 
@@ -361,7 +369,9 @@
 			r = data.hasOwnProperty(kr) && !$.isEmptyObject(data.kr) ? data.kr : data.hasOwnProperty('rows') ? data.rows : false;
 
 		if (!h || !r || h.length === 0 || r.length === 0) {
-			if (c.debug) { console.error('aborting build table widget, missing data for object build'); }
+			if (ts.debug(c, 'build')) {
+				console.error('Build >> ERROR: Aborting build table widget, missing data for object build');
+			}
 			return false;
 		}
 
@@ -371,7 +381,7 @@
 		// Build thead
 		// h = [ ['headerRow1Cell1', 'headerRow1Cell2', ... 'headerRow1CellN' ], ['headerRow2Cell1', ... ] ]
 		// or h = [ [ { text: 'firstCell', class: 'fc', width: '20%' }, ..., { text: 'last Cell' } ], [ /* second row */ ] ]
-		$.each(h, function(i, d){
+		$.each(h, function(i, d) {
 			$tr = $('<tr>').appendTo( $t.find('thead') );
 			l = d.length; // header row
 			for ( j = 0; j < l; j++ ) {
@@ -388,14 +398,14 @@
 
 		$tb = $('<tbody>');
 		// Build tbody
-		$.each(r, function(i, d){
+		$.each(r, function(i, d) {
 			var j;
 			t = $.type(d) === 'object';
 			// add new tbody
 			if (t && d.newTbody) {
 				$tb = $('<tbody>').appendTo( $t );
 				for (j in d) {
-					if (d.hasOwnProperty(j) && j !== 'newTbody'){
+					if (d.hasOwnProperty(j) && j !== 'newTbody') {
 						$tb.attr(j, d[j]);
 					}
 				}
@@ -409,7 +419,7 @@
 				if (t) {
 					// row defined by object
 					for (j in d) {
-						if (d.hasOwnProperty(j) && j !== wo.build_objectCellKey){
+						if (d.hasOwnProperty(j) && j !== wo.build_objectCellKey) {
 							$tr.attr(j, d[j]);
 						}
 					}

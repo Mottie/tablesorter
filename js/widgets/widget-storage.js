@@ -1,4 +1,4 @@
-/*! Widget: storage - updated 4/18/2017 (v2.28.8) */
+/*! Widget: storage - updated 2018-03-17 (v2.30.0) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
@@ -44,6 +44,7 @@
 			values = {},
 			c = table.config,
 			wo = c && c.widgetOptions,
+			debug = ts.debug(c, 'storage'),
 			storageType = (
 				( options && options.storageType ) || ( wo && wo.storage_storageType )
 			).toString().charAt(0).toLowerCase(),
@@ -72,14 +73,12 @@
 					hasStorage = true;
 					window[storageType].removeItem('_tmptest');
 				} catch (error) {
-					if (c && c.debug) {
-						console.warn( storageType + ' is not supported in this browser' );
-					}
+					console.warn( storageType + ' is not supported in this browser' );
 				}
 			}
 		}
-		if (c.debug) {
-			console.log('Storage widget using', hasStorage ? storageType : 'cookies');
+		if (debug) {
+			console.log('Storage >> Using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
 		if ($.parseJSON) {
