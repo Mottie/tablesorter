@@ -1,4 +1,4 @@
-/*! Widget: saveSort - updated 2018-03-17 (v2.30.0) *//*
+/*! Widget: saveSort - updated 2018-03-18 (v2.30.0) *//*
 * Requires tablesorter v2.16+
 * by Rob Garrison
 */

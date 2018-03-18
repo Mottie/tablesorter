@@ -104,6 +104,23 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.0">Version 2.30.0</a> (2018-03-18)
+
+* Core:
+  * [Debug](https://mottie.github.io/tablesorter/docs/#debug) now allows you to debug components separately; set to `true` as usual, or set to `'core filter'` to only show the core and filter widget debug logs.
+  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
+* Filter:
+  * Make `onlyAvail` work with showProcessing. Fixes [issue #1518](https://github.com/Mottie/tablesorter/issues/1518).
+  * Escape quotes in select options. See [issue #1527](https://github.com/Mottie/tablesorter/issues/1527).
+* Pager:
+  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
+* Global:
+  * Add editor eslint &amp; fix issues. File versions were not updated for this change!
+* Docs:
+  * Update Bootstrap v4.0.0.
+  * Adjust (accordion) link position.
+  * Fix scroller fixed column border alignment.
+
 #### <a name="v2.29.6">Version 2.29.6</a> (2018-02-25)
 
 * Docs:
@@ -129,14 +146,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Fix version numbering.
 * Parser:
   * Add radio parser. See [issue #1502](https://github.com/Mottie/tablesorter/issues/1502).
-
-#### <a name="v2.29.4">Version 2.29.4</a> (2018-01-18)
-
-* Docs:
-  * Downgrade Bootstrap JS (v3.3.7) in demos.
-* Filter:
-  * Add `filter_filterLabel` to support filter input ARIA labels. See [issue #1495](https://github.com/Mottie/tablesorter/issues/1495).
-  * Change filter row role from "row" to "search".
-  * Fix select2 issue. Closes [issue #1497](https://github.com/Mottie/tablesorter/issues/1497).
-* Meta:
-  * Change date format in file comments to "YYYY-MM-DD".

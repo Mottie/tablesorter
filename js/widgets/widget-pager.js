@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 2018-03-17 (v2.30.0) */
+/*! Widget: Pager - updated 2018-03-18 (v2.30.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */

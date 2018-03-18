@@ -1,4 +1,4 @@
-/*! Widget: storage - updated 2018-03-17 (v2.30.0) */
+/*! Widget: storage - updated 2018-03-18 (v2.30.0) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
