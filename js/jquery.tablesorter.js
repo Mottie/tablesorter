@@ -1473,7 +1473,6 @@
 		appendCache : function( c, init ) {
 			var parsed, totalRows, $tbody, $curTbody, rowIndex, tbodyIndex, appendTime,
 				table = c.table,
-				wo = c.widgetOptions,
 				$tbodies = c.$tbodies,
 				rows = [],
 				cache = c.cache;
@@ -1496,7 +1495,7 @@
 					for ( rowIndex = 0; rowIndex < totalRows; rowIndex++ ) {
 						rows[rows.length] = parsed[ rowIndex ][ c.columns ].$row;
 						// removeRows used by the pager plugin; don't render if using ajax - fixes #411
-						if ( !c.appender || ( c.pager && ( !c.pager.removeRows || !wo.pager_removeRows ) && !c.pager.ajax ) ) {
+						if ( !c.appender || ( c.pager && !c.pager.removeRows && !c.pager.ajax ) ) {
 							$curTbody.append( parsed[ rowIndex ][ c.columns ].$row );
 						}
 					}

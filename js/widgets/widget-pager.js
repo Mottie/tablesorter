@@ -158,6 +158,9 @@
 					setPage: wo.pager_startPage
 				}, c.pager );
 
+			// Used by core appendCache; !undefined is always true
+			p.removeRows = wo.pager_removeRows;
+
 			// pager initializes multiple times before table has completed initialization
 			if ( p.isInitializing ) { return; }
 
