@@ -81,7 +81,7 @@ tr.group-header.collapsed td i {
 	<!-- grouping widget -->
 	<script src="../js/widgets/widget-grouping.js"></script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	$("table").tablesorter({
 		theme : 'blue',
@@ -97,7 +97,7 @@ tr.group-header.collapsed td i {
 
 	$('.tablesorter-childRow td').hide();
 
-	$('.tablesorter').on('click', '.toggle', function(){
+	$('.tablesorter').on('click', '.toggle', function() {
 		$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').find('td').toggle();
 		return false;
 	});

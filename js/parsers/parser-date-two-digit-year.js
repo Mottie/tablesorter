@@ -1,7 +1,7 @@
 /*! Parser: two digit year - updated 11/26/2016 (v2.28.0) */
 /* Demo: http://mottie.github.io/tablesorter/docs/example-parsers-dates.html */
 /*jshint jquery:true */
-;(function($){
+;(function($) {
 	'use strict';
 
 	// Make the date be within +/- range of the 2 digit year
@@ -20,7 +20,7 @@
 	ts.dates.regxxxxyy = /(\d{1,2})[\/\s](\d{1,2})[\/\s](\d{2})/;
 	ts.dates.regyyxxxx = /(\d{2})[\/\s](\d{1,2})[\/\s](\d{1,2})/;
 
-	ts.formatDate = function(s, regex, format, table){
+	ts.formatDate = function(s, regex, format, table) {
 		if (s) {
 			var y, rng,
 				n = s

@@ -31,12 +31,12 @@
 
 			// append new html to thead & tbody
 			$("table thead th:eq(2)").html("Age");
-			$("table tbody").find('td:nth-child(3)').html(function(i,h){
+			$("table tbody").find('td:nth-child(3)').html(function(i,h) {
 				return h.substring(1); // remove x & y prefix
 			});
 
 			var resort = true, // re-apply the current sort
-				callback = function(){
+				callback = function() {
 					// do something after the updateAll method has completed
 				};
 

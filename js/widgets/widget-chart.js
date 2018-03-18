@@ -3,7 +3,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,

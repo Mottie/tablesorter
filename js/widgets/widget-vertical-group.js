@@ -1,5 +1,5 @@
 /*! Widget: vertical-group (BETA) - updated 12/13/2017 (v2.29.1) */
-/* Requires tablesorter and jQuery 
+/* Requires tablesorter and jQuery
  * Originally by @aavmurphy (Andrew Murphy)
  * Adapted for tablesorter by Rob Garrison - see #1469 & #1470
  *
@@ -7,7 +7,7 @@
  */
 /* jshint browser:true, jquery:true, unused:false */
 /* global jQuery:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -19,11 +19,11 @@
 		verticalGroupShow:   'tablesorter-vertical-group-show'
 	});
 
-	ts.addWidget({ 
-		id: 'vertical-group', 
+	ts.addWidget({
+		id: 'vertical-group',
 		priority: 99,
 		init: verticalGroup,
-		format: verticalGroup 
+		format: verticalGroup
 	});
 
 	function cleanUp( el ) {
@@ -37,7 +37,7 @@
 			.addClass( wo.zebra[ indx % 2] );
 	}
 
-	function verticalGroup( table, c, wo, init ) {
+	function verticalGroup( table, c, wo ) {
 		// -------------------------------------------------------------------------
 		// loop thru the header row,
 		//    - look for .vertical-group
@@ -51,9 +51,9 @@
 		//      else if this column does not have '.vertical-group', then this cell is SHOW
 		//      else if this cell is NOT the same as the cell-above, then this cell is SHOW
 		//      else this cell is HIDE
-		//      if this cell is SHOW, set ALWAYS_SHOW 
-		//      if this cell is SHOW, 
-		//      then 
+		//      if this cell is SHOW, set ALWAYS_SHOW
+		//      if this cell is SHOW,
+		//      then
 		//        set the cell class to .vertical_group_show
 		//      else
 		//        set the cell class to vertical_group_show
@@ -69,10 +69,8 @@
 		//          - the border-color needs to be the same
 		//
 		// ------------------------------------------------------------------------------------------------
-		var tmp,
-			zebra_index = -1, // increments at start of loop
+		var zebra_index = -1, // increments at start of loop
 			rows = table.tBodies[0].rows,
-			header = table.tHead.rows,
 			has_zebra = ts.hasWidget( table, 'zebra'),
 			is_vertical_group_col = [],
 			last_row = [];

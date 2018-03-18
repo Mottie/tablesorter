@@ -61,7 +61,7 @@ Note:
 	<script src="../js/widgets/widget-filter.js"></script>
 	<script src="../js/widgets/widget-stickyHeaders.js"></script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	$('.open-popup-link').magnificPopup({
 		type: 'inline',
@@ -145,10 +145,10 @@ Note:
 $(function() {
 
 	window.includeCaption = true;
-	$('.caption').on('click', function(){
+	$('.caption').on('click', function() {
 		includeCaption = !includeCaption;
 		$(this).html( '' + includeCaption );
-		$('#table0, #table1, #table2, #table3, .nested').each(function(){
+		$('#table0, #table1, #table2, #table3, .nested').each(function() {
 			if (this.config) {
 				this.config.widgetOptions.stickyHeaders_includeCaption = includeCaption;
 				this.config.widgetOptions.$sticky.children('caption').toggle(includeCaption);
@@ -157,7 +157,7 @@ $(function() {
 	});
 
 	// removed jQuery UI theme because of the accordion!
-	$('link.theme').each(function(){ this.disabled = true; });
+	$('link.theme').each(function() { this.disabled = true; });
 
 	var themes = 'blue default green grey ice black-ice dark dropbox metro-dark',
 		i, o = '', t = themes.split(' ');
@@ -167,13 +167,13 @@ $(function() {
 
 	$('select:first')
 		.append(o)
-		.change(function(){
+		.change(function() {
 			var theme = $(this).val().toLowerCase(),
 				// ui-theme is added by the themeswitcher
-				files = $('link.theme').each(function(){
+				files = $('link.theme').each(function() {
 					this.disabled = true;
 				})
-			files.filter('.' + theme).each(function(){
+			files.filter('.' + theme).each(function() {
 				this.disabled = false;
 			});
 			$('table')

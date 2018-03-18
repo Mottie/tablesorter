@@ -85,10 +85,10 @@
 });</script>
 
 	<script>
-	$(function(){
+	$(function() {
 
 		// filter button demo code
-		$('button.filter').click(function(){
+		$('button.filter').click(function() {
 			var col = $(this).data('column'),
 				txt = $(this).data('filter');
 			$('table').find('.tablesorter-filter').val('').eq(col).val(txt);
@@ -97,7 +97,7 @@
 		});
 
 		// toggle zebra widget
-		$('button.zebra').click(function(){
+		$('button.zebra').click(function() {
 			var t = $(this).hasClass('btn-success');
 			$('table')
 				.toggleClass('table-striped')[0]

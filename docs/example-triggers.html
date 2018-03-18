@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
 
-<script id="js">$(function(){
+<script id="js">$(function() {
 
 	var start;
 	// call the tablesorter plugin, the magic happens in the markup
@@ -29,12 +29,12 @@
 		})
 
 		// assign the sortStart event
-		.bind("sortStart",function(e, t){
+		.bind("sortStart",function(e, t) {
 			start = e.timeStamp;
 			$("#display").append('<li>Sort Started</li>').find('li:first').remove();
 		})
 
-		.bind("sortEnd",function(e, t){
+		.bind("sortEnd",function(e, t) {
 			$("#display").append('<li>Sort Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>').find('li:first').remove();
 		});
 

@@ -4,7 +4,7 @@
 * Demo: http://jsfiddle.net/Mottie/abkNM/154/
 */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter;
@@ -26,7 +26,7 @@
 				n = p + parseInt(t[0], 10) / parseInt(t[1] || 1, 10);
 				// look for fraction symbols
 			} else if (ts.symbolRegex.test(n)) {
-				n = p + n.replace(ts.symbolRegex, function(m){
+				n = p + n.replace(ts.symbolRegex, function(m) {
 					return {
 						'\u215b' : '.125', // 1/8
 						'\u215c' : '.375', // 3/8

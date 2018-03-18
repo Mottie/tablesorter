@@ -196,7 +196,7 @@
 .params { font-size: 0.8em; }
 </style>
 <script>
-$(function(){
+$(function() {
 	var tdy = $('.tdy'),  // two digit year
 		a = $('.result'),   // answer
 		r = $('.range'),    // range
@@ -206,7 +206,7 @@ $(function(){
 	tdy.val( (y + 20).toString().slice(-2) ); // use this year + 20
 	c.val( y );
 
-	$('input').on('change', function(){
+	$('input').on('change', function() {
 		var y = parseInt(tdy.val(), 10),
 			result = 1900 + y,
 			range = parseInt(r.val(), 10);

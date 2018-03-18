@@ -25,7 +25,7 @@
 	<script src="js/select2-3.4.6.min.js"></script>
 	<script src="../js/widgets/widget-filter-formatter-select2.js"></script>
 
-<script id="js">$(function(){
+<script id="js">$(function() {
 
 	$('.tablesorter').tablesorter({
 		theme: 'blue',
@@ -40,7 +40,7 @@
 			filter_formatter : {
 
 				// Alphanumeric (match)
-				0 : function($cell, indx){
+				0 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.select2( $cell, indx, {
 						match : true,         // adds "filter-match" to header
 						cellText : 'Match: ', // Cell text
@@ -50,7 +50,7 @@
 				},
 
 				// Alphanumeric (exact)
-				1 : function($cell, indx){
+				1 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.select2( $cell, indx, {
 						match : false // exact match only
 					});
@@ -153,7 +153,7 @@
 			This is an example of how to set these options:
 			<pre class="prettyprint lang-js">filter_formatter : {
   // default settings on first column
-  0 : function($cell, indx){
+  0 : function($cell, indx) {
     return $.tablesorter.filterFormatter.select2( $cell, indx, {
       // *** select2 filter formatter options ***
       cellText : '',    // Text (wrapped in a label element)

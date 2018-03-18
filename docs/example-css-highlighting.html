@@ -343,16 +343,16 @@ table.focus-highlight td:before {
 
 <script>
 /* highlight hover & focus selectors in the syntax highlighted code */
-$(window).on('load', function(){
-	setTimeout(function(){
+$(window).on('load', function() {
+	setTimeout(function() {
 		// css
-		$('.pln:contains(highlight)').each(function(){
+		$('.pln:contains(highlight)').each(function() {
 			var $this = $(this),
 				$prev = $this.prev().prev(),
 				text = $prev.text() || '',
 				type = /hover/.test(text) ? 'hover-hl' : /focus/.test(text) ? 'focus-hl' : '';
 			if (type) {
-				$this.html(function(i,h){
+				$this.html(function(i,h) {
 					return h.replace('highlight', '<span>highlight</span>');
 				});
 				// "highlight".. "-" .... "hover"/"focus" ... "."

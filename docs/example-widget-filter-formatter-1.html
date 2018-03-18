@@ -39,19 +39,19 @@
 	<script src="../js/widgets/widget-uitheme.js"></script>
 	<script src="../js/widgets/widget-filter-formatter-jui.js"></script>
 	<script>
-	$(function(){
+	$(function() {
 
 		$('#switcher').jui_theme_switch({
 			stylesheet_link_id : 'ui-theme',
 			datasource_url     : 'assets/theme_switcher.json'
 		});
 
-		$('.accordion button').on('click', function(){
+		$('.accordion button').on('click', function() {
 			var $this = $(this),
 				column = $this.data('column'),
 				filters = [];
 			filters[ column ] = $this.data('value');
-			$('table').trigger('sorton', [ [[column, 0]], function(){
+			$('table').trigger('sorton', [ [[column, 0]], function() {
 				$.tablesorter.setFilters( $('table'), filters, true );
 			} ]);
 		});
@@ -77,7 +77,7 @@
 			filter_formatter : {
 
 				// Rank (jQuery selector added v2.17.0)
-				'th:contains("Rank")' : function($cell, indx){
+				'th:contains("Rank")' : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
 						delayed : true,
 						valueToHeader : false,
@@ -92,7 +92,7 @@
 				},
 
 				// Age
-				1 : function($cell, indx){
+				1 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
 						delayed : false,
 						valueToHeader : false,
@@ -108,7 +108,7 @@
 				},
 
 				// Total (jQuery selector added v2.17.0)
-				'.total' : function($cell, indx){
+				'.total' : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
 						delayed : false,
 						valueToHeader : false,
@@ -120,7 +120,7 @@
 				},
 
 				// Discount
-				3 : function($cell, indx){
+				3 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
 						delayed : true,
 						addToggle : false,
@@ -136,7 +136,7 @@
 				},
 
 				// Date (one input)
-				4 : function($cell, indx){
+				4 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
 						cellText : 'Dates', // text added before the input
 						compare : [ '', '=', '>=', '<=' ],
@@ -150,7 +150,7 @@
 				},
 
 				// Date (two inputs)
-				5 : function($cell, indx){
+				5 : function($cell, indx) {
 					return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
 						// from : '08/01/2013', // default from date
 						// to   : '1/18/2014',  // default to date
@@ -266,7 +266,7 @@
       filter_formatter : {
 
         // Rank (jQuery selector added v2.17.0)
-        'th:contains("Rank")' : function($cell, indx){
+        'th:contains("Rank")' : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
             // filterFormatter options
             cellText : 'Rank:',
@@ -285,7 +285,7 @@
         },
 
         // Age
-        1 : function($cell, indx){
+        1 : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiSlider( $cell, indx, {
             delayed: false,       // delay search (set by filter_searchDelay)
             valueToHeader: false, // add current slider value to the header cell
@@ -334,7 +334,7 @@
       filter_formatter : {
 
         // Total column (jQuery selector added v2.17.0)
-        '.total' : function($cell, indx){
+        '.total' : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiRange( $cell, indx, {
             delayed: true,        // delay search (set by filter_searchDelay)
             valueToHeader: false, // add current slider value to the header cell
@@ -378,7 +378,7 @@
       filter_formatter : {
 
         // Discount column
-        3 : function($cell, indx){
+        3 : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiSpinner( $cell, indx, {
             delayed: true,    // delay search (set by filter_searchDelay)
             addToggle: false, // add a toggle switch to activate/deactive the search
@@ -433,7 +433,7 @@
       filter_formatter : {
 
         // Date (one input)
-        4 : function($cell, indx){
+        4 : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
             cellText : 'Dates', // text added before the input
             compare : [ '', '=', '&gt;=', '&lt;=' ], // search values greater/less than selected value; overrides exactMatch
@@ -496,7 +496,7 @@
       filter_formatter : {
 
         // Date (two inputs)
-        5 : function($cell, indx){
+        5 : function($cell, indx) {
           return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
             // add any of the jQuery UI Datepicker options here (http://api.jqueryui.com/datepicker/)
             // from : '8/1/2013', // starting date
@@ -543,10 +543,10 @@
 				</li>
 				<li>Some method should be added to show the user the current value of the selector - update a data attribute for css3 tooltips, or update the header cell.</li>
 				<li>A reset function needs to also be included; bind to the <code>filterReset</code> event and clear out or disable your custom selector when triggered.
-					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterReset', function(){ /* update the input here */ });</pre>
+					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterReset', function() { /* update the input here */ });</pre>
 				</li>
 				<li>In <span class="version">v2.15.0</span>, in order to update your custom input with any saved filter searches, you will need to bind to the <code>filterFomatterUpdate</code> event to get the saved filter value from the hidden input and apply it to your custom input.
-					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterFomatterUpdate', function(){
+					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterFomatterUpdate', function() {
 	var savedSearch = $cell.find('input[type=hidden]').val();
 	// apply this saved search to your custom input
 	$.tablesorter.filter.formatterUpdated($cell, indx); // new v2.17.5

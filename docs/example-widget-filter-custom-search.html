@@ -24,7 +24,7 @@
 	#types { width: 100%; }
 	</style>
 	<script>
-	$(function(){
+	$(function() {
 		$('#types').tablesorter();
 	});
 	</script>
@@ -70,7 +70,7 @@ $(function() {
 	// External search
 	// buttons set up like this:
 	// <button type="button" class="search" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
-	$('button').click(function(){
+	$('button').click(function() {
 		var $t = $(this),
 			col = $t.data('filter-column'), // zero-based index
 			filter = [];
@@ -211,7 +211,7 @@ $.tablesorter.filter.types.start = function( config, data ) {
 		<div>
 		<ul>
 			<li>If one of the built-in search types is interfering or bothersome to your users, then you can remove it using the following command (using fuzzy search as an example):
-			<pre class="prettyprint lang-js">$(function(){
+			<pre class="prettyprint lang-js">$(function() {
 
 	// Remove fuzzy search
 	delete $.tablesorter.filter.types.fuzzy;

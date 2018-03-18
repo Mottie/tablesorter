@@ -25,7 +25,7 @@
 		// {icon} isn't used by the blue theme; it is optional here
 		headerTemplate : '{icon}{content}',
 		// manipulate the template string after is it created
-		onRenderTemplate : function(i, t){
+		onRenderTemplate : function(i, t) {
 			// add the column number to the beginning
 			// it's a zero-based index, so we add one
 			return '<em>' + (i+1) + ':</em> ' + t;

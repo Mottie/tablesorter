@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 12/13/2017 (v2.29.1) *//*
+/*! Widget: scroller - updated 2018-02-25 (v2.29.6) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -188,7 +188,7 @@
 		},
 
 		setup : function( c, wo ) {
-			var tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp, detectedWidth,
+			var tbHt, $hdr, $t, $hCells, $tableWrap, events, tmp, detectedWidth,
 				$win = $( window ),
 				tsScroller = ts.scroller,
 				namespace = c.namespace + 'tsscroller',
@@ -228,7 +228,6 @@
 					// maintain any bindings on the tfoot cells
 					.append( $t.clone( true ) )
 					.wrap( '<div class="' + tscss.scrollerFooter + '"/>' );
-				$fCells = $foot.children( 'tfoot' ).eq( 0 ).children( 'tr' ).children();
 			}
 			wo.scroller_$footer = $foot;
 
@@ -361,7 +360,7 @@
 			// updateAll called - need to give the browser time to adjust the layout
 			// before calculating fix column widths
 			if ( c.table.hasInitialized && c.isScrolling ) {
-				setTimeout(function(){
+				setTimeout(function() {
 					ts.scroller.resize( c, wo );
 				}, 50);
 			}

@@ -6,7 +6,7 @@
 ;( function( $ ) {
 	'use strict';
 
-	var updateServer = function( event, $table, $input ) {
+	var updateServer = function( /* event, $table, $input */ ) {
 		// do something here to update your server, if needed
 		// event = change event object
 		// $table = jQuery object of the table that was just updated

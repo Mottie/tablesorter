@@ -4,7 +4,7 @@
  * Demo: http://jsfiddle.net/Mottie/abkNM/5/
  */
 /*jshint browser: true, jquery:true, unused:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter;

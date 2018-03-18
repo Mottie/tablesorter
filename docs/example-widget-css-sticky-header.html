@@ -56,7 +56,7 @@
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 	<script src="../js/widgets/widget-cssStickyHeaders.js"></script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	$('.open-popup-link').magnificPopup({
 		type: 'inline',
@@ -114,7 +114,7 @@
 });</script>
 <script>
 $(function() {
-	$('link.theme').each(function(){ this.disabled = true; });
+	$('link.theme').each(function() { this.disabled = true; });
 
 	var themes = 'default blue green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
@@ -124,12 +124,12 @@ $(function() {
 
 	$('select:first')
 		.append(o)
-		.change(function(){
+		.change(function() {
 			var theme = $(this).val().toLowerCase(),
-				files = $('link.theme').each(function(){
+				files = $('link.theme').each(function() {
 					this.disabled = true;
 				})
-			files.filter('[href$="theme.' + theme + '.css"]').each(function(){
+			files.filter('[href$="theme.' + theme + '.css"]').each(function() {
 				this.disabled = false;
 			});
 			$('table')
@@ -138,10 +138,10 @@ $(function() {
 		}).change();
 
 	window.addCaption = true;
-	$('.caption').on('click', function(){
+	$('.caption').on('click', function() {
 		addCaption = !addCaption;
 		$(this).html( '' + addCaption );
-		$('#table0, #table1, #table2, #table3, .nested').each(function(){
+		$('#table0, #table1, #table2, #table3, .nested').each(function() {
 			if (this.config) {
 				this.config.widgetOptions.cssStickyHeaders_addCaption = addCaption;
 			}

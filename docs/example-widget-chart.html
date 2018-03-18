@@ -521,7 +521,7 @@ FusionCharts.ready(function () {
 	packages: ["bar", "corechart", "line"]
 });
 
-$(function(){
+$(function() {
 	/* Initial settings */
 	var $table = $('#table'),
 		$chart = $('#chart'),
@@ -629,7 +629,7 @@ $(function(){
 		}
 		$icons.removeClass('active');
 		var $t = $(this).addClass('active');
-		$.each(types, function(i, v){
+		$.each(types, function(i, v) {
 			if ($t.hasClass(v.icon)) {
 				settings.type = i;
 			}
@@ -637,7 +637,7 @@ $(function(){
 		drawChart();
 	});
 
-	$rowType.on('change', function(){
+	$rowType.on('change', function() {
 		$table[0].config.widgetOptions.chart_incRows = $rowType.filter(':checked').attr('data-type');
 		// update data, then draw new chart
 		$table.trigger('chartData');
@@ -686,15 +686,14 @@ $(function(){
 				pager_output: 'Showing {startRow} to {endRow} of {filteredRows} results',
 				pager_size: 5,
 				chart_incRows: 'f',
-				chart_useSelector: true,
-				chart_hideTable: false
+				chart_useSelector: true
 			}
 		});
 
 });</script>
 
 <script>
-$(function(){
+$(function() {
 	$('[data-toggle="tooltip"]').tooltip();
 });
 </script>

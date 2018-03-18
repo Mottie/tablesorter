@@ -1,10 +1,10 @@
-/* Widget: columnSelector (responsive table widget) - updated 9/27/2017 (v2.29.0) *//*
+/* Widget: columnSelector (responsive table widget) - updated 2018-03-18 (v2.30.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -15,13 +15,14 @@
 		queryBreak : '@media all and (min-width: [size]) { [columns] { display: table-cell; } } ',
 
 		init: function(table, c, wo) {
-			var $t, colSel;
+			var $t, colSel,
+				debug = ts.debug(c, 'columnSelector');
 
 			// abort if no input is contained within the layout
 			$t = $(wo.columnSelector_layout);
 			if (!$t.find('input').add( $t.filter('input') ).length) {
-				if (c.debug) {
-					console.error('ColumnSelector: >> ERROR: Column Selector aborting, no input found in the layout! ***');
+				if (debug) {
+					console.error('ColumnSelector >> ERROR: Column Selector aborting, no input found in the layout! ***');
 				}
 				return;
 			}
@@ -45,8 +46,8 @@
 			colSel.isInitializing = false;
 			if (colSel.$container.length) {
 				tsColSel.updateCols(c, wo);
-			} else if (c.debug) {
-				console.warn('ColumnSelector: >> container not found');
+			} else if (debug) {
+				console.warn('ColumnSelector >> container not found');
 			}
 
 			c.$table
@@ -59,11 +60,14 @@
 					[ 'auto', [2,3,4] ] = set visible columns; turn on "auto" mode.
 					true = turn on "auto" mode.
 				*/
-				.on('refreshColumnSelector' + namespace, function( e, optName, optState ){
+				.on('refreshColumnSelector' + namespace, function( e, optName, optState ) {
 					// make sure we're using current config settings
 					tsColSel.refreshColumns( this.config, optName, optState );
 				});
 
+			if (debug) {
+				console.log('ColumnSelector >> Widget initialized');
+			}
 		},
 
 		refreshColumns: function( c, optName, optState ) {
@@ -87,7 +91,7 @@
 				if (isArry) {
 					arry = optState || optName;
 					// make sure array contains numbers
-					$.each(arry, function(i, v){
+					$.each(arry, function(i, v) {
 						arry[i] = parseInt(v, 10);
 					});
 					for (i = 0; i < c.columns; i++) {
@@ -229,7 +233,7 @@
 						.attr('data-column', 'auto')
 						.prop('checked', colSel.auto)
 						.toggleClass( wo.columnSelector_cssChecked, colSel.auto )
-						.on('change', function(){
+						.on('change', function() {
 							tsColSel.updateAuto(c, wo, $(this));
 						}).change();
 				}
@@ -243,7 +247,7 @@
 		updateAuto: function(c, wo, $el) {
 			var colSel = c.selector;
 			colSel.auto = $el.prop('checked') || false;
-			$.each( colSel.$checkbox, function(i, $cb){
+			$.each( colSel.$checkbox, function(i, $cb) {
 				if ($cb) {
 					$cb[0].disabled = colSel.auto;
 					colSel.$wrapper[i].toggleClass('disabled', colSel.auto);
@@ -257,7 +261,7 @@
 			if (c.selector.$popup) {
 				c.selector.$popup.find('.tablesorter-column-selector')
 					.html( colSel.$container.html() )
-					.find('input').each(function(){
+					.find('input').each(function() {
 						var indx = $(this).attr('data-column');
 						$(this).prop( 'checked', indx === 'auto' ? colSel.auto : colSel.states[indx] );
 					});
@@ -306,10 +310,10 @@
 				}
 			}
 			// only 6 breakpoints (same as jQuery Mobile)
-			for (priority = 0; priority < wo.columnSelector_maxPriorities; priority++){
+			for (priority = 0; priority < wo.columnSelector_maxPriorities; priority++) {
 				/*jshint loopfunc:true */
 				breaks = [];
-				c.$headers.filter('[' + wo.columnSelector_priority + '=' + (priority + 1) + ']').each(function(){
+				c.$headers.filter('[' + wo.columnSelector_priority + '=' + (priority + 1) + ']').each(function() {
 					column = parseInt($(this).attr('data-column'), 10) + 1;
 					// don't reveal columnSelector false columns
 					if ( !isHidden[ column ] ) {
@@ -340,14 +344,14 @@
 				colSel = c.selector,
 				styles = [],
 				prefix = c.namespace + 'columnselector';
-			colSel.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function(){
+			colSel.$container.find('input[data-column]').filter('[data-column!="auto"]').each(function() {
 				if (!this.checked) {
 					column = parseInt( $(this).attr('data-column'), 10 ) + 1;
 					styles = styles.concat( tsColSel.addSelectors( wo, prefix, column ) );
 				}
 				$(this).toggleClass( wo.columnSelector_cssChecked, this.checked );
 			});
-			if (wo.columnSelector_mediaquery){
+			if (wo.columnSelector_mediaquery) {
 				colSel.$breakpoints.prop('disabled', true);
 			}
 			if (colSel.$style) {
@@ -451,7 +455,7 @@
 				wo = c.widgetOptions;
 				$popup.find('.tablesorter-column-selector')
 					.html( colSel.$container.html() )
-					.find('input').each(function(){
+					.find('input').each(function() {
 						var indx = $(this).attr('data-column'),
 							isChecked = indx === 'auto' ? colSel.auto : colSel.states[indx];
 						$(this)
@@ -503,7 +507,7 @@
 			// container layout
 			columnSelector_layout : '<label><input type="checkbox">{name}</label>',
 			// layout customizer callback called for each column
-			// function($cell, name, column){ return name || $cell.html(); }
+			// function($cell, name, column) { return name || $cell.html(); }
 			columnSelector_layoutCustomizer : null,
 			// data attribute containing column name to use in the selector container
 			columnSelector_name : 'data-selector-name',

@@ -18,6 +18,7 @@
 				str = number.toString();
 			if (
 				!isNaN( number ) &&
+				// eslint-disable-next-line eqeqeq
 				number == val && // jshint ignore:line
 				val.length !== str.length
 			) {

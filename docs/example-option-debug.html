@@ -16,14 +16,18 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/widgets/widget-filter.js"></script>
 
 	<script id="js">$(function() {
 
 	// call the tablesorter plugin
 	$("table").tablesorter({
 		theme : 'blue',
-		// enable debug mode
-		debug: true
+		// enable debug mode;
+		// debug: true => all debugging
+		// debug: "filter" => filter widget debugging only
+		debug: "core filter", // => core and filter widget debugging
+		widgets: ["filter"]
 	});
 
 });</script>
@@ -39,7 +43,7 @@
 
 <div id="main">
 	<p class="tip">
-		<em>NOTE!</em> If firebug is installed the debuging information will be displayed in the firebug console.
+		<em>NOTE!</em> Debugging information will be displayed in the development console (Press <kbd>F12</kbd> and select the console tab).
 	</p>
 
 	<h1>Demo</h1>

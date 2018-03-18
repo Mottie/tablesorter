@@ -163,12 +163,12 @@
 	});
 
 	// Clear stored filters - added v2.25.6
-	$('.resetsaved').click(function(){
+	$('.resetsaved').click(function() {
 		$('#table').trigger('filterResetSaved');
 
 		// show quick popup to indicate something happened
 		var $message = $('<span class="results"> Reset</span>').insertAfter(this);
-		setTimeout(function(){
+		setTimeout(function() {
 			$message.remove();
 		}, 500);
 		return false;
@@ -177,7 +177,7 @@
 	// External search
 	// buttons set up like this:
 	// <button type="button" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
-	$('button[data-filter-column]').click(function(){
+	$('button[data-filter-column]').click(function() {
 		/*** first method *** data-filter-column="1" data-filter-text="!son"
 			add search value to Discount column (zero based index) input */
 		var filters = [],
@@ -211,10 +211,10 @@
 });</script>
 
 <script>
-$(function(){
+$(function() {
 
 	// *** widgetfilter_startsWith toggle button ***
-	$('button.toggle').click(function(){
+	$('button.toggle').click(function() {
 		var c = $('#table')[0].config,
 		$t = $(this),
 		// toggle the boolean

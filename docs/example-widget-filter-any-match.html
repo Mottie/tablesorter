@@ -42,7 +42,7 @@
 	});
 
 	// make demo search buttons work
-	$('button[data-column]').on('click', function(){
+	$('button[data-column]').on('click', function() {
 		var $this = $(this),
 			totalColumns = $table[0].config.columns,
 			col = $this.data('column'), // zero-based index or "all"

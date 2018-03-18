@@ -1,6 +1,6 @@
 /*! Parser: duration & countdown - updated 2/7/2015 (v2.19.0) */
 /*jshint jquery:true, unused:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	// If any number > 9999, then set table.config.durationLength = 5

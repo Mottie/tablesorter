@@ -11,19 +11,19 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter,
 
 	// add/refresh row indexes
-	addIndexes = function(table){
+	addIndexes = function(table) {
 		var $tr, wo, v, indx, rows,
 			c = table.config;
 		// 'Index' the static rows, saving their current (starting) position in the
 		// table inside a data() param on the <tr> element itself for later use.
 		if (c) {
 			wo = c.widgetOptions;
-			c.$tbodies.each(function(){
+			c.$tbodies.each(function() {
 				$tr = $(this).children();
 				rows = $tr.length;
 				$tr.filter(wo.staticRow_class).each(function() {
@@ -55,12 +55,12 @@
 			staticRow_event : 'staticRowsRefresh'
 		},
 
-		init: function(table, thisWidget, c, wo){
+		init: function(table, thisWidget, c, wo) {
 			addIndexes(table);
 			// refresh static rows after updates
 			c.$table
 				.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') )
-				.bind('updateComplete.tsstaticrows ' + wo.staticRow_event, function(){
+				.bind('updateComplete.tsstaticrows ' + wo.staticRow_event, function() {
 					addIndexes(table);
 					ts.applyWidget( table );
 				});
@@ -71,7 +71,7 @@
 			// & repeat until no more re-shuffling is needed
 			var targetIndex, $thisRow, indx, numRows, $tbody, hasShuffled, $rows, max;
 
-			c.$tbodies.each(function(){
+			c.$tbodies.each(function() {
 				$tbody = $.tablesorter.processTbody(table, $(this), true); // remove tbody
 				hasShuffled = true;
 				indx = 0;
@@ -112,7 +112,7 @@
 			c.$table.triggerHandler('staticRowsComplete', table);
 		},
 
-		remove : function(table, c, wo){
+		remove : function(table, c, wo) {
 			c.$table.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') );
 		}
 

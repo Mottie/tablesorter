@@ -391,7 +391,7 @@ td:nth-child(3) .ts-align-right i {
 
 <script>
 /* DEMO ONLY CODE */
-$(function(){
+$(function() {
 	var $table = $('#demo table'),
 		c = $table[0].config,
 		$animals = c.$headers.eq(2),
@@ -403,7 +403,7 @@ $(function(){
 		min: 0,
 		max: 3,
 		step: 1,
-		create: function(){
+		create: function() {
 			$animals.find('span').html( $animals.attr('data-align-index') );
 		},
 		slide: function( event, ui ) {
@@ -419,7 +419,7 @@ $(function(){
 		min: 0,
 		max: 4,
 		step: 1,
-		create: function(){
+		create: function() {
 			$sites.find('span').html( $sites.attr('data-align-index') );
 		},
 		slide: function( event, ui ) {
@@ -435,7 +435,7 @@ $(function(){
 		min: -30,
 		max: 30,
 		step: 5,
-		create: function(){
+		create: function() {
 			$sites.find('span').html( $sites.attr('data-align-index') );
 		},
 		slide: function( event, ui ) {

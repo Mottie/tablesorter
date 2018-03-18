@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 	var ts = $.tablesorter,
 
@@ -12,7 +12,7 @@
 
 		types : {
 			number : function(c, $column, txt, num) {
-				var word, result,
+				var result,
 					ascSort = $column.hasClass( ts.css.sortAsc );
 				if ( num > 1 && txt !== '' ) {
 					if ( ascSort ) {
@@ -43,7 +43,7 @@
 			letter : function(c, $column, txt, num) {
 				return txt ? (txt + ' ').substring(0, num) : '';
 			},
-			date : function(c, $column, txt, part, group) {
+			date : function(c, $column, txt, part) {
 				var year, month,
 					wo = c.widgetOptions,
 					time = new Date(txt || '');
@@ -203,7 +203,7 @@
 			return savedGroup;
 		},
 		findColumnGroups : function( c, wo, data ) {
-			var tbodyIndex, norm_rows, $row, rowIndex, end, undef,
+			var tbodyIndex, norm_rows, rowIndex, end, undef,
 				hasPager = ts.hasWidget( c.table, 'pager' ),
 				p = c.pager || {};
 			data.groupIndex = 0;
@@ -251,15 +251,15 @@
 			}
 		},
 
-		bindEvents : function(table, c, wo){
+		bindEvents : function(table, c, wo) {
 			if (wo.group_collapsible) {
 				wo.group_collapsedGroups = [];
 				// .on() requires jQuery 1.7+
-				c.$table.on('click toggleGroup keyup', 'tr.group-header', function(event){
+				c.$table.on('click toggleGroup keyup', 'tr.group-header', function(event) {
 					event.stopPropagation();
 					// pressing enter will toggle the group
 					if (event.type === 'keyup' && event.which !== 13) { return; }
-					var isCollapsed, $groups, indx,
+					var isCollapsed, indx,
 						$this = $(this),
 						name = $this.find('.group-name').text().toLowerCase() + $this.attr('data-group-index');
 					// use shift-click to toggle ALL groups
@@ -276,7 +276,6 @@
 					}
 					// save collapsed groups
 					if (wo.group_saveGroups && ts.storage) {
-						$groups = c.$table.find('.group-header');
 						if (!wo.group_collapsedGroups[wo.group_collapsedGroup]) {
 							wo.group_collapsedGroups[wo.group_collapsedGroup] = [];
 						}
@@ -292,15 +291,15 @@
 					}
 				});
 			}
-			$(wo.group_saveReset).on('click', function(){
+			$(wo.group_saveReset).on('click', function() {
 				tsg.clearSavedGroups(table);
 			});
-			c.$table.on('pagerChange.tsgrouping', function(){
+			c.$table.on('pagerChange.tsgrouping', function() {
 				tsg.update(table);
 			});
 		},
 
-		clearSavedGroups: function(table){
+		clearSavedGroups: function(table) {
 			if (table && ts.storage) {
 				ts.storage(table, 'tablesorter-groups', '');
 				tsg.update(table);
@@ -320,7 +319,7 @@
 			group_count       : ' ({num})', // if not false, the '{num}' string is replaced with the number of rows in the group
 			group_separator   : '-',  // group name separator; used when group-separator-# class is used.
 			group_formatter   : null, // function(txt, column, table, c, wo) { return txt; }
-			group_callback    : null, // function($cell, $rows, column, table){}, callback allowing modification of the group header labels
+			group_callback    : null, // function($cell, $rows, column, table) {}, callback allowing modification of the group header labels
 			group_complete    : 'groupingComplete', // event triggered on the table when the grouping widget has finished work
 
 			// apply the grouping widget only to selected column
@@ -344,13 +343,13 @@
 			// reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter
 			group_dateString  : function(date) { return date.toLocaleString(); }
 		},
-		init: function(table, thisWidget, c, wo){
+		init: function(table, thisWidget, c, wo) {
 			tsg.bindEvents(table, c, wo);
 		},
-		format: function(table, c, wo) {
+		format: function(table) {
 			tsg.update(table);
 		},
-		remove : function(table, c, wo){
+		remove : function(table, c) {
 			c.$table
 				.off('click', 'tr.group-header')
 				.off('pagerChange.tsgrouping')

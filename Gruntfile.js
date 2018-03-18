@@ -4,8 +4,6 @@ module.exports = function( grunt ) {
 
 	var pkg = grunt.file.readJSON( 'package.json' ),
 		tasks,
-		widgetFilePrefix,
-		widgetFileSuffix,
 
 		defaults = {
 			dependencies : {
@@ -428,7 +426,7 @@ module.exports = function( grunt ) {
 	});
 
 	function escapeRegExp(str) {
-		return str.replace(/[$()*+\-.\/?[\\\]^{|}]/g, "\\$&");
+		return str.replace(/[$()*+\-.\/?[\\\]^{|}]/g, '\\$&');
 	}
 
 	// update tablesorter.jquery.json file version numbers to match the package.json version

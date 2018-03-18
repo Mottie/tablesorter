@@ -26,7 +26,7 @@
 	<!-- Tablesorter: optional -->
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-	<script id="js">$(function(){
+	<script id="js">$(function() {
 
 	// Initialize tablesorter
 	// ***********************
@@ -72,7 +72,7 @@
 			},
 
 			// ajax error callback from $.tablesorter.showError function
-			// ajaxError: function( config, xhr, settings, exception ){ return exception; };
+			// ajaxError: function( config, xhr, settings, exception ) { return exception; };
 			// returning false will abort the error message
 			ajaxError: null,
 
@@ -98,7 +98,7 @@
 			// ]
 			// OR
 			// return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
-			ajaxProcessing: function(data){
+			ajaxProcessing: function(data) {
 				if (data && data.hasOwnProperty('rows')) {
 					var indx, r, row, c, d = data.rows,
 					// total number of rows (required)
@@ -465,11 +465,11 @@ var $url = $('#url');
 $('table')
 
 	// show current URL for the DEMO ONLY
-	.on('changingUrl', function(e, url){
+	.on('changingUrl', function(e, url) {
 		$url.html(url);
 	})
 
-	.on('pagerInitialized', function(){
+	.on('pagerInitialized', function() {
 		// allow THIS demo to sort the content; this variable is automatically set to true when ajax
 		// is used as there isn't any way to sort the server side data from the client side.
 		this.config.serverSideSorting = false;

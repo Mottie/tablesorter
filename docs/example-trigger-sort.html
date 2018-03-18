@@ -51,13 +51,13 @@
 	});
 
 	// sort using data-sort attribute value
-	$('button[data-sort]').click(function(){
+	$('button[data-sort]').click(function() {
 		var sort = $(this).data('sort');
 		$(this).closest('.block').find('table').trigger('sorton', [ sort ]);
 		return false;
 	});
 
-	$('.sortReset-toggle').click(function(){
+	$('.sortReset-toggle').click(function() {
 		var c = $(this).closest('.block').find('table')[0].config;
 		c.sortReset = !c.sortReset;
 		$(this).next().html('' + c.sortReset);
@@ -74,7 +74,7 @@
 	<script>
 	// demo stuff (update pre with current sort)
 	$(function() {
-		$('button[data-sort]').click(function(){
+		$('button[data-sort]').click(function() {
 			var $this = $(this),
 				$box = $this.closest('.box'),
 				sort = $this.data('sort'),

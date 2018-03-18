@@ -4,7 +4,7 @@
  * Jonathan Snook comment @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter#comment-16140
  */
 /*jshint jquery:true, unused:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	// allow lower case roman numerals, since lists use i, ii, iii, etc.
@@ -14,7 +14,7 @@
 
 	$.tablesorter.addParser({
 		id: 'roman',
-		is: function(){
+		is: function() {
 			return false;
 		},
 		format: function(s) {
@@ -39,7 +39,7 @@
 
 	$.tablesorter.addParser({
 		id: 'roman-ignore',
-		is: function(){
+		is: function() {
 			return false;
 		},
 		format: function(s, table, cell, column) {
@@ -80,13 +80,13 @@
 
 	$.tablesorter.addParser({
 		id: 'roman-extract',
-		is: function(){
+		is: function() {
 			return false;
 		},
 		format: function(s) {
 			var val,
 				// find roman numerals
-				roman = $.grep(s.split(/\b/), function(v, i){
+				roman = $.grep(s.split(/\b/), function(v) {
 					return validator.test(v) ? v : '';
 				}).join('').match(matcher),
 

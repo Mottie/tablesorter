@@ -49,7 +49,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -68,15 +68,15 @@
 				.off('refresh.tsreflow updateComplete.tsreflow2')
 				// emulate jQuery Mobile refresh
 				// https://api.jquerymobile.com/table-reflow/#method-refresh
-				.on('refresh.tsreflow updateComplete.tsreflow2', function(){
+				.on('refresh.tsreflow updateComplete.tsreflow2', function() {
 					tablereflow.init(table, c, wo);
 				});
-			c.$headers.each(function(){
+			c.$headers.each(function() {
 				$this = $(this);
 				headers.push( $.trim( $this.attr(header) || $this.text() ) );
 			});
-			c.$tbodies.children().each(function(){
-				$(this).children().each(function(i){
+			c.$tbodies.children().each(function() {
+				$(this).children().each(function(i) {
 					$(this).attr(title, headers[i]);
 				});
 			});
@@ -91,7 +91,7 @@
 				.off('refresh.tsreflow2 updateComplete.tsreflow2')
 				// emulate jQuery Mobile refresh
 				// https://api.jquerymobile.com/table-reflow/#method-refresh
-				.on('refresh.tsreflow2 updateComplete.tsreflow2', function(){
+				.on('refresh.tsreflow2 updateComplete.tsreflow2', function() {
 					tablereflow.init2(table, c, wo);
 				});
 
@@ -101,7 +101,7 @@
 				if ($hdr.length > 1) {
 					txt = [];
 					/*jshint loopfunc:true */
-					$hdr.each(function(){
+					$hdr.each(function() {
 						$this = $(this);
 						if (!$this.hasClass(wo.reflow2_classIgnore)) {
 							txt.push( $this.attr(header) || $this.text() );
@@ -114,9 +114,9 @@
 			}
 			// include 'remove-me' class so these additional elements are removed before updating
 			txt = '<b class="' + c.selectorRemove.slice(1) + ' ' + wo.reflow2_labelClass;
-			c.$tbodies.children().each(function(){
+			c.$tbodies.children().each(function() {
 				$tbody = ts.processTbody(table, $(this), true);
-				$tbody.children().each(function(j){
+				$tbody.children().each(function(j) {
 					$this = $(this);
 					len = headers[j].length;
 					i = len - 1;
@@ -149,7 +149,7 @@
 		init: function(table, thisWidget, c, wo) {
 			tablereflow.init(table, c, wo);
 		},
-		remove: function(table, c, wo){
+		remove: function(table, c, wo) {
 			tablereflow.remove(table, c, wo);
 		}
 	});
@@ -171,7 +171,7 @@
 		init: function(table, thisWidget, c, wo) {
 			tablereflow.init2(table, c, wo);
 		},
-		remove: function(table, c, wo){
+		remove: function(table, c, wo) {
 			tablereflow.remove2(table, c, wo);
 		}
 	});

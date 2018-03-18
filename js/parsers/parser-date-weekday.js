@@ -1,7 +1,7 @@
 /*! Parser: weekday - updated 11/22/2015 (v2.24.6) */
 /* Demo: http://jsfiddle.net/Mottie/abkNM/4169/ */
 /*jshint jquery:true */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter;

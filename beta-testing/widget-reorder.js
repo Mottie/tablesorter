@@ -4,8 +4,8 @@
 */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($){
-	"use strict";
+;(function($) {
+	'use strict';
 
 $.tablesorter.addWidget({
 	id: 'reorder',
@@ -22,14 +22,13 @@ $.tablesorter.addWidget({
 	init: function(table, thisWidget, c, wo) {
 		var i, timer, $helper, $bar, clickOffset,
 		lastIndx = -1,
-		ts = $.tablesorter,
 		endIndex = -1,
 		startIndex = -1,
 		t = wo.reorder_blocked.split(' '),
 		noReorderLeft = t[0] || 'reorder-block-left',
 		noReorderLast = t[1] || 'reorder-block-end',
 		lastOffset = c.$headers.not('.' + noReorderLeft).first(),
-		offsets = c.$headers.map(function(i){
+		offsets = c.$headers.map(function() {
 			var s, $t = $(this);
 			if ($t.hasClass(noReorderLeft)) {
 				s = lastOffset;
@@ -40,7 +39,7 @@ $.tablesorter.addWidget({
 			return $t.offset().left;
 		}).get(),
 		len = offsets.length,
-		startReorder = function(e, $th){
+		startReorder = function(e, $th) {
 			var p = $th.position(),
 			r = $th.parent().position(),
 			i = startIndex = $th.index();
@@ -68,7 +67,7 @@ $.tablesorter.addWidget({
 			positionBar(e);
 			lastIndx = endIndex;
 		},
-		positionBar = function(e){
+		positionBar = function(e) {
 			for (i = 0; i <= len; i++) {
 				if ( i > 0 && e.pageX < offsets[i-1] + (offsets[i] - offsets[i-1])/2 && !c.$headers.eq(i).hasClass(noReorderLeft) ) {
 					endIndex = i - 1;
@@ -87,7 +86,7 @@ $.tablesorter.addWidget({
 				$bar.css('left', offsets[len]);
 			}
 		},
-		finishReorder = function(){
+		finishReorder = function() {
 			$helper.remove();
 			$bar.remove();
 			// finish reorder
@@ -95,7 +94,7 @@ $.tablesorter.addWidget({
 			rows = c.$table.find('tr'),
 			cols;
 			startIndex = -1; // stop mousemove updates
-			if ( s > -1 && endIndex > -1 && s != endIndex && s + 1 !== endIndex ) {
+			if ( s > -1 && endIndex > -1 && s !== endIndex && s + 1 !== endIndex ) {
 				adj = endIndex !== 0;
 				if (c.debug) {
 					console.log( 'Inserting column ' + s + (adj ? ' after' : ' before') + ' column ' + (endIndex - adj ? 1 : 0) );
@@ -123,10 +122,10 @@ $.tablesorter.addWidget({
 			}
 			endIndex = -1;
 		},
-		mdown = function(e, el){
+		mdown = function(e, el) {
 			var $t = $(el), evt = e;
 			if ($t.hasClass(wo.reorder_noReorder)) { return; }
-			timer = setTimeout(function(){
+			timer = setTimeout(function() {
 				$t.addClass('tablesorter-reorder');
 				startReorder(evt, $t);
 			}, wo.reorder_delay);
@@ -140,13 +139,13 @@ $.tablesorter.addWidget({
 			offsets.push( c.$table.offset().left + c.$table.outerWidth() );
 		}
 
-		c.$headers.not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e){
+		c.$headers.not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e) {
 			mdown(e, this);
 		});
 
 		$(document)
-		.bind('mousemove.reorder', function(e){
-			if (startIndex !== -1){
+		.bind('mousemove.reorder', function(e) {
+			if (startIndex !== -1) {
 				var c = { left : e.pageX - clickOffset[0] };
 				endIndex = -1;
 				if (/y/.test(wo.reorder_axis)) {
@@ -157,9 +156,9 @@ $.tablesorter.addWidget({
 			}
 		})
 		.add( c.$headers )
-		.bind('mouseup.reorder', function(){
+		.bind('mouseup.reorder', function() {
 			clearTimeout(timer);
-			if (startIndex !== -1 && endIndex !== -1){
+			if (startIndex !== -1 && endIndex !== -1) {
 				finishReorder();
 			} else {
 				startIndex = -1;
@@ -167,8 +166,8 @@ $.tablesorter.addWidget({
 		});
 
 		// has sticky headers?
-		c.$table.bind('stickyHeadersInit', function(){
-			wo.$sticky.find('thead').children().not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e){
+		c.$table.bind('stickyHeadersInit', function() {
+			wo.$sticky.find('thead').children().not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e) {
 				mdown(e, this);
 			});
 		});
@@ -177,6 +176,6 @@ $.tablesorter.addWidget({
 });
 
 // add mouse coordinates
-$x = $('#main h1:last'); $(document).mousemove(function(e){ $x.html( e.pageX ); });
+$x = $('#main h1:last'); $(document).mousemove(function(e) { $x.html( e.pageX ); });
 
 })(jQuery);

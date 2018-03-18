@@ -84,7 +84,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 	});
 
 	// preset searches for the first table
-	$('button[data-filter-column]').click(function(){
+	$('button[data-filter-column]').click(function() {
 		var filters = [],
 			config = $table[0].config,
 			$t = $(this),
@@ -115,7 +115,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
 	});
 
 	// preset searches on the second table
-	$('button.table2').click(function(){
+	$('button.table2').click(function() {
 		// check for reset
 		var query = $(this).hasClass('reset2') ? '' : this.textContent;
 			config = $table2[0].config;
@@ -229,7 +229,7 @@ th.tablesorter-header.ignore, .ignore { background-color: #e6bf99; }
   }
 });
 
-$('button.update').click(function(){
+$('button.update').click(function() {
   // update the marks in the table
   $('table').trigger('markFu');
 });</pre>
@@ -322,12 +322,12 @@ $('button.update').click(function(){
 					</tr>
 					<tr id="mark-each">
 						<td><span class="permalink">mark_each</span></td>
-						<td>function(element){}</td>
+						<td>function(element) {}</td>
 						<td>A callback for each marked element.</td>
 					</tr>
 					<tr id="mark-filter">
 						<td><a href="#" class="permalink">mark_filter</a></td>
-						<td>function(parameters){ return true; }</td>
+						<td>function(parameters) { return true; }</td>
 						<td>A callback to filter or limit matches.
 							<div class="collapsible">
 								<br>
@@ -342,7 +342,7 @@ $('button.update').click(function(){
 					</tr>
 					<tr id="mark-nomatch">
 						<td><a href="#" class="permalink">mark_noMatch</a></td>
-						<td>function(keyword){}</td>
+						<td>function(keyword) {}</td>
 						<td>A callback function that will be called when there are no matches.
 							<div class="collapsible">
 								<br>
@@ -354,7 +354,7 @@ $('button.update').click(function(){
 					</tr>
 					<tr id="mark-done">
 						<td><span class="permalink">mark_done</span></td>
-						<td>function(totalMatches){}</td>
+						<td>function(totalMatches) {}</td>
 						<td>A callback function after all marks are done.</td>
 					</tr>
 					<tr id="mark-debug">

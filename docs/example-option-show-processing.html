@@ -22,7 +22,7 @@
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/jquery.tablesorter.widgets.js"></script>
 
-<script id="js">$(function(){
+<script id="js">$(function() {
 	var t, start,
 		vis = false;
 
@@ -53,12 +53,12 @@
 		$("#display").append(t).find('li:first').remove();
 	});
 
-	$('.toggle').click(function(){
+	$('.toggle').click(function() {
 		vis = !vis;
 		$.tablesorter.isProcessing($("table"), vis);
 	});
 
-	$('[data-search]').click(function(){
+	$('[data-search]').click(function() {
 		var search = $(this).attr('data-search').split(',');
 		$('table').trigger('search', [search]);
 		return false;

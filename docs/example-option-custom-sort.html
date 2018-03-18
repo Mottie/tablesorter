@@ -45,7 +45,7 @@
 			// alphanumeric sort from sugar v2.0+ (https://sugarjs.com/docs/#/Array/getOption)
 			1 : Sugar.Array.getOption('sortCollate'),
 			// function parameters were previously (a, b, table, column) - *** THEY HAVE CHANGED!!! ***
-			2 : function(a, b, direction, column, table){
+			2 : function(a, b, direction, column, table) {
 				// this is the original sort method from tablesorter 2.0.3
 				if (table.config.sortLocaleCompare) { return a.localeCompare(b); }
 				return ((a < b) ? -1 : ((a > b) ? 1 : 0));

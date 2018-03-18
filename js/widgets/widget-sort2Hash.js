@@ -25,7 +25,7 @@
 				if ( filter ) {
 					filter = filter.split( wo.sort2Hash_separator );
 					c.$table.one( 'tablesorter-ready', function() {
-						setTimeout(function(){
+						setTimeout(function() {
 							c.$table.one( 'filterEnd', function() {
 								$(this).triggerHandler( 'pageAndSize', [ page, size ] );
 							});
@@ -237,7 +237,7 @@
 				var baseUrl = window.location.href.split(hashChar)[0];
 				// Ensure that there is a leading hash character
 				var firstChar = newHash[0];
-				if (firstChar != hashChar) {
+				if (firstChar !== hashChar) {
 					newHash = hashChar + newHash;
 				}
 				// Update URL in browser
