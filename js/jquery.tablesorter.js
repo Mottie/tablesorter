@@ -298,7 +298,10 @@
 			ts.setupParsers( c );
 			// start total row count at zero
 			c.totalRows = 0;
-			ts.validateOptions( c );
+			// only validate options while debugging. See #1528
+			if (c.debug) {
+				ts.validateOptions( c );
+			}
 			// build the cache for the tbody cells
 			// delayInit will delay building the cache until the user starts a sort
 			if ( !c.delayInit ) { ts.buildCache( c ); }
