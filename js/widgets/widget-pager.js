@@ -1021,7 +1021,6 @@
 				$.data( table, 'pagerLastSize', p.size );
 				p.page = 0;
 				p.size = p.totalRows;
-				console.log(p.totalRows, p.totalPages);
 				p.totalPages = 1;
 				c.$table
 					.addClass( 'pagerDisabled' )
