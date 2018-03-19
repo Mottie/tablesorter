@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2018-03-18 (v2.30.0)*/
+/*! tablesorter (FORK) - updated 2018-03-19 (v2.30.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -3105,7 +3105,7 @@
 
 })( jQuery, window );
 
-/*! Widget: saveSort - updated 2018-03-18 (v2.30.0) *//*
+/*! Widget: saveSort - updated 2018-03-19 (v2.30.1) *//*
 * Requires tablesorter v2.16+
 * by Rob Garrison
 */
@@ -3115,7 +3115,7 @@
 
 	function getStoredSortList(c) {
 		var stored = ts.storage( c.table, 'tablesorter-savesort' );
-		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
+		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : [];
 	}
 
 	function sortListChanged(c, sortList) {
