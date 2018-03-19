@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 2018-03-18 (v2.30.0) */
+/*! Widget: Pager - updated 2018-03-19 (v2.30.1) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -1020,7 +1020,8 @@
 				$.data( table, 'pagerLastPage', p.page );
 				$.data( table, 'pagerLastSize', p.size );
 				p.page = 0;
-				p.size = p.totalPages;
+				p.size = p.totalRows;
+				console.log(p.totalRows, p.totalPages);
 				p.totalPages = 1;
 				c.$table
 					.addClass( 'pagerDisabled' )
