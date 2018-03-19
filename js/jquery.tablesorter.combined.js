@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2018-03-18 (v2.30.0)*/
+/*! tablesorter (FORK) - updated 2018-03-19 (v2.30.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -16,7 +16,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.30.0 *//*
+/*! TableSorter (FORK) v2.30.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -40,7 +40,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.30.0',
+		version : '2.30.1',
 
 		parsers : [],
 		widgets : [],
@@ -316,7 +316,10 @@
 			ts.setupParsers( c );
 			// start total row count at zero
 			c.totalRows = 0;
-			ts.validateOptions( c );
+			// only validate options while debugging. See #1528
+			if (c.debug) {
+				ts.validateOptions( c );
+			}
 			// build the cache for the tbody cells
 			// delayInit will delay building the cache until the user starts a sort
 			if ( !c.delayInit ) { ts.buildCache( c ); }
@@ -5994,7 +5997,7 @@
 
 })( jQuery, window );
 
-/*! Widget: saveSort - updated 2018-03-18 (v2.30.0) *//*
+/*! Widget: saveSort - updated 2018-03-19 (v2.30.1) *//*
 * Requires tablesorter v2.16+
 * by Rob Garrison
 */
@@ -6004,7 +6007,7 @@
 
 	function getStoredSortList(c) {
 		var stored = ts.storage( c.table, 'tablesorter-savesort' );
-		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
+		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : [];
 	}
 
 	function sortListChanged(c, sortList) {

@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 2018-03-18 (v2.30.0)
+* updated 2018-03-19 (v2.30.1)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -692,12 +692,12 @@
 					$.data(table, 'pagerLastPage', p.page);
 					$.data(table, 'pagerLastSize', p.size);
 					p.page = 0;
-					p.size = p.totalPages;
+					p.size = p.totalRows;
 					p.totalPages = 1;
 					$(table)
-					.addClass('pagerDisabled')
-					.removeAttr('aria-describedby')
-					.find('tr.pagerSavedHeightSpacer').remove();
+						.addClass('pagerDisabled')
+						.removeAttr('aria-describedby')
+						.find('tr.pagerSavedHeightSpacer').remove();
 					renderTable(table, table.config.rowsCopy, p);
 					p.isDisabled = true;
 					ts.applyWidget( table );

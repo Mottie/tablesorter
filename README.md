@@ -104,6 +104,15 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.1">Version 2.30.1</a> (2018-03-19)
+
+* Core:
+  * Only validate options while debugging. Closes [issue #1528](https://github.com/Mottie/tablesorter/issues/1528)
+* Pager:
+  * Show all rows, not pages. Fixes [issue #1529](https://github.com/Mottie/tablesorter/issues/1529)
+* SaveSort:
+  * Fix JS error. See [issue #1525](https://github.com/Mottie/tablesorter/issues/1525)
+
 #### <a name="v2.30.0">Version 2.30.0</a> (2018-03-18)
 
 * Core:

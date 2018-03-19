@@ -16,7 +16,8 @@
 	<!-- Tablesorter: required -->
 	<link rel="stylesheet" href="../css/theme.blue.css">
 	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/jquery.tablesorter.widgets.js"></script>
+	<script src="../js/widgets/widget-storage.js"></script>
+	<script src="../js/widgets/widget-saveSort.js"></script>
 	<script src="../js/parsers/parser-ignore-articles.js"></script>
 
 	<script id="js">$(function() {
@@ -26,7 +27,11 @@
 		theme: 'blue',
 
 		// use save sort widget
-		widgets: ["saveSort", "zebra"]
+		widgets: ["saveSort", "zebra"],
+		widgetOptions: {
+			// enable/disable saveSort dynamically
+			saveSort: true
+		}
 
 	});
 
