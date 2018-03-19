@@ -26,6 +26,10 @@ table.tablesorter tr:not(:last-of-type) td {
 	/* all current themes style the bottom border; we'll switch to use the top */
 	border-width: 1px 1px 0 0;
 }
+table.tablesorter tr:last-of-type td:not(.tablesorter-vertical-group-hide) {
+	/* last row gets a top & bottom border */
+	border-width: 1px 1px 1px 0;
+}
 .tablesorter td.tablesorter-vertical-group-hide {
 	text-indent: -9999em;
 	border-top-color: transparent;
