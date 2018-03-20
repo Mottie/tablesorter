@@ -5,13 +5,17 @@
 <title>jQuery tablesorter 2.0</title>
 
 <!-- Demo stuff -->
-<link rel="stylesheet" href="css/bootstrap-v3.min.css">
-<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+<style>
+#banner h1 em {color:#6cf;}
+.main-nav {display:none;}
+</style>
+<link href="css/bootstrap-v3.min.css" rel="preload" as="style" onload="this.rel='stylesheet'">
+<link href="css/jquery-ui.min.css" class="ui-theme" rel="preload" as="style" onload="this.rel='stylesheet'">
 
-<link rel="stylesheet" href="css/jq.css">
-<link rel="stylesheet" href="css/menu.css">
-<link href="css/prettify.css" rel="stylesheet">
-<link href="../css/theme.blue.css" rel="stylesheet">
+<link href="css/jq.css" rel="preload" as="style" onload="this.rel='stylesheet'">
+<link href="css/menu.css" rel="preload" as="style" onload="this.rel='stylesheet'">
+<link href="css/prettify.css" rel="preload" as="style" onload="this.rel='stylesheet'">
+<link href="../css/theme.blue.css" rel="preload" as="style" onload="this.rel='stylesheet'">
 
 </head>
 <body id="root">
@@ -21,7 +25,7 @@
 	<div class="page-search">
 		<h2 class="title">table<em>sorter</em></h2>
 		<div class="input-group search-group">
-			<div class="status" title="results"></div>
+			<div class="status"></div>
 			<input type="text" placeholder="Find on page..." size="25" maxlength="25" class="search form-control input-sm">
 			<div class="input-group-btn">
 				<button type="button" class="search-clear btn btn-default tooltip-top" title="Clear search">
@@ -8193,25 +8197,27 @@ $.tablesorter.addHeaderResizeEvent( table, true );</pre>
 
 <!-- jQuery -->
 <script src="js/jquery-latest.min.js"></script>
-<script src="js/jquery-migrate-3.0.0.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/prettify.js"></script>
-<script src="js/docs.js"></script>
-<script src="js/search.js"></script>
+<script async src="js/jquery-migrate-3.0.0.min.js"></script>
+<script async src="js/jquery-ui.min.js"></script>
+<script async src="js/prettify.js"></script>
+<script async src="js/docs.js"></script>
+<script async src="js/search.js"></script>
 <!--[if lte IE 8]>
 <script src="js/search-ie.js"></script>
 <![endif]-->
 
 <!-- Tablesorter: required -->
 <script src="../js/jquery.tablesorter.combined.js"></script>
-<script>
+<script async>
 $.extend( $.tablesorter.defaults, {
 	theme: 'blue',
 	widthFixed: true
 });
-$('.compatibility').tablesorter();
 $('#tablesorter-demo').tablesorter({widgets:['zebra']});
-$('table.options, table.api').tablesorter({widgets:['stickyHeaders']});
+setTimeout(function(){
+	$('.compatibility').tablesorter();
+	$('table.options, table.api').tablesorter({widgets:['stickyHeaders']});
+}, 1000);
 </script>
 
 </body>

@@ -1,10 +1,10 @@
 /*jshint browser:true, jquery:true, unused:false */
 /*global prettyPrint:false */
-(function($){
-	$(function(){
+(function($) {
+	$(function() {
 		var $t, t, v, animating, clicked,
 
-		cleanupCode = function(code){
+		cleanupCode = function(code) {
 			return code.replace(/([<>\"\'\t\n]|&#133;)/g, function(m) { return {
 				'<' : '&lt;',
 				'>' : '&gt;',
@@ -16,24 +16,24 @@
 			}[m];});
 		};
 
-		$("a.external").each(function(){this.target = '_new';});
+		$('a.external').each(function() {this.target = '_new';});
 
 		// get javascript source
-		if ($("#js").length) {
-			$("#javascript pre").addClass('mod').html( cleanupCode( $("#js").html() ) );
+		if ($('#js').length) {
+			$('#javascript pre').addClass('mod').html( cleanupCode( $('#js').html() ) );
 		}
-		if ($("#js2").length) {
-			$("#javascript2 pre").addClass('mod').html( cleanupCode( $("#js2").html() ) );
+		if ($('#js2').length) {
+			$('#javascript2 pre').addClass('mod').html( cleanupCode( $('#js2').html() ) );
 		}
-		if ($("#css").length) {
-			$("pre.lang-css").not('.locked').addClass('mod').html( cleanupCode( $("#css").html() ) );
+		if ($('#css').length) {
+			$('pre.lang-css').not('.locked').addClass('mod').html( cleanupCode( $('#css').html() ) );
 		}
-		if ($("#demo").length && $("#html pre").length) {
-			$("#html pre").addClass('mod').html( cleanupCode( $("#demo").html() ) );
+		if ($('#demo').length && $('#html pre').length) {
+			$('#html pre').addClass('mod').html( cleanupCode( $('#demo').html() ) );
 		}
 
 		// apply to already pre-formatted blocks to add <br> for IE
-		$('pre.prettyprint:not(.mod)').each(function(){
+		$('pre.prettyprint:not(.mod)').each(function() {
 			$t = $(this);
 			$t.html( cleanupCode( $t.html() ) );
 		});
@@ -45,7 +45,7 @@
 		// hide child rows
 		$('#root .tablesorter-childRow').hide();
 		// toggle child row content, not hiding the row since we are using rowspan
-		$('#root .toggle').click(function(){
+		$('#root .toggle').click(function() {
 			$(this).closest('tr').nextUntil('tr:not(.tablesorter-childRow)').toggle();
 			return false;
 		});
@@ -54,26 +54,26 @@
 		clicked = false;
 		$('.collapsible').hide();
 
-		$('a.permalink').click(function(){
+		$('a.permalink').click(function() {
 			var $el = $(this);
-			setTimeout(function(){
+			setTimeout(function() {
 				if (!animating && !clicked) {
 					animating = true;
 					$el.closest('tr').find('.collapsible').slideToggle();
-					setTimeout(function(){ animating = false; }, 200);
+					setTimeout(function() { animating = false; }, 200);
 				}
 			}, 200);
 			return false;
 		});
-		$('#root .permalink').dblclick(function(){
+		$('#root .permalink').dblclick(function() {
 			clicked = true;
 			window.location.hash = '#' + $(this).closest('tr')[0].id;
 			showProperty();
-			setTimeout(function(){ clicked = false; }, 500);
+			setTimeout(function() { clicked = false; }, 500);
 			return false;
 		});
 
-		$('.toggleAll, .showAll, .hideAll').click(function(){
+		$('.toggleAll, .showAll, .hideAll').click(function() {
 			t = $.trim($(this).text());
 			// use nextAll to ignore any <br> or other elements between this link and the table
 			$(this).parent().nextAll('table:first').find('.collapsible')[t]();
@@ -89,7 +89,7 @@
 		// add high visibility tags for newest versions
 		t = $.tablesorter.version.replace(/(v|version|\+)/g, '').split('.');
 		v = [ parseInt(t[0], 10) || 1, parseInt(t[1], 10) || 0, parseInt(t[2], 10) || 0 ];
-		$('.version').each(function(){
+		$('.version').each(function() {
 			var i;
 			$t = $(this);
 			i = $t.text().replace(/(v|version|\+)/g, '').split('.');
@@ -107,11 +107,11 @@
 
 		$t = $('.accordion');
 		if ($t.length) {
-			var id, hashId,
+			var hashId,
 				hash = window.location.hash;
 			// add accodion ids
-			$t.each(function(i){
-				$(this).children('h3').each(function(i){
+			$t.each(function() {
+				$(this).children('h3').each(function(i) {
 					var txt = $(this).find('a').text().toLowerCase().replace(/[-:()\"]/g,'').replace(/[\s+\/]/g,'_');
 					this.id = txt;
 					if (hash && txt === hash.slice(1)) {
@@ -120,7 +120,7 @@
 				});
 			});
 			// set up accordions
-			$t.each(function(i){
+			$t.each(function() {
 				var $this = $(this);
 				$this.accordion({
 					active: $this.hasClass('start-closed') ? false : hashId,
@@ -128,12 +128,12 @@
 					heightStyle: 'content',
 					collapsible: true,
 					create: function() {
-						$this.children('h3').each(function(i){
+						$this.children('h3').each(function(i) {
 							this.id = $(this).find('a').text().toLowerCase().replace(/[-:()\"]/g,'').replace(/[\s+\/]/g,'_');
 							$(this).before('<a class="accordion-link link" data-index="' + i + '" href="#' + this.id + '"></a>');
 						});
-						$this.find('.accordion-link').click(function(){
-							$this.accordion( "option", "active", $(this).data('index') );
+						$this.find('.accordion-link').click(function() {
+							$this.accordion( 'option', 'active', $(this).data('index') );
 						});
 					},
 					activate: function(e, ui) {
@@ -154,7 +154,7 @@
 				widgets: ['stickyHeaders']
 			});
 
-			$('.intlink').click(function(){
+			$('.intlink').click(function() {
 				openAccordion( $(this).attr('href') );
 			});
 
@@ -191,7 +191,7 @@
 				t = $accordion.find(hash).closest('tr');
 				t.find('.collapsible').show();
 				if (t.closest('table').hasClass('hasStickyHeaders')) {
-					setTimeout(function(){
+					setTimeout(function() {
 						window.scrollTo( 0, t.offset().top - t.parents('table')[0].config.widgetOptions.$sticky.outerHeight() );
 					}, 200);
 				}
@@ -200,7 +200,7 @@
 		}
 	}
 
-	function showProperty(){
+	function showProperty() {
 		var prop, $t, wo, stickyHt,
 			h = window.location.hash;
 		if (h && !/[=,]/.test(h)) {
@@ -211,7 +211,7 @@
 					$('#root .tablesorter-childRow').show();
 				}
 				// move below sticky header; added delay as there could be some lag
-				setTimeout(function(){
+				setTimeout(function() {
 					$t = prop.closest('table');
 					if ($t.length && $t[0].config) {
 						wo = $t[0].config.widgetOptions;
@@ -229,15 +229,15 @@
 	}
 
 	// update stickyHeader when menu closes
-	$('#main-nav-check').bind('change', function(){
-		setTimeout(function(){
+	$('#main-nav-check').bind('change', function() {
+		setTimeout(function() {
 			$(window).scroll();
 		}, 350); // transition animation 300ms
 	});
 
-	$(window).bind('load', function(){
+	$(window).bind('load', function() {
 		if ($('#root').length) {
-			$(window).bind('hashchange', function(){
+			$(window).bind('hashchange', function() {
 				showProperty();
 			});
 			showProperty();
@@ -246,13 +246,13 @@
 
 	// append hidden parsed value to cell
 	// used by feet-inch-fraction & metric parser demos
-	window.addParsedValues = function($t, cols, format){
+	window.addParsedValues = function($t, cols, format) {
 		var r, val,
 			$r = $t.find('tbody tr'),
 			c = $t[0].config.cache[0].normalized;
-		$r.each(function(i){
+		$r.each(function(i) {
 			r = this;
-			$.each(cols, function(v,j){
+			$.each(cols, function(v,j) {
 				val = format ? format(c[i][j]) : c[i][j];
 				if (val !== '') {
 					r.cells[j].innerHTML += ' <span class="val hidden removeme">(<span class="results">' + val + '</span>)</span>';
@@ -260,7 +260,7 @@
 			});
 		});
 
-		$('.toggleparsedvalue').bind('click', function(){
+		$('.toggleparsedvalue').bind('click', function() {
 			$('.val').toggleClass('hidden');
 			return false;
 		});

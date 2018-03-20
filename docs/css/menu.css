@@ -3,7 +3,7 @@
 html,body{min-height:100%;}
 a{text-decoration:none;}
 #main{transition: transform .3s ease; }
-.main-nav{position:fixed;top:0;left:0;width:250px;height:100%;background:#3B3B3B;color:#fff;overflow:hidden;transition:transform .3s ease;transform:translateX(-250px);}
+div.main-nav{position:fixed;top:0;left:0;width:250px;height:100%;background:#3B3B3B;color:#fff;overflow:hidden;transition:transform .3s ease;transform:translateX(-250px);display:block;}
 .main-nav h2{color:#fff;font-size:20px;margin:0 0 15px 30px;}
 .main-nav em{color:#6cf;font-style:normal;}
 .main-nav .page-links a{display:block;background:linear-gradient(#3e3e3e,#383838);border-top:1px solid #484848;border-bottom:1px solid #2E2E2E;color:#FFF;white-space:nowrap;text-overflow:ellipsis;padding:10px;}
