@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 2018-01-30 (v2.29.5) *//*
+/*! Parser: input & select - updated 2018-03-03 (v2.30.2) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -161,13 +161,14 @@
 			}
 		},
 		updateHeaderCheckbox = function( $table, checkboxClass ) {
-			var $rows = $table.children( 'tbody' ).children( ':visible' ), // (include child rows?)
+			var $sticky,
+				$rows = $table.children( 'tbody' ).children( ':visible' ), // (include child rows?)
 				len = $rows.length,
 				hasSticky = $table[0].config.widgetOptions.$sticky;
 			// set indeterminate state on header checkbox
 			$table.children( 'thead' ).find( 'input[type="checkbox"]' ).each( function() {
-				if (hasSticky){
-						var $sticky = hasSticky.find( '[data-column="' + column + '"]' );
+				if (hasSticky) {
+					$sticky = hasSticky.find( '[data-column="' + column + '"]' );
 				}
 				var column = $( this ).closest( 'td, th' ).attr( 'data-column' ),
 					vis = $rows.filter( '.' + checkboxClass + '-' + column ).length,
