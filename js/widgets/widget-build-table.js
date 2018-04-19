@@ -1,4 +1,4 @@
-/*! Widget: Build Table - updated 2018-03-18 (v2.30.0) *//*
+/*! Widget: Build Table - updated 2018-04-19 (v2.30.1) *//*
  * for tableSorter v2.16.0+
  * by Rob Garrison
  */
@@ -26,7 +26,7 @@
 		// determine type: html, json, array, csv, object
 		runType = function(d) {
 			var t = $.type(d),
-				jq = d instanceof jQuery;
+				jq = d instanceof $;
 			// run any processing if set
 			if ( typeof p === 'function' ) { d = p(d, wo); }
 			// store processed data in table.config.data
@@ -66,7 +66,7 @@
 			return false;
 		}
 
-		if ( d instanceof jQuery ) {
+		if ( d instanceof $ ) {
 			// get data from within a jQuery object (csv)
 			runType( $.trim( d.html() ) );
 		} else if ( d && ( d.hasOwnProperty('url') || typ === 'json' ) ) {
@@ -309,7 +309,7 @@
 	// data may be a jQuery object after processing
 	bt.html = function(table, data, wo) {
 		var $t = $(table);
-		if ( data instanceof jQuery ) {
+		if ( data instanceof $ ) {
 			$t.empty().append(data);
 		} else {
 			$t.html(data);

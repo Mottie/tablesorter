@@ -773,7 +773,7 @@
 						th = result[ 2 ]; // headers
 					}
 					l = d && d.length;
-					if ( d instanceof jQuery ) {
+					if ( d instanceof $ ) {
 						if ( wo.pager_processAjaxOnInit ) {
 							// append jQuery object
 							c.$tbodies.eq( 0 ).empty();
