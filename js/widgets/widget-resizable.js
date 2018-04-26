@@ -1,4 +1,4 @@
-/*! Widget: resizable - updated 2018-02-14 (v2.29.6) */
+/*! Widget: resizable - updated 2018-03-26 (v2.30.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';

@@ -8,7 +8,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.30.1 *//*
+/*! TableSorter (FORK) v2.30.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -32,7 +32,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.30.1',
+		version : '2.30.2',
 
 		parsers : [],
 		widgets : [],
@@ -528,11 +528,8 @@
 					ts.buildCache( c );
 				}
 				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
-				// reference original table headers and find the same cell
-				// don't use $headers or IE8 throws an error - see #987
-				temp = $headers.index( $cell );
-				c.last.clickedIndex = ( temp < 0 ) ? $cell.attr( 'data-column' ) : temp;
-				// use column index if $headers is undefined
+				// use column index from data-attribute or index of current row; fixes #1116
+				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
 				cell = c.$headers[ c.last.clickedIndex ];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
@@ -1410,7 +1407,7 @@
 			} else if (
 				!$row ||
 				// row is a jQuery object?
-				!( $row instanceof jQuery ) ||
+				!( $row instanceof $ ) ||
 				// row contained in the table?
 				( ts.getClosest( $row, 'table' )[ 0 ] !== c.table )
 			) {

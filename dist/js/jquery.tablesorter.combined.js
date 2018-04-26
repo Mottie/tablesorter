@@ -1,4 +1,4 @@
-/*! tablesorter (FORK) - updated 2018-03-19 (v2.30.1)*/
+/*! tablesorter (FORK) - updated 2018-04-26 (v2.30.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
 	}
 }(function(jQuery) {
 
-/*! TableSorter (FORK) v2.30.1 *//*
+/*! TableSorter (FORK) v2.30.2 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -34,7 +34,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.30.1',
+		version : '2.30.2',
 
 		parsers : [],
 		widgets : [],
@@ -530,11 +530,8 @@
 					ts.buildCache( c );
 				}
 				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
-				// reference original table headers and find the same cell
-				// don't use $headers or IE8 throws an error - see #987
-				temp = $headers.index( $cell );
-				c.last.clickedIndex = ( temp < 0 ) ? $cell.attr( 'data-column' ) : temp;
-				// use column index if $headers is undefined
+				// use column index from data-attribute or index of current row; fixes #1116
+				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
 				cell = c.$headers[ c.last.clickedIndex ];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
@@ -1412,7 +1409,7 @@
 			} else if (
 				!$row ||
 				// row is a jQuery object?
-				!( $row instanceof jQuery ) ||
+				!( $row instanceof $ ) ||
 				// row contained in the table?
 				( ts.getClosest( $row, 'table' )[ 0 ] !== c.table )
 			) {
@@ -5576,7 +5573,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 2018-02-14 (v2.29.6) */
+/*! Widget: resizable - updated 2018-03-26 (v2.30.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -5746,7 +5743,8 @@
 				tableHeight -= c.$table.children('tfoot').height();
 			}
 			// subtract out table left position from resizable handles. Fixes #864
-			startPosition = c.$table.position().left;
+			// jQuery v3.3.0+ appears to include the start position with the $header.position().left; see #1544
+			startPosition = parseFloat($.fn.jquery) >= 3.3 ? 0 : c.$table.position().left;
 			$handles.each( function() {
 				var $this = $(this),
 					column = parseInt( $this.attr( 'data-column' ), 10 ),

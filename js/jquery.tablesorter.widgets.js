@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2018-03-19 (v2.30.1)*/
+/*! tablesorter (FORK) - updated 2018-04-26 (v2.30.2)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -2690,7 +2690,7 @@
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 2018-02-14 (v2.29.6) */
+/*! Widget: resizable - updated 2018-03-26 (v2.30.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -2860,7 +2860,8 @@
 				tableHeight -= c.$table.children('tfoot').height();
 			}
 			// subtract out table left position from resizable handles. Fixes #864
-			startPosition = c.$table.position().left;
+			// jQuery v3.3.0+ appears to include the start position with the $header.position().left; see #1544
+			startPosition = parseFloat($.fn.jquery) >= 3.3 ? 0 : c.$table.position().left;
 			$handles.each( function() {
 				var $this = $(this),
 					column = parseInt( $this.attr( 'data-column' ), 10 ),

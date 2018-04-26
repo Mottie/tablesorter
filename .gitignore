@@ -162,5 +162,10 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+
+# lockfiles
+package-lock.json
+yarn.lock
+
 # Mac crap
 .DS_Store

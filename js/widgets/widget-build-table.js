@@ -1,4 +1,4 @@
-/*! Widget: Build Table - updated 2018-04-19 (v2.30.1) *//*
+/*! Widget: Build Table - updated 2018-03-26 (v2.30.2) *//*
  * for tableSorter v2.16.0+
  * by Rob Garrison
  */
