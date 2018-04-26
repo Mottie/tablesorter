@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 2018-03-19 (v2.30.1) */
+/*! Widget: Pager - updated 2018-03-26 (v2.30.2) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -773,7 +773,7 @@
 						th = result[ 2 ]; // headers
 					}
 					l = d && d.length;
-					if ( d instanceof jQuery ) {
+					if ( d instanceof $ ) {
 						if ( wo.pager_processAjaxOnInit ) {
 							// append jQuery object
 							c.$tbodies.eq( 0 ).empty();

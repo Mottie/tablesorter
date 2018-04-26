@@ -104,6 +104,28 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.2">Version 2.30.2</a> (2018-03-26)
+
+* Core:
+  * Allow passing headers from multiple rows. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Build:
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Pager:
+  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
+* Resizable:
+  * Adjust handle position for jQuery v3.3.0+. Fixes [issue #1544](https://github.com/Mottie/tablesorter/issues/1544).
+* Vertical Group:
+  * Fix border css for last row.
+* Parser:
+  * Input-select: Fix TypeError `hasSticky` is undefined. See [issue #1534](https://github.com/Mottie/tablesorter/issues/1534) & [PR #1535](https://github.com/Mottie/tablesorter/pull/1535); thanks [@adamz01h](https://github.com/adamz01h).
+* Docs
+  * Improve load time.
+  * Update incorrect default. See [issue #1510](https://github.com/Mottie/tablesorter/issues/1510).
+  * Replace whitespace with symbols.
+* Meta:
+  * Update dependencies.
+
 #### <a name="v2.30.1">Version 2.30.1</a> (2018-03-19)
 
 * Core:
@@ -129,29 +151,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Update Bootstrap v4.0.0.
   * Adjust (accordion) link position.
   * Fix scroller fixed column border alignment.
-
-#### <a name="v2.29.6">Version 2.29.6</a> (2018-02-25)
-
-* Docs:
-  * Fix theme selector.
-  * `pager.page` is zero-based. See [issue #1516](https://github.com/Mottie/tablesorter/issues/1516).
-* Resizable:
-  * Don't save 'auto' table width. Closes [issue #1514](https://github.com/Mottie/tablesorter/issues/1514).
-* Scroller:
-  * Adjust spacing for jQuery UI themes. See [issue #1506](https://github.com/Mottie/tablesorter/issues/1506).
-* StickyHeaders:
-  * Allow nested tables in sticky header. See [Stack Overflow](https://stackoverflow.com/q/48793036/145346).
-  * Include nested tables inside a scrolling element. Fixes [issue #1512](https://github.com/Mottie/tablesorter/issues/1512).
-
-#### <a name="v2.29.5">Version 2.29.5</a> (2018-01-30)
-
-* Docs:
-  * Update jQuery to v3.3.1.
-  * Add jQuery UI theme selector to scroller demo. See [issue #1506](https://github.com/Mottie/tablesorter/issues/1506).
-  * Minor fixes to links.
-* Filter:
-  * Clean up language settings & allow empty strings. See [issue #1505](https://github.com/Mottie/tablesorter/issues/1505).
-  * Fix linting issue.
-  * Fix version numbering.
-* Parser:
-  * Add radio parser. See [issue #1502](https://github.com/Mottie/tablesorter/issues/1502).
