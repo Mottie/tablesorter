@@ -104,6 +104,13 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.3">Version 2.30.3</a> (2018-03-30)
+
+* Core:
+  * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
+* Docs:
+  * Remove link preload because it isn't supported in Firefox.
+
 #### <a name="v2.30.2">Version 2.30.2</a> (2018-03-26)
 
 * Core:
