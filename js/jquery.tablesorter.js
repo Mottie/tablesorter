@@ -520,7 +520,7 @@
 				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
 				// use column index from data-attribute or index of current row; fixes #1116
 				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
-				cell = c.$headers[ c.last.clickedIndex ];
+				cell = c.$headerIndexed[ c.last.clickedIndex ];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
 				}
