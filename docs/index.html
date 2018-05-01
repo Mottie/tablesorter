@@ -1000,8 +1000,8 @@
 					An object of instructions for per-"header cell" controls in the format: <code>headers: { 0: { option: setting }, ... }</code>
 					(<span class="version updated">v2.17.1</span>)
 					<div class="collapsible">
-					<br>
-					<span class="label label-warning">Warning</span> <strong>Do not</strong> use this option if your header contains multiple rows or any <code>colspan</code> or <code>rowspan</code>. Instead add a data-attribute or class name to the header (see the first demo for an example).<br>
+					<p>
+					<span class="label label-warning">Warning</span> <strong>Do not</strong> use this option if your header contains multiple rows or any <code>colspan</code> or <code>rowspan</code>. Instead add a data-attribute or class name to the header (see the first demo for an example).</p>
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
 					<br>
 					The plugin attempts to detect the type of data that is contained in a column, but if it can't figure it out then it defaults to alphanumeric. You can easily override this by setting the header argument (or column parser).
