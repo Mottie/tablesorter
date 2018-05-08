@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 2018-02-25 (v2.29.6) *//*
+/*! Widget: scroller - updated 2018-05-07 (v2.30.4) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -203,6 +203,7 @@
 			wo.scroller_calcWidths = [];
 			wo.scroller_saved = [ 0, 0 ];
 			wo.scroller_isBusy = true;
+			wo.scroller_scrollTimer = null;
 
 			// set scrollbar width to one of the following (1) explicitly set scroller_barWidth option,
 			// (2) detected scrollbar width or (3) fallback of 15px
@@ -273,8 +274,11 @@
 				.off( 'scroll' + namespace )
 				.on( 'scroll' + namespace, function() {
 					// Save position
-					wo.scroller_saved[0] = $tableWrap.scrollLeft();
-					wo.scroller_saved[1] = $tableWrap.scrollTop();
+					clearTimeout(wo.scroller_scrollTimer);
+					wo.scroller_scrollTimer = setTimeout(function() {
+						wo.scroller_saved[0] = $tableWrap.scrollLeft();
+						wo.scroller_saved[1] = $tableWrap.scrollTop();
+					}, 300);
 					if ( wo.scroller_jumpToHeader ) {
 						var pos = $win.scrollTop() - $hdr.offset().top;
 						if ( $( this ).scrollTop() !== 0 && pos < tbHt && pos > 0 ) {
@@ -295,12 +299,18 @@
 
 			$table
 				.off( namespace )
+				.on( 'sortStart' + namespace, function() {
+					clearTimeout(wo.scroller_scrollTimer);
+					wo.scroller_isBusy = true;
+				})
 				.on( 'sortEnd filterEnd'.split( ' ' ).join( namespace + ' ' ), function( event ) {
 					// Sorting, so scroll to top
 					if ( event.type === 'sortEnd' && wo.scroller_upAfterSort ) {
-						$tableWrap.animate({
-							scrollTop : 0
-						}, 'fast' );
+						$tableWrap
+							.scrollLeft( wo.scroller_saved[0] )
+							.animate({ scrollTop : 0 }, 'fast', function() {
+								wo.scroller_isBusy = false;
+							});
 					} else if ( wo.scroller_fixedColumns ) {
 						setTimeout( function() {
 							// restore previous scroll position
@@ -859,7 +869,9 @@
 			$fixedColumn.find('caption').height( wo.scroller_$header.find( 'caption' ).height() );
 
 			$tableWrap.scroll();
-			wo.scroller_isBusy = false;
+			setTimeout(function() {
+				wo.scroller_isBusy = false;
+			}, 0)
 
 		},
 
