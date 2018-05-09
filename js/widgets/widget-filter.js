@@ -467,7 +467,7 @@
 						for (var t in searchTrigger){
 							// events
 							var stType = typeof searchTrigger[t];
-							if(stType === "string" && eventType === searchTrigger[t]){
+							if(stType === "string" && event.type === searchTrigger[t]){
 								triggerSearch = true;
 								break;
 							}
