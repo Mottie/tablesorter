@@ -59,7 +59,8 @@
 			filter_selectSourceSeparator : '|', // filter_selectSource array text left of the separator is added to the option value, right into the option text
 			filter_serversideFiltering : false, // if true, must perform server-side filtering b/c client-side filtering is disabled, but the ui and events will still be used.
 			filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
-			filter_useParsedData : false  // filter all data using parsed content
+			filter_useParsedData : false, // filter all data using parsed content
+			filter_searchTrigger : ['search', 'blur' , 13 ]  // array of events / Keys who trigger the search false = search, blur event and enterkey
 		},
 		format: function( table, c, wo ) {
 			if ( !c.$table.hasClass( 'hasFilters' ) ) {
@@ -869,25 +870,57 @@
 					eventType = event.type,
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
-						ts.getColumnData( table, wo.filter_liveSearch, column );
-				if ( table.config.widgetOptions.filter_initialized &&
-					// immediate search if user presses enter
-					( event.which === tskeyCodes.enter ||
-						// immediate search if a "search" or "blur" is triggered on the input
-						( eventType === 'search' || eventType === 'blur' ) ||
-						// change & input events must be ignored if liveSearch !== true
-						( eventType === 'change' || eventType === 'input' ) &&
-						// prevent search if liveSearch is a number
-						( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
-						// don't allow 'change' or 'input' event to process if the input value
-						// is the same - fixes #685
-						this.value !== c.lastSearch[column]
-					)
-				) {
-					event.preventDefault();
-					// init search with no delay
-					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, eventType !== 'keypress', true, column );
+						ts.getColumnData( table, wo.filter_liveSearch, column ),
+					searchTrigger = wo.filter_searchTrigger,
+					triggerSearch = false;
+				
+				if (table.config.widgetOptions.filter_initialized) {
+				
+					// Only if liveSearch is disabled
+					if(liveSearch === false){
+						for (var t in searchTrigger){
+							// events
+							var stType = typeof t;
+							if(stType === "string" && eventType === t){
+								triggerSearch = true;
+								break;
+							} else if(stType === "number" && event.which === t){
+								// keycodes
+								triggerSearch = true;
+								break;
+							} else if(stType === "object" ){
+								if(t.hasOwnProperty('keyCode') && event.which === t.keyCode){
+									// same keycode 
+									triggerSearch = true;
+									// check modifier
+									if(t.hasOwnProperty('ctrl') && t.ctrl  !== event.ctrl ){
+										triggerSearch = false;
+									}
+									if(t.hasOwnProperty('alt') && t.alt  !== event.alt ){
+										triggerSearch = false;
+									}
+									if(t.hasOwnProperty('shift') && t.shift  !== event.shift ){
+										triggerSearch = false;
+									}
+								}
+							}
+						}
+							// change & input events must be ignored if liveSearch !== true
+					} else if ( eventType === 'change' || eventType === 'input' ) &&
+							// prevent search if liveSearch is a number
+							( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
+							// don't allow 'change' or 'input' event to process if the input value
+							// is the same - fixes #685
+							this.value !== c.lastSearch[column]){
+						triggerSearch = true;
+					}
+
+					if(triggerSearch) {
+						event.preventDefault();
+						// init search with no delay
+						$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
+						tsf.searching( table, eventType !== 'keypress', true, column );
+					}
 				}
 			});
 		},
