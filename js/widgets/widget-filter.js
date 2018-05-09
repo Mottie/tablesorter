@@ -60,7 +60,7 @@
 			filter_serversideFiltering : false, // if true, must perform server-side filtering b/c client-side filtering is disabled, but the ui and events will still be used.
 			filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
 			filter_useParsedData : false, // filter all data using parsed content
-			filter_searchTrigger : ['search', 'blur' , 13 ]  // array of events / Keys who trigger the search false = search, blur event and enterkey
+			filter_searchTrigger : false  // array of events / Keys who trigger the search false = search, blur event and enterkey
 		},
 		format: function( table, c, wo ) {
 			if ( !c.$table.hasClass( 'hasFilters' ) ) {
@@ -459,6 +459,24 @@
 							c.$table.triggerHandler( 'filterFomatterUpdate' );
 						}, 100);
 					}
+					
+					if(event.type === 'search'){
+						var triggerSearch = false;
+						var searchTrigger = wo.filter_searchTrigger === false ? ['search', 'blur' , 13 ] : wo.filter_searchTrigger;
+						// skip search if not included
+						for (var t in searchTrigger){
+							// events
+							var stType = typeof searchTrigger[t];
+							if(stType === "string" && eventType === searchTrigger[t]){
+								triggerSearch = true;
+								break;
+							}
+						}
+						if(!triggerSearch){
+							return;
+						}
+					}
+					
 					// pass true ( skipFirst ) to prevent the tablesorter.setFilters function from skipping the first
 					// input ensures all inputs are updated when a search is triggered on the table
 					// $( 'table' ).trigger( 'search', [...] );
@@ -837,7 +855,8 @@
 				wo = table.config.widgetOptions; // make sure "wo" isn't cached
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ? wo.filter_liveSearch :
-						ts.getColumnData( table, wo.filter_liveSearch, column );
+						ts.getColumnData( table, wo.filter_liveSearch, column ),
+					searchTrigger = wo.filter_searchTrigger	;
 				if ( typeof liveSearch === 'undefined' ) {
 					liveSearch = wo.filter_liveSearch.fallback || false;
 				}
@@ -852,13 +871,67 @@
 					( typeof liveSearch === 'number' && this.value.length < liveSearch ) ||
 					// let return & backspace continue on, but ignore arrows & non-valid characters
 					( event.which !== tskeyCodes.enter && event.which !== tskeyCodes.backSpace &&
-						( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) ) ) ) {
+						( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) 
+						 )  && searchTrigger === false  ) ) {
 					return;
 					// live search
 				} else if ( liveSearch === false ) {
-					if ( this.value !== '' && event.which !== tskeyCodes.enter ) {
-						return;
+					
+					if (searchTrigger === false) {
+						if ( this.value !== '' && event.which !== tskeyCodes.enter ) {
+							return;
+						}
+					} else {
+						var skipSearch = true;
+						// only allow keyCode
+						for ( var t in searchTrigger ){
+							// events
+							var stType = typeof searchTrigger[t];
+						 if(stType === "number" && event.which === searchTrigger[t]){
+								// keycodes
+								skipSearch = false;
+								break;
+							} else if(stType === "object" ){
+								if(searchTrigger[t].hasOwnProperty('keyCode') && event.which === searchTrigger[t].keyCode){
+									// check modifier
+									var ctrl = true, alt = true, shift = true;
+									if(searchTrigger[t].hasOwnProperty('ctrl')){
+										if(searchTrigger[t].ctrl  === event.ctrlKey ){
+											ctrl = true;
+										}else{
+											ctrl = false;
+										}
+									}
+									if(searchTrigger[t].hasOwnProperty('alt')){
+										if(searchTrigger[t].alt  === event.altKey ){
+											alt = true;
+										}else{
+											alt = false;
+										}
+									}
+									if(searchTrigger[t].hasOwnProperty('shift')){
+										if( searchTrigger[t].shift  === event.shiftKey ){
+											shift = true;
+										}
+										else{
+											shift = false;
+										}
+									}
+									
+									if(ctrl && alt && shift){
+										skipSearch = false;
+									}
+								}
+							}
+						}
+						if(skipSearch){
+							return;
+						}
+						
+						
 					}
+					
+					
 				}
 				// change event = no delay; last true flag tells getFilters to skip newest timed input
 				tsf.searching( table, true, true, column );
@@ -871,35 +944,34 @@
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column ),
-					searchTrigger = wo.filter_searchTrigger,
+					searchTrigger = wo.filter_searchTrigger === false ? ['search', 'blur' , 13 ] : wo.filter_searchTrigger,
 					triggerSearch = false;
 				
 				if (table.config.widgetOptions.filter_initialized) {
-				
 					// Only if liveSearch is disabled
 					if(liveSearch === false){
 						for (var t in searchTrigger){
 							// events
-							var stType = typeof t;
-							if(stType === "string" && eventType === t){
+							var stType = typeof searchTrigger[t];
+							if(stType === "string" && eventType === searchTrigger[t]){
 								triggerSearch = true;
 								break;
-							} else if(stType === "number" && event.which === t){
+							} else if(stType === "number" && event.which === searchTrigger[t] ){
 								// keycodes
 								triggerSearch = true;
 								break;
-							} else if(stType === "object" ){
-								if(t.hasOwnProperty('keyCode') && event.which === t.keyCode){
+							} else if( stType === "object" ){
+								if( searchTrigger[t].hasOwnProperty('keyCode') && event.which === searchTrigger[t].keyCode ){
 									// same keycode 
 									triggerSearch = true;
 									// check modifier
-									if(t.hasOwnProperty('ctrl') && t.ctrl  !== event.ctrl ){
+									if( searchTrigger[t].hasOwnProperty('ctrl') && searchTrigger[t].ctrl  !== event.ctrlKey ){
 										triggerSearch = false;
 									}
-									if(t.hasOwnProperty('alt') && t.alt  !== event.alt ){
+									if( searchTrigger[t].hasOwnProperty('alt') && searchTrigger[t].alt  !== event.altKey ){
 										triggerSearch = false;
 									}
-									if(t.hasOwnProperty('shift') && t.shift  !== event.shift ){
+									if( searchTrigger[t].hasOwnProperty('shift') && searchTrigger[t].shift  !== event.shiftKey ){
 										triggerSearch = false;
 									}
 								}
