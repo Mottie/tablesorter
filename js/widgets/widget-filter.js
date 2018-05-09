@@ -906,7 +906,7 @@
 							}
 						}
 							// change & input events must be ignored if liveSearch !== true
-					} else if ( eventType === 'change' || eventType === 'input' ) &&
+					} else if ( ( eventType === 'change' || eventType === 'input' ) &&
 							// prevent search if liveSearch is a number
 							( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
 							// don't allow 'change' or 'input' event to process if the input value
