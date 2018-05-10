@@ -18,6 +18,7 @@
 
 	$.extend( tskeyCodes, {
 		backSpace : 8,
+		tab : 9,
 		escape : 27,
 		space : 32,
 		left : 37,
@@ -459,24 +460,24 @@
 							c.$table.triggerHandler( 'filterFomatterUpdate' );
 						}, 100);
 					}
-					
-					if(event.type === 'search'){
-						var triggerSearch = false;
-						var searchTrigger = wo.filter_searchTrigger === false ? ['search', 'blur' , 13 ] : wo.filter_searchTrigger;
+					// check if search is included because enter trigger a search event
+					/* if ( event.type === 'search' ) {
+						var triggerSearch = false,
+								searchTrigger = wo.filter_searchTrigger === false ? [ 'blur', tskeyCodes.enter ] : wo.filter_searchTrigger;
 						// skip search if not included
-						for (var t in searchTrigger){
-							// events
-							var stType = typeof searchTrigger[t];
-							if(stType === "string" && event.type === searchTrigger[t]){
+						for ( var t in searchTrigger ) {
+							var stType = typeof searchTrigger[t],
+									trigger = searchTrigger[t];
+							// only events required
+							if ( stType === "string" && event.type === trigger ) {
 								triggerSearch = true;
 								break;
 							}
 						}
-						if(!triggerSearch){
+						if( !triggerSearch ) {
 							return;
 						}
-					}
-					
+					} */
 					// pass true ( skipFirst ) to prevent the tablesorter.setFilters function from skipping the first
 					// input ensures all inputs are updated when a search is triggered on the table
 					// $( 'table' ).trigger( 'search', [...] );
@@ -856,7 +857,7 @@
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ? wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column ),
-					searchTrigger = wo.filter_searchTrigger	;
+					searchTrigger = wo.filter_searchTrigger;
 				if ( typeof liveSearch === 'undefined' ) {
 					liveSearch = wo.filter_liveSearch.fallback || false;
 				}
@@ -871,67 +872,44 @@
 					( typeof liveSearch === 'number' && this.value.length < liveSearch ) ||
 					// let return & backspace continue on, but ignore arrows & non-valid characters
 					( event.which !== tskeyCodes.enter && event.which !== tskeyCodes.backSpace &&
-						( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) 
-						 )  && searchTrigger === false  ) ) {
+					 ( event.which < tskeyCodes.space || ( event.which >= tskeyCodes.left && event.which <= tskeyCodes.down ) ) ) && 
+					searchTrigger === false  ) ) {
 					return;
 					// live search
 				} else if ( liveSearch === false ) {
-					
-					if (searchTrigger === false) {
+					if ( searchTrigger === false ) {
 						if ( this.value !== '' && event.which !== tskeyCodes.enter ) {
 							return;
 						}
 					} else {
 						var skipSearch = true;
-						// only allow keyCode
-						for ( var t in searchTrigger ){
-							// events
-							var stType = typeof searchTrigger[t];
-						 if(stType === "number" && event.which === searchTrigger[t]){
-								// keycodes
+						// on keyup event only keycodes needed to be checked
+						for ( var t in searchTrigger ) {
+							var stType = typeof searchTrigger[t],
+									trigger = searchTrigger[t];
+							// single keycode
+						 if ( stType === 'number' && event.which === trigger ) {
 								skipSearch = false;
 								break;
-							} else if(stType === "object" ){
-								if(searchTrigger[t].hasOwnProperty('keyCode') && event.which === searchTrigger[t].keyCode){
+						 } else if ( stType === 'object' ) {
+								// keyCode property must be in the object
+								if ( typeof trigger.keyCode === 'number' && event.which === trigger.keyCode ||
+									 	tskeyCodes[ trigger.keyCode ] !== undefined && 
+										event.which === tskeyCodes[ trigger.keyCode ] ) {
 									// check modifier
-									var ctrl = true, alt = true, shift = true;
-									if(searchTrigger[t].hasOwnProperty('ctrl')){
-										if(searchTrigger[t].ctrl  === event.ctrlKey ){
-											ctrl = true;
-										}else{
-											ctrl = false;
-										}
-									}
-									if(searchTrigger[t].hasOwnProperty('alt')){
-										if(searchTrigger[t].alt  === event.altKey ){
-											alt = true;
-										}else{
-											alt = false;
-										}
-									}
-									if(searchTrigger[t].hasOwnProperty('shift')){
-										if( searchTrigger[t].shift  === event.shiftKey ){
-											shift = true;
-										}
-										else{
-											shift = false;
-										}
-									}
-									
-									if(ctrl && alt && shift){
+									var ctrl = typeof trigger.ctrl === 'undefined' ? true : trigger.ctrl === event.ctrlKey,
+											alt = typeof trigger.alt === 'undefined' ? true : trigger.alt === event.altKey,
+											shift = typeof trigger.shift === 'undefined' ? true : trigger.shift  === event.shiftKey;									
+									if( ctrl && alt && shift ){
 										skipSearch = false;
 									}
 								}
 							}
 						}
-						if(skipSearch){
+						if( skipSearch ) {
 							return;
 						}
-						
-						
 					}
-					
-					
 				}
 				// change event = no delay; last true flag tells getFilters to skip newest timed input
 				tsf.searching( table, true, true, column );
@@ -944,35 +922,43 @@
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column ),
-					searchTrigger = wo.filter_searchTrigger === false ? ['search', 'blur' , 13 ] : wo.filter_searchTrigger,
+					searchTrigger = wo.filter_searchTrigger === false ? ['blur' , tskeyCodes.enter ] : wo.filter_searchTrigger,
 					triggerSearch = false;
 				
-				if (table.config.widgetOptions.filter_initialized) {
+				if ( table.config.widgetOptions.filter_initialized ) {
 					// Only if liveSearch is disabled
-					if(liveSearch === false){
-						for (var t in searchTrigger){
-							// events
-							var stType = typeof searchTrigger[t];
-							if(stType === "string" && eventType === searchTrigger[t]){
-								triggerSearch = true;
-								break;
-							} else if(stType === "number" && event.which === searchTrigger[t] ){
-								// keycodes
-								triggerSearch = true;
-								break;
-							} else if( stType === "object" ){
-								if( searchTrigger[t].hasOwnProperty('keyCode') && event.which === searchTrigger[t].keyCode ){
-									// same keycode 
+					if ( liveSearch === false ) {
+						if ( eventType === 'search' ) {
+							triggerSearch = true;
+						} else {
+							for ( var t in searchTrigger ) {
+								var stType = typeof searchTrigger[t],
+										trigger = searchTrigger[t];
+								// events
+								if ( stType === 'string' && eventType === trigger) {
 									triggerSearch = true;
-									// check modifier
-									if( searchTrigger[t].hasOwnProperty('ctrl') && searchTrigger[t].ctrl  !== event.ctrlKey ){
-										triggerSearch = false;
-									}
-									if( searchTrigger[t].hasOwnProperty('alt') && searchTrigger[t].alt  !== event.altKey ){
-										triggerSearch = false;
-									}
-									if( searchTrigger[t].hasOwnProperty('shift') && searchTrigger[t].shift  !== event.shiftKey ){
-										triggerSearch = false;
+									break;
+								} else if ( stType === 'number' && event.which === trigger ) {
+									// keys
+									triggerSearch = true;
+									break;
+								} else if ( stType === 'object' ){
+									// key combinations
+									if ( typeof trigger.keyCode === 'number' && event.which === trigger.keyCode || 
+										 	tskeyCodes[ trigger.keyCode ] !== undefined &&
+											event.which === tskeyCodes[ trigger.keyCode ] ) {
+										// same keycode 
+										triggerSearch = true;
+										// check modifier
+										if ( typeof trigger.ctrl !== 'undefined' && trigger.ctrl !== event.ctrlKey ) {
+											triggerSearch = false;
+										}
+										if ( typeof trigger.alt !== 'undefined' && trigger.alt !== event.altKey ) {
+											triggerSearch = false;
+										}
+										if ( typeof trigger.shift !== 'undefined' && trigger.shift !== event.shiftKey ) {
+											triggerSearch = false;
+										}
 									}
 								}
 							}
@@ -984,10 +970,10 @@
 							// don't allow 'change' or 'input' event to process if the input value
 							// is the same - fixes #685
 							this.value !== c.lastSearch[column]){
-						triggerSearch = true;
+							triggerSearch = true;
 					}
 
-					if(triggerSearch) {
+					if ( triggerSearch ) {
 						event.preventDefault();
 						// init search with no delay
 						$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
