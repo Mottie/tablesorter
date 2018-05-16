@@ -104,14 +104,23 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.30.3">Version 2.30.3</a> (2018-03-30)
+#### <a name="v2.30.4">Version 2.30.4</a> (2018-05-16)
+
+* Core:
+  * Use table cell, not jQuery object to disable sort; Fixes issue introduced in v2.30.2.
+* Scroller:
+  * Set scrollLeft position after sort. Fixes [issue #1545](https://github.com/Mottie/tablesorter/issues/1545).
+* Docs:
+  * Add when not to use headers. See [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
+
+#### <a name="v2.30.3">Version 2.30.3</a> (2018-04-30)
 
 * Core:
   * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
 * Docs:
   * Remove link preload because it isn't supported in Firefox.
 
-#### <a name="v2.30.2">Version 2.30.2</a> (2018-03-26)
+#### <a name="v2.30.2">Version 2.30.2</a> (2018-04-26)
 
 * Core:
   * Allow passing headers from multiple rows. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
@@ -132,29 +141,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Replace whitespace with symbols.
 * Meta:
   * Update dependencies.
-
-#### <a name="v2.30.1">Version 2.30.1</a> (2018-03-19)
-
-* Core:
-  * Only validate options while debugging. Closes [issue #1528](https://github.com/Mottie/tablesorter/issues/1528)
-* Pager:
-  * Show all rows, not pages. Fixes [issue #1529](https://github.com/Mottie/tablesorter/issues/1529)
-* SaveSort:
-  * Fix JS error. See [issue #1525](https://github.com/Mottie/tablesorter/issues/1525)
-
-#### <a name="v2.30.0">Version 2.30.0</a> (2018-03-18)
-
-* Core:
-  * [Debug](https://mottie.github.io/tablesorter/docs/#debug) now allows you to debug components separately; set to `true` as usual, or set to `'core filter'` to only show the core and filter widget debug logs.
-  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
-* Filter:
-  * Make `onlyAvail` work with showProcessing. Fixes [issue #1518](https://github.com/Mottie/tablesorter/issues/1518).
-  * Escape quotes in select options. See [issue #1527](https://github.com/Mottie/tablesorter/issues/1527).
-* Pager:
-  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
-* Global:
-  * Add editor eslint &amp; fix issues. File versions were not updated for this change!
-* Docs:
-  * Update Bootstrap v4.0.0.
-  * Adjust (accordion) link position.
-  * Fix scroller fixed column border alignment.

@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.30.3 *//*
+/*! TableSorter (FORK) v2.30.4 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -22,7 +22,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.30.3',
+		version : '2.30.4',
 
 		parsers : [],
 		widgets : [],
@@ -520,7 +520,7 @@
 				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
 				// use column index from data-attribute or index of current row; fixes #1116
 				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
-				cell = c.$headerIndexed[ c.last.clickedIndex ];
+				cell = c.$headerIndexed[ c.last.clickedIndex ][0];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
 				}
