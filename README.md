@@ -104,6 +104,13 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.5">Version 2.30.5</a> (2018-05-28)
+
+* Core:
+  * Ignore clicks on disabled colspan headers. Fixes [issue #1550](https://github.com/Mottie/tablesorter/issues/1550); Changes related to [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
+* Output:
+  * Add column index & parsed content to formatContent data parameter. See [issue #1547](https://github.com/Mottie/tablesorter/issues/1547).
+
 #### <a name="v2.30.4">Version 2.30.4</a> (2018-05-16)
 
 * Core:
@@ -119,25 +126,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
 * Docs:
   * Remove link preload because it isn't supported in Firefox.
-
-#### <a name="v2.30.2">Version 2.30.2</a> (2018-04-26)
-
-* Core:
-  * Allow passing headers from multiple rows. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Build:
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Pager:
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Resizable:
-  * Adjust handle position for jQuery v3.3.0+. Fixes [issue #1544](https://github.com/Mottie/tablesorter/issues/1544).
-* Vertical Group:
-  * Fix border css for last row.
-* Parser:
-  * Input-select: Fix TypeError `hasSticky` is undefined. See [issue #1534](https://github.com/Mottie/tablesorter/issues/1534) & [PR #1535](https://github.com/Mottie/tablesorter/pull/1535); thanks [@adamz01h](https://github.com/adamz01h).
-* Docs
-  * Improve load time.
-  * Update incorrect default. See [issue #1510](https://github.com/Mottie/tablesorter/issues/1510).
-  * Replace whitespace with symbols.
-* Meta:
-  * Update dependencies.
