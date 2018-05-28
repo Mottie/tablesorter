@@ -74,7 +74,7 @@
 					// process rowspans
 					if ($cell.filter('[rowspan]').length) {
 						rowspanLen = parseInt( $cell.attr('rowspan'), 10) - 1;
-						txt = output.formatData( c, wo, $cell, isHeader );
+						txt = output.formatData( c, wo, $cell, isHeader, indx );
 						for (row = 1; row <= rowspanLen; row++) {
 							if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 							tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
@@ -84,7 +84,7 @@
 					if ($cell.filter('[colspan]').length) {
 						colspanLen = parseInt( $cell.attr('colspan'), 10) - 1;
 						// allow data-attribute to be an empty string
-						txt = output.formatData( c, wo, $cell, isHeader );
+						txt = output.formatData( c, wo, $cell, isHeader, indx );
 						for (col = 0; col < colspanLen; col++) {
 							// if we're processing the header & making JSON, the header names need to be unique
 							if ($cell.filter('[rowspan]').length) {
@@ -107,7 +107,7 @@
 					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
-						output.formatData( c, wo, $cell, isHeader );
+						output.formatData( c, wo, $cell, isHeader, cellIndex );
 					cellIndex++;
 				}
 			}
@@ -264,7 +264,7 @@
 			return json;
 		},
 
-		formatData : function(c, wo, $el, isHeader) {
+		formatData : function(c, wo, $el, isHeader, colIndex) {
 			var attr = $el.attr(wo.output_dataAttrib),
 				txt = typeof attr !== 'undefined' ? attr : $el.html(),
 				quotes = (wo.output_separator || ',').toLowerCase(),
@@ -288,13 +288,14 @@
 			// JSON & array outputs don't need quotes
 			quotes = separator ? false : wo.output_wrapQuotes || wo.output_regex.test(result) || output.regexQuote.test(result);
 			result = quotes ? '"' + result + '"' : result;
-
 			// formatting callback - added v2.22.4
 			if ( typeof wo.output_formatContent === 'function' ) {
 				return wo.output_formatContent( c, wo, {
-					isHeader : isHeader,
+					isHeader : isHeader || false,
 					$cell : $el,
-					content : result
+					content : result,
+					columnIndex: colIndex,
+					parsed: c.parsers[colIndex].format(result, c.table, $el[0], colIndex)
 				});
 			}
 

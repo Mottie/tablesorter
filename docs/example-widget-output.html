@@ -134,9 +134,14 @@ table.tablesorter tbody tr.even.checked td {
 			output_wrapQuotes    : false,       // wrap every cell output in quotes
 			output_popupStyle    : 'width=580,height=310',
 			output_saveFileName  : 'mytable.csv',
-			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
-			output_callbackJSON  : function($cell, txt, cellIndex) {
-				return txt + '(' + cellIndex + ')';
+			// callback executed after the content of the table has been processed
+			output_formatContent : function(config, widgetOptions, data) {
+				// data.isHeader (boolean) = true if processing a header cell
+				// data.$cell = jQuery object of the cell currently being processed
+				// data.content = processed cell content (spaces trimmed, quotes added/replaced, etc)
+				// data.columnIndex = column in which the cell is contained
+				// data.parsed = cell content parsed by the associated column parser
+				return data.content;
 			},
 			// callback executed when processing completes
 			output_callback      : function(config, data, url) {
@@ -144,7 +149,10 @@ table.tablesorter tbody tr.even.checked td {
 				// return true OR modified data (v2.25.1) to continue download/output
 				return true;
 			},
-
+			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
+			output_callbackJSON  : function($cell, txt, cellIndex) {
+				return txt + '(' + cellIndex + ')';
+			},
 			// the need to modify this for Excel no longer exists
 			output_encoding      : 'data:application/octet-stream;charset=utf8,',
 			// override internal save file code and use an external plugin such as
@@ -271,6 +279,7 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.30.5</span>, the <a class="intlink" href="#output_formatcontent">output_formatContent</a> callback data parameter now includes the column index and parsed value for the cell.</li>
 				<li>In <span class="version">v2.29.0</span>, updated internal function parameters to make it easier to output all table data from the server without modifying the current table, or changing the pager size or page. See the modified <code>output_callback</code> code in the <a class="intlink" href="#setup_example_php">Output all data</a> section.</li>
 				<li>In <span class="version">v2.28.5</span>, triggering of the "outputTable" event multiple times in rapid succession (within 600 milliseconds) will now prevent the opening of multiple popups or cause mutliple downloads.</li>
 				<li>In <span class="version">v2.28.4</span>,
@@ -802,7 +811,7 @@ line,value1,value2,value3
 					<tr id="output_formatcontent">
 						<td><a href="#" class="permalink">output_formatContent</a></td>
 						<td>null</td>
-						<td>This callback is executed after the content of a table cell has been processed.
+						<td>This callback is executed after the content of a table cell has been processed (<span class="version">v2.22.4</span>; <span class="version updated">2.30.5</span>).
 							<div class="collapsible">
 								<br>
 								Default setting &amp; how to use this option:
@@ -810,6 +819,8 @@ line,value1,value2,value3
 	// data.isHeader (boolean) = true if processing a header cell
 	// data.$cell = jQuery object of the cell currently being processed
 	// data.content = processed cell content (spaces trimmed, quotes added/replaced, etc)
+	// data.columnIndex = column in which the cell is contained (added v2.30.5)
+	// data.parsed = cell content parsed by the associated column parser (added v2.30.5)
 	// **********
 	// use data.$cell.html() to get the original cell content
 	return data.content
