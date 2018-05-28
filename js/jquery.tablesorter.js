@@ -506,10 +506,13 @@
 					return;
 				}
 				downTarget = null;
+				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
 				// prevent sort being triggered on form elements
 				if ( ts.regex.formElements.test( e.target.nodeName ) ||
 					// nosort class name, or elements within a nosort container
 					$target.hasClass( c.cssNoSort ) || $target.parents( '.' + c.cssNoSort ).length > 0 ||
+					// disabled cell directly clicked
+					$cell.hasClass( 'sorter-false' ) ||
 					// elements within a button
 					$target.parents( 'button' ).length > 0 ) {
 					return !c.cancelSelection;
@@ -517,7 +520,6 @@
 				if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
 					ts.buildCache( c );
 				}
-				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
 				// use column index from data-attribute or index of current row; fixes #1116
 				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
 				cell = c.$headerIndexed[ c.last.clickedIndex ][0];
