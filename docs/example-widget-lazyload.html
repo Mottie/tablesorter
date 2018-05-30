@@ -67,6 +67,9 @@
 
 		<h3><a href="#">Notes</a></h3>
 		<div>
+			<p>
+				<span class="label warning">Warning</span> Binding the <a class="intlink" href="#lazyload_event"><code>lazyload_event</code></a> to <code>'scroll'</code> may cause excessive lag.
+			</p>
 			<ul>
 				<li>This widget, added in <span class="version">v2.24.0</span>, integrates the popular <a class="external" href="https://github.com/tuupola/jquery_lazyload">jQuery lazyload plugin</a> &amp; <a class="external" href="https://github.com/ssorallen/jquery-scrollstop">jQuery scrollstop</a>.</li>
 				<li>This widget will only work if:
@@ -157,7 +160,7 @@
 						<td>
 							By default images are loaded when they appear on the screen.
 							<div class="collapsible">
-								<p>If you want images to load earlier use threshold parameter. Setting threshold to 200 causes image to load 200 pixels before it appears on viewport.</p>
+								<p>If you want images to load earlier use threshold parameter. Setting threshold to <code>200</code> causes image to load 200 pixels before it appears on viewport.</p>
 								For more details, see the <a class="external" href="http://www.appelsiini.net/projects/lazyload#setting-threshold">main documentation</a>.
 							</div>
 						</td>
@@ -179,9 +182,10 @@
 						<td>
 							Event to trigger image loading.
 							<div class="collapsible">
-								<p>In the original plugin, the default for this option is "scroll". It was changed to "scrollstop" in this widget to only load images after scrolling stops.</p>
-								<p>Alternative settings include "click" (user clicks on image to load it) or "mouseover".</p>
-								<p>If this option is not set to "scrollstop", then the scrollstop plugin will not be initialized.</p>
+								<p>In the original plugin, the default for this option is <code>'scroll'</code>. It was changed to <code>'scrollstop'</code> in this widget to only load images after scrolling stops.</p>
+								<p>Alternative settings include <code>'click'</code> (user clicks on image to load it) or <code>'mouseover'</code>.</p>
+								<p>If this option is not set to <code>'scrollstop'</code>, then the scrollstop plugin will not be initialized.</p>
+								<p><span class="label warning">Warning</span> If the option is set to <code>'scroll'</code>, the plugin may cause excessive lag.</p>
 								For more details, see the <a class="external" href="http://www.appelsiini.net/projects/lazyload#event-to-trigger-loading">main documentation</a>.
 							</div>
 						</td>
