@@ -104,6 +104,15 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.6">Version 2.30.6</a> (2018-06-16)
+
+* CssStickyHeaders:
+  * Reinitialize after update. Fixes [issue #1553](https://github.com/Mottie/tablesorter/issues/1553).
+* Parser:
+  * Prevent input-select error. Fixes [issue #1554](https://github.com/Mottie/tablesorter/issues/1554).
+* Docs:
+  * Add lazyload warnings. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
+
 #### <a name="v2.30.5">Version 2.30.5</a> (2018-05-28)
 
 * Core:
@@ -119,10 +128,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Set scrollLeft position after sort. Fixes [issue #1545](https://github.com/Mottie/tablesorter/issues/1545).
 * Docs:
   * Add when not to use headers. See [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
-
-#### <a name="v2.30.3">Version 2.30.3</a> (2018-04-30)
-
-* Core:
-  * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
-* Docs:
-  * Remove link preload because it isn't supported in Firefox.
