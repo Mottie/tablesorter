@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 2018-03-03 (v2.30.2) *//*
+/*! Parser: input & select - updated 2018-06-16 (v2.30.6) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -145,7 +145,7 @@
 			}
 		},
 		updateCheckbox = function($el, state) {
-			if ($el[0].nodeName !== 'INPUT') {
+			if ($el.length && $el[0].nodeName !== 'INPUT') {
 				$el = $el.find( 'input[type="checkbox"]' );
 			}
 			if ($el.length) {
