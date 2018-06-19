@@ -6744,14 +6744,16 @@ $headers.each(function() {
   // column 0
   count: 0, // click count; used as index for order value
   order: [ 0, 1, 2 ], // default sort (sortReset: true)
-  lockedOrder: false  // true if column order is locked (read only)
+  lockedOrder: false, // true if column order is locked (read only)
+  sortedBy: 'user'
 },{
   // ...
 },{
   // column n
   count: 0, // click count; used as index for order value
   order: [ 0, 1, 2 ], // default sort (sortReset: true)
-  lockedOrder: false  // true if column order is locked (read only)
+  lockedOrder: false, // true if column order is locked (read only)
+  sortedBy: 'sorton'
 }]</pre>
 						<ul>
 							<li><code>count</code>
@@ -6775,6 +6777,16 @@ $headers.each(function() {
 								<ul>
 									<li>See the <a href="#headers">lockedOrder</a> setting.</li>
 									<li>It's readonly because it is set during initialization and not used again (future use by a widget?)</li>
+								</ul>
+							</li>
+							<li><code>sortedBy</code>
+								These values are added to the header cell in a <code>data-sortedBy</code> attribute and may contain:
+								<ul>
+									<li><code>'user'</code> (renamed from <code>'mouseup'</code> event) when a column is sorted by a user.</li>
+									<li><code>'sort'</code> when a column is sorted by triggering a <a href="#sort">sort</a> event on the header.</li>
+									<li><code>'sorton'</code> when a column is sorted using the <a href="#sorton">sorton</a> method.</li>
+									<li><code>'sortAppend'</code> when a sorted column is added by the <a href="#sortappend">sortAppend</a> option.</li>
+									<li><code>'sortForce'</code> when a sorted column is added by the <a href="#sortforce">sortForce</a> option.</li>
 								</ul>
 							</li>
 						</ul>

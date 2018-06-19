@@ -593,10 +593,11 @@
 				// this may get updated numerous times if there are multiple rows
 				c.sortVars[ column ] = {
 					count : -1, // set to -1 because clicking on the header automatically adds one
-					order:  tmp ?
+					order :  tmp ?
 						( c.sortReset ? [ 1, 0, 2 ] : [ 1, 0 ] ) : // desc, asc, unsorted
 						( c.sortReset ? [ 0, 1, 2 ] : [ 0, 1 ] ),  // asc, desc, unsorted
-					lockedOrder : false
+					lockedOrder : false,
+					sortedBy : ''
 				};
 				tmp = ts.getData( $elem, configHeaders, 'lockedOrder' ) || false;
 				if ( typeof tmp !== 'undefined' && tmp !== false ) {
@@ -1196,6 +1197,11 @@
 					txt += ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 				}
 				$header.attr( 'aria-label', txt );
+				if (vars.sortedBy) {
+					$header.attr( 'data-sortedBy', vars.sortedBy );
+				} else {
+					$header.removeAttr('data-sortedBy');
+				}
 			}
 		},
 
@@ -1550,6 +1556,7 @@
 				len = c.$headers.length,
 				th = ts.getClosest( $( cell ), 'th, td' ),
 				col = parseInt( th.attr( 'data-column' ), 10 ),
+				sortedBy = event.type === 'mouseup' ? 'user' : event.type,
 				order = c.sortVars[ col ].order;
 			th = th[0];
 			// Only call sortStart if sorting is enabled
@@ -1570,6 +1577,9 @@
 			}
 			// user only wants to sort on one column
 			if ( notMultiSort ) {
+				$.each( c.sortVars, function( i ) {
+					c.sortVars[ i ].sortedBy = '';
+				});
 				// flush the sort list
 				c.sortList = [];
 				c.last.sortList = [];
@@ -1578,6 +1588,7 @@
 					for ( indx = 0; indx < arry.length; indx++ ) {
 						if ( arry[ indx ][ 0 ] !== col ) {
 							c.sortList[ c.sortList.length ] = arry[ indx ];
+							c.sortVars[ arry[ indx ][ 0 ] ].sortedBy = 'sortForce';
 						}
 					}
 				}
@@ -1585,12 +1596,14 @@
 				dir = order[ c.sortVars[ col ].count ];
 				if ( dir < 2 ) {
 					c.sortList[ c.sortList.length ] = [ col, dir ];
+					c.sortVars[ col ].sortedBy = sortedBy;
 					// add other columns if header spans across multiple
 					if ( th.colSpan > 1 ) {
 						for ( indx = 1; indx < th.colSpan; indx++ ) {
 							c.sortList[ c.sortList.length ] = [ col + indx, dir ];
 							// update count on columns in colSpan
 							c.sortVars[ col + indx ].count = $.inArray( dir, order );
+							c.sortVars[ col + indx ].sortedBy = sortedBy;
 						}
 					}
 				}
@@ -1602,6 +1615,7 @@
 				// the user has clicked on an already sorted column
 				if ( ts.isValueInArray( col, c.sortList ) >= 0 ) {
 					// reverse the sorting direction
+					c.sortVars[ col ].sortedBy = sortedBy;
 					for ( indx = 0; indx < c.sortList.length; indx++ ) {
 						tmp = c.sortList[ indx ];
 						if ( tmp[ 0 ] === col ) {
@@ -1616,6 +1630,7 @@
 				} else {
 					// add column to sort list array
 					dir = order[ c.sortVars[ col ].count ];
+					c.sortVars[ col ].sortedBy = sortedBy;
 					if ( dir < 2 ) {
 						c.sortList[ c.sortList.length ] = [ col, dir ];
 						// add other columns if header spans across multiple
@@ -1624,6 +1639,7 @@
 								c.sortList[ c.sortList.length ] = [ col + indx, dir ];
 								// update count on columns in colSpan
 								c.sortVars[ col + indx ].count = $.inArray( dir, order );
+								c.sortVars[ col + indx ].sortedBy = sortedBy;
 							}
 						}
 					}
@@ -1659,6 +1675,7 @@
 								}
 							}
 							c.sortList[ c.sortList.length ] = [ arry[ indx ][ 0 ], dir ];
+							c.sortVars[ arry[ indx ][ 0 ] ].sortedBy = 'sortAppend';
 						}
 					}
 				}
@@ -1790,8 +1807,12 @@
 		},
 
 		sortOn : function( c, list, callback, init ) {
-			var table = c.table;
+			var indx,
+				table = c.table;
 			c.$table.triggerHandler( 'sortStart', table );
+			for (indx = 0; indx < c.columns; indx++) {
+				c.sortVars[ indx ].sortedBy = ts.isValueInArray( indx, list ) > -1 ? 'sorton' : '';
+			}
 			// update header count index
 			ts.updateHeaderSortCount( c, list );
 			// set css for headers
@@ -1814,13 +1835,14 @@
 
 		sortReset : function( c, callback ) {
 			c.sortList = [];
-			ts.setHeadersCss( c );
-			ts.multisort( c );
-			ts.appendCache( c );
 			var indx;
 			for (indx = 0; indx < c.columns; indx++) {
 				c.sortVars[ indx ].count = -1;
+				c.sortVars[ indx ].sortedBy = '';
 			}
+			ts.setHeadersCss( c );
+			ts.multisort( c );
+			ts.appendCache( c );
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
 			}
