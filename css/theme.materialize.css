@@ -94,7 +94,7 @@
 }
 
 /* caption */
-.caption {
+.tablesorter-materialize > .caption {
 	background-color: #fff;
 }
 

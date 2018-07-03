@@ -137,7 +137,7 @@
 }
 
 /* caption */
-caption {
+.tablesorter-ice > caption {
 	background-color: #fff;
 }
 

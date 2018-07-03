@@ -112,7 +112,7 @@
 }
 
 /* caption */
-.tablesorter-bootstrap:not(.table-dark) .caption {
+.tablesorter-bootstrap:not(.table-dark) > .caption {
 	background-color: #fff;
 }
 

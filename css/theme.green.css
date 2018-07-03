@@ -137,7 +137,7 @@
 }
 
 /* caption */
-caption {
+.tablesorter-green > caption {
 	background-color: #fff;
 }
 
