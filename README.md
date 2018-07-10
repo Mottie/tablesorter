@@ -104,6 +104,16 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.30.7">Version 2.30.7</a> (2018-07-10)
+
+* Core:
+  * Add `data-sortedBy` to headers; see [`config.sortVars`](https://mottie.github.io/tablesorter/docs/#variable-sort-vars). Closes [issue #1558](https://github.com/Mottie/tablesorter/issues/1558).
+  * Ensure sort parameters are defined. Fixes [issue #1566](https://github.com/Mottie/tablesorter/issues/1566).
+* Parser:
+  * input-select updates extra header checkboxes. Fixes [issue #1560](https://github.com/Mottie/tablesorter/issues/1560).
+* CSS:
+  * Style caption per table theme. Fixes [issue #1564](https://github.com/Mottie/tablesorter/issues/1564).
+
 #### <a name="v2.30.6">Version 2.30.6</a> (2018-06-16)
 
 * CssStickyHeaders:
@@ -119,12 +129,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Ignore clicks on disabled colspan headers. Fixes [issue #1550](https://github.com/Mottie/tablesorter/issues/1550); Changes related to [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
 * Output:
   * Add column index & parsed content to formatContent data parameter. See [issue #1547](https://github.com/Mottie/tablesorter/issues/1547).
-
-#### <a name="v2.30.4">Version 2.30.4</a> (2018-05-16)
-
-* Core:
-  * Use table cell, not jQuery object to disable sort; Fixes issue introduced in v2.30.2.
-* Scroller:
-  * Set scrollLeft position after sort. Fixes [issue #1545](https://github.com/Mottie/tablesorter/issues/1545).
-* Docs:
-  * Add when not to use headers. See [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
