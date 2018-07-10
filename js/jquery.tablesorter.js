@@ -1761,7 +1761,7 @@
 								sort = sorter[ col ]( x[ col ], y[ col ], dir, col, table );
 							} else {
 								// fall back to natural sort
-								sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( a[ col ], b[ col ], col, c );
+								sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( a[ col ] || '', b[ col ] || '', col, c );
 							}
 						}
 						if ( sort ) { return sort; }
@@ -1860,20 +1860,20 @@
 		// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
 		sortNatural : function( a, b ) {
 			if ( a === b ) { return 0; }
-			a = a.toString();
-			b = b.toString();
+			a = ( a || '' ).toString();
+			b = ( b || '' ).toString();
 			var aNum, bNum, aFloat, bFloat, indx, max,
 				regex = ts.regex;
 			// first try and sort Hex codes
 			if ( regex.hex.test( b ) ) {
-				aNum = parseInt( ( a || '' ).match( regex.hex ), 16 );
-				bNum = parseInt( ( b || '' ).match( regex.hex ), 16 );
+				aNum = parseInt( a.match( regex.hex ), 16 );
+				bNum = parseInt( b.match( regex.hex ), 16 );
 				if ( aNum < bNum ) { return -1; }
 				if ( aNum > bNum ) { return 1; }
 			}
 			// chunk/tokenize
-			aNum = ( a || '' ).replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
-			bNum = ( b || '' ).replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
+			aNum = a.replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
+			bNum = b.replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
 			max = Math.max( aNum.length, bNum.length );
 			// natural sorting through split numeric strings and default strings
 			for ( indx = 0; indx < max; indx++ ) {
