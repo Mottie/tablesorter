@@ -1,4 +1,4 @@
-/*! TableSorter (FORK) v2.30.6 *//*
+/*! TableSorter (FORK) v2.30.7 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -22,7 +22,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.30.6',
+		version : '2.30.7',
 
 		parsers : [],
 		widgets : [],
@@ -593,7 +593,7 @@
 				// this may get updated numerous times if there are multiple rows
 				c.sortVars[ column ] = {
 					count : -1, // set to -1 because clicking on the header automatically adds one
-					order :  tmp ?
+					order : tmp ?
 						( c.sortReset ? [ 1, 0, 2 ] : [ 1, 0 ] ) : // desc, asc, unsorted
 						( c.sortReset ? [ 0, 1, 2 ] : [ 0, 1 ] ),  // asc, desc, unsorted
 					lockedOrder : false,
