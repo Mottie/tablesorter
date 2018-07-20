@@ -7908,6 +7908,7 @@ var index, len,
 	$table = $('table'),
 	column = 0, // first column
 	onlyAvail = false, // if true, available rows (visible rows after filtering) are returned
+	// arry is an array of all text content from a table column; duplicate entries are included!
 	array = $.tablesorter.filter.getOptions( $table, column, onlyAvail );
 
 // process array; sort & remove duplicates (added v2.23.4)
@@ -7921,6 +7922,38 @@ for ( index = 0; index &lt; len; index++ ) {
 $('select.external').html( opts );</pre>
 						<p>Please be aware that this function does not process the array, so the array may contain duplicates and will not be sorted.</p>
 						The filter <a href="#function-processoptions"><code>processOptions</code></a> function was added in <span class="version">v2.23.4</span> which performs those actions.
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-getoptionsource">
+				<td><a href="#" class="permalink">getOptionSource</a></td>
+				<td>This filter widget function returns all the cached values of the set table column (<span class="version">v2.16.0</span>):
+					<div class="collapsible"><br>
+						This function returns both the text and the parsed text for a column. So it <strong>ignores</strong> the <code>filter_useParsedData</code> option, <code>&quot;filter-parsed&quot;</code> class on the header, and the parser <code>parsed</code> flag settinng (<a href="example-parsers.html">ref</a>).
+						<p>Use it as follows:</p>
+						<pre class="prettyprint lang-js">$.tablesorter.filter.getOptionSource( table, column, onlyAvail );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>column</code> - zero-based column index.</li>
+							<li><code>onlyAvail</code> - an optional boolean flag, which will be ignored if the <code>options</code> parameter is defined or is an empty string; otherwise it is the value passed to the function which finds all table column values; if <code>true</code>, only the available options will be diplayed.</li>
+						</ul>
+						Use this function as follows:<br>
+						<pre class="prettyprint lang-js">// external filter select
+var index, len,
+	opts = '',
+	$table = $('table'),
+	column = 0, // first column
+	onlyAvail = false, // if true, available rows (visible rows after filtering) are returned
+	// arry is an array of objects [{ text: "Foo", parsed: "foo" }, ...] with duplicates entries removed
+	arry = $.tablesorter.filter.getOptionSource( $table, column, onlyAvail );
+
+// build options
+for ( index = 0; index &lt; len; index++ ) {
+	opts += '&lt;option value="' + array[ index ].parsed + '"&gt;' + array[ index ].text + '&lt;/option&gt;';
+}
+$('select.external').html( opts );</pre>
+						<p>Please be aware that this function is different from the <a href="#function-getoptions"><code>getOptions</code></a> filter function in that an object is returned.</p>
 					</div>
 				</td>
 			</tr>
