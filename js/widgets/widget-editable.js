@@ -1,4 +1,4 @@
-/*! Widget: editable - updated 4/4/2017 (v2.28.7) *//*
+/*! Widget: editable - updated 2018-07-27 (v2.30.8) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -85,6 +85,16 @@
 			return cols;
 		},
 
+		trimContent: function( wo, $cell ) {
+			if ( wo.editable_trimContent ) {
+				var html = $cell.html();
+				if (html.trim() !== html) {
+					// Add &nbsp; to bypass Firefox issue - see #1570
+					$cell.html( html === '' ? '&nbsp;' : html );
+				}
+			}
+		},
+
 		update: function( c, wo ) {
 			var $t, $cells, cellIndex, cellLen, $editable, editableIndex, editableLen,
 				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
@@ -104,6 +114,9 @@
 				$t = $cells.eq( cellIndex );
 				if ( tmp && $t.children( 'div, span' ).length === 0 ) {
 					$t.wrapInner( wo.editable_wrapContent );
+					if ($t.children().text().trim() === '') {
+						$t.children().html('&nbsp;');
+					}
 				}
 				$editable = $t.children( 'div, span' ).not( '.' + wo.editable_noEdit );
 				editableLen = $editable.length;
@@ -111,19 +124,11 @@
 					// make div/span children content editable
 					for ( editableIndex = 0; editableIndex < editableLen; editableIndex++ ) {
 						var $this = $editable.eq( editableIndex );
-						if ( wo.editable_trimContent ) {
-							$this.html( function( i, txt ) {
-								return $.trim( txt );
-							});
-						}
+						tse.trimContent( wo, $this );
 						$this.prop( 'contenteditable', true );
 					}
 				} else {
-					if ( wo.editable_trimContent ) {
-						$t.html( function( i, txt ) {
-							return $.trim( txt );
-						});
-					}
+					tse.trimContent( wo, $t );
 					$t.prop( 'contenteditable', true );
 				}
 			}
@@ -160,7 +165,7 @@
 						column = $this.closest( 'td' ).index(),
 						txt = $this.html();
 					if ( wo.editable_trimContent ) {
-						txt = $.trim( txt );
+						txt = $.trim( txt === '' ? '&nbsp;' : txt );
 					}
 					// prevent enter from adding into the content
 					$this
@@ -194,7 +199,7 @@
 						txt = $this.html(),
 						column = $this.closest( 'td' ).index();
 					if ( wo.editable_trimContent ) {
-						txt = $.trim( txt );
+						txt = $.trim( txt === '' ? '&nbsp;' : txt );
 					}
 					if ( e.which === 27 ) {
 						// user cancelled
