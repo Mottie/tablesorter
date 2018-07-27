@@ -368,6 +368,7 @@
 
 	<h4>Using Parsers / Extracting Content</h4>
 	<ul>
+		<li><a href=example-option-built-in-parsers.html">Built-in parsers</a>(full list)</li>
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (<a href="#stringto"><code>stringTo</code></a>; v2.0.10).</li>
 		<li><a href="example-parsers-class-name.html">Disable sorting or set the column parser using class names</a> (v2.0.11).</li>
@@ -1005,7 +1006,7 @@
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
 					<br>
 					The plugin attempts to detect the type of data that is contained in a column, but if it can't figure it out then it defaults to alphanumeric. You can easily override this by setting the header argument (or column parser).
-					See the full list of <a href="#parsers">default parsers</a> here or <a href="example-parsers.html">write your own</a>.
+					See the full list of <a href="#parsers">default parsers here</a> or <a href="example-option-built-in-parsers.html">here</a>, or <a href="example-parsers.html">write your own</a>.
 					<pre class="prettyprint lang-js">$(function() {
   $("table").tablesorter({
     headers: {
@@ -6628,13 +6629,14 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 						<tr><th><code>sorter: &quot;metadata&quot;</code></th><td>Sort by the sorter value in the metadata - requires the metadata plugin.</td></tr>
 					</tbody></table>
 					<p>Check out the <a href="#headers"><code>headers</code></a> option to see how to use these parsers in your table (example #1).</p>
-					Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3).
+					Or add a header class name using "sorter-" plus the parser name (example #2 & #3), this includes custom parsers (example #4).
 					</div>
 				</td>
 				<td>
 					<a href="example-options-headers-digits-strings.html">1</a>
 					<a href="example-parsers-class-name.html">2</a>
-					<a href="example-parsers.html">3</a>
+					<a href="example-option-built-in-parsers.html">3</a>
+					<a href="example-parsers.html">4</a>
 				</td>
 			</tr>
 
