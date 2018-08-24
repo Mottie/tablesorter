@@ -52,7 +52,7 @@
 				//   ],
 				//   [ "header1", "header2", ... "headerN" ] // optional
 				// ]
-				ajaxProcessing: function( /* ajax */ ) { return [ 0, [], null ]; },
+				ajaxProcessing: function(data) { return data; },
 
 				// output default: '{page}/{totalPages}'
 				// possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow},

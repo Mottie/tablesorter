@@ -91,7 +91,7 @@
 			//   ],
 			//   [ "header1", "header2", ... "headerN" ] // optional
 			// ]
-			pager_ajaxProcessing: function( /* ajax */ ) { return [ 0, [], null ]; },
+			pager_ajaxProcessing: function( data ) { return data; },
 
 			// css class names of pager arrows
 			pager_css: {
