@@ -1,4 +1,4 @@
-/*! Widget: editable - updated 2018-07-27 (v2.30.8) *//*
+/*! Widget: editable - updated 2018-08-27 (v2.31.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
