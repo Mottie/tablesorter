@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery tablesorter 2.0 - Built-in parsers</title>
+
+	<!-- jQuery -->
+	<script src="js/jquery-latest.min.js"></script>
+
+	<!-- Demo stuff -->
+	<link href="css/jq.css" rel="stylesheet">
+	<link href="css/prettify.css" rel="stylesheet">
+	<script src="js/prettify.js"></script>
+	<script src="js/docs.js"></script>
+
+	<!-- Tablesorter: required -->
+	<link rel="stylesheet" href="../css/theme.blue.css">
+	<script src="../js/jquery.tablesorter.js"></script>
+
+	<style>th, tr td:nth-child(8) { text-align:center; } td img { width:20px; }</style>
+
+	<script id="js">$(function() {
+	// call the tablesorter plugin
+	$("table").tablesorter({
+		theme : 'blue',
+		imgAttr: 'title' // image attribute used by "image" parser
+	});
+});</script>
+</head>
+<body>
+<div id="banner">
+	<h1>table<em>sorter</em></h1>
+	<h2>Built-in parsers</h2>
+	<h3>Flexible client-side table sorting</h3>
+	<a href="index.html">Back to documentation</a>
+</div>
+<div id="main">
+
+	<p class="tip">
+		<em>NOTE!</em>
+	</p>
+	<ul>
+		<li>This demo is showing all of the built-in parsers (included with tablesorter's core).</li>
+		<li><a href="index.html#custom-parsers">Additional parsers</a> are available, but must be loaded after the core.</li>
+		<li>Or, you have the option of writing a <a href="example-parsers.html">custom parser</a> by using the <a href="index.html#function-addparser"><code>addParser</code></a> function.</li>
+		<li>The built-in <code>metadata</code> parser requires the metadata plugin; maintained for backwards compatibility. An example is not included in this demo.</li>
+	</ul>
+
+<h1>Demo</h1>
+<div id="demo">
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th class="sorter-no-parser">"no-parser"<br>will not sort</th>
+			<th class="sorter-text">"text"</th>
+			<th class="sorter-digit">"digit"</th>
+			<th class="sorter-currency">"currency"</th>
+			<th class="sorter-url">"url"</th>
+			<th class="sorter-isoDate">"isoDate"</th>
+			<th class="sorter-percent">"percent"</th>
+			<th class="sorter-image">"image"</th>
+			<th class="sorter-usLongDate">"usLongDate"</th>
+			<th class="sorter-shortDate" data-date-format="mmddyyyy">"shortDate"<br>(mmddyyyy)</th>
+			<th class="sorter-shortDate" data-date-format="ddmmyyyy">"shortDate"<br>(ddmmyyyy)</th>
+			<th class="sorter-shortDate" data-date-format="yyyymmdd">"shortDate"<br>(yyyymmdd)</th>
+			<th class="sorter-time">"time"</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>1</td><td>abc</td><td>02</td><td>$10.00</td><td>https://google.com</td><td>2018-07-26</td><td>9.8%</td><td><img src="img/cat.gif" title="Cat"/></td><td>Jul 6, 2006 8:14 AM</td><td>12-31-2017</td><td>31-12-2017</td><td>2017-12-31</td><td>10:00 PM</td></tr>
+		<tr><td>4</td><td>xyz</td><td>04</td><td>$9.99</td><td>https://yahoo.com</td><td>2017-07-24</td><td>9.9%</td><td><img src="img/x.gif" title="X marks the spot"/></td><td>Dec 10, 2002 5:14 AM</td><td>12.11.2017</td><td>11.12.2017</td><td>2017.12.11</td><td>10:23 AM</td></tr>
+		<tr><td>2</td><td>def</td><td>03</td><td>$01.99</td><td>https://github.com</td><td>2018-08-24</td><td>10%</td><td><img src="img/fish.gif" title="Fish"/></td><td>Jan 18, 2007 9:12 AM</td><td>12/16/2017</td><td>16/12/2017</td><td>2017/12/16</td><td>10:04 PM</td></tr>
+		<tr><td>3</td><td>hij</td><td>01</td><td>$00.99</td><td>https://gitlab.com</td><td>2018-07-28</td><td>1%</td><td><img src="img/octopus.gif" title="Octopus"/></td><td>Jul 6, 2006 8:14 AM</td><td>12-04.2017</td><td>4/12 2017</td><td>2017, 12 4</td><td>9:56 PM</td></tr>
+	</tbody>
+</table></div>
+
+	<h1>Javascript</h1>
+	<div id="javascript">
+		<pre class="prettyprint lang-javascript"></pre>
+	</div>
+	<h1>Page Header</h1>
+	<div>
+		<pre class="prettyprint lang-html">
+&lt;link href="css/theme.blue.css" rel="stylesheet"&gt;
+&lt;script src="js/jquery.tablesorter.js"&gt;&lt;/script&gt;</pre>
+	</div>
+	<h1>HTML</h1>
+	<div id="html">
+		<pre class="prettyprint lang-html"></pre>
+	</div>
+
+</div>
+
+</body>
+</html>

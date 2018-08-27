@@ -104,6 +104,18 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.31.0">Version 2.31.0</a> (2018-08-27)
+
+* Editable:
+  * Add nbsp to empty cells. Fixes [issue #1570](https://github.com/Mottie/tablesorter/issues/1570).
+* Docs:
+  * Add filter `getOptionSource` function. See [issue #671](https://github.com/Mottie/tablesorter/issues/671).
+  * Add built-in parsers demo. See [issue #1571](https://github.com/Mottie/tablesorter/issues/1571).
+* Pager:
+  * Change default ajaxProcessing function. See [issue #1580](https://github.com/Mottie/tablesorter/issues/1580).
+* Build:
+  * Update build to UMD wrap widgets, parsers & extras (necessitates a minor version bump).
+
 #### <a name="v2.30.7">Version 2.30.7</a> (2018-07-10)
 
 * Core:
@@ -122,10 +134,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Prevent input-select error. Fixes [issue #1554](https://github.com/Mottie/tablesorter/issues/1554).
 * Docs:
   * Add lazyload warnings. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
-
-#### <a name="v2.30.5">Version 2.30.5</a> (2018-05-28)
-
-* Core:
-  * Ignore clicks on disabled colspan headers. Fixes [issue #1550](https://github.com/Mottie/tablesorter/issues/1550); Changes related to [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
-* Output:
-  * Add column index & parsed content to formatContent data parameter. See [issue #1547](https://github.com/Mottie/tablesorter/issues/1547).

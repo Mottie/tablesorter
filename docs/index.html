@@ -368,6 +368,7 @@
 
 	<h4>Using Parsers / Extracting Content</h4>
 	<ul>
+		<li><a href="example-option-built-in-parsers.html">Built-in parsers</a>(full list)</li>
 		<li><a href="example-option-digits.html">Dealing with digits!</a></li>
 		<li><a href="example-options-headers-digits-strings.html">Dealing with text strings in numerical sorts</a> (<a href="#stringto"><code>stringTo</code></a>; v2.0.10).</li>
 		<li><a href="example-parsers-class-name.html">Disable sorting or set the column parser using class names</a> (v2.0.11).</li>
@@ -466,7 +467,7 @@
 		<li><span class="label label-info">Beta</span> <a href="example-widget-chart.html">Chart Widget</a> (<span class="version">v2.19.0</span>; <span class="version updated">v2.24.0</span>).</li>
 		<li><span class="results">&dagger;</span> <a href="example-widget-columns.html">Columns highlight widget</a> (v2.0.17; <span class="version updated">v2.28.11</span>).</li>
 		<li><a href="example-widget-column-selector.html">Column selector widget</a> (<span class="version">v2.15</span>; <span class="version updated">v2.30.0</span>).</li>
-		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.28.7</span>).</li>
+		<li><a href="example-widget-editable.html">Content editable widget</a> (v2.9; <span class="version updated">v2.31.0</span>).</li>
 		<li><a href="example-widget-current-sort.html">Current Sort Widget</a> (<span class="version">v2.27.0</span>).</li>
 		<li><span class="label label-info">Beta</span> <a href="example-dragtable.html">Dragtable mod</a>  - (jQuery UI widget for column reordering [<a class="external" href="http://stackoverflow.com/a/27770224/145346">ref</a>]; <span class="version">v2.24.0</span>).</li>
 		<li><span class="results">&dagger;</span> Filter widget (<span class="version updated">v2.29.4</span>):
@@ -500,9 +501,9 @@
 			<br><br>
 		</li>
 
-		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.30.1</span>).</li>
+		<li>Pager plugin (<a href="example-pager.html">basic</a> &amp; <a href="example-pager-ajax.html">ajax</a> demos; <span class="version updated">v2.31.0</span>).</li>
 		<li>
-			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.30.1</span>).<br>
+			Pager widget (<a href="example-widget-pager.html">basic</a> &amp; <a href="example-widget-pager-ajax.html">ajax</a> demos) (<span class="version">v2.12</span>; <span class="version updated">v2.31.0</span>).<br>
 			<br>
 		</li>
 
@@ -1005,7 +1006,7 @@
 					For example, to disable sorting on the first two columns of a table: <code>headers: { 0: { sorter: false}, 1: {sorter: false} }</code>.<br>
 					<br>
 					The plugin attempts to detect the type of data that is contained in a column, but if it can't figure it out then it defaults to alphanumeric. You can easily override this by setting the header argument (or column parser).
-					See the full list of <a href="#parsers">default parsers</a> here or <a href="example-parsers.html">write your own</a>.
+					See the full list of <a href="#parsers">default parsers here</a> or <a href="example-option-built-in-parsers.html">here</a>, or <a href="example-parsers.html">write your own</a>.
 					<pre class="prettyprint lang-js">$(function() {
   $("table").tablesorter({
     headers: {
@@ -4462,9 +4463,9 @@ $('table').trigger('search', false);</pre></div>
 			<tr id="pager-ajaxprocessing">
 				<td><a href="#" class="permalink">ajaxProcessing</a></td>
 				<td>Function</td>
-				<td>null</td>
+				<td>function (data) { return data; }</td>
 				<td>
-					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1, <span class="version updated">v2.17.3</span>).
+					This function is required to return the ajax data obtained from your server into a useable format for tablesorter to apply to the table (v2.1, <span class="version updated">v2.30.8</span>).
 					<div class="collapsible">
 					<br>
 					<span class="label label-info">Note</span> The pager widget equivalent option is within the <code>widgetOptions</code> and accessed via <code>widgetOptions.pager_ajaxProcessing</code><br>
@@ -6628,13 +6629,14 @@ $('.tablesorter')[0].config.cache[0].normalized[0];
 						<tr><th><code>sorter: &quot;metadata&quot;</code></th><td>Sort by the sorter value in the metadata - requires the metadata plugin.</td></tr>
 					</tbody></table>
 					<p>Check out the <a href="#headers"><code>headers</code></a> option to see how to use these parsers in your table (example #1).</p>
-					Or add a header class name using "sorter-" plus the parser name (example #2), this includes custom parsers (example #3).
+					Or add a header class name using "sorter-" plus the parser name (example #2 & #3), this includes custom parsers (example #4).
 					</div>
 				</td>
 				<td>
 					<a href="example-options-headers-digits-strings.html">1</a>
 					<a href="example-parsers-class-name.html">2</a>
-					<a href="example-parsers.html">3</a>
+					<a href="example-option-built-in-parsers.html">3</a>
+					<a href="example-parsers.html">4</a>
 				</td>
 			</tr>
 
@@ -7908,6 +7910,7 @@ var index, len,
 	$table = $('table'),
 	column = 0, // first column
 	onlyAvail = false, // if true, available rows (visible rows after filtering) are returned
+	// arry is an array of all text content from a table column; duplicate entries are included!
 	array = $.tablesorter.filter.getOptions( $table, column, onlyAvail );
 
 // process array; sort & remove duplicates (added v2.23.4)
@@ -7921,6 +7924,38 @@ for ( index = 0; index &lt; len; index++ ) {
 $('select.external').html( opts );</pre>
 						<p>Please be aware that this function does not process the array, so the array may contain duplicates and will not be sorted.</p>
 						The filter <a href="#function-processoptions"><code>processOptions</code></a> function was added in <span class="version">v2.23.4</span> which performs those actions.
+					</div>
+				</td>
+			</tr>
+
+			<tr id="function-getoptionsource">
+				<td><a href="#" class="permalink">getOptionSource</a></td>
+				<td>This filter widget function returns all the cached values of the set table column (<span class="version">v2.16.0</span>):
+					<div class="collapsible"><br>
+						This function returns both the text and the parsed text for a column. So it <strong>ignores</strong> the <code>filter_useParsedData</code> option, <code>&quot;filter-parsed&quot;</code> class on the header, and the parser <code>parsed</code> flag settinng (<a href="example-parsers.html">ref</a>).
+						<p>Use it as follows:</p>
+						<pre class="prettyprint lang-js">$.tablesorter.filter.getOptionSource( table, column, onlyAvail );</pre>
+						<ul>
+							<li><code>table</code> - table DOM element (or jQuery object) of table.</li>
+							<li><code>column</code> - zero-based column index.</li>
+							<li><code>onlyAvail</code> - an optional boolean flag, which will be ignored if the <code>options</code> parameter is defined or is an empty string; otherwise it is the value passed to the function which finds all table column values; if <code>true</code>, only the available options will be diplayed.</li>
+						</ul>
+						Use this function as follows:<br>
+						<pre class="prettyprint lang-js">// external filter select
+var index, len,
+	opts = '',
+	$table = $('table'),
+	column = 0, // first column
+	onlyAvail = false, // if true, available rows (visible rows after filtering) are returned
+	// arry is an array of objects [{ text: "Foo", parsed: "foo" }, ...] with duplicates entries removed
+	arry = $.tablesorter.filter.getOptionSource( $table, column, onlyAvail );
+
+// build options
+for ( index = 0; index &lt; len; index++ ) {
+	opts += '&lt;option value="' + array[ index ].parsed + '"&gt;' + array[ index ].text + '&lt;/option&gt;';
+}
+$('select.external').html( opts );</pre>
+						<p>Please be aware that this function is different from the <a href="#function-getoptions"><code>getOptions</code></a> filter function in that an object is returned.</p>
 					</div>
 				</td>
 			</tr>
