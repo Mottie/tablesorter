@@ -319,6 +319,8 @@
 			ts.applyWidget( table, true );
 			// if user has supplied a sort list to constructor
 			if ( c.sortList.length > 0 ) {
+				// save sortList before any sortAppend is added
+				c.last.sortList = c.sortList;
 				ts.sortOn( c, c.sortList, {}, !c.initWidgets );
 			} else {
 				ts.setHeadersCss( c );
