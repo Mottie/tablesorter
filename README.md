@@ -102,6 +102,17 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.31.1">Version 2.31.1</a> (2018-11-20)
+
+* Core:
+  * Store sortList on init. Fixes [issue #1585](https://github.com/Mottie/tablesorter/issues/1585).
+* Math:
+  * Add math_textAttr. See [issue #1601](https://github.com/Mottie/tablesorter/issues/1601).
+* Readme:
+  * Remove bower, gitter & add Slack.
+* Meta:
+  * Update dependencies.
+
 #### <a name="v2.31.0">Version 2.31.0</a> (2018-08-27)
 
 * Editable:
@@ -123,12 +134,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * input-select updates extra header checkboxes. Fixes [issue #1560](https://github.com/Mottie/tablesorter/issues/1560).
 * CSS:
   * Style caption per table theme. Fixes [issue #1564](https://github.com/Mottie/tablesorter/issues/1564).
-
-#### <a name="v2.30.6">Version 2.30.6</a> (2018-06-16)
-
-* CssStickyHeaders:
-  * Reinitialize after update. Fixes [issue #1553](https://github.com/Mottie/tablesorter/issues/1553).
-* Parser:
-  * Prevent input-select error. Fixes [issue #1554](https://github.com/Mottie/tablesorter/issues/1554).
-* Docs:
-  * Add lazyload warnings. See [issue #1169](https://github.com/Mottie/tablesorter/issues/1169).
