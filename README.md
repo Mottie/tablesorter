@@ -1,6 +1,6 @@
 tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes. tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
 
-[![Bower Version][bower-image]][bower-url] [![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url] [![zenhub-image]][zenhub-url]
+[![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url] [![zenhub-image]][zenhub-url]
 
 ### Notice!
 
@@ -15,7 +15,7 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 ### Questions?
 
-[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
+[![irc-image]][irc-url] [![slack-image]][slack-url] [![stackoverflow-image]][stackoverflow-url]
 
 * Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
 * Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
@@ -88,15 +88,13 @@ If you would like to contribute, please...
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
 [david-dev-url]: https://david-dm.org/Mottie/tablesorter?type=dev
 [david-dev-image]: https://img.shields.io/david/dev/Mottie/tablesorter.svg
-[bower-url]: http://bower.io/search/?q=jquery.tablesorter
-[bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
 [zenhub-url]: https://zenhub.io
 [zenhub-image]: https://cdn.rawgit.com/Mottie/tablesorter/master/docs/img/zenhub-badge.svg
 
 [irc-url]: https://kiwiirc.com/client/irc.freenode.net#tablesorter
 [irc-image]: https://img.shields.io/badge/irc-%23tablesorter-yellowgreen.svg
-[gitter-url]: https://gitter.im/Mottie/tablesorter
-[gitter-image]: https://img.shields.io/badge/GITTER-join%20chat-yellowgreen.svg
+[slack-url]: https://join.slack.com/t/tablesorter/shared_invite/enQtNDc2NTczODg0NjkzLWRmYzE2NjIzNjM2ZWE1NzkyNzFkNjM4NjY0OTIyOTM3NDRmNWRhMjgxMTk5MjFhNzM3NWIzMWU1ZTc1NTZlOGE
+[slack-image]: https://img.shields.io/badge/Slack-join%20chat-yellowgreen.svg
 [stackoverflow-url]: http://stackoverflow.com/questions/tagged/tablesorter
 [stackoverflow-image]: https://img.shields.io/badge/stackoverflow-tablesorter-blue.svg
 
