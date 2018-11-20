@@ -4,10 +4,10 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2018-08-27 (v2.31.0)*/
+/*! tablesorter (FORK) - updated 2018-11-20 (v2.31.1)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery) {
-/*! TableSorter (FORK) v2.31.0 *//*
+/*! TableSorter (FORK) v2.31.1 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -31,7 +31,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.31.0',
+		version : '2.31.1',
 
 		parsers : [],
 		widgets : [],
@@ -328,6 +328,8 @@
 			ts.applyWidget( table, true );
 			// if user has supplied a sort list to constructor
 			if ( c.sortList.length > 0 ) {
+				// save sortList before any sortAppend is added
+				c.last.sortList = c.sortList;
 				ts.sortOn( c, c.sortList, {}, !c.initWidgets );
 			} else {
 				ts.setHeadersCss( c );
