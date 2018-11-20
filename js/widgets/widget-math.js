@@ -1,4 +1,4 @@
-/*! Widget: math - updated 5/3/2017 (v2.28.9) *//*
+/*! Widget: math - updated 11/20/2018 (v2.31.1) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -28,10 +28,14 @@
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell filterReset ' )
 			.split(' ').join('.tsmath '),
 
-		processText : function( c, $cell ) {
+		processText : function( c, $cell ) { 
 			var tmp,
+				wo = c.widgetOptions,
 				txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) ),
 				prefix = c.widgetOptions.math_prefix;
+			if (wo.math_textAttr) {
+				txt = $cell.attr(wo.math_textAttr) || txt;
+			}
 			if ( /</.test( prefix ) ) {
 				// prefix contains HTML; remove it & any text before using formatFloat
 				tmp = $( '<div>' + prefix + '</div>' ).text()
@@ -612,6 +616,8 @@
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
 			math_suffix   : '',
+			// cell attribute containing the math value to use
+			math_textAttr : '',
 			// no matching math elements found (text added to cell)
 			math_none     : 'N/A',
 			math_event    : 'recalculate',
