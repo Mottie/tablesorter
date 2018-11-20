@@ -114,6 +114,8 @@
 				// called after all math calculations have completed
 				console.log( 'math calculations complete', c.$table.find('[data-math="all-sum"]:first').text() );
 			},
+			// cell data-attribute containing the math value to use (added v2.31.1)
+			math_textAttr : '',
 			// see "Mask Examples" section
 			math_mask     : '#,##0.00',
 			math_prefix   : '', // custom string added before the math_mask value (usually HTML)
@@ -196,6 +198,7 @@
 		<h3><a href="#">Notes</a></h3>
 		<div>
 		<ul>
+			<li>In <span class="version">v2.31.1</span>, added <a href="#math_textattr" class="intlink"><code>math_textAttr</code></a>.</li>
 			<li>In <span class="version">v2.28.0</span>
 				<ul>
 					<li>Fix documentation and processing of <code>math_prefix</code> and <code>math_suffix</code> options. See <a href="https://github.com/Mottie/tablesorter/issues/1305">issue #1305</a>.</li>
@@ -302,6 +305,22 @@
 						<td><code>false</code></td>
 						<td>
 							Set this option to <code>true</code> to enable the debug log of the math widget without all the extra noise from the overall <a href="index.html#debug"><code>debug</code></a> option (<span class="version">v2.27.0</span>).
+						</td>
+					</tr>
+
+
+					<tr id="math_textattr">
+						<td><a href="#" class="permalink">math_textAttr</a></td>
+						<td><code>''</code></td>
+						<td>
+							Cell attribute (data-attribute) containing the math value to use. This defaults to the <a href="index.html#textattribute"><code>textAttribute</code></a> value when the <a href="index.html#textextraction"><code>textExtraction</code></a> option is set to "basic" (<span class="version">v2.31.1</span>).
+							<div class="collapsible">
+							<br>
+							Use this option as follows:
+							<pre class="prettyprint lang-js">// Include the "data-" prefix in the option
+math_textAttr : 'data-math-value'</pre>
+							<pre class="prettyprint lang-html">&lt;td data-math-value="1000"&gt;1.0k&lt;/td&gt;</pre>
+							</div>
 						</td>
 					</tr>
 
