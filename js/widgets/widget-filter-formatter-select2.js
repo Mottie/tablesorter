@@ -65,7 +65,7 @@
 				v = v.join('\u0000');
 			}
 			// escape special regex characters (http://stackoverflow.com/a/9310752/145346)
-			v = v.replace(/[-[\]{}()*+?.,/\\^$|#\s]/g, '\\$&');
+			v = v.replace(/[-[\]{}()*+?.,/\\^$|#]/g, '\\$&');
 			// convert string back into an array
 			if (arry) {
 				v = v.split('\u0000');
