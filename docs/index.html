@@ -5363,7 +5363,7 @@ var sorting = [ [2,1], [0,0] ];
 // After v2.19.0; do the following to apply a new sort after updating
 // if sorting is an empty array [], then the sort will be reset
 $( 'table' ).trigger( 'update', [ sorting ] );</pre>
-						<span class="label label-info">NOTE</span> Don't confuse this method with the <a href="#sortreset"><code>sortReset</code> option</a>. <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
+						<span class="label label-info">NOTE</span> <code>updateRows</code> was added to work around the issue of using jQuery with the Prototype library. Triggering an "update" would make Prototype clear the tbody; Please see <a href="https://github.com/Mottie/tablesorter/issues/217">issue #217</a> for more details.
 					</div>
 				</td>
 				<td><a href="example-ajax.html">Example</a></td>
