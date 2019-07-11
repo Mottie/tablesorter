@@ -70,11 +70,12 @@
 					headerTemplate : '{content} {icon}', // Add icon for various themes
 					widgets: ['zebra', 'filter', 'cssStickyHeaders'],
 					widgetOptions: {
+						// caption set by demo button value
+						cssStickyHeaders_addCaption: addCaption,
 						// jQuery selector or object to attach sticky header to
 						cssStickyHeaders_attachTo: '.mfp-wrap',
-						cssStickyHeaders_offset: 0,
-						// caption set by demo button value
-						cssStickyHeaders_addCaption: addCaption
+						cssStickyHeaders_filteredToTop : true,
+						cssStickyHeaders_offset: 0
 					}
 				});
 			}
@@ -88,12 +89,11 @@
 		widgets: [ 'zebra', 'cssStickyHeaders', 'filter' ],
 
 		widgetOptions: {
-			cssStickyHeaders_offset        : 0,
 			cssStickyHeaders_addCaption    : true,
 			// jQuery selector or object to attach sticky header to
 			cssStickyHeaders_attachTo      : null,
 			cssStickyHeaders_filteredToTop : true,
-			cssStickyHeaders_zIndex        : 10
+			cssStickyHeaders_offset        : 0
 		}
 
 	});
@@ -116,7 +116,7 @@
 $(function() {
 	$('link.theme').each(function() { this.disabled = true; });
 
-	var themes = 'default blue green grey ice black-ice dark dropbox',
+	var themes = 'blue default green grey ice black-ice dark dropbox',
 		i, o = '', t = themes.split(' ');
 	for (i = 0; i < t.length; i++) {
 		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
@@ -179,6 +179,57 @@ $(function() {
 		</ul>
 		</div>
 
+		<h3><a href="#">Options</a></h3>
+		<div>
+			<h4>cssStickyHeaders widget defaults</h4>
+			<div>
+				<span class="label label-info">TIP!</span> Click on the link in the function column to reveal full details (or <a href="#" class="toggleAll">toggle</a>|<a href="#" class="showAll">show</a>|<a href="#" class="hideAll">hide</a> all) or double click to update the browser location.
+			</div>
+			<table class="options tablesorter-blue" data-sortlist="[[0,0]]">
+				<thead>
+					<tr><th>Option</th><th>Default</th><th class="sorter-false">Description</th></tr>
+				</thead>
+				<tbody>
+
+					<tr id="cssstickyheaders-offset">
+						<td><span class="permalink">cssStickyHeaders_offset</span></td>
+						<td>0</td>
+						<td>Set this to a number (in pixels) or jquery selector targeting the <code>position:fixed</code> element in which to place the sticky header below while scrolling.</td>
+					</tr>
+
+					<tr id="cssstickyheaders-includecaption">
+						<td><span class="permalink">cssStickyHeaders_includeCaption</span></td>
+						<td>true</td>
+						<td>If <code>false</code> and a table caption exist, it won't be included in the sticky header.</td>
+					</tr>
+
+					<tr id="cssstickyheaders-attachto">
+						<td><a href="#" class="permalink">cssStickyHeaders_attachTo</a></td>
+						<td>null</td>
+						<td>Set this option as a jQuery selector or object where the sticky header will be attached.
+							<div class="collapsible">
+							<ul>
+								<li>Setting this option with either a jQuery selector string (<code>&quot;.wrapper&quot;</code>) or jQuery object (<code>$(&quot;.wrapper&quot;)</code>).</li>
+								<li>This option contains the target to which the sticky header will attach - see the <a href="#popup-header">first example</a> below.</li>
+							</ul>
+							</div>
+						</td>
+					</tr>
+
+					<tr id="cssstickyheaders-filteredtotop">
+						<td><a href="#" class="permalink">cssStickyHeaders_filteredToTop</a></td>
+						<td>true</td>
+						<td>Scroll table top into view after filtering
+							<div class="collapsible">
+							<br>
+							This is needed when the user choses to filter the table which results in fewer rows than are currently visible in the browser viewport. So, the sticky header may still exist, but the table body may not be seen. Setting this option to <code>true</code> forces the original table header to scroll back into view.
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 		<h3><a href="#">Change log</a></h3>
 		<div>
 		<ul>
@@ -235,7 +286,7 @@ $(function() {
 	Include Caption: <button type="button" class="caption">true</button>
 	<p></p>
 
-	<h3>Sticky headers in a popup window</h3>
+	<h3 id="popup-header">Sticky headers in a popup window</h3>
 	<a href="#popup" class="open-popup-link">Show table in Magnific popup window</a>
 
 	<div id="popup" class="white-popup mfp-hide">
