@@ -65,17 +65,18 @@
 				v = v.join('\u0000');
 			}
 			// escape special regex characters (http://stackoverflow.com/a/9310752/145346)
-			v = v.replace(/[-[\]{}()*+?.,/\\^$|#]/g, '\\$&');
+			var v_escape = v.replace(/[-[\]{}()*+?.,/\\^$|#]/g, '\\$&');
 			// convert string back into an array
 			if (arry) {
 				v = v.split('\u0000');
+				v_escape =  v_escape.split('\u0000');
 			}
 			if (!ts.isEmptyObject($cell.find('.select2').data())) {
 				$input
 					// add regex, so we filter exact numbers
 					.val(
-						$.isArray(v) && v.length && v.join('') !== '' ?
-							'/(' + matchPrefix + (v || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
+						$.isArray(v_escape) && v_escape.length && v_escape.join('') !== '' ?
+							'/(' + matchPrefix + (v_escape || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
 							''
 					)
 					.trigger('search');
