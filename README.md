@@ -102,6 +102,20 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.31.2">Version 2.31.2</a> (2019-12-01)
+
+* Column selector:
+  * Fix scroller widget compatibility. See [issue #1682](https://github.com/Mottie/tablesorter/issues/1682).
+* Filter:
+  * Update select2 regexp. See [issue #1497](https://github.com/Mottie/tablesorter/issues/1497). Fixed in [PR #1677](https://github.com/Mottie/tablesorter/pull/1677); thanks [@cwisdo](https://github.com/cwisdo)!
+  * Prevent search on enter if filters are unchanged. See [issue #1631](https://github.com/Mottie/tablesorter/issues/1631). Fixed in [PR #1642](https://github.com/Mottie/tablesorter/pull/1642); thanks [@larsbonczek](https://github.com/larsbonczek)!
+* Math
+  * Add math ignore to cells; it was documented, but not added previously. See [issue #1526](https://github.com/Mottie/tablesorter/issues/1526).
+* Docs:
+  * Various fixes.
+  * Updated trigger sort page. See [issue #1641](https://github.com/Mottie/tablesorter/issues/1641).
+  * Remove invalid widget option. See [issue #1581](https://github.com/Mottie/tablesorter/issues/1581).
+
 #### <a name="v2.31.1">Version 2.31.1</a> (2018-11-20)
 
 * Core:
@@ -124,13 +138,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Change default ajaxProcessing function. See [issue #1580](https://github.com/Mottie/tablesorter/issues/1580).
 * Build:
   * Update build to UMD wrap widgets, parsers & extras (necessitates a minor version bump).
-
-#### <a name="v2.30.7">Version 2.30.7</a> (2018-07-10)
-
-* Core:
-  * Add `data-sortedBy` to headers; see [`config.sortVars`](https://mottie.github.io/tablesorter/docs/#variable-sort-vars). Closes [issue #1558](https://github.com/Mottie/tablesorter/issues/1558).
-  * Ensure sort parameters are defined. Fixes [issue #1566](https://github.com/Mottie/tablesorter/issues/1566).
-* Parser:
-  * input-select updates extra header checkboxes. Fixes [issue #1560](https://github.com/Mottie/tablesorter/issues/1560).
-* CSS:
-  * Style caption per table theme. Fixes [issue #1564](https://github.com/Mottie/tablesorter/issues/1564).
