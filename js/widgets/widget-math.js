@@ -1,4 +1,4 @@
-/*! Widget: math - updated 11/20/2018 (v2.31.1) *//*
+/*! Widget: math - updated 12/1/2019 (v2.31.2) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -28,7 +28,7 @@
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell filterReset ' )
 			.split(' ').join('.tsmath '),
 
-		processText : function( c, $cell ) { 
+		processText : function( c, $cell ) {
 			var tmp,
 				wo = c.widgetOptions,
 				txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) ),
@@ -110,7 +110,7 @@
 						// stop calculating 'above', when encountering another 'above'
 						if ( mathAbove ) {
 							index = 0;
-						} else if ( $t.length ) {
+						} else if ( $t.length && $t.not( mathIgnore ).length ) {
 							arry[ arry.length ] = math.processText( c, $t );
 						}
 					}
@@ -132,7 +132,7 @@
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$tr.not( mathIgnore ).length &&
-						$t.length ) {
+						$t.length && $t.not( mathIgnore ) ) {
 						arry[ arry.length ] = math.processText( c, $t );
 					}
 				}
@@ -149,11 +149,11 @@
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$t.not( mathAttrs.join( ',' ) ).length &&
-						!$t.is( $el ) ) {
-						arry[ arry.length ] = math.processText( c, $t );
+						!$t.is( $el ) && $t.not( mathIgnore ).length ) {
+							arry[ arry.length ] = math.processText( c, $t );
+						}
 					}
 				}
-			}
 			return arry;
 		},
 
@@ -664,4 +664,4 @@
 		}
 	});
 
-})(jQuery);
+})(jQuery); 
