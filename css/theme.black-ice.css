@@ -117,7 +117,7 @@
 }
 
 /* caption */
-caption {
+.tablesorter-blackice > caption {
 	background-color: #fff;
 }
 

@@ -118,7 +118,7 @@ Default Theme
 }
 
 /* caption */
-caption {
+.tablesorter-default > caption {
 	background-color: #fff;
 }
 

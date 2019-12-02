@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 2018-03-26 (v2.30.2) */
+/*! Widget: Pager - updated 2018-08-27 (v2.31.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -91,7 +91,7 @@
 			//   ],
 			//   [ "header1", "header2", ... "headerN" ] // optional
 			// ]
-			pager_ajaxProcessing: function( /* ajax */ ) { return [ 0, [], null ]; },
+			pager_ajaxProcessing: function( data ) { return data; },
 
 			// css class names of pager arrows
 			pager_css: {

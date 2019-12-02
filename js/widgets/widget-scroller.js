@@ -871,7 +871,7 @@
 			$tableWrap.scroll();
 			setTimeout(function() {
 				wo.scroller_isBusy = false;
-			}, 0)
+			}, 0);
 
 		},
 

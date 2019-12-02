@@ -116,7 +116,7 @@
 }
 
 /* caption */
-caption {
+.tablesorter-dark > caption {
 	background-color: #202020;
 }
 

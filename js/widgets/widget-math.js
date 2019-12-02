@@ -1,4 +1,4 @@
-/*! Widget: math - updated 5/3/2017 (v2.28.9) *//*
+/*! Widget: math - updated 12/1/2019 (v2.31.2) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -30,8 +30,12 @@
 
 		processText : function( c, $cell ) {
 			var tmp,
+				wo = c.widgetOptions,
 				txt = ts.getElementText( c, $cell, math.getCellIndex( $cell ) ),
 				prefix = c.widgetOptions.math_prefix;
+			if (wo.math_textAttr) {
+				txt = $cell.attr(wo.math_textAttr) || txt;
+			}
 			if ( /</.test( prefix ) ) {
 				// prefix contains HTML; remove it & any text before using formatFloat
 				tmp = $( '<div>' + prefix + '</div>' ).text()
@@ -106,7 +110,7 @@
 						// stop calculating 'above', when encountering another 'above'
 						if ( mathAbove ) {
 							index = 0;
-						} else if ( $t.length ) {
+						} else if ( $t.length && $t.not( mathIgnore ).length ) {
 							arry[ arry.length ] = math.processText( c, $t );
 						}
 					}
@@ -128,7 +132,7 @@
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$tr.not( mathIgnore ).length &&
-						$t.length ) {
+						$t.length && $t.not( mathIgnore ) ) {
 						arry[ arry.length ] = math.processText( c, $t );
 					}
 				}
@@ -145,11 +149,11 @@
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$t.not( mathAttrs.join( ',' ) ).length &&
-						!$t.is( $el ) ) {
-						arry[ arry.length ] = math.processText( c, $t );
+						!$t.is( $el ) && $t.not( mathIgnore ).length ) {
+							arry[ arry.length ] = math.processText( c, $t );
+						}
 					}
 				}
-			}
 			return arry;
 		},
 
@@ -612,6 +616,8 @@
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
 			math_suffix   : '',
+			// cell attribute containing the math value to use
+			math_textAttr : '',
 			// no matching math elements found (text added to cell)
 			math_none     : 'N/A',
 			math_event    : 'recalculate',
@@ -658,4 +664,4 @@
 		}
 	});
 
-})(jQuery);
+})(jQuery); 

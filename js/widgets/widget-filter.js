@@ -979,6 +979,25 @@
 						$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
 						tsf.searching( table, eventType !== 'keypress', true, column );
 					}
+						ts.getColumnData( table, wo.filter_liveSearch, column );
+				if ( table.config.widgetOptions.filter_initialized &&
+					// immediate search if user presses enter
+					( event.which === tskeyCodes.enter ||
+						// immediate search if a "search" or "blur" is triggered on the input
+						( eventType === 'search' || eventType === 'blur' ) ||
+						// change & input events must be ignored if liveSearch !== true
+						( eventType === 'change' || eventType === 'input' ) &&
+						// prevent search if liveSearch is a number
+						( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
+						// don't allow 'change' or 'input' event to process if the input value
+						// is the same - fixes #685
+						this.value !== c.lastSearch[column]
+					)
+				) {
+					event.preventDefault();
+					// init search with no delay
+					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
+					tsf.searching( table, eventType !== 'keypress' || event.which === tskeyCodes.enter, true, column );
 				}
 			});
 		},
@@ -1053,12 +1072,14 @@
 			}
 			// return if the last search is the same; but filter === false when updating the search
 			// see example-widget-filter.html filter toggle buttons
-			if ( tsf.equalFilters(c, c.lastSearch, currentFilters) && filter !== false ) {
-				return;
-			} else if ( filter === false ) {
-				// force filter refresh
-				c.lastCombinedFilter = '';
-				c.lastSearch = [];
+			if ( tsf.equalFilters(c, c.lastSearch, currentFilters) ) {
+				if ( filter !== false ) {
+					return;
+				} else {
+					// force filter refresh
+					c.lastCombinedFilter = '';
+					c.lastSearch = [];
+				}
 			}
 			// define filter inside it is false
 			filters = filters || [];

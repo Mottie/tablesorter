@@ -1,4 +1,4 @@
-/* Widget: columnSelector (responsive table widget) - updated 2018-03-18 (v2.30.0) *//*
+/* Widget: columnSelector (responsive table widget) - updated 2018-08-03 (v2.31.2) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -399,6 +399,27 @@
 					});
 			}
 		},
+
+		// Extracted from buildHeaders in core; needed for scroller widget compatibility
+		findHeaders : function(c) {
+			var indx, $temp,
+				sel = '.' + ts.css.scrollerHeader + ' thead > tr > ',
+				$headers = $(sel + 'th,' + sel + 'td'),
+				result = [];
+			for ( indx = 0; indx < c.columns; indx++ ) {
+				// Use $headers.parent() in case selectorHeaders doesn't point to the th/td
+				$temp = $headers.filter( '[data-column="' + indx + '"]' );
+				// target sortable column cells, unless there are none, then use non-sortable cells
+				// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
+				result[ indx ] = $temp.length ?
+					$temp.not( '.sorter-false' ).length ?
+						$temp.not( '.sorter-false' ).filter( ':last' ) :
+						$temp.filter( ':last' ) :
+					$();
+			}
+			return result;
+		},
+
 		adjustColspans: function(c, wo) {
 			var index, cols, col, span, end, $cell,
 				colSel = c.selector,
@@ -409,7 +430,10 @@
 					.add( $(c.namespace + '_extra_table').children( 'thead, tfoot' ).children().children() )
 					// include grouping widget headers (they have colspans!)
 					.add( c.$table.find( '.group-header' ).children() ),
-				len = $headers.length;
+				len = $headers.length,
+				$headerIndexed = ts.hasWidget(c.table, 'scroller')
+					? tsColSel.findHeaders(c)
+					: c.$headerIndexed;
 			for ( index = 0; index < len; index++ ) {
 				$cell = $headers.eq(index);
 				col = parseInt( $cell.attr('data-column'), 10 ) || $cell[0].cellIndex;
@@ -418,7 +442,7 @@
 				if ( span > 1 ) {
 					for ( cols = col; cols < end; cols++ ) {
 						if ( !autoModeOn && colSel.states[ cols ] === false ||
-							autoModeOn && c.$headerIndexed[ cols ] && !c.$headerIndexed[ cols ].is(':visible') ) {
+							autoModeOn && $headerIndexed[ cols ] && !$headerIndexed[ cols ].is(':visible') ) {
 							span--;
 						}
 					}

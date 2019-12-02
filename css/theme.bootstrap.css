@@ -109,7 +109,7 @@
 }
 
 /* caption */
-.caption {
+.tablesorter-bootstrap > .caption {
 	background-color: #fff;
 }
 

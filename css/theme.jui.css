@@ -89,7 +89,7 @@
 }
 
 /* caption */
-.tablesorter-jui caption {
+.tablesorter-jui > caption {
 	border: 0;
 }
 

@@ -1,6 +1,6 @@
 tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THEAD and TBODY tags into a sortable table without page refreshes. tablesorter can successfully parse and sort many types of data including linked data in a cell. This forked version adds lots of new enhancements including: alphanumeric sorting, pager callback functons, multiple widgets providing column styling, ui theme application, sticky headers, column filters and resizer, as well as extended documentation with a lot more demos.
 
-[![Bower Version][bower-image]][bower-url] [![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url] [![zenhub-image]][zenhub-url]
+[![NPM Version][npm-image]][npm-url] [![devDependency Status][david-dev-image]][david-dev-url] [![zenhub-image]][zenhub-url]
 
 ### Notice!
 
@@ -15,7 +15,7 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 
 ### Questions?
 
-[![irc-image]][irc-url] [![gitter-image]][gitter-url] [![stackoverflow-image]][stackoverflow-url]
+[![irc-image]][irc-url] [![slack-image]][slack-url] [![stackoverflow-image]][stackoverflow-url]
 
 * Check the [FAQ](https://github.com/Mottie/tablesorter/wiki/FAQ) page.
 * Search the [main documentation](https://mottie.github.io/tablesorter/docs/) (click the menu button in the upper left corner).
@@ -88,15 +88,13 @@ If you would like to contribute, please...
 [npm-image]: https://img.shields.io/npm/v/tablesorter.svg
 [david-dev-url]: https://david-dm.org/Mottie/tablesorter?type=dev
 [david-dev-image]: https://img.shields.io/david/dev/Mottie/tablesorter.svg
-[bower-url]: http://bower.io/search/?q=jquery.tablesorter
-[bower-image]: https://img.shields.io/bower/v/jquery.tablesorter.svg
 [zenhub-url]: https://zenhub.io
 [zenhub-image]: https://cdn.rawgit.com/Mottie/tablesorter/master/docs/img/zenhub-badge.svg
 
 [irc-url]: https://kiwiirc.com/client/irc.freenode.net#tablesorter
 [irc-image]: https://img.shields.io/badge/irc-%23tablesorter-yellowgreen.svg
-[gitter-url]: https://gitter.im/Mottie/tablesorter
-[gitter-image]: https://img.shields.io/badge/GITTER-join%20chat-yellowgreen.svg
+[slack-url]: https://join.slack.com/t/tablesorter/shared_invite/enQtNDc2NTczODg0NjkzLWRmYzE2NjIzNjM2ZWE1NzkyNzFkNjM4NjY0OTIyOTM3NDRmNWRhMjgxMTk5MjFhNzM3NWIzMWU1ZTc1NTZlOGE
+[slack-image]: https://img.shields.io/badge/Slack-join%20chat-yellowgreen.svg
 [stackoverflow-url]: http://stackoverflow.com/questions/tagged/tablesorter
 [stackoverflow-image]: https://img.shields.io/badge/stackoverflow-tablesorter-blue.svg
 
@@ -104,57 +102,39 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
-#### <a name="v2.30.3">Version 2.30.3</a> (2018-03-30)
+#### <a name="v2.31.2">Version 2.31.2</a> (2019-12-01)
 
-* Core:
-  * Use indexed headers. Fixes [issue #1524](https://github.com/Mottie/tablesorter/issues/1524).
+* Column selector:
+  * Fix scroller widget compatibility. See [issue #1682](https://github.com/Mottie/tablesorter/issues/1682).
+* Filter:
+  * Update select2 regexp. See [issue #1497](https://github.com/Mottie/tablesorter/issues/1497). Fixed in [PR #1677](https://github.com/Mottie/tablesorter/pull/1677); thanks [@cwisdo](https://github.com/cwisdo)!
+  * Prevent search on enter if filters are unchanged. See [issue #1631](https://github.com/Mottie/tablesorter/issues/1631). Fixed in [PR #1642](https://github.com/Mottie/tablesorter/pull/1642); thanks [@larsbonczek](https://github.com/larsbonczek)!
+* Math
+  * Add math ignore to cells; it was documented, but not added previously. See [issue #1526](https://github.com/Mottie/tablesorter/issues/1526).
 * Docs:
-  * Remove link preload because it isn't supported in Firefox.
+  * Various fixes.
+  * Updated trigger sort page. See [issue #1641](https://github.com/Mottie/tablesorter/issues/1641).
+  * Remove invalid widget option. See [issue #1581](https://github.com/Mottie/tablesorter/issues/1581).
 
-#### <a name="v2.30.2">Version 2.30.2</a> (2018-03-26)
+#### <a name="v2.31.1">Version 2.31.1</a> (2018-11-20)
 
 * Core:
-  * Allow passing headers from multiple rows. See [issue #1116](https://github.com/Mottie/tablesorter/issues/1116).
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Build:
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Pager:
-  * Use local `$` inside of IIFE. Fixes [issue #1542](https://github.com/Mottie/tablesorter/issues/1542).
-* Resizable:
-  * Adjust handle position for jQuery v3.3.0+. Fixes [issue #1544](https://github.com/Mottie/tablesorter/issues/1544).
-* Vertical Group:
-  * Fix border css for last row.
-* Parser:
-  * Input-select: Fix TypeError `hasSticky` is undefined. See [issue #1534](https://github.com/Mottie/tablesorter/issues/1534) & [PR #1535](https://github.com/Mottie/tablesorter/pull/1535); thanks [@adamz01h](https://github.com/adamz01h).
-* Docs
-  * Improve load time.
-  * Update incorrect default. See [issue #1510](https://github.com/Mottie/tablesorter/issues/1510).
-  * Replace whitespace with symbols.
+  * Store sortList on init. Fixes [issue #1585](https://github.com/Mottie/tablesorter/issues/1585).
+* Math:
+  * Add math_textAttr. See [issue #1601](https://github.com/Mottie/tablesorter/issues/1601).
+* Readme:
+  * Remove bower, gitter & add Slack.
 * Meta:
   * Update dependencies.
 
-#### <a name="v2.30.1">Version 2.30.1</a> (2018-03-19)
+#### <a name="v2.31.0">Version 2.31.0</a> (2018-08-27)
 
-* Core:
-  * Only validate options while debugging. Closes [issue #1528](https://github.com/Mottie/tablesorter/issues/1528)
-* Pager:
-  * Show all rows, not pages. Fixes [issue #1529](https://github.com/Mottie/tablesorter/issues/1529)
-* SaveSort:
-  * Fix JS error. See [issue #1525](https://github.com/Mottie/tablesorter/issues/1525)
-
-#### <a name="v2.30.0">Version 2.30.0</a> (2018-03-18)
-
-* Core:
-  * [Debug](https://mottie.github.io/tablesorter/docs/#debug) now allows you to debug components separately; set to `true` as usual, or set to `'core filter'` to only show the core and filter widget debug logs.
-  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
-* Filter:
-  * Make `onlyAvail` work with showProcessing. Fixes [issue #1518](https://github.com/Mottie/tablesorter/issues/1518).
-  * Escape quotes in select options. See [issue #1527](https://github.com/Mottie/tablesorter/issues/1527).
-* Pager:
-  * Change pager `removeRows` check. Fixes issues [#1525](https://github.com/Mottie/tablesorter/issues/1525) &amp; [#1466](https://github.com/Mottie/tablesorter/issues/1466).
-* Global:
-  * Add editor eslint &amp; fix issues. File versions were not updated for this change!
+* Editable:
+  * Add nbsp to empty cells. Fixes [issue #1570](https://github.com/Mottie/tablesorter/issues/1570).
 * Docs:
-  * Update Bootstrap v4.0.0.
-  * Adjust (accordion) link position.
-  * Fix scroller fixed column border alignment.
+  * Add filter `getOptionSource` function. See [issue #671](https://github.com/Mottie/tablesorter/issues/671).
+  * Add built-in parsers demo. See [issue #1571](https://github.com/Mottie/tablesorter/issues/1571).
+* Pager:
+  * Change default ajaxProcessing function. See [issue #1580](https://github.com/Mottie/tablesorter/issues/1580).
+* Build:
+  * Update build to UMD wrap widgets, parsers & extras (necessitates a minor version bump).
