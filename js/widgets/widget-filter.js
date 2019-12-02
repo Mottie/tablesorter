@@ -56,12 +56,12 @@
 			filter_saveFilters   : false, // Use the $.tablesorter.storage utility to save the most recent filters
 			filter_searchDelay   : 300,   // typing delay in milliseconds before starting a search
 			filter_searchFiltered: true,  // allow searching through already filtered rows in special circumstances; will speed up searching in large tables if true
+			filter_searchTrigger : false,  // array of events / Keys who trigger the search false = search, blur event and enterkey
 			filter_selectSource  : null,  // include a function to return an array of values to be added to the column filter select
 			filter_selectSourceSeparator : '|', // filter_selectSource array text left of the separator is added to the option value, right into the option text
 			filter_serversideFiltering : false, // if true, must perform server-side filtering b/c client-side filtering is disabled, but the ui and events will still be used.
 			filter_startsWith    : false, // if true, filter start from the beginning of the cell contents
-			filter_useParsedData : false, // filter all data using parsed content
-			filter_searchTrigger : false  // array of events / Keys who trigger the search false = search, blur event and enterkey
+			filter_useParsedData : false // filter all data using parsed content
 		},
 		format: function( table, c, wo ) {
 			if ( !c.$table.hasClass( 'hasFilters' ) ) {
@@ -900,13 +900,13 @@
 									var ctrl = typeof trigger.ctrl === 'undefined' ? true : trigger.ctrl === event.ctrlKey,
 											alt = typeof trigger.alt === 'undefined' ? true : trigger.alt === event.altKey,
 											shift = typeof trigger.shift === 'undefined' ? true : trigger.shift  === event.shiftKey;									
-									if( ctrl && alt && shift ){
+									if ( ctrl && alt && shift ) {
 										skipSearch = false;
 									}
 								}
 							}
 						}
-						if( skipSearch ) {
+						if ( skipSearch ) {
 							return;
 						}
 					}
@@ -942,7 +942,7 @@
 									// keys
 									triggerSearch = true;
 									break;
-								} else if ( stType === 'object' ){
+								} else if ( stType === 'object' ) {
 									// key combinations
 									if ( typeof trigger.keyCode === 'number' && event.which === trigger.keyCode || 
 										 	tskeyCodes[ trigger.keyCode ] !== undefined &&
@@ -969,7 +969,7 @@
 							( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
 							// don't allow 'change' or 'input' event to process if the input value
 							// is the same - fixes #685
-							this.value !== c.lastSearch[column]){
+							this.value !== c.lastSearch[column]) {
 							triggerSearch = true;
 					}
 
@@ -980,24 +980,26 @@
 						tsf.searching( table, eventType !== 'keypress', true, column );
 					}
 						ts.getColumnData( table, wo.filter_liveSearch, column );
-				if ( table.config.widgetOptions.filter_initialized &&
-					// immediate search if user presses enter
-					( event.which === tskeyCodes.enter ||
-						// immediate search if a "search" or "blur" is triggered on the input
-						( eventType === 'search' || eventType === 'blur' ) ||
-						// change & input events must be ignored if liveSearch !== true
-						( eventType === 'change' || eventType === 'input' ) &&
-						// prevent search if liveSearch is a number
-						( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
-						// don't allow 'change' or 'input' event to process if the input value
-						// is the same - fixes #685
-						this.value !== c.lastSearch[column]
-					)
-				) {
-					event.preventDefault();
-					// init search with no delay
-					$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
-					tsf.searching( table, eventType !== 'keypress' || event.which === tskeyCodes.enter, true, column );
+					if ( table.config.widgetOptions.filter_initialized &&
+						// immediate search if user presses enter
+						( event.which === tskeyCodes.enter ||
+							// immediate search if a "search" or "blur" is triggered on the input
+							( eventType === 'search' || eventType === 'blur' ) ||
+							// change & input events must be ignored if liveSearch !== true
+							( eventType === 'change' || eventType === 'input' ) &&
+							// prevent search if liveSearch is a number
+							( liveSearch === true || liveSearch !== true && event.target.nodeName !== 'INPUT' ) &&
+							// don't allow 'change' or 'input' event to process if the input value
+							// is the same - fixes #685
+							this.value !== c.lastSearch[column]
+						)
+					) {
+						event.preventDefault();
+						// init search with no delay
+						$( this ).attr( 'data-lastSearchTime', new Date().getTime() );
+						tsf.searching( table, eventType !== 'keypress' || event.which === tskeyCodes.enter, true, column );
+
+					}
 				}
 			});
 		},
