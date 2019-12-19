@@ -922,7 +922,7 @@
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ?
 						wo.filter_liveSearch :
 						ts.getColumnData( table, wo.filter_liveSearch, column ),
-					searchTrigger = wo.filter_searchTrigger === false ? ['blur' , 'search', tskeyCodes.enter ] : wo.filter_searchTrigger,
+					searchTrigger = wo.filter_searchTrigger === false ? ['blur' , tskeyCodes.enter ] : wo.filter_searchTrigger,
 					triggerSearch = false;
 				
 				if ( table.config.widgetOptions.filter_initialized ) {
