@@ -149,11 +149,12 @@
 					});
 					if ( ( hasFilter || !$tr.hasClass( filtered ) ) &&
 						$t.not( mathAttrs.join( ',' ) ).length &&
-						!$t.is( $el ) && $t.not( mathIgnore ).length ) {
-							arry[ arry.length ] = math.processText( c, $t );
-						}
+						!$t.is( $el ) && $t.not( mathIgnore ).length
+					) {
+						arry[ arry.length ] = math.processText( c, $t );
 					}
 				}
+			}
 			return arry;
 		},
 
@@ -664,4 +665,4 @@
 		}
 	});
 
-})(jQuery); 
+})(jQuery);
