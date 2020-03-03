@@ -1,6 +1,6 @@
 /*!
 * tablesorter (FORK) pager plugin
-* updated 2018-08-27 (v2.31.0)
+* updated 2020-03-03 (v2.31.3)
 */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($) {
@@ -367,7 +367,7 @@
 					sz = p.size === 'all' ? p.totalRows : p.size,
 					s = ( p.page * sz ),
 					e =  s + sz,
-					last = 0, // for cache indexing
+					last = -1, // for cache indexing
 					j = 0; // size counter
 					p.cacheIndex = [];
 					for ( i = 0; i < l; i++ ) {
