@@ -638,15 +638,15 @@ jQuery(function($){
 
 	QUnit.test( 'colspan parsing', function(assert) {
 		assert.expect(3);
-
+		// parsed colspan values (not raw)
 		t = [
 			'g1', '6', 'a9', 155, 'l', 'nytimes',
-			'g1', '2', 'z1 957 K mit', 'z1 957 K mit', 'z1 957 K mit', 'z1 957 K mit', // colspan 4
-			'g3', '0', 'a13', '17 K', '17 K', 'google',
+			'g1', '2', 'z1 957 k mit', 'z1 957 k mit', 'z1 957 k mit', 'z1 957 k mit', // colspan 4
+			'g3', '0', 'a13', 17, 17, 'google',
 			'g2', '8', 'z9', 10, 'g', 'facebook',
 			'g1', '3', 'z24 67', 'z24 67', 'b', 'whitehouse',
-			'g4', '7 A10', '7 A10', 87, 'z', 'google',
-			'g3', '9', 'z12', 0, 'K nasa', 'K nasa'
+			'g4', '7 a10', '7 a10', 87, 'z', 'google',
+			'g3', '9', 'z12', 0, 'k nasa', 'k nasa'
 		];
 		assert.cacheCompare( table6,'all', t, 'colspans in tbody (duplicateSpan:true)' );
 
