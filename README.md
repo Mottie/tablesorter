@@ -102,6 +102,19 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.31.3">Version 2.31.3</a> (2020-03-03)
+
+* Core:
+  * Cache parsed value in colspan. Fixes [issue #1708](https://github.com/Mottie/tablesorter/issues/1708).
+* AlignChar:
+  * Tweak demo css. See [isssue #1713](https://github.com/Mottie/tablesorter/issues/1713).
+* Pager:
+  * Restore first row in cacheIndex. Fixes issues [#1714](https://github.com/Mottie/tablesorter/issues/1714) & [#1710](https://github.com/Mottie/tablesorter/issues/1710).
+* Docs:
+  * Update to jQuery 3.4.1 & migrate 3.1.0.
+  * Update to Bootstrap 4.4.1.
+  * CSS cleanup - code font size was off.
+
 #### <a name="v2.31.2">Version 2.31.2</a> (2019-12-01)
 
 * Column selector:
@@ -126,15 +139,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Remove bower, gitter & add Slack.
 * Meta:
   * Update dependencies.
-
-#### <a name="v2.31.0">Version 2.31.0</a> (2018-08-27)
-
-* Editable:
-  * Add nbsp to empty cells. Fixes [issue #1570](https://github.com/Mottie/tablesorter/issues/1570).
-* Docs:
-  * Add filter `getOptionSource` function. See [issue #671](https://github.com/Mottie/tablesorter/issues/671).
-  * Add built-in parsers demo. See [issue #1571](https://github.com/Mottie/tablesorter/issues/1571).
-* Pager:
-  * Change default ajaxProcessing function. See [issue #1580](https://github.com/Mottie/tablesorter/issues/1580).
-* Build:
-  * Update build to UMD wrap widgets, parsers & extras (necessitates a minor version bump).

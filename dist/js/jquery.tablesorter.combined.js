@@ -1,7 +1,7 @@
-/*! tablesorter (FORK) - updated 2019-12-01 (v2.31.2)*/
+/*! tablesorter (FORK) - updated 2020-03-03 (v2.31.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery) {
-/*! TableSorter (FORK) v2.31.2 *//*
+/*! TableSorter (FORK) v2.31.3 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -25,7 +25,7 @@
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.31.2',
+		version : '2.31.3',
 
 		parsers : [],
 		widgets : [],
@@ -985,7 +985,7 @@
 									// instead of setting duplicate span to empty string, use textExtraction to try to get a value
 									// see http://stackoverflow.com/q/36449711/145346
 									txt = c.duplicateSpan || index === 0 ?
-										val :
+										txt :
 										typeof c.textExtraction !== 'string' ?
 											ts.getElementText( c, cell, cacheIndex + index ) || '' :
 											'';
