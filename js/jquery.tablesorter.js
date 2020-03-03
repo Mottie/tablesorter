@@ -982,7 +982,7 @@
 									// instead of setting duplicate span to empty string, use textExtraction to try to get a value
 									// see http://stackoverflow.com/q/36449711/145346
 									txt = c.duplicateSpan || index === 0 ?
-										val :
+										txt :
 										typeof c.textExtraction !== 'string' ?
 											ts.getElementText( c, cell, cacheIndex + index ) || '' :
 											'';
