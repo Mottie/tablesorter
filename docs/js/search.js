@@ -5,7 +5,7 @@
  * Licensed under MIT license.
  * Modified to require a minimum number of characters before searching
  *//* eslint-disable */
-;jQuery.extend({highlight:function(a,c,b,d,f) {if(3===a.nodeType) {if(c=a.data.match(c))return b=document.createElement(b||"span"),b.className=d||"highlight",a=a.splitText(c.index),a.splitText(c[0].length),d=a.cloneNode(!0),b.appendChild(d),a.parentNode.replaceChild(b,a),1}else if(1===a.nodeType&&a.childNodes&&!/(script|style)/i.test(a.tagName)&&1>$(a).closest(f).length&&(a.tagName!==b.toUpperCase()||a.className!==d))for(var e=0;e<a.childNodes.length;e++)e+=jQuery.highlight(a.childNodes[e],c,b,d,f); return 0}});jQuery.fn.unhighlight=function(a) {var c={className:"highlight",element:"span"};jQuery.extend(c,a);return this.find(c.element+"."+c.className).each(function() {var a=this.parentNode;a.replaceChild(this.firstChild,this);a.normalize()}).end()}; jQuery.fn.highlight=function(a,c) {var b={className:"highlight",element:"span",caseSensitive:!1,wordsOnly:!1,ignore:"",min:3,error:">= 3",message:function(a) {console&&console.log&&console.log(a)}},b=jQuery.extend(b,c);a.constructor===String&&(a=0<a.indexOf(",")?a.replace(/\s+/g," ").split(/\s*,\s*/g):[a]);a=jQuery.grep(a,function(a) {return""!==a});if(a.join("").length<b.min)return b.message&&b.message(b.error||""),!1;a=jQuery.map(a,function(a) {return a.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&")}); if(0===a.length)return this;var d=b.caseSensitive?"":"i",f="("+a.join("|")+")";b.wordsOnly&&(f="\\b"+f+"\\b");var e=RegExp(f,d);return this.each(function() {jQuery.highlight(this,e,b.element,b.className,b.ignore)})};
+;jQuery.extend({highlight:function(a,c,b,d,f) {if(3===a.nodeType) {if(c=a.data.match(c))return b=document.createElement(b||"span"),b.className=d||"highlight",a=a.splitText(c.index),a.splitText(c[0].length),d=a.cloneNode(!0),b.appendChild(d),a.parentNode.replaceChild(b,a),1}else if(1===a.nodeType&&a.childNodes&&!/(script|style)/i.test(a.tagName)&&1>$(a).closest(f).length&&(a.tagName!==b.toUpperCase()||a.className!==d))for(var e=0;e<a.childNodes.length;e++)e+=jQuery.highlight(a.childNodes[e],c,b,d,f); return 0}});jQuery.fn.unhighlight=function(a) {var c={className:"highlight",element:"span"};jQuery.extend(c,a);return this.find(c.element+"."+c.className).each(function() {var a=this.parentNode;a.replaceChild(this.firstChild,this);a.normalize()}).end()}; jQuery.fn.highlight=function(a,c) {var b={className:"highlight",element:"span",caseSensitive:!1,wordsOnly:!1,ignore:"",min:3,error:"",message:function(a) {}},b=jQuery.extend(b,c);a.constructor===String&&(a=0<a.indexOf(",")?a.replace(/\s+/g," ").split(/\s*,\s*/g):[a]);a=jQuery.grep(a,function(a) {return""!==a});if(a.join("").length<b.min)return b.message&&b.message(b.error||""),!1;a=jQuery.map(a,function(a) {return a.replace(/[-[\]{}()*+?.,\\^$|#\s]/g,"\\$&")}); if(0===a.length)return this;var d=b.caseSensitive?"":"i",f="("+a.join("|")+")";b.wordsOnly&&(f="\\b"+f+"\\b");var e=RegExp(f,d);return this.each(function() {jQuery.highlight(this,e,b.element,b.className,b.ignore)})};
 
 /* tipsy, facebook style tooltips for jquery
  * version 1.0.0a
@@ -39,7 +39,7 @@ jQuery(function($) {
 		$status = $('.status'),
 		$word = $('#word'),
 		$case = $('#cstrue'), // case sensitive
-		updateStatus = function() { console.log('update status')
+		updateStatus = function() {
 			var value = $search.val();
 			$status.empty().removeClass('busy');
 			if (resultsLength) {

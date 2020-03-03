@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 2018-08-27 (v2.31.0) */
+/*! Widget: Pager - updated 2020-03-03 (v2.31.3) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -665,14 +665,14 @@
 					sz = p.size === 'all' ? p.totalRows : p.size,
 					start = ( p.page * sz ),
 					end =  start + sz,
-					last = 0, // for cache indexing
+					last = -1, // for cache indexing
 					size = 0; // size counter
 				p.cacheIndex = [];
 				for ( tbodyIndex = 0; tbodyIndex < tbodyLen; tbodyIndex++ ) {
 					$rows = c.$tbodies.eq( tbodyIndex ).children( 'tr' );
 					len = $rows.length;
 					lastIndex = 0;
-					last = 0; // for cache indexing
+					last = -1; // for cache indexing
 					size = 0; // size counter
 					for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
 						if ( !p.regexFiltered.test( $rows[ rowIndex ].className ) ) {
