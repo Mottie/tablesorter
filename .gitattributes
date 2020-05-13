@@ -21,3 +21,29 @@
 *.rtf  diff=astextplain
 *.RTF  diff=astextplain
 *.md   diss=astextplain
+
+# Exclude from export
+/.git                   export-ignore
+/addons                 export-ignore
+/beta-testing           export-ignore
+/css                    export-ignore
+/docs                   export-ignore
+/js                     export-ignore
+/testing                export-ignore
+.editorconfig           export-ignore
+.eslintignore           export-ignore
+.eslintrc               export-ignore
+.gitattributes          export-ignore
+.gitignore              export-ignore
+.jscsrc                 export-ignore
+.mailmap                export-ignore
+AUTHORS                 export-ignore
+bower.json              export-ignore
+composer.json           export-ignore
+CONTRIBUTING.md         export-ignore
+example.json            export-ignore
+Gruntfile.js            export-ignore
+index.html              export-ignore
+package.json            export-ignore
+tablesorter.jquery.json export-ignore
+test.html               export-ignore
