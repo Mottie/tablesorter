@@ -179,7 +179,7 @@
 				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
 				data.groupIndex + '">' +
 				'<td colspan="' + c.columns + '">' +
-					( wo.group_collapsible ? '<i/>' : '' ) +
+					( wo.group_collapsible ? '<i></i>' : '' ) +
 					'<span class="group-name">' + name + '</span>' +
 					'<span class="group-count"></span>' +
 				'</td></tr>';
