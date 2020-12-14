@@ -9,7 +9,7 @@ tablesorter (FORK) is a jQuery plugin for turning a standard HTML table with THE
 ### [Documentation](https://mottie.github.io/tablesorter/docs/)
 
 * See the [full documentation](https://mottie.github.io/tablesorter/docs/).
-* All of the [original document pages](http://tablesorter.com/docs/) have been included.
+* All of the original documentation has been included.
 * Information from my blog post on [undocumented options](https://wowmotty.blogspot.com/2011/06/jquery-tablesorter-missing-docs.html) and lots of new demos have also been included.
 * Change log moved from included text file into the [wiki documentation](https://github.com/Mottie/tablesorter/wiki/Changes).
 
