@@ -18,7 +18,7 @@
 		'T|Tera|tera'   : [ 1e12, Math.pow(1024, 4) ], // 1024^4
 		'G|Giga|giga'   : [ 1e9,  Math.pow(1024, 3) ], // 1024^3
 		'M|Mega|mega'   : [ 1e6,  Math.pow(1024, 2) ], // 1024^2
-		'k|Kilo|kilo'   : [ 1e3, 1024 ], // 1024
+		'K|Kilo|kilo'   : [ 1e3, 1024 ], // 1024
 		// prefixes below here are rarely, if ever, used in binary
 		'h|hecto'       : [ 1e2, 1e2 ],
 		'da|deka'       : [ 1e1, 1e1 ],
@@ -35,7 +35,7 @@
 	},
 	// the \\d+ will not catch digits with spaces, commas or decimals; so use the value from n instead
 	RegLong = '(\\d+)(\\s+)?([Zz]etta|[Ee]xa|[Pp]eta|[Tt]era|[Gg]iga|[Mm]ega|kilo|hecto|deka|deci|centi|milli|micro|nano|pico|femto|atto|zepto|yocto)(',
-	RegAbbr = '(\\d+)(\\s+)?(Z|E|P|T|G|M|k|h|da|d|c|m|µ|n|p|f|a|z|y)(',
+	RegAbbr = '(\\d+)(\\s+)?(Z|E|P|T|G|M|K|h|da|d|c|m|µ|n|p|f|a|z|y)(',
 	// make these case-insensitive because we all forget the case for these binary values
 	byteTest = /^[b|bit|byte|o|octet]/i;
 
