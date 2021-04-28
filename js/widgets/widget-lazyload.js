@@ -367,7 +367,7 @@
 	/* Custom selectors for your convenience.   */
 	/* Use as $('img:below-the-fold').something() or */
 	/* $('img').filter(':below-the-fold').something() which is faster */
-	$.extend($.expr[':'], {
+	$.extend($.expr.pseudos, {
 		'below-the-fold' : function(a) { return $.belowthefold(a, {threshold : 0}); },
 		'above-the-top'  : function(a) { return !$.belowthefold(a, {threshold : 0}); },
 		'right-of-screen': function(a) { return $.rightoffold(a, {threshold : 0}); },
