@@ -231,7 +231,7 @@
 			// update sticky header class names to match real header after sorting
 			$table
 				.addClass('hasStickyHeaders')
-				.bind('pagerComplete' + namespace, function() {
+				.on('pagerComplete' + namespace, function() {
 					resizeHeader();
 				});
 
@@ -255,13 +255,13 @@
 			}
 			// make it sticky!
 			$xScroll.add($yScroll)
-				.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
-				.bind('scroll resize '.split(' ').join( namespace ), function( event ) {
+				.off( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+				.on('scroll resize '.split(' ').join( namespace ), function( event ) {
 					scrollSticky( event.type === 'resize' );
 				});
 			c.$table
-				.unbind('stickyHeadersUpdate' + namespace)
-				.bind('stickyHeadersUpdate' + namespace, function() {
+				.off('stickyHeadersUpdate' + namespace)
+				.on('stickyHeadersUpdate' + namespace, function() {
 					scrollSticky( true );
 				});
 
@@ -272,7 +272,7 @@
 			// look for filter widget
 			if ($table.hasClass('hasFilters') && wo.filter_columnFilters) {
 				// scroll table into view after filtering, if sticky header is active - #482
-				$table.bind('filterEnd' + namespace, function() {
+				$table.on('filterEnd' + namespace, function() {
 					// $(':focus') needs jQuery 1.6+
 					var $td = $(document.activeElement).closest('td'),
 						column = $td.parent().children().index($td);
@@ -295,7 +295,7 @@
 
 			// resize table (Firefox)
 			if (wo.stickyHeaders_addResizeEvent) {
-				$table.bind('resize' + c.namespace + 'stickyheaders', function() {
+				$table.on('resize' + c.namespace + 'stickyheaders', function() {
 					resizeHeader();
 				});
 			}
@@ -309,14 +309,14 @@
 			var namespace = c.namespace + 'stickyheaders ';
 			c.$table
 				.removeClass('hasStickyHeaders')
-				.unbind( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+				.off( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 				.next('.' + ts.css.stickyWrap).remove();
 			if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 			$(window)
 				.add(wo.stickyHeaders_xScroll)
 				.add(wo.stickyHeaders_yScroll)
 				.add(wo.stickyHeaders_attachTo)
-				.unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
+				.off( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
 			ts.addHeaderResizeEvent(table, true);
 		}
 	});

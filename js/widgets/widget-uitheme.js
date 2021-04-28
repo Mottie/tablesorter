@@ -104,8 +104,8 @@
 					.removeClass( (hasOldTheme ? [ oldtheme.header, oldtheme.hover, oldremove ].join(' ') : '') || '' )
 					.addClass(themes.header)
 					.not('.sorter-false')
-					.unbind('mouseenter.tsuitheme mouseleave.tsuitheme')
-					.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
+					.off('mouseenter.tsuitheme mouseleave.tsuitheme')
+					.on('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
 						// toggleClass with switch added in jQuery 1.3
 						$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 					});
@@ -185,7 +185,7 @@
 			if (refreshing) { return; }
 			$table.find(ts.css.header).removeClass(themes.header);
 			$headers
-				.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
+				.off('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
 				.removeClass(themes.hover + ' ' + remove + ' ' + themes.active)
 				.filter('.' + ts.css.filterRow)
 				.removeClass(themes.filterRow);
