@@ -81,15 +81,15 @@
 			console.log('Storage >> Using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
-		if ($.parseJSON) {
+		if (JSON.parse()) {
 			if (hasStorage) {
-				values = $.parseJSON( window[storageType][key] || 'null' ) || {};
+				values = JSON.parse( window[storageType][key] || 'null' ) || {};
 			} else {
 				// old browser, using cookies
 				cookies = document.cookie.split(/[;\s|=]/);
 				// add one to get from the key to the value
 				cookieIndex = $.inArray(key, cookies) + 1;
-				values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || 'null') || {} : {};
+				values = (cookieIndex !== 0) ? JSON.parse(cookies[cookieIndex] || 'null') || {} : {};
 			}
 		}
 		// allow value to be an empty string too
