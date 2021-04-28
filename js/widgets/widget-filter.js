@@ -88,7 +88,7 @@
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 			if ( wo.filter_reset ) {
-				$( document ).undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' );
+				$( document ).off( 'click' + c.namespace + 'filter', wo.filter_reset );
 			}
 		}
 	});
@@ -476,8 +476,8 @@
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
 					$( document )
-						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
-						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
+						.off( 'click' + c.namespace + 'filter', wo.filter_reset )
+						.on( 'click' + c.namespace + 'filter', wo.filter_reset, function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
 							c.$table.triggerHandler( 'filterReset' );
 						});
