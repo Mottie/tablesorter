@@ -9,10 +9,10 @@
   },
   "authors": [{
     "name": "Christian Bach",
-    "url": "http://tablesorter.com/"
+    "homepage": "http://tablesorter.com/"
   },{
     "name": "Rob Garrison",
-    "url": "https://github.com/Mottie",
+    "homepage": "https://github.com/Mottie",
     "email": "wowmotty@gmail.com"
   }],
   "keywords": [
