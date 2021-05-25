@@ -8,11 +8,10 @@
     "components/jquery": ">=1.2.6"
   },
   "authors": [{
-    "name": "Christian Bach",
-    "url": "http://tablesorter.com/"
+    "name": "Christian Bach"
   },{
     "name": "Rob Garrison",
-    "url": "https://github.com/Mottie",
+    "homepage": "https://github.com/Mottie",
     "email": "wowmotty@gmail.com"
   }],
   "keywords": [
