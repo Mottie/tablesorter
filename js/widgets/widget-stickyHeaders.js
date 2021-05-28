@@ -206,6 +206,18 @@
 							.addClass( state )
 							.css(cssSettings);
 					}
+					if (isVisible !== laststate) {
+							// make sure the focused filter stay focused after showing/hiding sticky
+							var $td = $(document.activeElement).closest('td'),
+							column = $td.parent().children().index($td);
+							if (column >= 0 && c.$filters) {
+									if (isVisible === "hidden") {
+											c.$filters.eq(column).find('a, select, input').focus();
+									} else {
+											$stickyTable.find('a, select, input').eq(column).focus();
+									}
+							}
+					}
 					if (isVisible !== laststate || resizing) {
 						// make sure the column widths match
 						resizeHeader();
