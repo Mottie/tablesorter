@@ -59,8 +59,8 @@
 			addIndexes(table);
 			// refresh static rows after updates
 			c.$table
-				.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') )
-				.bind('updateComplete.tsstaticrows ' + wo.staticRow_event, function() {
+				.off( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') )
+				.on('updateComplete.tsstaticrows ' + wo.staticRow_event, function() {
 					addIndexes(table);
 					ts.applyWidget( table );
 				});
@@ -113,7 +113,7 @@
 		},
 
 		remove : function(table, c, wo) {
-			c.$table.unbind( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') );
+			c.$table.off( ('updateComplete.tsstaticrows ' + wo.staticRow_event).replace(/\s+/g, ' ') );
 		}
 
 	});

@@ -38,7 +38,7 @@
 					return bt.html( table, d, wo );
 				}
 				try {
-					d = $.parseJSON(d || 'null');
+					d = JSON.parse(d || 'null');
 					if (d) {
 						// valid JSON!
 						return bt.object( table, d, wo );
