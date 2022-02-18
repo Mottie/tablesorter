@@ -226,6 +226,10 @@
 				this.value = $( this ).data( 'ts-original-value' );
 			})
 			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
+				// don't use updateCell if this (input) is set to 'parser-false' 
+				if (this.classList.contains('parser-false')) {
+					return;
+				}
 				var $row = $( this ).closest( 'tr' ),
 					c = $row.closest( 'table' )[0].config;
 				if ( !c || c && c.ignoreChildRow && $row.hasClass( c.cssChildRow ) ) {
