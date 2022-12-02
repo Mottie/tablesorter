@@ -333,16 +333,16 @@
 			// show processesing icon
 			if ( c.showProcessing ) {
 				$table
-				.off( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace )
-				.on( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace, function( e ) {
-					clearTimeout( c.timerProcessing );
-					ts.isProcessing( table );
-					if ( e.type === 'sortBegin' ) {
-						c.timerProcessing = setTimeout( function() {
-							ts.isProcessing( table, true );
-						}, 500 );
-					}
-				});
+					.unbind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace )
+					.bind( 'sortBegin' + c.namespace + ' sortEnd' + c.namespace, function( e ) {
+						clearTimeout( c.timerProcessing );
+						ts.isProcessing( table );
+						if ( e.type === 'sortBegin' ) {
+							c.timerProcessing = setTimeout( function() {
+								ts.isProcessing( table, true );
+							}, 500 );
+						}
+					});
 			}
 
 			// initialized
@@ -367,95 +367,95 @@
 					.join( namespace + ' ' );
 			// apply easy methods that trigger bound events
 			$table
-			.off( events.replace( ts.regex.spaces, ' ' ) )
-			.on( 'sortReset' + namespace, function( e, callback ) {
-				e.stopPropagation();
-				// using this.config to ensure functions are getting a non-cached version of the config
-				ts.sortReset( this.config, function( table ) {
-					if (table.isApplyingWidgets) {
-						// multiple triggers in a row... filterReset, then sortReset - see #1361
-						// wait to update widgets
-						setTimeout( function() {
+				.unbind( events.replace( ts.regex.spaces, ' ' ) )
+				.bind( 'sortReset' + namespace, function( e, callback ) {
+					e.stopPropagation();
+					// using this.config to ensure functions are getting a non-cached version of the config
+					ts.sortReset( this.config, function( table ) {
+						if (table.isApplyingWidgets) {
+							// multiple triggers in a row... filterReset, then sortReset - see #1361
+							// wait to update widgets
+							setTimeout( function() {
+								ts.applyWidget( table, '', callback );
+							}, 100 );
+						} else {
 							ts.applyWidget( table, '', callback );
-						}, 100 );
-					} else {
-						ts.applyWidget( table, '', callback );
+						}
+					});
+				})
+				.bind( 'updateAll' + namespace, function( e, resort, callback ) {
+					e.stopPropagation();
+					ts.updateAll( this.config, resort, callback );
+				})
+				.bind( 'update' + namespace + ' updateRows' + namespace, function( e, resort, callback ) {
+					e.stopPropagation();
+					ts.update( this.config, resort, callback );
+				})
+				.bind( 'updateHeaders' + namespace, function( e, callback ) {
+					e.stopPropagation();
+					ts.updateHeaders( this.config, callback );
+				})
+				.bind( 'updateCell' + namespace, function( e, cell, resort, callback ) {
+					e.stopPropagation();
+					ts.updateCell( this.config, cell, resort, callback );
+				})
+				.bind( 'addRows' + namespace, function( e, $row, resort, callback ) {
+					e.stopPropagation();
+					ts.addRows( this.config, $row, resort, callback );
+				})
+				.bind( 'updateComplete' + namespace, function() {
+					this.isUpdating = false;
+				})
+				.bind( 'sorton' + namespace, function( e, list, callback, init ) {
+					e.stopPropagation();
+					ts.sortOn( this.config, list, callback, init );
+				})
+				.bind( 'appendCache' + namespace, function( e, callback, init ) {
+					e.stopPropagation();
+					ts.appendCache( this.config, init );
+					if ( $.isFunction( callback ) ) {
+						callback( this );
 					}
+				})
+				// $tbodies variable is used by the tbody sorting widget
+				.bind( 'updateCache' + namespace, function( e, callback, $tbodies ) {
+					e.stopPropagation();
+					ts.updateCache( this.config, callback, $tbodies );
+				})
+				.bind( 'applyWidgetId' + namespace, function( e, id ) {
+					e.stopPropagation();
+					ts.applyWidgetId( this, id );
+				})
+				.bind( 'applyWidgets' + namespace, function( e, callback ) {
+					e.stopPropagation();
+					// apply widgets (false = not initializing)
+					ts.applyWidget( this, false, callback );
+				})
+				.bind( 'refreshWidgets' + namespace, function( e, all, dontapply ) {
+					e.stopPropagation();
+					ts.refreshWidgets( this, all, dontapply );
+				})
+				.bind( 'removeWidget' + namespace, function( e, name, refreshing ) {
+					e.stopPropagation();
+					ts.removeWidget( this, name, refreshing );
+				})
+				.bind( 'destroy' + namespace, function( e, removeClasses, callback ) {
+					e.stopPropagation();
+					ts.destroy( this, removeClasses, callback );
+				})
+				.bind( 'resetToLoadState' + namespace, function( e ) {
+					e.stopPropagation();
+					// remove all widgets
+					ts.removeWidget( this, true, false );
+					var tmp = $.extend( true, {}, c.originalSettings );
+					// restore original settings; this clears out current settings, but does not clear
+					// values saved to storage.
+					c = $.extend( true, {}, ts.defaults, tmp );
+					c.originalSettings = tmp;
+					this.hasInitialized = false;
+					// setup the entire table again
+					ts.setup( this, c );
 				});
-			})
-			.on( 'updateAll' + namespace, function( e, resort, callback ) {
-				e.stopPropagation();
-				ts.updateAll( this.config, resort, callback );
-			})
-			.on( 'update' + namespace + ' updateRows' + namespace, function( e, resort, callback ) {
-				e.stopPropagation();
-				ts.update( this.config, resort, callback );
-			})
-			.on( 'updateHeaders' + namespace, function( e, callback ) {
-				e.stopPropagation();
-				ts.updateHeaders( this.config, callback );
-			})
-			.on( 'updateCell' + namespace, function( e, cell, resort, callback ) {
-				e.stopPropagation();
-				ts.updateCell( this.config, cell, resort, callback );
-			})
-			.on( 'addRows' + namespace, function( e, $row, resort, callback ) {
-				e.stopPropagation();
-				ts.addRows( this.config, $row, resort, callback );
-			})
-			.on( 'updateComplete' + namespace, function() {
-				this.isUpdating = false;
-			})
-			.on( 'sorton' + namespace, function( e, list, callback, init ) {
-				e.stopPropagation();
-				ts.sortOn( this.config, list, callback, init );
-			})
-			.on( 'appendCache' + namespace, function( e, callback, init ) {
-				e.stopPropagation();
-				ts.appendCache( this.config, init );
-				if ( $.isFunction( callback ) ) {
-					callback( this );
-				}
-			})
-			// $tbodies variable is used by the tbody sorting widget
-			.on( 'updateCache' + namespace, function( e, callback, $tbodies ) {
-				e.stopPropagation();
-				ts.updateCache( this.config, callback, $tbodies );
-			})
-			.on( 'applyWidgetId' + namespace, function( e, id ) {
-				e.stopPropagation();
-				ts.applyWidgetId( this, id );
-			})
-			.on( 'applyWidgets' + namespace, function( e, callback ) {
-				e.stopPropagation();
-				// apply widgets (false = not initializing)
-				ts.applyWidget( this, false, callback );
-			})
-			.on( 'refreshWidgets' + namespace, function( e, all, dontapply ) {
-				e.stopPropagation();
-				ts.refreshWidgets( this, all, dontapply );
-			})
-			.on( 'removeWidget' + namespace, function( e, name, refreshing ) {
-				e.stopPropagation();
-				ts.removeWidget( this, name, refreshing );
-			})
-			.on( 'destroy' + namespace, function( e, removeClasses, callback ) {
-				e.stopPropagation();
-				ts.destroy( this, removeClasses, callback );
-			})
-			.on( 'resetToLoadState' + namespace, function( e ) {
-				e.stopPropagation();
-				// remove all widgets
-				ts.removeWidget( this, true, false );
-				var tmp = $.extend( true, {}, c.originalSettings );
-				// restore original settings; this clears out current settings, but does not clear
-				// values saved to storage.
-				c = $.extend( true, {}, ts.defaults, tmp );
-				c.originalSettings = tmp;
-				this.hasInitialized = false;
-				// setup the entire table again
-				ts.setup( this, c );
-			});
 		},
 
 		bindEvents : function( table, $headers, core ) {
@@ -477,63 +477,63 @@
 				.join( namespace + ' ' );
 			// apply event handling to headers and/or additional headers (stickyheaders, scroller, etc)
 			$headers
-			// http://stackoverflow.com/questions/5312849/jquery-find-self;
-			.find( c.selectorSort )
-			.add( $headers.filter( c.selectorSort ) )
-			.off( tmp )
-			.on( tmp, function( e, external ) {
-				var $cell, cell, temp,
-					$target = $( e.target ),
-					// wrap event type in spaces, so the match doesn't trigger on inner words
-					type = ' ' + e.type + ' ';
-				// only recognize left clicks
-				if ( ( ( e.which || e.button ) !== 1 && !type.match( ' ' + c.pointerClick + ' | sort | keyup ' ) ) ||
-					// allow pressing enter
-					( type === ' keyup ' && e.which !== ts.keyCodes.enter ) ||
-					// allow triggering a click event (e.which is undefined) & ignore physical clicks
-					( type.match( ' ' + c.pointerClick + ' ' ) && typeof e.which !== 'undefined' ) ) {
-					return;
-				}
-				// ignore mouseup if mousedown wasn't on the same target
-				if ( type.match( ' ' + c.pointerUp + ' ' ) && downTarget !== e.target && external !== true ) {
-					return;
-				}
-				// set target on mousedown
-				if ( type.match( ' ' + c.pointerDown + ' ' ) ) {
-					downTarget = e.target;
-					// preventDefault needed or jQuery v1.3.2 and older throws an
-					// "Uncaught TypeError: handler.apply is not a function" error
-					temp = $target.jquery.split( '.' );
-					if ( temp[ 0 ] === '1' && temp[ 1 ] < 4 ) { e.preventDefault(); }
-					return;
-				}
-				downTarget = null;
-				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
-				// prevent sort being triggered on form elements
-				if ( ts.regex.formElements.test( e.target.nodeName ) ||
-					// nosort class name, or elements within a nosort container
-					$target.hasClass( c.cssNoSort ) || $target.parents( '.' + c.cssNoSort ).length > 0 ||
-					// disabled cell directly clicked
-					$cell.hasClass( 'sorter-false' ) ||
-					// elements within a button
-					$target.parents( 'button' ).length > 0 ) {
-					return !c.cancelSelection;
-				}
-				if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
-					ts.buildCache( c );
-				}
-				// use column index from data-attribute or index of current row; fixes #1116
-				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
-				cell = c.$headerIndexed[ c.last.clickedIndex ][0];
-				if ( cell && !cell.sortDisabled ) {
-					ts.initSort( c, cell, e );
-				}
-			});
+				// http://stackoverflow.com/questions/5312849/jquery-find-self;
+				.find( c.selectorSort )
+				.add( $headers.filter( c.selectorSort ) )
+				.unbind( tmp )
+				.bind( tmp, function( e, external ) {
+					var $cell, cell, temp,
+						$target = $( e.target ),
+						// wrap event type in spaces, so the match doesn't trigger on inner words
+						type = ' ' + e.type + ' ';
+					// only recognize left clicks
+					if ( ( ( e.which || e.button ) !== 1 && !type.match( ' ' + c.pointerClick + ' | sort | keyup ' ) ) ||
+						// allow pressing enter
+						( type === ' keyup ' && e.which !== ts.keyCodes.enter ) ||
+						// allow triggering a click event (e.which is undefined) & ignore physical clicks
+						( type.match( ' ' + c.pointerClick + ' ' ) && typeof e.which !== 'undefined' ) ) {
+						return;
+					}
+					// ignore mouseup if mousedown wasn't on the same target
+					if ( type.match( ' ' + c.pointerUp + ' ' ) && downTarget !== e.target && external !== true ) {
+						return;
+					}
+					// set target on mousedown
+					if ( type.match( ' ' + c.pointerDown + ' ' ) ) {
+						downTarget = e.target;
+						// preventDefault needed or jQuery v1.3.2 and older throws an
+						// "Uncaught TypeError: handler.apply is not a function" error
+						temp = $target.jquery.split( '.' );
+						if ( temp[ 0 ] === '1' && temp[ 1 ] < 4 ) { e.preventDefault(); }
+						return;
+					}
+					downTarget = null;
+					$cell = ts.getClosest( $( this ), '.' + ts.css.header );
+					// prevent sort being triggered on form elements
+					if ( ts.regex.formElements.test( e.target.nodeName ) ||
+						// nosort class name, or elements within a nosort container
+						$target.hasClass( c.cssNoSort ) || $target.parents( '.' + c.cssNoSort ).length > 0 ||
+						// disabled cell directly clicked
+						$cell.hasClass( 'sorter-false' ) ||
+						// elements within a button
+						$target.parents( 'button' ).length > 0 ) {
+						return !c.cancelSelection;
+					}
+					if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
+						ts.buildCache( c );
+					}
+					// use column index from data-attribute or index of current row; fixes #1116
+					c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
+					cell = c.$headerIndexed[ c.last.clickedIndex ][0];
+					if ( cell && !cell.sortDisabled ) {
+						ts.initSort( c, cell, e );
+					}
+				});
 			if ( c.cancelSelection ) {
 				// cancel selection
 				$headers
 					.attr( 'unselectable', 'on' )
-					.on( 'selectstart', false )
+					.bind( 'selectstart', false )
 					.css({
 						'user-select' : 'none',
 						'MozUserSelect' : 'none' // not needed for jQuery 1.8+
@@ -824,23 +824,26 @@
 				extract = c.textExtraction || '',
 				// node could be a jquery object
 				// http://jsperf.com/jquery-vs-instanceof-jquery/2
-				$node = node.jquery ? node : $( node );
+				$node = node.jquery ? node : $( node ),
+				elementText = '';
 			if ( typeof extract === 'string' ) {
 				// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 				// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
 				if ( extract === 'basic' && typeof ( tmp = $node.attr( c.textAttribute ) ) !== 'undefined' ) {
-					return $.trim( tmp );
+					return typeof tmp === 'string' ? tmp.trim() : tmp;
 				}
-				return $.trim( node.textContent || $node.text() );
+				return (node.textContent || $node.text()).trim();
 			} else {
 				if ( typeof extract === 'function' ) {
-					return $.trim( extract( $node[ 0 ], c.table, cellIndex ) );
+					elementText = extract( $node[ 0 ], c.table, cellIndex );
+					return typeof elementText === 'string' ? elementText.trim() : elementText;
 				} else if ( typeof ( tmp = ts.getColumnData( c.table, extract, cellIndex ) ) === 'function' ) {
-					return $.trim( tmp( $node[ 0 ], c.table, cellIndex ) );
+					elementText = tmp( $node[ 0 ], c.table, cellIndex );
+					return typeof elementText === 'string' ? elementText.trim() : elementText;
 				}
 			}
 			// fallback
-			return $.trim( $node[ 0 ].textContent || $node.text() );
+			return ($node[ 0 ].textContent || $node.text()).trim();
 		},
 
 		// centralized function to extract/parse cell contents
@@ -885,7 +888,7 @@
 			// update tbody variable
 			c.$tbodies = c.$table.children( 'tbody:not(.' + c.cssInfoBlock + ')' );
 			$tbody = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies,
-			c.cache = {};
+				c.cache = {};
 			c.totalRows = 0;
 			// if no parsers found, return - it's an empty table.
 			if ( !parsers ) {
@@ -1189,7 +1192,7 @@
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
 						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone',
-					txt = $.trim( $header.text() ) + ': ' + ts.language[ tmp ];
+					txt = $header.text().trim() + ': ' + ts.language[ tmp ];
 				if ( $header.hasClass( 'sorter-false' ) || nextSort === false ) {
 					txt += ts.language.sortDisabled;
 				} else {
@@ -2267,7 +2270,7 @@
 			}
 			num = parseFloat( str );
 			// return the text instead of zero
-			return isNaN( num ) ? $.trim( str ) : num;
+			return isNaN( num ) ? ( typeof str === 'string' ? str.trim() : str  ) : num;
 		},
 
 		isDigit : function( str ) {
@@ -2408,7 +2411,7 @@
 				// include sorter class name 'sorter-text', etc; now works with 'sorter-my-custom-parser'
 				val = cl4ss.match( new RegExp( '\\s' + key + '-([\\w-]+)' ) )[ 1 ] || '';
 			}
-			return $.trim( val );
+			return typeof val === 'string' ? val.trim() : val;
 		},
 
 		getColumnData : function( table, obj, indx, getCell, $headers ) {
@@ -2593,10 +2596,10 @@
 			events = 'sortReset update updateRows updateAll updateHeaders updateCell addRows updateComplete sorton ' +
 				'appendCache updateCache applyWidgetId applyWidgets refreshWidgets removeWidget destroy mouseup mouseleave ' +
 				'keypress sortBegin sortEnd resetToLoadState '.split( ' ' )
-				.join( c.namespace + ' ' );
+					.join( c.namespace + ' ' );
 			$t
 				.removeData( 'tablesorter' )
-				.off( events.replace( ts.regex.spaces, ' ' ) );
+				.unbind( events.replace( ts.regex.spaces, ' ' ) );
 			c.$headers
 				.add( $f )
 				.removeClass( [ ts.css.header, c.cssHeader, c.cssAsc, c.cssDesc, ts.css.sortAsc, ts.css.sortDesc, ts.css.sortNone ].join( ' ' ) )
@@ -2605,7 +2608,7 @@
 				.attr( 'aria-disabled', 'true' );
 			$r
 				.find( c.selectorSort )
-				.off( ( 'mousedown mouseup keypress '.split( ' ' ).join( c.namespace + ' ' ) ).replace( ts.regex.spaces, ' ' ) );
+				.unbind( ( 'mousedown mouseup keypress '.split( ' ' ).join( c.namespace + ' ' ) ).replace( ts.regex.spaces, ' ' ) );
 			ts.restoreHeaders( table );
 			$t.toggleClass( ts.css.table + ' ' + c.tableClass + ' tablesorter-' + c.theme, removeClasses === false );
 			$t.removeClass(c.namespace.slice(1));
@@ -2625,8 +2628,8 @@
 	$.fn.tablesorter = function( settings ) {
 		return this.each( function() {
 			var table = this,
-			// merge & extend config options
-			c = $.extend( true, {}, ts.defaults, settings, ts.instanceMethods );
+				// merge & extend config options
+				c = $.extend( true, {}, ts.defaults, settings, ts.instanceMethods );
 			// save initial settings
 			c.originalSettings = settings;
 			// create a table from data (build table widget)
@@ -2671,7 +2674,8 @@
 		format : function( str, table ) {
 			var c = table.config;
 			if ( str ) {
-				str = $.trim( c.ignoreCase ? str.toLocaleLowerCase() : str );
+				str = c.ignoreCase ? str.toLocaleLowerCase() : str;
+				str = str.trim();
 				str = c.sortLocaleCompare ? ts.replaceAccents( str ) : str;
 			}
 			return str;
@@ -2687,8 +2691,9 @@
 		},
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
+			var tmp = (str && table.config.ignoreCase ? str.toLocaleLowerCase() : str);
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? (typeof tmp === 'string' ? tmp.trim() : tmp ) : str;
 		},
 		type : 'numeric'
 	});
@@ -2704,8 +2709,9 @@
 		},
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
+			var tmp = (str && table.config.ignoreCase ? str.toLocaleLowerCase() : str);
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? ( typeof tmp === 'string' ? tmp.trim() : tmp ) : str;
 		},
 		type : 'numeric'
 	});
@@ -2720,7 +2726,7 @@
 			return ts.regex.urlProtocolTest.test( str );
 		},
 		format : function( str ) {
-			return str ? $.trim( str.replace( ts.regex.urlProtocolReplace, '' ) ) : str;
+			return str ? str.replace( ts.regex.urlProtocolReplace, '' ).trim() : str;
 		},
 		type : 'text'
 	});
@@ -2862,7 +2868,7 @@
 		},
 		format : function( str, table, cell ) {
 			var c = table.config,
-			p = ( !c.parserMetadataName ) ? 'sortValue' : c.parserMetadataName;
+				p = ( !c.parserMetadataName ) ? 'sortValue' : c.parserMetadataName;
 			return $( cell ).metadata()[ p ];
 		},
 		type : 'numeric'
