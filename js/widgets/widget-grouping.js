@@ -138,7 +138,7 @@
 				$headers = c.$table.find( 'tr.group-header' ),
 				len = $headers.length;
 
-			$headers.bind( 'selectstart', false );
+			$headers.on( 'selectstart', false );
 			for ( index = 0; index < len; index++ ) {
 				$row = $headers.eq( index );
 				$rows = $row.nextUntil( 'tr.group-header' ).filter( ':visible' );

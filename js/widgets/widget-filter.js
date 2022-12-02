@@ -77,7 +77,7 @@
 			$table
 				.removeClass( 'hasFilters' )
 				// add filter namespace to all BUT search
-				.unbind( events.replace( ts.regex.spaces, ' ' ) )
+				.off( events.replace( ts.regex.spaces, ' ' ) )
 				// remove the filter row even if refreshing, because the column might have been moved
 				.find( '.' + tscss.filterRow ).remove();
 			wo.filter_initialized = false;
@@ -88,7 +88,7 @@
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 			if ( wo.filter_reset ) {
-				$( document ).undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' );
+				$( document ).off( 'click' + c.namespace + 'filter', wo.filter_reset );
 			}
 		}
 	});
@@ -420,7 +420,7 @@
 
 			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
 				'filterAndSortReset filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
-			c.$table.bind( txt, function( event, filter ) {
+			c.$table.on( txt, function( event, filter ) {
 				val = wo.filter_hideEmpty &&
 					$.isEmptyObject( c.cache ) &&
 					!( c.delayInit && event.type === 'appendCache' );
@@ -476,8 +476,8 @@
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
 					$( document )
-						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
-						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
+						.off( 'click' + c.namespace + 'filter', wo.filter_reset )
+						.on( 'click' + c.namespace + 'filter', wo.filter_reset, function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
 							c.$table.triggerHandler( 'filterReset' );
 						});
@@ -550,8 +550,8 @@
 			if ( c.showProcessing ) {
 				txt = 'filterStart filterEnd '.split( ' ' ).join( c.namespace + 'filter-sp ' );
 				c.$table
-					.unbind( txt.replace( ts.regex.spaces, ' ' ) )
-					.bind( txt, function( event, columns ) {
+					.off( txt.replace( ts.regex.spaces, ' ' ) )
+					.on( txt, function( event, columns ) {
 					// only add processing to certain columns to all columns
 					$header = ( columns ) ?
 						c.$table
@@ -570,8 +570,8 @@
 			// add default values
 			txt = 'tablesorter-initialized pagerBeforeInitialized '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table
-			.unbind( txt.replace( ts.regex.spaces, ' ' ) )
-			.bind( txt, function() {
+			.off( txt.replace( ts.regex.spaces, ' ' ) )
+			.on( txt, function() {
 				tsf.completeInit( this );
 			});
 			// if filter widget is added after pager has initialized; then set filter init flag
@@ -825,14 +825,14 @@
 			// use data attribute instead of jQuery data since the head is cloned without including
 			// the data/binding
 			.attr( 'data-lastSearchTime', new Date().getTime() )
-			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
-			.bind( 'keydown' + namespace, function( event ) {
+			.off( tmp.replace( ts.regex.spaces, ' ' ) )
+			.on( 'keydown' + namespace, function( event ) {
 				if ( event.which === tskeyCodes.escape && !table.config.widgetOptions.filter_resetOnEsc ) {
 					// prevent keypress event
 					return false;
 				}
 			})
-			.bind( 'keyup' + namespace, function( event ) {
+			.on( 'keyup' + namespace, function( event ) {
 				wo = table.config.widgetOptions; // make sure "wo" isn't cached
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ? wo.filter_liveSearch :
@@ -863,7 +863,7 @@
 				tsf.searching( table, true, true, column );
 			})
 			// include change for select - fixes #473
-			.bind( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			.on( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					eventType = event.type,
@@ -1007,7 +1007,7 @@
 			( $table || c.$table )
 				.find( '.' + tscss.filterRow )
 				.addClass( tscss.filterRowHide )
-				.bind( 'mouseenter mouseleave', function( e ) {
+				.on( 'mouseenter mouseleave', function( e ) {
 					// save event object - http://bugs.jquery.com/ticket/12140
 					var event = e,
 						$row = $( this );
@@ -1025,7 +1025,7 @@
 						}
 					}, 200 );
 				})
-				.find( 'input, select' ).bind( 'focus blur', function( e ) {
+				.find( 'input, select' ).on( 'focus blur', function( e ) {
 					var event = e,
 						$row = $( this ).closest( 'tr' );
 					clearTimeout( timer );
