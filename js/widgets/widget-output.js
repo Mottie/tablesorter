@@ -60,7 +60,7 @@
 				wo = c.widgetOptions,
 				tmpRow = [],
 				dupe = wo.output_duplicateSpans,
-				addSpanIndex = isHeader && isJSON && wo.output_headerRows && $.isFunction(wo.output_callbackJSON),
+				addSpanIndex = isHeader && isJSON && wo.output_headerRows && typeof wo.output_callbackJSON === 'function',
 				cellIndex = 0,
 				rowsLength = $rows.length;
 
@@ -219,7 +219,7 @@
 			}
 
 			// callback; if true returned, continue processing
-			if ($.isFunction(wo.output_callback)) {
+			if (typeof wo.output_callback === 'function') {
 				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
 					output.busy = false;

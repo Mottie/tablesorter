@@ -81,7 +81,7 @@
 			printStyle += wo.print_extraCSS;
 
 			// callback function
-			if ( $.isFunction(wo.print_callback) ) {
+			if ( typeof wo.print_callback === 'function' ) {
 				wo.print_callback( c, $table, printStyle );
 			} else {
 				printTable.printOutput(c, $table.html(), printStyle);

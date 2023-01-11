@@ -727,7 +727,7 @@
 				wo = c.widgetOptions,
 				debug = ts.debug(c, 'pager');
 			// process data
-			if ( $.isFunction( wo.pager_ajaxProcessing ) ) {
+			if ( typeof wo.pager_ajaxProcessing === 'function' ) {
 
 				// in case nothing is returned by ajax, empty out the table; see #1032
 				// but do it before calling pager_ajaxProcessing because that function may add content
@@ -935,7 +935,7 @@
 				url = url.replace( /\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join( '&' ) : filterCol );
 				p.currentFilters = filterList;
 			}
-			if ( $.isFunction( wo.pager_customAjaxUrl ) ) {
+			if ( typeof wo.pager_customAjaxUrl === 'function' ) {
 				url = wo.pager_customAjaxUrl( c.table, url );
 			}
 			if ( ts.debug(c, 'pager') ) {

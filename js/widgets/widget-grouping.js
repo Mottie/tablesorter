@@ -144,13 +144,13 @@
 				$rows = $row.nextUntil( 'tr.group-header' ).filter( ':visible' );
 
 				// add group count (only visible rows!)
-				if ( wo.group_count || $.isFunction( wo.group_callback ) ) {
+				if ( wo.group_count || typeof wo.group_callback === 'function' ) {
 					$label = $row.find( '.group-count' );
 					if ( $label.length ) {
 						if ( wo.group_count ) {
 							$label.html( wo.group_count.toString().replace( /\{num\}/g, $rows.length ) );
 						}
-						if ( $.isFunction( wo.group_callback ) ) {
+						if ( typeof wo.group_callback === 'function' ) {
 							wo.group_callback( $row.find( 'td' ), $rows, data.column, c.table );
 						}
 					}
@@ -238,7 +238,7 @@
 				data.currentGroup;
 			if ( data.group !== data.currentGroup ) {
 				data.group = data.currentGroup;
-				if ( $.isFunction( wo.group_formatter ) ) {
+				if ( typeof wo.group_formatter === 'function' ) {
 					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo, data ) || data.group;
 				}
 				// add first() for grouping with childRows

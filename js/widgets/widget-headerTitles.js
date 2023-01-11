@@ -71,7 +71,7 @@
 						}[m.toLowerCase()];
 					});
 				}
-				$this.attr('title', $.isFunction(wo.headerTitle_callback) ? wo.headerTitle_callback($this, txt) : txt);
+				$this.attr('title', typeof wo.headerTitle_callback === 'function' ? wo.headerTitle_callback($this, txt) : txt);
 			});
 		},
 		remove: function (table, c, wo) {
