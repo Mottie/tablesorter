@@ -829,18 +829,21 @@
 				// check data-attribute first when set to 'basic'; don't use node.innerText - it's really slow!
 				// http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
 				if ( extract === 'basic' && typeof ( tmp = $node.attr( c.textAttribute ) ) !== 'undefined' ) {
-					return $.trim( tmp );
+					return tmp.trim();
 				}
-				return $.trim( node.textContent || $node.text() );
+				return node.textContent.trim() || $node.text().trim();
 			} else {
+				var result;
 				if ( typeof extract === 'function' ) {
-					return $.trim( extract( $node[ 0 ], c.table, cellIndex ) );
+					result = extract( $node[ 0 ], c.table, cellIndex );
+					return typeof result === 'string' ? result.trim() : result;
 				} else if ( typeof ( tmp = ts.getColumnData( c.table, extract, cellIndex ) ) === 'function' ) {
-					return $.trim( tmp( $node[ 0 ], c.table, cellIndex ) );
+					result = tmp( $node[ 0 ], c.table, cellIndex );
+					return typeof result === 'string' ? result.trim() : result;
 				}
 			}
 			// fallback
-			return $.trim( $node[ 0 ].textContent || $node.text() );
+			return $node[ 0 ].textContent.trim() || $node.text().trim();
 		},
 
 		// centralized function to extract/parse cell contents
@@ -1189,7 +1192,7 @@
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
 						$header.hasClass( ts.css.sortDesc ) ? 'sortDesc' : 'sortNone',
-					txt = $.trim( $header.text() ) + ': ' + ts.language[ tmp ];
+					txt = $header.text().trim() + ': ' + ts.language[ tmp ];
 				if ( $header.hasClass( 'sorter-false' ) || nextSort === false ) {
 					txt += ts.language.sortDisabled;
 				} else {
@@ -2267,7 +2270,7 @@
 			}
 			num = parseFloat( str );
 			// return the text instead of zero
-			return isNaN( num ) ? $.trim( str ) : num;
+			return isNaN( num ) ? str.trim() : num;
 		},
 
 		isDigit : function( str ) {
@@ -2408,7 +2411,7 @@
 				// include sorter class name 'sorter-text', etc; now works with 'sorter-my-custom-parser'
 				val = cl4ss.match( new RegExp( '\\s' + key + '-([\\w-]+)' ) )[ 1 ] || '';
 			}
-			return $.trim( val );
+			return val.trim();
 		},
 
 		getColumnData : function( table, obj, indx, getCell, $headers ) {
@@ -2671,7 +2674,7 @@
 		format : function( str, table ) {
 			var c = table.config;
 			if ( str ) {
-				str = $.trim( c.ignoreCase ? str.toLocaleLowerCase() : str );
+				str = c.ignoreCase ? str.toLocaleLowerCase().trim() : str.trim();
 				str = c.sortLocaleCompare ? ts.replaceAccents( str ) : str;
 			}
 			return str;
@@ -2688,7 +2691,7 @@
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? str && table.config.ignoreCase ? str.toLocaleLowerCase().trim() : str.trim() : str;
 		},
 		type : 'numeric'
 	});
@@ -2705,7 +2708,7 @@
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? str && table.config.ignoreCase ? str.toLocaleLowerCase().trim() : str.trim() : str;
 		},
 		type : 'numeric'
 	});
@@ -2720,7 +2723,7 @@
 			return ts.regex.urlProtocolTest.test( str );
 		},
 		format : function( str ) {
-			return str ? $.trim( str.replace( ts.regex.urlProtocolReplace, '' ) ) : str;
+			return str ? str.replace( ts.regex.urlProtocolReplace, '' ).trim() : str;
 		},
 		type : 'text'
 	});

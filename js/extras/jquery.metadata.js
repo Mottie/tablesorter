@@ -84,7 +84,7 @@ $.extend({
 			} else if ( settings.type === "elem" ) {
 				if( !elem.getElementsByTagName ) { return undefined; }
 				e = elem.getElementsByTagName(settings.name);
-				if ( e.length ) { data = $.trim(e[0].innerHTML); }
+				if ( e.length ) { data = e[0].innerHTML.trim(); }
 			} else if ( elem.getAttribute !== undefined ) {
 				attr = elem.getAttribute( settings.name );
 				if ( attr ) { data = attr; }

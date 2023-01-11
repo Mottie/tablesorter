@@ -30,7 +30,7 @@
 			separator : function(c, $column, txt, num) {
 				var word = (txt + '').split(c.widgetOptions.group_separator);
 				// return $.trim(word && num > 0 && word.length >= num ? word[(num || 1) - 1] : '');
-				return $.trim( word[ num - 1 ] || '' );
+				return ( word[ num - 1 ] || '' ).trim();
 			},
 			text : function( c, $column, txt ) {
 				return txt;

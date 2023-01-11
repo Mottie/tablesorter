@@ -785,7 +785,7 @@
 							var regex = new RegExp(attr, 'g'),
 								data = $header.attr('data-' + attr.replace(/{{|}}/g, '')),
 								text = typeof data === 'undefined' ? $header.text() : data;
-							name = name.replace( regex, $.trim( text ) );
+							name = name.replace( regex, text.trim() );
 						});
 						buildFilter.attr({
 							'data-column': $filter.attr( 'data-column' ),
@@ -1040,7 +1040,7 @@
 			if ( filter === '' ) { return filter; }
 			var regex = tsfRegex.iQuery,
 				maskLen = mask.match( tsfRegex.igQuery ).length,
-				query = maskLen > 1 ? $.trim( filter ).split( /\s/ ) : [ $.trim( filter ) ],
+				query = maskLen > 1 ? filter.trim().split( /\s/ ) : [ filter.trim() ],
 				len = query.length - 1,
 				indx = 0,
 				val = mask;
@@ -1131,7 +1131,7 @@
 				// only target 'all' column inputs on initialization
 				// & don't target 'all' column inputs if they don't exist
 				targets = wo.filter_initialized || !$input.filter( wo.filter_anyColumnSelector ).length,
-				val = $.trim( tsf.getLatestSearch( $input ).attr( 'data-column' ) || '' );
+				val = ( tsf.getLatestSearch( $input ).attr( 'data-column' ) || '' ).trim();
 			return tsf.findRange( c, val, !targets );
 		},
 		processTypes: function( c, data, vars ) {
@@ -1200,7 +1200,7 @@
 							txt = data.cacheArray[ i ];
 						} else {
 							txt = data.rawArray[ i ];
-							txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
+							txt = wo.filter_ignoreCase ? txt.toLowerCase().trim() : txt.trim();
 							if ( c.sortLocaleCompare ) {
 								txt = ts.replaceAccents( txt );
 							}

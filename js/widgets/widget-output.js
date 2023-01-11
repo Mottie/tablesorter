@@ -284,7 +284,7 @@
 			}
 			// replace/remove html
 			result = wo.output_includeHTML && !isHeader ? result : result.replace(output.regexHTML, '');
-			result = wo.output_trimSpaces || isHeader ? $.trim(result) : result;
+			result = wo.output_trimSpaces || isHeader ? result.trim() : result;
 			// JSON & array outputs don't need quotes
 			quotes = separator ? false : wo.output_wrapQuotes || wo.output_regex.test(result) || output.regexQuote.test(result);
 			result = quotes ? '"' + result + '"' : result;
