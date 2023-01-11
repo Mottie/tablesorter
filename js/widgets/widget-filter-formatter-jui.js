@@ -20,7 +20,7 @@
 	tsff = ts.filterFormatter = $.extend( {}, ts.filterFormatter, {
 
 		addCompare: function($cell, indx, options) {
-			if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
+			if (options.compare && Array.isArray(options.compare) && options.compare.length > 1) {
 				var opt = '',
 					compareSelectClass = [ compareSelect.slice(1), ' ' + compareSelect.slice(1), '' ],
 					txt = options.cellText ? '<label class="' + compareSelectClass.join('-label') + indx + '">' + options.cellText + '</label>' : '';
@@ -40,7 +40,7 @@
 				num = val.replace(/\s*?[><=]\s*?/g, ''),
 				compare = val.match(/[><=]/g) || '';
 			if (o.compare) {
-				if ($.isArray(o.compare)) {
+				if (Array.isArray(o.compare)) {
 					compare = (compare || []).join('') || o.compare[o.selected || 0];
 				}
 				$cell.find(compareSelect).val( compare );
@@ -83,7 +83,7 @@
 					// ui is not undefined on create
 					v = ui && ui.value && ts.formatFloat((ui.value + '').replace(/[><=]/g, '')) ||
 						$cell.find('.spinner').val() || o.value,
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 				if (o.addToggle) {
 					chkd = $cell.find('.toggle').is(':checked');
@@ -190,7 +190,7 @@
 
 			// on reset
 			c.$table.on('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				// turn off the toggle checkbox
@@ -242,7 +242,7 @@
 				// ui is not undefined on create
 				var v = typeof ui !== 'undefined' ? ts.formatFloat((ui.value + '').replace(/[><=]/g, '')) || o.value : o.value,
 					val = o.compare ? v : v === o.min ? o.allText : v,
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					result = compare + val,
 					searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 				if (o.valueToHeader) {
@@ -317,7 +317,7 @@
 
 			// on reset
 			c.$table.on('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				setTimeout(function() {
@@ -520,7 +520,7 @@
 			date1Compare = function(notrigger) {
 				var date, query,
 					getdate = $date.datepicker('getDate') || '',
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					searchType = c.$table[0].hasInitialized ? o.delayed || '' : true;
 				$date.datepicker('setDate', (getdate === '' ? '' : getdate) || null);
 				if (getdate === '') { notrigger = false; }
@@ -559,7 +559,7 @@
 
 			// on reset
 			c.$table.on('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate || null);

@@ -74,7 +74,7 @@
 					}
 					len--;
 				}
-			} else if ( $.isArray( editableColumns ) ) {
+			} else if ( Array.isArray( editableColumns ) ) {
 				len = editableColumns.length;
 				for ( indx = 0; indx < len; indx++ ) {
 					if ( editableColumns[ indx ] < c.columns ) {

@@ -673,7 +673,7 @@
 				filters = ts.getFilters( table ) || [];
 			if ( wo.filter_saveFilters && ts.storage ) {
 				saved = ts.storage( table, 'tablesorter-filters' ) || [];
-				isArray = $.isArray( saved );
+				isArray = Array.isArray( saved );
 				// make sure we're not just getting an empty array
 				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
 					filters = tsf.processFilters( saved );
@@ -705,7 +705,7 @@
 				// c.columns defined in computeThIndexes()
 				cellFilter = wo.filter_cellFilter,
 				columns = c.columns,
-				arry = $.isArray( cellFilter ),
+				arry = Array.isArray( cellFilter ),
 				buildFilter = '<tr role="search" class="' + tscss.filterRow + ' ' + c.cssIgnoreRow + '">';
 			for ( column = 0; column < columns; column++ ) {
 				if ( c.$headerIndexed[ column ].length ) {
@@ -771,7 +771,7 @@
 					}
 					if ( buildFilter ) {
 						// add filter class name
-						name = ( $.isArray( wo.filter_cssFilter ) ?
+						name = ( Array.isArray( wo.filter_cssFilter ) ?
 							( typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '' ) :
 							wo.filter_cssFilter ) || '';
 						// copy data-column from table cell (it will include colspan)
@@ -922,8 +922,8 @@
 				f1 = [],
 				f2 = [],
 				len = c.columns + 1; // add one to include anyMatch filter
-			filter1 = $.isArray(filter1) ? filter1 : [];
-			filter2 = $.isArray(filter2) ? filter2 : [];
+			filter1 = Array.isArray(filter1) ? filter1 : [];
+			filter2 = Array.isArray(filter2) ? filter2 : [];
 			for (indx = 0; indx < len; indx++) {
 				f1[indx] = filter1[indx] || '';
 				f2[indx] = filter2[indx] || '';
@@ -933,7 +933,7 @@
 		checkFilters: function( table, filter, skipFirst ) {
 			var c = table.config,
 				wo = c.widgetOptions,
-				filterArray = $.isArray( filter ),
+				filterArray = Array.isArray( filter ),
 				filters = ( filterArray ) ? filter : ts.getFilters( table, true ),
 				currentFilters = filters || []; // current filter values
 			// prevent errors if delay init is set
@@ -1604,7 +1604,7 @@
 			} else if ( fxn instanceof $ || ( $.type( fxn ) === 'string' && fxn.indexOf( '</option>' ) >= 0 ) ) {
 				// selectSource is a jQuery object or string of options
 				return fxn;
-			} else if ( $.isArray( fxn ) ) {
+			} else if ( Array.isArray( fxn ) ) {
 				arry = fxn;
 			} else if ( $.type( source ) === 'object' && fxn ) {
 				// custom select source function for a SPECIFIC COLUMN
@@ -1623,7 +1623,7 @@
 
 		},
 		processOptions: function( table, column, arry ) {
-			if ( !$.isArray( arry ) ) {
+			if ( !Array.isArray( arry ) ) {
 				return false;
 			}
 			table = $( table )[0];
@@ -1776,7 +1776,7 @@
 				}
 			}
 
-			if ( $.isArray( arry ) ) {
+			if ( Array.isArray( arry ) ) {
 				// build option list
 				for ( indx = 0; indx < arry.length; indx++ ) {
 					option = arry[ indx ];
@@ -1837,7 +1837,7 @@
 			// make sure there is a select there!
 			if ( $filter.length ) {
 				$filter[ updating ? 'html' : 'append' ]( options );
-				if ( !$.isArray( arry ) ) {
+				if ( !Array.isArray( arry ) ) {
 					// append options if arry is provided externally as a string or jQuery object
 					// options ( default value ) was already added
 					$filter.append( arry ).val( currentValue );
@@ -1874,7 +1874,7 @@
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
-			( $.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
+			( Array.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
 		) {
 			return $( table ).data( 'lastSearch' ) || [];
 		}
@@ -1898,7 +1898,7 @@
 					if ( $column.length ) {
 						// move the latest search to the first slot in the array
 						$column = tsf.getLatestSearch( $column );
-						if ( $.isArray( setFilters ) ) {
+						if ( Array.isArray( setFilters ) ) {
 							// skip first ( latest input ) to maintain cursor position while typing
 							if ( skipFirst && $column.length > 1 ) {
 								$column = $column.slice( 1 );

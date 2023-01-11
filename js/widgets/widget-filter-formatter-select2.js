@@ -60,7 +60,7 @@
 			var arry = false,
 				v = c.$table.find('.select2col' + indx + ' .select2').select2('val') || o.value || '';
 			// convert array to string
-			if ($.isArray(v)) {
+			if (Array.isArray(v)) {
 				arry = true;
 				v = v.join('\u0000');
 			}
@@ -75,7 +75,7 @@
 				$input
 					// add regex, so we filter exact numbers
 					.val(
-						$.isArray(v_escape) && v_escape.length && v_escape.join('') !== '' ?
+						Array.isArray(v_escape) && v_escape.length && v_escape.join('') !== '' ?
 							'/(' + matchPrefix + (v_escape || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
 							''
 					)

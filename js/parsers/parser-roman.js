@@ -45,7 +45,7 @@
 		format: function(s, table, cell, column) {
 			var val, orig,
 				c = table.config,
-				ignore = $.isArray(c.roman_ignore) ? c.roman_ignore[column] : 0,
+				ignore = Array.isArray(c.roman_ignore) ? c.roman_ignore[column] : 0,
 				// find roman numerals
 				roman = ( isNaN(ignore) ?
 					// ignore can be a regex or string

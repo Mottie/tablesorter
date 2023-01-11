@@ -41,7 +41,7 @@
 				thisWidget.format(table, c, wo);
 			});
 			// add tooltip class
-			if ($.isArray(wo.headerTitle_tooltip)) {
+			if (Array.isArray(wo.headerTitle_tooltip)) {
 				c.$headers.each(function() {
 					$(this).addClass( wo.headerTitle_tooltip[this.column] || '' );
 				});
@@ -78,7 +78,7 @@
 			c.$headers.attr('title', '');
 			c.$table.off('refreshHeaderTitle');
 			// remove tooltip class
-			if ($.isArray(wo.headerTitle_tooltip)) {
+			if (Array.isArray(wo.headerTitle_tooltip)) {
 				c.$headers.each(function() {
 					$(this).removeClass( wo.headerTitle_tooltip[this.column] || '' );
 				});
