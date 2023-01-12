@@ -39,7 +39,7 @@
 			var val = $input.length ? $input.val() : txt,
 				num = $.tablesorter.formatFloat( ( val || '' ).replace( /[^\w,. \-()]/g, '' ), table );
 			return txt && typeof num === 'number' ? num :
-				txt ? $.trim( txt && table.config.ignoreCase ? txt.toLocaleLowerCase() : txt ) : txt;
+				txt ? txt && table.config.ignoreCase ? txt.toLocaleLowerCase().trim() : txt.trim() : txt;
 		},
 		parsed : true, // filter widget flag
 		type : 'numeric'
@@ -226,7 +226,7 @@
 				this.value = $( this ).data( 'ts-original-value' );
 			})
 			.on( 'change keyup '.split( ' ' ).join( namespace + ' ' ), 'select, input, textarea', function( event ) {
-				// don't use updateCell if this (input) is set to 'parser-false' 
+				// don't use updateCell if this (input) is set to 'parser-false'
 				if (this.classList.contains('parser-false')) {
 					return;
 				}

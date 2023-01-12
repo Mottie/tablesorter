@@ -20,7 +20,7 @@
 	tsff = ts.filterFormatter = $.extend( {}, ts.filterFormatter, {
 
 		addCompare: function($cell, indx, options) {
-			if (options.compare && $.isArray(options.compare) && options.compare.length > 1) {
+			if (options.compare && Array.isArray(options.compare) && options.compare.length > 1) {
 				var opt = '',
 					compareSelectClass = [ compareSelect.slice(1), ' ' + compareSelect.slice(1), '' ],
 					txt = options.cellText ? '<label class="' + compareSelectClass.join('-label') + indx + '">' + options.cellText + '</label>' : '';
@@ -40,7 +40,7 @@
 				num = val.replace(/\s*?[><=]\s*?/g, ''),
 				compare = val.match(/[><=]/g) || '';
 			if (o.compare) {
-				if ($.isArray(o.compare)) {
+				if (Array.isArray(o.compare)) {
 					compare = (compare || []).join('') || o.compare[o.selected || 0];
 				}
 				$cell.find(compareSelect).val( compare );
@@ -72,7 +72,7 @@
 			$input = $('<input class="filter" type="hidden">')
 				.appendTo($cell)
 				// hidden filter update namespace trigger by filter widget
-				.bind('change' + c.namespace + 'filter', function() {
+				.on('change' + c.namespace + 'filter', function() {
 					updateSpinner({ value: this.value, delayed: false });
 				}),
 			$shcell = [],
@@ -83,7 +83,7 @@
 					// ui is not undefined on create
 					v = ui && ui.value && ts.formatFloat((ui.value + '').replace(/[><=]/g, '')) ||
 						$cell.find('.spinner').val() || o.value,
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 				if (o.addToggle) {
 					chkd = $cell.find('.toggle').is(':checked');
@@ -123,7 +123,7 @@
 					'<label for="uispinnerbutton' + indx + '"></label></div>')
 					.appendTo($cell)
 					.find('.toggle')
-					.bind('change', function() {
+					.on('change', function() {
 						updateSpinner();
 					});
 			}
@@ -134,12 +134,12 @@
 				.val(o.value)
 				.appendTo($cell)
 				.spinner(o)
-				.bind('change keyup', function() {
+				.on('change keyup', function() {
 					updateSpinner();
 				});
 
 			// update spinner from hidden input, in case of saved filters
-			c.$table.bind('filterFomatterUpdate' + c.namespace + 'filter', function() {
+			c.$table.on('filterFomatterUpdate' + c.namespace + 'filter', function() {
 				var val = tsff.updateCompare($cell, $input, o)[0];
 				$cell.find('.spinner').val( val );
 				updateSpinner({ value: val }, true);
@@ -149,20 +149,20 @@
 			if (o.compare) {
 				// add compare select
 				tsff.addCompare($cell, indx, o);
-				$cell.find(compareSelect).bind('change', function() {
+				$cell.find(compareSelect).on('change', function() {
 					updateSpinner();
 				});
 			}
 
 			// has sticky headers?
-			c.$table.bind('stickyHeadersInit' + c.namespace + 'filter', function() {
+			c.$table.on('stickyHeadersInit' + c.namespace + 'filter', function() {
 				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 				if (o.addToggle) {
 					$('<div class="button"><input id="stickyuispinnerbutton' + indx + '" type="checkbox" class="toggle" />' +
 						'<label for="stickyuispinnerbutton' + indx + '"></label></div>')
 						.appendTo($shcell)
 						.find('.toggle')
-						.bind('change', function() {
+						.on('change', function() {
 							$cell.find('.toggle')[0].checked = this.checked;
 							updateSpinner();
 						});
@@ -172,7 +172,7 @@
 					.val(o.value)
 					.appendTo($shcell)
 					.spinner(o)
-					.bind('change keyup', function() {
+					.on('change keyup', function() {
 						$cell.find('.spinner').val( this.value );
 						updateSpinner();
 					});
@@ -180,7 +180,7 @@
 				if (o.compare) {
 					// add compare select
 					tsff.addCompare($shcell, indx, o);
-					$shcell.find(compareSelect).bind('change', function() {
+					$shcell.find(compareSelect).on('change', function() {
 						$cell.find(compareSelect).val( $(this).val() );
 						updateSpinner();
 					});
@@ -189,8 +189,8 @@
 			});
 
 			// on reset
-			c.$table.bind('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+			c.$table.on('filterReset' + c.namespace + 'filter', function() {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				// turn off the toggle checkbox
@@ -232,7 +232,7 @@
 			$input = $('<input class="filter" type="hidden">')
 				.appendTo($cell)
 				// hidden filter update namespace trigger by filter widget
-				.bind('change' + c.namespace + 'filter', function() {
+				.on('change' + c.namespace + 'filter', function() {
 					updateSlider({ value: this.value });
 				}),
 			$shcell = [],
@@ -242,7 +242,7 @@
 				// ui is not undefined on create
 				var v = typeof ui !== 'undefined' ? ts.formatFloat((ui.value + '').replace(/[><=]/g, '')) || o.value : o.value,
 					val = o.compare ? v : v === o.min ? o.allText : v,
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					result = compare + val,
 					searchType = ui && typeof ui.delayed === 'boolean' ? ui.delayed : c.$table[0].hasInitialized ? o.delayed || '' : true;
 				if (o.valueToHeader) {
@@ -300,7 +300,7 @@
 				.slider(o);
 
 			// update slider from hidden input, in case of saved filters
-			c.$table.bind('filterFomatterUpdate' + c.namespace + 'filter', function() {
+			c.$table.on('filterFomatterUpdate' + c.namespace + 'filter', function() {
 				var val = tsff.updateCompare($cell, $input, o)[0];
 				$cell.find('.slider').slider('value', val );
 				updateSlider({ value: val }, false);
@@ -310,14 +310,14 @@
 			if (o.compare) {
 				// add compare select
 				tsff.addCompare($cell, indx, o);
-				$cell.find(compareSelect).bind('change', function() {
+				$cell.find(compareSelect).on('change', function() {
 					updateSlider({ value: $cell.find('.slider').slider('value') });
 				});
 			}
 
 			// on reset
-			c.$table.bind('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+			c.$table.on('filterReset' + c.namespace + 'filter', function() {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				setTimeout(function() {
@@ -326,7 +326,7 @@
 			});
 
 			// has sticky headers?
-			c.$table.bind('stickyHeadersInit' + c.namespace + 'filter', function() {
+			c.$table.on('stickyHeadersInit' + c.namespace + 'filter', function() {
 				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 
 				// add a jQuery UI slider!
@@ -334,7 +334,7 @@
 					.val(o.value)
 					.appendTo($shcell)
 					.slider(o)
-					.bind('change keyup', function() {
+					.on('change keyup', function() {
 						$cell.find('.slider').slider('value', this.value );
 						updateSlider();
 					});
@@ -342,7 +342,7 @@
 				if (o.compare) {
 					// add compare select
 					tsff.addCompare($shcell, indx, o);
-					$shcell.find(compareSelect).bind('change', function() {
+					$shcell.find(compareSelect).on('change', function() {
 						$cell.find(compareSelect).val( $(this).val() );
 						updateSlider();
 					});
@@ -373,7 +373,7 @@
 			$input = $('<input class="filter" type="hidden">')
 				.appendTo($cell)
 				// hidden filter update namespace trigger by filter widget
-				.bind('change' + c.namespace + 'filter', function() {
+				.on('change' + c.namespace + 'filter', function() {
 					getRange();
 				}),
 			$shcell = [],
@@ -449,13 +449,13 @@
 				.slider(o);
 
 			// update slider from hidden input, in case of saved filters
-			c.$table.bind('filterFomatterUpdate' + c.namespace + 'filter', function() {
+			c.$table.on('filterFomatterUpdate' + c.namespace + 'filter', function() {
 				getRange();
 				ts.filter.formatterUpdated($cell, indx);
 			});
 
 			// on reset
-			c.$table.bind('filterReset' + c.namespace + 'filter', function() {
+			c.$table.on('filterReset' + c.namespace + 'filter', function() {
 				$cell.find('.range').slider('values', o.values);
 				setTimeout(function() {
 					updateUiRange();
@@ -463,7 +463,7 @@
 			});
 
 			// has sticky headers?
-			c.$table.bind('stickyHeadersInit' + c.namespace + 'filter', function() {
+			c.$table.on('stickyHeadersInit' + c.namespace + 'filter', function() {
 				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 
 				// add a jQuery UI slider!
@@ -471,7 +471,7 @@
 					.val(o.value)
 					.appendTo($shcell)
 					.slider(o)
-					.bind('change keyup', function() {
+					.on('change keyup', function() {
 						$cell.find('.range').val( this.value );
 						updateUiRange();
 					});
@@ -508,7 +508,7 @@
 			$input = $('<input class="dateCompare" type="hidden">')
 				.appendTo($cell)
 				// hidden filter update namespace trigger by filter widget
-				.bind('change' + c.namespace + 'filter', function() {
+				.on('change' + c.namespace + 'filter', function() {
 					var v = this.value;
 					if (v) {
 						o.onClose(v);
@@ -520,7 +520,7 @@
 			date1Compare = function(notrigger) {
 				var date, query,
 					getdate = $date.datepicker('getDate') || '',
-					compare = ($.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
+					compare = (Array.isArray(o.compare) ? $cell.find(compareSelect).val() || o.compare[ o.selected || 0] : o.compare) || '',
 					searchType = c.$table[0].hasInitialized ? o.delayed || '' : true;
 				$date.datepicker('setDate', (getdate === '' ? '' : getdate) || null);
 				if (getdate === '') { notrigger = false; }
@@ -558,8 +558,8 @@
 			$date.datepicker(o);
 
 			// on reset
-			c.$table.bind('filterReset' + c.namespace + 'filter', function() {
-				if ($.isArray(o.compare)) {
+			c.$table.on('filterReset' + c.namespace + 'filter', function() {
+				if (Array.isArray(o.compare)) {
 					$cell.add($shcell).find(compareSelect).val( o.compare[ o.selected || 0 ] );
 				}
 				$cell.add($shcell).find('.date').val(o.defaultDate).datepicker('setDate', o.defaultDate || null);
@@ -569,7 +569,7 @@
 			});
 
 			// update date compare from hidden input, in case of saved filters
-			c.$table.bind('filterFomatterUpdate' + c.namespace + 'filter', function() {
+			c.$table.on('filterFomatterUpdate' + c.namespace + 'filter', function() {
 				var num, v = $input.val();
 				if (/\s+-\s+/.test(v)) {
 					// date range found; assume an exact match on one day
@@ -591,13 +591,13 @@
 			if (o.compare) {
 				// add compare select
 				tsff.addCompare($cell, indx, o);
-				$cell.find(compareSelect).bind('change', function() {
+				$cell.find(compareSelect).on('change', function() {
 					date1Compare();
 				});
 			}
 
 			// has sticky headers?
-			c.$table.bind('stickyHeadersInit' + c.namespace + 'filter', function() {
+			c.$table.on('stickyHeadersInit' + c.namespace + 'filter', function() {
 				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 
 				// add a jQuery datepicker!
@@ -609,7 +609,7 @@
 				if (o.compare) {
 					// add compare select
 					tsff.addCompare($shcell, indx, o);
-					$shcell.find(compareSelect).bind('change', function() {
+					$shcell.find(compareSelect).on('change', function() {
 						$cell.find(compareSelect).val( $(this).val() );
 						date1Compare();
 					});
@@ -646,7 +646,7 @@
 			$input = $('<input class="dateRange" type="hidden">')
 				.appendTo($cell)
 				// hidden filter update namespace trigger by filter widget
-				.bind('change' + c.namespace + 'filter', function() {
+				.on('change' + c.namespace + 'filter', function() {
 					var v = this.value;
 					if (v.match(' - ')) {
 						v = v.split(' - ');
@@ -708,7 +708,7 @@
 			$cell.find('.dateTo').datepicker(o);
 
 			// update date compare from hidden input, in case of saved filters
-			c.$table.bind('filterFomatterUpdate' + c.namespace + 'filter', function() {
+			c.$table.on('filterFomatterUpdate' + c.namespace + 'filter', function() {
 				var val = $input.val() || '',
 					from = '',
 					to = '';
@@ -739,7 +739,7 @@
 			});
 
 			// has sticky headers?
-			c.$table.bind('stickyHeadersInit' + c.namespace + 'filter', function() {
+			c.$table.on('stickyHeadersInit' + c.namespace + 'filter', function() {
 				$shcell = c.widgetOptions.$sticky.find('.tablesorter-filter-row').children().eq(indx).empty();
 				$shcell.append(t);
 
@@ -753,7 +753,7 @@
 			});
 
 			// on reset
-			$cell.closest('table').bind('filterReset' + c.namespace + 'filter', function() {
+			$cell.closest('table').on('filterReset' + c.namespace + 'filter', function() {
 				$cell.add($shcell).find('.dateFrom').val('').datepicker('setDate', o.from || null );
 				$cell.add($shcell).find('.dateTo').val('').datepicker('setDate', o.to || null );
 				setTimeout(function() {

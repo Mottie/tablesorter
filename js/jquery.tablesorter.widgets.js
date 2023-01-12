@@ -4,7 +4,7 @@
 ██  ██ ██  ██   ██  ██ ██  ██   ██     ██ ██ ██ ██  ██ ██  ██ ██ ██▀▀    ▀▀▀██
 █████▀ ▀████▀   ██  ██ ▀████▀   ██     ██ ██ ██ ▀████▀ █████▀ ██ ██     █████▀
 */
-/*! tablesorter (FORK) - updated 2020-03-03 (v2.31.3)*/
+/*! tablesorter (FORK) - updated 2023-01-12 (v2.31.3)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery) {
 /*! Widget: storage - updated 2018-03-18 (v2.30.0) */
@@ -90,16 +90,14 @@
 			console.log('Storage >> Using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
-		if ($.parseJSON) {
-			if (hasStorage) {
-				values = $.parseJSON( window[storageType][key] || 'null' ) || {};
-			} else {
-				// old browser, using cookies
-				cookies = document.cookie.split(/[;\s|=]/);
-				// add one to get from the key to the value
-				cookieIndex = $.inArray(key, cookies) + 1;
-				values = (cookieIndex !== 0) ? $.parseJSON(cookies[cookieIndex] || 'null') || {} : {};
-			}
+		if (hasStorage) {
+			values = JSON.parse( window[storageType][key] || 'null' ) || {};
+		} else {
+			// old browser, using cookies
+			cookies = document.cookie.split(/[;\s|=]/);
+			// add one to get from the key to the value
+			cookieIndex = $.inArray(key, cookies) + 1;
+			values = (cookieIndex !== 0) ? JSON.parse(cookies[cookieIndex] || 'null') || {} : {};
 		}
 		// allow value to be an empty string too
 		if (typeof value !== 'undefined' && window.JSON && JSON.hasOwnProperty('stringify')) {
@@ -187,8 +185,8 @@
 				$headers = c.$headers.add( $( c.namespace + '_extra_headers' ) ),
 				theme = c.theme || 'jui',
 				themes = themesAll[theme] || {},
-				remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
-				iconRmv = $.trim( [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ) ),
+				remove = [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ).trim(),
+				iconRmv = [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ).trim(),
 				debug = ts.debug(c, 'uitheme');
 			if (debug) { time = new Date(); }
 			// initialization code - run once
@@ -199,8 +197,8 @@
 				oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
 				oldIconRmv = hasOldTheme ? [ oldtheme.iconSortNone, oldtheme.iconSortDesc, oldtheme.iconSortAsc ].join( ' ' ) : '';
 				if (hasOldTheme) {
-					wo.zebra[0] = $.trim( ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '') );
-					wo.zebra[1] = $.trim( ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '') );
+					wo.zebra[0] = ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '').trim();
+					wo.zebra[1] = ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '').trim();
 					c.$tbodies.children().removeClass( [ oldtheme.even, oldtheme.odd ].join(' ') );
 				}
 				// update zebra stripes
@@ -229,8 +227,8 @@
 					.removeClass( (hasOldTheme ? [ oldtheme.header, oldtheme.hover, oldremove ].join(' ') : '') || '' )
 					.addClass(themes.header)
 					.not('.sorter-false')
-					.unbind('mouseenter.tsuitheme mouseleave.tsuitheme')
-					.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
+					.off('mouseenter.tsuitheme mouseleave.tsuitheme')
+					.on('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
 						// toggleClass with switch added in jQuery 1.3
 						$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 					});
@@ -310,7 +308,7 @@
 			if (refreshing) { return; }
 			$table.find(ts.css.header).removeClass(themes.header);
 			$headers
-				.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
+				.off('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
 				.removeClass(themes.hover + ' ' + remove + ' ' + themes.active)
 				.filter('.' + ts.css.filterRow)
 				.removeClass(themes.filterRow);
@@ -478,7 +476,7 @@
 			$table
 				.removeClass( 'hasFilters' )
 				// add filter namespace to all BUT search
-				.unbind( events.replace( ts.regex.spaces, ' ' ) )
+				.off( events.replace( ts.regex.spaces, ' ' ) )
 				// remove the filter row even if refreshing, because the column might have been moved
 				.find( '.' + tscss.filterRow ).remove();
 			wo.filter_initialized = false;
@@ -489,7 +487,7 @@
 				ts.processTbody( table, $tbody, false ); // restore tbody
 			}
 			if ( wo.filter_reset ) {
-				$( document ).undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' );
+				$( document ).off( 'click' + c.namespace + 'filter', wo.filter_reset );
 			}
 		}
 	});
@@ -628,7 +626,7 @@
 						savedSearch = query;
 					// parse filter value in case we're comparing numbers ( dates )
 					if ( parsed || parser.type === 'numeric' ) {
-						txt = $.trim( '' + data.iFilter.replace( tsfRegex.operators, '' ) );
+						txt = '' + data.iFilter.replace( tsfRegex.operators, '' ).trim();
 						result = tsf.parseFilter( c, txt, data, true );
 						query = ( typeof result === 'number' && result !== '' && !isNaN( result ) ) ? result : query;
 					}
@@ -663,9 +661,9 @@
 					if ( tsfRegex.exact.test( filter ) ) {
 						// look for exact not matches - see #628
 						filter = filter.replace( tsfRegex.exact, '' );
-						return filter === '' ? true : $.trim( filter ) !== data.iExact;
+						return filter === '' ? true : filter.trim() !== data.iExact;
 					} else {
-						indx = data.iExact.search( $.trim( filter ) );
+						indx = data.iExact.search( filter.trim() );
 						return filter === '' ? true :
 							// return true if not found
 							data.anyMatch ? indx < 0 :
@@ -821,7 +819,7 @@
 
 			txt = 'addRows updateCell update updateRows updateComplete appendCache filterReset ' +
 				'filterAndSortReset filterResetSaved filterEnd search '.split( ' ' ).join( c.namespace + 'filter ' );
-			c.$table.bind( txt, function( event, filter ) {
+			c.$table.on( txt, function( event, filter ) {
 				val = wo.filter_hideEmpty &&
 					$.isEmptyObject( c.cache ) &&
 					!( c.delayInit && event.type === 'appendCache' );
@@ -877,8 +875,8 @@
 				} else if ( $( wo.filter_reset ).length ) {
 					// reset is a jQuery selector, use event delegation
 					$( document )
-						.undelegate( wo.filter_reset, 'click' + c.namespace + 'filter' )
-						.delegate( wo.filter_reset, 'click' + c.namespace + 'filter', function() {
+						.off( 'click' + c.namespace + 'filter', wo.filter_reset )
+						.on( 'click' + c.namespace + 'filter', wo.filter_reset, function() {
 							// trigger a reset event, so other functions ( filter_formatter ) know when to reset
 							c.$table.triggerHandler( 'filterReset' );
 						});
@@ -951,8 +949,8 @@
 			if ( c.showProcessing ) {
 				txt = 'filterStart filterEnd '.split( ' ' ).join( c.namespace + 'filter-sp ' );
 				c.$table
-					.unbind( txt.replace( ts.regex.spaces, ' ' ) )
-					.bind( txt, function( event, columns ) {
+					.off( txt.replace( ts.regex.spaces, ' ' ) )
+					.on( txt, function( event, columns ) {
 					// only add processing to certain columns to all columns
 					$header = ( columns ) ?
 						c.$table
@@ -971,8 +969,8 @@
 			// add default values
 			txt = 'tablesorter-initialized pagerBeforeInitialized '.split( ' ' ).join( c.namespace + 'filter ' );
 			c.$table
-			.unbind( txt.replace( ts.regex.spaces, ' ' ) )
-			.bind( txt, function() {
+			.off( txt.replace( ts.regex.spaces, ' ' ) )
+			.on( txt, function() {
 				tsf.completeInit( this );
 			});
 			// if filter widget is added after pager has initialized; then set filter init flag
@@ -1074,7 +1072,7 @@
 				filters = ts.getFilters( table ) || [];
 			if ( wo.filter_saveFilters && ts.storage ) {
 				saved = ts.storage( table, 'tablesorter-filters' ) || [];
-				isArray = $.isArray( saved );
+				isArray = Array.isArray( saved );
 				// make sure we're not just getting an empty array
 				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
 					filters = tsf.processFilters( saved );
@@ -1106,7 +1104,7 @@
 				// c.columns defined in computeThIndexes()
 				cellFilter = wo.filter_cellFilter,
 				columns = c.columns,
-				arry = $.isArray( cellFilter ),
+				arry = Array.isArray( cellFilter ),
 				buildFilter = '<tr role="search" class="' + tscss.filterRow + ' ' + c.cssIgnoreRow + '">';
 			for ( column = 0; column < columns; column++ ) {
 				if ( c.$headerIndexed[ column ].length ) {
@@ -1172,7 +1170,7 @@
 					}
 					if ( buildFilter ) {
 						// add filter class name
-						name = ( $.isArray( wo.filter_cssFilter ) ?
+						name = ( Array.isArray( wo.filter_cssFilter ) ?
 							( typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '' ) :
 							wo.filter_cssFilter ) || '';
 						// copy data-column from table cell (it will include colspan)
@@ -1186,7 +1184,7 @@
 							var regex = new RegExp(attr, 'g'),
 								data = $header.attr('data-' + attr.replace(/{{|}}/g, '')),
 								text = typeof data === 'undefined' ? $header.text() : data;
-							name = name.replace( regex, $.trim( text ) );
+							name = name.replace( regex, text.trim() );
 						});
 						buildFilter.attr({
 							'data-column': $filter.attr( 'data-column' ),
@@ -1226,14 +1224,14 @@
 			// use data attribute instead of jQuery data since the head is cloned without including
 			// the data/binding
 			.attr( 'data-lastSearchTime', new Date().getTime() )
-			.unbind( tmp.replace( ts.regex.spaces, ' ' ) )
-			.bind( 'keydown' + namespace, function( event ) {
+			.off( tmp.replace( ts.regex.spaces, ' ' ) )
+			.on( 'keydown' + namespace, function( event ) {
 				if ( event.which === tskeyCodes.escape && !table.config.widgetOptions.filter_resetOnEsc ) {
 					// prevent keypress event
 					return false;
 				}
 			})
-			.bind( 'keyup' + namespace, function( event ) {
+			.on( 'keyup' + namespace, function( event ) {
 				wo = table.config.widgetOptions; // make sure "wo" isn't cached
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					liveSearch = typeof wo.filter_liveSearch === 'boolean' ? wo.filter_liveSearch :
@@ -1264,7 +1262,7 @@
 				tsf.searching( table, true, true, column );
 			})
 			// include change for select - fixes #473
-			.bind( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
+			.on( 'search change keypress input blur '.split( ' ' ).join( namespace + ' ' ), function( event ) {
 				// don't get cached data, in case data-column changes dynamically
 				var column = parseInt( $( this ).attr( 'data-column' ), 10 ),
 					eventType = event.type,
@@ -1323,8 +1321,8 @@
 				f1 = [],
 				f2 = [],
 				len = c.columns + 1; // add one to include anyMatch filter
-			filter1 = $.isArray(filter1) ? filter1 : [];
-			filter2 = $.isArray(filter2) ? filter2 : [];
+			filter1 = Array.isArray(filter1) ? filter1 : [];
+			filter2 = Array.isArray(filter2) ? filter2 : [];
 			for (indx = 0; indx < len; indx++) {
 				f1[indx] = filter1[indx] || '';
 				f2[indx] = filter2[indx] || '';
@@ -1334,7 +1332,7 @@
 		checkFilters: function( table, filter, skipFirst ) {
 			var c = table.config,
 				wo = c.widgetOptions,
-				filterArray = $.isArray( filter ),
+				filterArray = Array.isArray( filter ),
 				filters = ( filterArray ) ? filter : ts.getFilters( table, true ),
 				currentFilters = filters || []; // current filter values
 			// prevent errors if delay init is set
@@ -1408,7 +1406,7 @@
 			( $table || c.$table )
 				.find( '.' + tscss.filterRow )
 				.addClass( tscss.filterRowHide )
-				.bind( 'mouseenter mouseleave', function( e ) {
+				.on( 'mouseenter mouseleave', function( e ) {
 					// save event object - http://bugs.jquery.com/ticket/12140
 					var event = e,
 						$row = $( this );
@@ -1426,7 +1424,7 @@
 						}
 					}, 200 );
 				})
-				.find( 'input, select' ).bind( 'focus blur', function( e ) {
+				.find( 'input, select' ).on( 'focus blur', function( e ) {
 					var event = e,
 						$row = $( this ).closest( 'tr' );
 					clearTimeout( timer );
@@ -1441,7 +1439,7 @@
 			if ( filter === '' ) { return filter; }
 			var regex = tsfRegex.iQuery,
 				maskLen = mask.match( tsfRegex.igQuery ).length,
-				query = maskLen > 1 ? $.trim( filter ).split( /\s/ ) : [ $.trim( filter ) ],
+				query = maskLen > 1 ? filter.trim().split( /\s/ ) : [ filter.trim() ],
 				len = query.length - 1,
 				indx = 0,
 				val = mask;
@@ -1532,7 +1530,7 @@
 				// only target 'all' column inputs on initialization
 				// & don't target 'all' column inputs if they don't exist
 				targets = wo.filter_initialized || !$input.filter( wo.filter_anyColumnSelector ).length,
-				val = $.trim( tsf.getLatestSearch( $input ).attr( 'data-column' ) || '' );
+				val = ( tsf.getLatestSearch( $input ).attr( 'data-column' ) || '' ).trim();
 			return tsf.findRange( c, val, !targets );
 		},
 		processTypes: function( c, data, vars ) {
@@ -1601,7 +1599,7 @@
 							txt = data.cacheArray[ i ];
 						} else {
 							txt = data.rawArray[ i ];
-							txt = $.trim( wo.filter_ignoreCase ? txt.toLowerCase() : txt );
+							txt = wo.filter_ignoreCase ? txt.toLowerCase().trim() : txt.trim();
 							if ( c.sortLocaleCompare ) {
 								txt = ts.replaceAccents( txt );
 							}
@@ -2005,7 +2003,7 @@
 			} else if ( fxn instanceof $ || ( $.type( fxn ) === 'string' && fxn.indexOf( '</option>' ) >= 0 ) ) {
 				// selectSource is a jQuery object or string of options
 				return fxn;
-			} else if ( $.isArray( fxn ) ) {
+			} else if ( Array.isArray( fxn ) ) {
 				arry = fxn;
 			} else if ( $.type( source ) === 'object' && fxn ) {
 				// custom select source function for a SPECIFIC COLUMN
@@ -2024,7 +2022,7 @@
 
 		},
 		processOptions: function( table, column, arry ) {
-			if ( !$.isArray( arry ) ) {
+			if ( !Array.isArray( arry ) ) {
 				return false;
 			}
 			table = $( table )[0];
@@ -2177,7 +2175,7 @@
 				}
 			}
 
-			if ( $.isArray( arry ) ) {
+			if ( Array.isArray( arry ) ) {
 				// build option list
 				for ( indx = 0; indx < arry.length; indx++ ) {
 					option = arry[ indx ];
@@ -2238,7 +2236,7 @@
 			// make sure there is a select there!
 			if ( $filter.length ) {
 				$filter[ updating ? 'html' : 'append' ]( options );
-				if ( !$.isArray( arry ) ) {
+				if ( !Array.isArray( arry ) ) {
 					// append options if arry is provided externally as a string or jQuery object
 					// options ( default value ) was already added
 					$filter.append( arry ).val( currentValue );
@@ -2275,7 +2273,7 @@
 		if ( ( getRaw !== true && wo && !wo.filter_columnFilters ) ||
 			// setFilters called, but last search is exactly the same as the current
 			// fixes issue #733 & #903 where calling update causes the input values to reset
-			( $.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
+			( Array.isArray(setFilters) && tsf.equalFilters(c, setFilters, c.lastSearch) )
 		) {
 			return $( table ).data( 'lastSearch' ) || [];
 		}
@@ -2299,7 +2297,7 @@
 					if ( $column.length ) {
 						// move the latest search to the first slot in the array
 						$column = tsf.getLatestSearch( $column );
-						if ( $.isArray( setFilters ) ) {
+						if ( Array.isArray( setFilters ) ) {
 							// skip first ( latest input ) to maintain cursor position while typing
 							if ( skipFirst && $column.length > 1 ) {
 								$column = $column.slice( 1 );
@@ -2591,7 +2589,7 @@
 			// update sticky header class names to match real header after sorting
 			$table
 				.addClass('hasStickyHeaders')
-				.bind('pagerComplete' + namespace, function() {
+				.on('pagerComplete' + namespace, function() {
 					resizeHeader();
 				});
 
@@ -2615,13 +2613,13 @@
 			}
 			// make it sticky!
 			$xScroll.add($yScroll)
-				.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
-				.bind('scroll resize '.split(' ').join( namespace ), function( event ) {
+				.off( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
+				.on('scroll resize '.split(' ').join( namespace ), function( event ) {
 					scrollSticky( event.type === 'resize' );
 				});
 			c.$table
-				.unbind('stickyHeadersUpdate' + namespace)
-				.bind('stickyHeadersUpdate' + namespace, function() {
+				.off('stickyHeadersUpdate' + namespace)
+				.on('stickyHeadersUpdate' + namespace, function() {
 					scrollSticky( true );
 				});
 
@@ -2632,7 +2630,7 @@
 			// look for filter widget
 			if ($table.hasClass('hasFilters') && wo.filter_columnFilters) {
 				// scroll table into view after filtering, if sticky header is active - #482
-				$table.bind('filterEnd' + namespace, function() {
+				$table.on('filterEnd' + namespace, function() {
 					// $(':focus') needs jQuery 1.6+
 					var $td = $(document.activeElement).closest('td'),
 						column = $td.parent().children().index($td);
@@ -2655,7 +2653,7 @@
 
 			// resize table (Firefox)
 			if (wo.stickyHeaders_addResizeEvent) {
-				$table.bind('resize' + c.namespace + 'stickyheaders', function() {
+				$table.on('resize' + c.namespace + 'stickyheaders', function() {
 					resizeHeader();
 				});
 			}
@@ -2669,14 +2667,14 @@
 			var namespace = c.namespace + 'stickyheaders ';
 			c.$table
 				.removeClass('hasStickyHeaders')
-				.unbind( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+				.off( ('pagerComplete resize filterEnd stickyHeadersUpdate '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 				.next('.' + ts.css.stickyWrap).remove();
 			if (wo.$sticky && wo.$sticky.length) { wo.$sticky.remove(); } // remove cloned table
 			$(window)
 				.add(wo.stickyHeaders_xScroll)
 				.add(wo.stickyHeaders_yScroll)
 				.add(wo.stickyHeaders_attachTo)
-				.unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
+				.off( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
 			ts.addHeaderResizeEvent(table, true);
 		}
 	});
@@ -2784,7 +2782,7 @@
 							'unselectable' : 'on'
 						})
 						.data( 'header', $header )
-						.bind( 'selectstart', false );
+						.on( 'selectstart', false );
 				}
 			}
 			ts.resizable.bindings( c, wo );
@@ -2894,17 +2892,17 @@
 			if ( toggle ) {
 				$( 'body' )
 					.attr( 'unselectable', 'on' )
-					.bind( 'selectstart' + namespace, false );
+					.on( 'selectstart' + namespace, false );
 			} else {
 				$( 'body' )
 					.removeAttr( 'unselectable' )
-					.unbind( 'selectstart' + namespace );
+					.off( 'selectstart' + namespace );
 			}
 		},
 
 		bindings : function( c, wo ) {
 			var namespace = c.namespace + 'tsresize';
-			wo.$resizable_container.children().bind( 'mousedown', function( event ) {
+			wo.$resizable_container.children().on( 'mousedown', function( event ) {
 				// save header cell and mouse position
 				var column,
 					vars = wo.resizable_vars,
@@ -2930,7 +2928,7 @@
 			});
 
 			$( document )
-				.bind( 'mousemove' + namespace, function( event ) {
+				.on( 'mousemove' + namespace, function( event ) {
 					var vars = wo.resizable_vars;
 					// ignore mousemove if no mousedown
 					if ( !vars.disabled || vars.mouseXPosition === 0 || !vars.$target ) { return; }
@@ -2943,7 +2941,7 @@
 						ts.resizable.mouseMove( c, wo, event );
 					}
 				})
-				.bind( 'mouseup' + namespace, function() {
+				.on( 'mouseup' + namespace, function() {
 					if (!wo.resizable_vars.disabled) { return; }
 					ts.resizable.toggleTextSelection( c, wo, false );
 					ts.resizable.stopResize( c, wo );
@@ -2951,21 +2949,21 @@
 				});
 
 			// resizeEnd event triggered by scroller widget
-			$( window ).bind( 'resize' + namespace + ' resizeEnd' + namespace, function() {
+			$( window ).on( 'resize' + namespace + ' resizeEnd' + namespace, function() {
 				ts.resizable.setHandlePosition( c, wo );
 			});
 
 			// right click to reset columns to default widths
 			c.$table
-				.bind( 'columnUpdate pagerComplete resizableUpdate '.split( ' ' ).join( namespace + ' ' ), function() {
+				.on( 'columnUpdate pagerComplete resizableUpdate '.split( ' ' ).join( namespace + ' ' ), function() {
 					ts.resizable.setHandlePosition( c, wo );
 				})
-				.bind( 'resizableReset' + namespace, function() {
+				.on( 'resizableReset' + namespace, function() {
 					ts.resizableReset( c.table );
 				})
 				.find( 'thead:first' )
 				.add( $( c.namespace + '_extra_table' ).find( 'thead:first' ) )
-				.bind( 'contextmenu' + namespace, function() {
+				.on( 'contextmenu' + namespace, function() {
 					// $.isEmptyObject() needs jQuery 1.4+; allow right click if already reset
 					var allowClick = wo.resizable_vars.storedSizes.length === 0;
 					ts.resizableReset( c.table );
@@ -3054,12 +3052,12 @@
 				c.$table.add( $( c.namespace + '_extra_table' ) )
 					.removeClass('hasResizable')
 					.children( 'thead' )
-					.unbind( 'contextmenu' + namespace );
+					.off( 'contextmenu' + namespace );
 
 				wo.$resizable_container.remove();
 				ts.resizable.toggleTextSelection( c, wo, false );
 				ts.resizableReset( table, refreshing );
-				$( document ).unbind( 'mousemove' + namespace + ' mouseup' + namespace );
+				$( document ).off( 'mousemove' + namespace + ' mouseup' + namespace );
 			}
 		}
 	});
@@ -3109,7 +3107,7 @@
 
 	function getStoredSortList(c) {
 		var stored = ts.storage( c.table, 'tablesorter-savesort' );
-		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : [];
+		return (stored && stored.hasOwnProperty('sortList') && Array.isArray(stored.sortList)) ? stored.sortList : [];
 	}
 
 	function sortListChanged(c, sortList) {
@@ -3156,7 +3154,7 @@
 					if (debug) {
 						console.log('saveSort >> Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
-					$table.bind('saveSortReset', function(event) {
+					$table.on('saveSortReset', function(event) {
 						event.stopPropagation();
 						ts.storage( table, 'tablesorter-savesort', '' );
 					});

@@ -41,7 +41,7 @@
 				thisWidget.format(table, c, wo);
 			});
 			// add tooltip class
-			if ($.isArray(wo.headerTitle_tooltip)) {
+			if (Array.isArray(wo.headerTitle_tooltip)) {
 				c.$headers.each(function() {
 					$(this).addClass( wo.headerTitle_tooltip[this.column] || '' );
 				});
@@ -71,14 +71,14 @@
 						}[m.toLowerCase()];
 					});
 				}
-				$this.attr('title', $.isFunction(wo.headerTitle_callback) ? wo.headerTitle_callback($this, txt) : txt);
+				$this.attr('title', typeof wo.headerTitle_callback === 'function' ? wo.headerTitle_callback($this, txt) : txt);
 			});
 		},
 		remove: function (table, c, wo) {
 			c.$headers.attr('title', '');
 			c.$table.off('refreshHeaderTitle');
 			// remove tooltip class
-			if ($.isArray(wo.headerTitle_tooltip)) {
+			if (Array.isArray(wo.headerTitle_tooltip)) {
 				c.$headers.each(function() {
 					$(this).removeClass( wo.headerTitle_tooltip[this.column] || '' );
 				});

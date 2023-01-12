@@ -51,8 +51,8 @@
 		}
 
 		$win
-		.unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
-		.bind('scroll resize '.split(' ').join(namespace), function() {
+		.off( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+		.on('scroll resize '.split(' ').join(namespace), function() {
 			// make sure "wo" is current otherwise changes to widgetOptions
 			// are not dynamic (like the add caption button in the demo)
 			wo = c.widgetOptions;
@@ -125,14 +125,14 @@
 
 		});
 		$table
-			.unbind( ('filterEnd updateComplete '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
-			.bind('filterEnd' + namespace, function() {
+			.off( ('filterEnd updateComplete '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+			.on('filterEnd' + namespace, function() {
 				if (wo.cssStickyHeaders_filteredToTop) {
 					// scroll top of table into view
 					window.scrollTo(0, $table.position().top);
 				}
 			})
-			.bind('updateComplete' + namespace, function() {
+			.on('updateComplete' + namespace, function() {
 				cssStickyHeadersInit(c, c.widgetOptions);
 			});
 	}
@@ -153,9 +153,9 @@
 		remove: function(table, c, wo, refreshing) {
 			if (refreshing) { return; }
 			var namespace = c.namespace + 'cssstickyheader ';
-			$(window).unbind( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
+			$(window).off( ('scroll resize '.split(' ').join(namespace)).replace(/\s+/g, ' ') );
 			c.$table
-				.unbind( ('filterEnd scroll resize updateComplete '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
+				.off( ('filterEnd scroll resize updateComplete '.split(' ').join(namespace)).replace(/\s+/g, ' ') )
 				.add( c.$table.children('thead').children().children() )
 				.children('thead, caption').css({
 					'transform' : '',

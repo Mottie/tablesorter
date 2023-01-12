@@ -30,7 +30,7 @@
 			separator : function(c, $column, txt, num) {
 				var word = (txt + '').split(c.widgetOptions.group_separator);
 				// return $.trim(word && num > 0 && word.length >= num ? word[(num || 1) - 1] : '');
-				return $.trim( word[ num - 1 ] || '' );
+				return ( word[ num - 1 ] || '' ).trim();
 			},
 			text : function( c, $column, txt ) {
 				return txt;
@@ -71,7 +71,7 @@
 			return wo.group_months[ month + ( ( wo.group_months[0] || '' ) === '' ? 1 : 0 ) ];
 		},
 		findWeek : function( wo, day ) {
-			if ( $.isArray( wo.group_week ) ) {
+			if ( Array.isArray( wo.group_week ) ) {
 				return wo.group_week[ day ];
 			} else if ( !$.isEmptyObject( wo.group_week ) ) {
 				// CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
@@ -102,7 +102,7 @@
 				wo = c.widgetOptions,
 				hasSort = typeof c.sortList[0] !== 'undefined',
 				data = {},
-				column = $.isArray( wo.group_forceColumn ) && typeof wo.group_forceColumn[0] !== 'undefined' ?
+				column = Array.isArray( wo.group_forceColumn ) && typeof wo.group_forceColumn[0] !== 'undefined' ?
 					( wo.group_enforceSort && !hasSort ? -1 : wo.group_forceColumn[0] ) :
 					( hasSort ? c.sortList[0][0] : -1 );
 			c.$table
@@ -138,19 +138,19 @@
 				$headers = c.$table.find( 'tr.group-header' ),
 				len = $headers.length;
 
-			$headers.bind( 'selectstart', false );
+			$headers.on( 'selectstart', false );
 			for ( index = 0; index < len; index++ ) {
 				$row = $headers.eq( index );
 				$rows = $row.nextUntil( 'tr.group-header' ).filter( ':visible' );
 
 				// add group count (only visible rows!)
-				if ( wo.group_count || $.isFunction( wo.group_callback ) ) {
+				if ( wo.group_count || typeof wo.group_callback === 'function' ) {
 					$label = $row.find( '.group-count' );
 					if ( $label.length ) {
 						if ( wo.group_count ) {
 							$label.html( wo.group_count.toString().replace( /\{num\}/g, $rows.length ) );
 						}
-						if ( $.isFunction( wo.group_callback ) ) {
+						if ( typeof wo.group_callback === 'function' ) {
 							wo.group_callback( $row.find( 'td' ), $rows, data.column, c.table );
 						}
 					}
@@ -238,7 +238,7 @@
 				data.currentGroup;
 			if ( data.group !== data.currentGroup ) {
 				data.group = data.currentGroup;
-				if ( $.isFunction( wo.group_formatter ) ) {
+				if ( typeof wo.group_formatter === 'function' ) {
 					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo, data ) || data.group;
 				}
 				// add first() for grouping with childRows

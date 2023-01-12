@@ -179,7 +179,7 @@ $(table).trigger('staticRowsRefresh');</pre>
 			this allows moving a static row dynamically; try the Move "Ignuana" row buttons above the "Single tbody" demo.
 			<h3>Event</h3>
 			A <code>staticRowsComplete</code> event is triggered after the static rows widget has completed moving the static rows back into place. Use it as follows:
-			<pre class="prettyprint lang-js">$(table).bind('staticRowsComplete', function(table) {
+			<pre class="prettyprint lang-js">$(table).on('staticRowsComplete', function(table) {
 	console.log('static rows applied to ' + table.id);
 });</pre>
 		</div>

@@ -73,7 +73,7 @@
 				});
 			c.$headers.each(function() {
 				$this = $(this);
-				headers.push( $.trim( $this.attr(header) || $this.text() ) );
+				headers.push( $this.attr(header).trim() || $this.text().trim() );
 			});
 			c.$tbodies.children().each(function() {
 				$(this).children().each(function(i) {

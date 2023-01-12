@@ -29,12 +29,12 @@
 		})
 
 		// assign the sortStart event
-		.bind("sortStart",function(e, t) {
+		.on("sortStart",function(e, t) {
 			start = e.timeStamp;
 			$("#display").append('<li>Sort Started</li>').find('li:first').remove();
 		})
 
-		.bind("sortEnd",function(e, t) {
+		.on("sortEnd",function(e, t) {
 			$("#display").append('<li>Sort Ended after ' + ( (e.timeStamp - start)/1000 ).toFixed(2) + ' seconds</li>').find('li:first').remove();
 		});
 

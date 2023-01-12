@@ -35,10 +35,10 @@
 			filter_reset : '.reset'
 		}
 	})
-	.bind('sortBegin sortEnd', function(e) {
+	.on('sortBegin sortEnd', function(e) {
 		vis = e.type === "sortBegin";
 	})
-	.bind('filterStart filterEnd', function(e, filter) {
+	.on('filterStart filterEnd', function(e, filter) {
 		if (e.type === 'filterStart') {
 			start = e.timeStamp;
 			vis = true;

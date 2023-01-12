@@ -12,12 +12,12 @@
 	ts.processFractions = function(n, table) {
 		if (n) {
 			var t, p = 0;
-			n = $.trim(n.replace(/\"/, ''));
+			n = n.replace(/\"/, '').trim();
 			// look for a space in the first part of the number: '10 3/4' and save the '10'
 			if (/\s/.test(n)) {
 				p = ts.formatFloat(n.split(' ')[0], table);
 				// remove stuff to the left of the space
-				n = $.trim(n.substring(n.indexOf(' '), n.length));
+				n = n.substring(n.indexOf(' '), n.length).trim();
 			}
 			// look for a '/' to calculate fractions
 			if (/\//g.test(n)) {

@@ -20,7 +20,7 @@
 				h = '<tr class="repeated-header ' + c.selectorRemove.slice(1) + '">';
 				for (i = 0; i < c.columns; i++) {
 					// repeat the content of the current header (including child elements)
-					h += '<th>' + $.trim( c.$headers.eq(i).html() ) + '</th>';
+					h += '<th>' + c.$headers.eq(i).html().trim() + '</th>';
 				}
 				// 'remove-me' class was added in case the table needs to be updated, the 'remove-me' rows will be
 				// removed prior to the update to prevent including the rows in the update - see 'selectorRemove' option

@@ -121,7 +121,7 @@
 
 		// bind to pager events
 		// *********************
-		.bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c) {
+		.on('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c) {
 			var msg = '"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
 				' page <span class="typ">' + (c.page + 1) + '/' + c.totalPages + '</span>';
 			$('#display')
@@ -196,7 +196,7 @@
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 			return false;
 		});
-		$('table').bind('pagerChange', function() {
+		$('table').on('pagerChange', function() {
 			// pager automatically enables when table is sorted.
 			$('.toggle').text('Disable Pager');
 		});

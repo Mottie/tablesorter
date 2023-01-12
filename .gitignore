@@ -169,3 +169,6 @@ yarn.lock
 
 # Mac crap
 .DS_Store
+
+# JetBrains
+.idea

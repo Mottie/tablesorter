@@ -51,7 +51,7 @@
 		selectmenuClass = 'selectmenu';
 
 	// reinitialize on "updateComplete" just-in-case an "updateAll" was called
-	$table.bind( 'tablesorter-initialized updateComplete', function() {
+	$table.on( 'tablesorter-initialized updateComplete', function() {
 		$table
 			.find( '.' + selectmenuClass )
 			.iconselectmenu({

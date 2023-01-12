@@ -73,7 +73,7 @@
 		refreshColumns: function( c, optName, optState ) {
 			var i, arry, $el, val,
 				colSel = c.selector,
-				isArry = $.isArray(optState || optName),
+				isArry = Array.isArray(optState || optName),
 				wo = c.widgetOptions;
 			// see #798
 			if (typeof optName !== 'undefined' && optName !== null && colSel.$container.length) {

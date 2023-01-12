@@ -114,7 +114,7 @@
 				len = arry.length;
 			for ( index = 0; index < len; index++ ) {
 				column = arry[ index ][ 0 ];
-				txt = $.trim( c.$headerIndexed[ column ].attr( wo.sort2Hash_headerTextAttr ) );
+				txt = c.$headerIndexed[ column ].attr( wo.sort2Hash_headerTextAttr ).trim();
 				sort.push( txt !== '' ? encodeURIComponent( txt ) : column );
 				direction = wo.sort2Hash_directionText[ arry[ index ][ 1 ] ];
 				sort.push( direction );
@@ -130,7 +130,7 @@
 				len = arry.length;
 			for ( index = 0; index < len; index++ ) {
 				column = arry[ index ][ 0 ];
-				txt = $.trim( c.$headerIndexed[ column ].attr( wo.sort2Hash_headerTextAttr ) );
+				txt = c.$headerIndexed[ column ].attr( wo.sort2Hash_headerTextAttr ).trim();
 				column = typeof txt !== 'undefined' ? encodeURIComponent( txt ) : column;
 				sort.push( column );
 				direction = wo.sort2Hash_directionText[ arry[ index ][ 1 ] ];

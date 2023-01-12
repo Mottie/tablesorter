@@ -251,7 +251,7 @@
 			c.$table
 				.off( namespace )
 				.on( 'filterInit filterStart '.split( ' ' ).join( namespace + ' ' ), function( e, filters ) {
-					p.currentFilters = $.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
+					p.currentFilters = Array.isArray( filters ) ? filters : c.$table.data( 'lastSearch' );
 					var filtersEqual;
 					if (p.ajax && e.type === 'filterInit') {
 						// ensure pager ajax is called after filter widget has initialized
@@ -727,7 +727,7 @@
 				wo = c.widgetOptions,
 				debug = ts.debug(c, 'pager');
 			// process data
-			if ( $.isFunction( wo.pager_ajaxProcessing ) ) {
+			if ( typeof wo.pager_ajaxProcessing === 'function' ) {
 
 				// in case nothing is returned by ajax, empty out the table; see #1032
 				// but do it before calling pager_ajaxProcessing because that function may add content
@@ -752,7 +752,7 @@
 					p.totalRows = 0;
 				} else {
 					// process ajax object
-					if ( !$.isArray( result ) ) {
+					if ( !Array.isArray( result ) ) {
 						p.ajaxData = result;
 						c.totalRows = p.totalRows = result.total;
 						c.filteredRows = p.filteredRows = typeof result.filteredRows !== 'undefined' ?
@@ -785,7 +785,7 @@
 							tds += '<tr>';
 							for ( j = 0; j < d[i].length; j++ ) {
 								// build tbody cells; watch for data containing HTML markup - see #434
-								tds += /^\s*<td/.test( d[ i ][ j ] ) ? $.trim( d[ i ][ j ] ) : '<td>' + d[ i ][ j ] + '</td>';
+								tds += /^\s*<td/.test( d[ i ][ j ] ) ? d[ i ][ j ].trim() : '<td>' + d[ i ][ j ] + '</td>';
 							}
 							tds += '</tr>';
 						}
@@ -935,7 +935,7 @@
 				url = url.replace( /\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g, arry.length ? arry.join( '&' ) : filterCol );
 				p.currentFilters = filterList;
 			}
-			if ( $.isFunction( wo.pager_customAjaxUrl ) ) {
+			if ( typeof wo.pager_customAjaxUrl === 'function' ) {
 				url = wo.pager_customAjaxUrl( c.table, url );
 			}
 			if ( ts.debug(c, 'pager') ) {

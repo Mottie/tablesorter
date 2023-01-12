@@ -33,7 +33,7 @@
 		$input = $('<input class="filter" type="hidden">')
 			.appendTo($cell)
 			// hidden filter update namespace trigger by filter widget
-			.bind('change' + c.namespace + 'filter', function() {
+			.on('change' + c.namespace + 'filter', function() {
 				var val = convertRegex(this.value);
 				c.$table.find('.select2col' + indx + ' .select2').select2('val', val);
 				updateSelect2();
@@ -60,7 +60,7 @@
 			var arry = false,
 				v = c.$table.find('.select2col' + indx + ' .select2').select2('val') || o.value || '';
 			// convert array to string
-			if ($.isArray(v)) {
+			if (Array.isArray(v)) {
 				arry = true;
 				v = v.join('\u0000');
 			}
@@ -75,7 +75,7 @@
 				$input
 					// add regex, so we filter exact numbers
 					.val(
-						$.isArray(v_escape) && v_escape.length && v_escape.join('') !== '' ?
+						Array.isArray(v_escape) && v_escape.length && v_escape.join('') !== '' ?
 							'/(' + matchPrefix + (v_escape || []).join(matchSuffix + '|' + matchPrefix) + matchSuffix + ')/' + flags :
 							''
 					)
@@ -110,7 +110,7 @@
 		// data options are already defined
 		if (!(o.ajax && !$.isEmptyObject(o.ajax)) && !o.data) {
 			updateOptions();
-			c.$table.bind('filterEnd', function() {
+			c.$table.on('filterEnd', function() {
 				updateOptions();
 				c.$table
 					.find('.select2col' + indx)
@@ -124,12 +124,12 @@
 			.val(o.value)
 			.appendTo($cell)
 			.select2(o)
-			.bind('change', function() {
+			.on('change', function() {
 				updateSelect2();
 			});
 
 		// update select2 from filter hidden input, in case of saved filters
-		c.$table.bind('filterFomatterUpdate', function() {
+		c.$table.on('filterFomatterUpdate', function() {
 			// value = '/(^x$|^y$)/' => 'x,y'
 			var val = convertRegex(c.$table.data('lastSearch')[indx] || '');
 			$cell = c.$table.find('.select2col' + indx);
@@ -139,14 +139,14 @@
 		});
 
 		// has sticky headers?
-		c.$table.bind('stickyHeadersInit', function() {
+		c.$table.on('stickyHeadersInit', function() {
 			var $shcell = c.widgetOptions.$sticky.find('.select2col' + indx).empty();
 			// add a select2!
 			$('<input class="select2 select2-' + indx + '" type="hidden">')
 				.val(o.value)
 				.appendTo($shcell)
 				.select2(o)
-				.bind('change', function() {
+				.on('change', function() {
 					c.$table.find('.select2col' + indx)
 						.find('.select2')
 						.select2('val', c.widgetOptions.$sticky.find('.select2col' + indx + ' .select2').select2('val') );
@@ -158,7 +158,7 @@
 		});
 
 		// on reset
-		c.$table.bind('filterReset', function() {
+		c.$table.on('filterReset', function() {
 			c.$table.find('.select2col' + indx).find('.select2').select2('val', o.value || '');
 			setTimeout(function() {
 				updateSelect2();

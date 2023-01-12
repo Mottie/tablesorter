@@ -137,10 +137,10 @@
 							timer = null;
 						}, _data.latency);
 					};
-				$(this).bind('scroll', handler).data(uid1, handler);
+				$(this).on('scroll', handler).data(uid1, handler);
 			},
 			teardown: function() {
-				$(this).unbind('scroll', $(this).data(uid1));
+				$(this).off('scroll', $(this).data(uid1));
 			}
 		};
 		special.scrollstop = {
@@ -162,10 +162,10 @@
 							dispatch.apply(_self, _args);
 						}, _data.latency);
 					};
-				$(this).bind('scroll', handler).data(uid2, handler);
+				$(this).on('scroll', handler).data(uid2, handler);
 			},
 			teardown: function() {
-				$(this).unbind('scroll', $(this).data(uid2));
+				$(this).off('scroll', $(this).data(uid2));
 			}
 		};
 	/*
@@ -246,7 +246,7 @@
 		settings.container === window) ? $window : $(settings.container);
 		/* Fire one scroll event per scroll. Not one scroll event per image. */
 		if (0 === settings.event.indexOf('scroll')) {
-			$container.bind(settings.event, function() {
+			$container.on(settings.event, function() {
 				return update();
 			});
 		}
@@ -268,7 +268,7 @@
 						settings.appear.call(self, elements_left, settings);
 					}
 					$('<img />')
-						.bind('load', function() {
+						.on('load', function() {
 							var original = $self.attr('data-' + settings.data_attribute);
 							$self.hide();
 							if ($self.is('img')) {
@@ -294,7 +294,7 @@
 			/* When wanted event is triggered load original image */
 			/* by triggering appear.                              */
 			if (0 !== settings.event.indexOf('scroll')) {
-				$self.bind(settings.event, function() {
+				$self.on(settings.event, function() {
 					if (!self.loaded) {
 						$self.trigger('appear');
 					}
@@ -302,13 +302,13 @@
 			}
 		});
 		/* Check if something appears when window is resized. */
-		$window.bind('resize', function() {
+		$window.on('resize', function() {
 			update();
 		});
 		/* With IOS5 force loading images when navigating with back button. */
 		/* Non optimal workaround. */
 		if ((/(?:iphone|ipod|ipad).*os 5/gi).test(navigator.appVersion)) {
-			$window.bind('pageshow', function(event) {
+			$window.on('pageshow', function(event) {
 				if (event.originalEvent && event.originalEvent.persisted) {
 					elements.each(function() {
 						$(this).trigger('appear');
@@ -367,7 +367,7 @@
 	/* Custom selectors for your convenience.   */
 	/* Use as $('img:below-the-fold').something() or */
 	/* $('img').filter(':below-the-fold').something() which is faster */
-	$.extend($.expr[':'], {
+	$.extend($.expr.pseudos, {
 		'below-the-fold' : function(a) { return $.belowthefold(a, {threshold : 0}); },
 		'above-the-top'  : function(a) { return !$.belowthefold(a, {threshold : 0}); },
 		'right-of-screen': function(a) { return $.rightoffold(a, {threshold : 0}); },

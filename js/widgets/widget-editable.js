@@ -74,7 +74,7 @@
 					}
 					len--;
 				}
-			} else if ( $.isArray( editableColumns ) ) {
+			} else if ( Array.isArray( editableColumns ) ) {
 				len = editableColumns.length;
 				for ( indx = 0; indx < len; indx++ ) {
 					if ( editableColumns[ indx ] < c.columns ) {
@@ -97,7 +97,7 @@
 
 		update: function( c, wo ) {
 			var $t, $cells, cellIndex, cellLen, $editable, editableIndex, editableLen,
-				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || $.isFunction( wo.editable_wrapContent ),
+				tmp = $( '<div>' ).wrapInner( wo.editable_wrapContent ).children().length || typeof wo.editable_wrapContent === 'function',
 				cols = tse.getColumns( c, wo ).join( ',' );
 
 			// turn off contenteditable to allow dynamically setting the wo.editable_noEdit
@@ -165,7 +165,8 @@
 						column = $this.closest( 'td' ).index(),
 						txt = $this.html();
 					if ( wo.editable_trimContent ) {
-						txt = $.trim( txt === '' ? '&nbsp;' : txt );
+						txt = txt.trim();
+						txt = txt === '' ? '&nbsp;' : txt;
 					}
 					// prevent enter from adding into the content
 					$this
@@ -199,7 +200,8 @@
 						txt = $this.html(),
 						column = $this.closest( 'td' ).index();
 					if ( wo.editable_trimContent ) {
-						txt = $.trim( txt === '' ? '&nbsp;' : txt );
+						txt = txt.trim();
+						txt = txt === '' ? '&nbsp;' : txt;
 					}
 					if ( e.which === 27 ) {
 						// user cancelled
@@ -253,9 +255,9 @@
 						$this.data( 'timer', setTimeout( function() {
 							c.table.isUpdating = false; // clear flag or sorting will be disabled
 
-							if ( $.isFunction( wo.editable_blur ) ) {
+							if ( typeof wo.editable_blur === 'function' ) {
 								txt = $this.html();
-								wo.editable_blur( wo.editable_trimContent ? $.trim( txt ) : txt, column, $this );
+								wo.editable_blur( wo.editable_trimContent ? txt.trim() : txt, column, $this );
 							}
 						}, 100 ) );
 						// restore original content on blur

@@ -62,8 +62,8 @@
 				$headers = c.$headers.add( $( c.namespace + '_extra_headers' ) ),
 				theme = c.theme || 'jui',
 				themes = themesAll[theme] || {},
-				remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
-				iconRmv = $.trim( [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ) ),
+				remove = [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ).trim(),
+				iconRmv = [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ).trim(),
 				debug = ts.debug(c, 'uitheme');
 			if (debug) { time = new Date(); }
 			// initialization code - run once
@@ -74,8 +74,8 @@
 				oldremove =  hasOldTheme ? [ oldtheme.sortNone, oldtheme.sortDesc, oldtheme.sortAsc, oldtheme.active ].join( ' ' ) : '';
 				oldIconRmv = hasOldTheme ? [ oldtheme.iconSortNone, oldtheme.iconSortDesc, oldtheme.iconSortAsc ].join( ' ' ) : '';
 				if (hasOldTheme) {
-					wo.zebra[0] = $.trim( ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '') );
-					wo.zebra[1] = $.trim( ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '') );
+					wo.zebra[0] = ' ' + wo.zebra[0].replace(' ' + oldtheme.even, '').trim();
+					wo.zebra[1] = ' ' + wo.zebra[1].replace(' ' + oldtheme.odd, '').trim();
 					c.$tbodies.children().removeClass( [ oldtheme.even, oldtheme.odd ].join(' ') );
 				}
 				// update zebra stripes
@@ -104,8 +104,8 @@
 					.removeClass( (hasOldTheme ? [ oldtheme.header, oldtheme.hover, oldremove ].join(' ') : '') || '' )
 					.addClass(themes.header)
 					.not('.sorter-false')
-					.unbind('mouseenter.tsuitheme mouseleave.tsuitheme')
-					.bind('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
+					.off('mouseenter.tsuitheme mouseleave.tsuitheme')
+					.on('mouseenter.tsuitheme mouseleave.tsuitheme', function(event) {
 						// toggleClass with switch added in jQuery 1.3
 						$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 					});
@@ -185,7 +185,7 @@
 			if (refreshing) { return; }
 			$table.find(ts.css.header).removeClass(themes.header);
 			$headers
-				.unbind('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
+				.off('mouseenter.tsuitheme mouseleave.tsuitheme') // remove hover
 				.removeClass(themes.hover + ' ' + remove + ' ' + themes.active)
 				.filter('.' + ts.css.filterRow)
 				.removeClass(themes.filterRow);

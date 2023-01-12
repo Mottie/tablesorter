@@ -8,7 +8,7 @@
 
 	function getStoredSortList(c) {
 		var stored = ts.storage( c.table, 'tablesorter-savesort' );
-		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : [];
+		return (stored && stored.hasOwnProperty('sortList') && Array.isArray(stored.sortList)) ? stored.sortList : [];
 	}
 
 	function sortListChanged(c, sortList) {
@@ -55,7 +55,7 @@
 					if (debug) {
 						console.log('saveSort >> Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
-					$table.bind('saveSortReset', function(event) {
+					$table.on('saveSortReset', function(event) {
 						event.stopPropagation();
 						ts.storage( table, 'tablesorter-savesort', '' );
 					});

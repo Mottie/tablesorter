@@ -41,7 +41,7 @@
 				if (!c.headers[cellIndex]) { c.headers[cellIndex] = {}; }
 				lang = ts.getData( c.$headers.eq(cellIndex), ts.getColumnData( table, c.headers, cellIndex ), 'ignoreArticles' );
 				art = (ts.ignoreArticles[lang] || 'the, a, an' ) + '';
-				c.headers[cellIndex].ignoreArticlesRegex = new RegExp('^(' + $.trim( art.split(/\s*\,\s*/).join('\\s|') + '\\s' ).replace('_\\s', '') + ')', 'i');
+				c.headers[cellIndex].ignoreArticlesRegex = new RegExp('^(' + ( art.split(/\s*\,\s*/).join('\\s|') + '\\s' ).trim().replace('_\\s', '') + ')', 'i');
 				// exception regex stored in c.headers[cellIndex].ignoreArticlesRegex2
 				ignore = ts.getData( c.$headers.eq(cellIndex), ts.getColumnData( table, c.headers, cellIndex ), 'ignoreArticlesExcept' );
 				c.headers[cellIndex].ignoreArticlesRegex2 = ignore !== '' ? new RegExp('^(' + ignore.replace(/\s/g, '\\s') + ')', 'i') : '';

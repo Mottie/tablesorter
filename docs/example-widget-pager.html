@@ -103,7 +103,7 @@
 
 		// bind to pager events
 		// *********************
-		.bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c) {
+		.on('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c) {
 			var p = c.pager, // NEW with the widget... it returns config, instead of config.pager
 				msg = '"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
 				' page <span class="typ">' + (p.page + 1) + '/' + p.totalPages + '</span>';
@@ -175,7 +175,7 @@
 			$(this).text( (mode ? 'Enable' : 'Disable') + 'Pager');
 			return false;
 		});
-		$table.bind('pagerChange', function() {
+		$table.on('pagerChange', function() {
 			// pager automatically enables when table is sorted.
 			$('.toggle').text('Disable Pager');
 		});

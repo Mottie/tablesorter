@@ -31,16 +31,16 @@
 			}
 
 			c.$table
-				.unbind( 'sortBegin updateComplete '.split( ' ' ).join( namespace + ' ' ) )
-				.bind( 'sortBegin' + namespace, function() {
+				.off( 'sortBegin updateComplete '.split( ' ' ).join( namespace + ' ' ) )
+				.on( 'sortBegin' + namespace, function() {
 					ts.sortTbodies.sorter( c );
 				})
-				.bind( 'updateComplete' + namespace, function() {
+				.on( 'updateComplete' + namespace, function() {
 					// find parsers for each column
 					ts.sortTbodies.setTbodies( c, wo );
 					ts.updateCache( c, null, c.$tbodies );
 				})
-				.bind('sortEnd', function() {
+				.on('sortEnd', function() {
 					// Moves the head row back to the top of the tbody
 					var primaryRow = wo.sortTbody_primaryRow;
 					if ( wo.sortTbody_lockHead && primaryRow ) {
@@ -231,7 +231,7 @@
 			ts.sortTbodies.init( c, wo );
 		},
 		remove : function( table, c, wo ) {
-			c.$table.unbind( 'sortBegin updateComplete '.split( ' ' ).join( c.namespace + 'sortTbody ' ) );
+			c.$table.off( 'sortBegin updateComplete '.split( ' ' ).join( c.namespace + 'sortTbody ' ) );
 			c.serverSideSorting = wo.sortTbody_original_serverSideSorting;
 			c.cssInfoBlock = wo.sortTbody_original_cssInfoBlock;
 		}

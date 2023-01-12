@@ -16,8 +16,8 @@
 
 		init : function(c) {
 			c.$table
-				.unbind(printTable.event)
-				.bind(printTable.event, function() {
+				.off(printTable.event)
+				.on(printTable.event, function() {
 					// explicitly use table.config.widgetOptions because we want
 					// the most up-to-date values; not the 'wo' from initialization
 					printTable.process(c, c.widgetOptions);
@@ -81,7 +81,7 @@
 			printStyle += wo.print_extraCSS;
 
 			// callback function
-			if ( $.isFunction(wo.print_callback) ) {
+			if ( typeof wo.print_callback === 'function' ) {
 				wo.print_callback( c, $table, printStyle );
 			} else {
 				printTable.printOutput(c, $table.html(), printStyle);

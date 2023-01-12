@@ -45,13 +45,13 @@
 		format: function(s, table, cell, column) {
 			var val, orig,
 				c = table.config,
-				ignore = $.isArray(c.roman_ignore) ? c.roman_ignore[column] : 0,
+				ignore = Array.isArray(c.roman_ignore) ? c.roman_ignore[column] : 0,
 				// find roman numerals
 				roman = ( isNaN(ignore) ?
 					// ignore can be a regex or string
-					$.trim( s.replace(ignore, '') ) :
+					s.replace(ignore, '').trim() :
 					// or a number to ignore the last x letters...
-					$.trim( s.substring(0, s.length - ignore) )
+					s.substring(0, s.length - ignore).trim()
 				).match(matcher),
 				v = validator.test(roman),
 				num = 0;
