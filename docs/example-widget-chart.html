@@ -566,7 +566,7 @@ $(function() {
 			t = types[s.type],
 			obj = s.chart,
 			rawdata = $table[0].config.chart.data;
-		if ( $.isFunction( s.processor ) ) {
+		if ( typeof s.processor === 'function' ) {
 			rawdata = s.processor( rawdata );
 		}
 		if ( rawdata.length < 2 ) {

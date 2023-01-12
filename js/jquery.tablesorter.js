@@ -2591,7 +2591,7 @@
 			}
 			// remove widget added rows, just in case
 			$h.find( 'tr' ).not( $r ).remove();
-			// disable tablesorter - not using .unbind( namespace ) because namespacing was
+			// disable tablesorter - not using .off( namespace ) because namespacing was
 			// added in jQuery v1.4.3 - see http://api.jquery.com/event.namespace/
 			events = 'sortReset update updateRows updateAll updateHeaders updateCell addRows updateComplete sorton ' +
 				'appendCache updateCache applyWidgetId applyWidgets refreshWidgets removeWidget destroy mouseup mouseleave ' +
