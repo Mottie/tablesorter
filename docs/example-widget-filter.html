@@ -777,7 +777,7 @@ $.tablesorter.filter.bindSearch( $table, $('.search'), false );</pre>
 		<pre class="prettyprint lang-javascript">// Basic search binding, alternate to the above
 // bind to search - pressing enter and clicking on "x" to clear (Webkit)
 // keyup allows dynamic searching
-$(".search").bind('search keyup', function (e) {
+$(".search").on('search keyup', function (e) {
   $('table').trigger('search', [ [this.value] ]);
 });
 </pre></blockquote>

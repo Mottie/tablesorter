@@ -139,12 +139,12 @@ $.tablesorter.addWidget({
 			offsets.push( c.$table.offset().left + c.$table.outerWidth() );
 		}
 
-		c.$headers.not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e) {
+		c.$headers.not('.' + wo.reorder_noReorder).on('mousedown.reorder', function(e) {
 			mdown(e, this);
 		});
 
 		$(document)
-		.bind('mousemove.reorder', function(e) {
+		.on('mousemove.reorder', function(e) {
 			if (startIndex !== -1) {
 				var c = { left : e.pageX - clickOffset[0] };
 				endIndex = -1;
@@ -156,7 +156,7 @@ $.tablesorter.addWidget({
 			}
 		})
 		.add( c.$headers )
-		.bind('mouseup.reorder', function() {
+		.on('mouseup.reorder', function() {
 			clearTimeout(timer);
 			if (startIndex !== -1 && endIndex !== -1) {
 				finishReorder();
@@ -166,8 +166,8 @@ $.tablesorter.addWidget({
 		});
 
 		// has sticky headers?
-		c.$table.bind('stickyHeadersInit', function() {
-			wo.$sticky.find('thead').children().not('.' + wo.reorder_noReorder).bind('mousedown.reorder', function(e) {
+		c.$table.on('stickyHeadersInit', function() {
+			wo.$sticky.find('thead').children().not('.' + wo.reorder_noReorder).on('mousedown.reorder', function(e) {
 				mdown(e, this);
 			});
 		});

@@ -1117,7 +1117,7 @@
 
   // bind to tablesorter-initialized event BEFORE initializing tablesorter*
   $("table")
-    .bind("tablesorter-initialized",function(e, table) {
+    .on("tablesorter-initialized",function(e, table) {
       // do something after tablesorter has initialized
     });
 

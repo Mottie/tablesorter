@@ -119,7 +119,7 @@
 			$(this).text( ( mode ? 'Enable' : 'Disable' ) + ' Pager');
 			return false;
 		});
-		$table.bind('pagerChange', function() {
+		$table.on('pagerChange', function() {
 			// pager automatically enables when table is sorted.
 			$('.toggle').text( 'Disable Pager' );
 		});

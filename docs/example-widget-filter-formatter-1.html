@@ -543,10 +543,10 @@
 				</li>
 				<li>Some method should be added to show the user the current value of the selector - update a data attribute for css3 tooltips, or update the header cell.</li>
 				<li>A reset function needs to also be included; bind to the <code>filterReset</code> event and clear out or disable your custom selector when triggered.
-					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterReset', function() { /* update the input here */ });</pre>
+					<pre class="prettyprint lang-javascript">$cell.closest('table').on('filterReset', function() { /* update the input here */ });</pre>
 				</li>
 				<li>In <span class="version">v2.15.0</span>, in order to update your custom input with any saved filter searches, you will need to bind to the <code>filterFomatterUpdate</code> event to get the saved filter value from the hidden input and apply it to your custom input.
-					<pre class="prettyprint lang-javascript">$cell.closest('table').bind('filterFomatterUpdate', function() {
+					<pre class="prettyprint lang-javascript">$cell.closest('table').on('filterFomatterUpdate', function() {
 	var savedSearch = $cell.find('input[type=hidden]').val();
 	// apply this saved search to your custom input
 	$.tablesorter.filter.formatterUpdated($cell, indx); // new v2.17.5
