@@ -437,7 +437,7 @@
 						p.totalRows = 0;
 					} else {
 						// process ajax object
-						if (!$.isArray(result)) {
+						if (!Array.isArray(result)) {
 							p.ajaxData = result;
 							c.totalRows = p.totalRows = result.total;
 							c.filteredRows = p.filteredRows = typeof result.filteredRows !== 'undefined' ? result.filteredRows : result.total;
@@ -974,7 +974,7 @@
 				// .off( namespace ) adding in jQuery 1.4.3 ( I think )
 				.off( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
 				.on('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
-					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
+					p.currentFilters = Array.isArray(filters) ? filters : c.$table.data('lastSearch');
 					var filtersEqual;
 					if (p.ajax && e.type === 'filterInit') {
 						// ensure pager ajax is called after filter widget has initialized

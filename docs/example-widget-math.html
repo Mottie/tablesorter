@@ -172,7 +172,7 @@
 			math_complete : function($cell, wo, result) {
 				var txt = result + ' (<span class="results">' + expectedResults[resultIndex++ % resultLen] + '</span>)';
 				// mode will return an array if there is a tie
-				return $.isArray(result) ? 'Tie: ' + txt : txt;
+				return Array.isArray(result) ? 'Tie: ' + txt : txt;
 			}
 		}
 	});
