@@ -171,7 +171,7 @@
 							row.push( rowVal[i] );
 						} else {
 							txt = $cells[i].getAttribute( c.textAttribute ) || $cells[i].textContent || $cells.eq(i).text();
-							row.push( $.trim( txt ) );
+							row.push( txt.trim() );
 						}
 					}
 					rows.push(row);

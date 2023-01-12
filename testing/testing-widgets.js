@@ -375,13 +375,13 @@ jQuery(function($){
 		assert.equal ( $t.length !== 0, true, 'filter_functions: true working' );
 
 		this.c.$table.find('.tablesorter-filter-row select:first option').each(function(){
-			opts.push( $.trim( $(this).text() ) );
+			opts.push( $(this).text().trim() );
 		});
 		assert.equal ( 'len=' + opts.length + ',' + opts.join(''), 'len=3,< 10> 10', 'filter_functions set' );
 
 		opts = [];
 		$t.find('option').each(function(){
-			opts.push( $.trim( $(this).text() ) );
+			opts.push( $(this).text().trim() );
 		});
 		assert.equal ( 'len=' + opts.length + ',' + opts.join(''), 'len=4,abcdefzyx', 'filter_selectSource set' );
 	});

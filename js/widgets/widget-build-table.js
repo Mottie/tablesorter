@@ -68,7 +68,7 @@
 
 		if ( d instanceof $ ) {
 			// get data from within a jQuery object (csv)
-			runType( $.trim( d.html() ) );
+			runType( d.html().trim() );
 		} else if ( d && ( d.hasOwnProperty('url') || typ === 'json' ) ) {
 			// load data via ajax
 			$.ajax( wo.build_source )
@@ -289,7 +289,7 @@
 	// CSV Parser by Brian Huisman (http://www.greywyvern.com/?post=258)
 	bt.splitCSV = function(str, sep) {
 		var x, tl,
-			thisCSV = $.trim(str).split(sep = sep || ',');
+			thisCSV = str.trim().split(sep = sep || ',');
 		for ( x = thisCSV.length - 1; x >= 0; x-- ) {
 			if ( thisCSV[x].replace(/\"\s+$/, '"').charAt(thisCSV[x].length - 1) === '"' ) {
 				if ( (tl = thisCSV[x].replace(/^\s+\"/, '"')).length > 1 && tl.charAt(0) === '"' ) {

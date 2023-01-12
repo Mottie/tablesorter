@@ -227,7 +227,7 @@
 						savedSearch = query;
 					// parse filter value in case we're comparing numbers ( dates )
 					if ( parsed || parser.type === 'numeric' ) {
-						txt = $.trim( '' + data.iFilter.replace( tsfRegex.operators, '' ) );
+						txt = '' + data.iFilter.replace( tsfRegex.operators, '' ).trim();
 						result = tsf.parseFilter( c, txt, data, true );
 						query = ( typeof result === 'number' && result !== '' && !isNaN( result ) ) ? result : query;
 					}
@@ -262,9 +262,9 @@
 					if ( tsfRegex.exact.test( filter ) ) {
 						// look for exact not matches - see #628
 						filter = filter.replace( tsfRegex.exact, '' );
-						return filter === '' ? true : $.trim( filter ) !== data.iExact;
+						return filter === '' ? true : filter.trim() !== data.iExact;
 					} else {
-						indx = data.iExact.search( $.trim( filter ) );
+						indx = data.iExact.search( filter.trim() );
 						return filter === '' ? true :
 							// return true if not found
 							data.anyMatch ? indx < 0 :

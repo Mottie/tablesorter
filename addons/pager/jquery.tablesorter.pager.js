@@ -468,7 +468,7 @@
 								tds += '<tr>';
 								for ( j = 0; j < d[i].length; j++ ) {
 									// build tbody cells; watch for data containing HTML markup - see #434
-									tds += /^\s*<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
+									tds += /^\s*<td/.test(d[i][j]) ? d[i][j].trim() : '<td>' + d[i][j] + '</td>';
 								}
 								tds += '</tr>';
 							}
