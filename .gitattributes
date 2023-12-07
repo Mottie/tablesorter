@@ -44,6 +44,5 @@ CONTRIBUTING.md         export-ignore
 example.json            export-ignore
 Gruntfile.js            export-ignore
 index.html              export-ignore
-package.json            export-ignore
 tablesorter.jquery.json export-ignore
 test.html               export-ignore
