@@ -1353,7 +1353,7 @@
 			cell = $cell[ 0 ]; // in case cell is a jQuery object
 			// tbody may not exist if update is initialized while tbody is removed for processing
 			if ( $tbodies.length && tbodyIndex >= 0 ) {
-				row = $tbodies.eq( tbodyIndex ).find( 'tr' ).not( '.' + c.cssChildRow ).index( $row );
+				row = $tbodies.eq( tbodyIndex ).children( 'tr' ).not( '.' + c.cssChildRow ).index( $row );
 				cache = tbcache.normalized[ row ];
 				len = $row[ 0 ].cells.length;
 				if ( len !== c.columns ) {
