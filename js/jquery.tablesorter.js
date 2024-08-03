@@ -49,7 +49,7 @@
 			resort           : true,       // default setting to trigger a resort after an 'update', 'addRows', 'updateCell', etc has completed
 
 			// *** sort options
-			headers          : {},         // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
+			headers          : null,       // set sorter, string, empty, locked order, sortInitialOrder, filter, etc.
 			ignoreCase       : true,       // ignore case while sorting
 			sortForce        : null,       // column(s) first sorted; always applied
 			sortList         : [],         // Initial sort order; applied initially; updated when manually sorted
