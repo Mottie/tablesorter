@@ -102,6 +102,14 @@ If you would like to contribute, please...
 
 View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/Changes).
 
+#### <a name="v2.32.0">Version 2.32.0</a> (2024-08-13)
+
+* Core:
+  * Remove ie8 support (Grunt limitation)
+  * Initialize headers as `null`
+* Grouping: Fix self-closing icon tags to support jQuery 3.5+
+* Parser-input-select: Don't use updateCell if cell has `parser-false` class
+
 #### <a name="v2.31.3">Version 2.31.3</a> (2020-03-03)
 
 * Core:
@@ -128,14 +136,3 @@ View the [complete change log here](https://github.com/Mottie/tablesorter/wiki/C
   * Various fixes.
   * Updated trigger sort page. See [issue #1641](https://github.com/Mottie/tablesorter/issues/1641).
   * Remove invalid widget option. See [issue #1581](https://github.com/Mottie/tablesorter/issues/1581).
-
-#### <a name="v2.31.1">Version 2.31.1</a> (2018-11-20)
-
-* Core:
-  * Store sortList on init. Fixes [issue #1585](https://github.com/Mottie/tablesorter/issues/1585).
-* Math:
-  * Add math_textAttr. See [issue #1601](https://github.com/Mottie/tablesorter/issues/1601).
-* Readme:
-  * Remove bower, gitter & add Slack.
-* Meta:
-  * Update dependencies.

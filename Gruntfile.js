@@ -280,7 +280,7 @@ module.exports = function( grunt ) {
 				output: {
 					comments: /^!/,
 					beautify: false,
-					ie8: true
+					// ie8: true
 				},
 				report: 'gzip'
 			},
