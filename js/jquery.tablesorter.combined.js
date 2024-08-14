@@ -4505,6 +4505,14 @@
 					// look for multiple columns '1-3,4-6,8'
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
+
+			// in case select filter option has a different value vs text 'a - z|A through Z'
+			ffxn = wo.filter_columnFilters ?
+				c.$filters.add( wo.filter_$externalFilters )
+					.filter( '[data-column="' + columnIndex + '"]' )
+					.find( 'select option:selected' )
+					.attr( 'data-function-name' ) || '' : '';
+
 			data.$cells = data.$row.children();
 			data.matchedOn = null;
 			if ( data.anyMatchFlag && columnIndex.length > 1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
@@ -4571,12 +4579,6 @@
 
 					result = showRow; // if showRow is true, show that row
 
-					// in case select filter option has a different value vs text 'a - z|A through Z'
-					ffxn = wo.filter_columnFilters ?
-						c.$filters.add( wo.filter_$externalFilters )
-							.filter( '[data-column="' + columnIndex + '"]' )
-							.find( 'select option:selected' )
-							.attr( 'data-function-name' ) || '' : '';
 					// replace accents - see #357
 					if ( c.sortLocaleCompare ) {
 						data.filter = ts.replaceAccents( data.filter );
