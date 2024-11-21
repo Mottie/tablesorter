@@ -603,7 +603,11 @@ $(function() {
 						<td>true</td>
 						<td>Allow searching through already filtered rows in special circumstances; will speed up searching in large tables if <code>true</code>.</td>
 					</tr>
-
+					<tr id="filter-search-trigger">
+						<td><span class="permalink">filter_searchTrigger</span></td>
+						<td>false</td>
+						<td>If <code>String,Number,Object</code>, search is only triggered by the given types, see <a href="example-widget-filter-search-trigger.html">here</a></td>
+					</tr>
 					<tr id="filter-select-source">
 						<td><span class="permalink">filter_selectSource</span></td>
 						<td>null</td>
@@ -621,7 +625,7 @@ $(function() {
 						<td>false</td>
 						<td>If <code>true</code>, filter will be done server-side. The client-side filtering will be disabled, but the ui and events will still be used.</td>
 					</tr>
-
+					
 					<tr id="filter-starts-with">
 						<td><span class="permalink">filter_startsWith</span></td>
 						<td>false</td>

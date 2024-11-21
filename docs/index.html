@@ -3511,7 +3511,44 @@ $('table').trigger('search', false);</pre></div>
 				</td>
 				<td><a href="example-widget-filter-formatter-select2.html">1</a> <a href="example-widget-filter-selectmenu.html">2</a></td>
 			</tr>
-
+			<tr id="widget-filter-searchtrigger">
+				<td><a href="#" class="permalink">filter_searchTrigger</a></td>
+				<td>Boolean,String,Number,Object</td>
+				<td>false</td>
+				<td>
+					Filter widget: If set, only passed Keys/Events are used to trigger the search.
+					<code>filter_liveSearch</code> must be set to <code>false</code>
+					<div class="collapsible">
+					<br>
+					Use the <a href="#widget-filter-searchtrigger"><code>filter_searchTrigger</code></a> option as follows:
+					<pre class="prettyprint lang-js">$(function() {
+  $("table").tablesorter({
+    widgets: ["filter"],
+    widgetOptions : {
+      filter_searchTrigger : [
+		  {
+			  keycode : $.tablesorter.keyCodes.enter, ctrl : true, alt : false, shift : false
+		  },
+		  $.tablesorter.keyCodes.tab,
+		  "blur"
+	  ]
+    }
+  });
+});</pre>
+					<ul>
+						<li>Possible values to use as parameter
+							<ul>
+								<li>Boolean <code>false</code> Default same as <code>['blur', 'search', 13]</code></li>
+								<li>String <code>search change keypress input blur</code> Events</li>
+								<li>Number Keycodes 13 = Enter, 9 = Tab, etc. see <code>$.tablesorter.keyCodes</code> for internal constants</li>
+								<li>Object <code>{keycode: Number, ctrl : boolean, alt : boolean, shift : boolean}</code></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				</td>
+				<td><a href="example-widget-filter-search-trigger.html">Example</a></td>
+			</tr>
 			<tr id="widget-filter-selectsource-separator">
 				<td><a href="#" class="permalink">filter_selectSourceSeparator</a></td>
 				<td>String</td>
