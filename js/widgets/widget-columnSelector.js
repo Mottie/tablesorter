@@ -73,7 +73,7 @@
 		refreshColumns: function( c, optName, optState ) {
 			var i, arry, $el, val,
 				colSel = c.selector,
-				isArry = $.isArray(optState || optName),
+				isArry = Array.isArray(optState || optName),
 				wo = c.widgetOptions;
 			// see #798
 			if (typeof optName !== 'undefined' && optName !== null && colSel.$container.length) {
@@ -126,7 +126,7 @@
 				state = useStorage ? ts.storage( c.table, 'tablesorter-columnSelector-auto') : {};
 
 			// initial states
-			colSel.auto = $.isEmptyObject(state) || $.type(state.auto) !== 'boolean' ? wo.columnSelector_mediaqueryState : state.auto;
+			colSel.auto = $.isEmptyObject(state) || typeof state.auto !== 'boolean' ? wo.columnSelector_mediaqueryState : state.auto;
 			colSel.states = [];
 			colSel.$column = [];
 			colSel.$wrapper = [];

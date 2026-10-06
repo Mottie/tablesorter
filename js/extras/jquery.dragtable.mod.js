@@ -106,7 +106,7 @@
               c.lastCombinedFilter = null;
               c.$table.data('lastSearch', filters);
               ts.setFilters( $table, filters );
-              if ($.isFunction(_this.options.tablesorterComplete)) {
+              if (typeof _this.options.tablesorterComplete === 'function') {
                 _this.options.tablesorterComplete( c.table );
               }
             }, 10 );
@@ -331,7 +331,7 @@
         restoreTextSelection();
         ts.dragtable.update(_this);
         // persist state if necessary
-        if ($.isFunction(_this.options.persistState)) {
+        if (typeof _this.options.persistState === 'function') {
           _this.options.persistState(_this.originalTable);
         } else {
           _this.persistState();
@@ -532,7 +532,7 @@
         _this.bindTo += ' ' + _this.options.dragHandle;
       }
       // restore state if necessary
-      if ($.isFunction(_this.options.restoreState)) {
+      if (typeof _this.options.restoreState === 'function') {
         _this.options.restoreState(_this.originalTable);
       } else {
         _this._restoreState(_this.options.restoreState);

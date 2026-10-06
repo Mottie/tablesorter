@@ -173,7 +173,7 @@
 					var tmp,
 						offset = $table.offset(),
 						stickyOffset = getStickyOffset(c, wo),
-						yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
+						yWindow = ($yScroll[0] != null && $yScroll[0] === $yScroll[0].window), // $.isWindow needs jQuery 1.4.3
 						yScroll = yWindow ?
 							$yScroll.scrollTop() :
 							// use parent sticky position if nested AND inside of a scrollable element - see #1512

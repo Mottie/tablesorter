@@ -39,7 +39,7 @@
 			var val = $input.length ? $input.val() : txt,
 				num = $.tablesorter.formatFloat( ( val || '' ).replace( /[^\w,. \-()]/g, '' ), table );
 			return txt && typeof num === 'number' ? num :
-				txt ? $.trim( txt && table.config.ignoreCase ? txt.toLocaleLowerCase() : txt ) : txt;
+				txt ? ( txt && table.config.ignoreCase ? txt.toLocaleLowerCase() : txt ).trim() : txt;
 		},
 		parsed : true, // filter widget flag
 		type : 'numeric'
