@@ -2688,7 +2688,7 @@
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? $.trim( table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
 		},
 		type : 'numeric'
 	});
@@ -2705,7 +2705,7 @@
 		format : function( str, table ) {
 			var num = ts.formatFloat( ( str || '' ).replace( ts.regex.nondigit, '' ), table );
 			return str && typeof num === 'number' ? num :
-				str ? $.trim( str && table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
+				str ? $.trim( table.config.ignoreCase ? str.toLocaleLowerCase() : str ) : str;
 		},
 		type : 'numeric'
 	});
