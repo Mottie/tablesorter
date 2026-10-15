@@ -13,10 +13,13 @@
 		lastEdited: 'tseditable-last-edited-cell',
 
 		editComplete: function( c, wo, $cell, refocus ) {
-			c.$table
-				.find( '.' + tse.lastEdited )
-				.removeClass( tse.lastEdited )
-				.trigger( wo.editable_editComplete, [ c ] );
+			var $edited = c.$table.find( '.' + tse.lastEdited );
+			$edited.removeClass( tse.lastEdited );
+			if ( !refocus ) {
+				// Firefox retains focus when updating the table moves the edited cell.
+				$edited.filter( ':focus' ).trigger( 'blur' );
+			}
+			$edited.trigger( wo.editable_editComplete, [ c ] );
 			// restore focus last cell after updating
 			if ( refocus ) {
 				setTimeout( function() {
