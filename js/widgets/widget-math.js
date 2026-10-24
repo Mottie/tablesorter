@@ -42,7 +42,8 @@
 					.replace(/\{content\}/g, '').trim();
 				txt = txt.replace( tmp, '' );
 			}
-			txt = ts.formatFloat( txt.replace( /[^\w,. \-()]/g, '' ), c.table ) || 0;
+			// Remove grouping spaces before formatFloat can stop at the first one.
+			txt = ts.formatFloat( txt.replace( /[^\w,.\-()]/g, '' ), c.table ) || 0;
 			// isNaN('') => false
 			return isNaN( txt ) ? 0 : txt;
 		},
